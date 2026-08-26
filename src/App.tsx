@@ -6,6 +6,7 @@ import { Fire, Gear, PlusCircle } from '@phosphor-icons/react';
 import { useAppStore } from './hooks/useAppStore';
 import { formatDateStr, calculateBMR, generateUUID } from './utils/helpers';
 import type { UserProfile } from './types';
+import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
   const {
@@ -40,23 +41,26 @@ function App() {
   const handleSaveProfile = (profile: UserProfile) => {
     updateProfile(profile);
     setIsSettingsOpen(false);
+    toast.success('Perfil actualizado correctamente', { style: { background: '#161b22', color: '#fff' } });
   };
 
   const handleLoadMock = () => {
     loadMockData();
     setIsSettingsOpen(false);
+    toast.success('Datos de prueba cargados', { style: { background: '#161b22', color: '#fff' } });
   };
 
   const handleReset = () => {
     resetData();
     setIsSettingsOpen(false);
+    toast.success('Datos reiniciados correctamente', { style: { background: '#161b22', color: '#fff' } });
   };
 
   const currentBMR = calculateBMR(activeProfile);
 
   return (
     <div className="min-h-screen bg-github-bg text-github-text p-4 md:p-8 flex flex-col items-center">
-      
+      <Toaster position="bottom-right" />
       <header className="w-full max-w-4xl mb-8 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-github-border rounded-lg">

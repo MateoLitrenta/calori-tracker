@@ -33,9 +33,9 @@ export const fetchAllData = async (): Promise<UserProfile[] | null> => {
         id: p.id,
         name: p.name,
         age: p.age,
-        sex: p.sex as any,
-        height: p.height,
-        weight: p.weight,
+        sex: p.gender as any,
+        height: p.height_cm,
+        weight: p.weight_kg,
         goal: p.goal as any,
         records: recordsMap
       };
@@ -53,9 +53,9 @@ export const syncProfile = async (p: UserProfile) => {
     id: p.id, 
     name: p.name, 
     age: p.age, 
-    sex: p.sex, 
-    height: p.height, 
-    weight: p.weight, 
+    gender: p.sex, 
+    height_cm: p.height, 
+    weight_kg: p.weight, 
     goal: p.goal
   });
   if (error) console.error('Error syncing profile:', error);

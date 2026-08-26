@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ForkKnife, Flame, Barbell, Drop, Trash, Check } from '@phosphor-icons/react';
+import toast from 'react-hot-toast';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry } from '../types';
 import { getCaloriesIngested, getCaloriesBurned, getNetBalance, getBalanceLabel, generateUUID } from '../utils/helpers';
 
@@ -42,22 +43,31 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   // --- Handlers ---
   const handleDeleteMeal = (id: string) => {
     onUpdateRecord(dateStr, { ...currentRecord, meals: currentRecord.meals.filter(m => m.id !== id) });
+    toast.success('Comida eliminada', { style: { background: '#161b22', color: '#fff' }, icon: '🗑️' });
   };
 
   const handleDeleteWorkout = (id: string) => {
     onUpdateRecord(dateStr, { ...currentRecord, workouts: currentRecord.workouts.filter(w => w.id !== id) });
+    toast.success('Entrenamiento eliminado', { style: { background: '#161b22', color: '#fff' }, icon: '🗑️' });
   };
 
   const handleAddWater = (amount: number) => {
-    onUpdateRecord(dateStr, { ...currentRecord, water: currentRecord.water + amount });
+    const newWater = Math.max(0, currentRecord.water + amount);
+    onUpdateRecord(dateStr, { ...currentRecord, water: newWater });
+  };
+
+  const handleSetWater = (amount: number) => {
+    const newWater = Math.max(0, amount);
+    onUpdateRecord(dateStr, { ...currentRecord, water: newWater });
   };
 
   const handleUpdateSteps = (steps: number) => {
-    onUpdateRecord(dateStr, { ...currentRecord, steps });
+    onUpdateRecord(dateStr, { ...currentRecord, steps: Math.max(0, steps) });
   };
 
   // --- Forms State ---
   const [mealName, setMealName] = useState('');
+  const [isEditingWater, setIsEditingWater] = useState(false);
   const [mealType, setMealType] = useState<MealType>('Almuerzo');
   const [mealCals, setMealCals] = useState<number | ''>('');
 
@@ -130,7 +140,36 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
           <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
             <Drop size={20} className="text-cyan-400" /> Agua Ingerida
           </div>
-          <div className="text-2xl font-bold text-white">{currentRecord.water} <span className="text-sm font-normal text-github-muted">/ 2500 ml</span></div>
+          <div className="text-2xl font-bold text-white flex items-center gap-1">
+            {isEditingWater ? (
+              <input
+                type="number"
+                min="0"
+                autoFocus
+                defaultValue={currentRecord.water}
+                onBlur={(e) => {
+                  handleSetWater(Number(e.target.value));
+                  setIsEditingWater(false);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSetWater(Number(e.currentTarget.value));
+                    setIsEditingWater(false);
+                  }
+                }}
+                className="w-20 bg-github-bg border border-github-border rounded-md px-2 py-1 text-lg focus:outline-none focus:border-cyan-500"
+              />
+            ) : (
+              <span 
+                className="cursor-pointer hover:text-cyan-400 transition-colors" 
+                onClick={() => setIsEditingWater(true)}
+                title="Editar cantidad"
+              >
+                {currentRecord.water}
+              </span>
+            )}
+            <span className="text-sm font-normal text-github-muted">/ 2500 ml</span>
+          </div>
         </div>
       </div>
 
@@ -223,13 +262,23 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         <div className="bg-[#1c2128] border border-github-border p-4 rounded-xl flex flex-col md:flex-row gap-8 animate-in fade-in slide-in-from-top-2">
           <div className="flex-1 flex flex-col gap-3">
             <h4 className="font-bold flex items-center gap-2"><Drop className="text-cyan-400" /> Registro de Agua</h4>
-            <div className="flex gap-2">
-              <button onClick={() => handleAddWater(250)} className="flex-1 bg-github-bg border border-github-border hover:border-cyan-500 hover:text-cyan-400 py-2 rounded-md text-sm transition-colors">
-                + 250 ml
-              </button>
-              <button onClick={() => handleAddWater(500)} className="flex-1 bg-github-bg border border-github-border hover:border-cyan-500 hover:text-cyan-400 py-2 rounded-md text-sm transition-colors">
-                + 500 ml
-              </button>
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-2">
+                <button onClick={() => handleAddWater(250)} className="flex-1 bg-github-bg border border-github-border hover:border-cyan-500 hover:text-cyan-400 py-2 rounded-md text-sm transition-colors">
+                  + 250 ml
+                </button>
+                <button onClick={() => handleAddWater(500)} className="flex-1 bg-github-bg border border-github-border hover:border-cyan-500 hover:text-cyan-400 py-2 rounded-md text-sm transition-colors">
+                  + 500 ml
+                </button>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => handleAddWater(-250)} className="flex-1 bg-github-bg border border-github-border hover:border-red-500 hover:text-red-400 py-2 rounded-md text-sm transition-colors">
+                  - 250 ml
+                </button>
+                <button onClick={() => handleAddWater(-500)} className="flex-1 bg-github-bg border border-github-border hover:border-red-500 hover:text-red-400 py-2 rounded-md text-sm transition-colors">
+                  - 500 ml
+                </button>
+              </div>
             </div>
           </div>
           <div className="flex-1 flex flex-col gap-3">

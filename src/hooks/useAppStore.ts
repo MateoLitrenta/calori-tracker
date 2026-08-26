@@ -3,6 +3,7 @@ import type { UserProfile, DailyRecord } from '../types';
 import { generateMockRecords } from '../utils/mockData';
 import { generateUUID } from '../utils/helpers';
 import * as db from '../lib/db';
+import toast from 'react-hot-toast';
 
 const STORAGE_KEY = 'calori_app_state';
 
@@ -127,6 +128,7 @@ export const useAppStore = () => {
 
     } catch (e) {
       console.error('Failed to sync record to Supabase', e);
+      toast.error('Error al guardar en la nube', { style: { background: '#161b22', color: '#fff' } });
     }
   };
 
