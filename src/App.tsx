@@ -13,7 +13,6 @@ function App() {
   const {
     user,
     activeProfile,
-    loading,
     updateProfile,
     updateRecord,
     resetData,
