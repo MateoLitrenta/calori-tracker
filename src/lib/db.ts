@@ -2,46 +2,68 @@ import { supabase } from './supabase';
 import type { UserProfile, DailyRecord, MealEntry, WorkoutEntry } from '../types';
 import { generateUUID } from '../utils/helpers';
 
-export const fetchAllData = async (): Promise<UserProfile[] | null> => {
+export const fetchUserData = async (userId: string, userEmail?: string): Promise<UserProfile | null> => {
   try {
-    const { data: profiles, error: pErr } = await supabase.from('profiles').select('*');
+    let { data: profile, error: pErr } = await supabase
+      .from('profiles')
+      .select('*')
+      .or(`id.eq.${userId},user_id.eq.${userId}`)
+      .maybeSingle();
+
     if (pErr) throw pErr;
 
-    const { data: logs, error: lErr } = await supabase.from('daily_logs').select('*, meals(*), exercises(*)');
+    if (!profile) {
+      // Auto-crear perfil si no existe
+      const defaultName = userEmail ? userEmail.split('@')[0] : 'Usuario';
+      const { data: newProfile, error: insertErr } = await supabase
+        .from('profiles')
+        .insert({
+          id: userId,
+          user_id: userId,
+          name: defaultName,
+          age: 25,
+          weight_kg: 70,
+          height_cm: 170,
+          gender: 'Masculino',
+          goal: 'Mantenimiento'
+        })
+        .select()
+        .single();
+        
+      if (insertErr) throw insertErr;
+      profile = newProfile;
+    }
+
+    const { data: logs, error: lErr } = await supabase.from('daily_logs').select('*, meals(*), exercises(*)').eq('profile_id', userId);
     if (lErr) throw lErr;
 
-    const reconstructed: UserProfile[] = profiles.map(p => {
-      const pLogs = logs.filter(l => l.profile_id === p.id);
-      const recordsMap: Record<string, DailyRecord> = {};
-      
-      pLogs.forEach(l => {
-         recordsMap[l.date] = {
-           dateStr: l.date,
-           date: new Date(l.date),
-           steps: l.steps,
-           water: l.water_ml,
-           meals: l.meals.map((m: any) => ({
-             id: m.id, name: m.description, type: m.meal_type, calories: m.calories
-           })),
-           workouts: l.exercises.map((e: any) => ({
-             id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: []
-           }))
-         };
-      });
-
-      return {
-        id: p.id,
-        name: p.name,
-        age: p.age,
-        sex: p.gender as any,
-        height: p.height_cm,
-        weight: p.weight_kg,
-        goal: p.goal as any,
-        records: recordsMap
-      };
+    const recordsMap: Record<string, DailyRecord> = {};
+    
+    logs.forEach(l => {
+       recordsMap[l.date] = {
+         dateStr: l.date,
+         date: new Date(l.date),
+         steps: l.steps,
+         water: l.water_ml,
+         meals: l.meals.map((m: any) => ({
+           id: m.id, name: m.description, type: m.meal_type, calories: m.calories
+         })),
+         workouts: l.exercises.map((e: any) => ({
+           id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: []
+         }))
+       };
     });
 
-    return reconstructed;
+    return {
+      id: profile.id,
+      name: profile.name,
+      age: profile.age,
+      sex: profile.gender as any,
+      height: profile.height_cm,
+      weight: profile.weight_kg,
+      goal: profile.goal as any,
+      records: recordsMap
+    };
   } catch (e) {
     console.error('Supabase fetch error:', e);
     return null;
@@ -49,16 +71,19 @@ export const fetchAllData = async (): Promise<UserProfile[] | null> => {
 };
 
 export const syncProfile = async (p: UserProfile) => {
-  const { error } = await supabase.from('profiles').upsert({
-    id: p.id, 
+  const { error } = await supabase.from('profiles').update({
     name: p.name, 
     age: p.age, 
     gender: p.sex, 
     height_cm: p.height, 
     weight_kg: p.weight, 
     goal: p.goal
-  });
-  if (error) console.error('Error syncing profile:', error);
+  }).or(`id.eq.${p.id},user_id.eq.${p.id}`);
+  
+  if (error) {
+    console.error('Error syncing profile:', error);
+    throw error;
+  }
 };
 
 export const ensureDailyLog = async (profileId: string, record: DailyRecord) => {

@@ -3,15 +3,27 @@ import { X, User, FloppyDisk, Warning } from '@phosphor-icons/react';
 import type { UserProfile } from '../types';
 
 interface SettingsModalProps {
-  profile: UserProfile;
+  profile: UserProfile | null;
+  userEmail?: string;
+  userId?: string;
   onClose: () => void;
   onSave: (profile: UserProfile) => void;
-  onLoadMock: () => void;
   onReset: () => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ profile, onClose, onSave, onLoadMock, onReset }) => {
-  const [formData, setFormData] = useState<UserProfile>({ ...profile });
+const SettingsModal: React.FC<SettingsModalProps> = ({ profile, userEmail, userId, onClose, onSave, onReset }) => {
+  const [formData, setFormData] = useState<UserProfile>(
+    profile || {
+      id: userId || '',
+      name: userEmail ? userEmail.split('@')[0] : 'Usuario',
+      age: 25,
+      sex: 'Masculino',
+      height: 170,
+      weight: 70,
+      goal: 'Mantenimiento',
+      records: {}
+    }
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -39,6 +51,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ profile, onClose, onSave,
 
         <div className="p-6 overflow-y-auto max-h-[70vh] custom-scrollbar">
           <form id="profile-form" onSubmit={handleSubmit} className="flex flex-col gap-4">
+            
+            <div>
+              <label className="block text-sm font-medium text-github-muted mb-1">Email</label>
+              <input readOnly value={userEmail || ''} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 text-github-muted cursor-not-allowed opacity-70" />
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-github-muted mb-1">Nombre</label>
               <input required name="name" value={formData.name} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
@@ -81,9 +99,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ profile, onClose, onSave,
 
           <div className="mt-8 border-t border-github-border pt-6 flex flex-col gap-3">
             <h3 className="text-sm font-bold text-red-400 flex items-center gap-2"><Warning /> Zona Peligrosa</h3>
-            <button onClick={onLoadMock} className="w-full bg-[#21262d] hover:bg-github-border border border-github-border text-white px-4 py-2 rounded-md font-medium text-sm transition-colors">
-              Cargar datos de prueba (6 meses)
-            </button>
             <button onClick={onReset} className="w-full bg-red-900/30 hover:bg-red-900/50 border border-red-900 text-red-400 px-4 py-2 rounded-md font-medium text-sm transition-colors">
               Reiniciar todos los datos
             </button>

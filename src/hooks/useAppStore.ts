@@ -1,117 +1,79 @@
 import { useState, useEffect } from 'react';
 import type { UserProfile, DailyRecord } from '../types';
-import { generateMockRecords } from '../utils/mockData';
-import { generateUUID } from '../utils/helpers';
 import * as db from '../lib/db';
+import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
-
-const STORAGE_KEY = 'calori_app_state';
-
-interface AppState {
-  profiles: UserProfile[];
-  activeProfileId: string;
-}
-
-const createDefaultProfile = (): UserProfile => ({
-  id: generateUUID(),
-  name: 'Usuario',
-  age: 25,
-  sex: 'Masculino',
-  height: 175,
-  weight: 70,
-  goal: 'Mantenimiento',
-  records: {},
-});
+import type { User } from '@supabase/supabase-js';
 
 export const useAppStore = () => {
-  const [state, setState] = useState<AppState>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        parsed.profiles.forEach((p: UserProfile) => {
-          Object.values(p.records).forEach((r: any) => {
-            r.date = new Date(r.date);
-          });
-        });
-        return parsed as AppState;
-      } catch (e) {
-        console.error('Failed to parse local storage', e);
-      }
-    }
-    const defProfile = createDefaultProfile();
-    return {
-      profiles: [defProfile],
-      activeProfileId: defProfile.id,
-    };
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [activeProfile, setActiveProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Initial Data Load from Supabase
+  // Auth & Initial Data Load
   useEffect(() => {
     let isMounted = true;
-    const initDb = async () => {
-      const data = await db.fetchAllData();
-      if (isMounted && data && data.length > 0) {
-        setState(prev => {
-          const exists = data.some(p => p.id === prev.activeProfileId);
-          return {
-            profiles: data,
-            activeProfileId: exists ? prev.activeProfileId : data[0].id
-          };
-        });
+    
+    // Check active session on mount
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (isMounted) {
+        setUser(session?.user ?? null);
       }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (isMounted) {
+        setUser(session?.user ?? null);
+        if (!session?.user) {
+          setActiveProfile(null); // Clear state on logout
+        }
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
     };
-    initDb();
-    return () => { isMounted = false; };
   }, []);
 
-  // Sync to LocalStorage
+  // Fetch profile when user changes
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [state]);
+    let isMounted = true;
+    const loadProfile = async () => {
+      if (!user) return;
+      setLoading(true);
+      const data = await db.fetchUserData(user.id, user.email);
+      if (isMounted && data) {
+        setActiveProfile(data);
+      }
+      if (isMounted) setLoading(false);
+    };
 
-  const activeProfile = state.profiles.find(p => p.id === state.activeProfileId) || state.profiles[0];
+    loadProfile();
+    return () => { isMounted = false; };
+  }, [user]);
 
   const updateProfile = async (updated: UserProfile) => {
-    setState(prev => ({
-      ...prev,
-      profiles: prev.profiles.map(p => p.id === updated.id ? updated : p)
-    }));
     await db.syncProfile(updated);
-  };
-
-  const createProfile = async (profile: UserProfile) => {
-    setState(prev => ({
-      ...prev,
-      profiles: [...prev.profiles, profile],
-      activeProfileId: profile.id
-    }));
-    await db.syncProfile(profile);
-  };
-
-  const switchProfile = (id: string) => {
-    setState(prev => ({ ...prev, activeProfileId: id }));
+    if (user) {
+      const refreshed = await db.fetchUserData(user.id, user.email);
+      if (refreshed) setActiveProfile(refreshed);
+    }
   };
 
   const updateRecord = async (dateStr: string, record: DailyRecord) => {
-    const profile = state.profiles.find(p => p.id === state.activeProfileId);
-    if (!profile) return;
-    const oldRecord = profile.records[dateStr] || { meals: [], workouts: [] };
+    if (!activeProfile || !user) return;
+    const oldRecord = activeProfile.records[dateStr] || { meals: [], workouts: [] };
 
     // Optmistic Update
-    setState(prev => ({
-      ...prev,
-      profiles: prev.profiles.map(p => {
-        if (p.id === prev.activeProfileId) {
-          return { ...p, records: { ...p.records, [dateStr]: record } };
-        }
-        return p;
-      })
-    }));
+    setActiveProfile(prev => {
+      if (!prev) return prev;
+      return { ...prev, records: { ...prev.records, [dateStr]: record } };
+    });
 
     // Supabase Sync
     try {
-      const logId = await db.ensureDailyLog(profile.id, record);
+      const logId = await db.ensureDailyLog(activeProfile.id, record);
       if (!logId) return;
 
       const addedMeals = record.meals.filter(m => !oldRecord.meals?.some((o: any) => o.id === m.id));
@@ -132,40 +94,26 @@ export const useAppStore = () => {
     }
   };
 
-  const loadMockData = () => {
-    const records = generateMockRecords(6);
-    setState(prev => ({
-      ...prev,
-      profiles: prev.profiles.map(p => {
-        if (p.id === prev.activeProfileId) {
-          return { ...p, records };
-        }
-        return p;
-      })
-    }));
-    // Note: Mock data is not fully synced to DB to prevent API spam, it will remain in LocalStorage until individual days are updated.
+  const resetData = () => {
+    if (!activeProfile) return;
+    setActiveProfile(prev => {
+      if (!prev) return prev;
+      return { ...prev, records: {} };
+    });
   };
 
-  const resetData = () => {
-    setState(prev => ({
-      ...prev,
-      profiles: prev.profiles.map(p => {
-        if (p.id === prev.activeProfileId) {
-          return { ...p, records: {} };
-        }
-        return p;
-      })
-    }));
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    toast.success('Sesión cerrada', { style: { background: '#161b22', color: '#fff' } });
   };
 
   return {
-    profiles: state.profiles,
+    user,
     activeProfile,
-    switchProfile,
+    loading,
     updateProfile,
-    createProfile,
     updateRecord,
-    loadMockData,
     resetData,
+    signOut
   };
 };
