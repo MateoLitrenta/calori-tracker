@@ -16,7 +16,7 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
       const defaultName = userEmail ? userEmail.split('@')[0] : 'Usuario';
       const { data: newProfile, error: insertErr } = await supabase
         .from('profiles')
-        .insert({
+        .upsert({
           id: userId,
           user_id: userId,
           name: defaultName,
@@ -25,7 +25,7 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
           height_cm: 170,
           gender: 'Masculino',
           goal: 'Mantenimiento'
-        })
+        }, { onConflict: 'id' })
         .select()
         .single();
         

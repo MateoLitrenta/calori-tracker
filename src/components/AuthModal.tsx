@@ -43,7 +43,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
         
         if (data.user) {
           // Crear perfil
-          const { error: profileError } = await supabase.from('profiles').insert({
+          const { error: profileError } = await supabase.from('profiles').upsert({
             id: data.user.id,
             user_id: data.user.id,
             name,
@@ -52,7 +52,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             height_cm: height,
             gender: sex,
             goal: 'Mantenimiento'
-          });
+          }, { onConflict: 'id' });
           if (profileError) throw profileError;
           
           toast.success('Registro exitoso. ¡Bienvenido!', { style: { background: '#161b22', color: '#fff' } });
