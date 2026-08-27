@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useMemo, useLayoutEffect, useRef, useState } from 'react';
 import { format, parseISO, addDays, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { DailyRecordsMap } from '../types';
@@ -36,12 +36,11 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     setPeriod('day');
   };
 
-  const { weeksArray, monthLabels, weekDays, singleRow } = useMemo(() => {
+  const { weeksArray, monthLabels, weekDays } = useMemo(() => {
     const today = new Date();
     const anchorDate = parseISO(selectedDateStr) || today;
     
     let allDates: (string | null)[] = [];
-    let isSingleRow = false;
     const wArray: (string | null)[][] = [];
     const labels: { label: string; colIndex: number }[] = [];
 
@@ -92,12 +91,10 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       for (let i = 0; i < 7; i++) {
         allDates.push(format(addDays(startDate, i), 'yyyy-MM-dd'));
       }
-      isSingleRow = true;
       wArray.push(allDates);
     } else {
       // Day view
       allDates.push(selectedDateStr);
-      isSingleRow = true;
       wArray.push(allDates);
     }
 
@@ -125,7 +122,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       }
     }
 
-    return { weeksArray: wArray, monthLabels: labels, weekDays: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'], singleRow: isSingleRow };
+    return { weeksArray: wArray, monthLabels: labels, weekDays: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'] };
   }, [period, selectedDateStr]);
 
   const renderBox = (dateStr: string | null, sizeClass = '') => {
