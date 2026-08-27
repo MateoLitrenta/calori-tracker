@@ -1,5 +1,5 @@
 import React, { useMemo, useLayoutEffect, useRef, useState } from 'react';
-import { format, parseISO, addDays, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth, isSameDay } from 'date-fns';
+import { format, parseISO, addDays, subDays, startOfWeek, startOfMonth, endOfMonth, isSameDay, subMonths, addMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { DailyRecordsMap } from '../types';
 import { getHeatmapColor, getNetBalance } from '../utils/helpers';
@@ -14,16 +14,15 @@ interface HeatmapProps {
 type Period = 'day' | 'week' | 'month' | 'year';
 
 const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDate, currentBMR }) => {
-  const [period, setPeriod] = useState<Period>('year');
+  const [period, setPeriod] = useState<Period>('day');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to the right when period changes to 'year' or on mount
+  // Scroll to the right when period changes to 'day' or on mount
   useLayoutEffect(() => {
-    if ((period === 'year' || period === 'month') && scrollContainerRef.current) {
+    if (period === 'day' && scrollContainerRef.current) {
       const scrollEl = scrollContainerRef.current;
       scrollEl.scrollLeft = scrollEl.scrollWidth;
       
-      // Respaldo en caso de que el layout tarde un poco más en mobile
       const timer = setTimeout(() => {
         if (scrollEl) scrollEl.scrollLeft = scrollEl.scrollWidth;
       }, 100);
@@ -33,18 +32,30 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
 
   const handleBoxClick = (dateStr: string) => {
     onSelectDate(dateStr);
-    setPeriod('day');
+  };
+
+  const getAverageBalance = (dates: string[]) => {
+    let sum = 0;
+    let count = 0;
+    dates.forEach(d => {
+      const record = records[d];
+      if (record) {
+        const balance = getNetBalance(record, currentBMR);
+        if (balance !== null) {
+          sum += balance;
+          count++;
+        }
+      }
+    });
+    return count === 0 ? null : Math.round(sum / count);
   };
 
   const { weeksArray, monthLabels, weekDays } = useMemo(() => {
     const today = new Date();
-    const anchorDate = parseISO(selectedDateStr) || today;
-    
-    let allDates: (string | null)[] = [];
     const wArray: (string | null)[][] = [];
     const labels: { label: string; colIndex: number }[] = [];
 
-    if (period === 'year') {
+    if (period === 'day') {
       const todayStr = format(today, 'yyyy-MM-dd');
       const startOfOneYearAgo = subDays(today, 364);
       const startDate = startOfWeek(startOfOneYearAgo, { weekStartsOn: 0 }); // Empieza en Domingo
@@ -72,33 +83,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
           currentWeek = [];
         }
       }
-    } else if (period === 'month') {
-      const startDate = startOfWeek(startOfMonth(anchorDate), { weekStartsOn: 0 });
-      const endDate = endOfWeek(endOfMonth(anchorDate), { weekStartsOn: 0 });
-      
-      let curr = startDate;
-      let currentWeek: (string | null)[] = [];
-      while (curr <= endDate) {
-        currentWeek.push(format(curr, 'yyyy-MM-dd'));
-        curr = addDays(curr, 1);
-        if (currentWeek.length === 7) {
-          wArray.push(currentWeek);
-          currentWeek = [];
-        }
-      }
-    } else if (period === 'week') {
-      const startDate = startOfWeek(anchorDate, { weekStartsOn: 0 });
-      for (let i = 0; i < 7; i++) {
-        allDates.push(format(addDays(startDate, i), 'yyyy-MM-dd'));
-      }
-      wArray.push(allDates);
-    } else {
-      // Day view
-      allDates.push(selectedDateStr);
-      wArray.push(allDates);
-    }
 
-    if (period === 'year' || period === 'month') {
       let currentMonth = -1;
       wArray.forEach((week, index) => {
         const firstValid = week.find(d => d !== null);
@@ -114,19 +99,76 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
         }
       });
       
-      // Ocultar etiqueta duplicada del primer mes si coincide con el último
-      if (period === 'year' && labels.length > 1) {
-        if (labels[0].label === labels[labels.length - 1].label) {
-          labels.shift();
-        }
+      if (labels.length > 1 && labels[0].label === labels[labels.length - 1].label) {
+        labels.shift();
       }
     }
 
     return { weeksArray: wArray, monthLabels: labels, weekDays: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'] };
-  }, [period, selectedDateStr]);
+  }, [period]);
+
+  const groupedData = useMemo(() => {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    
+    if (period === 'month') {
+      const months = [];
+      const endMonth = startOfMonth(today);
+      const startMonth = subMonths(endMonth, 11);
+      
+      let curr = startMonth;
+      while (curr <= endMonth) {
+        const mStart = startOfMonth(curr);
+        const mEnd = endOfMonth(curr);
+        const dates = [];
+        let d = mStart;
+        while (d <= mEnd) {
+          dates.push(format(d, 'yyyy-MM-dd'));
+          d = addDays(d, 1);
+        }
+        months.push({ label: format(mStart, 'MMM yyyy', { locale: es }), dates });
+        curr = addMonths(curr, 1);
+      }
+      return months;
+    }
+    
+    if (period === 'week') {
+      const startOfOneYearAgo = subDays(today, 364);
+      const startDate = startOfWeek(startOfOneYearAgo, { weekStartsOn: 0 }); 
+      const weeks = [];
+      let curr = startDate;
+      let weekNum = 1;
+      while (curr <= today) {
+        const dates = [];
+        for (let i = 0; i < 7; i++) {
+          dates.push(format(addDays(curr, i), 'yyyy-MM-dd'));
+        }
+        weeks.push({ label: `Sem ${weekNum}`, dates });
+        weekNum++;
+        curr = addDays(curr, 7);
+      }
+      return weeks;
+    }
+    
+    if (period === 'year') {
+      const years = [currentYear - 1, currentYear];
+      return years.map(y => {
+        const start = new Date(y, 0, 1);
+        const end = new Date(y, 11, 31);
+        const dates = [];
+        let curr = start;
+        while (curr <= end) {
+          dates.push(format(curr, 'yyyy-MM-dd'));
+          curr = addDays(curr, 1);
+        }
+        return { label: y.toString(), dates };
+      });
+    }
+    
+    return [];
+  }, [period, records]);
 
   const renderBox = (dateStr: string | null, sizeClass = '') => {
-    // Si no hay fecha (días futuros o padding inicial), renderizamos un bloque invisible
     if (!dateStr) return <div className={`${sizeClass} invisible`} />;
     
     const record = records[dateStr];
@@ -148,15 +190,51 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     );
   };
 
+  const renderGroupedBox = (dates: string[], label: string, view: 'week' | 'month' | 'year') => {
+    const todayStr = format(new Date(), 'yyyy-MM-dd');
+    const pastDates = dates.filter(d => d <= todayStr);
+    const avgBalance = getAverageBalance(pastDates);
+    const colorClass = getHeatmapColor(avgBalance);
+    const balanceText = avgBalance !== null ? `${avgBalance > 0 ? '+' : ''}${avgBalance} kcal/día` : 'Sin datos';
+
+    if (view === 'week') {
+      return (
+        <div key={label} className="flex flex-col items-center gap-1">
+          <div
+            className={`w-6 h-6 md:w-8 md:h-8 rounded-sm transition-all flex-shrink-0 shadow-sm ${colorClass}`}
+            title={`${label}: ${balanceText}`}
+          ></div>
+        </div>
+      );
+    }
+
+    if (view === 'month') {
+      return (
+        <div key={label} className={`flex flex-col p-4 rounded-xl border border-github-border/50 items-center justify-center gap-2 ${colorClass}`}>
+          <span className="text-sm font-bold capitalize text-white drop-shadow-md">{label}</span>
+          <span className="text-xs text-white/90 font-medium drop-shadow-md text-center">{balanceText}</span>
+        </div>
+      );
+    }
+
+    if (view === 'year') {
+      return (
+        <div key={label} className={`flex flex-col p-6 md:p-8 rounded-2xl border border-github-border/50 items-center justify-center gap-3 ${colorClass}`}>
+          <span className="text-3xl font-bold text-white drop-shadow-md">{label}</span>
+          <span className="text-lg text-white/90 font-medium drop-shadow-md">{balanceText}</span>
+        </div>
+      );
+    }
+  };
+
   return (
     <div className="p-4 md:p-6 bg-github-card border border-github-border rounded-xl shadow-lg w-full overflow-hidden flex flex-col gap-4">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-xl font-bold text-github-text">Historial de Actividad</h2>
         
-        {/* Period Selector */}
         <div className="flex bg-[#1c2128] rounded-md p-1 border border-github-border self-end sm:self-auto">
-          {(['day', 'week', 'month', 'year'] as Period[]).map((p) => {
-            const labels = { day: 'Día', week: 'Semana', month: 'Mes', year: 'Año' };
+          {(['year', 'month', 'week', 'day'] as Period[]).map((p) => {
+            const labels = { year: 'Año', month: 'Mes', week: 'Semana', day: 'Día' };
             return (
               <button
                 key={p}
@@ -172,84 +250,66 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
         </div>
       </div>
       
-      {period !== 'day' ? (
+      {period === 'day' ? (
         <div className="flex w-full overflow-x-auto md:overflow-x-hidden custom-scrollbar md:justify-center pb-2" ref={scrollContainerRef}>
           <div className="flex flex-col w-max">
             
-            {/* Months Header (only for year/month) */}
-            {(period === 'year' || period === 'month') && (
-              <div className="flex mb-1 ml-[24px] md:ml-[32px] relative h-4">
-                {monthLabels.map((month, i) => (
-                  <div 
-                    key={i} 
-                    className="absolute text-[10px] text-github-muted capitalize"
-                    style={{ 
-                      // Mobile: 11px box + 2px gap = 13px. Desktop: 10px box + 4px gap = 14px.
-                      left: `calc(${month.colIndex} * var(--col-width, 13px))` 
-                    }}
-                  >
-                    {month.label}
+            <div className="flex mb-1 ml-[24px] md:ml-[32px] relative h-4">
+              {monthLabels.map((month, i) => (
+                <div 
+                  key={i} 
+                  className="absolute text-[10px] text-github-muted capitalize"
+                  style={{ 
+                    left: `calc(${month.colIndex} * var(--col-width, 13px))` 
+                  }}
+                >
+                  {month.label}
+                </div>
+              ))}
+            </div>
+
+            <div className="flex">
+              <div className="flex flex-col gap-[2px] md:gap-1 pr-2 mt-[2px]">
+                {weekDays.map((day, i) => (
+                  <div key={day} className="text-[9px] text-github-muted h-[11px] md:h-2.5 leading-[11px] md:leading-[10px] pr-1 text-right w-5 md:w-7">
+                    {i % 2 !== 0 ? day : ''}
                   </div>
                 ))}
               </div>
-            )}
 
-            <div className="flex">
-              {/* Weekdays Side Labels */}
-              {period !== 'week' && (
-                <div className="flex flex-col gap-[2px] md:gap-1 pr-2 mt-[2px]">
-                  {weekDays.map((day, i) => (
-                    <div key={day} className="text-[9px] text-github-muted h-[11px] md:h-2.5 leading-[11px] md:leading-[10px] pr-1 text-right w-5 md:w-7">
-                      {i % 2 !== 0 ? day : ''}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Grid */}
               <div 
-                className={`flex gap-[2px] md:gap-1 ${period === 'week' ? 'w-full justify-around' : ''}`}
+                className="flex gap-[2px] md:gap-1"
                 style={{ '--col-width': '13px' } as any}
                 ref={(el) => {
                   if (el) {
-                    // Update variable for desktop labels in a simple way
                     el.parentElement?.parentElement?.style.setProperty('--col-width', window.innerWidth >= 768 ? '14px' : '13px');
                   }
                 }}
               >
-                {period === 'week' ? (
-                  // Week view
-                  weeksArray[0].map((dateStr, i) => (
-                    <div key={dateStr || i} className="flex flex-col items-center gap-2">
-                      <span className="text-xs text-github-muted">{weekDays[i]}</span>
-                      {renderBox(dateStr, 'w-8 h-8 rounded-md')}
-                      {dateStr && <span className="text-[10px] text-github-muted">{format(parseISO(dateStr), 'dd')}</span>}
-                    </div>
-                  ))
-                ) : (
-                  // Year/Month view
-                  weeksArray.map((week, i) => (
-                    <div key={i} className="flex flex-col gap-[2px] md:gap-1">
-                      {week.map((dateStr, j) => (
-                        <React.Fragment key={dateStr || `empty-${i}-${j}`}>
-                          {renderBox(dateStr, period === 'year' ? 'w-[11px] h-[11px] md:w-2.5 md:h-2.5' : 'w-3 h-3 md:w-4 md:h-4')}
-                        </React.Fragment>
-                      ))}
-                    </div>
-                  ))
-                )}
+                {weeksArray.map((week, i) => (
+                  <div key={i} className="flex flex-col gap-[2px] md:gap-1">
+                    {week.map((dateStr, j) => (
+                      <React.Fragment key={dateStr || `empty-${i}-${j}`}>
+                        {renderBox(dateStr, 'w-[11px] h-[11px] md:w-2.5 md:h-2.5')}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
+      ) : period === 'week' ? (
+        <div className="flex w-full overflow-x-auto custom-scrollbar pb-4 pt-2 gap-2 md:gap-3 flex-wrap justify-center">
+          {groupedData.map(group => renderGroupedBox(group.dates, group.label, 'week'))}
+        </div>
+      ) : period === 'month' ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 w-full pb-2">
+          {groupedData.map(group => renderGroupedBox(group.dates, group.label, 'month'))}
+        </div>
       ) : (
-        // Day View summary
-        <div className="flex items-center justify-center p-8 bg-[#1c2128] rounded-lg border border-github-border">
-          <div className="text-center flex flex-col items-center gap-2">
-            <span className="text-sm text-github-muted capitalize">{format(parseISO(selectedDateStr), "EEEE, d 'de' MMMM yyyy", { locale: es })}</span>
-            {renderBox(selectedDateStr, 'w-12 h-12 rounded-lg')}
-            <span className="text-xs text-github-muted mt-2">Los detalles de este día se muestran abajo</span>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full pb-2">
+          {groupedData.map(group => renderGroupedBox(group.dates, group.label, 'year'))}
         </div>
       )}
 
