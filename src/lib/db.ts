@@ -13,7 +13,6 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
     if (pErr) throw pErr;
 
     if (!profile) {
-      // Auto-crear perfil si no existe
       const defaultName = userEmail ? userEmail.split('@')[0] : 'Usuario';
       const { data: newProfile, error: insertErr } = await supabase
         .from('profiles')
@@ -34,7 +33,11 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
       profile = newProfile;
     }
 
-    const { data: logs, error: lErr } = await supabase.from('daily_logs').select('*, meals(*), exercises(*)').eq('profile_id', userId);
+    const { data: logs, error: lErr } = await supabase
+      .from('daily_logs')
+      .select('*, meals(*), workouts(*)')
+      .or(`profile_id.eq.${userId},user_id.eq.${userId}`);
+      
     if (lErr) throw lErr;
 
     const recordsMap: Record<string, DailyRecord> = {};
@@ -45,10 +48,10 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
          date: new Date(l.date),
          steps: l.steps,
          water: l.water_ml,
-         meals: l.meals.map((m: any) => ({
+         meals: (l.meals || []).map((m: any) => ({
            id: m.id, name: m.description, type: m.meal_type, calories: m.calories
          })),
-         workouts: l.exercises.map((e: any) => ({
+         workouts: (l.workouts || []).map((e: any) => ({
            id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: []
          }))
        };
@@ -70,6 +73,36 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
   }
 };
 
+export const fetchDailyLog = async (userId: string, dateStr: string): Promise<DailyRecord | null> => {
+  try {
+    const { data: l, error } = await supabase
+      .from('daily_logs')
+      .select('*, meals(*), workouts(*)')
+      .eq('user_id', userId)
+      .eq('date', dateStr)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!l) return null;
+
+    return {
+      dateStr: l.date,
+      date: new Date(l.date),
+      steps: l.steps,
+      water: l.water_ml,
+      meals: (l.meals || []).map((m: any) => ({
+        id: m.id, name: m.description, type: m.meal_type, calories: m.calories
+      })),
+      workouts: (l.workouts || []).map((e: any) => ({
+        id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: []
+      }))
+    };
+  } catch (e) {
+    console.error('Fetch daily log error:', e);
+    return null;
+  }
+};
+
 export const syncProfile = async (p: UserProfile) => {
   const { error } = await supabase.from('profiles').update({
     name: p.name, 
@@ -86,10 +119,10 @@ export const syncProfile = async (p: UserProfile) => {
   }
 };
 
-export const ensureDailyLog = async (profileId: string, record: DailyRecord) => {
+export const ensureDailyLog = async (userId: string, record: DailyRecord) => {
   try {
     let { data: log, error: searchErr } = await supabase.from('daily_logs')
-      .select('id').eq('profile_id', profileId).eq('date', record.dateStr).maybeSingle();
+      .select('id').eq('user_id', userId).eq('date', record.dateStr).maybeSingle();
     
     if (searchErr) throw searchErr;
 
@@ -97,18 +130,25 @@ export const ensureDailyLog = async (profileId: string, record: DailyRecord) => 
       const newId = generateUUID();
       const { error: insertErr } = await supabase.from('daily_logs').insert({
         id: newId,
-        profile_id: profileId, 
+        user_id: userId,
+        profile_id: userId, 
         date: record.dateStr, 
         steps: record.steps, 
         water_ml: record.water
       });
-      if (insertErr) throw insertErr;
+      if (insertErr) {
+        console.error('Error inserting daily log:', insertErr);
+        throw insertErr;
+      }
       return newId;
     } else {
       const { error: updateErr } = await supabase.from('daily_logs').update({
         steps: record.steps, water_ml: record.water
       }).eq('id', log.id);
-      if (updateErr) throw updateErr;
+      if (updateErr) {
+        console.error('Error updating daily log:', updateErr);
+        throw updateErr;
+      }
       return log.id;
     }
   } catch (e) {
@@ -117,26 +157,50 @@ export const ensureDailyLog = async (profileId: string, record: DailyRecord) => 
   }
 };
 
-export const syncAddMeal = async (logId: string, meal: MealEntry) => {
+export const syncAddMeal = async (userId: string, logId: string, meal: MealEntry, dateStr: string) => {
   const { error } = await supabase.from('meals').insert({
-    id: meal.id, daily_log_id: logId, description: meal.name, meal_type: meal.type, calories: meal.calories
+    id: meal.id, 
+    user_id: userId,
+    daily_log_id: logId, 
+    date: dateStr,
+    description: meal.name, 
+    meal_type: meal.type, 
+    calories: meal.calories
   });
-  if (error) console.error('Error adding meal:', error);
+  if (error) {
+    console.error('Error adding meal:', error);
+    throw error;
+  }
 };
 
 export const syncDeleteMeal = async (mealId: string) => {
   const { error } = await supabase.from('meals').delete().eq('id', mealId);
-  if (error) console.error('Error deleting meal:', error);
+  if (error) {
+    console.error('Error deleting meal:', error);
+    throw error;
+  }
 };
 
-export const syncAddWorkout = async (logId: string, w: WorkoutEntry) => {
-  const { error } = await supabase.from('exercises').insert({
-    id: w.id, daily_log_id: logId, activity_name: w.activity, duration_min: w.duration, calories_burned: w.calories
+export const syncAddWorkout = async (userId: string, logId: string, w: WorkoutEntry, dateStr: string) => {
+  const { error } = await supabase.from('workouts').insert({
+    id: w.id, 
+    user_id: userId,
+    daily_log_id: logId, 
+    date: dateStr,
+    activity_name: w.activity, 
+    duration_min: w.duration, 
+    calories_burned: w.calories
   });
-  if (error) console.error('Error adding workout:', error);
+  if (error) {
+    console.error('Error adding workout:', error);
+    throw error;
+  }
 };
 
 export const syncDeleteWorkout = async (wId: string) => {
-  const { error } = await supabase.from('exercises').delete().eq('id', wId);
-  if (error) console.error('Error deleting workout:', error);
+  const { error } = await supabase.from('workouts').delete().eq('id', wId);
+  if (error) {
+    console.error('Error deleting workout:', error);
+    throw error;
+  }
 };

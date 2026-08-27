@@ -73,20 +73,29 @@ export const useAppStore = () => {
 
     // Supabase Sync
     try {
-      const logId = await db.ensureDailyLog(activeProfile.id, record);
+      const logId = await db.ensureDailyLog(user.id, record);
       if (!logId) return;
 
       const addedMeals = record.meals.filter(m => !oldRecord.meals?.some((o: any) => o.id === m.id));
       const deletedMeals = oldRecord.meals?.filter((o: any) => !record.meals.some(m => m.id === o.id)) || [];
       
-      for (const m of addedMeals) await db.syncAddMeal(logId, m);
+      for (const m of addedMeals) await db.syncAddMeal(user.id, logId, m, dateStr);
       for (const m of deletedMeals) await db.syncDeleteMeal(m.id);
 
       const addedWorkouts = record.workouts.filter(w => !oldRecord.workouts?.some((o: any) => o.id === w.id));
       const deletedWorkouts = oldRecord.workouts?.filter((o: any) => !record.workouts.some(w => w.id === o.id)) || [];
 
-      for (const w of addedWorkouts) await db.syncAddWorkout(logId, w);
+      for (const w of addedWorkouts) await db.syncAddWorkout(user.id, logId, w, dateStr);
       for (const w of deletedWorkouts) await db.syncDeleteWorkout(w.id);
+
+      // Refresh log directly from DB
+      const refreshedLog = await db.fetchDailyLog(user.id, dateStr);
+      if (refreshedLog) {
+        setActiveProfile(prev => {
+          if (!prev) return prev;
+          return { ...prev, records: { ...prev.records, [dateStr]: refreshedLog } };
+        });
+      }
 
     } catch (e) {
       console.error('Failed to sync record to Supabase', e);
