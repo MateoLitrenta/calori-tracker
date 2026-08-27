@@ -131,6 +131,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                   <label className="text-sm text-github-muted">Nombre completo</label>
                   <input
                     type="text"
+                    inputMode="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -144,6 +145,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                     <label className="text-sm text-github-muted">Edad</label>
                     <input
                       type="number"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       required
                       min={1}
                       value={age}
@@ -169,6 +172,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                     <label className="text-sm text-github-muted">Peso (kg)</label>
                     <input
                       type="number"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       required
                       min={1}
                       value={weight}
@@ -180,6 +185,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                     <label className="text-sm text-github-muted">Altura (cm)</label>
                     <input
                       type="number"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       required
                       min={1}
                       value={height}

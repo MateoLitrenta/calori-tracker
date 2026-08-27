@@ -59,13 +59,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ profile, userEmail, userI
 
             <div>
               <label className="block text-sm font-medium text-github-muted mb-1">Nombre</label>
-              <input required name="name" value={formData.name} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
+              <input required inputMode="text" name="name" value={formData.name} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-github-muted mb-1">Edad</label>
-                <input required type="number" min="1" name="age" value={formData.age} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
+                <input required type="number" inputMode="numeric" pattern="[0-9]*" min="1" name="age" value={formData.age} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-github-muted mb-1">Sexo</label>
@@ -79,11 +79,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ profile, userEmail, userI
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-github-muted mb-1">Estatura (cm)</label>
-                <input required type="number" min="50" name="height" value={formData.height} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
+                <input required type="number" inputMode="numeric" pattern="[0-9]*" min="50" name="height" value={formData.height} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-github-muted mb-1">Peso (kg)</label>
-                <input required type="number" min="20" name="weight" value={formData.weight} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
+                <input required type="number" inputMode="numeric" pattern="[0-9]*" min="20" name="weight" value={formData.weight} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
               </div>
             </div>
 

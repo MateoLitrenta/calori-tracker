@@ -144,6 +144,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             {isEditingWater ? (
               <input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 min="0"
                 autoFocus
                 defaultValue={currentRecord.water}
@@ -202,6 +204,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
           <div className="flex gap-4 flex-wrap">
             <input 
               required
+              type="text"
+              inputMode="text"
               placeholder="Descripción (ej: Ensalada)" 
               value={mealName} onChange={e => setMealName(e.target.value)}
               className="flex-1 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
@@ -218,7 +222,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             </select>
             <input 
               required
-              type="number" min="0" placeholder="Kcal" 
+              type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
               value={mealCals} onChange={e => setMealCals(Number(e.target.value))}
               className="w-24 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
             />
@@ -235,19 +239,21 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
           <div className="flex gap-4 flex-wrap">
             <input 
               required
+              type="text"
+              inputMode="text"
               placeholder="Actividad (ej: Running)" 
               value={workActivity} onChange={e => setWorkActivity(e.target.value)}
               className="flex-1 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
             />
             <input 
               required
-              type="number" min="1" placeholder="Minutos" 
+              type="number" inputMode="numeric" pattern="[0-9]*" min="1" placeholder="Minutos" 
               value={workDuration} onChange={e => setWorkDuration(Number(e.target.value))}
               className="w-24 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
             />
             <input 
               required
-              type="number" min="0" placeholder="Kcal" 
+              type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
               value={workCals} onChange={e => setWorkCals(Number(e.target.value))}
               className="w-24 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
             />
@@ -285,7 +291,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             <h4 className="font-bold flex items-center gap-2"><Flame className="text-orange-400" /> Pasos del Día</h4>
             <div className="flex gap-2">
               <input 
-                type="number" min="0"
+                type="number" inputMode="numeric" pattern="[0-9]*" min="0"
                 value={currentRecord.steps}
                 onChange={e => handleUpdateSteps(Number(e.target.value))}
                 className="flex-1 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
