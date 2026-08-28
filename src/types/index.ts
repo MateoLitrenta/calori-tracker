@@ -24,6 +24,7 @@ export interface DailyRecord {
   workouts: WorkoutEntry[];
   steps: number;
   water: number; // ml
+  weight?: number; // kg
 }
 
 export type DailyRecordsMap = Record<string, DailyRecord>;

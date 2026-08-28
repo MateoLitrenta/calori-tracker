@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ForkKnife, Flame, Barbell, Drop, Trash, Check } from '@phosphor-icons/react';
+import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap } from '../types';
 import { getCaloriesIngested, getCaloriesBurned, getNetBalance, getBalanceLabel, generateUUID } from '../utils/helpers';
@@ -115,26 +115,52 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     onUpdateRecord(dateStr, { ...currentRecord, water: newWater });
   };
 
+  const handleSetWeight = (weight: number) => {
+    const newWeight = Math.max(0, weight);
+    onUpdateRecord(dateStr, { ...currentRecord, weight: newWeight });
+  };
+
   const handleUpdateSteps = (steps: number) => {
     onUpdateRecord(dateStr, { ...currentRecord, steps: Math.max(0, steps) });
   };
 
   // --- Forms State ---
+  const [editingMealId, setEditingMealId] = useState<string | null>(null);
   const [mealName, setMealName] = useState('');
   const [isEditingWater, setIsEditingWater] = useState(false);
+  const [isEditingWeight, setIsEditingWeight] = useState(false);
   const [mealType, setMealType] = useState<MealType>('Almuerzo');
   const [mealCals, setMealCals] = useState<number | ''>('');
 
   const handleAddMeal = (e: React.FormEvent) => {
     e.preventDefault();
     if (!mealName || !mealCals) return;
-    const newMeal: MealEntry = { id: generateUUID(), name: mealName, type: mealType, calories: Number(mealCals) };
-    onUpdateRecord(dateStr, { ...currentRecord, meals: [...currentRecord.meals, newMeal] });
+    
+    if (editingMealId) {
+      const updatedMeals = currentRecord.meals.map(m => 
+        m.id === editingMealId ? { ...m, name: mealName, type: mealType, calories: Number(mealCals) } : m
+      );
+      onUpdateRecord(dateStr, { ...currentRecord, meals: updatedMeals });
+      setEditingMealId(null);
+    } else {
+      const newMeal: MealEntry = { id: generateUUID(), name: mealName, type: mealType, calories: Number(mealCals) };
+      onUpdateRecord(dateStr, { ...currentRecord, meals: [...currentRecord.meals, newMeal] });
+    }
+    
     setMealName('');
     setMealCals('');
     setActiveTab(null);
   };
 
+  const startEditMeal = (m: MealEntry) => {
+    setActiveTab('comida');
+    setEditingMealId(m.id);
+    setMealName(m.name);
+    setMealType(m.type);
+    setMealCals(m.calories);
+  };
+
+  const [editingWorkoutId, setEditingWorkoutId] = useState<string | null>(null);
   const [workActivity, setWorkActivity] = useState('');
   const [workDuration, setWorkDuration] = useState<number | ''>('');
   const [workCals, setWorkCals] = useState<number | ''>('');
@@ -142,14 +168,32 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const handleAddWorkout = (e: React.FormEvent) => {
     e.preventDefault();
     if (!workActivity || !workDuration || !workCals) return;
-    const newWorkout: WorkoutEntry = { 
-      id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [] 
-    };
-    onUpdateRecord(dateStr, { ...currentRecord, workouts: [...currentRecord.workouts, newWorkout] });
+    
+    if (editingWorkoutId) {
+      const updatedWorkouts = currentRecord.workouts.map(w => 
+        w.id === editingWorkoutId ? { ...w, activity: workActivity, duration: Number(workDuration), calories: Number(workCals) } : w
+      );
+      onUpdateRecord(dateStr, { ...currentRecord, workouts: updatedWorkouts });
+      setEditingWorkoutId(null);
+    } else {
+      const newWorkout: WorkoutEntry = { 
+        id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [] 
+      };
+      onUpdateRecord(dateStr, { ...currentRecord, workouts: [...currentRecord.workouts, newWorkout] });
+    }
+    
     setWorkActivity('');
     setWorkDuration('');
     setWorkCals('');
     setActiveTab(null);
+  };
+
+  const startEditWorkout = (w: WorkoutEntry) => {
+    setActiveTab('entrenamiento');
+    setEditingWorkoutId(w.id);
+    setWorkActivity(w.activity);
+    setWorkDuration(w.duration);
+    setWorkCals(w.calories);
   };
 
   return (
@@ -160,7 +204,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="bg-github-card border border-github-border p-4 rounded-xl flex flex-col gap-2">
           <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
             <ForkKnife size={20} className="text-blue-400" /> Ingeridas
@@ -193,43 +237,83 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         </div>
 
         {!isGroup && (
-          <div className="bg-github-card border border-github-border p-4 rounded-xl flex flex-col gap-2 col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
-              <Drop size={20} className="text-cyan-400" /> Agua Ingerida
-            </div>
-            <div className="text-2xl font-bold text-white flex items-center gap-1">
-              {isEditingWater ? (
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  min="0"
-                  autoFocus
-                  defaultValue={currentRecord.water}
-                  onBlur={(e) => {
-                    handleSetWater(Number(e.target.value));
-                    setIsEditingWater(false);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleSetWater(Number(e.currentTarget.value));
+          <>
+            <div className="bg-github-card border border-github-border p-4 rounded-xl flex flex-col gap-2 col-span-1 md:col-span-1">
+              <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
+                <Drop size={20} className="text-cyan-400" /> Agua Ingerida
+              </div>
+              <div className="text-2xl font-bold text-white flex items-center gap-1">
+                {isEditingWater ? (
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    min="0"
+                    autoFocus
+                    defaultValue={currentRecord.water}
+                    onBlur={(e) => {
+                      handleSetWater(Number(e.target.value));
                       setIsEditingWater(false);
-                    }
-                  }}
-                  className="w-20 bg-github-bg border border-github-border rounded-md px-2 py-1 text-lg focus:outline-none focus:border-cyan-500"
-                />
-              ) : (
-                <span 
-                  className="cursor-pointer hover:text-cyan-400 transition-colors" 
-                  onClick={() => setIsEditingWater(true)}
-                  title="Editar cantidad"
-                >
-                  {currentRecord.water}
-                </span>
-              )}
-              <span className="text-sm font-normal text-github-muted">/ 2500 ml</span>
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSetWater(Number(e.currentTarget.value));
+                        setIsEditingWater(false);
+                      }
+                    }}
+                    className="w-20 bg-github-bg border border-github-border rounded-md px-2 py-1 text-lg focus:outline-none focus:border-cyan-500"
+                  />
+                ) : (
+                  <span 
+                    className="cursor-pointer hover:text-cyan-400 transition-colors" 
+                    onClick={() => setIsEditingWater(true)}
+                    title="Editar cantidad"
+                  >
+                    {currentRecord.water}
+                  </span>
+                )}
+                <span className="text-sm font-normal text-github-muted">ml</span>
+              </div>
             </div>
-          </div>
+
+            <div className="bg-github-card border border-github-border p-4 rounded-xl flex flex-col gap-2 col-span-1 md:col-span-1">
+              <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
+                <Scales size={20} className="text-pink-400" /> Peso
+              </div>
+              <div className="text-2xl font-bold text-white flex items-center gap-1">
+                {isEditingWeight ? (
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    step="0.1"
+                    min="0"
+                    autoFocus
+                    defaultValue={currentRecord.weight || ''}
+                    onBlur={(e) => {
+                      handleSetWeight(Number(e.target.value));
+                      setIsEditingWeight(false);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSetWeight(Number(e.currentTarget.value));
+                        setIsEditingWeight(false);
+                      }
+                    }}
+                    className="w-20 bg-github-bg border border-github-border rounded-md px-2 py-1 text-lg focus:outline-none focus:border-pink-500"
+                  />
+                ) : (
+                  <span 
+                    className="cursor-pointer hover:text-pink-400 transition-colors" 
+                    onClick={() => setIsEditingWeight(true)}
+                    title="Editar peso"
+                  >
+                    {currentRecord.weight ? currentRecord.weight : '--'}
+                  </span>
+                )}
+                <span className="text-sm font-normal text-github-muted">kg</span>
+              </div>
+            </div>
+          </>
         )}
       </div>
 
@@ -385,12 +469,22 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               </div>
               <div className="flex items-center gap-4">
                 <span className="font-semibold text-blue-400">+{meal.calories} kcal</span>
-                <button 
-                  onClick={() => handleDeleteMeal(meal.id)}
-                  className="text-github-muted hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
-                >
-                  <Trash size={18} />
-                </button>
+                <div className="flex items-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
+                  <button 
+                    onClick={() => startEditMeal(meal)}
+                    className="text-github-muted hover:text-blue-400 p-1"
+                    title="Editar"
+                  >
+                    <PencilSimple size={18} />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteMeal(meal.id)}
+                    className="text-github-muted hover:text-red-500 p-1"
+                    title="Eliminar"
+                  >
+                    <Trash size={18} />
+                  </button>
+                </div>
               </div>
             </li>
           ))}
@@ -403,12 +497,22 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               </div>
               <div className="flex items-center gap-4">
                 <span className="font-semibold text-orange-400">-{workout.calories} kcal</span>
-                <button 
-                  onClick={() => handleDeleteWorkout(workout.id)}
-                  className="text-github-muted hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
-                >
-                  <Trash size={18} />
-                </button>
+                <div className="flex items-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
+                  <button 
+                    onClick={() => startEditWorkout(workout)}
+                    className="text-github-muted hover:text-orange-400 p-1"
+                    title="Editar"
+                  >
+                    <PencilSimple size={18} />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteWorkout(workout.id)}
+                    className="text-github-muted hover:text-red-500 p-1"
+                    title="Eliminar"
+                  >
+                    <Trash size={18} />
+                  </button>
+                </div>
               </div>
             </li>
           ))}

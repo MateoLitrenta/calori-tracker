@@ -48,6 +48,7 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
          date: new Date(l.date),
          steps: l.steps,
          water: l.water_ml,
+         weight: l.weight,
          meals: (l.meals || []).map((m: any) => ({
            id: m.id, name: m.description, type: m.meal_type, calories: m.calories
          })),
@@ -90,6 +91,7 @@ export const fetchDailyLog = async (userId: string, dateStr: string): Promise<Da
       date: new Date(l.date),
       steps: l.steps,
       water: l.water_ml,
+      weight: l.weight,
       meals: (l.meals || []).map((m: any) => ({
         id: m.id, name: m.description, type: m.meal_type, calories: m.calories
       })),
@@ -134,7 +136,8 @@ export const ensureDailyLog = async (userId: string, record: DailyRecord) => {
         profile_id: userId, 
         date: record.dateStr, 
         steps: record.steps, 
-        water_ml: record.water
+        water_ml: record.water,
+        weight: record.weight
       });
       if (insertErr) {
         console.error('Error inserting daily log:', insertErr);
@@ -143,7 +146,7 @@ export const ensureDailyLog = async (userId: string, record: DailyRecord) => {
       return newId;
     } else {
       const { error: updateErr } = await supabase.from('daily_logs').update({
-        steps: record.steps, water_ml: record.water
+        steps: record.steps, water_ml: record.water, weight: record.weight
       }).eq('id', log.id);
       if (updateErr) {
         console.error('Error updating daily log:', updateErr);
