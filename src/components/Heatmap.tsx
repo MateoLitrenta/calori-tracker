@@ -18,6 +18,56 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
   const [period, setPeriod] = useState<Period>('day');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  const handlePeriodChange = (p: Period) => {
+    setPeriod(p);
+    
+    const today = new Date();
+    const todayStr = format(today, 'yyyy-MM-dd');
+
+    if (p === 'day') {
+      onSelectDate(todayStr);
+      if (onSelectGroup) onSelectGroup('day', todayStr, [todayStr]);
+    } else if (p === 'week') {
+      const startOfOneYearAgo = subDays(today, 364);
+      const startDate = startOfWeek(startOfOneYearAgo, { weekStartsOn: 0 }); 
+      let curr = startDate;
+      let weekNum = 1;
+      let latestDates: string[] = [];
+      let latestLabel = '';
+      while (curr <= today) {
+        latestDates = [];
+        for (let i = 0; i < 7; i++) {
+          latestDates.push(format(addDays(curr, i), 'yyyy-MM-dd'));
+        }
+        latestLabel = `Sem ${weekNum}`;
+        weekNum++;
+        curr = addDays(curr, 7);
+      }
+      if (onSelectGroup) onSelectGroup(p, latestLabel, latestDates);
+    } else if (p === 'month') {
+      const mStart = startOfMonth(today);
+      const mEnd = endOfMonth(today);
+      const dates = [];
+      let curr = mStart;
+      while (curr <= mEnd) {
+        dates.push(format(curr, 'yyyy-MM-dd'));
+        curr = addDays(curr, 1);
+      }
+      if (onSelectGroup) onSelectGroup(p, format(mStart, 'MMM yyyy', { locale: es }), dates);
+    } else if (p === 'year') {
+      const currentYear = today.getFullYear();
+      const start = new Date(currentYear, 0, 1);
+      const end = new Date(currentYear, 11, 31);
+      const dates = [];
+      let curr = start;
+      while (curr <= end) {
+        dates.push(format(curr, 'yyyy-MM-dd'));
+        curr = addDays(curr, 1);
+      }
+      if (onSelectGroup) onSelectGroup(p, currentYear.toString(), dates);
+    }
+  };
+
   // Scroll to the right when period changes to 'day' or on mount
   useLayoutEffect(() => {
     if (period === 'day' && scrollContainerRef.current) {
@@ -239,7 +289,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
             return (
               <button
                 key={p}
-                onClick={() => setPeriod(p)}
+                onClick={() => handlePeriodChange(p)}
                 className={`px-3 py-1 text-xs font-medium rounded-sm transition-colors ${
                   period === p ? 'bg-github-bg text-white shadow' : 'text-github-muted hover:text-white'
                 }`}
