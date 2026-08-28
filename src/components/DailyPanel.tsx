@@ -205,45 +205,55 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <div className="bg-github-card border border-github-border p-4 rounded-xl flex flex-col gap-2">
-          <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
-            <ForkKnife size={20} className="text-blue-400" /> Ingeridas
+      <div className="flex flex-col gap-4">
+        {/* Hero Card de Calorías */}
+        <div className="bg-github-card border border-github-border rounded-xl p-4 md:p-6 flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center text-center">
+            <div className="flex items-center gap-2 text-github-muted text-sm font-semibold mb-1">
+              <Barbell size={20} className="text-purple-400" /> Balance Neto
+            </div>
+            <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+              {balance !== null ? (balance > 0 ? `+${balance}` : balance) : 0}
+            </div>
+            <div className={`text-xs px-3 py-1 rounded-full font-medium ${getPillColor(balance)}`}>
+              {balanceLabel || 'Mantenimiento'}
+            </div>
           </div>
-          <div className="text-2xl font-bold text-white">{ingested} kcal</div>
-        </div>
 
-        <div className="bg-github-card border border-github-border p-4 rounded-xl flex flex-col gap-2">
-          <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
-            <Flame size={20} className="text-orange-400" /> Quemadas
+          <div className="w-full flex justify-between md:justify-around items-center border-t border-github-border/30 pt-4 mt-2">
+            <div className="flex flex-col items-center gap-1 flex-1">
+              <div className="flex items-center gap-1 text-github-muted text-xs font-semibold">
+                <ForkKnife size={16} className="text-blue-400" /> Ingeridas
+              </div>
+              <div className="text-xl font-bold text-white">{ingested} <span className="text-xs font-normal text-github-muted">kcal</span></div>
+            </div>
+            
+            <div className="h-10 w-px bg-github-border/50"></div>
+            
+            <div className="flex flex-col items-center gap-1 flex-1">
+              <div className="flex items-center gap-1 text-github-muted text-xs font-semibold">
+                <Flame size={16} className="text-orange-400" /> Quemadas
+              </div>
+              <div className="text-xl font-bold text-white">{Math.round(burned)} <span className="text-xs font-normal text-github-muted">kcal</span></div>
+            </div>
           </div>
-          <div className="text-2xl font-bold text-white">{Math.round(burned)} kcal</div>
+          
           {!isGroup && (
-            <div className="text-[10px] text-github-muted leading-tight">
+            <div className="text-[10px] text-github-muted leading-tight text-center mt-2 max-w-xs opacity-75">
               TMB: {currentBMR} + Pasos: {Math.round(currentRecord.steps * 0.04)} + Ejercicio: {currentRecord.workouts.reduce((s,w)=>s+w.calories,0)}
             </div>
           )}
         </div>
 
-        <div className="bg-github-card border border-github-border p-4 rounded-xl flex flex-col gap-2 col-span-2 md:col-span-1">
-          <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
-            <Barbell size={20} className="text-purple-400" /> Balance Neto
-          </div>
-          <div className="text-2xl font-bold text-white">
-            {balance !== null ? (balance > 0 ? `+${balance}` : balance) : 0} kcal
-          </div>
-          <div className={`text-xs px-2 py-1 rounded-full w-max mt-1 font-medium ${getPillColor(balance)}`}>
-            {balanceLabel || 'Mantenimiento'}
-          </div>
-        </div>
-
+        {/* Hábitos Compactos */}
         {!isGroup && (
-          <>
-            <div className="bg-github-card border border-github-border p-4 rounded-xl flex flex-col gap-2 col-span-1 md:col-span-1">
-              <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
-                <Drop size={20} className="text-cyan-400" /> Agua Ingerida
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-github-card border border-github-border p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2">
+              <div className="flex flex-col items-center gap-1">
+                <Drop size={20} className="text-cyan-400" />
+                <span className="text-[10px] uppercase tracking-wider font-semibold text-github-muted">Agua</span>
               </div>
-              <div className="text-2xl font-bold text-white flex items-center gap-1">
+              <div className="text-lg md:text-xl font-bold text-white flex flex-col md:flex-row items-center gap-1">
                 {isEditingWater ? (
                   <input
                     type="number"
@@ -262,7 +272,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                         setIsEditingWater(false);
                       }
                     }}
-                    className="w-20 bg-github-bg border border-github-border rounded-md px-2 py-1 text-lg focus:outline-none focus:border-cyan-500"
+                    className="w-16 bg-github-bg border border-github-border rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-cyan-500"
                   />
                 ) : (
                   <span 
@@ -273,53 +283,16 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     {currentRecord.water}
                   </span>
                 )}
-                <span className="text-sm font-normal text-github-muted">ml</span>
+                <span className="text-[10px] font-normal text-github-muted">ml</span>
               </div>
             </div>
 
-            <div className="bg-github-card border border-github-border p-4 rounded-xl flex flex-col gap-2 col-span-1 md:col-span-1">
-              <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
-                <Scales size={20} className="text-pink-400" /> Peso
+            <div className="bg-github-card border border-github-border p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2">
+              <div className="flex flex-col items-center gap-1">
+                <Sneaker size={20} className="text-green-400" />
+                <span className="text-[10px] uppercase tracking-wider font-semibold text-github-muted">Pasos</span>
               </div>
-              <div className="text-2xl font-bold text-white flex items-center gap-1">
-                {isEditingWeight ? (
-                  <input
-                    type="number"
-                    inputMode="decimal"
-                    step="0.1"
-                    min="0"
-                    autoFocus
-                    defaultValue={currentRecord.weight || ''}
-                    onBlur={(e) => {
-                      handleSetWeight(Number(e.target.value));
-                      setIsEditingWeight(false);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleSetWeight(Number(e.currentTarget.value));
-                        setIsEditingWeight(false);
-                      }
-                    }}
-                    className="w-20 bg-github-bg border border-github-border rounded-md px-2 py-1 text-lg focus:outline-none focus:border-pink-500"
-                  />
-                ) : (
-                  <span 
-                    className="cursor-pointer hover:text-pink-400 transition-colors" 
-                    onClick={() => setIsEditingWeight(true)}
-                    title="Editar peso"
-                  >
-                    {currentRecord.weight ? currentRecord.weight : '--'}
-                  </span>
-                )}
-                <span className="text-sm font-normal text-github-muted">kg</span>
-              </div>
-            </div>
-
-            <div className="bg-github-card border border-github-border p-4 rounded-xl flex flex-col gap-2 col-span-2 md:col-span-1">
-              <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
-                <Sneaker size={20} className="text-green-400" /> Pasos del Día
-              </div>
-              <div className="text-2xl font-bold text-white flex items-center gap-1">
+              <div className="text-lg md:text-xl font-bold text-white flex flex-col md:flex-row items-center gap-1">
                 {isEditingSteps ? (
                   <input
                     type="number"
@@ -338,7 +311,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                         setIsEditingSteps(false);
                       }
                     }}
-                    className="w-24 bg-github-bg border border-github-border rounded-md px-2 py-1 text-lg focus:outline-none focus:border-green-500"
+                    className="w-16 bg-github-bg border border-github-border rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-green-500"
                   />
                 ) : (
                   <span 
@@ -349,10 +322,48 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     {currentRecord.steps}
                   </span>
                 )}
-                <span className="text-sm font-normal text-github-muted">pasos</span>
               </div>
             </div>
-          </>
+
+            <div className="bg-github-card border border-github-border p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2">
+              <div className="flex flex-col items-center gap-1">
+                <Scales size={20} className="text-pink-400" />
+                <span className="text-[10px] uppercase tracking-wider font-semibold text-github-muted">Peso</span>
+              </div>
+              <div className="text-lg md:text-xl font-bold text-white flex flex-col md:flex-row items-center gap-1">
+                {isEditingWeight ? (
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    step="0.1"
+                    min="0"
+                    autoFocus
+                    defaultValue={currentRecord.weight || ''}
+                    onBlur={(e) => {
+                      handleSetWeight(Number(e.target.value));
+                      setIsEditingWeight(false);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSetWeight(Number(e.currentTarget.value));
+                        setIsEditingWeight(false);
+                      }
+                    }}
+                    className="w-16 bg-github-bg border border-github-border rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-pink-500"
+                  />
+                ) : (
+                  <span 
+                    className="cursor-pointer hover:text-pink-400 transition-colors" 
+                    onClick={() => setIsEditingWeight(true)}
+                    title="Editar peso"
+                  >
+                    {currentRecord.weight ? currentRecord.weight : '--'}
+                  </span>
+                )}
+                <span className="text-[10px] font-normal text-github-muted">kg</span>
+              </div>
+            </div>
+          </div>
         )}
       </div>
 
