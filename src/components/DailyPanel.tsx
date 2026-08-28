@@ -128,8 +128,13 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [editingMealId, setEditingMealId] = useState<string | null>(null);
   const [mealName, setMealName] = useState('');
   const [isEditingWater, setIsEditingWater] = useState(false);
+  const [editWaterVal, setEditWaterVal] = useState('');
+  
   const [isEditingWeight, setIsEditingWeight] = useState(false);
+  const [editWeightVal, setEditWeightVal] = useState('');
+  
   const [isEditingSteps, setIsEditingSteps] = useState(false);
+  const [editStepsVal, setEditStepsVal] = useState('');
   const [mealType, setMealType] = useState<MealType>('Almuerzo');
   const [mealCals, setMealCals] = useState<number | ''>('');
 
@@ -261,14 +266,15 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     pattern="[0-9]*"
                     min="0"
                     autoFocus
-                    defaultValue={currentRecord.water}
-                    onBlur={(e) => {
-                      handleSetWater(Number(e.target.value));
+                    value={editWaterVal}
+                    onChange={(e) => setEditWaterVal(e.target.value)}
+                    onBlur={() => {
+                      handleSetWater(Number(editWaterVal) || 0);
                       setIsEditingWater(false);
                     }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
-                        handleSetWater(Number(e.currentTarget.value));
+                        handleSetWater(Number(editWaterVal) || 0);
                         setIsEditingWater(false);
                       }
                     }}
@@ -277,7 +283,10 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 ) : (
                   <span 
                     className="cursor-pointer hover:text-cyan-400 transition-colors" 
-                    onClick={() => setIsEditingWater(true)}
+                    onClick={() => {
+                      setEditWaterVal(currentRecord.water ? String(currentRecord.water) : '');
+                      setIsEditingWater(true);
+                    }}
                     title="Editar cantidad"
                   >
                     {currentRecord.water.toLocaleString('es-AR')}
@@ -300,14 +309,15 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     pattern="[0-9]*"
                     min="0"
                     autoFocus
-                    defaultValue={currentRecord.steps}
-                    onBlur={(e) => {
-                      handleUpdateSteps(Number(e.target.value));
+                    value={editStepsVal}
+                    onChange={(e) => setEditStepsVal(e.target.value)}
+                    onBlur={() => {
+                      handleUpdateSteps(Number(editStepsVal) || 0);
                       setIsEditingSteps(false);
                     }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
-                        handleUpdateSteps(Number(e.currentTarget.value));
+                        handleUpdateSteps(Number(editStepsVal) || 0);
                         setIsEditingSteps(false);
                       }
                     }}
@@ -316,7 +326,10 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 ) : (
                   <span 
                     className="cursor-pointer hover:text-green-400 transition-colors" 
-                    onClick={() => setIsEditingSteps(true)}
+                    onClick={() => {
+                      setEditStepsVal(currentRecord.steps ? String(currentRecord.steps) : '');
+                      setIsEditingSteps(true);
+                    }}
                     title="Editar pasos"
                   >
                     {currentRecord.steps.toLocaleString('es-AR')}
@@ -339,14 +352,15 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     step="0.1"
                     min="0"
                     autoFocus
-                    defaultValue={currentRecord.weight || ''}
-                    onBlur={(e) => {
-                      handleSetWeight(Number(e.target.value));
+                    value={editWeightVal}
+                    onChange={(e) => setEditWeightVal(e.target.value)}
+                    onBlur={() => {
+                      handleSetWeight(Number(editWeightVal) || 0);
                       setIsEditingWeight(false);
                     }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
-                        handleSetWeight(Number(e.currentTarget.value));
+                        handleSetWeight(Number(editWeightVal) || 0);
                         setIsEditingWeight(false);
                       }
                     }}
@@ -355,7 +369,10 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 ) : (
                   <span 
                     className="cursor-pointer hover:text-pink-400 transition-colors" 
-                    onClick={() => setIsEditingWeight(true)}
+                    onClick={() => {
+                      setEditWeightVal(currentRecord.weight ? String(currentRecord.weight) : '');
+                      setIsEditingWeight(true);
+                    }}
                     title="Editar peso"
                   >
                     {currentRecord.weight ? currentRecord.weight.toLocaleString('es-AR') : '--'}
@@ -487,8 +504,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <div className="flex gap-2">
                 <input 
                   type="number" inputMode="numeric" pattern="[0-9]*" min="0"
-                  value={currentRecord.steps}
-                  onChange={e => handleUpdateSteps(Number(e.target.value))}
+                  value={currentRecord.steps === 0 ? '' : currentRecord.steps}
+                  onChange={e => handleUpdateSteps(Number(e.target.value) || 0)}
                   className="flex-1 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
               </div>
@@ -514,12 +531,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         <ul className="divide-y divide-github-border">
           {currentRecord.meals.map(meal => (
             <li key={meal.id} className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors">
-              <div className="flex flex-col">
-                <span className="font-medium">{meal.name}</span>
-                <span className="text-xs text-github-muted">{meal.type}</span>
+              <div className="flex flex-col flex-1 min-w-0 pr-2">
+                <span className="font-medium truncate">{meal.name}</span>
+                <span className="text-xs text-github-muted truncate">{meal.type}</span>
               </div>
-              <div className="flex items-center gap-4">
-                <span className="font-semibold text-blue-400">+{meal.calories} kcal</span>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="font-semibold text-blue-400 whitespace-nowrap">+{meal.calories} kcal</span>
                 <div className="flex items-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
                   <button 
                     onClick={() => startEditMeal(meal)}
@@ -542,12 +559,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
 
           {currentRecord.workouts.map(workout => (
             <li key={workout.id} className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors">
-              <div className="flex flex-col">
-                <span className="font-medium">{workout.activity}</span>
-                <span className="text-xs text-github-muted">{workout.duration} min</span>
+              <div className="flex flex-col flex-1 min-w-0 pr-2">
+                <span className="font-medium truncate">{workout.activity}</span>
+                <span className="text-xs text-github-muted truncate">{workout.duration} min</span>
               </div>
-              <div className="flex items-center gap-4">
-                <span className="font-semibold text-orange-400">-{workout.calories} kcal</span>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="font-semibold text-orange-400 whitespace-nowrap">-{workout.calories} kcal</span>
                 <div className="flex items-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
                   <button 
                     onClick={() => startEditWorkout(workout)}
