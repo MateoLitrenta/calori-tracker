@@ -8,12 +8,13 @@ interface HeatmapProps {
   records: DailyRecordsMap;
   selectedDateStr: string;
   onSelectDate: (dateStr: string) => void;
+  onSelectGroup?: (type: 'day'|'week'|'month'|'year', label: string, dates: string[]) => void;
   currentBMR: number;
 }
 
 type Period = 'day' | 'week' | 'month' | 'year';
 
-const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDate, currentBMR }) => {
+const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDate, onSelectGroup, currentBMR }) => {
   const [period, setPeriod] = useState<Period>('day');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -199,30 +200,30 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
 
     if (view === 'week') {
       return (
-        <div key={label} className="flex flex-col items-center gap-1">
+        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className="flex flex-col items-center gap-1 focus:outline-none hover:scale-110 transition-transform">
           <div
             className={`w-6 h-6 md:w-8 md:h-8 rounded-sm transition-all flex-shrink-0 shadow-sm ${colorClass}`}
             title={`${label}: ${balanceText}`}
           ></div>
-        </div>
+        </button>
       );
     }
 
     if (view === 'month') {
       return (
-        <div key={label} className={`flex flex-col p-4 rounded-xl border border-github-border/50 items-center justify-center gap-2 ${colorClass}`}>
+        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className={`flex flex-col p-4 rounded-xl border border-github-border/50 items-center justify-center gap-2 ${colorClass} focus:outline-none hover:brightness-110 transition-all`}>
           <span className="text-sm font-bold capitalize text-white drop-shadow-md">{label}</span>
           <span className="text-xs text-white/90 font-medium drop-shadow-md text-center">{balanceText}</span>
-        </div>
+        </button>
       );
     }
 
     if (view === 'year') {
       return (
-        <div key={label} className={`flex flex-col p-6 md:p-8 rounded-2xl border border-github-border/50 items-center justify-center gap-3 ${colorClass}`}>
+        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className={`flex flex-col p-6 md:p-8 rounded-2xl border border-github-border/50 items-center justify-center gap-3 ${colorClass} focus:outline-none hover:brightness-110 transition-all`}>
           <span className="text-3xl font-bold text-white drop-shadow-md">{label}</span>
           <span className="text-lg text-white/90 font-medium drop-shadow-md">{balanceText}</span>
-        </div>
+        </button>
       );
     }
   };
@@ -252,7 +253,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       
       {period === 'day' ? (
         <div className="flex w-full overflow-x-auto md:overflow-x-hidden custom-scrollbar md:justify-center pb-2" ref={scrollContainerRef}>
-          <div className="flex flex-col w-max">
+          <div className="flex flex-col w-max pr-8 md:pr-0">
             
             <div className="flex mb-1 ml-[24px] md:ml-[32px] relative h-4">
               {monthLabels.map((month, i) => (

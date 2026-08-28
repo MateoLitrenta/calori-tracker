@@ -20,6 +20,7 @@ function App() {
   } = useAppStore();
 
   const [selectedDateStr, setSelectedDateStr] = useState<string>(formatDateStr(new Date()));
+  const [selectedGroup, setSelectedGroup] = useState<{type: 'day'|'week'|'month'|'year', label: string, dates: string[]} | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
@@ -93,7 +94,11 @@ function App() {
         <Heatmap 
           records={records} 
           selectedDateStr={selectedDateStr}
-          onSelectDate={setSelectedDateStr}
+          onSelectDate={(dateStr) => {
+            setSelectedDateStr(dateStr);
+            setSelectedGroup({ type: 'day', label: dateStr, dates: [dateStr] });
+          }}
+          onSelectGroup={(type, label, dates) => setSelectedGroup({ type, label, dates })}
           currentBMR={currentBMR}
         />
         
@@ -102,6 +107,8 @@ function App() {
           dateStr={selectedDateStr}
           onUpdateRecord={updateRecord}
           currentBMR={currentBMR}
+          selectedGroup={selectedGroup}
+          records={records}
         />
       </main>
 
