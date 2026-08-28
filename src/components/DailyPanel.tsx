@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales } from '@phosphor-icons/react';
+import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap } from '../types';
 import { getCaloriesIngested, getCaloriesBurned, getNetBalance, getBalanceLabel, generateUUID } from '../utils/helpers';
@@ -129,6 +129,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [mealName, setMealName] = useState('');
   const [isEditingWater, setIsEditingWater] = useState(false);
   const [isEditingWeight, setIsEditingWeight] = useState(false);
+  const [isEditingSteps, setIsEditingSteps] = useState(false);
   const [mealType, setMealType] = useState<MealType>('Almuerzo');
   const [mealCals, setMealCals] = useState<number | ''>('');
 
@@ -204,7 +205,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <div className="bg-github-card border border-github-border p-4 rounded-xl flex flex-col gap-2">
           <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
             <ForkKnife size={20} className="text-blue-400" /> Ingeridas
@@ -311,6 +312,44 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   </span>
                 )}
                 <span className="text-sm font-normal text-github-muted">kg</span>
+              </div>
+            </div>
+
+            <div className="bg-github-card border border-github-border p-4 rounded-xl flex flex-col gap-2 col-span-2 md:col-span-1">
+              <div className="flex items-center gap-2 text-github-muted text-sm font-semibold">
+                <Sneaker size={20} className="text-green-400" /> Pasos del Día
+              </div>
+              <div className="text-2xl font-bold text-white flex items-center gap-1">
+                {isEditingSteps ? (
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    min="0"
+                    autoFocus
+                    defaultValue={currentRecord.steps}
+                    onBlur={(e) => {
+                      handleUpdateSteps(Number(e.target.value));
+                      setIsEditingSteps(false);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleUpdateSteps(Number(e.currentTarget.value));
+                        setIsEditingSteps(false);
+                      }
+                    }}
+                    className="w-24 bg-github-bg border border-github-border rounded-md px-2 py-1 text-lg focus:outline-none focus:border-green-500"
+                  />
+                ) : (
+                  <span 
+                    className="cursor-pointer hover:text-green-400 transition-colors" 
+                    onClick={() => setIsEditingSteps(true)}
+                    title="Editar pasos"
+                  >
+                    {currentRecord.steps}
+                  </span>
+                )}
+                <span className="text-sm font-normal text-github-muted">pasos</span>
               </div>
             </div>
           </>
