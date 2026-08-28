@@ -213,7 +213,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <Barbell size={20} className="text-purple-400" /> Balance Neto
             </div>
             <div className="text-4xl md:text-5xl font-bold text-white mb-2">
-              {balance !== null ? (balance > 0 ? `+${balance}` : balance) : 0}
+              {balance !== null ? (balance > 0 ? `+${balance.toLocaleString('es-AR')}` : balance.toLocaleString('es-AR')) : 0}
             </div>
             <div className={`text-xs px-3 py-1 rounded-full font-medium ${getPillColor(balance)}`}>
               {balanceLabel || 'Mantenimiento'}
@@ -225,7 +225,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <div className="flex items-center gap-1 text-github-muted text-xs font-semibold">
                 <ForkKnife size={16} className="text-blue-400" /> Ingeridas
               </div>
-              <div className="text-xl font-bold text-white">{ingested} <span className="text-xs font-normal text-github-muted">kcal</span></div>
+              <div className="text-xl font-bold text-white">{ingested.toLocaleString('es-AR')} <span className="text-xs font-normal text-github-muted">kcal</span></div>
             </div>
             
             <div className="h-10 w-px bg-github-border/50"></div>
@@ -234,13 +234,13 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <div className="flex items-center gap-1 text-github-muted text-xs font-semibold">
                 <Flame size={16} className="text-orange-400" /> Quemadas
               </div>
-              <div className="text-xl font-bold text-white">{Math.round(burned)} <span className="text-xs font-normal text-github-muted">kcal</span></div>
+              <div className="text-xl font-bold text-white">{Math.round(burned).toLocaleString('es-AR')} <span className="text-xs font-normal text-github-muted">kcal</span></div>
             </div>
           </div>
           
           {!isGroup && (
             <div className="text-[10px] text-github-muted leading-tight text-center mt-2 max-w-xs opacity-75">
-              TMB: {currentBMR} + Pasos: {Math.round(currentRecord.steps * 0.04)} + Ejercicio: {currentRecord.workouts.reduce((s,w)=>s+w.calories,0)}
+              TMB: {currentBMR.toLocaleString('es-AR')} + Pasos: {Math.round(currentRecord.steps * 0.04).toLocaleString('es-AR')} + Ejercicio: {currentRecord.workouts.reduce((s,w)=>s+w.calories,0).toLocaleString('es-AR')}
             </div>
           )}
         </div>
@@ -248,12 +248,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         {/* Hábitos Compactos */}
         {!isGroup && (
           <div className="grid grid-cols-3 gap-2">
-            <div className="bg-github-card border border-github-border p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2">
+            <div className="bg-github-card border border-github-border p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
               <div className="flex flex-col items-center gap-1">
                 <Drop size={20} className="text-cyan-400" />
                 <span className="text-[10px] uppercase tracking-wider font-semibold text-github-muted">Agua</span>
               </div>
-              <div className="text-lg md:text-xl font-bold text-white flex flex-col md:flex-row items-center gap-1">
+              <div className="text-lg md:text-xl font-bold text-white flex flex-col items-center">
                 {isEditingWater ? (
                   <input
                     type="number"
@@ -280,19 +280,19 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     onClick={() => setIsEditingWater(true)}
                     title="Editar cantidad"
                   >
-                    {currentRecord.water}
+                    {currentRecord.water.toLocaleString('es-AR')}
                   </span>
                 )}
-                <span className="text-[10px] font-normal text-github-muted">ml</span>
+                <span className="text-[10px] font-normal text-github-muted mt-0.5">ml</span>
               </div>
             </div>
 
-            <div className="bg-github-card border border-github-border p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2">
+            <div className="bg-github-card border border-github-border p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
               <div className="flex flex-col items-center gap-1">
                 <Sneaker size={20} className="text-green-400" />
                 <span className="text-[10px] uppercase tracking-wider font-semibold text-github-muted">Pasos</span>
               </div>
-              <div className="text-lg md:text-xl font-bold text-white flex flex-col md:flex-row items-center gap-1">
+              <div className="text-lg md:text-xl font-bold text-white flex flex-col items-center">
                 {isEditingSteps ? (
                   <input
                     type="number"
@@ -319,18 +319,19 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     onClick={() => setIsEditingSteps(true)}
                     title="Editar pasos"
                   >
-                    {currentRecord.steps}
+                    {currentRecord.steps.toLocaleString('es-AR')}
                   </span>
                 )}
+                <span className="text-[10px] font-normal text-github-muted mt-0.5">pasos</span>
               </div>
             </div>
 
-            <div className="bg-github-card border border-github-border p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2">
+            <div className="bg-github-card border border-github-border p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
               <div className="flex flex-col items-center gap-1">
                 <Scales size={20} className="text-pink-400" />
                 <span className="text-[10px] uppercase tracking-wider font-semibold text-github-muted">Peso</span>
               </div>
-              <div className="text-lg md:text-xl font-bold text-white flex flex-col md:flex-row items-center gap-1">
+              <div className="text-lg md:text-xl font-bold text-white flex flex-col items-center">
                 {isEditingWeight ? (
                   <input
                     type="number"
@@ -357,10 +358,10 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     onClick={() => setIsEditingWeight(true)}
                     title="Editar peso"
                   >
-                    {currentRecord.weight ? currentRecord.weight : '--'}
+                    {currentRecord.weight ? currentRecord.weight.toLocaleString('es-AR') : '--'}
                   </span>
                 )}
-                <span className="text-[10px] font-normal text-github-muted">kg</span>
+                <span className="text-[10px] font-normal text-github-muted mt-0.5">kg</span>
               </div>
             </div>
           </div>
