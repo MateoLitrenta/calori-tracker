@@ -136,6 +136,15 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [mealType, setMealType] = useState<MealType>('Almuerzo');
   const [mealCals, setMealCals] = useState<number | ''>('');
 
+  const [localSteps, setLocalSteps] = useState(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
+  const stepsInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (document.activeElement !== stepsInputRef.current) {
+      setLocalSteps(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
+    }
+  }, [currentRecord.steps]);
+
   const handleAddMeal = (e: React.FormEvent) => {
     e.preventDefault();
     if (!mealName || !mealCals) return;
@@ -215,7 +224,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             <div className="flex items-center gap-2 text-github-muted text-sm font-semibold mb-1">
               <Barbell size={20} className="text-purple-400" /> Balance Neto
             </div>
-            <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+            <div className="text-4xl md:text-5xl font-bold text-white mb-2 tabular-nums">
               {balance !== null ? (balance > 0 ? `+${balance.toLocaleString('es-AR')}` : balance.toLocaleString('es-AR')) : 0}
             </div>
             <div className={`text-xs px-3 py-1 rounded-full font-medium ${getPillColor(balance)}`}>
@@ -228,7 +237,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <div className="flex items-center gap-1 text-github-muted text-xs font-semibold">
                 <ForkKnife size={16} className="text-blue-400" /> Ingeridas
               </div>
-              <div className="text-xl font-bold text-white">{ingested.toLocaleString('es-AR')} <span className="text-xs font-normal text-github-muted">kcal</span></div>
+              <div className="text-xl font-bold text-white tabular-nums">{ingested.toLocaleString('es-AR')} <span className="text-xs font-normal text-github-muted">kcal</span></div>
             </div>
             
             <div className="h-10 w-px bg-github-border/50"></div>
@@ -237,7 +246,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <div className="flex items-center gap-1 text-github-muted text-xs font-semibold">
                 <Flame size={16} className="text-orange-400" /> Quemadas
               </div>
-              <div className="text-xl font-bold text-white">{Math.round(burned).toLocaleString('es-AR')} <span className="text-xs font-normal text-github-muted">kcal</span></div>
+              <div className="text-xl font-bold text-white tabular-nums">{Math.round(burned).toLocaleString('es-AR')} <span className="text-xs font-normal text-github-muted">kcal</span></div>
             </div>
           </div>
           
@@ -501,9 +510,17 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <h4 className="font-bold flex items-center gap-2"><Flame className="text-orange-400" /> Pasos del Día</h4>
               <div className="flex gap-2">
                 <input 
+                  ref={stepsInputRef}
                   type="number" inputMode="numeric" pattern="[0-9]*" min="0"
-                  value={currentRecord.steps === 0 ? '' : currentRecord.steps}
-                  onChange={e => handleUpdateSteps(Number(e.target.value) || 0)}
+                  value={localSteps}
+                  onChange={e => setLocalSteps(e.target.value)}
+                  onBlur={e => handleUpdateSteps(Number(e.target.value) || 0)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      handleUpdateSteps(Number(localSteps) || 0);
+                      (e.target as HTMLInputElement).blur();
+                    }
+                  }}
                   className="flex-1 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
               </div>
