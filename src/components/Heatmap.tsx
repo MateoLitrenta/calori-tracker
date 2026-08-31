@@ -261,18 +261,18 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
 
     if (view === 'month') {
       return (
-        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className={`flex flex-col p-4 rounded-xl border border-github-border/50 items-center justify-center gap-2 ${colorClass} focus:outline-none hover:brightness-110 transition-all`}>
-          <span className="text-sm font-bold capitalize text-white drop-shadow-md">{label}</span>
-          <span className="text-xs text-white/90 font-medium drop-shadow-md text-center">{balanceText}</span>
+        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className={`flex flex-col p-2 rounded-lg border border-github-border/50 items-center justify-center gap-1 ${colorClass} focus:outline-none hover:brightness-110 transition-all`}>
+          <span className="text-xs font-bold capitalize text-white drop-shadow-md truncate w-full">{label.substring(0,3)} {label.split(' ')[1]}</span>
+          <span className="text-[10px] text-white/90 font-medium drop-shadow-md text-center leading-tight whitespace-nowrap">{balanceText.replace(' kcal/día', ' kcal')}</span>
         </button>
       );
     }
 
     if (view === 'year') {
       return (
-        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className={`flex flex-col p-6 md:p-8 rounded-2xl border border-github-border/50 items-center justify-center gap-3 ${colorClass} focus:outline-none hover:brightness-110 transition-all`}>
-          <span className="text-3xl font-bold text-white drop-shadow-md">{label}</span>
-          <span className="text-lg text-white/90 font-medium drop-shadow-md">{balanceText}</span>
+        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className={`flex px-6 py-3 rounded-xl border border-github-border/50 items-center justify-center gap-4 flex-1 max-w-[200px] ${colorClass} focus:outline-none hover:brightness-110 transition-all`}>
+          <span className="text-xl font-bold text-white drop-shadow-md">{label}</span>
+          <span className="text-sm text-white/90 font-medium drop-shadow-md whitespace-nowrap">{balanceText.replace(' kcal/día', ' kcal')}</span>
         </button>
       );
     }
@@ -301,68 +301,70 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
         </div>
       </div>
       
-      {period === 'day' ? (
-        <div className="flex w-full overflow-x-auto md:overflow-x-hidden custom-scrollbar md:justify-center pb-2" ref={scrollContainerRef}>
-          <div className="flex flex-col w-max pr-8 md:pr-0">
-            
-            <div className="flex mb-1 ml-[24px] md:ml-[32px] relative h-4">
-              {monthLabels.map((month, i) => (
-                <div 
-                  key={i} 
-                  className="absolute text-[10px] text-github-muted capitalize"
-                  style={{ 
-                    left: `calc(${month.colIndex} * var(--col-width, 13px))` 
-                  }}
-                >
-                  {month.label}
-                </div>
-              ))}
-            </div>
-
-            <div className="flex">
-              <div className="flex flex-col gap-[2px] md:gap-1 pr-2 mt-[2px]">
-                {weekDays.map((day, i) => (
-                  <div key={day} className="text-[9px] text-github-muted h-[11px] md:h-2.5 leading-[11px] md:leading-[10px] pr-1 text-right w-5 md:w-7">
-                    {i % 2 !== 0 ? day : ''}
+      <div className="h-[135px] md:h-[135px] w-full flex items-center justify-center">
+        {period === 'day' ? (
+          <div className="flex w-full overflow-x-auto md:overflow-x-hidden custom-scrollbar md:justify-center h-full items-center" ref={scrollContainerRef}>
+            <div className="flex flex-col w-max pr-8 md:pr-0">
+              
+              <div className="flex mb-1 ml-[24px] md:ml-[32px] relative h-4">
+                {monthLabels.map((month, i) => (
+                  <div 
+                    key={i} 
+                    className="absolute text-[10px] text-github-muted capitalize"
+                    style={{ 
+                      left: `calc(${month.colIndex} * var(--col-width, 13px))` 
+                    }}
+                  >
+                    {month.label}
                   </div>
                 ))}
               </div>
 
-              <div 
-                className="flex gap-[2px] md:gap-1"
-                style={{ '--col-width': '13px' } as any}
-                ref={(el) => {
-                  if (el) {
-                    el.parentElement?.parentElement?.style.setProperty('--col-width', window.innerWidth >= 768 ? '14px' : '13px');
-                  }
-                }}
-              >
-                {weeksArray.map((week, i) => (
-                  <div key={i} className="flex flex-col gap-[2px] md:gap-1">
-                    {week.map((dateStr, j) => (
-                      <React.Fragment key={dateStr || `empty-${i}-${j}`}>
-                        {renderBox(dateStr, 'w-[11px] h-[11px] md:w-2.5 md:h-2.5')}
-                      </React.Fragment>
-                    ))}
-                  </div>
-                ))}
+              <div className="flex">
+                <div className="flex flex-col gap-[2px] md:gap-1 pr-2 mt-[2px]">
+                  {weekDays.map((day, i) => (
+                    <div key={day} className="text-[9px] text-github-muted h-[11px] md:h-2.5 leading-[11px] md:leading-[10px] pr-1 text-right w-5 md:w-7">
+                      {i % 2 !== 0 ? day : ''}
+                    </div>
+                  ))}
+                </div>
+
+                <div 
+                  className="flex gap-[2px] md:gap-1"
+                  style={{ '--col-width': '13px' } as any}
+                  ref={(el) => {
+                    if (el) {
+                      el.parentElement?.parentElement?.style.setProperty('--col-width', window.innerWidth >= 768 ? '14px' : '13px');
+                    }
+                  }}
+                >
+                  {weeksArray.map((week, i) => (
+                    <div key={i} className="flex flex-col gap-[2px] md:gap-1">
+                      {week.map((dateStr, j) => (
+                        <React.Fragment key={dateStr || `empty-${i}-${j}`}>
+                          {renderBox(dateStr, 'w-[11px] h-[11px] md:w-2.5 md:h-2.5')}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ) : period === 'week' ? (
-        <div className="flex w-full overflow-x-auto custom-scrollbar pb-4 pt-2 gap-2 md:gap-3 flex-wrap justify-center">
-          {groupedData.map(group => renderGroupedBox(group.dates, group.label, 'week'))}
-        </div>
-      ) : period === 'month' ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 w-full pb-2">
-          {groupedData.map(group => renderGroupedBox(group.dates, group.label, 'month'))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full pb-2">
-          {groupedData.map(group => renderGroupedBox(group.dates, group.label, 'year'))}
-        </div>
-      )}
+        ) : period === 'week' ? (
+          <div className="flex w-full overflow-x-auto custom-scrollbar gap-2 md:gap-3 flex-wrap justify-center content-center h-full">
+            {groupedData.map(group => renderGroupedBox(group.dates, group.label, 'week'))}
+          </div>
+        ) : period === 'month' ? (
+          <div className="grid grid-cols-4 md:grid-cols-6 gap-2 w-full h-full content-center max-w-2xl">
+            {groupedData.map(group => renderGroupedBox(group.dates, group.label, 'month'))}
+          </div>
+        ) : (
+          <div className="flex flex-col sm:flex-row gap-3 w-full h-full justify-center items-center">
+            {groupedData.map(group => renderGroupedBox(group.dates, group.label, 'year'))}
+          </div>
+        )}
+      </div>
 
       {/* Legend */}
       <div className="flex justify-end items-center mt-2 text-xs text-github-muted gap-2 flex-wrap">
