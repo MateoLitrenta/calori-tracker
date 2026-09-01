@@ -219,6 +219,14 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     return [];
   }, [period, records]);
 
+  const chunkedGroupedData = useMemo(() => {
+    const chunks = [];
+    for (let i = 0; i < groupedData.length; i += 7) {
+      chunks.push(groupedData.slice(i, i + 7));
+    }
+    return chunks;
+  }, [groupedData]);
+
   const renderBox = (dateStr: string | null, sizeClass = '') => {
     if (!dateStr) return <div className={`${sizeClass} invisible`} />;
     
@@ -249,35 +257,15 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     const colorClass = getHeatmapColor(avgBalance);
     const balanceText = avgBalance !== null ? `${avgBalance > 0 ? '+' : ''}${avgBalance} kcal/día` : 'Sin datos';
 
-    if (view === 'week') {
-      return (
-        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className="flex flex-col items-center justify-center gap-1 focus:outline-none hover:scale-110 transition-transform h-full">
-          <div
-            className={`w-6 h-6 md:w-8 md:h-8 rounded-sm transition-all flex-shrink-0 shadow-sm ${colorClass}`}
-            title={`${label}: ${balanceText}`}
-          ></div>
-          <span className="text-[10px] text-github-muted whitespace-nowrap mt-1">{label}</span>
-        </button>
-      );
-    }
-
-    if (view === 'month') {
-      return (
-        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className={`flex flex-col p-3 rounded-lg border border-github-border/50 items-center justify-center gap-1 ${colorClass} focus:outline-none hover:brightness-110 transition-all h-full min-w-[70px] md:min-w-[80px]`}>
-          <span className="text-xs font-bold capitalize text-white drop-shadow-md truncate w-full">{label.substring(0,3)} {label.split(' ')[1]?.substring(2)}</span>
-          <span className="text-[10px] text-white/90 font-medium drop-shadow-md text-center leading-tight whitespace-nowrap">{balanceText.replace(' kcal/día', ' kcal')}</span>
-        </button>
-      );
-    }
-
-    if (view === 'year') {
-      return (
-        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className={`flex flex-col px-6 py-4 rounded-xl border border-github-border/50 items-center justify-center gap-2 ${colorClass} focus:outline-none hover:brightness-110 transition-all h-full min-w-[120px]`}>
-          <span className="text-2xl font-bold text-white drop-shadow-md">{label}</span>
-          <span className="text-xs text-white/90 font-medium drop-shadow-md whitespace-nowrap">{balanceText.replace(' kcal/día', ' kcal')}</span>
-        </button>
-      );
-    }
+    return (
+      <button
+        key={label}
+        onClick={() => onSelectGroup?.(view, label, dates)}
+        className={`w-[11px] h-[11px] md:w-2.5 md:h-2.5 rounded-[2px] transition-all focus:outline-none flex-shrink-0 ${colorClass} hover:ring-1 hover:ring-gray-400`}
+        title={`${label}: ${balanceText}`}
+        aria-label={`Seleccionar ${label}`}
+      />
+    );
   };
 
   return (
@@ -355,12 +343,37 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
           </div>
         ) : (
           <div className="flex w-full overflow-x-auto md:overflow-x-hidden custom-scrollbar md:justify-center h-full items-center" ref={scrollContainerRef}>
-            <div className="flex flex-row w-max px-6 md:px-0 gap-3 md:gap-4 h-full items-center">
-              {groupedData.map(group => (
-                <div key={group.label} className="shrink-0 flex items-center h-full max-h-[100px]">
-                  {renderGroupedBox(group.dates, group.label, period as 'week'|'month'|'year')}
+            <div className="flex flex-col w-max pr-8 md:pr-0">
+              
+              <div className="flex mb-1 ml-[24px] md:ml-[32px] relative h-4">
+                {/* Empty spacer for X-axis alignment */}
+              </div>
+
+              <div className="flex">
+                <div className="flex flex-col gap-[2px] md:gap-1 pr-2 mt-[2px] invisible">
+                  {weekDays.map((day, i) => (
+                    <div key={`inv-${day}`} className="text-[9px] text-github-muted h-[11px] md:h-2.5 leading-[11px] md:leading-[10px] pr-1 text-right w-5 md:w-7">
+                      {i % 2 !== 0 ? day : ''}
+                    </div>
+                  ))}
                 </div>
-              ))}
+
+                <div className="flex gap-[2px] md:gap-1">
+                  {chunkedGroupedData.map((col, i) => (
+                    <div key={i} className="flex flex-col gap-[2px] md:gap-1">
+                      {col.map((group) => (
+                        <React.Fragment key={group.label}>
+                          {renderGroupedBox(group.dates, group.label, period as 'week'|'month'|'year')}
+                        </React.Fragment>
+                      ))}
+                      {/* pad with invisible if < 7 */}
+                      {Array.from({ length: 7 - col.length }).map((_, j) => (
+                        <div key={`empty-${j}`} className="w-[11px] h-[11px] md:w-2.5 md:h-2.5 invisible" />
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
