@@ -68,9 +68,9 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     }
   };
 
-  // Scroll to the right when period changes to 'day' or on mount
+  // Scroll to the right when period changes or on mount
   useLayoutEffect(() => {
-    if (period === 'day' && scrollContainerRef.current) {
+    if (scrollContainerRef.current) {
       const scrollEl = scrollContainerRef.current;
       scrollEl.scrollLeft = scrollEl.scrollWidth;
       
@@ -251,19 +251,20 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
 
     if (view === 'week') {
       return (
-        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className="flex flex-col items-center gap-1 focus:outline-none hover:scale-110 transition-transform">
+        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className="flex flex-col items-center justify-center gap-1 focus:outline-none hover:scale-110 transition-transform h-full">
           <div
             className={`w-6 h-6 md:w-8 md:h-8 rounded-sm transition-all flex-shrink-0 shadow-sm ${colorClass}`}
             title={`${label}: ${balanceText}`}
           ></div>
+          <span className="text-[10px] text-github-muted whitespace-nowrap mt-1">{label}</span>
         </button>
       );
     }
 
     if (view === 'month') {
       return (
-        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className={`flex flex-col p-2 rounded-lg border border-github-border/50 items-center justify-center gap-1 ${colorClass} focus:outline-none hover:brightness-110 transition-all`}>
-          <span className="text-xs font-bold capitalize text-white drop-shadow-md truncate w-full">{label.substring(0,3)} {label.split(' ')[1]}</span>
+        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className={`flex flex-col p-3 rounded-lg border border-github-border/50 items-center justify-center gap-1 ${colorClass} focus:outline-none hover:brightness-110 transition-all h-full min-w-[70px] md:min-w-[80px]`}>
+          <span className="text-xs font-bold capitalize text-white drop-shadow-md truncate w-full">{label.substring(0,3)} {label.split(' ')[1]?.substring(2)}</span>
           <span className="text-[10px] text-white/90 font-medium drop-shadow-md text-center leading-tight whitespace-nowrap">{balanceText.replace(' kcal/día', ' kcal')}</span>
         </button>
       );
@@ -271,9 +272,9 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
 
     if (view === 'year') {
       return (
-        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className={`flex px-6 py-3 rounded-xl border border-github-border/50 items-center justify-center gap-4 flex-1 max-w-[200px] ${colorClass} focus:outline-none hover:brightness-110 transition-all`}>
-          <span className="text-xl font-bold text-white drop-shadow-md">{label}</span>
-          <span className="text-sm text-white/90 font-medium drop-shadow-md whitespace-nowrap">{balanceText.replace(' kcal/día', ' kcal')}</span>
+        <button key={label} onClick={() => onSelectGroup?.(view, label, dates)} className={`flex flex-col px-6 py-4 rounded-xl border border-github-border/50 items-center justify-center gap-2 ${colorClass} focus:outline-none hover:brightness-110 transition-all h-full min-w-[120px]`}>
+          <span className="text-2xl font-bold text-white drop-shadow-md">{label}</span>
+          <span className="text-xs text-white/90 font-medium drop-shadow-md whitespace-nowrap">{balanceText.replace(' kcal/día', ' kcal')}</span>
         </button>
       );
     }
@@ -352,17 +353,15 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
               </div>
             </div>
           </div>
-        ) : period === 'week' ? (
-          <div className="flex w-full overflow-x-auto custom-scrollbar gap-2 md:gap-3 flex-wrap justify-center content-center h-full">
-            {groupedData.map(group => renderGroupedBox(group.dates, group.label, 'week'))}
-          </div>
-        ) : period === 'month' ? (
-          <div className="grid grid-cols-4 md:grid-cols-6 gap-2 w-full h-full content-center max-w-2xl">
-            {groupedData.map(group => renderGroupedBox(group.dates, group.label, 'month'))}
-          </div>
         ) : (
-          <div className="flex flex-col sm:flex-row gap-3 w-full h-full justify-center items-center">
-            {groupedData.map(group => renderGroupedBox(group.dates, group.label, 'year'))}
+          <div className="flex w-full overflow-x-auto md:overflow-x-hidden custom-scrollbar md:justify-center h-full items-center" ref={scrollContainerRef}>
+            <div className="flex flex-row w-max px-6 md:px-0 gap-3 md:gap-4 h-full items-center">
+              {groupedData.map(group => (
+                <div key={group.label} className="shrink-0 flex items-center h-full max-h-[100px]">
+                  {renderGroupedBox(group.dates, group.label, period as 'week'|'month'|'year')}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
