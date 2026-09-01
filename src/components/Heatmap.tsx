@@ -226,6 +226,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     const balance = getNetBalance(record, currentBMR);
     const isSelected = selectedDateStr === dateStr;
     const isToday = isSameDay(parseISO(dateStr), new Date());
+    const hasGym = record?.workouts?.some(w => w.activity.toLowerCase() === 'gimnasio');
     
     return (
       <button
@@ -233,9 +234,9 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
         onClick={() => handleBoxClick(dateStr)}
         className={`${sizeClass} rounded-[2px] transition-all focus:outline-none flex-shrink-0 
         ${getHeatmapColor(balance)} 
-        ${isSelected ? 'ring-1 ring-white scale-125 z-10' : 'hover:ring-1 hover:ring-gray-400'}
-        ${isToday && !isSelected ? 'ring-1 ring-blue-500' : ''}`}
-        title={`${dateStr}: ${balance !== null ? balance + ' kcal' : 'Sin datos'}`}
+        ${isSelected ? 'ring-1 ring-white scale-125 z-10' : (hasGym ? 'ring-1 ring-yellow-400 drop-shadow-[0_0_3px_rgba(250,204,21,0.6)]' : 'hover:ring-1 hover:ring-gray-400')}
+        ${isToday && !isSelected && !hasGym ? 'ring-1 ring-blue-500' : ''}`}
+        title={`${dateStr}: ${balance !== null ? balance + ' kcal' : 'Sin datos'}${hasGym ? ' (Día de Gimnasio)' : ''}`}
         aria-label={`Seleccionar ${dateStr}`}
       />
     );

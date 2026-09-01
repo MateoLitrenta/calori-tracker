@@ -177,6 +177,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [workActivity, setWorkActivity] = useState('');
   const [workDuration, setWorkDuration] = useState<number | ''>('');
   const [workCals, setWorkCals] = useState<number | ''>('');
+  const [workDetails, setWorkDetails] = useState('');
 
   const handleAddWorkout = (e: React.FormEvent) => {
     e.preventDefault();
@@ -184,13 +185,13 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     
     if (editingWorkoutId) {
       const updatedWorkouts = currentRecord.workouts.map(w => 
-        w.id === editingWorkoutId ? { ...w, activity: workActivity, duration: Number(workDuration), calories: Number(workCals) } : w
+        w.id === editingWorkoutId ? { ...w, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), details: workDetails } : w
       );
       onUpdateRecord(dateStr, { ...currentRecord, workouts: updatedWorkouts });
       setEditingWorkoutId(null);
     } else {
       const newWorkout: WorkoutEntry = { 
-        id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [] 
+        id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [], details: workDetails 
       };
       onUpdateRecord(dateStr, { ...currentRecord, workouts: [...currentRecord.workouts, newWorkout] });
     }
@@ -198,6 +199,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setWorkActivity('');
     setWorkDuration('');
     setWorkCals('');
+    setWorkDetails('');
     setActiveTab(null);
   };
 
@@ -207,6 +209,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setWorkActivity(w.activity);
     setWorkDuration(w.duration);
     setWorkCals(w.calories);
+    setWorkDetails(w.details || '');
   };
 
   return (
@@ -455,6 +458,20 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         {activeTab === 'entrenamiento' && (
           <form onSubmit={handleAddWorkout} className="bg-[#1c2128] border border-github-border p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
             <h4 className="font-bold">Agregar Entrenamiento</h4>
+            
+            <div className="flex flex-wrap gap-2">
+              {['Gimnasio', 'Fútbol', 'Correr', 'Natación', 'Caminata'].map(act => (
+                <button
+                  key={act}
+                  type="button"
+                  onClick={() => setWorkActivity(act)}
+                  className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${workActivity.toLowerCase() === act.toLowerCase() ? 'bg-orange-600 border-orange-500 text-white' : 'bg-github-bg border-github-border text-github-muted hover:text-white'}`}
+                >
+                  {act}
+                </button>
+              ))}
+            </div>
+
             <div className="flex gap-4 flex-wrap">
               <input 
                 required
@@ -462,20 +479,32 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 inputMode="text"
                 placeholder="Actividad (ej: Running)" 
                 value={workActivity} onChange={e => setWorkActivity(e.target.value)}
-                className="flex-1 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                className="flex-1 min-w-[150px] bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
               />
               <input 
                 required
                 type="number" inputMode="numeric" pattern="[0-9]*" min="1" placeholder="Minutos" 
                 value={workDuration} onChange={e => setWorkDuration(Number(e.target.value))}
-                className="w-24 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                className="w-24 flex-shrink-0 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
               />
               <input 
                 required
                 type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
                 value={workCals} onChange={e => setWorkCals(Number(e.target.value))}
-                className="w-24 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                className="w-24 flex-shrink-0 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
               />
+            </div>
+
+            {workActivity.toLowerCase() === 'gimnasio' && (
+              <textarea
+                placeholder="Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)"
+                value={workDetails}
+                onChange={e => setWorkDetails(e.target.value)}
+                className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-h-[60px] resize-y"
+              />
+            )}
+
+            <div className="flex justify-end">
               <button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-medium text-sm transition-colors flex items-center gap-2">
                 <Check weight="bold" /> Guardar
               </button>
@@ -577,6 +606,9 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <div className="flex flex-col flex-1 min-w-0 pr-2">
                 <span className="font-medium truncate">{workout.activity}</span>
                 <span className="text-xs text-github-muted truncate">{workout.duration} min</span>
+                {workout.details && workout.activity.toLowerCase() === 'gimnasio' && (
+                  <span className="text-xs text-github-muted/70 mt-1 line-clamp-2 whitespace-pre-wrap">{workout.details}</span>
+                )}
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <span className="font-semibold text-orange-400 whitespace-nowrap">-{workout.calories} kcal</span>

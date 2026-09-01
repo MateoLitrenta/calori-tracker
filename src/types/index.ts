@@ -15,6 +15,7 @@ export interface WorkoutEntry {
   duration: number;
   calories: number;
   muscles: string[]; // optional tags
+  details?: string; // routine details
 }
 
 export interface DailyRecord {

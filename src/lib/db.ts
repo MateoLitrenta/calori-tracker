@@ -53,7 +53,7 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
            id: m.id, name: m.description, type: m.meal_type, calories: m.calories
          })),
          workouts: (l.workouts || []).map((e: any) => ({
-           id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: []
+           id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: [], details: e.workout_details
          }))
        };
     });
@@ -96,7 +96,7 @@ export const fetchDailyLog = async (userId: string, dateStr: string): Promise<Da
         id: m.id, name: m.description, type: m.meal_type, calories: m.calories
       })),
       workouts: (l.workouts || []).map((e: any) => ({
-        id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: []
+        id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: [], details: e.workout_details
       }))
     };
   } catch (e) {
@@ -192,7 +192,8 @@ export const syncAddWorkout = async (userId: string, logId: string, w: WorkoutEn
     date: dateStr,
     activity_name: w.activity, 
     duration_min: w.duration, 
-    calories_burned: w.calories
+    calories_burned: w.calories,
+    workout_details: w.details || null
   });
   if (error) {
     console.error('Error adding workout:', error);
