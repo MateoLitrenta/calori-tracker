@@ -184,6 +184,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [workDuration, setWorkDuration] = useState<number | ''>('');
   const [workCals, setWorkCals] = useState<number | ''>('');
   const [workDetails, setWorkDetails] = useState('');
+  const [workDistance, setWorkDistance] = useState<number | ''>('');
+  const [workPace, setWorkPace] = useState('');
 
   const handleAddWorkout = (e: React.FormEvent) => {
     e.preventDefault();
@@ -191,13 +193,13 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     
     if (editingWorkoutId) {
       const updatedWorkouts = currentRecord.workouts.map(w => 
-        w.id === editingWorkoutId ? { ...w, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), details: workDetails } : w
+        w.id === editingWorkoutId ? { ...w, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), details: workDetails, distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined } : w
       );
       onUpdateRecord(dateStr, { ...currentRecord, workouts: updatedWorkouts });
       setEditingWorkoutId(null);
     } else {
       const newWorkout: WorkoutEntry = { 
-        id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [], details: workDetails, time: format(new Date(), 'HH:mm')
+        id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [], details: workDetails, time: format(new Date(), 'HH:mm'), distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined
       };
       onUpdateRecord(dateStr, { ...currentRecord, workouts: [...currentRecord.workouts, newWorkout] });
     }
@@ -206,6 +208,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setWorkDuration('');
     setWorkCals('');
     setWorkDetails('');
+    setWorkDistance('');
+    setWorkPace('');
     setActiveTab(null);
   };
 
@@ -216,6 +220,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setWorkDuration(w.duration);
     setWorkCals(w.calories);
     setWorkDetails(w.details || '');
+    setWorkDistance(w.distance || '');
+    setWorkPace(w.pace || '');
   };
 
   return (
@@ -510,6 +516,21 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               />
             )}
 
+            {['correr', 'natación', 'caminata'].includes(workActivity.toLowerCase()) && (
+              <div className="flex gap-4">
+                <input 
+                  type="number" step="0.01" min="0" placeholder="Distancia (km) opc." 
+                  value={workDistance} onChange={e => setWorkDistance(e.target.value === '' ? '' : Number(e.target.value))}
+                  className="flex-1 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
+                />
+                <input 
+                  type="text" placeholder="Ritmo (ej: 5:30) opc." 
+                  value={workPace} onChange={e => setWorkPace(e.target.value)}
+                  className="flex-1 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
+                />
+              </div>
+            )}
+
             <div className="flex justify-end">
               <button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-medium text-sm transition-colors flex items-center gap-2">
                 <Check weight="bold" /> Guardar
@@ -524,17 +545,22 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <h4 className="font-bold flex items-center gap-2"><Sneaker className="text-orange-400" /> Pasos del Día</h4>
               <div className="flex flex-col gap-2">
                 <div className="flex gap-2">
+                  <button onClick={() => handleAddSteps(500)} className="flex-1 bg-github-bg border border-github-border hover:border-orange-500 hover:text-orange-400 py-2 rounded-md text-sm transition-colors">
+                    + 500
+                  </button>
                   <button onClick={() => handleAddSteps(1000)} className="flex-1 bg-github-bg border border-github-border hover:border-orange-500 hover:text-orange-400 py-2 rounded-md text-sm transition-colors">
                     + 1.000
                   </button>
-                  <button onClick={() => handleAddSteps(5000)} className="flex-1 bg-github-bg border border-github-border hover:border-orange-500 hover:text-orange-400 py-2 rounded-md text-sm transition-colors">
-                    + 5.000
-                  </button>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => handleAddSteps(-1000)} className="w-1/3 bg-github-bg border border-github-border hover:border-red-500 hover:text-red-400 py-2 rounded-md text-sm transition-colors">
+                  <button onClick={() => handleAddSteps(-500)} className="flex-1 bg-github-bg border border-github-border hover:border-red-500 hover:text-red-400 py-2 rounded-md text-sm transition-colors">
+                    - 500
+                  </button>
+                  <button onClick={() => handleAddSteps(-1000)} className="flex-1 bg-github-bg border border-github-border hover:border-red-500 hover:text-red-400 py-2 rounded-md text-sm transition-colors">
                     - 1.000
                   </button>
+                </div>
+                <div className="flex gap-2 mt-1">
                   <input 
                     ref={stepsInputRef}
                     type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Editar manual..."
@@ -592,68 +618,93 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
           )}
 
         <ul className="divide-y divide-github-border">
-          {currentRecord.meals.map(meal => (
-            <li key={meal.id} className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors">
-              <div className="flex flex-col flex-1 min-w-0 pr-2">
-                <span className="font-medium truncate">{meal.name}</span>
-                <span className="text-xs text-github-muted truncate">
-                  {meal.time ? `${meal.time} hs • ` : ''}{meal.type}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="font-semibold text-blue-400 whitespace-nowrap">+{meal.calories} kcal</span>
-                <div className="flex items-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
-                  <button 
-                    onClick={() => startEditMeal(meal)}
-                    className="text-github-muted hover:text-blue-400 p-1"
-                    title="Editar"
-                  >
-                    <PencilSimple size={18} />
-                  </button>
-                  <button 
-                    onClick={() => handleDeleteMeal(meal.id)}
-                    className="text-github-muted hover:text-red-500 p-1"
-                    title="Eliminar"
-                  >
-                    <Trash size={18} />
-                  </button>
-                </div>
-              </div>
-            </li>
-          ))}
-
-          {currentRecord.workouts.map(workout => (
-            <li key={workout.id} className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors">
-              <div className="flex flex-col flex-1 min-w-0 pr-2">
-                <span className="font-medium truncate">{workout.activity}</span>
-                <span className="text-xs text-github-muted truncate">
-                  {workout.time ? `${workout.time} hs • ` : ''}{workout.duration} min
-                </span>
-                {workout.details && workout.activity.toLowerCase() === 'gimnasio' && (
-                  <span className="text-xs text-github-muted/70 mt-1 line-clamp-2 whitespace-pre-wrap">{workout.details}</span>
-                )}
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="font-semibold text-orange-400 whitespace-nowrap">-{workout.calories} kcal</span>
-                <div className="flex items-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
-                  <button 
-                    onClick={() => startEditWorkout(workout)}
-                    className="text-github-muted hover:text-orange-400 p-1"
-                    title="Editar"
-                  >
-                    <PencilSimple size={18} />
-                  </button>
-                  <button 
-                    onClick={() => handleDeleteWorkout(workout.id)}
-                    className="text-github-muted hover:text-red-500 p-1"
-                    title="Eliminar"
-                  >
-                    <Trash size={18} />
-                  </button>
-                </div>
-              </div>
-            </li>
-          ))}
+          {
+            [
+              ...currentRecord.meals.map(m => ({ ...m, _type: 'meal' as const })),
+              ...currentRecord.workouts.map(w => ({ ...w, _type: 'workout' as const }))
+            ]
+            .sort((a, b) => {
+              const timeA = a.time || '00:00';
+              const timeB = b.time || '00:00';
+              return timeA.localeCompare(timeB);
+            })
+            .map(item => {
+              if (item._type === 'meal') {
+                const meal = item as (MealEntry & { _type: 'meal' });
+                return (
+                  <li key={`meal-${meal.id}`} className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors">
+                    <div className="flex flex-col flex-1 min-w-0 pr-2">
+                      <span className="font-medium truncate">{meal.name}</span>
+                      <span className="text-xs text-github-muted truncate">
+                        {meal.time ? `${meal.time} hs • ` : ''}{meal.type}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="font-semibold text-blue-400 whitespace-nowrap">+{meal.calories} kcal</span>
+                      <div className="flex items-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
+                        <button 
+                          onClick={() => startEditMeal(meal)}
+                          className="text-github-muted hover:text-blue-400 p-1"
+                          title="Editar"
+                        >
+                          <PencilSimple size={18} />
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteMeal(meal.id)}
+                          className="text-github-muted hover:text-red-500 p-1"
+                          title="Eliminar"
+                        >
+                          <Trash size={18} />
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                );
+              } else {
+                const workout = item as (WorkoutEntry & { _type: 'workout' });
+                return (
+                  <li key={`workout-${workout.id}`} className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors">
+                    <div className="flex flex-col flex-1 min-w-0 pr-2">
+                      <span className="font-medium truncate">{workout.activity}</span>
+                      <span className="text-xs text-github-muted truncate">
+                        {workout.time ? `${workout.time} hs • ` : ''}{workout.duration} min
+                      </span>
+                      {workout.details && workout.activity.toLowerCase() === 'gimnasio' && (
+                        <span className="text-xs text-github-muted/70 mt-1 line-clamp-2 whitespace-pre-wrap">{workout.details}</span>
+                      )}
+                      {(workout.distance || workout.pace) && (
+                        <span className="text-xs text-github-muted/70 mt-1 line-clamp-1 truncate">
+                          {[
+                            workout.distance ? `${workout.distance} km` : null,
+                            workout.pace ? `${workout.pace} min/km` : null
+                          ].filter(Boolean).join(' • ')}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="font-semibold text-orange-400 whitespace-nowrap">-{workout.calories} kcal</span>
+                      <div className="flex items-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
+                        <button 
+                          onClick={() => startEditWorkout(workout)}
+                          className="text-github-muted hover:text-orange-400 p-1"
+                          title="Editar"
+                        >
+                          <PencilSimple size={18} />
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteWorkout(workout.id)}
+                          className="text-github-muted hover:text-red-500 p-1"
+                          title="Eliminar"
+                        >
+                          <Trash size={18} />
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                );
+              }
+            })
+          }
         </ul>
       </div>
       )}

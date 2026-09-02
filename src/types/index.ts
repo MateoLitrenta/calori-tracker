@@ -18,6 +18,8 @@ export interface WorkoutEntry {
   muscles: string[]; // optional tags
   details?: string; // routine details
   time?: string; // Format: HH:mm
+  distance?: number; // km
+  pace?: string; // min/km
 }
 
 export interface DailyRecord {
