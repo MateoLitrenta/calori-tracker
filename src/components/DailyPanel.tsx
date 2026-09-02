@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
+import { format } from 'date-fns';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap } from '../types';
 import { getCaloriesIngested, getCaloriesBurned, getNetBalance, getBalanceLabel, generateUUID } from '../utils/helpers';
 
@@ -122,6 +123,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     onUpdateRecord(dateStr, { ...currentRecord, steps: Math.max(0, steps) });
   };
 
+  const handleAddSteps = (amount: number) => {
+    const newSteps = Math.max(0, currentRecord.steps + amount);
+    onUpdateRecord(dateStr, { ...currentRecord, steps: newSteps });
+  };
+
   // --- Forms State ---
   const [editingMealId, setEditingMealId] = useState<string | null>(null);
   const [mealName, setMealName] = useState('');
@@ -156,7 +162,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       onUpdateRecord(dateStr, { ...currentRecord, meals: updatedMeals });
       setEditingMealId(null);
     } else {
-      const newMeal: MealEntry = { id: generateUUID(), name: mealName, type: mealType, calories: Number(mealCals) };
+      const newMeal: MealEntry = { id: generateUUID(), name: mealName, type: mealType, calories: Number(mealCals), time: format(new Date(), 'HH:mm') };
       onUpdateRecord(dateStr, { ...currentRecord, meals: [...currentRecord.meals, newMeal] });
     }
     
@@ -191,7 +197,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       setEditingWorkoutId(null);
     } else {
       const newWorkout: WorkoutEntry = { 
-        id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [], details: workDetails 
+        id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [], details: workDetails, time: format(new Date(), 'HH:mm')
       };
       onUpdateRecord(dateStr, { ...currentRecord, workouts: [...currentRecord.workouts, newWorkout] });
     }
@@ -515,6 +521,38 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         {activeTab === 'pasos-agua' && (
           <div className="bg-[#1c2128] border border-github-border p-4 rounded-xl flex flex-col md:flex-row gap-8 animate-in fade-in slide-in-from-top-2">
             <div className="flex-1 flex flex-col gap-3">
+              <h4 className="font-bold flex items-center gap-2"><Sneaker className="text-orange-400" /> Pasos del Día</h4>
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-2">
+                  <button onClick={() => handleAddSteps(1000)} className="flex-1 bg-github-bg border border-github-border hover:border-orange-500 hover:text-orange-400 py-2 rounded-md text-sm transition-colors">
+                    + 1.000
+                  </button>
+                  <button onClick={() => handleAddSteps(5000)} className="flex-1 bg-github-bg border border-github-border hover:border-orange-500 hover:text-orange-400 py-2 rounded-md text-sm transition-colors">
+                    + 5.000
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => handleAddSteps(-1000)} className="w-1/3 bg-github-bg border border-github-border hover:border-red-500 hover:text-red-400 py-2 rounded-md text-sm transition-colors">
+                    - 1.000
+                  </button>
+                  <input 
+                    ref={stepsInputRef}
+                    type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Editar manual..."
+                    value={localSteps}
+                    onChange={e => setLocalSteps(e.target.value)}
+                    onBlur={e => handleUpdateSteps(Number(e.target.value) || 0)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') {
+                        handleUpdateSteps(Number(localSteps) || 0);
+                        (e.target as HTMLInputElement).blur();
+                      }
+                    }}
+                    className="flex-1 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 flex flex-col gap-3">
               <h4 className="font-bold flex items-center gap-2"><Drop className="text-cyan-400" /> Registro de Agua</h4>
               <div className="flex flex-col gap-2">
                 <div className="flex gap-2">
@@ -533,25 +571,6 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     - 500 ml
                   </button>
                 </div>
-              </div>
-            </div>
-            <div className="flex-1 flex flex-col gap-3">
-              <h4 className="font-bold flex items-center gap-2"><Flame className="text-orange-400" /> Pasos del Día</h4>
-              <div className="flex gap-2">
-                <input 
-                  ref={stepsInputRef}
-                  type="number" inputMode="numeric" pattern="[0-9]*" min="0"
-                  value={localSteps}
-                  onChange={e => setLocalSteps(e.target.value)}
-                  onBlur={e => handleUpdateSteps(Number(e.target.value) || 0)}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter') {
-                      handleUpdateSteps(Number(localSteps) || 0);
-                      (e.target as HTMLInputElement).blur();
-                    }
-                  }}
-                  className="flex-1 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                />
               </div>
             </div>
           </div>
@@ -577,7 +596,9 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             <li key={meal.id} className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors">
               <div className="flex flex-col flex-1 min-w-0 pr-2">
                 <span className="font-medium truncate">{meal.name}</span>
-                <span className="text-xs text-github-muted truncate">{meal.type}</span>
+                <span className="text-xs text-github-muted truncate">
+                  {meal.time ? `${meal.time} hs • ` : ''}{meal.type}
+                </span>
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <span className="font-semibold text-blue-400 whitespace-nowrap">+{meal.calories} kcal</span>
@@ -605,7 +626,9 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             <li key={workout.id} className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors">
               <div className="flex flex-col flex-1 min-w-0 pr-2">
                 <span className="font-medium truncate">{workout.activity}</span>
-                <span className="text-xs text-github-muted truncate">{workout.duration} min</span>
+                <span className="text-xs text-github-muted truncate">
+                  {workout.time ? `${workout.time} hs • ` : ''}{workout.duration} min
+                </span>
                 {workout.details && workout.activity.toLowerCase() === 'gimnasio' && (
                   <span className="text-xs text-github-muted/70 mt-1 line-clamp-2 whitespace-pre-wrap">{workout.details}</span>
                 )}

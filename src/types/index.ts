@@ -7,6 +7,7 @@ export interface MealEntry {
   name: string;
   type: MealType;
   calories: number;
+  time?: string; // Format: HH:mm
 }
 
 export interface WorkoutEntry {
@@ -16,6 +17,7 @@ export interface WorkoutEntry {
   calories: number;
   muscles: string[]; // optional tags
   details?: string; // routine details
+  time?: string; // Format: HH:mm
 }
 
 export interface DailyRecord {

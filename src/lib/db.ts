@@ -50,10 +50,10 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
          water: l.water_ml,
          weight: l.weight,
          meals: (l.meals || []).map((m: any) => ({
-           id: m.id, name: m.description, type: m.meal_type, calories: m.calories
+           id: m.id, name: m.description, type: m.meal_type, calories: m.calories, time: m.time_str
          })),
          workouts: (l.workouts || []).map((e: any) => ({
-           id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: [], details: e.workout_details
+           id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: [], details: e.workout_details, time: e.time_str
          }))
        };
     });
@@ -93,10 +93,10 @@ export const fetchDailyLog = async (userId: string, dateStr: string): Promise<Da
       water: l.water_ml,
       weight: l.weight,
       meals: (l.meals || []).map((m: any) => ({
-        id: m.id, name: m.description, type: m.meal_type, calories: m.calories
+        id: m.id, name: m.description, type: m.meal_type, calories: m.calories, time: m.time_str
       })),
       workouts: (l.workouts || []).map((e: any) => ({
-        id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: [], details: e.workout_details
+        id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: [], details: e.workout_details, time: e.time_str
       }))
     };
   } catch (e) {
@@ -168,7 +168,8 @@ export const syncAddMeal = async (userId: string, logId: string, meal: MealEntry
     date: dateStr,
     description: meal.name, 
     meal_type: meal.type, 
-    calories: meal.calories
+    calories: meal.calories,
+    time_str: meal.time || null
   });
   if (error) {
     console.error('Error adding meal:', error);
@@ -193,7 +194,8 @@ export const syncAddWorkout = async (userId: string, logId: string, w: WorkoutEn
     activity_name: w.activity, 
     duration_min: w.duration, 
     calories_burned: w.calories,
-    workout_details: w.details || null
+    workout_details: w.details || null,
+    time_str: w.time || null
   });
   if (error) {
     console.error('Error adding workout:', error);
