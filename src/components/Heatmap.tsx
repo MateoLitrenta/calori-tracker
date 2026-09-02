@@ -188,14 +188,18 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       const startDate = startOfWeek(startOfOneYearAgo, { weekStartsOn: 0 }); 
       const weeks = [];
       let curr = startDate;
-      let weekNum = 1;
       while (curr <= today) {
         const dates = [];
         for (let i = 0; i < 7; i++) {
           dates.push(format(addDays(curr, i), 'yyyy-MM-dd'));
         }
-        weeks.push({ label: `Sem ${weekNum}`, dates });
-        weekNum++;
+        const endDate = addDays(curr, 6);
+        const startLabel = format(curr, 'd MMM', { locale: es });
+        const endLabel = format(endDate, 'd MMM yyyy', { locale: es });
+        // Capitalize month abbreviations
+        const capitalize = (s: string) => s.replace(/\b\w/g, c => c.toUpperCase());
+        weeks.push({ label: `${capitalize(startLabel)} - ${capitalize(endLabel)}`, dates });
+        
         curr = addDays(curr, 7);
       }
       return weeks;
