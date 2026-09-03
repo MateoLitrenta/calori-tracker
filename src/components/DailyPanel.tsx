@@ -645,17 +645,19 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <li 
                     key={`meal-${meal.id}`} 
                     onClick={() => setDetailModalItem(meal)}
-                    className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors cursor-pointer"
+                    className="p-3.5 hover:bg-[#1c2128] flex flex-col gap-1.5 group transition-colors cursor-pointer"
                   >
-                    <div className="flex flex-col flex-1 min-w-0 pr-2">
-                      <span className="font-medium truncate">{meal.name}</span>
-                      <span className="text-xs text-github-muted truncate">
+                    <div className="w-full font-medium text-wrap break-words leading-tight">
+                      {meal.name}
+                    </div>
+                    <div className="flex justify-between items-center text-xs mt-1 text-github-muted opacity-80 group-hover:opacity-100 transition-opacity">
+                      <span>
                         {meal.time ? `${meal.time} hs • ` : ''}{meal.type}
                       </span>
-                    </div>
-                    <div className="flex items-center gap-3 shrink-0">
-                      <span className="font-semibold text-blue-400 whitespace-nowrap">+{meal.calories} kcal</span>
-                      <CaretRight size={16} className="text-github-muted group-hover:text-white transition-colors" />
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-semibold text-blue-400 whitespace-nowrap text-sm">+{meal.calories} kcal</span>
+                        <CaretRight size={14} className="text-github-muted group-hover:text-white transition-colors" />
+                      </div>
                     </div>
                   </li>
                 );
@@ -665,17 +667,19 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <li 
                     key={`workout-${workout.id}`} 
                     onClick={() => setDetailModalItem(workout)}
-                    className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors cursor-pointer"
+                    className="p-3.5 hover:bg-[#1c2128] flex flex-col gap-1.5 group transition-colors cursor-pointer"
                   >
-                    <div className="flex flex-col flex-1 min-w-0 pr-2">
-                      <span className="font-medium truncate">{workout.activity}</span>
-                      <span className="text-xs text-github-muted truncate">
+                    <div className="w-full font-medium text-wrap break-words leading-tight">
+                      {workout.activity}
+                    </div>
+                    <div className="flex justify-between items-center text-xs mt-1 text-github-muted opacity-80 group-hover:opacity-100 transition-opacity">
+                      <span>
                         {workout.time ? `${workout.time} hs • ` : ''}{workout.duration} min
                       </span>
-                    </div>
-                    <div className="flex items-center gap-3 shrink-0">
-                      <span className="font-semibold text-orange-400 whitespace-nowrap">-{workout.calories} kcal</span>
-                      <CaretRight size={16} className="text-github-muted group-hover:text-white transition-colors" />
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-semibold text-orange-400 whitespace-nowrap text-sm">-{workout.calories} kcal</span>
+                        <CaretRight size={14} className="text-github-muted group-hover:text-white transition-colors" />
+                      </div>
                     </div>
                   </li>
                 );
