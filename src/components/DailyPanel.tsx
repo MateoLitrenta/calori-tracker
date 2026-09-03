@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker } from '@phosphor-icons/react';
+import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, X, CaretRight } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap } from '../types';
@@ -141,6 +141,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [editStepsVal, setEditStepsVal] = useState('');
   const [mealType, setMealType] = useState<MealType>('Almuerzo');
   const [mealCals, setMealCals] = useState<number | ''>('');
+  const [mealDetails, setMealDetails] = useState('');
 
   const [localSteps, setLocalSteps] = useState(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
   const stepsInputRef = useRef<HTMLInputElement>(null);
@@ -157,17 +158,18 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     
     if (editingMealId) {
       const updatedMeals = currentRecord.meals.map(m => 
-        m.id === editingMealId ? { ...m, name: mealName, type: mealType, calories: Number(mealCals) } : m
+        m.id === editingMealId ? { ...m, name: mealName, type: mealType, calories: Number(mealCals), details: mealDetails } : m
       );
       onUpdateRecord(dateStr, { ...currentRecord, meals: updatedMeals });
       setEditingMealId(null);
     } else {
-      const newMeal: MealEntry = { id: generateUUID(), name: mealName, type: mealType, calories: Number(mealCals), time: format(new Date(), 'HH:mm') };
+      const newMeal: MealEntry = { id: generateUUID(), name: mealName, type: mealType, calories: Number(mealCals), time: format(new Date(), 'HH:mm'), details: mealDetails };
       onUpdateRecord(dateStr, { ...currentRecord, meals: [...currentRecord.meals, newMeal] });
     }
     
     setMealName('');
     setMealCals('');
+    setMealDetails('');
     setActiveTab(null);
   };
 
@@ -177,6 +179,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setMealName(m.name);
     setMealType(m.type);
     setMealCals(m.calories);
+    setMealDetails(m.details || '');
   };
 
   const [editingWorkoutId, setEditingWorkoutId] = useState<string | null>(null);
@@ -223,6 +226,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setWorkDistance(w.distance || '');
     setWorkPace(w.pace || '');
   };
+
+  const [detailModalItem, setDetailModalItem] = useState<(MealEntry & { _type: 'meal' }) | (WorkoutEntry & { _type: 'workout' }) | null>(null);
 
   return (
     <div className="flex flex-col gap-6 w-full">
@@ -464,6 +469,13 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 <Check weight="bold" /> Guardar
               </button>
             </div>
+            <input
+              type="text"
+              placeholder="Notas / Detalles opcionales (ej: Acompañamientos, ingredientes...)"
+              value={mealDetails}
+              onChange={e => setMealDetails(e.target.value)}
+              className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+            />
           </form>
         )}
 
@@ -507,14 +519,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               />
             </div>
 
-            {workActivity.toLowerCase() === 'gimnasio' && (
-              <textarea
-                placeholder="Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)"
-                value={workDetails}
-                onChange={e => setWorkDetails(e.target.value)}
-                className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-h-[60px] resize-y"
-              />
-            )}
+            <textarea
+              placeholder={workActivity.toLowerCase() === 'gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Notas o detalles adicionales..."}
+              value={workDetails}
+              onChange={e => setWorkDetails(e.target.value)}
+              className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-h-[60px] resize-y"
+            />
 
             {['correr', 'natación', 'caminata'].includes(workActivity.toLowerCase()) && (
               <div className="flex gap-4">
@@ -632,73 +642,40 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               if (item._type === 'meal') {
                 const meal = item as (MealEntry & { _type: 'meal' });
                 return (
-                  <li key={`meal-${meal.id}`} className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors">
+                  <li 
+                    key={`meal-${meal.id}`} 
+                    onClick={() => setDetailModalItem(meal)}
+                    className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors cursor-pointer"
+                  >
                     <div className="flex flex-col flex-1 min-w-0 pr-2">
                       <span className="font-medium truncate">{meal.name}</span>
                       <span className="text-xs text-github-muted truncate">
                         {meal.time ? `${meal.time} hs • ` : ''}{meal.type}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-3 shrink-0">
                       <span className="font-semibold text-blue-400 whitespace-nowrap">+{meal.calories} kcal</span>
-                      <div className="flex items-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
-                        <button 
-                          onClick={() => startEditMeal(meal)}
-                          className="text-github-muted hover:text-blue-400 p-1"
-                          title="Editar"
-                        >
-                          <PencilSimple size={18} />
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteMeal(meal.id)}
-                          className="text-github-muted hover:text-red-500 p-1"
-                          title="Eliminar"
-                        >
-                          <Trash size={18} />
-                        </button>
-                      </div>
+                      <CaretRight size={16} className="text-github-muted group-hover:text-white transition-colors" />
                     </div>
                   </li>
                 );
               } else {
                 const workout = item as (WorkoutEntry & { _type: 'workout' });
                 return (
-                  <li key={`workout-${workout.id}`} className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors">
+                  <li 
+                    key={`workout-${workout.id}`} 
+                    onClick={() => setDetailModalItem(workout)}
+                    className="p-4 hover:bg-[#1c2128] flex justify-between items-center group transition-colors cursor-pointer"
+                  >
                     <div className="flex flex-col flex-1 min-w-0 pr-2">
                       <span className="font-medium truncate">{workout.activity}</span>
                       <span className="text-xs text-github-muted truncate">
                         {workout.time ? `${workout.time} hs • ` : ''}{workout.duration} min
                       </span>
-                      {workout.details && workout.activity.toLowerCase() === 'gimnasio' && (
-                        <span className="text-xs text-github-muted/70 mt-1 line-clamp-2 whitespace-pre-wrap">{workout.details}</span>
-                      )}
-                      {(workout.distance || workout.pace) && (
-                        <span className="text-xs text-github-muted/70 mt-1 line-clamp-1 truncate">
-                          {[
-                            workout.distance ? `${workout.distance} km` : null,
-                            workout.pace ? `${workout.pace} min/km` : null
-                          ].filter(Boolean).join(' • ')}
-                        </span>
-                      )}
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-3 shrink-0">
                       <span className="font-semibold text-orange-400 whitespace-nowrap">-{workout.calories} kcal</span>
-                      <div className="flex items-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
-                        <button 
-                          onClick={() => startEditWorkout(workout)}
-                          className="text-github-muted hover:text-orange-400 p-1"
-                          title="Editar"
-                        >
-                          <PencilSimple size={18} />
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteWorkout(workout.id)}
-                          className="text-github-muted hover:text-red-500 p-1"
-                          title="Eliminar"
-                        >
-                          <Trash size={18} />
-                        </button>
-                      </div>
+                      <CaretRight size={16} className="text-github-muted group-hover:text-white transition-colors" />
                     </div>
                   </li>
                 );
@@ -707,6 +684,91 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
           }
         </ul>
       </div>
+      )}
+
+      {/* Detail Modal */}
+      {detailModalItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-github-card border border-github-border w-full max-w-sm rounded-2xl shadow-xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-4 border-b border-github-border flex justify-between items-center bg-[#21262d]">
+              <h3 className="font-bold text-lg text-white">Detalle del Registro</h3>
+              <button 
+                onClick={() => setDetailModalItem(null)}
+                className="text-github-muted hover:text-white transition-colors p-1"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="p-6 flex flex-col gap-4">
+              <div className="flex flex-col gap-1 text-center">
+                <span className="text-xl font-bold text-white break-words">
+                  {detailModalItem._type === 'meal' ? detailModalItem.name : detailModalItem.activity}
+                </span>
+                <span className="text-sm text-github-muted">
+                  {detailModalItem.time ? `${detailModalItem.time} hs • ` : ''}
+                  {detailModalItem._type === 'meal' ? detailModalItem.type : `${detailModalItem.duration} min`}
+                </span>
+              </div>
+              
+              <div className="text-center py-2">
+                <span className={`text-3xl font-black tracking-tight ${detailModalItem._type === 'meal' ? 'text-blue-400' : 'text-orange-400'}`}>
+                  {detailModalItem._type === 'meal' ? '+' : '-'}{detailModalItem.calories} <span className="text-lg font-medium text-github-muted">kcal</span>
+                </span>
+              </div>
+
+              {detailModalItem.details && (
+                <div className="bg-[#1c2128] border border-github-border rounded-lg p-3 text-sm text-white/90 whitespace-pre-wrap">
+                  {detailModalItem.details}
+                </div>
+              )}
+
+              {detailModalItem._type === 'workout' && (detailModalItem.distance || detailModalItem.pace) && (
+                <div className="flex gap-4 bg-github-bg border border-github-border rounded-lg p-3">
+                  {detailModalItem.distance && (
+                    <div className="flex-1 flex flex-col items-center">
+                      <span className="text-[10px] uppercase text-github-muted font-bold tracking-wider mb-1">Distancia</span>
+                      <span className="font-medium">{detailModalItem.distance} km</span>
+                    </div>
+                  )}
+                  {detailModalItem.distance && detailModalItem.pace && (
+                    <div className="w-[1px] bg-github-border"></div>
+                  )}
+                  {detailModalItem.pace && (
+                    <div className="flex-1 flex flex-col items-center">
+                      <span className="text-[10px] uppercase text-github-muted font-bold tracking-wider mb-1">Ritmo</span>
+                      <span className="font-medium">{detailModalItem.pace} /km</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            <div className="p-4 border-t border-github-border flex gap-3 bg-[#21262d]">
+              <button 
+                onClick={() => {
+                  const item = detailModalItem;
+                  setDetailModalItem(null);
+                  if (item._type === 'meal') startEditMeal(item as MealEntry);
+                  else startEditWorkout(item as WorkoutEntry);
+                }}
+                className="flex-1 bg-github-bg border border-github-border hover:bg-github-border/50 text-white py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                <PencilSimple size={18} /> Editar
+              </button>
+              <button 
+                onClick={() => {
+                  if (detailModalItem._type === 'meal') handleDeleteMeal(detailModalItem.id);
+                  else handleDeleteWorkout(detailModalItem.id);
+                  setDetailModalItem(null);
+                }}
+                className="flex-1 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                <Trash size={18} /> Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
     </div>

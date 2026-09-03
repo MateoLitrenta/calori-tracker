@@ -8,6 +8,7 @@ export interface MealEntry {
   type: MealType;
   calories: number;
   time?: string; // Format: HH:mm
+  details?: string;
 }
 
 export interface WorkoutEntry {
