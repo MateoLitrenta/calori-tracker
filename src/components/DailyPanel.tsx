@@ -818,16 +818,18 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             </div>
             <div className="p-6 flex flex-col items-center gap-4">
                <input
-                 type="number"
+                 type="text"
                  inputMode="decimal"
-                 step="0.1"
-                 min="0"
                  autoFocus
                  value={editWeightVal}
-                 onChange={(e) => setEditWeightVal(e.target.value)}
+                 onChange={(e) => {
+                   const valorLimpio = e.target.value.replace(',', '.');
+                   const filtrado = valorLimpio.replace(/[^0-9.]/g, '');
+                   setEditWeightVal(filtrado);
+                 }}
                  onKeyDown={(e) => {
                    if (e.key === 'Enter') {
-                     handleSetWeight(Number(editWeightVal) || 0);
+                     handleSetWeight(parseFloat(editWeightVal) || 0);
                      setIsEditingWeight(false);
                    }
                  }}
@@ -838,7 +840,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             <div className="p-4 border-t border-github-border flex gap-3 bg-[#21262d]">
               <button 
                 onClick={() => {
-                  handleSetWeight(Number(editWeightVal) || 0);
+                  handleSetWeight(parseFloat(editWeightVal) || 0);
                   setIsEditingWeight(false);
                 }}
                 className="flex-1 bg-pink-600 hover:bg-pink-700 text-white py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
