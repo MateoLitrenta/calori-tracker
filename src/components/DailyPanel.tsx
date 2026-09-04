@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, X, CaretRight } from '@phosphor-icons/react';
+import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, X, CaretRight, Clock } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap } from '../types';
@@ -142,6 +142,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [mealType, setMealType] = useState<MealType>('Almuerzo');
   const [mealCals, setMealCals] = useState<number | ''>('');
   const [mealDetails, setMealDetails] = useState('');
+  const [mealTime, setMealTime] = useState('');
 
   const [localSteps, setLocalSteps] = useState(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
   const stepsInputRef = useRef<HTMLInputElement>(null);
@@ -152,24 +153,33 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     }
   }, [currentRecord.steps]);
 
+  useEffect(() => {
+    if (activeTab === 'comida' && !editingMealId) {
+      setMealTime(format(new Date(), 'HH:mm'));
+    } else if (activeTab === 'entrenamiento' && !editingWorkoutId) {
+      setWorkTime(format(new Date(), 'HH:mm'));
+    }
+  }, [activeTab, editingMealId, editingWorkoutId]);
+
   const handleAddMeal = (e: React.FormEvent) => {
     e.preventDefault();
     if (!mealName || !mealCals) return;
     
     if (editingMealId) {
       const updatedMeals = currentRecord.meals.map(m => 
-        m.id === editingMealId ? { ...m, name: mealName, type: mealType, calories: Number(mealCals), details: mealDetails } : m
+        m.id === editingMealId ? { ...m, name: mealName, type: mealType, calories: Number(mealCals), details: mealDetails, time: mealTime || format(new Date(), 'HH:mm') } : m
       );
       onUpdateRecord(dateStr, { ...currentRecord, meals: updatedMeals });
       setEditingMealId(null);
     } else {
-      const newMeal: MealEntry = { id: generateUUID(), name: mealName, type: mealType, calories: Number(mealCals), time: format(new Date(), 'HH:mm'), details: mealDetails };
+      const newMeal: MealEntry = { id: generateUUID(), name: mealName, type: mealType, calories: Number(mealCals), time: mealTime || format(new Date(), 'HH:mm'), details: mealDetails };
       onUpdateRecord(dateStr, { ...currentRecord, meals: [...currentRecord.meals, newMeal] });
     }
     
     setMealName('');
     setMealCals('');
     setMealDetails('');
+    setMealTime('');
     setActiveTab(null);
   };
 
@@ -180,6 +190,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setMealType(m.type);
     setMealCals(m.calories);
     setMealDetails(m.details || '');
+    setMealTime(m.time || format(new Date(), 'HH:mm'));
   };
 
   const [editingWorkoutId, setEditingWorkoutId] = useState<string | null>(null);
@@ -189,6 +200,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [workDetails, setWorkDetails] = useState('');
   const [workDistance, setWorkDistance] = useState<number | ''>('');
   const [workPace, setWorkPace] = useState('');
+  const [workTime, setWorkTime] = useState('');
 
   const handleAddWorkout = (e: React.FormEvent) => {
     e.preventDefault();
@@ -196,13 +208,13 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     
     if (editingWorkoutId) {
       const updatedWorkouts = currentRecord.workouts.map(w => 
-        w.id === editingWorkoutId ? { ...w, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), details: workDetails, distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined } : w
+        w.id === editingWorkoutId ? { ...w, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), details: workDetails, distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined, time: workTime || format(new Date(), 'HH:mm') } : w
       );
       onUpdateRecord(dateStr, { ...currentRecord, workouts: updatedWorkouts });
       setEditingWorkoutId(null);
     } else {
       const newWorkout: WorkoutEntry = { 
-        id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [], details: workDetails, time: format(new Date(), 'HH:mm'), distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined
+        id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [], details: workDetails, time: workTime || format(new Date(), 'HH:mm'), distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined
       };
       onUpdateRecord(dateStr, { ...currentRecord, workouts: [...currentRecord.workouts, newWorkout] });
     }
@@ -213,6 +225,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setWorkDetails('');
     setWorkDistance('');
     setWorkPace('');
+    setWorkTime('');
     setActiveTab(null);
   };
 
@@ -225,6 +238,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setWorkDetails(w.details || '');
     setWorkDistance(w.distance || '');
     setWorkPace(w.pace || '');
+    setWorkTime(w.time || format(new Date(), 'HH:mm'));
   };
 
   const [detailModalItem, setDetailModalItem] = useState<(MealEntry & { _type: 'meal' }) | (WorkoutEntry & { _type: 'workout' }) | null>(null);
@@ -469,13 +483,32 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 <Check weight="bold" /> Guardar
               </button>
             </div>
-            <input
-              type="text"
-              placeholder="Notas / Detalles opcionales (ej: Acompañamientos, ingredientes...)"
-              value={mealDetails}
-              onChange={e => setMealDetails(e.target.value)}
-              className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-            />
+            <div className="flex gap-4 flex-wrap">
+              <div className="flex items-center gap-2">
+                <input 
+                  type="time" 
+                  required 
+                  value={mealTime} 
+                  onChange={e => setMealTime(e.target.value)}
+                  className="bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                />
+                <button 
+                  type="button" 
+                  title="Hora actual" 
+                  onClick={() => setMealTime(format(new Date(), 'HH:mm'))}
+                  className="bg-github-bg border border-github-border p-2 rounded-md hover:text-blue-400 text-github-muted transition-colors flex-shrink-0"
+                >
+                  <Clock size={18} />
+                </button>
+              </div>
+              <input
+                type="text"
+                placeholder="Notas / Detalles opcionales (ej: Acompañamientos, ingredientes...)"
+                value={mealDetails}
+                onChange={e => setMealDetails(e.target.value)}
+                className="flex-1 min-w-[200px] bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+              />
+            </div>
           </form>
         )}
 
@@ -519,12 +552,31 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               />
             </div>
 
-            <textarea
-              placeholder={workActivity.toLowerCase() === 'gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Notas o detalles adicionales..."}
-              value={workDetails}
-              onChange={e => setWorkDetails(e.target.value)}
-              className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-h-[60px] resize-y"
-            />
+            <div className="flex gap-4 flex-wrap items-start">
+              <div className="flex items-center gap-2">
+                <input 
+                  type="time" 
+                  required 
+                  value={workTime} 
+                  onChange={e => setWorkTime(e.target.value)}
+                  className="bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                />
+                <button 
+                  type="button" 
+                  title="Hora actual" 
+                  onClick={() => setWorkTime(format(new Date(), 'HH:mm'))}
+                  className="bg-github-bg border border-github-border p-2 rounded-md hover:text-orange-400 text-github-muted transition-colors flex-shrink-0"
+                >
+                  <Clock size={18} />
+                </button>
+              </div>
+              <textarea
+                placeholder={workActivity.toLowerCase() === 'gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Notas o detalles adicionales..."}
+                value={workDetails}
+                onChange={e => setWorkDetails(e.target.value)}
+                className="flex-1 w-full bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-h-[42px] resize-y min-w-[200px]"
+              />
+            </div>
 
             {['correr', 'natación', 'caminata'].includes(workActivity.toLowerCase()) && (
               <div className="flex gap-4">
