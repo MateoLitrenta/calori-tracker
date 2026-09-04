@@ -144,6 +144,15 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [mealDetails, setMealDetails] = useState('');
   const [mealTime, setMealTime] = useState('');
 
+  const [editingWorkoutId, setEditingWorkoutId] = useState<string | null>(null);
+  const [workActivity, setWorkActivity] = useState('');
+  const [workDuration, setWorkDuration] = useState<number | ''>('');
+  const [workCals, setWorkCals] = useState<number | ''>('');
+  const [workDetails, setWorkDetails] = useState('');
+  const [workDistance, setWorkDistance] = useState<number | ''>('');
+  const [workPace, setWorkPace] = useState('');
+  const [workTime, setWorkTime] = useState('');
+
   const [localSteps, setLocalSteps] = useState(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
   const stepsInputRef = useRef<HTMLInputElement>(null);
 
@@ -192,15 +201,6 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setMealDetails(m.details || '');
     setMealTime(m.time || format(new Date(), 'HH:mm'));
   };
-
-  const [editingWorkoutId, setEditingWorkoutId] = useState<string | null>(null);
-  const [workActivity, setWorkActivity] = useState('');
-  const [workDuration, setWorkDuration] = useState<number | ''>('');
-  const [workCals, setWorkCals] = useState<number | ''>('');
-  const [workDetails, setWorkDetails] = useState('');
-  const [workDistance, setWorkDistance] = useState<number | ''>('');
-  const [workPace, setWorkPace] = useState('');
-  const [workTime, setWorkTime] = useState('');
 
   const handleAddWorkout = (e: React.FormEvent) => {
     e.preventDefault();
