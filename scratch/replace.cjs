@@ -1,0 +1,1 @@
+const fs = require('fs'); let f = fs.readFileSync('src/components/DailyPanel.tsx', 'utf8'); f = f.replace(/<(input|select|textarea)([^>]*)className=\"([^\"]*)text-sm([^\"]*)\"/g, '<=\"-base\"'); fs.writeFileSync('src/components/DailyPanel.tsx', f);

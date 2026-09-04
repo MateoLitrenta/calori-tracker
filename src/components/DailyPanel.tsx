@@ -380,45 +380,21 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               </div>
             </div>
 
-            <div className="bg-github-card border border-github-border p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
+            <div className="bg-github-card border border-github-border p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full cursor-pointer hover:border-pink-500/50 transition-colors"
+                 onClick={() => {
+                   setEditWeightVal(currentRecord.weight ? String(currentRecord.weight) : '');
+                   setIsEditingWeight(true);
+                 }}
+                 title="Registrar peso"
+            >
               <div className="flex flex-col items-center gap-1">
                 <Scales size={20} className="text-pink-400" />
                 <span className="text-[10px] uppercase tracking-wider font-semibold text-github-muted">Peso</span>
               </div>
               <div className="text-lg md:text-xl font-bold text-white flex flex-col items-center">
-                {isEditingWeight ? (
-                  <input
-                    type="number"
-                    inputMode="decimal"
-                    step="0.1"
-                    min="0"
-                    autoFocus
-                    value={editWeightVal}
-                    onChange={(e) => setEditWeightVal(e.target.value)}
-                    onBlur={() => {
-                      handleSetWeight(Number(editWeightVal) || 0);
-                      setIsEditingWeight(false);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleSetWeight(Number(editWeightVal) || 0);
-                        setIsEditingWeight(false);
-                      }
-                    }}
-                    className="w-16 bg-github-bg border border-github-border rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-pink-500"
-                  />
-                ) : (
-                  <span 
-                    className="cursor-pointer hover:text-pink-400 transition-colors" 
-                    onClick={() => {
-                      setEditWeightVal(currentRecord.weight ? String(currentRecord.weight) : '');
-                      setIsEditingWeight(true);
-                    }}
-                    title="Editar peso"
-                  >
-                    {currentRecord.weight ? currentRecord.weight.toLocaleString('es-AR') : '--'}
-                  </span>
-                )}
+                <span className="hover:text-pink-400 transition-colors">
+                  {currentRecord.weight ? currentRecord.weight.toLocaleString('es-AR') : '--'}
+                </span>
                 <span className="text-[10px] font-normal text-github-muted mt-0.5">kg</span>
               </div>
             </div>
@@ -827,8 +803,56 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         </div>
       )}
 
+      {/* Peso Modal */}
+      {isEditingWeight && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-github-card border border-github-border w-full max-w-xs rounded-2xl shadow-xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-4 border-b border-github-border flex justify-between items-center bg-[#21262d]">
+              <h3 className="font-bold text-lg text-white">Registrar Peso</h3>
+              <button 
+                onClick={() => setIsEditingWeight(false)}
+                className="text-github-muted hover:text-white transition-colors p-1"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-6 flex flex-col items-center gap-4">
+               <input
+                 type="number"
+                 inputMode="decimal"
+                 step="0.1"
+                 min="0"
+                 autoFocus
+                 value={editWeightVal}
+                 onChange={(e) => setEditWeightVal(e.target.value)}
+                 onKeyDown={(e) => {
+                   if (e.key === 'Enter') {
+                     handleSetWeight(Number(editWeightVal) || 0);
+                     setIsEditingWeight(false);
+                   }
+                 }}
+                 className="w-32 bg-github-bg border border-github-border rounded-lg px-4 py-3 text-center text-xl text-white focus:outline-none focus:border-pink-500"
+               />
+               <span className="text-sm text-github-muted">kilogramos</span>
+            </div>
+            <div className="p-4 border-t border-github-border flex gap-3 bg-[#21262d]">
+              <button 
+                onClick={() => {
+                  handleSetWeight(Number(editWeightVal) || 0);
+                  setIsEditingWeight(false);
+                }}
+                className="flex-1 bg-pink-600 hover:bg-pink-700 text-white py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                <Check size={18} weight="bold" /> Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
 
 export default DailyPanel;
+
