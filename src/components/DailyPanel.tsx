@@ -1064,7 +1064,9 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
           </div>
         </div>
       )}
-\n    </div>\n  );\n};
+    </div>
+  );
+};
 
 export default DailyPanel;
 
