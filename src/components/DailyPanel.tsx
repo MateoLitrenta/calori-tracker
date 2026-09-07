@@ -180,6 +180,29 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      // Ignore clicks on elements that have been removed from the DOM (like the modal buttons)
+      if (!document.contains(event.target as Node)) return;
+      
+      // Also ignore clicks inside any modal (which we give a special class or check by closest)
+      // Actually, checking if it's inside the tabContainer is enough, BUT if they click inside the modal
+      // and it's NOT removed from the DOM, we also want to ignore it!
+      const target = event.target as Element;
+      if (target.closest('.fixed.inset-0')) return; // Ignore clicks inside modals
+
+      if (tabContainerRef.current && !tabContainerRef.current.contains(event.target as Node)) {
+        setActiveTab(null);
+        resetForms();
+      }
+    };
+    if (activeTab) {
+      document.addEventListener('click', handleClickOutside as EventListener);
+    }
+    return () => {
+      document.removeEventListener('click', handleClickOutside as EventListener);
+    };
+  }, [activeTab]);
   const [localSteps, setLocalSteps] = useState(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
   const stepsInputRef = useRef<HTMLInputElement>(null);
 
@@ -805,7 +828,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             
             <div className="p-4 border-t border-github-border flex gap-3 bg-[#21262d]">
               <button 
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   const item = detailModalItem;
                   setDetailModalItem(null);
                   if (item._type === 'meal') startEditMeal(item as MealEntry);
@@ -816,7 +840,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 <PencilSimple size={18} /> Editar
               </button>
               <button 
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   if (detailModalItem._type === 'meal') handleDeleteMeal(detailModalItem.id);
                   else handleDeleteWorkout(detailModalItem.id);
                   setDetailModalItem(null);
