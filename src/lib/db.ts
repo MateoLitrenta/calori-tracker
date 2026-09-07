@@ -213,3 +213,33 @@ export const syncDeleteWorkout = async (wId: string) => {
     throw error;
   }
 };
+
+export const syncUpdateMeal = async (meal: MealEntry) => {
+  const { error } = await supabase.from('meals').update({
+    description: meal.name, 
+    meal_type: meal.type, 
+    calories: meal.calories,
+    time_str: meal.time || null,
+    meal_details: meal.details || null
+  }).eq('id', meal.id);
+  if (error) {
+    console.error('Error updating meal:', error);
+    throw error;
+  }
+};
+
+export const syncUpdateWorkout = async (w: WorkoutEntry) => {
+  const { error } = await supabase.from('workouts').update({
+    activity_name: w.activity, 
+    duration_min: w.duration, 
+    calories_burned: w.calories,
+    workout_details: w.details || null,
+    time_str: w.time || null,
+    distance_km: w.distance || null,
+    pace_str: w.pace || null
+  }).eq('id', w.id);
+  if (error) {
+    console.error('Error updating workout:', error);
+    throw error;
+  }
+};

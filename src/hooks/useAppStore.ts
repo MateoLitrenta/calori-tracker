@@ -78,15 +78,25 @@ export const useAppStore = () => {
 
       const addedMeals = record.meals.filter(m => !oldRecord.meals?.some((o: any) => o.id === m.id));
       const deletedMeals = oldRecord.meals?.filter((o: any) => !record.meals.some(m => m.id === o.id)) || [];
+      const modifiedMeals = record.meals.filter(m => {
+        const old = oldRecord.meals?.find((o: any) => o.id === m.id);
+        return old && JSON.stringify(old) !== JSON.stringify(m);
+      });
       
       for (const m of addedMeals) await db.syncAddMeal(user.id, logId, m, dateStr);
       for (const m of deletedMeals) await db.syncDeleteMeal(m.id);
+      for (const m of modifiedMeals) await db.syncUpdateMeal(m);
 
       const addedWorkouts = record.workouts.filter(w => !oldRecord.workouts?.some((o: any) => o.id === w.id));
       const deletedWorkouts = oldRecord.workouts?.filter((o: any) => !record.workouts.some(w => w.id === o.id)) || [];
+      const modifiedWorkouts = record.workouts.filter(w => {
+        const old = oldRecord.workouts?.find((o: any) => o.id === w.id);
+        return old && JSON.stringify(old) !== JSON.stringify(w);
+      });
 
       for (const w of addedWorkouts) await db.syncAddWorkout(user.id, logId, w, dateStr);
       for (const w of deletedWorkouts) await db.syncDeleteWorkout(w.id);
+      for (const w of modifiedWorkouts) await db.syncUpdateWorkout(w);
 
       // Refresh log directly from DB
       const refreshedLog = await db.fetchDailyLog(user.id, dateStr);
