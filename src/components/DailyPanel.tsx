@@ -153,6 +153,33 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [workPace, setWorkPace] = useState('');
   const [workTime, setWorkTime] = useState('');
 
+  const resetForms = () => {
+    setEditingMealId(null);
+    setMealName('');
+    setMealCals('');
+    setMealDetails('');
+    setMealTime('');
+    
+    setEditingWorkoutId(null);
+    setWorkActivity('');
+    setWorkDuration('');
+    setWorkCals('');
+    setWorkDetails('');
+    setWorkDistance('');
+    setWorkPace('');
+    setWorkTime('');
+  };
+
+  const handleTabToggle = (tab: 'comida' | 'entrenamiento' | 'pasos-agua') => {
+    if (activeTab === tab) {
+      setActiveTab(null);
+      resetForms();
+    } else {
+      setActiveTab(tab);
+      resetForms();
+    }
+  };
+
   const [localSteps, setLocalSteps] = useState(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
   const stepsInputRef = useRef<HTMLInputElement>(null);
 
@@ -407,19 +434,19 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
           {/* Action Buttons */}
           <div className="flex gap-2 mt-2">
             <button 
-              onClick={() => setActiveTab(activeTab === 'comida' ? null : 'comida')}
+              onClick={() => handleTabToggle('comida')}
               className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'comida' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-github-card border-github-border text-github-text hover:bg-[#21262d]'}`}
             >
               + Comida
             </button>
             <button 
-              onClick={() => setActiveTab(activeTab === 'entrenamiento' ? null : 'entrenamiento')}
+              onClick={() => handleTabToggle('entrenamiento')}
               className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'entrenamiento' ? 'bg-orange-600 border-orange-500 text-white' : 'bg-github-card border-github-border text-github-text hover:bg-[#21262d]'}`}
             >
               + Ejercicio
             </button>
             <button 
-              onClick={() => setActiveTab(activeTab === 'pasos-agua' ? null : 'pasos-agua')}
+              onClick={() => handleTabToggle('pasos-agua')}
               className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'pasos-agua' ? 'bg-cyan-600 border-cyan-500 text-white' : 'bg-github-card border-github-border text-github-text hover:bg-[#21262d]'}`}
             >
               Pasos/Agua
@@ -455,8 +482,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 value={mealCals} onChange={e => setMealCals(Number(e.target.value))}
                 className="w-24 bg-github-bg border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
               />
-              <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm transition-colors flex items-center gap-2">
-                <Check weight="bold" /> Guardar
+              <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2">
+                <Check weight="bold" /> {editingMealId ? 'Guardar Cambios' : 'Guardar'}
               </button>
             </div>
             <div className="flex gap-4 flex-wrap">
@@ -570,8 +597,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             )}
 
             <div className="flex justify-end">
-              <button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-medium text-sm transition-colors flex items-center gap-2">
-                <Check weight="bold" /> Guardar
+              <button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2">
+                <Check weight="bold" /> {editingWorkoutId ? 'Guardar Cambios' : 'Guardar'}
               </button>
             </div>
           </form>
