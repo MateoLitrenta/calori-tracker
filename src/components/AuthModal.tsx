@@ -69,15 +69,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-github-bg border border-github-border rounded-xl shadow-xl flex flex-col max-h-[90vh]">
+      <div className="w-full max-w-md bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-[gray-800] rounded-xl shadow-xl flex flex-col max-h-[90vh]">
         
-        <div className="flex items-center justify-between p-4 border-b border-github-border">
+        <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-[gray-800]">
           <div className="flex gap-4">
             <button
               onClick={() => setIsLogin(true)}
               className={clsx(
                 "text-lg font-semibold transition-colors",
-                isLogin ? "text-white" : "text-github-muted hover:text-white"
+                isLogin ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
               )}
             >
               Iniciar Sesión
@@ -86,13 +86,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
               onClick={() => setIsLogin(false)}
               className={clsx(
                 "text-lg font-semibold transition-colors",
-                !isLogin ? "text-white" : "text-github-muted hover:text-white"
+                !isLogin ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
               )}
             >
               Registrarse
             </button>
           </div>
-          <button onClick={onClose} className="text-github-muted hover:text-white p-1 rounded hover:bg-github-border transition-colors">
+          <button onClick={onClose} className="text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white p-1 rounded hover:bg-slate-200 dark:hover:bg-[gray-800] transition-colors">
             <X size={24} />
           </button>
         </div>
@@ -101,25 +101,25 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             
             <div className="flex flex-col gap-1">
-              <label className="text-sm text-github-muted">Email</label>
+              <label className="text-sm text-slate-500 dark:text-gray-400">Email</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-github-card border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                 placeholder="tu@email.com"
               />
             </div>
             
             <div className="flex flex-col gap-1">
-              <label className="text-sm text-github-muted">Contraseña</label>
+              <label className="text-sm text-slate-500 dark:text-gray-400">Contraseña</label>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-github-card border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                 placeholder="••••••••"
                 minLength={6}
               />
@@ -128,21 +128,21 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             {!isLogin && (
               <>
                 <div className="flex flex-col gap-1">
-                  <label className="text-sm text-github-muted">Nombre completo</label>
+                  <label className="text-sm text-slate-500 dark:text-gray-400">Nombre completo</label>
                   <input
                     type="text"
                     inputMode="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="bg-github-card border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                    className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                     placeholder="Ej. Mateo"
                   />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1">
-                    <label className="text-sm text-github-muted">Edad</label>
+                    <label className="text-sm text-slate-500 dark:text-gray-400">Edad</label>
                     <input
                       type="number"
                       inputMode="numeric"
@@ -151,15 +151,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                       min={1}
                       value={age}
                       onChange={(e) => setAge(Number(e.target.value))}
-                      className="bg-github-card border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label className="text-sm text-github-muted">Sexo</label>
+                    <label className="text-sm text-slate-500 dark:text-gray-400">Sexo</label>
                     <select
                       value={sex}
                       onChange={(e) => setSex(e.target.value as any)}
-                      className="bg-github-card border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                     >
                       <option value="Masculino">Masculino</option>
                       <option value="Femenino">Femenino</option>
@@ -169,7 +169,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1">
-                    <label className="text-sm text-github-muted">Peso (kg)</label>
+                    <label className="text-sm text-slate-500 dark:text-gray-400">Peso (kg)</label>
                     <input
                       type="number"
                       inputMode="numeric"
@@ -178,11 +178,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                       min={1}
                       value={weight}
                       onChange={(e) => setWeight(Number(e.target.value))}
-                      className="bg-github-card border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label className="text-sm text-github-muted">Altura (cm)</label>
+                    <label className="text-sm text-slate-500 dark:text-gray-400">Altura (cm)</label>
                     <input
                       type="number"
                       inputMode="numeric"
@@ -191,7 +191,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                       min={1}
                       value={height}
                       onChange={(e) => setHeight(Number(e.target.value))}
-                      className="bg-github-card border border-github-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                     />
                   </div>
                 </div>

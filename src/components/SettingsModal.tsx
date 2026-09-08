@@ -40,11 +40,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ profile, userEmail, userI
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-      <div className="bg-github-card border border-github-border w-full max-w-md rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95">
+      <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] w-full max-w-md rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95">
         
-        <div className="flex justify-between items-center p-4 border-b border-github-border bg-[#21262d]">
+        <div className="flex justify-between items-center p-4 border-b border-slate-200 dark:border-[gray-800] bg-slate-100 dark:bg-[#0f141c]">
           <h2 className="text-xl font-bold flex items-center gap-2"><User /> Configuración de Perfil</h2>
-          <button onClick={onClose} className="text-github-muted hover:text-white transition-colors">
+          <button onClick={onClose} className="text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white transition-colors">
             <X size={24} />
           </button>
         </div>
@@ -53,23 +53,23 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ profile, userEmail, userI
           <form id="profile-form" onSubmit={handleSubmit} className="flex flex-col gap-4">
             
             <div>
-              <label className="block text-sm font-medium text-github-muted mb-1">Email</label>
-              <input readOnly value={userEmail || ''} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 text-github-muted cursor-not-allowed opacity-70" />
+              <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1">Email</label>
+              <input readOnly value={userEmail || ''} className="w-full bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-slate-500 dark:text-gray-400 cursor-not-allowed opacity-70" />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-github-muted mb-1">Nombre</label>
-              <input required inputMode="text" name="name" value={formData.name} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
+              <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1">Nombre</label>
+              <input required inputMode="text" name="name" value={formData.name} onChange={handleChange} className="w-full bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-github-muted mb-1">Edad</label>
-                <input required type="number" inputMode="numeric" pattern="[0-9]*" min="1" name="age" value={formData.age} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1">Edad</label>
+                <input required type="number" inputMode="numeric" pattern="[0-9]*" min="1" name="age" value={formData.age} onChange={handleChange} className="w-full bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-github-muted mb-1">Sexo</label>
-                <select name="sex" value={formData.sex} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500">
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1">Sexo</label>
+                <select name="sex" value={formData.sex} onChange={handleChange} className="w-full bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 focus:outline-none focus:border-blue-500">
                   <option value="Masculino">Masculino</option>
                   <option value="Femenino">Femenino</option>
                 </select>
@@ -78,18 +78,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ profile, userEmail, userI
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-github-muted mb-1">Estatura (cm)</label>
-                <input required type="number" inputMode="numeric" pattern="[0-9]*" min="50" name="height" value={formData.height} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1">Estatura (cm)</label>
+                <input required type="number" inputMode="numeric" pattern="[0-9]*" min="50" name="height" value={formData.height} onChange={handleChange} className="w-full bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-github-muted mb-1">Peso (kg)</label>
-                <input required type="number" inputMode="numeric" pattern="[0-9]*" min="20" name="weight" value={formData.weight} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1">Peso (kg)</label>
+                <input required type="number" inputMode="numeric" pattern="[0-9]*" min="20" name="weight" value={formData.weight} onChange={handleChange} className="w-full bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-github-muted mb-1">Objetivo</label>
-              <select name="goal" value={formData.goal} onChange={handleChange} className="w-full bg-github-bg border border-github-border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500">
+              <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1">Objetivo</label>
+              <select name="goal" value={formData.goal} onChange={handleChange} className="w-full bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 focus:outline-none focus:border-blue-500">
                 <option value="Definición/Pérdida">Definición/Pérdida</option>
                 <option value="Mantenimiento">Mantenimiento</option>
                 <option value="Volumen/Ganancia">Volumen/Ganancia</option>
@@ -97,7 +97,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ profile, userEmail, userI
             </div>
           </form>
 
-          <div className="mt-8 border-t border-github-border pt-6 flex flex-col gap-3">
+          <div className="mt-8 border-t border-slate-200 dark:border-[gray-800] pt-6 flex flex-col gap-3">
             <h3 className="text-sm font-bold text-red-400 flex items-center gap-2"><Warning /> Zona Peligrosa</h3>
             <button onClick={onReset} className="w-full bg-red-900/30 hover:bg-red-900/50 border border-red-900 text-red-400 px-4 py-2 rounded-md font-medium text-sm transition-colors">
               Reiniciar todos los datos
@@ -105,8 +105,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ profile, userEmail, userI
           </div>
         </div>
 
-        <div className="p-4 border-t border-github-border bg-[#21262d] flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2 rounded-md font-medium text-sm transition-colors bg-github-bg hover:bg-github-border border border-github-border">
+        <div className="p-4 border-t border-slate-200 dark:border-[gray-800] bg-slate-100 dark:bg-[#0f141c] flex justify-end gap-3">
+          <button onClick={onClose} className="px-4 py-2 rounded-md font-medium text-sm transition-colors bg-slate-100 dark:bg-[#0f141c] hover:bg-slate-200 dark:hover:bg-[gray-800] border border-slate-200 dark:border-[gray-800]">
             Cancelar
           </button>
           <button form="profile-form" type="submit" className="px-4 py-2 rounded-md font-medium text-sm transition-colors bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2">

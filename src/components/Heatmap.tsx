@@ -273,11 +273,11 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
   };
 
   return (
-    <div className="p-4 md:p-6 bg-github-card border border-github-border rounded-xl shadow-lg w-full overflow-hidden flex flex-col gap-4">
+    <div className="p-4 md:p-6 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-xl shadow-lg w-full overflow-hidden flex flex-col gap-4">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h2 className="text-xl font-bold text-github-text">Historial de Actividad</h2>
+        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Historial de Actividad</h2>
         
-        <div className="flex bg-[#1c2128] rounded-md p-1 border border-github-border self-end sm:self-auto">
+        <div className="flex bg-[#1c2128] rounded-md p-1 border border-slate-200 dark:border-[gray-800] self-end sm:self-auto">
           {(['year', 'month', 'week', 'day'] as Period[]).map((p) => {
             const labels = { year: 'Año', month: 'Mes', week: 'Semana', day: 'Día' };
             return (
@@ -285,7 +285,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
                 key={p}
                 onClick={() => handlePeriodChange(p)}
                 className={`px-3 py-1 text-xs font-medium rounded-sm transition-colors ${
-                  period === p ? 'bg-github-bg text-white shadow' : 'text-github-muted hover:text-white'
+                  period === p ? 'bg-slate-100 dark:bg-[#0f141c] text-slate-900 dark:text-white shadow' : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 {labels[p]}
@@ -304,7 +304,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
                 {monthLabels.map((month, i) => (
                   <div 
                     key={i} 
-                    className="absolute text-[10px] text-github-muted capitalize"
+                    className="absolute text-[10px] text-slate-500 dark:text-gray-400 capitalize"
                     style={{ 
                       left: `calc(${month.colIndex} * var(--col-width, 13px))` 
                     }}
@@ -317,7 +317,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
               <div className="flex">
                 <div className="flex flex-col gap-[2px] md:gap-1 pr-2 mt-[2px]">
                   {weekDays.map((day, i) => (
-                    <div key={day} className="text-[9px] text-github-muted h-[11px] md:h-2.5 leading-[11px] md:leading-[10px] pr-1 text-right w-5 md:w-7">
+                    <div key={day} className="text-[9px] text-slate-500 dark:text-gray-400 h-[11px] md:h-2.5 leading-[11px] md:leading-[10px] pr-1 text-right w-5 md:w-7">
                       {i % 2 !== 0 ? day : ''}
                     </div>
                   ))}
@@ -356,7 +356,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
               <div className="flex">
                 <div className="flex flex-col gap-[2px] md:gap-1 pr-2 mt-[2px] invisible">
                   {weekDays.map((day, i) => (
-                    <div key={`inv-${day}`} className="text-[9px] text-github-muted h-[11px] md:h-2.5 leading-[11px] md:leading-[10px] pr-1 text-right w-5 md:w-7">
+                    <div key={`inv-${day}`} className="text-[9px] text-slate-500 dark:text-gray-400 h-[11px] md:h-2.5 leading-[11px] md:leading-[10px] pr-1 text-right w-5 md:w-7">
                       {i % 2 !== 0 ? day : ''}
                     </div>
                   ))}
@@ -384,7 +384,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       </div>
 
       {/* Legend */}
-      <div className="flex justify-end items-center mt-2 text-xs text-github-muted gap-2 flex-wrap">
+      <div className="flex justify-end items-center mt-2 text-xs text-slate-500 dark:text-gray-400 gap-2 flex-wrap">
         <span>Déficit</span>
         <div className="flex gap-1">
           <div className="w-3 h-3 rounded-[2px] bg-heatmap-deficit-high" title="< -500 kcal"></div>

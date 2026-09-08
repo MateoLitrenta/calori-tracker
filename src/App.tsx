@@ -3,6 +3,7 @@ import Heatmap from './components/Heatmap';
 import DailyPanel from './components/DailyPanel';
 import SettingsModal from './components/SettingsModal';
 import AuthModal from './components/AuthModal';
+import ThemeToggle from './components/ThemeToggle';
 import { Fire, Gear, SignOut, SignIn } from '@phosphor-icons/react';
 import { useAppStore } from './hooks/useAppStore';
 import { formatDateStr, calculateBMR } from './utils/helpers';
@@ -44,7 +45,7 @@ function App() {
   const records = activeProfile?.records || {};
 
   return (
-    <div className="min-h-screen bg-github-bg text-github-text p-4 md:p-8 flex flex-col items-center">
+    <div className="min-h-screen bg-slate-100 dark:bg-[#0f141c] text-slate-900 dark:text-white p-4 md:p-8 flex flex-col items-center">
       <Toaster position="bottom-right" />
       <header className="w-full max-w-4xl mb-8 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -53,11 +54,12 @@ function App() {
           </div>
           <div>
             <h1 className="text-2xl font-bold">Calori Tracker</h1>
-            <p className="text-github-muted text-sm hidden sm:block">Monitorea tu balance calórico diario</p>
+            <p className="text-slate-500 dark:text-gray-400 text-sm hidden sm:block">Monitorea tu balance calórico diario</p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           {!user ? (
             <button 
               onClick={() => setIsAuthOpen(true)}
@@ -68,19 +70,19 @@ function App() {
             </button>
           ) : (
             <>
-              <span className="text-sm font-semibold text-github-muted hidden sm:inline-block">
+              <span className="text-sm font-semibold text-slate-500 dark:text-gray-400 hidden sm:inline-block">
                 {activeProfile?.name || user.email}
               </span>
               <button 
                 onClick={() => setIsSettingsOpen(true)}
-                className="p-2 bg-github-card hover:bg-github-border border border-github-border rounded-md transition-colors text-github-muted hover:text-white"
+                className="p-2 bg-white dark:bg-[#161b22] hover:bg-slate-200 dark:hover:bg-[gray-800] border border-slate-200 dark:border-[gray-800] rounded-md transition-colors text-slate-500 dark:text-gray-400 hover:text-white"
                 title="Ajustes de Perfil"
               >
                 <Gear size={20} />
               </button>
               <button 
                 onClick={signOut}
-                className="p-2 bg-github-card hover:bg-red-900/50 border border-github-border hover:border-red-900 rounded-md transition-colors text-github-muted hover:text-red-400"
+                className="p-2 bg-white dark:bg-[#161b22] hover:bg-red-900/50 border border-slate-200 dark:border-[gray-800] hover:border-red-900 rounded-md transition-colors text-slate-500 dark:text-gray-400 hover:text-red-400"
                 title="Cerrar Sesión"
               >
                 <SignOut size={20} />

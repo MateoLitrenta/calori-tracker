@@ -4,6 +4,6 @@
 
 @layer base {
   body {
-    @apply bg-github-bg text-github-text m-0 p-0 antialiased;
+    @apply bg-slate-100 dark:bg-[#0f141c] text-slate-900 dark:text-white m-0 p-0 antialiased transition-colors duration-200;
   }
 }
