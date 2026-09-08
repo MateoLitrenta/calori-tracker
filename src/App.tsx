@@ -49,7 +49,7 @@ function App() {
       <Toaster position="bottom-right" />
       <header className="w-full max-w-4xl mb-8 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-github-border rounded-lg">
+          <div className="p-2 bg-slate-200 dark:bg-gray-800 rounded-lg">
             <Fire size={32} weight="fill" className="text-orange-500" />
           </div>
           <div>
@@ -75,14 +75,14 @@ function App() {
               </span>
               <button 
                 onClick={() => setIsSettingsOpen(true)}
-                className="p-2 bg-white dark:bg-[#161b22] hover:bg-slate-200 dark:hover:bg-[gray-800] border border-slate-200 dark:border-[gray-800] rounded-md transition-colors text-slate-500 dark:text-gray-400 hover:text-white"
+                className="p-2 bg-white dark:bg-[#161b22] hover:bg-slate-200 dark:hover:bg-gray-800 border border-slate-200 dark:border-gray-800 rounded-md transition-colors text-slate-500 dark:text-gray-400 hover:text-white"
                 title="Ajustes de Perfil"
               >
                 <Gear size={20} />
               </button>
               <button 
                 onClick={signOut}
-                className="p-2 bg-white dark:bg-[#161b22] hover:bg-red-900/50 border border-slate-200 dark:border-[gray-800] hover:border-red-900 rounded-md transition-colors text-slate-500 dark:text-gray-400 hover:text-red-400"
+                className="p-2 bg-white dark:bg-[#161b22] hover:bg-red-900/50 border border-slate-200 dark:border-gray-800 hover:border-red-900 rounded-md transition-colors text-slate-500 dark:text-gray-400 hover:text-red-400"
                 title="Cerrar Sesión"
               >
                 <SignOut size={20} />

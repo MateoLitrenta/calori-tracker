@@ -69,9 +69,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-[gray-800] rounded-xl shadow-xl flex flex-col max-h-[90vh]">
+      <div className="w-full max-w-md bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-xl shadow-xl flex flex-col max-h-[90vh]">
         
-        <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-[gray-800]">
+        <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-gray-800">
           <div className="flex gap-4">
             <button
               onClick={() => setIsLogin(true)}
@@ -92,7 +92,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
               Registrarse
             </button>
           </div>
-          <button onClick={onClose} className="text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white p-1 rounded hover:bg-slate-200 dark:hover:bg-[gray-800] transition-colors">
+          <button onClick={onClose} className="text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white p-1 rounded hover:bg-slate-200 dark:hover:bg-gray-800 transition-colors">
             <X size={24} />
           </button>
         </div>
@@ -107,7 +107,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                 placeholder="tu@email.com"
               />
             </div>
@@ -119,7 +119,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                 placeholder="••••••••"
                 minLength={6}
               />
@@ -135,7 +135,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                    className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                     placeholder="Ej. Mateo"
                   />
                 </div>
@@ -151,7 +151,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                       min={1}
                       value={age}
                       onChange={(e) => setAge(Number(e.target.value))}
-                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -159,7 +159,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                     <select
                       value={sex}
                       onChange={(e) => setSex(e.target.value as any)}
-                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                     >
                       <option value="Masculino">Masculino</option>
                       <option value="Femenino">Femenino</option>
@@ -178,7 +178,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                       min={1}
                       value={weight}
                       onChange={(e) => setWeight(Number(e.target.value))}
-                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -191,7 +191,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                       min={1}
                       value={height}
                       onChange={(e) => setHeight(Number(e.target.value))}
-                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
+                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
                     />
                   </div>
                 </div>

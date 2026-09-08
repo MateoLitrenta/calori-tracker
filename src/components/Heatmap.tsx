@@ -273,11 +273,11 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
   };
 
   return (
-    <div className="p-4 md:p-6 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-xl shadow-lg w-full overflow-hidden flex flex-col gap-4">
+    <div className="p-4 md:p-6 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl shadow-lg w-full overflow-hidden flex flex-col gap-4">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">Historial de Actividad</h2>
         
-        <div className="flex bg-[#1c2128] rounded-md p-1 border border-slate-200 dark:border-[gray-800] self-end sm:self-auto">
+        <div className="flex bg-[#1c2128] rounded-md p-1 border border-slate-200 dark:border-gray-800 self-end sm:self-auto">
           {(['year', 'month', 'week', 'day'] as Period[]).map((p) => {
             const labels = { year: 'Año', month: 'Mes', week: 'Semana', day: 'Día' };
             return (

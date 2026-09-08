@@ -30,14 +30,14 @@ export default function ThemeToggle() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 bg-white dark:bg-[#161b22] hover:bg-slate-200 dark:hover:bg-[gray-800] border border-slate-200 dark:border-[gray-800] rounded-md transition-colors text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
+        className="p-2 bg-white dark:bg-[#161b22] hover:bg-slate-200 dark:hover:bg-gray-800 border border-slate-200 dark:border-gray-800 rounded-md transition-colors text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
         title="Cambiar Tema"
       >
         <CurrentIcon size={20} />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[gray-800] rounded-md shadow-lg overflow-hidden z-50">
+        <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md shadow-lg overflow-hidden z-50">
           {themes.map(({ value, label, icon: Icon }) => (
             <button
               key={value}
@@ -47,8 +47,8 @@ export default function ThemeToggle() {
               }}
               className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors ${
                 theme === value
-                  ? 'bg-slate-200 dark:bg-[gray-800] text-slate-900 dark:text-white font-medium'
-                  : 'text-slate-500 dark:text-gray-400 hover:bg-slate-200 dark:hover:bg-[gray-800]/50 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-slate-200 dark:bg-gray-800 text-slate-900 dark:text-white font-medium'
+                  : 'text-slate-500 dark:text-gray-400 hover:bg-slate-200 dark:hover:bg-gray-800/50 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <Icon size={16} />

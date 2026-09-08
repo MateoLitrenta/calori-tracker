@@ -6,7 +6,7 @@ import { ThemeProvider } from './components/ThemeProvider'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider defaultTheme="system" storageKey="calori-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="calori-theme">
       <App />
     </ThemeProvider>
   </StrictMode>,

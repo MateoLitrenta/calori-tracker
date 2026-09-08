@@ -14,7 +14,7 @@ type ThemeProviderState = {
 };
 
 const initialState: ThemeProviderState = {
-  theme: 'system',
+  theme: 'dark',
   setTheme: () => null,
 };
 
@@ -22,7 +22,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'system',
+  defaultTheme = 'dark',
   storageKey = 'calori-theme',
   ...props
 }: ThemeProviderProps) {
@@ -32,16 +32,28 @@ export function ThemeProvider({
 
   useEffect(() => {
     const root = window.document.documentElement;
-
-    root.classList.remove('dark');
-
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else if (theme === 'system') {
-      const systemThemeDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (systemThemeDark) {
+    
+    const applyTheme = (t: Theme) => {
+      if (t === 'dark') {
         root.classList.add('dark');
+      } else if (t === 'light') {
+        root.classList.remove('dark');
+      } else if (t === 'system') {
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          root.classList.add('dark');
+        } else {
+          root.classList.remove('dark');
+        }
       }
+    };
+
+    applyTheme(theme);
+
+    if (theme === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = () => applyTheme('system');
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
     }
   }, [theme]);
 
