@@ -277,7 +277,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">Historial de Actividad</h2>
         
-        <div className="flex bg-[#1c2128] rounded-md p-1 border border-slate-200 dark:border-gray-800 self-end sm:self-auto">
+        <div className="flex bg-slate-200 dark:bg-[#161b22] rounded-md p-1 border border-slate-300 dark:border-gray-800 self-end sm:self-auto">
           {(['year', 'month', 'week', 'day'] as Period[]).map((p) => {
             const labels = { year: 'Año', month: 'Mes', week: 'Semana', day: 'Día' };
             return (
@@ -285,7 +285,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
                 key={p}
                 onClick={() => handlePeriodChange(p)}
                 className={`px-3 py-1 text-xs font-medium rounded-sm transition-colors ${
-                  period === p ? 'bg-slate-100 dark:bg-[#0f141c] text-slate-900 dark:text-white shadow' : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
+                  period === p ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-white' : 'text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 {labels[p]}
@@ -385,6 +385,10 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
 
       {/* Legend */}
       <div className="flex justify-end items-center mt-2 text-xs text-slate-500 dark:text-gray-400 gap-2 flex-wrap">
+        <div className="flex items-center gap-1 mr-2">
+          <span>Sin datos</span>
+          <div className="w-3 h-3 rounded-[2px] bg-slate-200 dark:bg-[#161b22]" title="Sin registros"></div>
+        </div>
         <span>Déficit</span>
         <div className="flex gap-1">
           <div className="w-3 h-3 rounded-[2px] bg-heatmap-deficit-high" title="< -500 kcal"></div>
