@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import type { DailyRecord, UserProfile } from '../types';
+import type { ActivityLevel, DailyRecord, DailyRecordsMap, UserProfile } from '../types';
 
 export const formatDateStr = (date: Date) => format(date, 'yyyy-MM-dd');
 
@@ -20,20 +20,63 @@ export const getCaloriesIngested = (record: DailyRecord | undefined) => {
   return record.meals.reduce((sum, meal) => sum + meal.calories, 0);
 };
 
-export const getCaloriesBurned = (record: DailyRecord | undefined, currentBMR: number) => {
-  if (!record) return 0;
-  const workoutCals = record.workouts.reduce((sum, w) => sum + w.calories, 0);
-  const stepsCals = record.steps * 0.04; // aprox 0.04 kcal per step
-  return currentBMR + workoutCals + stepsCals;
+export const ACTIVITY_MULTIPLIERS: Readonly<Record<ActivityLevel, number>> = {
+  Sedentario: 1.20, Moderado: 1.375, Activo: 1.55,
+};
+export const DEFICIT_ADJUSTMENT = -400;
+export const SURPLUS_ADJUSTMENT = 300;
+
+export const normalizeActivityLevel = (value: unknown): ActivityLevel =>
+  value === 'Moderado' || value === 'Activo' ? value : 'Sedentario';
+
+export const getActivityMultiplier = (profile: UserProfile): number =>
+  ACTIVITY_MULTIPLIERS[normalizeActivityLevel(profile.activity)];
+
+export const calculateTDEE = (profile: UserProfile): number =>
+  Math.round(calculateBMR(profile) * getActivityMultiplier(profile));
+
+export const calculateDailyCalorieTarget = (profile: UserProfile): number =>
+  Math.round(calculateTDEE(profile) + (profile.goal === 'Déficit' ? DEFICIT_ADJUSTMENT
+    : profile.goal === 'Superávit' ? SURPLUS_ADJUSTMENT : 0));
+
+export const getRemainingCalories = (record: DailyRecord | undefined, dailyTarget: number) =>
+  dailyTarget - getCaloriesIngested(record);
+
+export const getRemainingLabel = (remaining: number) =>
+  remaining > 0 ? 'Restantes' : remaining < 0 ? 'Exceso' : 'Meta alcanzada';
+
+export const getWorkoutCalories = (record: DailyRecord | undefined) =>
+  record?.workouts.reduce((sum, workout) => sum + workout.calories, 0) ?? 0;
+
+export const hasEnergyData = (record: DailyRecord | undefined): record is DailyRecord =>
+  !!record && (record.meals.length > 0 || record.workouts.length > 0 || record.steps > 0);
+
+// Compatibility helper: expenditure is TDEE only, never TDEE plus tracked activity.
+export const getCaloriesBurned = (record: DailyRecord | undefined, dailyTDEE: number) =>
+  hasEnergyData(record) ? dailyTDEE : 0;
+
+export const getEstimatedEnergyBalance = (record: DailyRecord | undefined, dailyTDEE: number) => {
+  if (!hasEnergyData(record)) return null;
+  return Math.round(getCaloriesIngested(record) - dailyTDEE);
 };
 
-export const getNetBalance = (record: DailyRecord | undefined, currentBMR: number) => {
-  if (!record) return null;
-  // If there are no meals and no workouts and no steps, maybe consider it 'empty'?
-  if (record.meals.length === 0 && record.workouts.length === 0 && record.steps === 0) {
-    return null; // Equivalent to 'no data'
+export const getNetBalance = getEstimatedEnergyBalance;
+
+// Missing, empty and future days are not assumed to have zero intake.
+export const aggregateEnergy = (records: DailyRecordsMap, dates: string[], dailyTDEE: number,
+  today = formatDateStr(new Date())) => {
+  let consumed = 0;
+  let days = 0;
+  for (const date of new Set(dates)) {
+    const record = records[date];
+    if (date > today || !hasEnergyData(record)) continue;
+    consumed += getCaloriesIngested(record);
+    days++;
   }
-  return Math.round(getCaloriesIngested(record) - getCaloriesBurned(record, currentBMR));
+  const expenditure = days * dailyTDEE;
+  const balance = days ? consumed - expenditure : null;
+  return { consumed, days, expenditure, balance,
+    averageBalance: balance === null ? null : Math.round(balance / days) };
 };
 
 export const getHeatmapColor = (balance: number | null) => {

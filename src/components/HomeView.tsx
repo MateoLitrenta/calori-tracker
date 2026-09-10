@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Heatmap from './Heatmap';
 import DailyPanel from './DailyPanel';
 import { useAppStore } from '../hooks/useAppStore';
-import { formatDateStr, calculateBMR } from '../utils/helpers';
+import { formatDateStr, calculateTDEE, calculateDailyCalorieTarget } from '../utils/helpers';
 
 export default function HomeView() {
   const { activeProfile, updateRecord } = useAppStore();
@@ -17,8 +17,10 @@ export default function HomeView() {
     }
   }, [selectedDateStr, selectedGroup]);
 
-  const currentBMR = activeProfile ? calculateBMR(activeProfile) : 2000;
+  const dailyTDEE = activeProfile ? calculateTDEE(activeProfile) : 0;
   const records = activeProfile?.records || {};
+
+  if (!activeProfile) return <p className="text-slate-500 dark:text-gray-400">Cargando perfil…</p>;
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-300">
@@ -30,14 +32,15 @@ export default function HomeView() {
           setSelectedGroup({ type: 'day', label: dateStr, dates: [dateStr] });
         }}
         onSelectGroup={(type, label, dates) => setSelectedGroup({ type, label, dates })}
-        currentBMR={currentBMR}
+        dailyTDEE={dailyTDEE}
       />
       
       <DailyPanel 
         record={records[selectedDateStr]}
         dateStr={selectedDateStr}
         onUpdateRecord={updateRecord}
-        currentBMR={currentBMR}
+        dailyTDEE={dailyTDEE}
+        dailyTarget={activeProfile ? calculateDailyCalorieTarget(activeProfile) : 0}
         selectedGroup={selectedGroup}
         records={records}
       />

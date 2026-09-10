@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { PaperPlaneRight, Robot, User } from '@phosphor-icons/react';
 import { useAppStore } from '../hooks/useAppStore';
-import { calculateBMR, formatDateStr } from '../utils/helpers';
+import { calculateBMR, calculateTDEE, calculateDailyCalorieTarget, getCaloriesIngested, getRemainingCalories, getWorkoutCalories, normalizeActivityLevel, formatDateStr } from '../utils/helpers';
 import { generateAIResponse, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
@@ -56,14 +56,29 @@ export default function ChatView() {
       // Build Dynamic Context
       const todayStr = formatDateStr(new Date());
       const todayRecord = activeProfile?.records?.[todayStr];
-      const ingested = todayRecord?.meals.reduce((acc, m) => acc + m.calories, 0) || 0;
-      
-      const bmr = activeProfile ? calculateBMR(activeProfile) : 2000;
-      let adjustedTarget = bmr;
-      if (activeProfile?.goal === 'Déficit') adjustedTarget -= 400;
-      if (activeProfile?.goal === 'Superávit') adjustedTarget += 400;
-
-      const systemPrompt = `Eres el asistente nutricional de la app Calori Tracker. Tu usuario actual se llama ${activeProfile?.name || 'Usuario'}, pesa ${activeProfile?.weight || 70}kg, tiene un objetivo de ${activeProfile?.goal || 'Mantenimiento'} con una meta diaria de ${adjustedTarget} kcal. Hoy ha consumido ${ingested} kcal. Sé conciso, directo, motivador, siempre en español y enfócate estrictamente en nutrición, salud y entrenamiento. No des explicaciones médicas complejas, sino consejos accionables.`;
+      if (!activeProfile) throw new Error('Esperá a que se cargue tu perfil para consultar al asistente.');
+      const ingested = getCaloriesIngested(todayRecord);
+      const bmr = calculateBMR(activeProfile);
+      const tdee = calculateTDEE(activeProfile);
+      const target = calculateDailyCalorieTarget(activeProfile);
+      const remaining = getRemainingCalories(todayRecord, target);
+      const systemPrompt = `Eres el asistente nutricional de la app Calori Tracker.
+Contexto actual del usuario:
+Nombre: ${activeProfile.name}
+Peso actual: ${activeProfile.weight} kg
+TMB: ${bmr} kcal
+TDEE estimado: ${tdee} kcal
+Nivel de actividad: ${normalizeActivityLevel(activeProfile.activity)}
+Objetivo: ${activeProfile.goal}
+Meta diaria: ${target} kcal
+Consumidas hoy: ${ingested} kcal
+Restantes para la meta: ${remaining} kcal
+Pasos hoy: ${todayRecord?.steps ?? 0}
+Ejercicio registrado: ${getWorkoutCalories(todayRecord)} kcal
+The user's daily calorie target is already calculated by the application. Do not recalculate or replace it unless the user explicitly asks for an explanation.
+No sumes calorías de pasos ni de ejercicio al TDEE o a la meta diaria: ya estima la actividad habitual. Son solo contexto.
+Si las restantes son positivas, usalas para recomendaciones. Si son negativas, indicá el exceso sin inventar otra meta. Si son cero, indicá que alcanzó la meta.
+Sé conciso, directo, motivador, siempre en español y enfócate estrictamente en nutrición, salud y entrenamiento. No des explicaciones médicas complejas, sino consejos accionables.`;
 
       const replyText = await generateAIResponse(newHistory, systemPrompt);
       

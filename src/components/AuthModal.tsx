@@ -51,7 +51,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             weight_kg: weight,
             height_cm: height,
             gender: sex,
-            goal: 'Mantenimiento'
+            goal: 'Mantenimiento',
+            activity_level: 'Sedentario'
           }, { onConflict: 'id' });
           if (profileError) throw profileError;
           

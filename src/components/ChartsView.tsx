@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
-import { calculateBMR, getNetBalance } from '../utils/helpers';
+import { calculateTDEE, calculateDailyCalorieTarget, aggregateEnergy, getCaloriesIngested, hasEnergyData, formatDateStr } from '../utils/helpers';
 import { ChartBar, CheckCircle, Fire, TrendUp } from '@phosphor-icons/react';
 import { format, subWeeks, subMonths, startOfWeek, addDays, startOfMonth, endOfMonth } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -11,7 +11,8 @@ export default function ChartsView() {
   const { activeProfile } = useAppStore();
   const [period, setPeriod] = useState<Period>('Semana');
 
-  const currentBMR = activeProfile ? calculateBMR(activeProfile) : 2000;
+  const dailyTDEE = activeProfile ? calculateTDEE(activeProfile) : 0;
+  const dailyTarget = activeProfile ? calculateDailyCalorieTarget(activeProfile) : 0;
   const records = activeProfile?.records || {};
 
   // Compute stats and dynamic chart data
@@ -23,19 +24,18 @@ export default function ChartsView() {
     let maxStreak = 0;
     let tempStreak = 0;
 
-    const sortedDates = Object.keys(records).sort();
+    const sortedDates = Object.keys(records).filter(date => date <= formatDateStr(new Date())).sort();
     
     // Overall stats (keeping original logic for global KPIs)
     for (let i = sortedDates.length - 1; i >= 0; i--) {
       const date = sortedDates[i];
       const rec = records[date];
-      if (rec && (rec.meals.length > 0 || rec.workouts.length > 0)) {
+      if (hasEnergyData(rec)) {
         tempStreak++;
         daysWithData++;
-        const ingested = rec.meals.reduce((acc, m) => acc + m.calories, 0);
+        const ingested = getCaloriesIngested(rec);
         totalCalories += ingested;
-        const balance = getNetBalance(rec, currentBMR) || 0;
-        if (balance <= 100) {
+        if (ingested <= dailyTarget) {
           daysMetGoal++;
         }
       } else {
@@ -51,66 +51,40 @@ export default function ChartsView() {
 
     // Dynamic Chart Data Generation
     const today = new Date();
-    const chartData = [];
+    const chartData: { day: string; cals: number; goal: number; hasData: boolean }[] = [];
     let periodCalories = 0;
 
+    let periodDays = 0;
+    const addBucket = (day: string, dates: string[]) => {
+      const summary = aggregateEnergy(records, dates, dailyTDEE);
+      periodCalories += summary.consumed;
+      periodDays += summary.days;
+      chartData.push({ day, cals: summary.days ? Math.round(summary.consumed / summary.days) : 0,
+        goal: summary.days ? dailyTarget : 0, hasData: summary.days > 0 });
+    };
     if (period === 'Semana') {
       const start = startOfWeek(today, { weekStartsOn: 1 });
       for (let i = 0; i < 7; i++) {
-        const d = addDays(start, i);
-        const dStr = format(d, 'yyyy-MM-dd');
-        const rec = records[dStr];
-        const cals = rec ? rec.meals.reduce((acc, m) => acc + m.calories, 0) : 0;
-        periodCalories += cals;
-        chartData.push({
-          day: format(d, 'EEE', { locale: es }).replace(/^\w/, c => c.toUpperCase()),
-          cals,
-          goal: currentBMR
-        });
+        const day = addDays(start, i);
+        addBucket(format(day, 'EEE', { locale: es }), [formatDateStr(day)]);
       }
     } else if (period === 'Mes') {
-      // 4 weeks approx
+      // Preserve the existing four-week view; average only days with data.
       for (let i = 3; i >= 0; i--) {
-        const d = subWeeks(today, i);
-        const start = startOfWeek(d, { weekStartsOn: 1 });
-        let weekCals = 0;
-        for (let j = 0; j < 7; j++) {
-          const wD = format(addDays(start, j), 'yyyy-MM-dd');
-          if (records[wD]) weekCals += records[wD].meals.reduce((a, b) => a + b.calories, 0);
-        }
-        periodCalories += weekCals;
-        chartData.push({
-          day: `Sem ${4 - i}`,
-          cals: Math.round(weekCals / 7),
-          goal: currentBMR
-        });
+        const start = startOfWeek(subWeeks(today, i), { weekStartsOn: 1 });
+        addBucket(`Sem ${4 - i}`, Array.from({ length: 7 }, (_, j) => formatDateStr(addDays(start, j))));
       }
-    } else if (period === 'Año') {
-      // 12 months
+    } else {
       for (let i = 11; i >= 0; i--) {
-        const d = subMonths(today, i);
-        const mStart = startOfMonth(d);
-        const mEnd = endOfMonth(d);
-        let monthCals = 0;
-        let daysInMonth = mEnd.getDate();
-        for (let j = 0; j < daysInMonth; j++) {
-          const mD = format(addDays(mStart, j), 'yyyy-MM-dd');
-          if (records[mD]) monthCals += records[mD].meals.reduce((a, b) => a + b.calories, 0);
-        }
-        periodCalories += monthCals;
-        chartData.push({
-          day: format(d, 'MMM', { locale: es }).replace(/^\w/, c => c.toUpperCase()),
-          cals: Math.round(monthCals / daysInMonth),
-          goal: currentBMR
-        });
+        const day = subMonths(today, i);
+        const start = startOfMonth(day);
+        addBucket(format(day, 'MMM', { locale: es }),
+          Array.from({ length: endOfMonth(day).getDate() }, (_, j) => formatDateStr(addDays(start, j))));
       }
     }
+    // Approximate macro targets use the same included days as calorie totals.
+    const theoreticalTargetCals = dailyTarget * periodDays;
 
-    // Macros: Approximated based on consumed calories in period
-    // Since we don't track exact macros per food yet, we map from consumed calories 
-    // to typical target ratios: 30% Prot, 45% Carb, 25% Fat
-    const theoreticalTargetCals = period === 'Semana' ? currentBMR * 7 : period === 'Mes' ? currentBMR * 30 : currentBMR * 365;
-    
     // Grams = Cals / 4 for prot/carbs, Cals / 9 for fat
     const macrosCalc = {
       protein: {
@@ -139,7 +113,7 @@ export default function ChartsView() {
       barChartData: chartData,
       macros: macrosCalc
     };
-  }, [records, currentBMR, period]);
+  }, [records, dailyTDEE, dailyTarget, period]);
 
   const maxCals = Math.max(1, ...barChartData.map(d => Math.max(d.cals, d.goal))) * 1.1; // Add 10% headroom
 
@@ -218,8 +192,8 @@ export default function ChartsView() {
             const isOver = d.cals > d.goal;
 
             return (
-              <div key={i} className="flex flex-col items-center gap-2 flex-1 group">
-                <div className="relative w-full max-w-[2.5rem] h-full flex items-end justify-center">
+              <div key={i} className="flex flex-col items-center gap-2 flex-1 h-full group">
+                <div className="relative w-full max-w-[2.5rem] flex-1 flex items-end justify-center">
                   {/* Goal Marker Line */}
                   <div 
                     className="absolute w-full border-t-2 border-slate-300 dark:border-gray-600 border-dashed z-10"
@@ -232,7 +206,7 @@ export default function ChartsView() {
                   >
                     {/* Tooltip */}
                     <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
-                      {d.cals} kcal
+                      {d.hasData ? `${d.cals} kcal` : 'Sin datos'}
                     </div>
                   </div>
                 </div>
@@ -252,7 +226,7 @@ export default function ChartsView() {
           </div>
           <div className="flex items-center gap-2 hidden sm:flex">
             <span className="w-4 border-t-2 border-slate-300 dark:border-gray-600 border-dashed"></span>
-            <span className="text-slate-600 dark:text-gray-400">Meta ({currentBMR} kcal)</span>
+            <span className="text-slate-600 dark:text-gray-400">Meta diaria ({dailyTarget} kcal)</span>
           </div>
         </div>
       </div>
