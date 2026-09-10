@@ -20,23 +20,39 @@ export async function generateAIResponse(
       parts: [{ text: msg.text }]
     }));
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: systemInstruction }] },
-        contents: history,
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 500,
-        }
-      })
+    const bodyPayload = JSON.stringify({
+      systemInstruction: { parts: [{ text: systemInstruction }] },
+      contents: history,
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 500,
+      }
     });
 
+    // Petición principal (Gemini 1.5 Flash)
+    let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: bodyPayload
+    });
+
+    // Si falla, reintento con fallback (Gemini 2.0 Flash)
     if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      console.error("AI Service Error Data:", errData);
-      throw new Error(errData?.error?.message || 'Error al conectar con el proveedor de IA.');
+      const errData1 = await response.json().catch(() => null);
+      console.warn("Fallo con gemini-1.5-flash. Intentando fallback a gemini-2.0-flash...", errData1);
+      
+      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: bodyPayload
+      });
+
+      // Si también falla el fallback, imprimimos el error detallado final
+      if (!response.ok) {
+        const errData2 = await response.json().catch(() => ({}));
+        console.error("AI Service Error Data Detallado (Fallback Gemini 2.0 fallido):", errData2);
+        throw new Error(errData2?.error?.message || 'Error al conectar con ambos modelos de Google AI.');
+      }
     }
 
     const data = await response.json();
