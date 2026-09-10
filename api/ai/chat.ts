@@ -80,7 +80,14 @@ export default {
       contents,
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 800
+        // Gemini 2.5 Flash uses dynamic thinking by default. For this fast,
+        // conversational nutrition assistant we disable thinking so the token
+        // budget is spent on the visible answer instead of hidden reasoning.
+        thinkingConfig: {
+          thinkingBudget: 0
+        },
+        // Leave enough room for complete recommendations and short explanations.
+        maxOutputTokens: 2048
       }
     };
 
@@ -115,13 +122,19 @@ export default {
         return json({ error: message }, 502);
       }
 
-      const reply = data?.candidates?.[0]?.content?.parts
+      const candidate = data?.candidates?.[0];
+      const finishReason = candidate?.finishReason;
+      const reply = candidate?.content?.parts
         ?.map((part: { text?: string }) => part?.text || '')
         .join('')
         .trim();
 
+      if (finishReason === 'MAX_TOKENS') {
+        console.warn('Gemini response reached MAX_TOKENS before completing.');
+      }
+
       if (!reply) {
-        console.error('Gemini returned an empty response.');
+        console.error('Gemini returned an empty response.', { finishReason: finishReason || 'unknown' });
         return json({ error: 'La IA respondió sin contenido.' }, 502);
       }
 
