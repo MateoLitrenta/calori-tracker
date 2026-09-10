@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import HomeView from './components/HomeView';
 import ChatView from './components/ChatView';
 import ChartsView from './components/ChartsView';
@@ -16,6 +16,11 @@ function App() {
   const { user } = useAppStore();
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0, behavior: 'instant' });
+  }, [activeTab]);
 
   return (
     <div className="h-screen flex flex-col md:flex-row overflow-hidden bg-slate-100 dark:bg-[#0f141c] text-slate-900 dark:text-white">
@@ -43,7 +48,7 @@ function App() {
         </header>
 
         {/* Main Content Area */}
-        <main className={`flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 w-full transition-all duration-300 ${!user ? 'opacity-40 pointer-events-none blur-[2px] select-none' : ''}`}>
+        <main ref={mainRef} className={`flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 w-full transition-all duration-300 ${!user ? 'opacity-40 pointer-events-none blur-[2px] select-none' : ''}`}>
           {activeTab === 'home' && <HomeView />}
           {activeTab === 'chat' && <ChatView />}
           {activeTab === 'charts' && <ChartsView />}
