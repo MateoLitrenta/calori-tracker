@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { PaperPlaneRight, Robot, User } from '@phosphor-icons/react';
+import { useAppStore } from '../hooks/useAppStore';
+import { calculateBMR, formatDateStr } from '../utils/helpers';
+import { generateAIResponse, type ChatMessage } from '../services/aiService';
+import toast from 'react-hot-toast';
 
-interface Message {
+interface Message extends ChatMessage {
   id: string;
-  role: 'user' | 'bot';
-  text: string;
 }
 
 const QUICK_SUGGESTIONS = [
@@ -14,6 +16,7 @@ const QUICK_SUGGESTIONS = [
 ];
 
 export default function ChatView() {
+  const { activeProfile } = useAppStore();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -38,24 +41,47 @@ export default function ChatView() {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const handleSend = (text: string) => {
-    if (!text.trim()) return;
+  const handleSend = async (text: string) => {
+    if (!text.trim() || isTyping) return;
 
     const userMsg: Message = { id: Date.now().toString(), role: 'user', text };
-    setMessages(prev => [...prev, userMsg]);
+    const newHistory = [...messages, userMsg];
+    
+    setMessages(newHistory);
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate bot response
-    setTimeout(() => {
+    try {
+      // Build Dynamic Context
+      const todayStr = formatDateStr(new Date());
+      const todayRecord = activeProfile?.records?.[todayStr];
+      const ingested = todayRecord?.meals.reduce((acc, m) => acc + m.calories, 0) || 0;
+      
+      const bmr = activeProfile ? calculateBMR(activeProfile) : 2000;
+      let adjustedTarget = bmr;
+      if (activeProfile?.goal === 'Déficit') adjustedTarget -= 400;
+      if (activeProfile?.goal === 'Superávit') adjustedTarget += 400;
+
+      const systemPrompt = `Eres el asistente nutricional de la app Calori Tracker. Tu usuario actual se llama ${activeProfile?.name || 'Usuario'}, pesa ${activeProfile?.weight || 70}kg, tiene un objetivo de ${activeProfile?.goal || 'Mantenimiento'} con una meta diaria de ${adjustedTarget} kcal. Hoy ha consumido ${ingested} kcal. Sé conciso, directo, motivador, siempre en español y enfócate estrictamente en nutrición, salud y entrenamiento. No des explicaciones médicas complejas, sino consejos accionables.`;
+
+      const replyText = await generateAIResponse(newHistory, systemPrompt);
+      
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: 'bot',
-        text: 'Esta es una respuesta simulada del asistente inteligente. Pronto estaré conectado a una IA real para ayudarte de forma personalizada.'
+        text: replyText
       };
       setMessages(prev => [...prev, botMsg]);
+    } catch (error) {
+      toast.error('Error al contactar al asistente.');
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'bot',
+        text: '❌ Ha ocurrido un error al intentar conectarme al servidor de IA.'
+      }]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -83,7 +109,7 @@ export default function ChatView() {
                 <Robot size={16} className="text-orange-600 dark:text-orange-400" weight="fill" />
               )}
             </div>
-            <div className={`px-4 py-3 rounded-2xl text-sm shadow-sm ${
+            <div className={`px-4 py-3 rounded-2xl text-sm shadow-sm whitespace-pre-wrap ${
               msg.role === 'user' 
                 ? 'bg-blue-600 text-white rounded-tr-sm' 
                 : 'bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-gray-100 rounded-tl-sm border border-slate-200 dark:border-gray-800'
@@ -114,7 +140,8 @@ export default function ChatView() {
             <button
               key={i}
               onClick={() => handleSend(suggestion)}
-              className="flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-700 text-slate-700 dark:text-gray-300 hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 transition-colors whitespace-nowrap shadow-sm"
+              disabled={isTyping}
+              className="flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-700 text-slate-700 dark:text-gray-300 hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 disabled:opacity-50 transition-colors whitespace-nowrap shadow-sm"
             >
               {suggestion}
             </button>
@@ -129,12 +156,13 @@ export default function ChatView() {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
+            disabled={isTyping}
             placeholder="Escribe un mensaje..."
-            className="flex-1 bg-white dark:bg-[#161b22] border border-slate-300 dark:border-gray-700 rounded-xl pl-4 pr-12 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 shadow-sm"
+            className="flex-1 bg-white dark:bg-[#161b22] border border-slate-300 dark:border-gray-700 rounded-xl pl-4 pr-12 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 shadow-sm disabled:opacity-50"
           />
           <button
             type="submit"
-            disabled={!inputValue.trim()}
+            disabled={!inputValue.trim() || isTyping}
             className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 dark:disabled:bg-gray-700 text-white rounded-lg transition-colors flex items-center justify-center"
           >
             <PaperPlaneRight size={18} weight="fill" />
