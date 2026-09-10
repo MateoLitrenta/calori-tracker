@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
 import { calculateBMR, getNetBalance } from '../utils/helpers';
 import { ChartBar, CheckCircle, Fire, TrendUp } from '@phosphor-icons/react';
+import { format, subWeeks, subMonths, startOfWeek, addDays, startOfMonth, endOfMonth } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 type Period = 'Semana' | 'Mes' | 'Año';
 
@@ -12,8 +14,8 @@ export default function ChartsView() {
   const currentBMR = activeProfile ? calculateBMR(activeProfile) : 2000;
   const records = activeProfile?.records || {};
 
-  // Compute dummy or real stats based on records
-  const stats = useMemo(() => {
+  // Compute stats and dynamic chart data
+  const { stats, barChartData, macros } = useMemo(() => {
     let daysWithData = 0;
     let totalCalories = 0;
     let daysMetGoal = 0;
@@ -23,22 +25,16 @@ export default function ChartsView() {
 
     const sortedDates = Object.keys(records).sort();
     
-    // Reverse iterate to find current streak
+    // Overall stats (keeping original logic for global KPIs)
     for (let i = sortedDates.length - 1; i >= 0; i--) {
       const date = sortedDates[i];
       const rec = records[date];
       if (rec && (rec.meals.length > 0 || rec.workouts.length > 0)) {
         tempStreak++;
         daysWithData++;
-        
-        // Calories ingested
         const ingested = rec.meals.reduce((acc, m) => acc + m.calories, 0);
         totalCalories += ingested;
-
         const balance = getNetBalance(rec, currentBMR) || 0;
-        
-        // Simple heuristic: if goal is deficit, balance < -100 is met. 
-        // For simplicity, just check if they logged anything substantial and were close to BMR
         if (balance <= 100) {
           daysMetGoal++;
         }
@@ -48,26 +44,104 @@ export default function ChartsView() {
       }
     }
     if (tempStreak > maxStreak) maxStreak = tempStreak;
-    currentStreak = tempStreak; // This implies the streak is ongoing up to the last logged day
+    currentStreak = tempStreak;
 
     const avgCalories = daysWithData ? Math.round(totalCalories / daysWithData) : 0;
     const goalPercentage = daysWithData ? Math.round((daysMetGoal / daysWithData) * 100) : 0;
 
-    return { avgCalories, goalPercentage, currentStreak };
-  }, [records, currentBMR]);
+    // Dynamic Chart Data Generation
+    const today = new Date();
+    const chartData = [];
+    let periodCalories = 0;
 
-  // Dummy chart data for illustration
-  const barChartData = [
-    { day: 'Lun', cals: 1800, goal: 2000 },
-    { day: 'Mar', cals: 2100, goal: 2000 },
-    { day: 'Mié', cals: 1950, goal: 2000 },
-    { day: 'Jue', cals: 2050, goal: 2000 },
-    { day: 'Vie', cals: 2300, goal: 2000 },
-    { day: 'Sáb', cals: 1700, goal: 2000 },
-    { day: 'Dom', cals: 1900, goal: 2000 },
-  ];
+    if (period === 'Semana') {
+      const start = startOfWeek(today, { weekStartsOn: 1 });
+      for (let i = 0; i < 7; i++) {
+        const d = addDays(start, i);
+        const dStr = format(d, 'yyyy-MM-dd');
+        const rec = records[dStr];
+        const cals = rec ? rec.meals.reduce((acc, m) => acc + m.calories, 0) : 0;
+        periodCalories += cals;
+        chartData.push({
+          day: format(d, 'EEE', { locale: es }).replace(/^\w/, c => c.toUpperCase()),
+          cals,
+          goal: currentBMR
+        });
+      }
+    } else if (period === 'Mes') {
+      // 4 weeks approx
+      for (let i = 3; i >= 0; i--) {
+        const d = subWeeks(today, i);
+        const start = startOfWeek(d, { weekStartsOn: 1 });
+        let weekCals = 0;
+        for (let j = 0; j < 7; j++) {
+          const wD = format(addDays(start, j), 'yyyy-MM-dd');
+          if (records[wD]) weekCals += records[wD].meals.reduce((a, b) => a + b.calories, 0);
+        }
+        periodCalories += weekCals;
+        chartData.push({
+          day: `Sem ${4 - i}`,
+          cals: Math.round(weekCals / 7),
+          goal: currentBMR
+        });
+      }
+    } else if (period === 'Año') {
+      // 12 months
+      for (let i = 11; i >= 0; i--) {
+        const d = subMonths(today, i);
+        const mStart = startOfMonth(d);
+        const mEnd = endOfMonth(d);
+        let monthCals = 0;
+        let daysInMonth = mEnd.getDate();
+        for (let j = 0; j < daysInMonth; j++) {
+          const mD = format(addDays(mStart, j), 'yyyy-MM-dd');
+          if (records[mD]) monthCals += records[mD].meals.reduce((a, b) => a + b.calories, 0);
+        }
+        periodCalories += monthCals;
+        chartData.push({
+          day: format(d, 'MMM', { locale: es }).replace(/^\w/, c => c.toUpperCase()),
+          cals: Math.round(monthCals / daysInMonth),
+          goal: currentBMR
+        });
+      }
+    }
 
-  const maxCals = Math.max(...barChartData.map(d => Math.max(d.cals, d.goal)));
+    // Macros: Approximated based on consumed calories in period
+    // Since we don't track exact macros per food yet, we map from consumed calories 
+    // to typical target ratios: 30% Prot, 45% Carb, 25% Fat
+    const theoreticalTargetCals = period === 'Semana' ? currentBMR * 7 : period === 'Mes' ? currentBMR * 30 : currentBMR * 365;
+    
+    // Grams = Cals / 4 for prot/carbs, Cals / 9 for fat
+    const macrosCalc = {
+      protein: {
+        consumed: Math.round((periodCalories * 0.3) / 4),
+        target: Math.round((theoreticalTargetCals * 0.3) / 4),
+        percent: 0
+      },
+      carbs: {
+        consumed: Math.round((periodCalories * 0.45) / 4),
+        target: Math.round((theoreticalTargetCals * 0.45) / 4),
+        percent: 0
+      },
+      fats: {
+        consumed: Math.round((periodCalories * 0.25) / 9),
+        target: Math.round((theoreticalTargetCals * 0.25) / 9),
+        percent: 0
+      }
+    };
+
+    macrosCalc.protein.percent = macrosCalc.protein.target > 0 ? Math.min(100, Math.round((macrosCalc.protein.consumed / macrosCalc.protein.target) * 100)) : 0;
+    macrosCalc.carbs.percent = macrosCalc.carbs.target > 0 ? Math.min(100, Math.round((macrosCalc.carbs.consumed / macrosCalc.carbs.target) * 100)) : 0;
+    macrosCalc.fats.percent = macrosCalc.fats.target > 0 ? Math.min(100, Math.round((macrosCalc.fats.consumed / macrosCalc.fats.target) * 100)) : 0;
+
+    return { 
+      stats: { avgCalories, goalPercentage, currentStreak },
+      barChartData: chartData,
+      macros: macrosCalc
+    };
+  }, [records, currentBMR, period]);
+
+  const maxCals = Math.max(1, ...barChartData.map(d => Math.max(d.cals, d.goal))) * 1.1; // Add 10% headroom
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-300">
@@ -135,9 +209,9 @@ export default function ChartsView() {
 
       {/* Main Bar Chart */}
       <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-6 rounded-2xl shadow-sm">
-        <h3 className="font-bold text-slate-900 dark:text-white mb-6">Consumo vs Meta ({period})</h3>
+        <h3 className="font-bold text-slate-900 dark:text-white mb-6">Consumo Promedio vs Meta ({period})</h3>
         
-        <div className="flex items-end justify-between gap-2 h-48 mt-4">
+        <div className="flex items-end justify-between gap-1 sm:gap-2 h-48 mt-4">
           {barChartData.map((d, i) => {
             const calsHeight = `${(d.cals / maxCals) * 100}%`;
             const goalHeight = `${(d.goal / maxCals) * 100}%`;
@@ -157,12 +231,12 @@ export default function ChartsView() {
                     style={{ height: calsHeight }}
                   >
                     {/* Tooltip */}
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
                       {d.cals} kcal
                     </div>
                   </div>
                 </div>
-                <span className="text-xs text-slate-500 dark:text-gray-400">{d.day}</span>
+                <span className="text-[10px] sm:text-xs text-slate-500 dark:text-gray-400 truncate w-full text-center">{d.day}</span>
               </div>
             );
           })}
@@ -170,13 +244,13 @@ export default function ChartsView() {
         <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-slate-100 dark:border-gray-800 text-sm">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-blue-500"></span>
-            <span className="text-slate-600 dark:text-gray-400">Dentro de la meta</span>
+            <span className="text-slate-600 dark:text-gray-400">Dentro de meta</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-red-500"></span>
-            <span className="text-slate-600 dark:text-gray-400">Sobre la meta</span>
+            <span className="text-slate-600 dark:text-gray-400">Sobre meta</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 hidden sm:flex">
             <span className="w-4 border-t-2 border-slate-300 dark:border-gray-600 border-dashed"></span>
             <span className="text-slate-600 dark:text-gray-400">Meta ({currentBMR} kcal)</span>
           </div>
@@ -185,36 +259,36 @@ export default function ChartsView() {
 
       {/* Macros Distribution */}
       <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-6 rounded-2xl shadow-sm mb-8">
-        <h3 className="font-bold text-slate-900 dark:text-white mb-6">Distribución de Macronutrientes (Aprox)</h3>
+        <h3 className="font-bold text-slate-900 dark:text-white mb-6">Macronutrientes Consumidos ({period})</h3>
         
         <div className="space-y-4">
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span className="font-medium text-slate-700 dark:text-gray-300">Proteínas</span>
-              <span className="text-slate-500 dark:text-gray-400">30% (Objetivo: 150g)</span>
+              <span className="font-medium text-slate-700 dark:text-gray-300">Proteínas (30%)</span>
+              <span className="text-slate-500 dark:text-gray-400">{macros.protein.consumed}g / {macros.protein.target}g</span>
             </div>
             <div className="h-3 w-full bg-slate-100 dark:bg-[#0f141c] rounded-full overflow-hidden">
-              <div className="h-full bg-pink-500 rounded-full" style={{ width: '85%' }}></div>
+              <div className="h-full bg-pink-500 rounded-full transition-all duration-500" style={{ width: `${macros.protein.percent}%` }}></div>
             </div>
           </div>
           
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span className="font-medium text-slate-700 dark:text-gray-300">Carbohidratos</span>
-              <span className="text-slate-500 dark:text-gray-400">45% (Objetivo: 225g)</span>
+              <span className="font-medium text-slate-700 dark:text-gray-300">Carbohidratos (45%)</span>
+              <span className="text-slate-500 dark:text-gray-400">{macros.carbs.consumed}g / {macros.carbs.target}g</span>
             </div>
             <div className="h-3 w-full bg-slate-100 dark:bg-[#0f141c] rounded-full overflow-hidden">
-              <div className="h-full bg-orange-400 rounded-full" style={{ width: '60%' }}></div>
+              <div className="h-full bg-orange-400 rounded-full transition-all duration-500" style={{ width: `${macros.carbs.percent}%` }}></div>
             </div>
           </div>
 
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span className="font-medium text-slate-700 dark:text-gray-300">Grasas</span>
-              <span className="text-slate-500 dark:text-gray-400">25% (Objetivo: 55g)</span>
+              <span className="font-medium text-slate-700 dark:text-gray-300">Grasas (25%)</span>
+              <span className="text-slate-500 dark:text-gray-400">{macros.fats.consumed}g / {macros.fats.target}g</span>
             </div>
             <div className="h-3 w-full bg-slate-100 dark:bg-[#0f141c] rounded-full overflow-hidden">
-              <div className="h-full bg-yellow-400 rounded-full" style={{ width: '110%' }}></div>
+              <div className="h-full bg-yellow-400 rounded-full transition-all duration-500" style={{ width: `${macros.fats.percent}%` }}></div>
             </div>
           </div>
         </div>

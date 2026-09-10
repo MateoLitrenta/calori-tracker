@@ -64,7 +64,7 @@ export default function ProfileView() {
         id: activeProfile?.id || '', 
         user_id: user.id 
       });
-      toast.success('Perfil actualizado correctamente', { style: { background: '#161b22', color: '#fff' } });
+      toast.success('¡Ajustes guardados correctamente!', { style: { background: '#161b22', color: '#fff' } });
     } catch (err) {
       toast.error('Error al actualizar', { style: { background: '#161b22', color: '#fff' } });
     }
