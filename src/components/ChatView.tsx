@@ -4,6 +4,7 @@ import { useAppStore } from '../hooks/useAppStore';
 import { calculateBMR, formatDateStr } from '../utils/helpers';
 import { generateAIResponse, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
+import ReactMarkdown from 'react-markdown';
 
 interface Message extends ChatMessage {
   id: string;
@@ -109,12 +110,18 @@ export default function ChatView() {
                 <Robot size={16} className="text-orange-600 dark:text-orange-400" weight="fill" />
               )}
             </div>
-            <div className={`px-4 py-3 rounded-2xl text-sm shadow-sm whitespace-pre-wrap ${
+            <div className={`px-4 py-3 rounded-2xl text-sm shadow-sm ${
               msg.role === 'user' 
-                ? 'bg-blue-600 text-white rounded-tr-sm' 
+                ? 'bg-blue-600 text-white rounded-tr-sm whitespace-pre-wrap' 
                 : 'bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-gray-100 rounded-tl-sm border border-slate-200 dark:border-gray-800'
             }`}>
-              {msg.text}
+              {msg.role === 'bot' ? (
+                <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-snug prose-p:mb-2 prose-ul:my-1 prose-li:my-0 last:prose-p:mb-0">
+                  <ReactMarkdown>{msg.text}</ReactMarkdown>
+                </div>
+              ) : (
+                msg.text
+              )}
             </div>
           </div>
         ))}
