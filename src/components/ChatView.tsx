@@ -74,11 +74,16 @@ export default function ChatView() {
       };
       setMessages(prev => [...prev, botMsg]);
     } catch (error) {
-      toast.error('Error al contactar al asistente.');
+      const errorMessage = error instanceof Error && error.message
+        ? error.message
+        : 'Ha ocurrido un error al intentar conectarme al servidor de IA.';
+
+      console.error('Chat AI error:', error);
+      toast.error(errorMessage);
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: 'bot',
-        text: '❌ Ha ocurrido un error al intentar conectarme al servidor de IA.'
+        text: `❌ ${errorMessage}`
       }]);
     } finally {
       setIsTyping(false);
