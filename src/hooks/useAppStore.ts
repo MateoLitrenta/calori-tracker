@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { UserProfile, DailyRecord } from '../types';
 import * as db from '../lib/db';
 import { supabase } from '../lib/supabase';
+import { normalizeActivityLevel } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import type { User } from '@supabase/supabase-js';
 
@@ -55,10 +56,9 @@ export const useAppStore = () => {
 
   const updateProfile = async (updated: UserProfile) => {
     await db.syncProfile(updated);
-    if (user) {
-      const refreshed = await db.fetchUserData(user.id, user.email);
-      if (refreshed) setActiveProfile(refreshed);
-    }
+    setActiveProfile(prev => prev && prev.id === updated.id
+      ? { ...prev, ...updated, activity: normalizeActivityLevel(updated.activity), records: prev.records }
+      : prev);
   };
 
   const updateRecord = async (dateStr: string, record: DailyRecord) => {

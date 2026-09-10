@@ -2,19 +2,19 @@ import React, { useMemo, useLayoutEffect, useRef, useState } from 'react';
 import { format, parseISO, addDays, subDays, startOfWeek, startOfMonth, endOfMonth, isSameDay, subMonths, addMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { DailyRecordsMap } from '../types';
-import { getHeatmapColor, getNetBalance } from '../utils/helpers';
+import { getHeatmapColor, getNetBalance, aggregateEnergy } from '../utils/helpers';
 
 interface HeatmapProps {
   records: DailyRecordsMap;
   selectedDateStr: string;
   onSelectDate: (dateStr: string) => void;
   onSelectGroup?: (type: 'day'|'week'|'month'|'year', label: string, dates: string[]) => void;
-  currentBMR: number;
+  dailyTDEE: number;
 }
 
 type Period = 'day' | 'week' | 'month' | 'year';
 
-const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDate, onSelectGroup, currentBMR }) => {
+const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDate, onSelectGroup, dailyTDEE }) => {
   const [period, setPeriod] = useState<Period>('day');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -85,21 +85,8 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     onSelectDate(dateStr);
   };
 
-  const getAverageBalance = (dates: string[]) => {
-    let sum = 0;
-    let count = 0;
-    dates.forEach(d => {
-      const record = records[d];
-      if (record) {
-        const balance = getNetBalance(record, currentBMR);
-        if (balance !== null) {
-          sum += balance;
-          count++;
-        }
-      }
-    });
-    return count === 0 ? null : Math.round(sum / count);
-  };
+  const getAverageBalance = (dates: string[]) =>
+    aggregateEnergy(records, dates, dailyTDEE).averageBalance;
 
   const { weeksArray, monthLabels, weekDays } = useMemo(() => {
     const today = new Date();
@@ -235,7 +222,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     if (!dateStr) return <div className={`${sizeClass} invisible`} />;
     
     const record = records[dateStr];
-    const balance = getNetBalance(record, currentBMR);
+    const balance = getNetBalance(record, dailyTDEE);
     const isSelected = selectedDateStr === dateStr;
     const isToday = isSameDay(parseISO(dateStr), new Date());
     const hasGym = record?.workouts?.some(w => w.activity.toLowerCase() === 'gimnasio');

@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 import type { UserProfile, DailyRecord, MealEntry, WorkoutEntry } from '../types';
-import { generateUUID } from '../utils/helpers';
+import { generateUUID, normalizeActivityLevel } from '../utils/helpers';
 
 export const fetchUserData = async (userId: string, userEmail?: string): Promise<UserProfile | null> => {
   try {
@@ -24,7 +24,8 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
           weight_kg: 70,
           height_cm: 170,
           gender: 'Masculino',
-          goal: 'Mantenimiento'
+          goal: 'Mantenimiento',
+          activity_level: 'Sedentario'
         }, { onConflict: 'id' })
         .select()
         .single();
@@ -66,6 +67,7 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
       height: profile.height_cm,
       weight: profile.weight_kg,
       goal: profile.goal as any,
+      activity: normalizeActivityLevel(profile.activity_level),
       records: recordsMap
     };
   } catch (e) {
@@ -112,7 +114,8 @@ export const syncProfile = async (p: UserProfile) => {
     gender: p.sex, 
     height_cm: p.height, 
     weight_kg: p.weight, 
-    goal: p.goal
+    goal: p.goal,
+    activity_level: normalizeActivityLevel(p.activity)
   }).or(`id.eq.${p.id},user_id.eq.${p.id}`);
   
   if (error) {
