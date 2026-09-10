@@ -37,7 +37,7 @@ export const getNetBalance = (record: DailyRecord | undefined, currentBMR: numbe
 };
 
 export const getHeatmapColor = (balance: number | null) => {
-  if (balance === null) return 'bg-slate-200 dark:bg-[#161b22]';
+  if (balance === null) return 'bg-slate-200 dark:bg-[#2d333b]';
   if (balance < -500) return 'bg-heatmap-deficit-high';
   if (balance >= -500 && balance < -250) return 'bg-heatmap-deficit-medium';
   if (balance >= -250 && balance < -100) return 'bg-heatmap-deficit-low';
@@ -45,7 +45,7 @@ export const getHeatmapColor = (balance: number | null) => {
   if (balance > 100 && balance <= 250) return 'bg-heatmap-surplus-low';
   if (balance > 250 && balance <= 500) return 'bg-heatmap-surplus-medium';
   if (balance > 500) return 'bg-heatmap-surplus-high';
-  return 'bg-slate-200 dark:bg-[#161b22]';
+  return 'bg-slate-200 dark:bg-[#2d333b]';
 };
 
 export const getBalanceLabel = (balance: number | null) => {

@@ -387,7 +387,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       <div className="flex justify-end items-center mt-2 text-xs text-slate-500 dark:text-gray-400 gap-2 flex-wrap">
         <div className="flex items-center gap-1 mr-2">
           <span>Sin datos</span>
-          <div className="w-3 h-3 rounded-[2px] bg-slate-200 dark:bg-[#161b22]" title="Sin registros"></div>
+          <div className="w-3 h-3 rounded-[2px] bg-slate-200 dark:bg-[#2d333b]" title="Sin registros"></div>
         </div>
         <span>Déficit</span>
         <div className="flex gap-1">

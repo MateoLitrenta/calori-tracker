@@ -369,7 +369,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                         setIsEditingWater(false);
                       }
                     }}
-                    className="w-16 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-cyan-500"
+                    className="w-16 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-cyan-500"
                   />
                 ) : (
                   <span 
@@ -412,7 +412,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                         setIsEditingSteps(false);
                       }
                     }}
-                    className="w-16 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-green-500"
+                    className="w-16 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-green-500"
                   />
                 ) : (
                   <span 
@@ -478,8 +478,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
 
           {/* Forms Area */}
         {activeTab === 'comida' && (
-          <form onSubmit={handleAddMeal} className="bg-[#1c2128] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
-            <h4 className="font-bold">Agregar Comida</h4>
+          <form onSubmit={handleAddMeal} className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+            <h4 className="font-bold text-slate-900 dark:text-white">Agregar Comida</h4>
             <div className="flex gap-4 flex-wrap">
               <input 
                 required
@@ -487,11 +487,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 inputMode="text"
                 placeholder="Descripción (ej: Ensalada)" 
                 value={mealName} onChange={e => setMealName(e.target.value)}
-                className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
               />
               <select 
                 value={mealType} onChange={e => setMealType(e.target.value as MealType)}
-                className="bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
               >
                 <option value="Desayuno">Desayuno</option>
                 <option value="Almuerzo">Almuerzo</option>
@@ -503,7 +503,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 required
                 type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
                 value={mealCals} onChange={e => setMealCals(Number(e.target.value))}
-                className="w-24 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
               />
               <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2">
                 <Check weight="bold" /> Guardar
@@ -516,7 +516,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   required 
                   value={mealTime} 
                   onChange={e => setMealTime(e.target.value)}
-                  className="bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                  className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                 />
                 <button 
                   type="button" 
@@ -532,15 +532,15 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 placeholder="Notas / Detalles opcionales (ej: Acompañamientos, ingredientes...)"
                 value={mealDetails}
                 onChange={e => setMealDetails(e.target.value)}
-                className="flex-1 min-w-[200px] bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                className="flex-1 min-w-[200px] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
               />
             </div>
           </form>
         )}
 
         {activeTab === 'entrenamiento' && (
-          <form onSubmit={handleAddWorkout} className="bg-[#1c2128] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
-            <h4 className="font-bold">Agregar Entrenamiento</h4>
+          <form onSubmit={handleAddWorkout} className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+            <h4 className="font-bold text-slate-900 dark:text-white">Agregar Entrenamiento</h4>
             
             <div className="flex flex-wrap gap-2">
               {['Gimnasio', 'Fútbol', 'Correr', 'Natación', 'Caminata'].map(act => (
@@ -562,19 +562,19 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 inputMode="text"
                 placeholder="Actividad (ej: Running)" 
                 value={workActivity} onChange={e => setWorkActivity(e.target.value)}
-                className="flex-1 min-w-[150px] bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                className="flex-1 min-w-[150px] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
               />
               <input 
                 required
                 type="number" inputMode="numeric" pattern="[0-9]*" min="1" placeholder="Minutos" 
                 value={workDuration} onChange={e => setWorkDuration(Number(e.target.value))}
-                className="w-24 flex-shrink-0 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
               />
               <input 
                 required
                 type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
                 value={workCals} onChange={e => setWorkCals(Number(e.target.value))}
-                className="w-24 flex-shrink-0 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
               />
             </div>
 
@@ -585,7 +585,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   required 
                   value={workTime} 
                   onChange={e => setWorkTime(e.target.value)}
-                  className="bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
                 <button 
                   type="button" 
@@ -600,7 +600,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 placeholder={workActivity.toLowerCase() === 'gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Notas o detalles adicionales..."}
                 value={workDetails}
                 onChange={e => setWorkDetails(e.target.value)}
-                className="flex-1 w-full bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-h-[42px] resize-y min-w-[200px]"
+                className="flex-1 w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-h-[42px] resize-y min-w-[200px]"
               />
             </div>
 
@@ -609,12 +609,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 <input 
                   type="number" step="0.01" min="0" placeholder="Distancia (km) opc." 
                   value={workDistance} onChange={e => setWorkDistance(e.target.value === '' ? '' : Number(e.target.value))}
-                  className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
+                  className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
                 />
                 <input 
                   type="text" placeholder="Ritmo (ej: 5:30) opc." 
                   value={workPace} onChange={e => setWorkPace(e.target.value)}
-                  className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
+                  className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
                 />
               </div>
             )}
@@ -628,7 +628,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         )}
 
         {activeTab === 'pasos-agua' && (
-          <div className="bg-[#1c2128] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col md:flex-row gap-8 animate-in fade-in slide-in-from-top-2">
+          <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col md:flex-row gap-8 animate-in fade-in slide-in-from-top-2">
             <div className="flex-1 flex flex-col gap-3">
               <h4 className="font-bold flex items-center gap-2"><Sneaker className="text-orange-400" /> Pasos del Día</h4>
               <div className="flex flex-col gap-2">
@@ -661,7 +661,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                         (e.target as HTMLInputElement).blur();
                       }
                     }}
-                    className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
+                    className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
                   />
                 </div>
               </div>
@@ -696,7 +696,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       {!isGroup && (
         <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden">
           <div className="bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
-            <h4 className="font-bold">Registros del Día</h4>
+            <h4 className="font-bold text-slate-900 dark:text-white">Registros del Día</h4>
           </div>
           
           {currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 && (
@@ -723,7 +723,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <li 
                     key={`meal-${meal.id}`} 
                     onClick={() => setDetailModalItem(meal)}
-                    className="p-3.5 hover:bg-[#1c2128] flex flex-col gap-1.5 group transition-colors cursor-pointer"
+                    className="p-3.5 hover:bg-white dark:bg-[#161b22] flex flex-col gap-1.5 group transition-colors cursor-pointer"
                   >
                     <div className="w-full font-medium text-wrap break-words leading-tight">
                       {meal.name}
@@ -745,7 +745,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <li 
                     key={`workout-${workout.id}`} 
                     onClick={() => setDetailModalItem(workout)}
-                    className="p-3.5 hover:bg-[#1c2128] flex flex-col gap-1.5 group transition-colors cursor-pointer"
+                    className="p-3.5 hover:bg-white dark:bg-[#161b22] flex flex-col gap-1.5 group transition-colors cursor-pointer"
                   >
                     <div className="w-full font-medium text-wrap break-words leading-tight">
                       {workout.activity}
@@ -885,7 +885,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                      setIsEditingWeight(false);
                    }
                  }}
-                 className="w-32 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-lg px-4 py-3 text-center text-xl text-white focus:outline-none focus:border-pink-500"
+                 className="w-32 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-lg px-4 py-3 text-center text-xl focus:outline-none focus:border-pink-500"
                />
                <span className="text-sm text-slate-500 dark:text-gray-400">kilogramos</span>
             </div>
@@ -927,11 +927,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   inputMode="text"
                   placeholder="Descripción (ej: Ensalada)" 
                   value={mealName} onChange={e => setMealName(e.target.value)}
-                  className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                  className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                 />
                 <select 
                   value={mealType} onChange={e => setMealType(e.target.value as any)}
-                  className="bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                  className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                 >
                   <option value="Desayuno">Desayuno</option>
                   <option value="Almuerzo">Almuerzo</option>
@@ -943,7 +943,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   required
                   type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
                   value={mealCals} onChange={e => setMealCals(Number(e.target.value))}
-                  className="w-24 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                  className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                 />
               </div>
               <div className="flex gap-4 flex-wrap">
@@ -952,7 +952,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     type="time" 
                     value={mealTime} 
                     onChange={e => setMealTime(e.target.value)}
-                    className="w-full bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                    className="w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                   />
                   <button 
                     type="button"
@@ -967,7 +967,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   type="text"
                   placeholder="Notas / Detalles (opcional)" 
                   value={mealDetails} onChange={e => setMealDetails(e.target.value)}
-                  className="flex-[2] bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                  className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                 />
               </div>
               <div className="flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
@@ -1001,19 +1001,19 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   type="text"
                   placeholder="Actividad (ej: Correr)" 
                   value={workActivity} onChange={e => setWorkActivity(e.target.value)}
-                  className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
                 <input 
                   required
                   type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Minutos" 
                   value={workDuration} onChange={e => setWorkDuration(Number(e.target.value))}
-                  className="w-24 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
                 <input 
                   required
                   type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
                   value={workCals} onChange={e => setWorkCals(Number(e.target.value))}
-                  className="w-24 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
               </div>
 
@@ -1023,7 +1023,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     type="time" 
                     value={workTime} 
                     onChange={e => setWorkTime(e.target.value)}
-                    className="w-full bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                    className="w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                   />
                   <button 
                     type="button"
@@ -1038,7 +1038,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   type="text"
                   placeholder="Notas / Detalles (opcional)" 
                   value={workDetails} onChange={e => setWorkDetails(e.target.value)}
-                  className="flex-[2] bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
               </div>
 
@@ -1046,12 +1046,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 <input 
                   type="number" step="0.1" inputMode="decimal" placeholder="Distancia (km) opcional" 
                   value={workDistance} onChange={e => setWorkDistance(Number(e.target.value))}
-                  className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
                 <input 
                   type="text" placeholder="Ritmo (min/km) opcional" 
                   value={workPace} onChange={e => setWorkPace(e.target.value)}
-                  className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
               </div>
 
