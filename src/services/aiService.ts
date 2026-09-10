@@ -28,10 +28,14 @@ export async function generateAIResponse(
     }
 
     // Formatear el historial para el SDK
-    const history = recentMessages.map(msg => ({
+    const formattedHistory = recentMessages.map(msg => ({
       role: msg.role === 'user' ? 'user' : 'model',
       parts: [{ text: msg.text }]
     }));
+
+    // Buscar el primer mensaje enviado por el usuario para no iniciar con un mensaje del bot
+    const firstUserIndex = formattedHistory.findIndex(m => m.role === 'user');
+    const validHistory = firstUserIndex !== -1 ? formattedHistory.slice(firstUserIndex) : [];
 
     const generationConfig = {
       temperature: 0.7,
@@ -44,7 +48,7 @@ export async function generateAIResponse(
         model: "gemini-1.5-flash",
         systemInstruction: systemInstruction
       });
-      const chat = model.startChat({ history, generationConfig });
+      const chat = model.startChat({ history: validHistory, generationConfig });
       const result = await chat.sendMessage(lastMessage.text);
       return result.response.text();
       
@@ -56,7 +60,7 @@ export async function generateAIResponse(
         model: "gemini-2.0-flash",
         systemInstruction: systemInstruction
       });
-      const chatFallback = modelFallback.startChat({ history, generationConfig });
+      const chatFallback = modelFallback.startChat({ history: validHistory, generationConfig });
       const resultFallback = await chatFallback.sendMessage(lastMessage.text);
       return resultFallback.response.text();
     }
