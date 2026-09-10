@@ -48,7 +48,7 @@ function App() {
         </header>
 
         {/* Main Content Area */}
-        <main ref={mainRef} className={`flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 w-full transition-all duration-300 ${!user ? 'opacity-40 pointer-events-none blur-[2px] select-none' : ''}`}>
+        <main ref={mainRef} className={`flex-1 flex flex-col overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 w-full transition-all duration-300 ${!user ? 'opacity-40 pointer-events-none blur-[2px] select-none' : ''}`}>
           {activeTab === 'home' && <HomeView />}
           {activeTab === 'chat' && <ChatView />}
           {activeTab === 'charts' && <ChartsView />}
