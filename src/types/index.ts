@@ -1,6 +1,7 @@
 export type MealType = 'Desayuno' | 'Almuerzo' | 'Merienda' | 'Cena' | 'Snack';
-export type Sex = 'Masculino' | 'Femenino';
-export type Goal = 'Definición/Pérdida' | 'Mantenimiento' | 'Volumen/Ganancia';
+export type UserSex = 'Masculino' | 'Femenino';
+export type UserGoal = 'Déficit' | 'Mantenimiento' | 'Superávit';
+export type ActivityLevel = 'Sedentario' | 'Moderado' | 'Activo';
 
 export interface MealEntry {
   id: string;
@@ -37,11 +38,14 @@ export type DailyRecordsMap = Record<string, DailyRecord>;
 
 export interface UserProfile {
   id: string;
+  user_id?: string;
   name: string;
   age: number;
-  sex: Sex;
+  sex: UserSex;
   height: number;
   weight: number;
-  goal: Goal;
+  goal: UserGoal;
+  activity?: ActivityLevel;
   records: DailyRecordsMap;
+  created_at?: string;
 }
