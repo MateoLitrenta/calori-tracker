@@ -51,17 +51,27 @@ export default {
       return json({ error: 'Falta el historial de mensajes.' }, 400);
     }
 
-    const messages = body.messages.slice(-MAX_MESSAGES);
-    if (!messages.every(isValidMessage)) {
+    const recentMessages = body.messages.slice(-MAX_MESSAGES);
+    if (!recentMessages.every(isValidMessage)) {
       return json({ error: 'El historial contiene mensajes inválidos.' }, 400);
     }
 
-    const lastMessage = messages[messages.length - 1];
+    const lastMessage = recentMessages[recentMessages.length - 1];
     if (lastMessage.role !== 'user') {
       return json({ error: 'El último mensaje debe ser del usuario.' }, 400);
     }
 
-    const contents = messages.map((message) => ({
+    // Gemini conversations should begin with a user turn. The UI starts with a
+    // local bot greeting, so discard any leading bot-only messages before sending
+    // history to the API.
+    const firstUserIndex = recentMessages.findIndex((message) => message.role === 'user');
+    const validMessages = firstUserIndex >= 0 ? recentMessages.slice(firstUserIndex) : [];
+
+    if (!validMessages.length) {
+      return json({ error: 'No hay mensajes de usuario válidos.' }, 400);
+    }
+
+    const contents = validMessages.map((message) => ({
       role: message.role === 'bot' ? 'model' : 'user',
       parts: [{ text: message.text }]
     }));
