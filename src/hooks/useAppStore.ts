@@ -67,7 +67,7 @@ export const useAppStore = () => {
   };
 
   const updateRecord = async (dateStr: string, record: DailyRecord) => {
-    if (!activeProfile || !user) return;
+    if (!activeProfile || !user) return false;
     const oldRecord = activeProfile.records[dateStr] || { meals: [], workouts: [] };
 
     // Optmistic Update
@@ -79,7 +79,7 @@ export const useAppStore = () => {
     // Supabase Sync
     try {
       const logId = await db.ensureDailyLog(user.id, record);
-      if (!logId) return;
+      if (!logId) throw new Error('No se pudo guardar el registro diario');
 
       const addedMeals = record.meals.filter(m => !oldRecord.meals?.some((o: any) => o.id === m.id));
       const deletedMeals = oldRecord.meals?.filter((o: any) => !record.meals.some(m => m.id === o.id)) || [];
@@ -112,9 +112,20 @@ export const useAppStore = () => {
         });
       }
 
+      return true;
     } catch (e) {
       console.error('Failed to sync record to Supabase', e);
       toast.error('Error al guardar en la nube', { style: { background: '#161b22', color: '#fff' } });
+      const saved = await db.fetchDailyLog(user.id, dateStr);
+      setActiveProfile(prev => {
+        if (!prev || prev.id !== activeProfile.id) return prev;
+        const records = { ...prev.records };
+        if (saved) records[dateStr] = saved;
+        else if (activeProfile.records[dateStr]) records[dateStr] = activeProfile.records[dateStr];
+        else delete records[dateStr];
+        return { ...prev, records };
+      });
+      return false;
     }
   };
 
