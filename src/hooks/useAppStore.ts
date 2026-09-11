@@ -19,6 +19,10 @@ export const useAppStore = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (isMounted) {
         setUser(session?.user ?? null);
+        if (!session?.user) {
+          setActiveProfile(null);
+          setLoading(false);
+        }
       }
     });
 
@@ -27,6 +31,7 @@ export const useAppStore = () => {
         setUser(session?.user ?? null);
         if (!session?.user) {
           setActiveProfile(null); // Clear state on logout
+          setLoading(false);
         }
       }
     });
