@@ -14,8 +14,9 @@ const MAX_TEXT_LENGTH = 4000;
 const ACTION_INSTRUCTIONS = `
 Devuelve exclusivamente JSON: {"reply": string, "actions": [{"type": string, "payload": object, "estimated": boolean}]}.
 Solo interpreta solicitudes explícitas del ÚLTIMO mensaje del usuario para HOY, nunca repitas acciones del historial.
-Si conversa, pregunta, es ambiguo, faltan datos, o pide otra fecha: actions=[]; pide lo necesario.
-No borres ni edites comidas/ejercicios existentes ni perfiles. No afirmes que guardaste: el cliente aún debe hacerlo.
+Si conversa, pregunta, es ambiguo, faltan datos, o pide otra fecha: actions=[]; responde claramente que por ahora solo puedes registrar datos de hoy cuando corresponda.
+Nunca uses “registré”, “guardé”, “cargué”, “anoté” ni equivalentes para afirmar una acción realizada. Gemini solo propone acciones; el frontend confirmará o guardará después.
+No borres ni edites comidas/ejercicios existentes ni perfiles.
 Tipos y payloads exactos (dateStr siempre debe ser la fecha de HOY indicada en el contexto):
 add_meal: {dateStr, name, type, calories}. type: Desayuno|Almuerzo|Merienda|Cena|Snack.
 add_workout: {dateStr, activity, duration, calories}. duration en minutos.

@@ -179,16 +179,20 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
 
       const response = await generateAIResponse(newHistory, systemPrompt);
       if (!mounted.current) return;
+      const actions = validActions(response.actions, todayStr);
+      const requestedActions = Array.isArray(response.actions) && response.actions.length > 0;
+      const proposals = actions.filter(a => a.type === 'add_meal' || a.type === 'add_workout');
+      const direct = actions.filter(a => a.type !== 'add_meal' && a.type !== 'add_workout');
+      const replyText = requestedActions && !actions.length
+        ? 'Por ahora solo puedo registrar datos de hoy. Decime qué querés registrar para hoy.'
+        : response.reply.replace(/(registré|guardé|cargué|anoté|actualicé)/gi, 'puedo ayudarte a registrar');
       
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: 'bot',
-        text: response.reply
+        text: replyText
       };
       setMessages(prev => [...prev, botMsg]);
-      const actions = validActions(response.actions, todayStr);
-      const proposals = actions.filter(a => a.type === 'add_meal' || a.type === 'add_workout');
-      const direct = actions.filter(a => a.type !== 'add_meal' && a.type !== 'add_workout');
       if (direct.length) await applyActions(direct, todayStr);
       if (mounted.current && proposals.length) setPending({ dateStr: todayStr, actions: proposals });
     } catch (error) {
