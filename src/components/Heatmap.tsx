@@ -1,7 +1,7 @@
 import React, { useMemo, useLayoutEffect, useRef, useState } from 'react';
 import { format, parseISO, addDays, subDays, startOfWeek, startOfMonth, endOfMonth, isSameDay, subMonths, addMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
-import type { DailyRecordsMap } from '../types';
+import type { DailyRecordsMap, UserProfile } from '../types';
 import { getHeatmapColor, getNetBalance, aggregateEnergy } from '../utils/helpers';
 
 interface HeatmapProps {
@@ -9,12 +9,12 @@ interface HeatmapProps {
   selectedDateStr: string;
   onSelectDate: (dateStr: string) => void;
   onSelectGroup?: (type: 'day'|'week'|'month'|'year', label: string, dates: string[]) => void;
-  dailyTDEE: number;
+  profile: UserProfile;
 }
 
 type Period = 'day' | 'week' | 'month' | 'year';
 
-const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDate, onSelectGroup, dailyTDEE }) => {
+const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDate, onSelectGroup, profile }) => {
   const [period, setPeriod] = useState<Period>('day');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -86,7 +86,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
   };
 
   const getAverageBalance = (dates: string[]) =>
-    aggregateEnergy(records, dates, dailyTDEE).averageBalance;
+    aggregateEnergy(records, dates, profile).averageBalance;
 
   const { weeksArray, monthLabels, weekDays } = useMemo(() => {
     const today = new Date();
@@ -222,7 +222,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     if (!dateStr) return <div className={`${sizeClass} invisible`} />;
     
     const record = records[dateStr];
-    const balance = getNetBalance(record, dailyTDEE);
+    const balance = getNetBalance(record, profile);
     const isSelected = selectedDateStr === dateStr;
     const isToday = isSameDay(parseISO(dateStr), new Date());
     const hasGym = record?.workouts?.some(w => w.activity.toLowerCase() === 'gimnasio');

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
-import { calculateBMR, calculateTDEE, calculateDailyCalorieTarget } from '../utils/helpers';
+import { calculateBMR, calculateTDEE, calculateDailyCalorieTarget, formatDateStr } from '../utils/helpers';
 import type { UserProfile, UserSex, ActivityLevel, UserGoal } from '../types';
 import { User, Check, Trash, PencilSimple, X } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
@@ -57,7 +57,7 @@ export default function ProfileView() {
   
   const calculatedBMR = calculateBMR(previewProfile);
   const calculatedTDEE = calculateTDEE(previewProfile);
-  const adjustedTarget = calculateDailyCalorieTarget(previewProfile);
+  const adjustedTarget = calculateDailyCalorieTarget(previewProfile, previewProfile.records[formatDateStr(new Date())]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -280,12 +280,12 @@ export default function ProfileView() {
               <span className="font-semibold text-slate-700 dark:text-gray-200">{calculatedBMR} kcal</span>
             </div>
             <div className="flex justify-between items-center gap-2">
-              <span className="text-sm text-slate-500 dark:text-gray-400">Gasto diario estimado (TDEE):</span>
+              <span className="text-sm text-slate-500 dark:text-gray-400">TDEE de referencia habitual:</span>
               <span className="font-semibold text-slate-700 dark:text-gray-200 whitespace-nowrap">{calculatedTDEE} kcal</span>
             </div>
-            <p className="text-xs text-slate-500 dark:text-gray-400">TDEE estima tu gasto diario según tu nivel de actividad.</p>
+            <p className="text-xs text-slate-500 dark:text-gray-400">TDEE es una referencia habitual. La meta de hoy usa TMB, pasos y ejercicio registrados.</p>
             <div className="flex justify-between items-center pt-3 border-t border-slate-200 dark:border-gray-800/50">
-              <span className="text-sm text-slate-500 dark:text-gray-400">Meta diaria sugerida:</span>
+              <span className="text-sm text-slate-500 dark:text-gray-400">Meta de hoy:</span>
               <span className={`text-lg font-bold ${
                 goal === 'Déficit' ? 'text-blue-600 dark:text-blue-400' :
                 goal === 'Superávit' ? 'text-orange-600 dark:text-orange-400' :

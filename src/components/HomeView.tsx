@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Heatmap from './Heatmap';
 import DailyPanel from './DailyPanel';
 import { useAppStore } from '../hooks/useAppStore';
-import { formatDateStr, calculateTDEE, calculateDailyCalorieTarget } from '../utils/helpers';
+import { formatDateStr } from '../utils/helpers';
 
 export default function HomeView() {
   const { activeProfile, updateRecord } = useAppStore();
@@ -17,7 +17,6 @@ export default function HomeView() {
     }
   }, [selectedDateStr, selectedGroup]);
 
-  const dailyTDEE = activeProfile ? calculateTDEE(activeProfile) : 0;
   const records = activeProfile?.records || {};
 
   if (!activeProfile) return <p className="text-slate-500 dark:text-gray-400">Cargando perfil…</p>;
@@ -32,15 +31,14 @@ export default function HomeView() {
           setSelectedGroup({ type: 'day', label: dateStr, dates: [dateStr] });
         }}
         onSelectGroup={(type, label, dates) => setSelectedGroup({ type, label, dates })}
-        dailyTDEE={dailyTDEE}
+        profile={activeProfile}
       />
       
       <DailyPanel 
         record={records[selectedDateStr]}
         dateStr={selectedDateStr}
         onUpdateRecord={updateRecord}
-        dailyTDEE={dailyTDEE}
-        dailyTarget={activeProfile ? calculateDailyCalorieTarget(activeProfile) : 0}
+        profile={activeProfile}
         selectedGroup={selectedGroup}
         records={records}
       />

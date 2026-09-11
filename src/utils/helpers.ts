@@ -35,12 +35,21 @@ export const getActivityMultiplier = (profile: UserProfile): number =>
 export const calculateTDEE = (profile: UserProfile): number =>
   Math.round(calculateBMR(profile) * getActivityMultiplier(profile));
 
-export const calculateDailyCalorieTarget = (profile: UserProfile): number =>
-  Math.round(calculateTDEE(profile) + (profile.goal === 'Déficit' ? DEFICIT_ADJUSTMENT
+export const CALORIES_PER_STEP = 0.04;
+
+export const getStepCalories = (record: DailyRecord | undefined): number =>
+  Math.round((record?.steps ?? 0) * CALORIES_PER_STEP);
+
+// Steps and workouts may overlap. This version uses recorded values without corrections.
+export const calculateDailyExpenditure = (profile: UserProfile, record?: DailyRecord): number =>
+  Math.round(calculateBMR(profile) + getStepCalories(record) + getWorkoutCalories(record));
+
+export const calculateDailyCalorieTarget = (profile: UserProfile, record?: DailyRecord): number =>
+  Math.round(calculateDailyExpenditure(profile, record) + (profile.goal === 'Déficit' ? DEFICIT_ADJUSTMENT
     : profile.goal === 'Superávit' ? SURPLUS_ADJUSTMENT : 0));
 
 export const getRemainingCalories = (record: DailyRecord | undefined, dailyTarget: number) =>
-  dailyTarget - getCaloriesIngested(record);
+  Math.round(dailyTarget - getCaloriesIngested(record));
 
 export const getRemainingLabel = (remaining: number) =>
   remaining > 0 ? 'Restantes' : remaining < 0 ? 'Exceso' : 'Meta alcanzada';
@@ -51,31 +60,56 @@ export const getWorkoutCalories = (record: DailyRecord | undefined) =>
 export const hasEnergyData = (record: DailyRecord | undefined): record is DailyRecord =>
   !!record && (record.meals.length > 0 || record.workouts.length > 0 || record.steps > 0);
 
-// Compatibility helper: expenditure is TDEE only, never TDEE plus tracked activity.
-export const getCaloriesBurned = (record: DailyRecord | undefined, dailyTDEE: number) =>
-  hasEnergyData(record) ? dailyTDEE : 0;
+// Historical empty days remain unknown; a daily preview can still show the baseline TMB.
+export const getCaloriesBurned = (record: DailyRecord | undefined, profile: UserProfile) =>
+  hasEnergyData(record) ? calculateDailyExpenditure(profile, record) : 0;
 
-export const getEstimatedEnergyBalance = (record: DailyRecord | undefined, dailyTDEE: number) => {
+export const getEstimatedEnergyBalance = (record: DailyRecord | undefined, profile: UserProfile) => {
   if (!hasEnergyData(record)) return null;
-  return Math.round(getCaloriesIngested(record) - dailyTDEE);
+  return Math.round(getCaloriesIngested(record) - calculateDailyExpenditure(profile, record));
 };
 
 export const getNetBalance = getEstimatedEnergyBalance;
 
+export const buildDailyEnergyContext = (profile: UserProfile, record?: DailyRecord): string => {
+  const target = calculateDailyCalorieTarget(profile, record);
+  return `Nombre: ${profile.name}
+Peso actual: ${profile.weight} kg
+TMB: ${calculateBMR(profile)} kcal
+TDEE de referencia habitual (no es el gasto de hoy): ${calculateTDEE(profile)} kcal
+Nivel de actividad habitual: ${normalizeActivityLevel(profile.activity)}
+Objetivo: ${profile.goal}
+Gasto estimado hoy: ${calculateDailyExpenditure(profile, record)} kcal
+Meta de hoy: ${target} kcal
+Consumidas hoy (solo comida/bebida): ${getCaloriesIngested(record)} kcal
+Restantes para la meta: ${getRemainingCalories(record, target)} kcal
+Pasos hoy: ${record?.steps ?? 0}
+Calorías por pasos: ${getStepCalories(record)} kcal
+Calorías por ejercicio registrado: ${getWorkoutCalories(record)} kcal
+El gasto de hoy es TMB + pasos registrados × 0.04 + calorías de ejercicio registradas.
+TDEE y nivel habitual son solo referencia: no los uses para el gasto, la meta ni el balance del día. Nunca uses TDEE + pasos + ejercicio.
+Pasos y ejercicio pueden solaparse; esta versión usa los valores registrados sin correcciones arbitrarias.
+The user's daily calorie target is already calculated by the application. Do not recalculate or replace it unless the user explicitly asks for an explanation.
+La meta ya incluye pasos y ejercicio; no vuelvas a sumarlos. Si las restantes son positivas, usalas para recomendaciones; si son negativas, indicá el exceso sin inventar otra meta; si son cero, indicá que alcanzó la meta.`;
+};
+
 // Missing, empty and future days are not assumed to have zero intake.
-export const aggregateEnergy = (records: DailyRecordsMap, dates: string[], dailyTDEE: number,
+export const aggregateEnergy = (records: DailyRecordsMap, dates: string[], profile: UserProfile,
   today = formatDateStr(new Date())) => {
   let consumed = 0;
   let days = 0;
+  let expenditure = 0;
+  let target = 0;
   for (const date of new Set(dates)) {
     const record = records[date];
     if (date > today || !hasEnergyData(record)) continue;
     consumed += getCaloriesIngested(record);
+    expenditure += calculateDailyExpenditure(profile, record);
+    target += calculateDailyCalorieTarget(profile, record);
     days++;
   }
-  const expenditure = days * dailyTDEE;
-  const balance = days ? consumed - expenditure : null;
-  return { consumed, days, expenditure, balance,
+  const balance = days ? Math.round(consumed - expenditure) : null;
+  return { consumed, days, expenditure, target, balance,
     averageBalance: balance === null ? null : Math.round(balance / days) };
 };
 
