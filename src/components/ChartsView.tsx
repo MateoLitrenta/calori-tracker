@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
-import { calculateTDEE, calculateDailyCalorieTarget, aggregateEnergy, getCaloriesIngested, hasEnergyData, formatDateStr } from '../utils/helpers';
+import { calculateDailyCalorieTarget, aggregateEnergy, getCaloriesIngested, hasEnergyData, formatDateStr } from '../utils/helpers';
 import { ChartBar, CheckCircle, Fire, TrendUp } from '@phosphor-icons/react';
 import { format, subWeeks, subMonths, startOfWeek, addDays, startOfMonth, endOfMonth } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -11,8 +11,6 @@ export default function ChartsView() {
   const { activeProfile } = useAppStore();
   const [period, setPeriod] = useState<Period>('Semana');
 
-  const dailyTDEE = activeProfile ? calculateTDEE(activeProfile) : 0;
-  const dailyTarget = activeProfile ? calculateDailyCalorieTarget(activeProfile) : 0;
   const records = activeProfile?.records || {};
 
   // Compute stats and dynamic chart data
@@ -35,7 +33,7 @@ export default function ChartsView() {
         daysWithData++;
         const ingested = getCaloriesIngested(rec);
         totalCalories += ingested;
-        if (ingested <= dailyTarget) {
+        if (activeProfile && ingested <= calculateDailyCalorieTarget(activeProfile, rec)) {
           daysMetGoal++;
         }
       } else {
@@ -54,13 +52,14 @@ export default function ChartsView() {
     const chartData: { day: string; cals: number; goal: number; hasData: boolean }[] = [];
     let periodCalories = 0;
 
-    let periodDays = 0;
+    let theoreticalTargetCals = 0;
     const addBucket = (day: string, dates: string[]) => {
-      const summary = aggregateEnergy(records, dates, dailyTDEE);
+      if (!activeProfile) return;
+      const summary = aggregateEnergy(records, dates, activeProfile);
       periodCalories += summary.consumed;
-      periodDays += summary.days;
+      theoreticalTargetCals += summary.target;
       chartData.push({ day, cals: summary.days ? Math.round(summary.consumed / summary.days) : 0,
-        goal: summary.days ? dailyTarget : 0, hasData: summary.days > 0 });
+        goal: summary.days ? Math.round(summary.target / summary.days) : 0, hasData: summary.days > 0 });
     };
     if (period === 'Semana') {
       const start = startOfWeek(today, { weekStartsOn: 1 });
@@ -83,7 +82,6 @@ export default function ChartsView() {
       }
     }
     // Approximate macro targets use the same included days as calorie totals.
-    const theoreticalTargetCals = dailyTarget * periodDays;
 
     // Grams = Cals / 4 for prot/carbs, Cals / 9 for fat
     const macrosCalc = {
@@ -113,7 +111,7 @@ export default function ChartsView() {
       barChartData: chartData,
       macros: macrosCalc
     };
-  }, [records, dailyTDEE, dailyTarget, period]);
+  }, [records, activeProfile, period]);
 
   const maxCals = Math.max(1, ...barChartData.map(d => Math.max(d.cals, d.goal))) * 1.1; // Add 10% headroom
 
@@ -226,7 +224,7 @@ export default function ChartsView() {
           </div>
           <div className="flex items-center gap-2 hidden sm:flex">
             <span className="w-4 border-t-2 border-slate-300 dark:border-gray-600 border-dashed"></span>
-            <span className="text-slate-600 dark:text-gray-400">Meta diaria ({dailyTarget} kcal)</span>
+            <span className="text-slate-600 dark:text-gray-400">Meta dinámica promedio</span>
           </div>
         </div>
       </div>

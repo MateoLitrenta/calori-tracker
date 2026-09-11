@@ -1,127 +1,53 @@
-# Energy model and activity persistence
+# Modelo de gasto diario dinámico
 
-Branch: `codex/tdee-activity-persistence`, based on `main` at `5f2bc7b`.
-No merge or production deployment was performed.
+Este documento reemplaza la especificación anterior basada en TDEE.
 
-## Model
+## Fórmulas centralizadas en src/utils/helpers.ts
 
-All energy calculations live in `src/utils/helpers.ts`. The existing rounded
-Mifflin-St Jeor BMR calculation is unchanged. TDEE is rounded BMR multiplied by
-activity: Sedentario **1.20**, Moderado **1.375**, Activo **1.55**. Missing or invalid
-activity normalizes to Sedentario. Maintenance target equals TDEE; deficit uses
-**−400 kcal**, surplus **+300 kcal**.
+- Gasto del día = TMB + pasos registrados × 0.04 + suma exacta de calorías de WorkoutEntry.
+- Meta dinámica = gasto − 400 (Déficit), gasto (Mantenimiento), gasto + 300 (Superávit).
+- Consumidas = suma de comidas/bebidas; nunca se descuentan pasos o ejercicios de este valor.
+- Restantes = meta − consumidas. Un valor negativo se muestra como Exceso.
+- Balance energético histórico = consumidas − gasto calculado de ese día.
+- TDEE = TMB × multiplicador habitual, solo como referencia de perfil. Sedentario 1.20,
+  Moderado 1.375, Activo 1.55; el fallback sigue siendo Sedentario.
 
-New helpers: `normalizeActivityLevel`, `getActivityMultiplier`, `calculateTDEE`,
-`calculateDailyCalorieTarget`, `getRemainingCalories`, `getRemainingLabel`,
-`getWorkoutCalories`, `hasEnergyData`, `getEstimatedEnergyBalance`, `aggregateEnergy`.
-`getNetBalance` remains a compatibility alias; `getCaloriesBurned` now accepts
-daily TDEE and never adds workouts or steps.
+La fórmula de TMB y la persistencia de activity_level no cambian. No hay nuevas
+migraciones ni dependencias. Cambiar actividad habitual afecta TDEE pero no gasto ni meta.
+Se conservan los valores fraccionarios de pasos/ejercicio; las medias gráficas se redondean
+solo para su presentación. No se aplican correcciones arbitrarias por solapamiento:
+pasos y ejercicio pueden describir parte de la misma actividad y sobreestimar el gasto.
 
-Remaining calories = target − consumed. Historical balance = consumed − TDEE.
-Workout calories and steps remain visible, but do not increase either target or
-expenditure. Historical estimates use the current profile, since no historical
-profile snapshots exist.
+## Vistas y estado
 
-Aggregations deduplicate calendar date keys and include one TDEE per recorded
-day up to today. Missing/empty days and water/weight-only days retain `Sin datos`;
-steps/workout-only days count as energy data, matching the original heatmap rule.
-Group colors use average daily balance, while group summaries display total balance.
-Charts retain the existing week/four-week/twelve-month windows, average only days
-with data, and compute macro targets over those same included days.
+DailyPanel calcula la meta desde las props actuales en cada render: los cambios optimistas
+del store al cambiar pasos o agregar/editar/eliminar ejercicios actualizan la meta.
+Muestra Consumidas, Meta de hoy, Restantes/Exceso, gasto estimado, TMB y el desglose de
+pasos y ejercicio. Para fechas pasadas usa las etiquetas del día seleccionado.
+ProfileView conserva TDEE como referencia y calcula la meta con los registros de hoy.
+ChatView usa buildDailyEnergyContext para distinguir TDEE habitual del gasto dinámico,
+con desglose y advertencias para Gemini de no recalcular ni sumar actividad otra vez.
 
-## Persistence and migration
+Heatmap y agregaciones excluyen días vacíos (también solo agua/peso), ausentes o futuros.
+Una fecha con comidas pero sin actividad tiene gasto TMB. Pasos/ejercicio sin comidas
+constituyen datos energéticos. Las fechas se deduplican y se suman gastos y metas reales
+de cada fecha. ChartsView usa metas diarias específicas, medias por días con datos y la
+suma de metas para sus macros aproximados; conserva sus ventanas de períodos existentes.
+Los históricos usan la TMB del perfil actual, ya que no hay snapshots biométricos históricos.
 
-Root cause: `syncProfile` omitted activity from its update payload, and
-`fetchUserData` omitted activity when rebuilding `UserProfile`. ProfileView then
-used its Sedentario fallback after the store fetched the incomplete profile again.
+## Validación y límites
 
-Read-only PostgREST probes on 2026-09-10 returned SQL error `42703` for both
-`profiles.activity` and `profiles.activity_level` (zero rows requested). No SQL
-schema or migrations were present in the repository. The administrative Supabase
-MCP connection returned Unauthorized.
+npm test incluye fórmulas, fracciones de calorías, tres objetivos, independencia de
+activity level, pasos/ejercicio añadidos/editados/eliminados, consumidas, Sin datos,
+restantes/exceso, agregaciones de 7/30/365 días, contexto Gemini y regresión del guardado/carga
+de actividad. DailyPanel también se renderiza con datos cambiantes para verificar etiquetas
+y metas sin duplicar sus fórmulas en la prueba. Las pruebas de persistencia usan Supabase
+simulado; no escriben en producción. El contexto de Gemini se prueba, no una respuesta viva.
 
-Migration: `supabase/migrations/202609100001_profile_activity_level.sql`.
-Apply it **before deploying the application changes**. It adds `activity_level`
-with default Sedentario, backfills NULL, sets NOT NULL and constrains allowed
-values. It preserves profiles, records and RLS policies, supports repeated
-execution, and aborts if an unexpected legacy `activity` column exists rather
-than creating duplicate activity data. It does not overwrite non-null values.
-The migration was reviewed but **not applied or executed against PostgreSQL**.
+Ejemplo: masculino 70 kg, 170 cm, 30 años → TMB 1618. Con 7000 pasos (280 kcal) y un
+entrenamiento registrado de 450 kcal, gasto 2348; metas 1948 / 2348 / 2648 según objetivo.
+TDEE Activo = 2508, pero no participa en ninguno de esos resultados diarios.
 
-Save: `activity_level: normalizeActivityLevel(p.activity)`.
-Load: `activity: normalizeActivityLevel(profile.activity_level)`.
-Both new-user paths (`fetchUserData` fallback and AuthModal registration) explicitly
-persist `activity_level: 'Sedentario'`. The optional activity type is retained.
-After a successful save, the store updates the active profile immediately while
-preserving the current records; failures reject and do not show a successful save.
-
-## UI and Gemini
-
-- ProfileView shows TMB, TDEE and daily target and recalculates from editing state.
-- HomeView passes centralized TDEE/target to DailyPanel and shows loading text
-  until a profile is available.
-- DailyPanel shows Consumidas, Meta diaria, Restantes/Meta alcanzada/Exceso,
-  plus secondary estimated expenditure and separate workout calories.
-- Heatmap and group summaries use the shared aggregation policy.
-- Charts use the daily target and valid-day averages; explicit chart-column height
-  keeps percentage-height bars visible.
-- ChatView includes name, weight, TMB, TDEE, persisted activity, goal, daily target,
-  consumed/remaining calories, steps and workout calories. It explicitly instructs
-  Gemini not to recalculate/replace the application target or add tracked activity.
-  Positive remaining calories inform recommendations; negative values indicate excess.
-  The existing Gemini API transport is unchanged.
-
-## Validation
-
-`npm test`: **12 passed**, Node 24, no added repository dependencies. The tests cover
-cases A–G, invalid activity, missing/empty days, duplicate dates, future dates,
-workout/step double counting, new-user defaults, save/load round trips and failure
-propagation. Persistence tests execute the actual database functions with a mocked
-Supabase boundary; they do not prove production RLS or network behavior.
-
-For male, 70 kg, 170 cm, age 30, the existing rounded TMB is **1618 kcal**:
-
-| Case | Activity/goal | TDEE | Target |
-| --- | --- | ---: | ---: |
-| A | Sedentario / Mantenimiento | 1942 | 1942 |
-| B | Moderado / Déficit | 2225 | 1825 |
-| C | Activo / Superávit | 2508 | 2808 |
-| D | Missing/invalid activity / Mantenimiento | 1942 | 1942 |
-
-Browser checks used the real UI, store and database mapping functions with an
-isolated fake Supabase boundary and a fake Gemini endpoint. Test infrastructure
-remained outside the repository. Agent-browser could not activate its browser tab;
-checks were completed with the Codex in-app browser.
-
-- A/B/C: profile preview values matched the table.
-- Moderado survived save, refresh, navigation away/back and simulated logout/login.
-- Activo survived save and refresh; its TDEE and target remained correct.
-- E: empty intake showed the full daily target remaining (1825 in case B).
-- F: 3200 consumed, target 2808 showed **Exceso 392 kcal**.
-- G: a single day with 3200 consumed, 7000 steps and 450 workout kcal produced
-  expenditure **2508**, balance **+692** in week, month and year views. No extra
-  TDEE was counted for empty calendar days.
-- H: the fake endpoint echoed the actual Gemini system instruction: Activo,
-  TMB 1618, TDEE 2508, target 2808, consumed 3200, remaining −392, 7000 steps,
-  450 workout kcal and the no-recalculation/no-double-counting instructions.
-- Profile/dashboard visual style preserved; no browser console errors observed.
-- Exact-target and invalid-activity cases were covered by automated tests.
-
-**Not verified in production:** real logout/login persistence after migration,
-database constraint execution and a live Gemini response. These require applying
-the migration and an authorized test account/server environment. A system prompt
-guides Gemini but cannot guarantee every generated response follows it.
-
-`npm run lint`: passes with existing React/hook warnings. The command now scopes
-linting to application/API/tests/config files, excluding historical scratch scripts;
-the original command failed on syntax errors in `scratch/replace2.cjs` on main.
-`npm run build`: passes TypeScript and Vite; bundle-size warning remains.
-
-## File inventory
-
-Modified: `package.json`, `src/utils/helpers.ts`, `src/lib/db.ts`,
-`src/hooks/useAppStore.ts`, and components `AuthModal.tsx`, `ProfileView.tsx`,
-`HomeView.tsx`, `DailyPanel.tsx`, `Heatmap.tsx`, `ChartsView.tsx`, `ChatView.tsx`.
-
-Created: the SQL migration above, `tests/energy.test.mjs`,
-`tests/persistence.test.mjs`, and this validation document.
+Lint conserva advertencias de React/hooks preexistentes. Build puede advertir sobre el
+bundle mayor a 500 kB. No se ha desplegado ni hecho merge. La migración de activity_level
+incluida en el cambio anterior sigue siendo requisito de la versión desplegada.

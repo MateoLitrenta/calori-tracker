@@ -2,20 +2,19 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, X, CaretRight, Clock } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
-import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap } from '../types';
-import { getCaloriesIngested, getBalanceLabel, generateUUID, aggregateEnergy, getRemainingCalories, getRemainingLabel, getWorkoutCalories } from '../utils/helpers';
+import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap, UserProfile } from '../types';
+import { hasEnergyData, formatDateStr, getCaloriesIngested, getBalanceLabel, generateUUID, aggregateEnergy, getRemainingCalories, getRemainingLabel, getWorkoutCalories, getStepCalories, calculateBMR, calculateTDEE, calculateDailyExpenditure, calculateDailyCalorieTarget } from '../utils/helpers';
 
 interface DailyPanelProps {
   record: DailyRecord | undefined;
   dateStr: string;
   onUpdateRecord: (dateStr: string, updatedRecord: DailyRecord) => void;
-  dailyTDEE: number;
-  dailyTarget: number;
+  profile: UserProfile;
   selectedGroup?: { type: 'day'|'week'|'month'|'year', label: string, dates: string[] } | null;
   records?: DailyRecordsMap;
 }
 
-const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord, dailyTDEE, dailyTarget, selectedGroup, records }) => {
+const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord, profile, selectedGroup, records }) => {
   const [activeTab, setActiveTab] = useState<'comida' | 'entrenamiento' | 'pasos-agua' | null>(null);
   const tabContainerRef = useRef<HTMLDivElement>(null);
 
@@ -45,11 +44,15 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
 
   const isGroup = selectedGroup && selectedGroup.type !== 'day';
 
-  const summary = aggregateEnergy(records || {}, isGroup ? selectedGroup.dates : [dateStr], dailyTDEE);
+  const isHistorical = dateStr < formatDateStr(new Date());
+  const emptyHistory = !isGroup && isHistorical && !hasEnergyData(currentRecord);
+  const dailyTarget = calculateDailyCalorieTarget(profile, currentRecord);
+  const expenditure = calculateDailyExpenditure(profile, currentRecord);
+  const summary = aggregateEnergy(records || {}, isGroup ? selectedGroup.dates : [dateStr], profile);
   const ingested = isGroup ? summary.consumed : getCaloriesIngested(currentRecord);
   const balance = summary.balance;
   const remaining = getRemainingCalories(currentRecord, dailyTarget);
-  const balanceLabel = isGroup ? getBalanceLabel(summary.averageBalance) : getRemainingLabel(remaining);
+  const balanceLabel = emptyHistory ? 'Sin datos' : isGroup ? getBalanceLabel(summary.averageBalance) : getRemainingLabel(remaining);
 
   let panelTitle = "Resumen del Día";
   let panelSubtitle = dateStr;
@@ -290,12 +293,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl p-4 md:p-6 flex flex-col items-center gap-4">
           <div className="flex flex-col items-center text-center">
             <div className="flex items-center gap-2 text-slate-500 dark:text-gray-400 text-sm font-semibold mb-1">
-              <Barbell size={20} className="text-purple-400" /> {isGroup ? 'Balance energético estimado' : getRemainingLabel(remaining)}
+              <Barbell size={20} className="text-purple-400" /> {isGroup ? 'Balance energético estimado' : balanceLabel}
             </div>
             <div className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2 tabular-nums">
-              {isGroup ? (balance === null ? 'Sin datos' : `${balance > 0 ? '+' : ''}${balance.toLocaleString('es-AR')} kcal`) : `${Math.abs(remaining).toLocaleString('es-AR')} kcal`}
+              {emptyHistory ? 'Sin datos' : isGroup ? (balance === null ? 'Sin datos' : `${balance > 0 ? '+' : ''}${balance.toLocaleString('es-AR')} kcal`) : `${Math.abs(remaining).toLocaleString('es-AR')} kcal`}
             </div>
-            <div className={`text-xs px-3 py-1 rounded-full font-medium ${getPillColor(isGroup ? summary.averageBalance : -remaining)}`}>
+            <div className={`text-xs px-3 py-1 rounded-full font-medium ${getPillColor(emptyHistory ? null : isGroup ? summary.averageBalance : -remaining)}`}>
               {balanceLabel || 'Mantenimiento'}
             </div>
           </div>
@@ -312,16 +315,21 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             
             <div className="flex flex-col items-center gap-1 flex-1">
               <div className="flex items-center gap-1 text-slate-500 dark:text-gray-400 text-xs font-semibold">
-                <Flame size={16} className="text-orange-400" /> {isGroup ? 'Gasto estimado' : 'Meta diaria'}
+                <Flame size={16} className="text-orange-400" /> {isGroup ? 'Gasto estimado' : isHistorical ? 'Meta del día' : 'Meta de hoy'}
               </div>
               <div className="text-xl font-bold text-slate-900 dark:text-white tabular-nums">{(isGroup ? summary.expenditure : dailyTarget).toLocaleString('es-AR')} <span className="text-xs font-normal text-slate-500 dark:text-gray-400">kcal</span></div>
             </div>
           </div>
           
-          {isGroup && <p className="text-xs text-slate-500 dark:text-gray-400">{summary.days} días con datos. Balance = consumidas − TDEE; se usa el perfil actual.</p>}
+          {isGroup && <p className="text-xs text-slate-500 dark:text-gray-400">{summary.days} días con datos. Balance = consumidas − gasto registrado de cada día; TMB según el perfil actual.</p>}
           {!isGroup && (
             <div className="text-[10px] text-slate-500 dark:text-gray-400 leading-tight text-center mt-2 max-w-xs opacity-75">
-              Gasto diario estimado: {dailyTDEE.toLocaleString('es-AR')} kcal. Ejercicio registrado: {getWorkoutCalories(currentRecord).toLocaleString('es-AR')} kcal (no modifica la meta).
+              <div>{isHistorical ? 'Gasto estimado del día' : 'Gasto estimado hoy'}: {expenditure.toLocaleString('es-AR')} kcal</div>
+              <div>TMB: {calculateBMR(profile).toLocaleString('es-AR')} kcal</div>
+              <div>Calorías por pasos: {getStepCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
+              <div>Calorías por ejercicio: {getWorkoutCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
+              <div>TDEE de referencia habitual: {calculateTDEE(profile).toLocaleString('es-AR')} kcal</div>
+              <div>Pasos y ejercicio pueden solaparse; se usan los valores registrados sin correcciones.</div>
             </div>
           )}
         </div>
