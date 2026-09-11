@@ -38,18 +38,18 @@ export const calculateTDEE = (profile: UserProfile): number =>
 export const CALORIES_PER_STEP = 0.04;
 
 export const getStepCalories = (record: DailyRecord | undefined): number =>
-  (record?.steps ?? 0) * CALORIES_PER_STEP;
+  Math.round((record?.steps ?? 0) * CALORIES_PER_STEP);
 
 // Steps and workouts may overlap. This version uses recorded values without corrections.
 export const calculateDailyExpenditure = (profile: UserProfile, record?: DailyRecord): number =>
-  calculateBMR(profile) + getStepCalories(record) + getWorkoutCalories(record);
+  Math.round(calculateBMR(profile) + getStepCalories(record) + getWorkoutCalories(record));
 
 export const calculateDailyCalorieTarget = (profile: UserProfile, record?: DailyRecord): number =>
-  calculateDailyExpenditure(profile, record) + (profile.goal === 'Déficit' ? DEFICIT_ADJUSTMENT
-    : profile.goal === 'Superávit' ? SURPLUS_ADJUSTMENT : 0);
+  Math.round(calculateDailyExpenditure(profile, record) + (profile.goal === 'Déficit' ? DEFICIT_ADJUSTMENT
+    : profile.goal === 'Superávit' ? SURPLUS_ADJUSTMENT : 0));
 
 export const getRemainingCalories = (record: DailyRecord | undefined, dailyTarget: number) =>
-  dailyTarget - getCaloriesIngested(record);
+  Math.round(dailyTarget - getCaloriesIngested(record));
 
 export const getRemainingLabel = (remaining: number) =>
   remaining > 0 ? 'Restantes' : remaining < 0 ? 'Exceso' : 'Meta alcanzada';
@@ -66,7 +66,7 @@ export const getCaloriesBurned = (record: DailyRecord | undefined, profile: User
 
 export const getEstimatedEnergyBalance = (record: DailyRecord | undefined, profile: UserProfile) => {
   if (!hasEnergyData(record)) return null;
-  return getCaloriesIngested(record) - calculateDailyExpenditure(profile, record);
+  return Math.round(getCaloriesIngested(record) - calculateDailyExpenditure(profile, record));
 };
 
 export const getNetBalance = getEstimatedEnergyBalance;
@@ -108,7 +108,7 @@ export const aggregateEnergy = (records: DailyRecordsMap, dates: string[], profi
     target += calculateDailyCalorieTarget(profile, record);
     days++;
   }
-  const balance = days ? consumed - expenditure : null;
+  const balance = days ? Math.round(consumed - expenditure) : null;
   return { consumed, days, expenditure, target, balance,
     averageBalance: balance === null ? null : Math.round(balance / days) };
 };

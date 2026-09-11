@@ -14,8 +14,9 @@ Este documento reemplaza la especificación anterior basada en TDEE.
 
 La fórmula de TMB y la persistencia de activity_level no cambian. No hay nuevas
 migraciones ni dependencias. Cambiar actividad habitual afecta TDEE pero no gasto ni meta.
-Se conservan los valores fraccionarios de pasos/ejercicio; las medias gráficas se redondean
-solo para su presentación. No se aplican correcciones arbitrarias por solapamiento:
+Las calorías por pasos, gasto diario, meta, restantes y balances se redondean a kcal enteras
+con Math.round. Los valores registrados de comida/ejercicio se conservan como entradas.
+Las medias gráficas también se redondean. No se aplican correcciones arbitrarias por solapamiento:
 pasos y ejercicio pueden describir parte de la misma actividad y sobreestimar el gasto.
 
 ## Vistas y estado

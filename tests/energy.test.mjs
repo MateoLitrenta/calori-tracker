@@ -40,8 +40,29 @@ test('TMB plus steps plus exact recorded workout calories, including fractional 
   assert.equal(calculateDailyExpenditure(profile, active), 2348);
   const r = { ...active, steps: 1, workouts: [{ calories: 100.25 }, { calories: 200.5 }] };
   assert.equal(getWorkoutCalories(r), 300.75);
-  assert.equal(calculateDailyExpenditure(profile, r), 1918.79);
+  assert.equal(getStepCalories(r), 0);
+  assert.equal(calculateDailyExpenditure(profile, r), 1919);
   assert.equal(getCaloriesIngested(r), 1200);
+});
+
+test('dynamic energy results round to integer kcal', () => {
+  assert.equal(getStepCalories({ ...active, steps: 12 }), 0);
+  assert.equal(getStepCalories({ ...active, steps: 13 }), 1);
+  const r = { ...record('2026-09-01', 1200.25), steps: 13, workouts: [{ calories: 100.6 }] };
+  assert.equal(calculateDailyExpenditure(profile, r), 1720);
+  for (const [goal, target] of [['Déficit', 1320], ['Mantenimiento', 1720], ['Superávit', 2020]]) {
+    assert.equal(calculateDailyCalorieTarget({ ...profile, goal }, r), target);
+  }
+  assert.equal(getRemainingCalories(r, 1720), 520);
+  assert.equal(getRemainingCalories(r, 1000), -200);
+  assert.equal(getEstimatedEnergyBalance(r, profile), -520);
+  const summary = aggregateEnergy({ [r.dateStr]: r }, [r.dateStr], profile, '2026-09-02');
+  assert.equal(summary.expenditure, 1720);
+  assert.equal(summary.target, 1720);
+  assert.equal(summary.balance, -520);
+  // Registered food/workout values are inputs, preserved without modification.
+  assert.equal(getCaloriesIngested(r), 1200.25);
+  assert.equal(getWorkoutCalories(r), 100.6);
 });
 
 for (const [goal, target] of [['Déficit', 1948], ['Mantenimiento', 2348], ['Superávit', 2648]])
