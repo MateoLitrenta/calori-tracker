@@ -23,6 +23,14 @@ export default function HomeView() {
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-300">
+      <DailyPanel
+        record={records[selectedDateStr]}
+        dateStr={selectedDateStr}
+        onUpdateRecord={updateRecord}
+        profile={activeProfile}
+        selectedGroup={selectedGroup}
+        records={records}
+      />
       <Heatmap 
         records={records} 
         selectedDateStr={selectedDateStr}
@@ -32,15 +40,6 @@ export default function HomeView() {
         }}
         onSelectGroup={(type, label, dates) => setSelectedGroup({ type, label, dates })}
         profile={activeProfile}
-      />
-      
-      <DailyPanel 
-        record={records[selectedDateStr]}
-        dateStr={selectedDateStr}
-        onUpdateRecord={updateRecord}
-        profile={activeProfile}
-        selectedGroup={selectedGroup}
-        records={records}
       />
     </div>
   );

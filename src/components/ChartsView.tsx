@@ -1,9 +1,11 @@
 import { useState, useMemo } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
-import { calculateDailyCalorieTarget, aggregateEnergy, getCaloriesIngested, hasEnergyData, formatDateStr } from '../utils/helpers';
+import { aggregateEnergy, formatDateStr } from '../utils/helpers';
 import { ChartBar, CheckCircle, Fire, TrendUp } from '@phosphor-icons/react';
 import { format, subWeeks, subMonths, startOfWeek, addDays, startOfMonth, endOfMonth } from 'date-fns';
 import { es } from 'date-fns/locale';
+
+import { calculateMealStats } from '../utils/mealStats';
 
 type Period = 'Semana' | 'Mes' | 'Año';
 
@@ -14,50 +16,16 @@ export default function ChartsView() {
   const records = activeProfile?.records || {};
 
   // Compute stats and dynamic chart data
-  const { stats, barChartData, macros } = useMemo(() => {
-    let daysWithData = 0;
-    let totalCalories = 0;
-    let daysMetGoal = 0;
-    let currentStreak = 0;
-    let maxStreak = 0;
-    let tempStreak = 0;
-
-    const sortedDates = Object.keys(records).filter(date => date <= formatDateStr(new Date())).sort();
-    
-    // Overall stats (keeping original logic for global KPIs)
-    for (let i = sortedDates.length - 1; i >= 0; i--) {
-      const date = sortedDates[i];
-      const rec = records[date];
-      if (hasEnergyData(rec)) {
-        tempStreak++;
-        daysWithData++;
-        const ingested = getCaloriesIngested(rec);
-        totalCalories += ingested;
-        if (activeProfile && ingested <= calculateDailyCalorieTarget(activeProfile, rec)) {
-          daysMetGoal++;
-        }
-      } else {
-        if (tempStreak > maxStreak) maxStreak = tempStreak;
-        tempStreak = 0;
-      }
-    }
-    if (tempStreak > maxStreak) maxStreak = tempStreak;
-    currentStreak = tempStreak;
-
-    const avgCalories = daysWithData ? Math.round(totalCalories / daysWithData) : 0;
-    const goalPercentage = daysWithData ? Math.round((daysMetGoal / daysWithData) * 100) : 0;
+  const { stats, barChartData } = useMemo(() => {
+    const stats = calculateMealStats(records, formatDateStr(new Date()));
 
     // Dynamic Chart Data Generation
     const today = new Date();
     const chartData: { day: string; cals: number; goal: number; hasData: boolean }[] = [];
-    let periodCalories = 0;
 
-    let theoreticalTargetCals = 0;
     const addBucket = (day: string, dates: string[]) => {
       if (!activeProfile) return;
-      const summary = aggregateEnergy(records, dates, activeProfile);
-      periodCalories += summary.consumed;
-      theoreticalTargetCals += summary.target;
+      const summary = aggregateEnergy(records, dates.filter(date => date <= formatDateStr(today) && records[date]?.meals.length > 0), activeProfile);
       chartData.push({ day, cals: summary.days ? Math.round(summary.consumed / summary.days) : 0,
         goal: summary.days ? Math.round(summary.target / summary.days) : 0, hasData: summary.days > 0 });
     };
@@ -81,36 +49,7 @@ export default function ChartsView() {
           Array.from({ length: endOfMonth(day).getDate() }, (_, j) => formatDateStr(addDays(start, j))));
       }
     }
-    // Approximate macro targets use the same included days as calorie totals.
-
-    // Grams = Cals / 4 for prot/carbs, Cals / 9 for fat
-    const macrosCalc = {
-      protein: {
-        consumed: Math.round((periodCalories * 0.3) / 4),
-        target: Math.round((theoreticalTargetCals * 0.3) / 4),
-        percent: 0
-      },
-      carbs: {
-        consumed: Math.round((periodCalories * 0.45) / 4),
-        target: Math.round((theoreticalTargetCals * 0.45) / 4),
-        percent: 0
-      },
-      fats: {
-        consumed: Math.round((periodCalories * 0.25) / 9),
-        target: Math.round((theoreticalTargetCals * 0.25) / 9),
-        percent: 0
-      }
-    };
-
-    macrosCalc.protein.percent = macrosCalc.protein.target > 0 ? Math.min(100, Math.round((macrosCalc.protein.consumed / macrosCalc.protein.target) * 100)) : 0;
-    macrosCalc.carbs.percent = macrosCalc.carbs.target > 0 ? Math.min(100, Math.round((macrosCalc.carbs.consumed / macrosCalc.carbs.target) * 100)) : 0;
-    macrosCalc.fats.percent = macrosCalc.fats.target > 0 ? Math.min(100, Math.round((macrosCalc.fats.consumed / macrosCalc.fats.target) * 100)) : 0;
-
-    return { 
-      stats: { avgCalories, goalPercentage, currentStreak },
-      barChartData: chartData,
-      macros: macrosCalc
-    };
+    return { stats, barChartData: chartData };
   }, [records, activeProfile, period]);
 
   const maxCals = Math.max(1, ...barChartData.map(d => Math.max(d.cals, d.goal))) * 1.1; // Add 10% headroom
@@ -125,7 +64,7 @@ export default function ChartsView() {
           </div>
           <div>
             <h2 className="font-bold text-lg text-slate-900 dark:text-white">Dashboard</h2>
-            <p className="text-xs text-slate-500 dark:text-gray-400">Tus estadísticas de progreso</p>
+            <p className="text-xs text-slate-500 dark:text-gray-400">Estadísticas de días con comidas registradas</p>
           </div>
         </div>
         
@@ -154,7 +93,7 @@ export default function ChartsView() {
           </div>
           <div>
             <p className="text-sm font-medium text-slate-500 dark:text-gray-400">Promedio Diario</p>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.avgCalories} <span className="text-sm font-normal text-slate-500">kcal</span></p>
+            <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.avgCalories === null ? 'Sin datos' : <>{stats.avgCalories} <span className="text-sm font-normal text-slate-500">kcal</span></>}</p>
           </div>
         </div>
         
@@ -163,8 +102,8 @@ export default function ChartsView() {
             <CheckCircle size={24} weight="fill" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500 dark:text-gray-400">Meta Cumplida</p>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.goalPercentage}%</p>
+            <p className="text-sm font-medium text-slate-500 dark:text-gray-400">Días registrados</p>
+            <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.registeredDays}</p>
           </div>
         </div>
 
@@ -225,43 +164,6 @@ export default function ChartsView() {
           <div className="flex items-center gap-2 hidden sm:flex">
             <span className="w-4 border-t-2 border-slate-300 dark:border-gray-600 border-dashed"></span>
             <span className="text-slate-600 dark:text-gray-400">Meta dinámica promedio</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Macros Distribution */}
-      <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-6 rounded-2xl shadow-sm mb-8">
-        <h3 className="font-bold text-slate-900 dark:text-white mb-6">Macronutrientes Consumidos ({period})</h3>
-        
-        <div className="space-y-4">
-          <div>
-            <div className="flex justify-between text-sm mb-1">
-              <span className="font-medium text-slate-700 dark:text-gray-300">Proteínas (30%)</span>
-              <span className="text-slate-500 dark:text-gray-400">{macros.protein.consumed}g / {macros.protein.target}g</span>
-            </div>
-            <div className="h-3 w-full bg-slate-100 dark:bg-[#0f141c] rounded-full overflow-hidden">
-              <div className="h-full bg-pink-500 rounded-full transition-all duration-500" style={{ width: `${macros.protein.percent}%` }}></div>
-            </div>
-          </div>
-          
-          <div>
-            <div className="flex justify-between text-sm mb-1">
-              <span className="font-medium text-slate-700 dark:text-gray-300">Carbohidratos (45%)</span>
-              <span className="text-slate-500 dark:text-gray-400">{macros.carbs.consumed}g / {macros.carbs.target}g</span>
-            </div>
-            <div className="h-3 w-full bg-slate-100 dark:bg-[#0f141c] rounded-full overflow-hidden">
-              <div className="h-full bg-orange-400 rounded-full transition-all duration-500" style={{ width: `${macros.carbs.percent}%` }}></div>
-            </div>
-          </div>
-
-          <div>
-            <div className="flex justify-between text-sm mb-1">
-              <span className="font-medium text-slate-700 dark:text-gray-300">Grasas (25%)</span>
-              <span className="text-slate-500 dark:text-gray-400">{macros.fats.consumed}g / {macros.fats.target}g</span>
-            </div>
-            <div className="h-3 w-full bg-slate-100 dark:bg-[#0f141c] rounded-full overflow-hidden">
-              <div className="h-full bg-yellow-400 rounded-full transition-all duration-500" style={{ width: `${macros.fats.percent}%` }}></div>
-            </div>
           </div>
         </div>
       </div>
