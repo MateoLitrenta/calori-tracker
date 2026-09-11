@@ -24,7 +24,7 @@ const source = (await readFile(new URL('../src/lib/db.ts', import.meta.url), 'ut
   .replace("import { supabase } from './supabase';", 'const supabase = globalThis.__profileTestSupabase;')
   .replace("'../utils/helpers'", JSON.stringify(new URL('../src/utils/helpers.ts', import.meta.url).href));
 const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext } }).outputText;
-const { fetchUserData, syncProfile } = await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
+const { fetchUserData, syncProfile, deleteUserRecords } = await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
 
 test('new-user default is persisted; saved activity survives fresh fetches', async () => {
   row = null;
@@ -47,4 +47,16 @@ test('legacy/invalid values load safely; failed saves reject', async () => {
   console.error = () => {};
   try { await assert.rejects(syncProfile({ id: 'test-user', activity: 'Moderado' }), /Simulated/); }
   finally { error = undefined; console.error = originalError; }
+});
+
+test('deletion requires explicit backend confirmation and propagates failures', async () => {
+  for (const result of [{ data: true, error: null }, { data: false, error: null },
+    { data: null, error: null }, { data: null, error: new Error('Delete failed') }]) {
+    globalThis.__profileTestSupabase.rpc = async name => {
+      assert.equal(name, 'delete_my_daily_records');
+      return result;
+    };
+    if (result.data === true) await deleteUserRecords();
+    else await assert.rejects(deleteUserRecords());
+  }
 });

@@ -16,6 +16,7 @@ export default function ProfileView() {
   const [height, setHeight] = useState<number>(170);
   const [activity, setActivity] = useState<ActivityLevel>('Sedentario');
   const [goal, setGoal] = useState<UserGoal>('Mantenimiento');
+  const [isResetting, setIsResetting] = useState(false);
   const [isResetConfirm, setIsResetConfirm] = useState(false);
 
   const initFromProfile = () => {
@@ -76,10 +77,18 @@ export default function ProfileView() {
     }
   };
 
-  const handleReset = () => {
-    resetData();
-    setIsResetConfirm(false);
-    toast.success('Datos reiniciados', { style: { background: '#161b22', color: '#fff' } });
+  const handleReset = async () => {
+    if (isResetting) return;
+    setIsResetting(true);
+    try {
+      await resetData();
+      setIsResetConfirm(false);
+      toast.success('Registros eliminados', { style: { background: '#161b22', color: '#fff' } });
+    } catch {
+      toast.error('No se pudieron borrar los registros. Intentá nuevamente.', { style: { background: '#161b22', color: '#fff' } });
+    } finally {
+      setIsResetting(false);
+    }
   };
 
   return (
@@ -283,9 +292,8 @@ export default function ProfileView() {
               <span className="text-sm text-slate-500 dark:text-gray-400">TDEE de referencia habitual:</span>
               <span className="font-semibold text-slate-700 dark:text-gray-200 whitespace-nowrap">{calculatedTDEE} kcal</span>
             </div>
-            <p className="text-xs text-slate-500 dark:text-gray-400">TDEE es una referencia habitual. La meta de hoy usa TMB, pasos y ejercicio registrados.</p>
             <div className="flex justify-between items-center pt-3 border-t border-slate-200 dark:border-gray-800/50">
-              <span className="text-sm text-slate-500 dark:text-gray-400">Meta de hoy:</span>
+              <span className="text-sm text-slate-500 dark:text-gray-400">Meta actual:</span>
               <span className={`text-lg font-bold ${
                 goal === 'Déficit' ? 'text-blue-600 dark:text-blue-400' :
                 goal === 'Superávit' ? 'text-orange-600 dark:text-orange-400' :
@@ -296,6 +304,14 @@ export default function ProfileView() {
             </div>
           </div>
         </div>
+
+        <section className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-6 rounded-2xl text-xs text-slate-500 dark:text-gray-400 space-y-2">
+          <h3 className="font-bold text-sm text-slate-900 dark:text-white">Cómo calculamos tus calorías</h3>
+          <p>TMB: tu gasto en reposo.</p>
+          <p>Gasto diario: TMB + pasos + ejercicio registrados. La meta se ajusta con esa actividad.</p>
+          <p>TDEE: referencia habitual según tu perfil; no es el gasto real del día.</p>
+          <p>Pasos y ejercicio pueden solaparse. Usamos los valores registrados sin correcciones.</p>
+        </section>
 
         {/* Danger Zone (Hidden in Edit Mode to avoid clutter) */}
         {!isEditing && (
@@ -315,13 +331,15 @@ export default function ProfileView() {
             ) : (
               <div className="flex gap-2">
                 <button
+                  disabled={isResetting}
                   onClick={handleReset}
                   type="button"
                   className="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors"
                 >
-                  Confirmar
+                  {isResetting ? 'Borrando…' : 'Confirmar'}
                 </button>
                 <button
+                  disabled={isResetting}
                   onClick={() => setIsResetConfirm(false)}
                   type="button"
                   className="flex-1 py-2 bg-white dark:bg-[#161b22] text-slate-700 dark:text-gray-300 font-medium rounded-lg border border-slate-300 dark:border-gray-700 hover:bg-slate-100 dark:hover:bg-[#0f141c] transition-colors"

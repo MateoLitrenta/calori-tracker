@@ -31,8 +31,8 @@ test('DailyPanel renders updated targets after steps and workout add/edit/delete
     [{ ...base, steps: 7000, workouts: [{ id: 'w', activity: 'Correr', calories: 600, duration: 45, muscles: [] }] }, '2.498'],
     [{ ...base, steps: 7000, workouts: [] }, '1.898']]) {
     const text = render(record);
-    assert.ok(text.includes(`Meta de hoy${target} kcal`), text);
-    assert.ok(text.includes(`Gasto estimado hoy: ${target} kcal`));
+    assert.ok(text.includes(`Meta actual${target} kcal`), text);
+    assert.ok(text.includes(`Gasto estimado: ${target} kcal`));
     assert.ok(text.includes('Consumidas0 kcal'));
   }
 });
@@ -47,5 +47,15 @@ test('DailyPanel displays exact-target and excess states', () => {
     const text = render({ ...base, meals: [{ id: 'm', name: 'Comida', type: 'Almuerzo', calories }] });
     assert.ok(text.includes(label));
   }
+});
+
+test('daily summary has a collapsed breakdown and no profile explanations', () => {
+  const html = renderToStaticMarkup(React.createElement(DailyPanel, {
+    profile, record: base, dateStr, records: {}, onUpdateRecord() {},
+  }));
+  assert.match(html, /<details class=/);
+  assert.doesNotMatch(html, /<details[^>]* open/);
+  assert.match(html, /Ver desglose/);
+  assert.doesNotMatch(html, /TDEE|solaparse|Meta de hoy/);
 });
 

@@ -113,10 +113,11 @@ export const useAppStore = () => {
     }
   };
 
-  const resetData = () => {
-    if (!activeProfile) return;
+  const resetData = async () => {
+    if (!activeProfile || !user) throw new Error('No hay una sesión activa');
+    await db.deleteUserRecords();
     setActiveProfile(prev => {
-      if (!prev) return prev;
+      if (!prev || prev.id !== activeProfile.id) return prev;
       return { ...prev, records: {} };
     });
   };

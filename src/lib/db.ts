@@ -1,4 +1,10 @@
 import { supabase } from './supabase';
+
+export async function deleteUserRecords(): Promise<void> {
+  const { data, error } = await supabase.rpc('delete_my_daily_records');
+  if (error) throw error;
+  if (data !== true) throw new Error('El backend no confirmó el borrado');
+}
 import type { UserProfile, DailyRecord, MealEntry, WorkoutEntry } from '../types';
 import { generateUUID, normalizeActivityLevel } from '../utils/helpers';
 
