@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { PaperPlaneRight, Robot, User } from '@phosphor-icons/react';
 import { useAppStore } from '../hooks/useAppStore';
-import { buildDailyEnergyContext, formatDateStr, calculateDailyCalorieTarget, getRemainingCalories } from '../utils/helpers';
-import type { UserProfile } from '../types';
-import { generateAIResponse, type ChatMessage } from '../services/aiService';
+import { buildDailyEnergyContext, formatDateStr, calculateDailyCalorieTarget, getRemainingCalories, generateUUID } from '../utils/helpers';
+import type { UserProfile, DailyRecord, MealType } from '../types';
+import { generateAIResponse, validActions, type DataAction, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
@@ -24,18 +24,82 @@ function readHistory(key: string): Message[] {
 }
 
 export default function ChatView() {
-  const { user, activeProfile } = useAppStore();
+  const { user, activeProfile, updateRecord } = useAppStore();
   if (!user) return null;
-  return <UserChat key={user.id} userId={user.id} activeProfile={activeProfile} />;
+  return <UserChat key={user.id} userId={user.id} activeProfile={activeProfile} updateRecord={updateRecord} />;
 }
 
-function UserChat({ userId, activeProfile }: { userId: string; activeProfile: UserProfile | null }) {
+function UserChat({ userId, activeProfile, updateRecord }: {
+  userId: string; activeProfile: UserProfile | null;
+  updateRecord: (dateStr: string, record: DailyRecord) => Promise<boolean>;
+}) {
   const storageKey = `calori:assistant:messages:${userId}`;
   const [messages, setMessages] = useState<Message[]>(() => readHistory(storageKey));
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const mounted = useRef(true);
+  const busy = useRef(false);
+  const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[] } | null>(null);
+
+  const appendReply = (text: string) => {
+    if (mounted.current) setMessages(prev => [...prev, { id: generateUUID(), role: 'bot', text }]);
+  };
+
+  const describeAction = (a: DataAction) => {
+    const p = a.payload;
+    switch (a.type) {
+      case 'add_meal': return `${p.name} · ${p.type} · ${p.calories} kcal`;
+      case 'add_workout': return `${p.activity} · ${p.duration} min · ${p.calories} kcal`;
+      case 'set_steps': return `${p.steps} pasos (total)`;
+      case 'add_water': return `+${p.water} ml de agua`;
+      case 'set_weight': return `${p.weight} kg de peso de hoy`;
+    }
+  };
+
+  const applyActions = async (actions: DataAction[], dateStr: string) => {
+    if (!mounted.current || !activeProfile || dateStr !== formatDateStr(new Date())) {
+      throw new Error('La fecha cambió. Pedime registrar los datos de hoy nuevamente.');
+    }
+    const base = activeProfile.records[dateStr] || {
+      dateStr, date: new Date(), meals: [], workouts: [], steps: 0, water: 0,
+    };
+    const record: DailyRecord = { ...base, meals: [...base.meals], workouts: [...base.workouts] };
+    for (const a of actions) {
+      const p = a.payload;
+      switch (a.type) {
+        case 'add_meal':
+          record.meals.push({ id: generateUUID(), name: p.name as string,
+            type: p.type as MealType, calories: p.calories as number }); break;
+        case 'add_workout':
+          record.workouts.push({ id: generateUUID(), activity: p.activity as string,
+            duration: p.duration as number, calories: p.calories as number, muscles: [] }); break;
+        case 'set_steps': record.steps = p.steps as number; break;
+        case 'add_water': record.water += p.water as number; break;
+        case 'set_weight': record.weight = p.weight as number; break;
+      }
+    }
+    if (!await updateRecord(dateStr, record)) {
+      throw new Error('No se pudo completar el guardado. Revisá los registros de hoy antes de reintentar.');
+    }
+    appendReply(`Registrado hoy: ${actions.map(describeAction).join('; ')}.`);
+  };
+
+  const confirmActions = async () => {
+    if (!pending || busy.current) return;
+    busy.current = true;
+    setIsTyping(true);
+    const proposal = pending;
+    setPending(null);
+    try {
+      await applyActions(proposal.actions, proposal.dateStr);
+    } catch (error) {
+      appendReply(error instanceof Error ? error.message : 'No se pudo guardar.');
+    } finally {
+      busy.current = false;
+      if (mounted.current) setIsTyping(false);
+    }
+  };
 
   useEffect(() => {
     mounted.current = true;
@@ -63,11 +127,12 @@ function UserChat({ userId, activeProfile }: { userId: string; activeProfile: Us
   ];
 
   const startConversation = () => {
-    if (isTyping) return;
+    if (busy.current) return;
     try {
       localStorage.removeItem(storageKey);
       setMessages([]);
       setInputValue('');
+      setPending(null);
     } catch {
       toast.error('No se pudo borrar la conversación local.');
     }
@@ -87,7 +152,8 @@ function UserChat({ userId, activeProfile }: { userId: string; activeProfile: Us
   }, [messages, isTyping]);
 
   const handleSend = async (text: string) => {
-    if (!text.trim() || isTyping || !activeProfile) return;
+    if (!text.trim() || busy.current || pending || !activeProfile) return;
+    busy.current = true;
 
     const userMsg: Message = { id: Date.now().toString(), role: 'user', text };
     const newHistory = [...messages, userMsg];
@@ -103,18 +169,28 @@ function UserChat({ userId, activeProfile }: { userId: string; activeProfile: Us
       if (!activeProfile) throw new Error('Esperá a que se cargue tu perfil para consultar al asistente.');
       const systemPrompt = `Eres el asistente nutricional de la app Calori Tracker.
 ${buildDailyEnergyContext(activeProfile, todayRecord)}
-Solo puedes conversar y leer este contexto. No puedes registrar, modificar ni borrar comidas, ejercicios, pasos, agua, peso ni ningún dato de la app. No afirmes haber realizado esas acciones.
+HOY: ${todayStr}.
+Perfil: ${JSON.stringify({ name: activeProfile.name, age: activeProfile.age, sex: activeProfile.sex,
+  height: activeProfile.height, weight: activeProfile.weight, goal: activeProfile.goal,
+  activity: activeProfile.activity || 'Sedentario' })}.
+Registros de HOY: ${JSON.stringify({ meals: todayRecord?.meals || [], workouts: todayRecord?.workouts || [],
+  steps: todayRecord?.steps || 0, water: todayRecord?.water || 0, weight: todayRecord?.weight ?? null })}.
 Sé conciso, directo, motivador, siempre en español y enfócate estrictamente en nutrición, salud y entrenamiento. No des explicaciones médicas complejas, sino consejos accionables.`;
 
-      const replyText = await generateAIResponse(newHistory, systemPrompt);
+      const response = await generateAIResponse(newHistory, systemPrompt);
       if (!mounted.current) return;
       
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: 'bot',
-        text: replyText
+        text: response.reply
       };
       setMessages(prev => [...prev, botMsg]);
+      const actions = validActions(response.actions, todayStr);
+      const proposals = actions.filter(a => a.type === 'add_meal' || a.type === 'add_workout');
+      const direct = actions.filter(a => a.type !== 'add_meal' && a.type !== 'add_workout');
+      if (direct.length) await applyActions(direct, todayStr);
+      if (mounted.current && proposals.length) setPending({ dateStr: todayStr, actions: proposals });
     } catch (error) {
       if (!mounted.current) return;
       const errorMessage = error instanceof Error && error.message
@@ -129,6 +205,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
         text: `❌ ${errorMessage}`
       }]);
     } finally {
+      busy.current = false;
       if (mounted.current) setIsTyping(false);
     }
   };
@@ -153,6 +230,20 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
 
       {/* Messages Area */}
       <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-4">
+        {pending && (
+          <div className="order-last rounded-xl border border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/20 p-4 text-sm">
+            <p className="font-semibold mb-2">Confirmar registros de hoy</p>
+            {pending.actions.map((action, index) => (
+              <p key={index}>{describeAction(action)}{action.estimated ? ' (estimado)' : ''}</p>
+            ))}
+            <div className="flex gap-3 mt-3">
+              <button type="button" disabled={isTyping} onClick={confirmActions}
+                className="rounded-lg bg-blue-600 text-white px-3 py-2 disabled:opacity-50">Confirmar</button>
+              <button type="button" disabled={isTyping} onClick={() => { setPending(null); appendReply('Registro cancelado.'); }}
+                className="rounded-lg border border-slate-300 dark:border-gray-700 px-3 py-2">Cancelar</button>
+            </div>
+          </div>
+        )}
         {messages.length === 0 && (
           <div className="my-auto py-8 text-center">
             <h3 className="text-lg font-semibold">¿En qué te puedo ayudar hoy?</h3>
@@ -207,7 +298,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             <button
               key={i}
               onClick={() => handleSend(suggestion)}
-              disabled={isTyping || !activeProfile}
+              disabled={isTyping || !!pending || !activeProfile}
               className="flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-700 text-slate-700 dark:text-gray-300 hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 disabled:opacity-50 transition-colors whitespace-nowrap shadow-sm"
             >
               {suggestion}
@@ -223,13 +314,13 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            disabled={isTyping || !activeProfile}
+            disabled={isTyping || !!pending || !activeProfile}
             placeholder="Escribe un mensaje..."
             className="flex-1 bg-white dark:bg-[#161b22] border border-slate-300 dark:border-gray-700 rounded-xl pl-4 pr-12 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 shadow-sm disabled:opacity-50"
           />
           <button
             type="submit"
-            disabled={!inputValue.trim() || isTyping || !activeProfile}
+            disabled={!inputValue.trim() || isTyping || !!pending || !activeProfile}
             className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 dark:disabled:bg-gray-700 text-white rounded-lg transition-colors flex items-center justify-center"
           >
             <PaperPlaneRight size={18} weight="fill" />

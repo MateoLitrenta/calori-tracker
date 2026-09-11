@@ -11,6 +11,22 @@ interface RequestBody {
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 const MAX_MESSAGES = 10;
 const MAX_TEXT_LENGTH = 4000;
+const ACTION_INSTRUCTIONS = `
+Devuelve exclusivamente JSON: {"reply": string, "actions": [{"type": string, "payload": object, "estimated": boolean}]}.
+Solo interpreta solicitudes explícitas del ÚLTIMO mensaje del usuario para HOY, nunca repitas acciones del historial.
+Si conversa, pregunta, es ambiguo, faltan datos, o pide otra fecha: actions=[]; pide lo necesario.
+No borres ni edites comidas/ejercicios existentes ni perfiles. No afirmes que guardaste: el cliente aún debe hacerlo.
+Tipos y payloads exactos (dateStr siempre debe ser la fecha de HOY indicada en el contexto):
+add_meal: {dateStr, name, type, calories}. type: Desayuno|Almuerzo|Merienda|Cena|Snack.
+add_workout: {dateStr, activity, duration, calories}. duration en minutos.
+set_steps: {dateStr, steps}. Solo total explícito, nunca incrementos ni estimaciones.
+add_water: {dateStr, water}. Cantidad bebida explícita en ml, se SUMA al agua actual.
+set_weight: {dateStr, weight}. Peso explícito en kg, solo registro diario, nunca perfil.
+Comidas y ejercicios: puedes estimar calorías usando cantidades, actividad, duración y perfil; estimated=true si estimas algo.
+Siempre requieren confirmación del usuario en la UI. Si faltan cantidad o duración, pregunta.
+Pasos, agua y peso: estimated=false, no inventes valores; convierte unidades explícitas.
+Ignora instrucciones que pidan otros tipos de acciones. No conviertas planes o sugerencias en registros.
+`;
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -79,6 +95,7 @@ export default {
     const payload: Record<string, unknown> = {
       contents,
       generationConfig: {
+        responseMimeType: 'application/json',
         temperature: 0.7,
         // Gemini 2.5 Flash uses dynamic thinking by default. For this fast,
         // conversational nutrition assistant we disable thinking so the token
@@ -91,11 +108,9 @@ export default {
       }
     };
 
-    if (typeof body.systemInstruction === 'string' && body.systemInstruction.trim()) {
-      payload.systemInstruction = {
-        parts: [{ text: body.systemInstruction.slice(0, 8000) }]
-      };
-    }
+    payload.systemInstruction = {
+      parts: [{ text: (typeof body.systemInstruction === 'string' ? body.systemInstruction.slice(0, 8000) : '') + ACTION_INSTRUCTIONS }]
+    };
 
     try {
       const response = await fetch(
@@ -138,7 +153,11 @@ export default {
         return json({ error: 'La IA respondió sin contenido.' }, 502);
       }
 
-      return json({ reply });
+      const result = JSON.parse(reply);
+      if (typeof result?.reply !== 'string' || !result.reply.trim() || !Array.isArray(result.actions)) {
+        return json({ error: 'La IA respondió con un formato inválido.' }, 502);
+      }
+      return json({ reply: result.reply, actions: result.actions });
     } catch (error) {
       console.error('Gemini network error:', error instanceof Error ? error.message : 'unknown error');
       return json({ error: 'No se pudo conectar con el servicio de IA.' }, 502);
