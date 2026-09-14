@@ -1,3 +1,4 @@
+import './PremiumViews.css';
 import { useState, useMemo } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
 import { aggregateEnergy, formatDateStr } from '../utils/helpers';
@@ -55,27 +56,27 @@ export default function ChartsView() {
   const maxCals = Math.max(1, ...barChartData.map(d => Math.max(d.cals, d.goal))) * 1.1; // Add 10% headroom
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-300">
+    <div className="premium-view dark charts-view flex flex-col gap-6 w-full max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-300">
       {/* Header & Filter */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-2xl shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] p-4 rounded-3xl shadow-none">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+          <div className="p-2 bg-[#f5a06416] dark:bg-[#f5a06416] rounded-xl text-[#f5a064] dark:text-[#f5a064]">
             <ChartBar size={24} weight="fill" />
           </div>
           <div>
-            <h2 className="font-bold text-lg text-slate-900 dark:text-white">Dashboard</h2>
+            <h2 className="font-bold text-lg text-slate-900 dark:text-white">Tu evolución</h2>
             <p className="text-xs text-slate-500 dark:text-gray-400">Estadísticas de días con comidas registradas</p>
           </div>
         </div>
         
-        <div className="flex bg-slate-100 dark:bg-[#0f141c] rounded-lg p-1 border border-slate-200 dark:border-gray-800">
+        <div className="flex bg-slate-100 dark:bg-[#151719] rounded-xl p-1 border border-slate-200 dark:border-[#ffffff0d]">
           {(['Semana', 'Mes', 'Año'] as Period[]).map(p => (
             <button
               key={p}
               onClick={() => setPeriod(p)}
               className={`px-4 py-1.5 text-xs font-medium rounded-md transition-colors ${
                 period === p 
-                  ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-white' 
+                  ? 'bg-[#f5a06416] text-[#f5a064] shadow-none dark:bg-[#f5a06416] dark:text-[#f5a064]' 
                   : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -86,8 +87,8 @@ export default function ChartsView() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-5 rounded-2xl shadow-sm flex items-center gap-4">
+      <div className="chart-stats grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] p-5 rounded-3xl shadow-none flex items-center gap-4">
           <div className="p-3 bg-orange-100 dark:bg-orange-900/20 text-orange-600 dark:text-orange-500 rounded-xl">
             <Fire size={24} weight="fill" />
           </div>
@@ -97,7 +98,7 @@ export default function ChartsView() {
           </div>
         </div>
         
-        <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-5 rounded-2xl shadow-sm flex items-center gap-4">
+        <div className="bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] p-5 rounded-3xl shadow-none flex items-center gap-4">
           <div className="p-3 bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-500 rounded-xl">
             <CheckCircle size={24} weight="fill" />
           </div>
@@ -107,7 +108,7 @@ export default function ChartsView() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-5 rounded-2xl shadow-sm flex items-center gap-4">
+        <div className="bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] p-5 rounded-3xl shadow-none flex items-center gap-4">
           <div className="p-3 bg-purple-100 dark:bg-purple-900/20 text-purple-600 dark:text-purple-500 rounded-xl">
             <TrendUp size={24} weight="fill" />
           </div>
@@ -119,10 +120,10 @@ export default function ChartsView() {
       </div>
 
       {/* Main Bar Chart */}
-      <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-6 rounded-2xl shadow-sm">
+      <div className="bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] p-6 rounded-3xl shadow-none">
         <h3 className="font-bold text-slate-900 dark:text-white mb-6">Consumo Promedio vs Meta ({period})</h3>
         
-        <div className="flex items-end justify-between gap-1 sm:gap-2 h-48 mt-4">
+        <div className="chart-plot flex items-end justify-between gap-1 sm:gap-2 h-48 mt-4">
           {barChartData.map((d, i) => {
             const calsHeight = `${(d.cals / maxCals) * 100}%`;
             const goalHeight = `${(d.goal / maxCals) * 100}%`;
@@ -138,7 +139,7 @@ export default function ChartsView() {
                   />
                   {/* Cals Bar */}
                   <div 
-                    className={`w-full rounded-t-md transition-all duration-500 relative z-0 ${isOver ? 'bg-red-500 dark:bg-red-600' : 'bg-blue-500 dark:bg-blue-600'}`}
+                    className={`w-full rounded-t-md transition-all duration-500 relative z-0 ${isOver ? 'bg-red-500 dark:bg-red-600' : 'bg-[#f5a064] dark:bg-[#f5a064]'}`}
                     style={{ height: calsHeight }}
                   >
                     {/* Tooltip */}
@@ -152,9 +153,9 @@ export default function ChartsView() {
             );
           })}
         </div>
-        <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-slate-100 dark:border-gray-800 text-sm">
+        <div className="flex flex-wrap items-center justify-center gap-4 mt-8 pt-4 border-t border-slate-100 dark:border-[#ffffff0d] text-sm">
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-blue-500"></span>
+            <span className="w-3 h-3 rounded-full bg-[#f5a064]"></span>
             <span className="text-slate-600 dark:text-gray-400">Dentro de meta</span>
           </div>
           <div className="flex items-center gap-2">
