@@ -736,7 +736,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     className="p-3.5 hover:bg-white dark:bg-[#161b22] flex flex-col gap-1.5 group transition-colors cursor-pointer"
                   >
                     <div className="w-full font-medium text-wrap break-words leading-tight">
-                      {meal.name}
+                      <ForkKnife size={18} className="inline-block mr-2 text-orange-400" aria-hidden="true" />{meal.name}
                     </div>
                     <div className="flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
                       <span>
@@ -758,11 +758,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     className="p-3.5 hover:bg-white dark:bg-[#161b22] flex flex-col gap-1.5 group transition-colors cursor-pointer"
                   >
                     <div className="w-full font-medium text-wrap break-words leading-tight">
-                      {workout.activity}
+                      <Barbell size={18} className="inline-block mr-2 text-orange-400" aria-hidden="true" />{workout.activity}
                     </div>
                     <div className="flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
                       <span>
-                        {workout.time ? `${workout.time} hs • ` : ''}{workout.duration} min
+                        {workout.time ? `${workout.time} hs • ` : ''}Ejercicio · {workout.duration} min
                       </span>
                       <div className="flex items-center gap-1.5">
                         <span className="font-semibold text-orange-400 whitespace-nowrap text-sm">-{workout.calories} kcal</span>
