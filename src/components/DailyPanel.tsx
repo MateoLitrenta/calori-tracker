@@ -105,12 +105,17 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   };
 
   const handleUpdateSteps = (steps: number) => {
-    onUpdateRecord(dateStr, { ...currentRecord, steps: Math.max(0, steps) });
+    const nextSteps = Math.max(0, steps);
+    setLocalSteps(nextSteps ? String(nextSteps) : '');
+    stepsValueRef.current = nextSteps;
+    scheduleStepsSave(nextSteps);
   };
 
   const handleAddSteps = (amount: number) => {
-    const newSteps = Math.max(0, currentRecord.steps + amount);
-    onUpdateRecord(dateStr, { ...currentRecord, steps: newSteps });
+    const newSteps = Math.max(0, stepsValueRef.current + amount);
+    stepsValueRef.current = newSteps;
+    setLocalSteps(newSteps ? String(newSteps) : '');
+    scheduleStepsSave(newSteps);
   };
 
   // --- Forms State ---
@@ -190,12 +195,25 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   }, [activeTab]);
   const [localSteps, setLocalSteps] = useState(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
   const stepsInputRef = useRef<HTMLInputElement>(null);
+  const stepsValueRef = useRef(currentRecord.steps);
+  const stepsSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scheduleStepsSave = (steps: number) => {
+    if (stepsSaveTimerRef.current) clearTimeout(stepsSaveTimerRef.current);
+    stepsSaveTimerRef.current = setTimeout(() => {
+      onUpdateRecord(dateStr, { ...currentRecord, steps });
+      stepsSaveTimerRef.current = null;
+    }, 400);
+  };
 
   useEffect(() => {
-    if (document.activeElement !== stepsInputRef.current) {
+    if (document.activeElement !== stepsInputRef.current && !stepsSaveTimerRef.current) {
+      stepsValueRef.current = currentRecord.steps;
       setLocalSteps(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
     }
   }, [currentRecord.steps]);
+  useEffect(() => () => {
+    if (stepsSaveTimerRef.current) clearTimeout(stepsSaveTimerRef.current);
+  }, []);
 
   useEffect(() => {
     if (activeTab === 'comida' && !editingMealId) {
@@ -301,7 +319,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             </div>
           </div>
 
-          <div className="w-full flex justify-between md:justify-around items-center border-t border-slate-200 dark:border-gray-800/30 pt-4 mt-2">
+          <div className="w-full flex justify-between md:justify-around items-start border-t border-slate-200 dark:border-gray-800/30 pt-4 mt-2">
             <div className="flex flex-col items-center gap-1 flex-1">
               <div className="flex items-center gap-1 text-slate-500 dark:text-gray-400 text-xs font-semibold">
                 <ForkKnife size={16} className="text-blue-400" /> Calorías consumidas
