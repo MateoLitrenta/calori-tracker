@@ -297,8 +297,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [detailModalItem, setDetailModalItem] = useState<(MealEntry & { _type: 'meal' }) | (WorkoutEntry & { _type: 'workout' }) | null>(null);
 
   return (
-    <div className="flex flex-col gap-6 w-full">
-      <div className="flex justify-between items-end border-b border-slate-200 dark:border-gray-800 pb-2">
+    <div className="daily-panel flex flex-col gap-6 w-full">
+      <div className="daily-heading flex justify-between items-end border-b border-slate-200 dark:border-gray-800 pb-2">
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white capitalize">{panelTitle}</h3>
         <span className="text-slate-500 dark:text-gray-400 capitalize">{panelSubtitle}</span>
       </div>
@@ -306,20 +306,20 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       {/* Summary Cards */}
       <div className="flex flex-col gap-4">
         {/* Hero Card de Calorías */}
-        <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl p-4 md:p-6 flex flex-col items-center gap-4">
-          <div className="flex flex-col items-center text-center">
+        <div className="energy-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl p-4 md:p-6 flex flex-col items-center gap-4">
+          <div className="energy-headline flex flex-col items-center text-center">
             <div className="flex items-center gap-2 text-slate-500 dark:text-gray-400 text-sm font-semibold mb-1">
               <Barbell size={20} className="text-purple-400" /> Balance energético
             </div>
-            <div className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2 tabular-nums">
+            <div className="energy-number text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2 tabular-nums">
               {balance === null ? 'Sin datos' : `${balance > 0 ? '+' : ''}${balance.toLocaleString('es-AR')} kcal`}
             </div>
-            <div className={`text-xs px-3 py-1 rounded-full font-medium ${getPillColor(balance === null ? null : isGroup ? summary.averageBalance : balance)}`}>
+            <div className={`energy-status text-xs px-3 py-1 rounded-full font-medium ${getPillColor(balance === null ? null : isGroup ? summary.averageBalance : balance)}`}>
               {balanceLabel}
             </div>
           </div>
 
-          <div className="w-full flex justify-between md:justify-around items-start border-t border-slate-200 dark:border-gray-800/30 pt-4 mt-2">
+          <div className="energy-metrics w-full flex justify-between md:justify-around items-start border-t border-slate-200 dark:border-gray-800/30 pt-4 mt-2">
             <div className="flex flex-col items-center gap-1 flex-1">
               <div className="flex items-center gap-1 text-slate-500 dark:text-gray-400 text-xs font-semibold">
                 <ForkKnife size={16} className="text-blue-400" /> Calorías consumidas
@@ -353,7 +353,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
 
         {/* Hábitos Compactos */}
         {!isGroup && (
-          <div className="grid grid-cols-3 gap-2">
+          <div className="daily-habits grid grid-cols-3 gap-2">
             <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
               <div className="flex flex-col items-center gap-1">
                 <Drop size={20} className="text-cyan-400" />
@@ -704,7 +704,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
 
       {/* Logs List */}
       {!isGroup && (
-        <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden">
+        <div className="daily-logs bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden">
           <div className="bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
             <h4 className="font-bold text-slate-900 dark:text-white">Registros del Día</h4>
           </div>

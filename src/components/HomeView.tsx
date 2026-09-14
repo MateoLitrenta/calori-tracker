@@ -3,9 +3,11 @@ import Heatmap from './Heatmap';
 import DailyPanel from './DailyPanel';
 import { useAppStore } from '../hooks/useAppStore';
 import { formatDateStr } from '../utils/helpers';
+import './HomeVariants.css';
 
 export default function HomeView() {
   const { activeProfile, updateRecord } = useAppStore();
+  const [variant, setVariant] = useState('minimal');
   
   const [selectedDateStr, setSelectedDateStr] = useState<string>(formatDateStr(new Date()));
   const [selectedGroup, setSelectedGroup] = useState<{type: 'day'|'week'|'month'|'year', label: string, dates: string[]} | null>(null);
@@ -22,7 +24,17 @@ export default function HomeView() {
   if (!activeProfile) return <p className="text-slate-500 dark:text-gray-400">Cargando perfil…</p>;
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-300">
+    <div className="home-variants dark flex flex-col gap-6 w-full max-w-4xl mx-auto" data-variant={variant}>
+      <div className="home-variant-picker">
+        <div className="home-brand"><span aria-hidden="true">●</span> CALORI <small>HOME / EXPLORACIÓN VISUAL</small></div>
+        <div className="home-variant-options" role="group" aria-label="Estilo de Home">
+          {[['minimal', 'Minimal extrema'], ['warm', 'Premium cálida'], ['data', 'Premium data-driven']].map(([value, label]) => (
+            <button type="button" key={value} aria-pressed={variant === value} onClick={() => setVariant(value)}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
       <DailyPanel
         record={records[selectedDateStr]}
         dateStr={selectedDateStr}
