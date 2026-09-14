@@ -3,6 +3,7 @@ import Heatmap from './Heatmap';
 import DailyPanel from './DailyPanel';
 import { useAppStore } from '../hooks/useAppStore';
 import { formatDateStr } from '../utils/helpers';
+import './HomeVariants.css';
 
 export default function HomeView() {
   const { activeProfile, updateRecord } = useAppStore();
@@ -22,7 +23,7 @@ export default function HomeView() {
   if (!activeProfile) return <p className="text-slate-500 dark:text-gray-400">Cargando perfil…</p>;
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-300">
+    <div className="home-variants dark flex flex-col gap-6 w-full max-w-4xl mx-auto">
       <DailyPanel
         record={records[selectedDateStr]}
         dateStr={selectedDateStr}
