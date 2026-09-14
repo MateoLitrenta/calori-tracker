@@ -1,3 +1,4 @@
+import './PremiumViews.css';
 import { useState, useRef, useEffect } from 'react';
 import { PaperPlaneRight, Robot, User } from '@phosphor-icons/react';
 import { useAppStore } from '../hooks/useAppStore';
@@ -211,11 +212,11 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 w-full max-w-3xl mx-auto bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+    <div className="premium-view dark assistant-view flex flex-col flex-1 min-h-0 w-full max-w-3xl mx-auto bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
       
       {/* Header */}
-      <div className="px-6 py-4 border-b border-slate-200 dark:border-gray-800 bg-slate-50 dark:bg-[#0f141c] flex flex-wrap items-center gap-3">
-        <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg text-orange-600 dark:text-orange-400">
+      <div className="chat-heading px-6 py-5 border-b border-slate-200 dark:border-[#ffffff0d] bg-slate-50 dark:bg-[#151719] flex flex-wrap items-center gap-3">
+        <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-xl text-orange-600 dark:text-orange-400">
           <Robot size={24} weight="fill" />
         </div>
         <div>
@@ -231,21 +232,21 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
       {/* Messages Area */}
       <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-4">
         {pending && (
-          <div className="order-last rounded-xl border border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/20 p-4 text-sm">
+          <div className="chat-confirmation order-last rounded-xl border border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/20 p-4 text-sm">
             <p className="font-semibold mb-2">Confirmar registros de hoy</p>
             {pending.actions.map((action, index) => (
               <p key={index}>{describeAction(action)}{action.estimated ? ' (estimado)' : ''}</p>
             ))}
             <div className="flex gap-3 mt-3">
               <button type="button" disabled={isTyping} onClick={confirmActions}
-                className="rounded-lg bg-blue-600 text-white px-3 py-2 disabled:opacity-50">Confirmar</button>
+                className="rounded-xl bg-[#f5a064] text-white px-3 py-2 disabled:opacity-50">Confirmar</button>
               <button type="button" disabled={isTyping} onClick={() => { setPending(null); appendReply('Registro cancelado.'); }}
-                className="rounded-lg border border-slate-300 dark:border-gray-700 px-3 py-2">Cancelar</button>
+                className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Cancelar</button>
             </div>
           </div>
         )}
         {messages.length === 0 && (
-          <div className="my-auto py-8 text-center">
+          <div className="chat-empty my-auto py-12 text-center">
             <h3 className="text-lg font-semibold">¿En qué te puedo ayudar hoy?</h3>
             <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
               Tengo en cuenta tus comidas, pasos, entrenamiento y balance energético.
@@ -253,7 +254,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           </div>
         )}
         {messages.map((msg) => (
-          <div key={msg.id} className={`flex gap-3 max-w-[85%] md:max-w-[75%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
+          <div key={msg.id} className={`flex gap-3 min-w-0 max-w-[95%] md:max-w-[80%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
             <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-slate-200 dark:bg-gray-800">
               {msg.role === 'user' ? (
                 <User size={16} className="text-slate-600 dark:text-gray-300" weight="fill" />
@@ -261,10 +262,10 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
                 <Robot size={16} className="text-orange-600 dark:text-orange-400" weight="fill" />
               )}
             </div>
-            <div className={`px-4 py-3 rounded-2xl text-sm shadow-sm ${
+            <div className={`chat-bubble ${msg.role === 'bot' && msg.text.startsWith('Registrado hoy:') ? 'chat-saved' : ''} px-4 py-3 rounded-3xl text-sm shadow-none ${
               msg.role === 'user' 
-                ? 'bg-blue-600 text-white rounded-tr-sm whitespace-pre-wrap' 
-                : 'bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-gray-100 rounded-tl-sm border border-slate-200 dark:border-gray-800'
+                ? 'chat-user text-white rounded-tr-sm whitespace-pre-wrap' 
+                : 'bg-slate-100 text-slate-900 dark:bg-[#191c1f] dark:text-gray-100 rounded-tl-sm border border-slate-200 dark:border-[#ffffff0d]'
             }`}>
               {msg.role === 'bot' ? (
                 <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-snug prose-p:mb-2 prose-ul:my-1 prose-li:my-0 last:prose-p:mb-0">
@@ -281,7 +282,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-slate-200 dark:bg-gray-800">
               <Robot size={16} className="text-orange-600 dark:text-orange-400" weight="fill" />
             </div>
-            <div className="px-4 py-4 rounded-2xl bg-slate-100 dark:bg-[#0d1117] rounded-tl-sm border border-slate-200 dark:border-gray-800 flex items-center gap-1">
+            <div className="px-4 py-4 rounded-3xl bg-slate-100 dark:bg-[#191c1f] rounded-tl-sm border border-slate-200 dark:border-[#ffffff0d] flex items-center gap-1">
               <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
               <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
               <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -291,7 +292,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
       </div>
 
       {/* Input Area */}
-      <div className="p-4 border-t border-slate-200 dark:border-gray-800 bg-slate-50 dark:bg-[#0f141c]">
+      <div className="chat-composer p-4 border-t border-slate-200 dark:border-[#ffffff0d] bg-slate-50 dark:bg-[#151719]">
         {/* Quick Suggestions */}
         <div className="flex overflow-x-auto gap-2 pb-3 mb-2 hide-scrollbar">
           {suggestions.map((suggestion, i) => (
@@ -299,7 +300,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
               key={i}
               onClick={() => handleSend(suggestion)}
               disabled={isTyping || !!pending || !activeProfile}
-              className="flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-700 text-slate-700 dark:text-gray-300 hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 disabled:opacity-50 transition-colors whitespace-nowrap shadow-sm"
+              className="chat-suggestion flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] text-slate-700 dark:text-gray-300 hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 disabled:opacity-50 transition-colors whitespace-nowrap shadow-none"
             >
               {suggestion}
             </button>
@@ -316,12 +317,12 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             onChange={(e) => setInputValue(e.target.value)}
             disabled={isTyping || !!pending || !activeProfile}
             placeholder="Escribe un mensaje..."
-            className="flex-1 bg-white dark:bg-[#161b22] border border-slate-300 dark:border-gray-700 rounded-xl pl-4 pr-12 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 shadow-sm disabled:opacity-50"
+            className="min-w-0 flex-1 bg-white dark:bg-[#1e2124] border border-slate-300 dark:border-[#ffffff0d] rounded-xl pl-4 pr-12 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#f5a064] dark:focus:border-[#f5a064] shadow-none disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={!inputValue.trim() || isTyping || !!pending || !activeProfile}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 dark:disabled:bg-gray-700 text-white rounded-lg transition-colors flex items-center justify-center"
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-[#f5a064] hover:bg-[#f8b17f] disabled:bg-slate-300 dark:disabled:bg-[#34383b] text-white rounded-xl transition-colors flex items-center justify-center"
           >
             <PaperPlaneRight size={18} weight="fill" />
           </button>
