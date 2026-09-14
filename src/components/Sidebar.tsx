@@ -20,10 +20,10 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
   ] as const;
 
   return (
-    <aside className="hidden md:flex flex-col w-64 border-r border-slate-200 dark:border-gray-800 bg-white dark:bg-[#161b22] p-6 justify-between flex-shrink-0 h-full overflow-y-auto">
+    <aside className="hidden md:flex flex-col w-64 border-r border-white/5 bg-[#1e2124] p-6 justify-between flex-shrink-0 h-full overflow-y-auto">
       <div>
         <div className="flex items-center gap-3 mb-10">
-          <div className="p-2 bg-slate-100 dark:bg-gray-800 rounded-lg">
+          <div className="p-2 bg-[#f5a06416] rounded-xl">
             <Fire size={32} weight="fill" className="text-orange-500" />
           </div>
           <div>
@@ -65,7 +65,7 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
         {user ? (
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0">
                 <User size={20} className="text-slate-500 dark:text-gray-400" />
               </div>
               <div className="flex flex-col overflow-hidden">

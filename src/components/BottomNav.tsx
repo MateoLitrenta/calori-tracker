@@ -9,12 +9,12 @@ interface BottomNavProps {
 
 const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   return (
-    <div className="fixed bottom-0 left-0 w-full z-50 md:hidden bg-white/90 dark:bg-[#0d1117]/90 backdrop-blur-md border-t border-slate-200 dark:border-gray-800">
+    <div className="fixed bottom-0 left-0 w-full z-50 md:hidden bg-[#1e2124]/95 backdrop-blur-md border-t border-white/5 pb-[env(safe-area-inset-bottom)]">
       <div className="flex justify-around items-center h-16 max-w-md mx-auto px-2">
         <button
           onClick={() => onTabChange('home')}
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${
-            activeTab === 'home' ? 'text-orange-500' : 'text-slate-500 dark:text-gray-500 hover:text-slate-900 dark:hover:text-white'
+            activeTab === 'home' ? 'text-[#f5a064]' : 'text-gray-400 hover:text-white'
           }`}
         >
           <House size={24} weight={activeTab === 'home' ? 'fill' : 'regular'} />
@@ -23,7 +23,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
         <button
           onClick={() => onTabChange('chat')}
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${
-            activeTab === 'chat' ? 'text-orange-500' : 'text-slate-500 dark:text-gray-500 hover:text-slate-900 dark:hover:text-white'
+            activeTab === 'chat' ? 'text-[#f5a064]' : 'text-gray-400 hover:text-white'
           }`}
         >
           <ChatCircle size={24} weight={activeTab === 'chat' ? 'fill' : 'regular'} />
@@ -32,7 +32,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
         <button
           onClick={() => onTabChange('charts')}
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${
-            activeTab === 'charts' ? 'text-orange-500' : 'text-slate-500 dark:text-gray-500 hover:text-slate-900 dark:hover:text-white'
+            activeTab === 'charts' ? 'text-[#f5a064]' : 'text-gray-400 hover:text-white'
           }`}
         >
           <ChartBar size={24} weight={activeTab === 'charts' ? 'fill' : 'regular'} />
@@ -41,7 +41,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
         <button
           onClick={() => onTabChange('profile')}
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${
-            activeTab === 'profile' ? 'text-orange-500' : 'text-slate-500 dark:text-gray-500 hover:text-slate-900 dark:hover:text-white'
+            activeTab === 'profile' ? 'text-[#f5a064]' : 'text-gray-400 hover:text-white'
           }`}
         >
           <User size={24} weight={activeTab === 'profile' ? 'fill' : 'regular'} />

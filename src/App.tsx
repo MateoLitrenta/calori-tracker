@@ -48,7 +48,7 @@ function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col md:flex-row overflow-hidden bg-slate-100 dark:bg-[#0f141c] text-slate-900 dark:text-white">
+    <div className="h-screen flex flex-col md:flex-row overflow-hidden bg-[#151719] text-slate-900 dark:text-white">
       <Toaster position="bottom-right" />
       
       {/* Desktop Sidebar */}
@@ -73,7 +73,7 @@ function App() {
         </header>
 
         {/* Main Content Area */}
-        <main ref={mainRef} className="flex-1 flex flex-col overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 w-full transition-all duration-300">
+        <main ref={mainRef} className="flex-1 flex flex-col overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 w-full transition-all duration-300 bg-[#151719]">
           {activeTab === 'home' && <HomeView />}
           {activeTab === 'chat' && <ChatView />}
           {activeTab === 'charts' && <ChartsView />}
