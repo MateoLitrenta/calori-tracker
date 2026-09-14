@@ -3,7 +3,7 @@ import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sn
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap, UserProfile } from '../types';
-import { hasEnergyData, formatDateStr, getCaloriesIngested, getBalanceLabel, generateUUID, aggregateEnergy, getRemainingCalories, getRemainingLabel, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure, calculateDailyCalorieTarget } from '../utils/helpers';
+import { hasEnergyData, formatDateStr, getCaloriesIngested, generateUUID, aggregateEnergy, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure } from '../utils/helpers';
 
 interface DailyPanelProps {
   record: DailyRecord | undefined;
@@ -46,13 +46,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
 
   const isHistorical = dateStr < formatDateStr(new Date());
   const emptyHistory = !isGroup && isHistorical && !hasEnergyData(currentRecord);
-  const dailyTarget = calculateDailyCalorieTarget(profile, currentRecord);
   const expenditure = calculateDailyExpenditure(profile, currentRecord);
   const summary = aggregateEnergy(records || {}, isGroup ? selectedGroup.dates : [dateStr], profile);
   const ingested = isGroup ? summary.consumed : getCaloriesIngested(currentRecord);
-  const balance = summary.balance;
-  const remaining = getRemainingCalories(currentRecord, dailyTarget);
-  const balanceLabel = emptyHistory ? 'Sin datos' : isGroup ? getBalanceLabel(summary.averageBalance) : getRemainingLabel(remaining);
+  const balance = emptyHistory ? null : isGroup ? summary.balance : Math.round(ingested - expenditure);
+  const balanceLabel = balance === null ? 'Sin datos' : balance < 0 ? 'Déficit' : balance > 0 ? 'Superávit' : 'Equilibrio';
 
   let panelTitle = "Resumen del Día";
   let panelSubtitle = dateStr;
@@ -293,20 +291,20 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl p-4 md:p-6 flex flex-col items-center gap-4">
           <div className="flex flex-col items-center text-center">
             <div className="flex items-center gap-2 text-slate-500 dark:text-gray-400 text-sm font-semibold mb-1">
-              <Barbell size={20} className="text-purple-400" /> {isGroup ? 'Balance energético estimado' : balanceLabel}
+              <Barbell size={20} className="text-purple-400" /> Balance energético
             </div>
             <div className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2 tabular-nums">
-              {emptyHistory ? 'Sin datos' : isGroup ? (balance === null ? 'Sin datos' : `${balance > 0 ? '+' : ''}${balance.toLocaleString('es-AR')} kcal`) : `${Math.abs(remaining).toLocaleString('es-AR')} kcal`}
+              {balance === null ? 'Sin datos' : `${balance > 0 ? '+' : ''}${balance.toLocaleString('es-AR')} kcal`}
             </div>
-            <div className={`text-xs px-3 py-1 rounded-full font-medium ${getPillColor(emptyHistory ? null : isGroup ? summary.averageBalance : -remaining)}`}>
-              {balanceLabel || 'Mantenimiento'}
+            <div className={`text-xs px-3 py-1 rounded-full font-medium ${getPillColor(balance === null ? null : isGroup ? summary.averageBalance : balance)}`}>
+              {balanceLabel}
             </div>
           </div>
 
           <div className="w-full flex justify-between md:justify-around items-center border-t border-slate-200 dark:border-gray-800/30 pt-4 mt-2">
             <div className="flex flex-col items-center gap-1 flex-1">
               <div className="flex items-center gap-1 text-slate-500 dark:text-gray-400 text-xs font-semibold">
-                <ForkKnife size={16} className="text-blue-400" /> Consumidas
+                <ForkKnife size={16} className="text-blue-400" /> Calorías consumidas
               </div>
               <div className="text-xl font-bold text-slate-900 dark:text-white tabular-nums">{ingested.toLocaleString('es-AR')} <span className="text-xs font-normal text-slate-500 dark:text-gray-400">kcal</span></div>
             </div>
@@ -315,26 +313,24 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             
             <div className="flex flex-col items-center gap-1 flex-1">
               <div className="flex items-center gap-1 text-slate-500 dark:text-gray-400 text-xs font-semibold">
-                <Flame size={16} className="text-orange-400" /> {isGroup ? 'Gasto estimado' : 'Meta actual'}
+                <Flame size={16} className="text-orange-400" /> Gasto estimado
               </div>
-              <div className="text-xl font-bold text-slate-900 dark:text-white tabular-nums">{(isGroup ? summary.expenditure : dailyTarget).toLocaleString('es-AR')} <span className="text-xs font-normal text-slate-500 dark:text-gray-400">kcal</span></div>
+              <div className="text-xl font-bold text-slate-900 dark:text-white tabular-nums">{(isGroup ? summary.expenditure : expenditure).toLocaleString('es-AR')} <span className="text-xs font-normal text-slate-500 dark:text-gray-400">kcal</span></div>
+              {!isGroup && (
+                <details className="text-xs text-slate-500 dark:text-gray-400 text-center mt-2">
+                  <summary className="cursor-pointer font-medium">Ver desglose</summary>
+                  <div className="space-y-1 mt-2">
+                    <div>TMB: {calculateBMR(profile).toLocaleString('es-AR')} kcal</div>
+                    <div>Pasos: {getStepCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
+                    <div>Ejercicio: {getWorkoutCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
+                  </div>
+                </details>
+              )}
             </div>
           </div>
           
           {isGroup && <p className="text-xs text-slate-500 dark:text-gray-400">{summary.days} días con datos.</p>}
-          {!isGroup && (
-            <div className="text-xs text-slate-500 dark:text-gray-400 text-center mt-2">
-              <div>Gasto estimado: {expenditure.toLocaleString('es-AR')} kcal</div>
-              <details className="mt-2">
-                <summary className="cursor-pointer font-medium">Ver desglose</summary>
-                <div className="space-y-1 mt-2">
-                  <div>TMB: {calculateBMR(profile).toLocaleString('es-AR')} kcal</div>
-                  <div>Pasos: {getStepCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
-                  <div>Ejercicio: {getWorkoutCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
-                </div>
-              </details>
-            </div>
-          )}
+
         </div>
 
         {/* Hábitos Compactos */}

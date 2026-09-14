@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { PaperPlaneRight, Robot, User } from '@phosphor-icons/react';
 import { useAppStore } from '../hooks/useAppStore';
-import { buildDailyEnergyContext, formatDateStr, calculateDailyCalorieTarget, getRemainingCalories, generateUUID } from '../utils/helpers';
+import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
 import { generateAIResponse, validActions, type DataAction, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
@@ -116,14 +116,11 @@ function UserChat({ userId, activeProfile, updateRecord }: {
   }, [messages, storageKey]);
 
   const todayRecord = activeProfile?.records[formatDateStr(new Date())];
-  const remaining = activeProfile
-    ? getRemainingCalories(todayRecord, calculateDailyCalorieTarget(activeProfile, todayRecord)) : 0;
   const suggestions = [
     'Analizá mi día',
-    '¿Estoy cumpliendo mi objetivo?',
+    '¿Cómo está mi balance energético?',
     !todayRecord?.meals.length ? 'Ayudame a planear mis comidas de hoy'
-      : remaining > 0 ? `¿Qué puedo comer con ~${remaining.toLocaleString('es-AR')} kcal?`
-        : 'Ayudame a planear mis comidas de mañana',
+      : '¿Cómo puedo equilibrar mi alimentación y actividad?',
   ];
 
   const startConversation = () => {
@@ -171,8 +168,7 @@ function UserChat({ userId, activeProfile, updateRecord }: {
 ${buildDailyEnergyContext(activeProfile, todayRecord)}
 HOY: ${todayStr}.
 Perfil: ${JSON.stringify({ name: activeProfile.name, age: activeProfile.age, sex: activeProfile.sex,
-  height: activeProfile.height, weight: activeProfile.weight, goal: activeProfile.goal,
-  activity: activeProfile.activity || 'Sedentario' })}.
+  height: activeProfile.height, weight: activeProfile.weight })}.
 Registros de HOY: ${JSON.stringify({ meals: todayRecord?.meals || [], workouts: todayRecord?.workouts || [],
   steps: todayRecord?.steps || 0, water: todayRecord?.water || 0, weight: todayRecord?.weight ?? null })}.
 Sé conciso, directo, motivador, siempre en español y enfócate estrictamente en nutrición, salud y entrenamiento. No des explicaciones médicas complejas, sino consejos accionables.`;
@@ -252,7 +248,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           <div className="my-auto py-8 text-center">
             <h3 className="text-lg font-semibold">¿En qué te puedo ayudar hoy?</h3>
             <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
-              Tengo en cuenta tus comidas, pasos, entrenamiento y objetivo.
+              Tengo en cuenta tus comidas, pasos, entrenamiento y balance energético.
             </p>
           </div>
         )}

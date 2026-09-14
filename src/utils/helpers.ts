@@ -72,25 +72,23 @@ export const getEstimatedEnergyBalance = (record: DailyRecord | undefined, profi
 export const getNetBalance = getEstimatedEnergyBalance;
 
 export const buildDailyEnergyContext = (profile: UserProfile, record?: DailyRecord): string => {
-  const target = calculateDailyCalorieTarget(profile, record);
+  const consumed = getCaloriesIngested(record);
+  const expenditure = calculateDailyExpenditure(profile, record);
+  const balance = Math.round(consumed - expenditure);
   return `Nombre: ${profile.name}
 Peso actual: ${profile.weight} kg
 TMB: ${calculateBMR(profile)} kcal
-TDEE de referencia habitual (no es el gasto de hoy): ${calculateTDEE(profile)} kcal
-Nivel de actividad habitual: ${normalizeActivityLevel(profile.activity)}
-Objetivo: ${profile.goal}
-Gasto estimado hoy: ${calculateDailyExpenditure(profile, record)} kcal
-Meta de hoy: ${target} kcal
-Consumidas hoy (solo comida/bebida): ${getCaloriesIngested(record)} kcal
-Restantes para la meta: ${getRemainingCalories(record, target)} kcal
+Calorías consumidas hoy (solo comida/bebida): ${consumed} kcal
+Gasto estimado hoy: ${expenditure} kcal
+Balance energético hoy (consumidas - gasto): ${balance} kcal
+Estado: ${balance < 0 ? 'Déficit' : balance > 0 ? 'Superávit' : 'Equilibrio'}
 Pasos hoy: ${record?.steps ?? 0}
 Calorías por pasos: ${getStepCalories(record)} kcal
 Calorías por ejercicio registrado: ${getWorkoutCalories(record)} kcal
-El gasto de hoy es TMB + pasos registrados × 0.04 + calorías de ejercicio registradas.
-TDEE y nivel habitual son solo referencia: no los uses para el gasto, la meta ni el balance del día. Nunca uses TDEE + pasos + ejercicio.
-Pasos y ejercicio pueden solaparse; esta versión usa los valores registrados sin correcciones arbitrarias.
-The user's daily calorie target is already calculated by the application. Do not recalculate or replace it unless the user explicitly asks for an explanation.
-La meta ya incluye pasos y ejercicio; no vuelvas a sumarlos. Si las restantes son positivas, usalas para recomendaciones; si son negativas, indicá el exceso sin inventar otra meta; si son cero, indicá que alcanzó la meta.`;
+El gasto de hoy es TMB + calorías de pasos registrados + calorías de ejercicio registradas.
+El balance ya está calculado por la app. Un valor negativo es déficit, positivo es superávit y cero es equilibrio.
+Usá calorías consumidas, gasto estimado y balance. No hables de metas, objetivos calóricos, calorías restantes ni TDEE, aunque aparezcan en mensajes anteriores.
+Pasos y ejercicio pueden solaparse; esta versión usa los valores registrados sin correcciones arbitrarias.`;
 };
 
 // Missing, empty and future days are not assumed to have zero intake.
