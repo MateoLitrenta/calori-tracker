@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
-import { calculateBMR, calculateTDEE, calculateDailyCalorieTarget, formatDateStr } from '../utils/helpers';
-import type { UserProfile, UserSex, ActivityLevel, UserGoal } from '../types';
+import type { UserProfile, UserSex } from '../types';
 import { User, Check, Trash, PencilSimple, X } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 
@@ -14,8 +13,6 @@ export default function ProfileView() {
   const [age, setAge] = useState<number>(30);
   const [weight, setWeight] = useState<number>(70);
   const [height, setHeight] = useState<number>(170);
-  const [activity, setActivity] = useState<ActivityLevel>('Sedentario');
-  const [goal, setGoal] = useState<UserGoal>('Mantenimiento');
   const [isResetting, setIsResetting] = useState(false);
   const [isResetConfirm, setIsResetConfirm] = useState(false);
 
@@ -26,8 +23,6 @@ export default function ProfileView() {
       setAge(activeProfile.age);
       setWeight(activeProfile.weight);
       setHeight(activeProfile.height);
-      setActivity(activeProfile.activity || 'Sedentario');
-      setGoal(activeProfile.goal || 'Mantenimiento');
     } else if (user) {
       setName(user.email?.split('@')[0] || 'Usuario');
     }
@@ -50,16 +45,12 @@ export default function ProfileView() {
     age,
     weight,
     height,
-    activity,
-    goal,
+    activity: activeProfile?.activity,
+    goal: activeProfile?.goal || 'Mantenimiento',
     created_at: activeProfile?.created_at || new Date().toISOString(),
     records: activeProfile?.records || {}
   };
   
-  const calculatedBMR = calculateBMR(previewProfile);
-  const calculatedTDEE = calculateTDEE(previewProfile);
-  const adjustedTarget = calculateDailyCalorieTarget(previewProfile, previewProfile.records[formatDateStr(new Date())]);
-
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -104,7 +95,7 @@ export default function ProfileView() {
               </div>
               <div>
                 <h2 className="font-bold text-xl text-slate-900 dark:text-white">Ajustes de Perfil</h2>
-                <p className="text-sm text-slate-500 dark:text-gray-400">Tus datos biométricos y objetivos</p>
+                <p className="text-sm text-slate-500 dark:text-gray-400">Tus datos personales</p>
               </div>
             </div>
             {!isEditing && (
@@ -140,22 +131,6 @@ export default function ProfileView() {
               <div className="flex flex-col">
                 <span className="text-xs font-medium text-slate-500 dark:text-gray-400 uppercase tracking-wider mb-1">Altura</span>
                 <span className="font-semibold text-slate-900 dark:text-white text-lg">{height} <span className="text-sm font-normal text-slate-500">cm</span></span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-medium text-slate-500 dark:text-gray-400 uppercase tracking-wider mb-1">Nivel Actividad</span>
-                <span className="inline-flex items-center mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 self-start">
-                  {activity}
-                </span>
-              </div>
-              <div className="flex flex-col sm:col-span-3">
-                <span className="text-xs font-medium text-slate-500 dark:text-gray-400 uppercase tracking-wider mb-1">Objetivo Actual</span>
-                <span className={`inline-flex items-center mt-1 px-3 py-1 rounded-full text-sm font-bold self-start ${
-                  goal === 'Déficit' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-400' :
-                  goal === 'Superávit' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-400' :
-                  'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400'
-                }`}>
-                  {goal}
-                </span>
               </div>
             </div>
           ) : (
@@ -218,38 +193,6 @@ export default function ProfileView() {
                   />
                 </div>
                 
-                <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1.5">Nivel de Actividad</label>
-                  <select
-                    value={activity}
-                    onChange={e => setActivity(e.target.value as ActivityLevel)}
-                    className="w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 transition-colors"
-                  >
-                    <option value="Sedentario">Sedentario (Poco o ningún ejercicio)</option>
-                    <option value="Moderado">Moderado (Ejercicio ligero 1-3 días/sem)</option>
-                    <option value="Activo">Activo (Ejercicio moderado 3-5 días/sem)</option>
-                  </select>
-                </div>
-                
-                <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1.5">Objetivo Físico</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {(['Déficit', 'Mantenimiento', 'Superávit'] as UserGoal[]).map(g => (
-                      <button
-                        key={g}
-                        type="button"
-                        onClick={() => setGoal(g)}
-                        className={`py-2 px-2 text-xs sm:text-sm font-medium rounded-lg border transition-colors ${
-                          goal === g
-                            ? 'bg-blue-600 border-blue-500 text-white'
-                            : 'bg-slate-100 dark:bg-[#0d1117] border-slate-200 dark:border-gray-800 text-slate-600 dark:text-gray-300 hover:border-slate-300 dark:hover:border-gray-700'
-                        }`}
-                      >
-                        {g}
-                      </button>
-                    ))}
-                  </div>
-                </div>
               </div>
 
               <div className="pt-4 border-t border-slate-200 dark:border-gray-800 flex justify-end gap-3">
@@ -277,39 +220,10 @@ export default function ProfileView() {
       {/* Summary / Danger Zone Column */}
       <div className="w-full md:w-80 flex flex-col gap-6">
         
-        {/* Real-time Summary Card */}
-        <div className="bg-slate-50 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 p-6 rounded-2xl shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-            <User size={100} weight="fill" />
-          </div>
-          <h3 className="font-bold text-slate-900 dark:text-white mb-4 relative z-10">Proyección Diaria</h3>
-          <div className="flex flex-col gap-3 relative z-10">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-500 dark:text-gray-400">TMB Estimada:</span>
-              <span className="font-semibold text-slate-700 dark:text-gray-200">{calculatedBMR} kcal</span>
-            </div>
-            <div className="flex justify-between items-center gap-2">
-              <span className="text-sm text-slate-500 dark:text-gray-400">TDEE de referencia habitual:</span>
-              <span className="font-semibold text-slate-700 dark:text-gray-200 whitespace-nowrap">{calculatedTDEE} kcal</span>
-            </div>
-            <div className="flex justify-between items-center pt-3 border-t border-slate-200 dark:border-gray-800/50">
-              <span className="text-sm text-slate-500 dark:text-gray-400">Meta actual:</span>
-              <span className={`text-lg font-bold ${
-                goal === 'Déficit' ? 'text-blue-600 dark:text-blue-400' :
-                goal === 'Superávit' ? 'text-orange-600 dark:text-orange-400' :
-                'text-green-600 dark:text-green-400'
-              }`}>
-                {adjustedTarget} kcal
-              </span>
-            </div>
-          </div>
-        </div>
-
         <section className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-6 rounded-2xl text-xs text-slate-500 dark:text-gray-400 space-y-2">
-          <h3 className="font-bold text-sm text-slate-900 dark:text-white">Cómo calculamos tus calorías</h3>
+          <h3 className="font-bold text-sm text-slate-900 dark:text-white">Cómo calculamos tu gasto</h3>
           <p>TMB: tu gasto en reposo.</p>
-          <p>Gasto diario: TMB + pasos + ejercicio registrados. La meta se ajusta con esa actividad.</p>
-          <p>TDEE: referencia habitual según tu perfil; no es el gasto real del día.</p>
+          <p>Gasto estimado = TMB + calorías de pasos + calorías de ejercicio registrados.</p>
           <p>Pasos y ejercicio pueden solaparse. Usamos los valores registrados sin correcciones.</p>
         </section>
 
