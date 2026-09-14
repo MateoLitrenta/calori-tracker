@@ -1,38 +1,39 @@
 .home-variants {
-  --home-bg: #151618;
-  --home-card: #1b1d20;
-  --home-line: #323438;
+  --home-bg: #151719;
+  --home-card: #1e2124;
+  --home-line: #ffffff0d;
   --home-text: #f1f0ec;
-  --home-muted: #a1a3a7;
+  --home-muted: #a9abae;
   --home-orange: #f69b59;
   background: var(--home-bg);
   color: var(--home-text);
-  padding: clamp(16px, 3vw, 32px);
-  border-radius: 20px;
+  padding: clamp(12px, 3vw, 32px);
+  border-radius: 24px;
   color-scheme: dark;
 }
-.home-variants .home-brand { font-size: 14px; font-weight: 800; letter-spacing: .16em; }
-.home-variants .home-brand > span { color: var(--home-orange); margin-right: 7px; }
-.home-variants .home-brand small { display: block; margin-top: 6px; font-size: 9px; font-weight: 500; color: var(--home-muted); letter-spacing: .14em; }
-.home-variants .home-variant-options { display: flex; gap: 5px; margin-top: 20px; padding: 4px; border: 1px solid var(--home-line); border-radius: 10px; }
-.home-variants .home-variant-options button { flex: 1; padding: 10px 6px; border-radius: 6px; color: var(--home-muted); font-size: 11px; line-height: 1.4; }
-.home-variants .home-variant-options button[aria-pressed="true"] { background: var(--home-orange); color: #21170f; font-weight: 700; }
 .home-variants button:focus-visible, .home-variants summary:focus-visible { outline: 2px solid var(--home-orange); outline-offset: 4px; }
 .home-variants :is([class~="bg-white"], [class~="bg-slate-50"], [class~="bg-slate-100"]) { background-color: var(--home-card); }
 .home-variants :is([class~="border-slate-200"], [class~="border-slate-300"], [class~="divide-slate-200"] > *) { border-color: var(--home-line); }
 .home-variants :is([class~="text-slate-900"], [class~="text-slate-700"]) { color: var(--home-text); }
 .home-variants :is([class~="text-slate-500"], [class~="text-slate-600"]) { color: var(--home-muted); }
 .home-variants :is([class~="text-blue-400"], [class~="text-orange-400"], [class~="text-purple-400"]) { color: var(--home-orange); }
+.home-variants .energy-status.bg-heatmap-deficit-high,
+.home-variants .energy-status.bg-heatmap-deficit-medium,
+.home-variants .energy-status.bg-heatmap-deficit-low { background: #4ade8020; color: #86efac; }
+.home-variants .energy-status.bg-heatmap-surplus-high,
+.home-variants .energy-status.bg-heatmap-surplus-medium,
+.home-variants .energy-status.bg-heatmap-surplus-low { background: #f8717120; color: #fca5a5; }
+.home-variants .energy-status.bg-heatmap-neutral { background: #ffffff10; color: var(--home-muted); }
 .home-variants .daily-heading { border: 0; padding-bottom: 0; gap: 12px; }
 .home-variants .daily-heading h3 { font-size: 19px; font-weight: 600; letter-spacing: -.025em; }
 .home-variants .daily-heading > span { font-size: 11px; text-align: right; }
-.home-variants .energy-card { padding: clamp(20px, 4vw, 36px); gap: 26px; box-shadow: none; }
+.home-variants .energy-card { padding: clamp(20px, 4vw, 36px); padding-top: 36px; gap: 32px; border: 0; border-radius: 24px; box-shadow: none; }
 .home-variants .energy-headline { width: 100%; }
-.home-variants .energy-headline > div:first-child { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; font-weight: 500; }
+.home-variants .energy-headline > div:first-child { font-size: 12px; letter-spacing: .01em; font-weight: 400; }
 .home-variants .energy-headline > div:first-child svg { display: none; }
 .home-variants .energy-number { font-size: clamp(36px, 7vw, 66px); line-height: 1.15; letter-spacing: -.055em; font-weight: 500; margin: 12px 0; }
-.home-variants .energy-status { background: transparent; color: var(--home-orange); padding: 0; font-size: 12px; }
-.home-variants .energy-metrics { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px 16px; align-items: start; }
+.home-variants .energy-status { background: #f69b5912; color: var(--home-orange); padding: 5px 14px; font-size: 12px; }
+.home-variants .energy-metrics { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px 16px; align-items: start; border: 0; padding-top: 0; margin-top: 0; }
 .home-variants .energy-metrics > div:first-child,
 .home-variants .energy-metrics > div:last-child { display: contents; }
 .home-variants .energy-metrics > div:nth-child(2) { display: none; }
@@ -40,49 +41,42 @@
 .home-variants .energy-metrics > div:last-child > div:first-child { grid-column: 2; grid-row: 1; }
 .home-variants .energy-metrics > div:first-child > div:nth-child(2) { grid-column: 1; grid-row: 2; }
 .home-variants .energy-metrics > div:last-child > div:nth-child(2) { grid-column: 2; grid-row: 2; }
-.home-variants .energy-metrics details { grid-column: 2; grid-row: 3; text-align: left; font-size: 11px; margin-top: 7px; }
-.home-variants .energy-metrics > div > div:first-child { font-size: 11px; font-weight: 400; }
+.home-variants .energy-metrics details { grid-column: 2; grid-row: 3; text-align: center; font-size: 11px; margin-top: 7px; }
+.home-variants .energy-metrics > div > div:first-child { font-size: 11px; font-weight: 400; text-align: center; justify-content: center; }
 .home-variants .energy-metrics > div > div:first-child svg { display: none; }
-.home-variants .energy-metrics > div > div:nth-child(2) { font-size: 24px; font-weight: 500; letter-spacing: -.025em; }
+.home-variants .energy-metrics > div > div:nth-child(2) { text-align: center; font-size: clamp(20px, 4vw, 26px); font-weight: 500; letter-spacing: -.02em; }
 .home-variants .daily-habits { gap: 10px; }
-.home-variants .daily-habits > div { padding: 16px 8px; min-height: 116px; border-radius: 12px; }
+.home-variants .daily-habits > div { padding: 16px 6px; min-height: 112px; border: 0; border-radius: 18px; }
 .home-variants .daily-habits svg { color: var(--home-orange); width: 18px; height: 18px; }
-.home-variants .daily-logs { margin-top: 0; border-radius: 12px; }
-.home-variants .daily-logs h4 { font-size: 12px; font-weight: 600; letter-spacing: .02em; }
-.home-variants .daily-logs li { background: var(--home-card); padding: 18px; }
-.home-variants .daily-logs li:hover { background: var(--home-line); }
+.home-variants .daily-habits > div:nth-child(1) svg { color: #67d8f5; }
+.home-variants .daily-habits > div:nth-child(2) svg { color: #70d394; }
+.home-variants .daily-habits > div:nth-child(3) svg { color: #ee8ab4; }
+.home-variants .daily-logs { margin-top: 4px; border: 0; border-radius: 20px; background: transparent; }
+.home-variants .daily-logs h4 { font-size: 15px; font-weight: 500; letter-spacing: -.01em; }
+.home-variants .daily-logs li { background: var(--home-card); border: 0; border-radius: 16px; padding: 18px 16px; gap: 10px; }
+.home-variants .daily-logs li:hover { background: #272b2f; }
 .home-variants .daily-logs li + li { border-color: var(--home-line); }
 
-/* 01 — Reduced surfaces, left-aligned hierarchy and generous whitespace. */
-.home-variants[data-variant="minimal"] .energy-card { background: transparent; border: 0; border-radius: 0; padding: 12px 0 22px; }
-.home-variants[data-variant="minimal"] .energy-headline { align-items: flex-start; text-align: left; }
-.home-variants[data-variant="minimal"] .daily-habits > div { background: transparent; border-width: 1px 0 0; border-radius: 0; }
-.home-variants[data-variant="minimal"] .daily-logs { border-width: 1px 0 0; border-radius: 0; }
-.home-variants[data-variant="minimal"] .daily-logs li,
-.home-variants[data-variant="minimal"] .daily-logs > div { background: transparent; }
-
-/* 02 — Warm graphite, soft card corners and a centered daily balance. */
-.home-variants[data-variant="warm"] { --home-bg: #1c1916; --home-card: #27221e; --home-line: #443a31; --home-text: #f6ede2; --home-muted: #b9a999; --home-orange: #f3a66a; }
-.home-variants[data-variant="warm"] .energy-card { border-radius: 24px; border-top: 2px solid var(--home-orange); padding-top: 34px; }
-.home-variants[data-variant="warm"] .energy-number { color: #ffd3ad; font-weight: 400; }
-.home-variants[data-variant="warm"] .energy-status { background: #3a2c20; padding: 5px 14px; border-radius: 20px; }
-.home-variants[data-variant="warm"] .daily-habits > div { border-radius: 18px; }
-.home-variants[data-variant="warm"] .daily-logs { border-radius: 18px; }
-
-/* 03 — Compact instrument panel, tabular numbers and precise divisions. */
-.home-variants[data-variant="data"] { --home-bg: #111416; --home-card: #191e21; --home-line: #323c42; --home-orange: #ff9955; border-radius: 10px; }
-.home-variants[data-variant="data"] .energy-card { border-radius: 8px; border-left: 3px solid var(--home-orange); padding: 22px; }
-.home-variants[data-variant="data"] .energy-headline { align-items: flex-start; text-align: left; }
-.home-variants[data-variant="data"] .energy-number,
-.home-variants[data-variant="data"] .tabular-nums,
-.home-variants[data-variant="data"] .daily-habits .text-lg { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-variant-numeric: tabular-nums; letter-spacing: -.04em; }
-.home-variants[data-variant="data"] .energy-status { text-transform: uppercase; letter-spacing: .12em; font-size: 10px; }
-.home-variants[data-variant="data"] .daily-habits { gap: 1px; border: 1px solid var(--home-line); background: var(--home-line); border-radius: 8px; overflow: hidden; }
-.home-variants[data-variant="data"] .daily-habits > div { border: 0; border-radius: 0; min-height: 100px; }
-.home-variants[data-variant="data"] .daily-logs { border-radius: 8px; }
-.home-variants[data-variant="data"] .daily-logs li { padding: 12px 16px; }
+.home-variants .daily-panel { gap: 28px; }
+.home-variants .daily-habits .uppercase { text-transform: none; letter-spacing: 0; font-size: 11px; font-weight: 400; }
+.home-variants .daily-habits .text-lg { font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.home-variants .daily-logs > div:first-child { background: transparent; border: 0; padding: 4px 4px 16px; }
+.home-variants .daily-logs ul { display: flex; flex-direction: column; gap: 10px; }
+.home-variants .daily-logs li > div:first-child { font-size: 14px; font-weight: 500; line-height: 1.5; }
+.home-variants .daily-logs li > div:last-child { opacity: 1; font-size: 11px; }
+.home-variants .daily-logs li .font-semibold { color: var(--home-text); font-weight: 500; font-variant-numeric: tabular-nums; }
+.home-header {
+  margin: 10px 12px 0;
+  border: 1px solid #ffffff0d;
+  border-radius: 18px;
+  padding: 12px 16px;
+  background: #1e2124;
+}
+.home-header > div:first-child > div:first-child { background: #f5a06416; border-radius: 12px; }
+.home-header h1 { font-size: 16px; letter-spacing: -.02em; }
+.home-header button { border-radius: 10px; }
 @media (min-width: 640px) {
-  .home-variants[data-variant="data"] .energy-card { display: grid; grid-template-columns: 1fr 1fr; align-items: start; }
-  .home-variants[data-variant="data"] .energy-number { font-size: 44px; }
-  .home-variants[data-variant="data"] .energy-metrics { border-top: 0; border-left: 1px solid var(--home-line); padding: 8px 0 8px 24px; margin: 0; }
+  .home-variants .energy-card { padding-top: 44px; padding-bottom: 32px; gap: 36px; }
+  .home-variants .energy-metrics { max-width: 520px; }
+  .home-variants .daily-habits { gap: 14px; }
 }
