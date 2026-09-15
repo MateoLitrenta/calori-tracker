@@ -75,6 +75,23 @@
 .home-header > div:first-child > div:first-child { background: #f5a06416; border-radius: 12px; }
 .home-header h1 { font-size: 16px; letter-spacing: -.02em; }
 .home-header button { border-radius: 10px; }
+html:not(.dark) .home-variants {
+  --home-bg: #f8f7f4;
+  --home-card: #ffffff;
+  --home-line: #1f293714;
+  --home-text: #1f2937;
+  --home-muted: #64748b;
+  background: var(--home-bg);
+  color: var(--home-text);
+  color-scheme: light;
+}
+html:not(.dark) .home-variants :is([class~="bg-white"], [class~="bg-slate-50"], [class~="bg-slate-100"]) { background-color: var(--home-card); }
+html:not(.dark) .home-variants :is([class~="text-slate-900"], [class~="text-slate-700"]) { color: var(--home-text); }
+html:not(.dark) .home-variants :is([class~="text-slate-500"], [class~="text-slate-600"]) { color: var(--home-muted); }
+html:not(.dark) .home-variants .daily-logs li { background: var(--home-card); }
+html:not(.dark) .home-variants .daily-logs li:hover { background: #f1f2f3; }
+html:not(.dark) .home-header { background: #ffffff; border-color: #1f293714; }
+html:not(.dark) .home-variants :is([class~="bg-slate-200"], [class~="bg-[#2d333b]"]) { background-color: #e5e7eb; }
 @media (min-width: 640px) {
   .home-variants .energy-card { padding-top: 44px; padding-bottom: 32px; gap: 36px; }
   .home-variants .energy-metrics { max-width: 520px; }
