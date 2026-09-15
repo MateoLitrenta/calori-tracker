@@ -60,7 +60,7 @@ function App() {
 
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Mobile Header */}
-        <header className="home-header md:hidden sticky top-0 z-40 flex-shrink-0 flex items-center justify-between p-4 border border-slate-200 dark:border-[#ffffff0d] bg-white dark:bg-[#1e2124]">
+        <header className="home-header md:hidden flex-shrink-0 flex items-center justify-between p-4 border border-slate-200 dark:border-[#ffffff0d] bg-white dark:bg-[#1e2124]">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-[#f5a06416] rounded-xl">
               <Fire size={24} weight="fill" className="text-orange-500" />

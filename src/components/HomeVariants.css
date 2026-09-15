@@ -91,6 +91,7 @@ html:not(.dark) .home-variants :is([class~="text-slate-500"], [class~="text-slat
 html:not(.dark) .home-variants .daily-logs li { background: var(--home-card); }
 html:not(.dark) .home-variants .daily-logs li:hover { background: #f1f2f3; }
 html:not(.dark) .home-header { background: #ffffff; border-color: #1f293714; }
+html:not(.dark) .home-variants :is([class~="bg-slate-200"], [class~="bg-[#2d333b]"]) { background-color: #e5e7eb; }
 @media (min-width: 640px) {
   .home-variants .energy-card { padding-top: 44px; padding-bottom: 32px; gap: 36px; }
   .home-variants .energy-metrics { max-width: 520px; }
