@@ -14,6 +14,16 @@
 .premium-view input, .premium-view select { min-height: 46px; border-radius: 14px; }
 .premium-view :is([class~="bg-blue-100"], [class~="bg-orange-100"], [class~="bg-purple-100"]) { background: #f5a06416; color: #f5a064; }
 .premium-view [class~="bg-green-100"] { background: #70d39414; color: #70d394; }
+html:not(.dark) .premium-view {
+  background: #f8f7f4;
+  color: #1f2937;
+  color-scheme: light;
+}
+html:not(.dark) .premium-view :is([class~="bg-white"], [class~="bg-slate-50"], [class~="bg-slate-100"]) { background-color: #ffffff; }
+html:not(.dark) .premium-view :is([class~="bg-[#1e2124]"], [class~="bg-[#151719]"], [class~="bg-[#191c1f]"]) { background-color: #ffffff; }
+html:not(.dark) .premium-view :is([class~="text-slate-900"], [class~="text-slate-700"]) { color: #1f2937; }
+html:not(.dark) .premium-view :is([class~="text-slate-500"], [class~="text-slate-600"]) { color: #64748b; }
+html:not(.dark) .premium-view :is([class~="border-[#ffffff0d]"], [class~="border-slate-200"], [class~="border-slate-300"]) { border-color: #1f293714; }
 .assistant-view { gap: 0; border-color: #ffffff0d; }
 .assistant-view .chat-heading { background: #1e2124; padding: 22px; }
 .assistant-view .chat-empty { max-width: 360px; margin-inline: auto; }
@@ -28,6 +38,12 @@
 .assistant-view .chat-composer { background: #151719; padding: 18px; }
 .assistant-view .chat-suggestion { background: #1e2124; border-color: #ffffff0d; box-shadow: none; }
 .assistant-view [class~="bg-slate-200"] { background: #292d30; }
+html:not(.dark) .assistant-view .chat-heading,
+html:not(.dark) .assistant-view .chat-composer { background: #f8f7f4; }
+html:not(.dark) .assistant-view .chat-confirmation,
+html:not(.dark) .assistant-view .chat-suggestion { background: #ffffff; }
+html:not(.dark) .assistant-view .chat-bubble:not(.chat-user) { background: #f1f2f3; color: #1f2937; }
+html:not(.dark) .assistant-view [class~="bg-slate-200"] { background: #e5e7eb; }
 .charts-view .chart-stats > div { padding: 24px; border: 0; }
 .charts-view .chart-stats .text-2xl { margin-top: 6px; font-size: 28px; font-weight: 500; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
 .charts-view .chart-plot { height: 240px; margin-top: 32px; }
@@ -40,6 +56,8 @@
 .profile-view .profile-details .text-lg { font-weight: 500; font-variant-numeric: tabular-nums; }
 .profile-view section { padding: 28px; font-size: 13px; line-height: 1.8; }
 .profile-view .profile-danger { padding: 24px; }
+.profile-view .profile-danger { color-scheme: dark; }
+html:not(.dark) .profile-view .profile-danger { background: #ffffff; color-scheme: light; }
 .profile-view .profile-danger > p { color: #a9abae; line-height: 1.7; }
 @media (max-width: 639px) {
   .premium-view { gap: 20px; }
@@ -49,3 +67,5 @@
   .charts-view .chart-stats > div { padding: 20px; }
   .profile-view section { padding: 24px; }
 }
+html.dark { --app-toast-bg: #1e2124; --app-toast-text: #f1f0ec; }
+html:not(.dark) { --app-toast-bg: #ffffff; --app-toast-text: #1f2937; }

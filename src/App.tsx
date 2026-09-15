@@ -29,7 +29,7 @@ function App() {
         {loading ? (
           <p role="status" className="text-sm text-slate-500 dark:text-gray-400">Cargando sesión…</p>
         ) : (
-          <main className="w-full max-w-sm rounded-2xl border border-slate-200 dark:border-gray-800 bg-white dark:bg-[#161b22] p-6 text-center shadow-sm">
+          <main className="w-full max-w-sm rounded-2xl border border-slate-200 dark:border-gray-800 bg-white dark:bg-[#1e2124] p-6 text-center shadow-sm">
             <Fire size={40} weight="fill" className="mx-auto mb-4 text-orange-500" />
             <h1 className="text-2xl font-bold">Calori Tracker</h1>
             <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">Ingresá a tu cuenta para ver y registrar tu día.</p>
@@ -48,7 +48,7 @@ function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col md:flex-row overflow-hidden bg-[#151719] text-slate-900 dark:text-white">
+    <div className="h-screen flex flex-col md:flex-row overflow-hidden bg-slate-50 dark:bg-[#151719] text-slate-900 dark:text-white">
       <Toaster position="bottom-right" />
       
       {/* Desktop Sidebar */}
@@ -60,7 +60,7 @@ function App() {
 
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Mobile Header */}
-        <header className="home-header md:hidden flex items-center justify-between p-4 border border-[#ffffff0d] bg-[#1e2124]">
+        <header className="home-header md:hidden sticky top-0 z-40 flex-shrink-0 flex items-center justify-between p-4 border border-slate-200 dark:border-[#ffffff0d] bg-white dark:bg-[#1e2124]">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-[#f5a06416] rounded-xl">
               <Fire size={24} weight="fill" className="text-orange-500" />
@@ -73,7 +73,7 @@ function App() {
         </header>
 
         {/* Main Content Area */}
-        <main ref={mainRef} className="flex-1 flex flex-col overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 w-full transition-all duration-300 bg-[#151719]">
+        <main ref={mainRef} className="flex-1 flex flex-col overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 w-full transition-all duration-300 bg-slate-50 dark:bg-[#151719]">
           {activeTab === 'home' && <HomeView />}
           {activeTab === 'chat' && <ChatView />}
           {activeTab === 'charts' && <ChartsView />}

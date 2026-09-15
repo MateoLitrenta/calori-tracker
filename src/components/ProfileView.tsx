@@ -63,9 +63,9 @@ export default function ProfileView() {
         user_id: user.id 
       });
       setIsEditing(false);
-      toast.success('¡Ajustes guardados correctamente!', { style: { background: '#161b22', color: '#fff' } });
+      toast.success('¡Ajustes guardados correctamente!', { style: { background: 'var(--app-toast-bg)', color: 'var(--app-toast-text)' } });
     } catch (err) {
-      toast.error('Error al actualizar', { style: { background: '#161b22', color: '#fff' } });
+      toast.error('Error al actualizar', { style: { background: 'var(--app-toast-bg)', color: 'var(--app-toast-text)' } });
     }
   };
 
@@ -75,9 +75,9 @@ export default function ProfileView() {
     try {
       await resetData();
       setIsResetConfirm(false);
-      toast.success('Registros eliminados', { style: { background: '#161b22', color: '#fff' } });
+      toast.success('Registros eliminados', { style: { background: 'var(--app-toast-bg)', color: 'var(--app-toast-text)' } });
     } catch {
-      toast.error('No se pudieron borrar los registros. Intentá nuevamente.', { style: { background: '#161b22', color: '#fff' } });
+      toast.error('No se pudieron borrar los registros. Intentá nuevamente.', { style: { background: 'var(--app-toast-bg)', color: 'var(--app-toast-text)' } });
     } finally {
       setIsResetting(false);
     }
