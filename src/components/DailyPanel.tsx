@@ -781,7 +781,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       {/* Detail Modal */}
       {detailModalItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm rounded-2xl shadow-xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="record-detail-modal bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm rounded-2xl shadow-xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
               <h3 className="font-bold text-lg text-slate-900 dark:text-white">Detalle del Registro</h3>
               <button 
@@ -794,10 +794,10 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             
             <div className="p-6 flex flex-col gap-4">
               <div className="flex flex-col gap-1 text-center">
-                <span className="text-xl font-bold text-white break-words">
+                <span className="record-detail-main text-xl font-bold text-white break-words">
                   {detailModalItem._type === 'meal' ? detailModalItem.name : detailModalItem.activity}
                 </span>
-                <span className="text-sm text-slate-500 dark:text-gray-400">
+                <span className="record-detail-secondary text-sm text-slate-500 dark:text-gray-400">
                   {detailModalItem.time ? `${detailModalItem.time} hs • ` : ''}
                   {detailModalItem._type === 'meal' ? detailModalItem.type : `${detailModalItem.duration} min`}
                 </span>
@@ -810,13 +810,13 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               </div>
 
               {detailModalItem.details && (
-                <div className="bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-lg p-3 text-sm text-slate-900 dark:text-white whitespace-pre-wrap">
+                <div className="record-detail-details bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-lg p-3 text-sm text-slate-900 dark:text-white whitespace-pre-wrap">
                   {detailModalItem.details}
                 </div>
               )}
 
               {detailModalItem._type === 'workout' && (detailModalItem.distance || detailModalItem.pace) && (
-                <div className="flex gap-4 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-lg p-3">
+                <div className="record-detail-meta flex gap-4 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-lg p-3">
                   {detailModalItem.distance && (
                     <div className="flex-1 flex flex-col items-center">
                       <span className="text-[10px] uppercase text-slate-500 dark:text-gray-400 font-bold tracking-wider mb-1">Distancia</span>
@@ -845,7 +845,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   if (item._type === 'meal') startEditMeal(item as MealEntry);
                   else startEditWorkout(item as WorkoutEntry);
                 }}
-                className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:bg-slate-200 dark:hover:bg-gray-800/50 text-white py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                className="record-detail-edit flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:bg-slate-200 dark:hover:bg-gray-800/50 text-white py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <PencilSimple size={18} /> Editar
               </button>
