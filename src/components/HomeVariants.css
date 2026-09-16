@@ -92,6 +92,11 @@ html:not(.dark) .home-variants .daily-logs li { background: var(--home-card); }
 html:not(.dark) .home-variants .daily-logs li:hover { background: #f1f2f3; }
 html:not(.dark) .home-header { background: #ffffff; border-color: #1f293714; }
 html:not(.dark) .home-variants :is([class~="bg-slate-200"], [class~="bg-[#2d333b]"]) { background-color: #e5e7eb; }
+html:not(.dark) .home-variants :is([class~="bg-[#161b22]"], [class~="bg-[#1e2124]"], [class~="bg-[#0f141c]"], [class~="bg-[#0d1117]"]) { background-color: #ffffff; color: #1f2937; }
+html:not(.dark) .home-variants :is(input, select, textarea) { background-color: #f8f7f4; color: #1f2937; border-color: #94a3b8; }
+html:not(.dark) .home-variants :is(input, select, textarea)::placeholder { color: #64748b; opacity: 1; }
+html:not(.dark) .home-variants :is(.energy-card, .daily-habits > div, .daily-logs li, .daily-logs) { border-color: #d1d5db; }
+html:not(.dark) .home-variants :is(.energy-card, .daily-habits > div) { box-shadow: 0 1px 2px #1f29370d; }
 @media (min-width: 640px) {
   .home-variants .energy-card { padding-top: 44px; padding-bottom: 32px; gap: 36px; }
   .home-variants .energy-metrics { max-width: 520px; }

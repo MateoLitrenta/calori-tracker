@@ -24,6 +24,8 @@ html:not(.dark) .premium-view :is([class~="bg-[#1e2124]"], [class~="bg-[#151719]
 html:not(.dark) .premium-view :is([class~="text-slate-900"], [class~="text-slate-700"]) { color: #1f2937; }
 html:not(.dark) .premium-view :is([class~="text-slate-500"], [class~="text-slate-600"]) { color: #64748b; }
 html:not(.dark) .premium-view :is([class~="border-[#ffffff0d]"], [class~="border-slate-200"], [class~="border-slate-300"]) { border-color: #1f293714; }
+html:not(.dark) .premium-view :is(input, select, textarea) { color: #1f2937; border-color: #94a3b8; background-color: #ffffff; }
+html:not(.dark) .premium-view :is(input, select, textarea)::placeholder { color: #94a3b8; opacity: 1; }
 .assistant-view { gap: 0; border-color: #ffffff0d; }
 .assistant-view .chat-heading { background: #1e2124; padding: 22px; }
 .assistant-view .chat-empty { max-width: 360px; margin-inline: auto; }
@@ -43,6 +45,12 @@ html:not(.dark) .assistant-view .chat-composer { background: #f8f7f4; }
 html:not(.dark) .assistant-view .chat-confirmation,
 html:not(.dark) .assistant-view .chat-suggestion { background: #ffffff; }
 html:not(.dark) .assistant-view .chat-bubble:not(.chat-user) { background: #f1f2f3; color: #1f2937; }
+html:not(.dark) .assistant-view .chat-bubble:not(.chat-user) { border: 1px solid #cbd5e1; }
+html:not(.dark) .assistant-view .chat-user { background: #fff1e6; color: #7c2d12; border: 1px solid #f5a06466; }
+html:not(.dark) .assistant-view .chat-suggestion { background: #ffffff; border-color: #cbd5e1; color: #334155; }
+html:not(.dark) .assistant-view .chat-suggestion:hover { border-color: #f5a064; color: #9a4d1f; }
+html:not(.dark) .assistant-view .chat-composer input { border-color: #94a3b8; background: #ffffff; color: #1f2937; }
+html:not(.dark) .assistant-view .chat-composer input::placeholder { color: #64748b; }
 html:not(.dark) .assistant-view [class~="bg-slate-200"] { background: #e5e7eb; }
 .charts-view .chart-stats > div { padding: 24px; border: 0; }
 .charts-view .chart-stats .text-2xl { margin-top: 6px; font-size: 28px; font-weight: 500; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
