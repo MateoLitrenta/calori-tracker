@@ -13,15 +13,18 @@ export function validActions(value: unknown, today: string): DataAction[] {
   if (!Array.isArray(value)) return [];
   const positive = (n: unknown): n is number => typeof n === 'number' && Number.isFinite(n) && n > 0;
   const text = (s: unknown) => typeof s === 'string' && s.trim().length > 0;
+  const time = (s: unknown) => typeof s === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(s);
+  const details = (s: unknown) => s === undefined || typeof s === 'string';
   return value.filter((a): a is DataAction => {
     if (!a || typeof a !== 'object' || typeof a.estimated !== 'boolean' ||
       !a.payload || typeof a.payload !== 'object' || Array.isArray(a.payload)) return false;
     const p = a.payload;
     if (p.dateStr !== today) return false;
     switch (a.type) {
-      case 'add_meal': return text(p.name) && positive(p.calories) &&
+      case 'add_meal': return text(p.name) && positive(p.calories) && time(p.time) && details(p.details) &&
         ['Desayuno', 'Almuerzo', 'Merienda', 'Cena', 'Snack'].includes(p.type);
-      case 'add_workout': return text(p.activity) && positive(p.calories) && positive(p.duration);
+      case 'add_workout': return text(p.activity) && positive(p.calories) && positive(p.duration) && time(p.time) &&
+        typeof p.details === 'string' && (p.distance === undefined || positive(p.distance)) && details(p.pace);
       case 'set_steps': return !a.estimated && Number.isSafeInteger(p.steps) && p.steps >= 0;
       case 'add_water': return !a.estimated && positive(p.water);
       case 'set_weight': return !a.estimated && positive(p.weight);

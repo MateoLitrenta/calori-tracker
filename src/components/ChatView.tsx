@@ -42,6 +42,12 @@ function UserChat({ userId, activeProfile, updateRecord }: {
   const mounted = useRef(true);
   const busy = useRef(false);
   const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[] } | null>(null);
+  const [isEditingProposal, setIsEditingProposal] = useState(false);
+
+  const editProposal = (index: number, field: string, value: string | number | undefined) => {
+    setPending(prev => prev && ({ ...prev, actions: prev.actions.map((action, i) =>
+      i === index ? { ...action, payload: { ...action.payload, [field]: value } } : action) }));
+  };
 
   const appendReply = (text: string) => {
     if (mounted.current) setMessages(prev => [...prev, { id: generateUUID(), role: 'bot', text }]);
@@ -50,8 +56,8 @@ function UserChat({ userId, activeProfile, updateRecord }: {
   const describeAction = (a: DataAction) => {
     const p = a.payload;
     switch (a.type) {
-      case 'add_meal': return `${p.name} · ${p.type} · ${p.calories} kcal`;
-      case 'add_workout': return `${p.activity} · ${p.duration} min · ${p.calories} kcal`;
+      case 'add_meal': return `${p.name} · ${p.type} · ${p.calories} kcal · ${p.time}`;
+      case 'add_workout': return `${p.activity} · ${p.duration} min · ${p.calories} kcal · ${p.time}`;
       case 'set_steps': return `${p.steps} pasos (total)`;
       case 'add_water': return `+${p.water} ml de agua`;
       case 'set_weight': return `${p.weight} kg de peso de hoy`;
@@ -62,6 +68,9 @@ function UserChat({ userId, activeProfile, updateRecord }: {
     if (!mounted.current || !activeProfile || dateStr !== formatDateStr(new Date())) {
       throw new Error('La fecha cambió. Pedime registrar los datos de hoy nuevamente.');
     }
+    if (validActions(actions, dateStr).length !== actions.length) {
+      throw new Error('Revisá los datos obligatorios antes de confirmar.');
+    }
     const base = activeProfile.records[dateStr] || {
       dateStr, date: new Date(), meals: [], workouts: [], steps: 0, water: 0,
     };
@@ -71,10 +80,13 @@ function UserChat({ userId, activeProfile, updateRecord }: {
       switch (a.type) {
         case 'add_meal':
           record.meals.push({ id: generateUUID(), name: p.name as string,
-            type: p.type as MealType, calories: p.calories as number }); break;
+            type: p.type as MealType, calories: p.calories as number,
+            time: p.time as string, details: p.details as string | undefined }); break;
         case 'add_workout':
           record.workouts.push({ id: generateUUID(), activity: p.activity as string,
-            duration: p.duration as number, calories: p.calories as number, muscles: [] }); break;
+            duration: p.duration as number, calories: p.calories as number, muscles: [],
+            time: p.time as string, details: p.details as string,
+            distance: p.distance as number | undefined, pace: p.pace as string | undefined }); break;
         case 'set_steps': record.steps = p.steps as number; break;
         case 'add_water': record.water += p.water as number; break;
         case 'set_weight': record.weight = p.weight as number; break;
@@ -88,6 +100,11 @@ function UserChat({ userId, activeProfile, updateRecord }: {
 
   const confirmActions = async () => {
     if (!pending || busy.current) return;
+    if (validActions(pending.actions, pending.dateStr).length !== pending.actions.length) {
+      toast.error('Revisá nombre/actividad, tipo, calorías, hora y duración. Los valores numéricos deben ser positivos.');
+      setIsEditingProposal(true);
+      return;
+    }
     busy.current = true;
     setIsTyping(true);
     const proposal = pending;
@@ -131,6 +148,7 @@ function UserChat({ userId, activeProfile, updateRecord }: {
       setMessages([]);
       setInputValue('');
       setPending(null);
+      setIsEditingProposal(false);
     } catch {
       toast.error('No se pudo borrar la conversación local.');
     }
@@ -191,7 +209,10 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
       };
       setMessages(prev => [...prev, botMsg]);
       if (direct.length) await applyActions(direct, todayStr);
-      if (mounted.current && proposals.length) setPending({ dateStr: todayStr, actions: proposals });
+      if (mounted.current && proposals.length) {
+        setIsEditingProposal(false);
+        setPending({ dateStr: todayStr, actions: proposals });
+      }
     } catch (error) {
       if (!mounted.current) return;
       const errorMessage = error instanceof Error && error.message
@@ -235,9 +256,57 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           <div className="chat-confirmation order-last rounded-xl border border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/20 p-4 text-sm">
             <p className="font-semibold mb-2">Confirmar registros de hoy</p>
             {pending.actions.map((action, index) => (
-              <p key={index}>{describeAction(action)}{action.estimated ? ' (estimado)' : ''}</p>
+              <div key={index} className="mb-3">
+                {isEditingProposal ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {(action.type === 'add_meal'
+                      ? [{ field: 'name', label: 'Nombre', type: 'text' },
+                        { field: 'calories', label: 'Calorías (kcal)', type: 'number' },
+                        { field: 'time', label: 'Hora', type: 'time' }]
+                      : [{ field: 'activity', label: 'Actividad', type: 'text' },
+                        { field: 'duration', label: 'Duración (min)', type: 'number' },
+                        { field: 'calories', label: 'Calorías (kcal)', type: 'number' },
+                        { field: 'time', label: 'Hora', type: 'time' },
+                        { field: 'distance', label: 'Distancia (km, opcional)', type: 'number' },
+                        { field: 'pace', label: 'Ritmo (min/km, opcional)', type: 'text' }]
+                    ).map(({ field, label, type }) => (
+                      <label key={field} className="flex flex-col gap-1">
+                        {label}
+                        <input type={type} value={String(action.payload[field] ?? '')}
+                          min={type === 'number' ? '0.01' : undefined} step={type === 'number' ? 'any' : undefined}
+                          onChange={e => editProposal(index, field, type === 'number'
+                            ? (e.target.value === '' ? undefined : Number(e.target.value)) : e.target.value)}
+                          className="w-full min-w-0 rounded-xl border border-slate-300 dark:border-[#ffffff0d] bg-white dark:bg-[#191c1f] px-3 py-2" />
+                      </label>
+                    ))}
+                    {action.type === 'add_meal' && (
+                      <label className="flex flex-col gap-1">
+                        Tipo
+                        <select value={String(action.payload.type)} onChange={e => editProposal(index, 'type', e.target.value)}
+                          className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] bg-white dark:bg-[#191c1f] px-3 py-2">
+                          {(['Desayuno', 'Almuerzo', 'Merienda', 'Cena', 'Snack'] as MealType[]).map(type => <option key={type}>{type}</option>)}
+                        </select>
+                      </label>
+                    )}
+                    <label className="flex flex-col gap-1 sm:col-span-2">
+                      Detalles
+                      <textarea value={String(action.payload.details ?? '')} onChange={e => editProposal(index, 'details', e.target.value)}
+                        className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] bg-white dark:bg-[#191c1f] px-3 py-2" />
+                    </label>
+                  </div>
+                ) : (
+                  <>
+                    <p>{describeAction(action)}{action.estimated ? ' (estimado)' : ''}</p>
+                    {typeof action.payload.details === 'string' && <p className="whitespace-pre-wrap">{action.payload.details}</p>}
+                    {action.payload.distance !== undefined && <p>Distancia: {String(action.payload.distance)} km</p>}
+                    {typeof action.payload.pace === 'string' && action.payload.pace && <p>Ritmo: {action.payload.pace} min/km</p>}
+                  </>
+                )}
+              </div>
             ))}
             <div className="flex gap-3 mt-3">
+              <button type="button" disabled={isTyping} onClick={() => setIsEditingProposal(true)}
+                className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Editar</button>
               <button type="button" disabled={isTyping} onClick={confirmActions}
                 className="rounded-xl bg-[#f5a064] text-white px-3 py-2 disabled:opacity-50">Confirmar</button>
               <button type="button" disabled={isTyping} onClick={() => { setPending(null); appendReply('Registro cancelado.'); }}

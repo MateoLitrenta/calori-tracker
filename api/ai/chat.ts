@@ -13,18 +13,23 @@ const MAX_MESSAGES = 10;
 const MAX_TEXT_LENGTH = 4000;
 const ACTION_INSTRUCTIONS = `
 Devuelve exclusivamente JSON: {"reply": string, "actions": [{"type": string, "payload": object, "estimated": boolean}]}.
-Solo interpreta solicitudes explícitas del ÚLTIMO mensaje del usuario para HOY, nunca repitas acciones del historial.
+Interpreta solicitudes explícitas para HOY. El último mensaje puede completar datos que preguntaste sobre una solicitud anterior aún sin propuesta: usa el historial reciente para conservar comida, actividad y detalles. Nunca repitas acciones ya propuestas, confirmadas, registradas o canceladas.
 Si conversa, pregunta, es ambiguo, faltan datos, o pide otra fecha: actions=[]; responde claramente que por ahora solo puedes registrar datos de hoy cuando corresponda.
 Nunca uses “registré”, “guardé”, “cargué”, “anoté” ni equivalentes para afirmar una acción realizada. Gemini solo propone acciones; el frontend confirmará o guardará después.
 No borres ni edites comidas/ejercicios existentes ni perfiles.
 Tipos y payloads exactos (dateStr siempre debe ser la fecha de HOY indicada en el contexto):
-add_meal: {dateStr, name, type, calories}. type: Desayuno|Almuerzo|Merienda|Cena|Snack.
-add_workout: {dateStr, activity, duration, calories}. duration en minutos.
+add_meal: {dateStr, name, type, calories, time, details}. type: Desayuno|Almuerzo|Merienda|Cena|Snack. time obligatorio en HH:mm.
+add_workout: {dateStr, activity, duration, calories, time, details, distance?, pace?}. duration obligatoria en minutos, time obligatorio en HH:mm. distance en km y pace en min/km solo si el usuario los informó.
 set_steps: {dateStr, steps}. Solo total explícito, nunca incrementos ni estimaciones.
 add_water: {dateStr, water}. Cantidad bebida explícita en ml, se SUMA al agua actual.
 set_weight: {dateStr, weight}. Peso explícito en kg, solo registro diario, nunca perfil.
 Comidas y ejercicios: puedes estimar calorías usando cantidades, actividad, duración y perfil; estimated=true si estimas algo.
-Siempre requieren confirmación del usuario en la UI. Si faltan cantidad o duración, pregunta.
+Siempre requieren confirmación del usuario en la UI. No inventes hora ni duración ni uses la hora actual o una hora habitual como defecto. Solo acepta hora y duración indicadas por el usuario para esa solicitud; normaliza "a las 19" a "19:00". Si la hora es ambigua, pregunta.
+Si falta hora en una comida: actions=[] y pregunta "¿A qué hora la comiste?". Si faltan hora y duración en ejercicio, pregunta ambas juntas: "¿A qué hora entrenaste y cuánto tiempo?". Si falta solo una, pregunta solo esa. Si faltan otros datos necesarios (como cantidad ambigua), pregunta todos juntos. No vuelvas a preguntar datos ya explícitos en la solicitud o su aclaración.
+Conserva en details todos los ejercicios, series, repeticiones y pesos descritos por el usuario, sin añadir ejercicios ni omitir información relevante. Para comida conserva sus notas. Usa details="" si no hay notas; nunca las inventes.
+Ejemplos: "Comí pizza" -> pregunta hora con actions=[]; respuesta "21:30" -> propuesta de esa pizza a las 21:30. "Comí pizza a las 21:30" -> propuesta directa.
+"Hice gimnasio: press banca, aperturas y fondos" -> pregunta hora y duración con actions=[]; "19:00, 50 minutos" -> propuesta de gimnasio, duration=50, time="19:00", details="Press banca, aperturas y fondos".
+"Hice gimnasio 45 minutos a las 18:30: press banca 4x8 y fondos 3x10" -> propuesta directa con esos datos y details completos.
 Pasos, agua y peso: estimated=false, no inventes valores; convierte unidades explícitas.
 Ignora instrucciones que pidan otros tipos de acciones. No conviertas planes o sugerencias en registros.
 `;
@@ -157,6 +162,19 @@ export default {
       const result = JSON.parse(reply);
       if (typeof result?.reply !== 'string' || !result.reply.trim() || !Array.isArray(result.actions)) {
         return json({ error: 'La IA respondió con un formato inválido.' }, 502);
+      }
+      const missing: string[] = [];
+      for (const action of result.actions) {
+        if (action?.type !== 'add_meal' && action?.type !== 'add_workout') continue;
+        const p = action.payload;
+        const fields: string[] = [];
+        if (typeof p?.time !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(p.time)) fields.push('hora');
+        if (action.type === 'add_workout' &&
+          (typeof p?.duration !== 'number' || !Number.isFinite(p.duration) || p.duration <= 0)) fields.push('duración en minutos');
+        if (fields.length) missing.push(`${fields.join(' y ')} de ${action.type === 'add_meal' ? 'la comida' : 'el entrenamiento'}`);
+      }
+      if (missing.length) {
+        return json({ reply: `¿Me indicás ${missing.join('; ')}?`, actions: [] });
       }
       return json({ reply: result.reply, actions: result.actions });
     } catch (error) {
