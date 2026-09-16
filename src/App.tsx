@@ -24,19 +24,21 @@ function App() {
 
   if (loading || !user) {
     return (
-      <div className="min-h-dvh flex items-center justify-center p-4 bg-slate-100 dark:bg-[#0f141c] text-slate-900 dark:text-white">
+      <div className="auth-entry min-h-dvh flex items-center justify-center p-4">
         <Toaster position="bottom-right" />
         {loading ? (
-          <p role="status" className="text-sm text-slate-500 dark:text-gray-400">Cargando sesión…</p>
+          <p role="status" className="auth-secondary text-sm">Cargando sesión…</p>
         ) : (
-          <main className="w-full max-w-sm rounded-2xl border border-slate-200 dark:border-gray-800 bg-white dark:bg-[#1e2124] p-6 text-center shadow-sm">
-            <Fire size={40} weight="fill" className="mx-auto mb-4 text-orange-500" />
-            <h1 className="text-2xl font-bold">Calori Tracker</h1>
-            <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">Ingresá a tu cuenta para ver y registrar tu día.</p>
+          <main className="auth-entry-card w-full max-w-sm text-center">
+            <div className="auth-logo mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl">
+              <Fire size={40} weight="fill" />
+            </div>
+            <h1 className="text-2xl font-semibold tracking-tight">Calori Tracker</h1>
+            <p className="auth-secondary mt-3 text-sm leading-relaxed">Ingresá a tu cuenta para ver y registrar tu día.</p>
             <button
               type="button"
               onClick={() => setIsAuthOpen(true)}
-              className="mt-6 w-full rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+              className="auth-primary mt-8 w-full px-4 py-3 font-medium transition-colors"
             >
               Ingresar / Registrarse
             </button>

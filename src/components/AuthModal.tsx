@@ -3,6 +3,7 @@ import { X, Spinner } from '@phosphor-icons/react';
 import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
+import './AuthEntry.css';
 
 interface AuthModalProps {
   onClose: () => void;
@@ -69,16 +70,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-xl shadow-xl flex flex-col max-h-[90vh]">
+    <div className="auth-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+      <div className="auth-modal w-full max-w-md flex flex-col overflow-hidden">
         
-        <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-gray-800">
-          <div className="flex gap-4">
+        <div className="auth-modal-header flex shrink-0 items-center justify-between gap-2 p-4 sm:px-6">
+          <div className="flex gap-3 sm:gap-5">
             <button
               onClick={() => setIsLogin(true)}
               className={clsx(
-                "text-lg font-semibold transition-colors",
-                isLogin ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
+                "auth-tab text-sm font-medium transition-colors",
+                isLogin && "auth-tab-active"
               )}
             >
               Iniciar Sesión
@@ -86,20 +87,20 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             <button
               onClick={() => setIsLogin(false)}
               className={clsx(
-                "text-lg font-semibold transition-colors",
-                !isLogin ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
+                "auth-tab text-sm font-medium transition-colors",
+                !isLogin && "auth-tab-active"
               )}
             >
               Registrarse
             </button>
           </div>
-          <button onClick={onClose} className="text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white p-1 rounded hover:bg-slate-200 dark:hover:bg-gray-800 transition-colors">
+          <button onClick={onClose} aria-label="Cerrar" className="auth-close shrink-0 p-2 rounded-xl transition-colors">
             <X size={24} />
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="auth-form-scroll min-h-0 overflow-y-auto p-5 sm:p-6">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             
             <div className="flex flex-col gap-1">
               <label className="text-sm text-slate-500 dark:text-gray-400">Email</label>
@@ -141,7 +142,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                   />
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="flex flex-col gap-1">
                     <label className="text-sm text-slate-500 dark:text-gray-400">Edad</label>
                     <input
@@ -168,7 +169,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="flex flex-col gap-1">
                     <label className="text-sm text-slate-500 dark:text-gray-400">Peso (kg)</label>
                     <input
@@ -202,7 +203,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             <button
               type="submit"
               disabled={loading}
-              className="mt-4 w-full flex items-center justify-center bg-green-600 hover:bg-green-700 text-white rounded-md py-2 px-4 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="auth-primary mt-2 w-full flex items-center justify-center py-3 px-4 transition-colors font-medium disabled:cursor-not-allowed"
             >
               {loading ? (
                 <Spinner size={20} className="animate-spin" />
