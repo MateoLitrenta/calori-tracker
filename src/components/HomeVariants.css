@@ -97,6 +97,15 @@ html:not(.dark) .home-variants :is(input, select, textarea) { background-color: 
 html:not(.dark) .home-variants :is(input, select, textarea)::placeholder { color: #64748b; opacity: 1; }
 html:not(.dark) .home-variants :is(.energy-card, .daily-habits > div, .daily-logs li, .daily-logs) { border-color: #d1d5db; }
 html:not(.dark) .home-variants :is(.energy-card, .daily-habits > div) { box-shadow: 0 1px 2px #1f29370d; }
+html:not(.dark) .home-variants .record-detail-modal { background: #ffffff; border-color: #cbd5e1; color: #1f2937; }
+html:not(.dark) .home-variants .record-detail-modal > :is(div:first-child, div:last-child) { background: #f8f7f4; border-color: #cbd5e1; }
+html:not(.dark) .home-variants .record-detail-modal .record-detail-main { color: #1f2937; }
+html:not(.dark) .home-variants .record-detail-modal .record-detail-secondary { color: #64748b; }
+html:not(.dark) .home-variants .record-detail-modal .record-detail-details,
+html:not(.dark) .home-variants .record-detail-modal .record-detail-meta { background: #f8f7f4; border-color: #cbd5e1; color: #334155; }
+html:not(.dark) .home-variants .record-detail-modal .record-detail-edit { background: #ffffff; border-color: #cbd5e1; color: #334155; }
+html:not(.dark) .home-variants .record-detail-modal > div:first-child button { color: #334155; }
+html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64748b; }
 @media (min-width: 640px) {
   .home-variants .energy-card { padding-top: 44px; padding-bottom: 32px; gap: 36px; }
   .home-variants .energy-metrics { max-width: 520px; }
