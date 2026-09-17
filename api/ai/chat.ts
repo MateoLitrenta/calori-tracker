@@ -1,6 +1,7 @@
 interface ChatMessage {
   role: 'user' | 'bot';
   text: string;
+  localTime?: string;
 }
 
 interface RequestBody {
@@ -24,10 +25,13 @@ set_steps: {dateStr, steps}. Solo total explícito, nunca incrementos ni estimac
 add_water: {dateStr, water}. Cantidad bebida explícita en ml, se SUMA al agua actual.
 set_weight: {dateStr, weight}. Peso explícito en kg, solo registro diario, nunca perfil.
 Comidas y ejercicios: puedes estimar calorías usando cantidades, actividad, duración y perfil; estimated=true si estimas algo.
-Siempre requieren confirmación del usuario en la UI. No inventes hora ni duración ni uses la hora actual o una hora habitual como defecto. Solo acepta hora y duración indicadas por el usuario para esa solicitud; normaliza "a las 19" a "19:00". Si la hora es ambigua, pregunta.
+Siempre requieren confirmación del usuario en la UI. No inventes hora ni duración ni uses una hora habitual como defecto. EXCEPCIÓN: expresiones inequívocas de inmediatez como "recién", "ahora", "justo ahora" o "acabo de" usan HORA LOCAL ACTUAL del contexto. "Hoy" por sí solo NO autoriza usar la hora actual. Para una solicitud anterior con inmediatez usa la hora local adjunta a ese mensaje, conservándola durante las aclaraciones posteriores. Nunca uses la hora del servidor. Si no hay referencia local disponible, pregunta la hora.
+Las aclaraciones cortas completan la solicitud anterior aún pendiente, no son solicitudes nuevas. Normaliza "15:30" a "15:30", "a las 15" a "15:00" y "17 hs" a "17:00". Reconstruye y devuelve la acción COMPLETA con name/type o activity, calories estimadas, details conservados y time HH:mm; para ejercicio también duration. Conserva datos ya conocidos en sucesivas aclaraciones. Si la hora es ambigua, pregunta.
 Si falta hora en una comida: actions=[] y pregunta "¿A qué hora la comiste?". Si faltan hora y duración en ejercicio, pregunta ambas juntas: "¿A qué hora entrenaste y cuánto tiempo?". Si falta solo una, pregunta solo esa. Si faltan otros datos necesarios (como cantidad ambigua), pregunta todos juntos. No vuelvas a preguntar datos ya explícitos en la solicitud o su aclaración.
 Conserva en details todos los ejercicios, series, repeticiones y pesos descritos por el usuario, sin añadir ejercicios ni omitir información relevante. Para comida conserva sus notas. Usa details="" si no hay notas; nunca las inventes.
 Ejemplos: "Comí pizza" -> pregunta hora con actions=[]; respuesta "21:30" -> propuesta de esa pizza a las 21:30. "Comí pizza a las 21:30" -> propuesta directa.
+"Recién comí pizza" o "Ahora me tomé un batido" -> propuesta con HORA LOCAL ACTUAL, no preguntes hora. "Hoy comí pizza" -> pregunta hora, nunca la completes con la hora actual.
+"Acabo de entrenar gimnasio 50 minutos" -> propuesta con hora local actual y duration=50. "Acabo de terminar el gimnasio" -> pregunta SOLO duración y conserva la hora local de ese mensaje para la propuesta posterior.
 "Hice gimnasio: press banca, aperturas y fondos" -> pregunta hora y duración con actions=[]; "19:00, 50 minutos" -> propuesta de gimnasio, duration=50, time="19:00", details="Press banca, aperturas y fondos".
 "Hice gimnasio 45 minutos a las 18:30: press banca 4x8 y fondos 3x10" -> propuesta directa con esos datos y details completos.
 Pasos, agua y peso: estimated=false, no inventes valores; convierte unidades explícitas.
@@ -95,7 +99,8 @@ export default {
 
     const contents = validMessages.map((message) => ({
       role: message.role === 'bot' ? 'model' : 'user',
-      parts: [{ text: message.text }]
+      parts: [{ text: message.role === 'user' && typeof message.localTime === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(message.localTime)
+        ? `[Hora local de envío: ${message.localTime}]\n${message.text}` : message.text }]
     }));
 
     const payload: Record<string, unknown> = {

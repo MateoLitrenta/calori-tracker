@@ -1,5 +1,5 @@
 import './PremiumViews.css';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback, type RefObject } from 'react';
 import { PaperPlaneRight, Robot, User } from '@phosphor-icons/react';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
@@ -10,6 +10,7 @@ import ReactMarkdown from 'react-markdown';
 
 interface Message extends ChatMessage {
   id: string;
+  localTime?: string;
 }
 
 function readHistory(key: string): Message[] {
@@ -54,7 +55,7 @@ function conversationDates(userId: string, today: string): string[] {
   }
 }
 
-export default function ChatView() {
+export default function ChatView({ scrollContainer }: { scrollContainer: RefObject<HTMLElement | null> }) {
   const { user, activeProfile, updateRecord } = useAppStore();
   const [today, setToday] = useState(() => formatDateStr(new Date()));
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -83,13 +84,14 @@ export default function ChatView() {
   if (!user) return null;
   const dateStr = selectedDate ?? today;
   return <UserChat key={`${user.id}:${today}:${dateStr}`} userId={user.id} activeProfile={activeProfile}
-    updateRecord={updateRecord} dateStr={dateStr} today={today} onSelectDate={setSelectedDate} />;
+    updateRecord={updateRecord} dateStr={dateStr} today={today} onSelectDate={setSelectedDate} scrollContainer={scrollContainer} />;
 }
 
-function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelectDate }: {
+function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelectDate, scrollContainer }: {
   userId: string; activeProfile: UserProfile | null;
   updateRecord: (dateStr: string, record: DailyRecord) => Promise<boolean>;
   dateStr: string; today: string; onSelectDate: (date: string) => void;
+  scrollContainer: RefObject<HTMLElement | null>;
 }) {
   const storageKey = `calori:assistant:messages:${userId}:${dateStr}`;
   const [messages, setMessages] = useState<Message[]>(() => readDailyHistory(userId, dateStr, today));
@@ -97,7 +99,10 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
   const [showHistory, setShowHistory] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const conversationEndRef = useRef<HTMLDivElement>(null);
+  const scrollToEnd = useCallback((behavior: ScrollBehavior) => {
+    const container = scrollContainer.current;
+    container?.scrollTo({ top: container.scrollHeight, behavior });
+  }, [scrollContainer]);
   const didScroll = useRef(false);
   const mounted = useRef(true);
   const busy = useRef(false);
@@ -219,17 +224,19 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
   useEffect(() => {
     if (!messages.length && !isTyping && !hasPending) return;
     const frame = requestAnimationFrame(() => {
-      conversationEndRef.current?.scrollIntoView({ block: 'end', behavior: didScroll.current ? 'smooth' : 'instant' });
+      scrollToEnd(didScroll.current ? 'smooth' : 'instant');
       didScroll.current = true;
     });
     return () => cancelAnimationFrame(frame);
-  }, [messages, isTyping, hasPending, isEditingProposal]);
+  }, [messages, isTyping, hasPending, isEditingProposal, scrollToEnd]);
 
   const handleSend = async (text: string) => {
     if (!text.trim() || busy.current || pending || !activeProfile || isPastConversation || dateStr !== formatDateStr(new Date())) return;
     busy.current = true;
 
-    const userMsg: Message = { id: Date.now().toString(), role: 'user', text };
+    const now = new Date();
+    const localTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    const userMsg: Message = { id: Date.now().toString(), role: 'user', text, localTime };
     const newHistory = [...messages, userMsg];
     
     setMessages(newHistory);
@@ -238,12 +245,14 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
 
     try {
       // Build Dynamic Context
-      const todayStr = formatDateStr(new Date());
+      const todayStr = formatDateStr(now);
       const todayRecord = activeProfile?.records?.[todayStr];
       if (!activeProfile) throw new Error('Esperá a que se cargue tu perfil para consultar al asistente.');
       const systemPrompt = `Eres el asistente nutricional de la app Calori Tracker.
 ${buildDailyEnergyContext(activeProfile, todayRecord)}
 HOY: ${todayStr}.
+HORA LOCAL ACTUAL: ${localTime}.
+DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.
 Perfil: ${JSON.stringify({ name: activeProfile.name, age: activeProfile.age, sex: activeProfile.sex,
   height: activeProfile.height, weight: activeProfile.weight })}.
 Registros de HOY: ${JSON.stringify({ meals: todayRecord?.meals || [], workouts: todayRecord?.workouts || [],
@@ -464,7 +473,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onFocus={() => conversationEndRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' })}
+            onFocus={() => scrollToEnd('smooth')}
             disabled={isTyping || !!pending || !activeProfile}
             placeholder="Escribe un mensaje..."
             className="min-w-0 flex-1 bg-white dark:bg-[#1e2124] border border-slate-300 dark:border-[#ffffff0d] rounded-xl pl-4 pr-12 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#f5a064] dark:focus:border-[#f5a064] shadow-none disabled:opacity-50"
@@ -478,7 +487,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           </button>
         </form>
       </div>}
-      <div ref={conversationEndRef} className="chat-scroll-end" aria-hidden="true" />
+      <div className="chat-scroll-end" aria-hidden="true" />
       
       <style>{`
         .hide-scrollbar::-webkit-scrollbar {
