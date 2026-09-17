@@ -19,6 +19,7 @@ function App() {
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    if (activeTab === 'chat') return;
     mainRef.current?.scrollTo({ top: 0, behavior: 'instant' });
   }, [activeTab]);
 
@@ -77,7 +78,7 @@ function App() {
           </header>
           <div className="p-4 md:p-0">
             {activeTab === 'home' && <HomeView />}
-            {activeTab === 'chat' && <ChatView />}
+            {activeTab === 'chat' && <ChatView scrollContainer={mainRef} />}
             {activeTab === 'charts' && <ChartsView />}
             {activeTab === 'profile' && <ProfileView />}
           </div>
