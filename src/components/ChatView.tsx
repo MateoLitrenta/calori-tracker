@@ -24,21 +24,81 @@ function readHistory(key: string): Message[] {
   }
 }
 
-export default function ChatView() {
-  const { user, activeProfile, updateRecord } = useAppStore();
-  if (!user) return null;
-  return <UserChat key={user.id} userId={user.id} activeProfile={activeProfile} updateRecord={updateRecord} />;
+function readDailyHistory(userId: string, dateStr: string, today: string): Message[] {
+  const legacyKey = `calori:assistant:messages:${userId}`;
+  const key = `${legacyKey}:${dateStr}`;
+  const current = readHistory(key);
+  if (dateStr !== today) return current;
+  try {
+    if (localStorage.getItem(`${legacyKey}:migrated`)) return current;
+    const legacy = readHistory(legacyKey);
+    const currentIds = new Set(current.map(message => message.id));
+    const merged = [...legacy.filter(message => !currentIds.has(message.id)), ...current];
+    if (merged.length) localStorage.setItem(key, JSON.stringify(merged));
+    localStorage.setItem(`${legacyKey}:migrated`, today);
+    return merged;
+  } catch {
+    // Preserve the original key if storage is unavailable or full.
+    return current.length ? current : readHistory(legacyKey);
+  }
 }
 
-function UserChat({ userId, activeProfile, updateRecord }: {
+function conversationDates(userId: string, today: string): string[] {
+  const prefix = `calori:assistant:messages:${userId}:`;
+  try {
+    return [...new Set([today, ...Object.keys(localStorage)
+      .filter(key => key.startsWith(prefix) && /^\d{4}-\d{2}-\d{2}$/.test(key.slice(prefix.length)) && readHistory(key).length)
+      .map(key => key.slice(prefix.length))])].sort().reverse();
+  } catch {
+    return [today];
+  }
+}
+
+export default function ChatView() {
+  const { user, activeProfile, updateRecord } = useAppStore();
+  const [today, setToday] = useState(() => formatDateStr(new Date()));
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    const checkDate = () => {
+      const now = new Date();
+      const nextToday = formatDateStr(now);
+      if (nextToday !== today) {
+        setToday(nextToday);
+        setSelectedDate(null);
+      }
+      clearTimeout(timer);
+      const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      timer = setTimeout(checkDate, midnight.getTime() - now.getTime() + 100);
+    };
+    checkDate();
+    window.addEventListener('focus', checkDate);
+    document.addEventListener('visibilitychange', checkDate);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('focus', checkDate);
+      document.removeEventListener('visibilitychange', checkDate);
+    };
+  }, [today]);
+  if (!user) return null;
+  const dateStr = selectedDate ?? today;
+  return <UserChat key={`${user.id}:${today}:${dateStr}`} userId={user.id} activeProfile={activeProfile}
+    updateRecord={updateRecord} dateStr={dateStr} today={today} onSelectDate={setSelectedDate} />;
+}
+
+function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelectDate }: {
   userId: string; activeProfile: UserProfile | null;
   updateRecord: (dateStr: string, record: DailyRecord) => Promise<boolean>;
+  dateStr: string; today: string; onSelectDate: (date: string) => void;
 }) {
-  const storageKey = `calori:assistant:messages:${userId}`;
-  const [messages, setMessages] = useState<Message[]>(() => readHistory(storageKey));
+  const storageKey = `calori:assistant:messages:${userId}:${dateStr}`;
+  const [messages, setMessages] = useState<Message[]>(() => readDailyHistory(userId, dateStr, today));
+  const isPastConversation = dateStr !== today;
+  const [showHistory, setShowHistory] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const conversationEndRef = useRef<HTMLDivElement>(null);
+  const didScroll = useRef(false);
   const mounted = useRef(true);
   const busy = useRef(false);
   const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[] } | null>(null);
@@ -64,8 +124,8 @@ function UserChat({ userId, activeProfile, updateRecord }: {
     }
   };
 
-  const applyActions = async (actions: DataAction[], dateStr: string) => {
-    if (!mounted.current || !activeProfile || dateStr !== formatDateStr(new Date())) {
+  const applyActions = async (actions: DataAction[], actionDate: string) => {
+    if (!mounted.current || !activeProfile || isPastConversation || dateStr !== formatDateStr(new Date()) || actionDate !== dateStr) {
       throw new Error('La fecha cambió. Pedime registrar los datos de hoy nuevamente.');
     }
     if (validActions(actions, dateStr).length !== actions.length) {
@@ -125,13 +185,14 @@ function UserChat({ userId, activeProfile, updateRecord }: {
   }, []);
 
   useEffect(() => {
+    if (isPastConversation) return;
     try {
       if (messages.length) localStorage.setItem(storageKey, JSON.stringify(messages));
       else localStorage.removeItem(storageKey);
     } catch {
       toast.error('No se pudo guardar la conversación en este dispositivo.');
     }
-  }, [messages, storageKey]);
+  }, [messages, storageKey, isPastConversation]);
 
   const todayRecord = activeProfile?.records[formatDateStr(new Date())];
   const suggestions = [
@@ -142,7 +203,7 @@ function UserChat({ userId, activeProfile, updateRecord }: {
   ];
 
   const startConversation = () => {
-    if (busy.current) return;
+    if (busy.current || isPastConversation) return;
     try {
       localStorage.removeItem(storageKey);
       setMessages([]);
@@ -154,21 +215,18 @@ function UserChat({ userId, activeProfile, updateRecord }: {
     }
   };
 
-  const scrollToBottom = () => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTo({
-        top: messagesContainerRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
-    }
-  };
-
+  const hasPending = !!pending;
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isTyping]);
+    if (!messages.length && !isTyping && !hasPending) return;
+    const frame = requestAnimationFrame(() => {
+      conversationEndRef.current?.scrollIntoView({ block: 'end', behavior: didScroll.current ? 'smooth' : 'instant' });
+      didScroll.current = true;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [messages, isTyping, hasPending, isEditingProposal]);
 
   const handleSend = async (text: string) => {
-    if (!text.trim() || busy.current || pending || !activeProfile) return;
+    if (!text.trim() || busy.current || pending || !activeProfile || isPastConversation || dateStr !== formatDateStr(new Date())) return;
     busy.current = true;
 
     const userMsg: Message = { id: Date.now().toString(), role: 'user', text };
@@ -193,7 +251,7 @@ Registros de HOY: ${JSON.stringify({ meals: todayRecord?.meals || [], workouts: 
 Sé conciso, directo, motivador, siempre en español y enfócate estrictamente en nutrición, salud y entrenamiento. No des explicaciones médicas complejas, sino consejos accionables.`;
 
       const response = await generateAIResponse(newHistory, systemPrompt);
-      if (!mounted.current) return;
+      if (!mounted.current || dateStr !== formatDateStr(new Date())) return;
       const actions = validActions(response.actions, todayStr);
       const requestedActions = Array.isArray(response.actions) && response.actions.length > 0;
       const proposals = actions.filter(a => a.type === 'add_meal' || a.type === 'add_workout');
@@ -244,14 +302,36 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           <h2 className="font-bold text-lg text-slate-900 dark:text-white">Asistente Calori</h2>
           <p className="text-xs text-slate-500 dark:text-gray-400">Siempre activo para ayudarte</p>
         </div>
-        <button type="button" onClick={startConversation} disabled={isTyping}
+        <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || !!pending}
+          aria-expanded={showHistory} className="chat-history-button text-xs font-medium disabled:opacity-50">
+          Historial
+        </button>
+        <button type="button" onClick={startConversation} disabled={isTyping || isPastConversation}
           className="ml-auto text-xs font-medium text-slate-500 dark:text-gray-400 hover:text-orange-500 disabled:opacity-50">
           Nueva conversación
         </button>
       </div>
 
+      {showHistory && (
+        <label className="chat-history-picker flex flex-col gap-2 px-4 py-3 text-sm">
+          Conversación
+          <select value={dateStr} onChange={e => { setShowHistory(false); onSelectDate(e.target.value); }}
+            className="w-full min-w-0 rounded-xl border border-slate-300 dark:border-[#ffffff0d] bg-white dark:bg-[#191c1f] px-3 py-2">
+            {conversationDates(userId, today).map(date => (
+              <option key={date} value={date}>{date === today ? 'Hoy' : new Date(`${date}T12:00:00`).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })}</option>
+            ))}
+          </select>
+        </label>
+      )}
+      {isPastConversation && (
+        <div className="chat-history-picker px-4 py-3 text-sm">
+          <p>{new Date(`${dateStr}T12:00:00`).toLocaleDateString('es-AR')} · Solo lectura</p>
+          <button type="button" onClick={() => onSelectDate(today)} className="mt-2 underline">Volver a hoy</button>
+        </div>
+      )}
+
       {/* Messages Area */}
-      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-4">
+      <div className="chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4">
         {pending && (
           <div className="chat-confirmation order-last rounded-xl border border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/20 p-4 text-sm">
             <p className="font-semibold mb-2">Confirmar registros de hoy</p>
@@ -304,7 +384,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
                 )}
               </div>
             ))}
-            <div className="flex gap-3 mt-3">
+            <div className="flex flex-wrap gap-3 mt-3">
               <button type="button" disabled={isTyping} onClick={() => setIsEditingProposal(true)}
                 className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Editar</button>
               <button type="button" disabled={isTyping} onClick={confirmActions}
@@ -361,7 +441,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
       </div>
 
       {/* Input Area */}
-      <div className="chat-composer p-4 border-t border-slate-200 dark:border-[#ffffff0d] bg-slate-50 dark:bg-[#151719]">
+      {!isPastConversation && <div className="chat-composer p-4 border-t border-slate-200 dark:border-[#ffffff0d] bg-slate-50 dark:bg-[#151719]">
         {/* Quick Suggestions */}
         <div className="flex overflow-x-auto gap-2 pb-3 mb-2 hide-scrollbar">
           {suggestions.map((suggestion, i) => (
@@ -384,6 +464,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
+            onFocus={() => conversationEndRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' })}
             disabled={isTyping || !!pending || !activeProfile}
             placeholder="Escribe un mensaje..."
             className="min-w-0 flex-1 bg-white dark:bg-[#1e2124] border border-slate-300 dark:border-[#ffffff0d] rounded-xl pl-4 pr-12 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#f5a064] dark:focus:border-[#f5a064] shadow-none disabled:opacity-50"
@@ -396,7 +477,8 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             <PaperPlaneRight size={18} weight="fill" />
           </button>
         </form>
-      </div>
+      </div>}
+      <div ref={conversationEndRef} className="chat-scroll-end" aria-hidden="true" />
       
       <style>{`
         .hide-scrollbar::-webkit-scrollbar {

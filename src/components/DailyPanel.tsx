@@ -465,21 +465,24 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       {!isGroup && (
         <div ref={tabContainerRef} className="flex flex-col gap-4">
           {/* Action Buttons */}
-          <div className="flex gap-2 mt-2">
+          <div className="daily-quick-actions flex gap-2 mt-2">
             <button 
               onClick={() => handleTabToggle('comida')}
+              aria-pressed={activeTab === 'comida'}
               className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'comida' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-white dark:bg-[#161b22] border-slate-200 dark:border-gray-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-[#0f141c]'}`}
             >
               + Comida
             </button>
             <button 
               onClick={() => handleTabToggle('entrenamiento')}
+              aria-pressed={activeTab === 'entrenamiento'}
               className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'entrenamiento' ? 'bg-orange-600 border-orange-500 text-white' : 'bg-white dark:bg-[#161b22] border-slate-200 dark:border-gray-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-[#0f141c]'}`}
             >
               + Ejercicio
             </button>
             <button 
               onClick={() => handleTabToggle('pasos-agua')}
+              aria-pressed={activeTab === 'pasos-agua'}
               className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'pasos-agua' ? 'bg-cyan-600 border-cyan-500 text-white' : 'bg-white dark:bg-[#161b22] border-slate-200 dark:border-gray-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-[#0f141c]'}`}
             >
               Pasos/Agua
