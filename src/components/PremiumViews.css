@@ -83,3 +83,36 @@ html:not(.dark) .profile-view .profile-danger { background: #ffffff; color-schem
 }
 html.dark { --app-toast-bg: #1e2124; --app-toast-text: #f1f0ec; }
 html:not(.dark) { --app-toast-bg: #ffffff; --app-toast-text: #1f2937; }
+.assistant-view .chat-history-button { color: #f5a064; }
+.assistant-view .chat-history-picker { background: #1e2124; color: #a9abae; }
+html:not(.dark) .assistant-view .chat-history-picker { background: #ffffff; color: #64748b; }
+html:not(.dark) .assistant-view .chat-history-button { color: #9a4d1f; }
+.assistant-view .chat-scroll-end { scroll-margin-bottom: 32px; }
+.assistant-view .chat-messages > * { flex-shrink: 0; }
+.assistant-view .prose pre { max-width: 100%; overflow-x: auto; }
+@media (max-width: 767px) {
+  .assistant-view .chat-scroll-end { scroll-margin-bottom: calc(6rem + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 639px) {
+  .assistant-view .chat-heading { gap: 10px; }
+  .assistant-view .chat-messages { padding: 14px 10px; gap: 14px; }
+  .assistant-view .chat-confirmation { padding: 14px; overflow-wrap: anywhere; }
+  .assistant-view .chat-confirmation :is(input, select, textarea) { width: 100%; min-width: 0; max-width: 100%; }
+  .assistant-view .chat-composer { padding: 12px; }
+  .charts-view { gap: 14px; }
+  .charts-view > div:first-child { padding: 14px; gap: 12px; border-radius: 18px; }
+  .charts-view > div:first-child > div:last-child button { flex: 1; padding: 7px 10px; }
+  .charts-view .chart-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; background: #1e2124; border-radius: 18px; padding: 14px 4px; }
+  html:not(.dark) .charts-view .chart-stats { background: #ffffff; }
+  .charts-view .chart-stats > div { padding: 0 5px; min-width: 0; display: block; background: transparent; border-radius: 0; text-align: center; }
+  .charts-view .chart-stats > div > div:first-child { display: none; }
+  .charts-view .chart-stats .text-sm { font-size: 10px; line-height: 1.4; }
+  .charts-view .chart-stats > div > div:last-child > p:first-child { min-height: 28px; display: flex; align-items: center; justify-content: center; }
+  .charts-view .chart-stats .text-2xl { margin-top: 4px; font-size: clamp(17px, 5vw, 22px); line-height: 1.3; letter-spacing: -.02em; }
+  .charts-view .chart-stats .text-2xl span { display: block; font-size: 10px; }
+  .charts-view > div:last-child { padding: 16px 12px; border-radius: 18px; }
+  .charts-view > div:last-child h3 { font-size: 14px; margin-bottom: 16px; }
+  .charts-view .chart-plot { height: 180px; margin-top: 16px; }
+  .charts-view .chart-plot > div { min-width: 0; }
+  .charts-view > div:last-child > div:last-child { margin-top: 16px; padding-top: 12px; gap: 12px; font-size: 11px; }
+}

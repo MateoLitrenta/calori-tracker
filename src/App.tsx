@@ -62,7 +62,7 @@ function App() {
 
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Main Content Area */}
-        <main ref={mainRef} className="flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-24 md:pb-8 w-full transition-all duration-300 bg-slate-50 dark:bg-[#151719]">
+        <main ref={mainRef} className="flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8 w-full transition-all duration-300 bg-slate-50 dark:bg-[#151719]">
           {/* Mobile Header */}
           <header className="home-header md:hidden flex-shrink-0 flex items-center justify-between p-4 border border-slate-200 dark:border-[#ffffff0d] bg-white dark:bg-[#1e2124]">
             <div className="flex items-center gap-3">
