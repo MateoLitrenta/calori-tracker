@@ -4,7 +4,12 @@
   --home-line: #ffffff0d;
   --home-text: #f1f0ec;
   --home-muted: #a9abae;
-  --home-orange: #f69b59;
+  --home-orange: #f5a064;
+  --home-radius-panel: 24px;
+  --home-radius-widget: 18px;
+  --home-radius-control: 14px;
+  --home-control: #ffffff06;
+  --home-hover: #ffffff0d;
   background: var(--home-bg);
   color: var(--home-text);
   padding: clamp(12px, 3vw, 32px);
@@ -32,7 +37,7 @@
 .home-variants .energy-headline > div:first-child { font-size: 12px; letter-spacing: .01em; font-weight: 400; }
 .home-variants .energy-headline > div:first-child svg { display: none; }
 .home-variants .energy-number { font-size: clamp(36px, 7vw, 66px); line-height: 1.15; letter-spacing: -.055em; font-weight: 500; margin: 12px 0; }
-.home-variants .energy-status { background: #f69b5912; color: var(--home-orange); padding: 5px 14px; font-size: 12px; }
+.home-variants .energy-status { background: #f69b5912; color: var(--home-orange); padding: 4px 12px; font-size: 12px; border-radius: 999px; }
 .home-variants .energy-metrics { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px 16px; align-items: start; border: 0; padding-top: 0; margin-top: 0; }
 .home-variants .energy-metrics > div:first-child,
 .home-variants .energy-metrics > div:last-child { display: contents; }
@@ -45,23 +50,43 @@
 .home-variants .energy-metrics > div > div:first-child { font-size: 11px; font-weight: 400; text-align: center; justify-content: center; }
 .home-variants .energy-metrics > div > div:first-child svg { display: none; }
 .home-variants .energy-metrics > div > div:nth-child(2) { text-align: center; font-size: clamp(20px, 4vw, 26px); font-weight: 500; letter-spacing: -.02em; }
-.home-variants .daily-habits { gap: 10px; }
-.home-variants .daily-habits > div { padding: 16px 6px; min-height: 112px; border: 0; border-radius: 18px; }
+.home-variants .daily-habits { gap: 12px; }
+.home-variants .daily-habits > div { min-width: 0; padding: 12px 8px 4px; gap: 4px; border: 1px solid var(--home-line); border-radius: var(--home-radius-widget); background: var(--home-card); box-shadow: none; }
+.home-variants .daily-habits > div > div:first-child { flex-direction: row; gap: 4px; }
+.home-variants .daily-habits > div > div:nth-child(2) { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 4px; min-height: 44px; }
+.home-variants .daily-habits input { min-width: 0; max-width: 100%; min-height: 44px; border-radius: var(--home-radius-control); }
+.home-variants .daily-habits .habit-value { min-height: 44px; min-width: 44px; border-radius: var(--home-radius-control); }
+.home-variants .habit-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; gap: 4px; }
+.home-variants :is(.habit-controls button, .habit-edit) { min-width: 0; min-height: 44px; border-radius: var(--home-radius-control); background: var(--home-control); color: var(--home-muted); font-size: 12px; font-weight: 500; transition: background-color .15s, color .15s; }
+.home-variants .habit-edit { width: 100%; }
+.home-variants :is(.habit-controls button, .habit-edit, .habit-value):hover:not(:disabled) { background: var(--home-hover); color: var(--home-text); }
+.home-variants :is(.daily-habits button, .daily-quick-actions button, .habit-adjustments button):active:not(:disabled) { background: var(--home-hover); color: var(--home-orange); }
+.home-variants :is(.daily-habits button, .daily-quick-actions button, .habit-adjustments button):disabled { opacity: .4; cursor: not-allowed; }
+.home-variants :is(.daily-habits input, .habit-adjustments input):focus-visible { outline: 2px solid var(--home-orange); outline-offset: 2px; }
+.home-variants .habit-adjustments { gap: 24px; border-radius: var(--home-radius-panel); }
+.home-variants .habit-adjustments :is(button, input) { min-height: 44px; border-radius: var(--home-radius-control); border-color: var(--home-line); background: var(--home-control); color: var(--home-text); }
+.home-variants .habit-adjustments button:hover:not(:disabled) { background: var(--home-hover); border-color: var(--home-orange); }
+.home-variants .daily-quick-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 0; }
+.home-variants .daily-quick-actions button { min-width: 0; min-height: 44px; padding: 8px 12px; border-radius: var(--home-radius-control); font-size: 14px; font-weight: 500; border: 1px solid var(--home-line); background: var(--home-card); color: var(--home-text); }
+.home-variants .daily-quick-actions button[aria-pressed="true"] { border-color: var(--home-orange); color: var(--home-orange); }
+.home-variants .daily-quick-actions button:first-child { background: var(--home-orange); border-color: var(--home-orange); color: #3b2418; }
+.home-variants .daily-quick-actions button:hover:not(:disabled) { border-color: var(--home-orange); background: var(--home-hover); }
+.home-variants .daily-quick-actions button:first-child:is(:hover, :active):not(:disabled) { background: #e99050; color: #3b2418; }
 .home-variants .daily-habits svg { color: var(--home-orange); width: 18px; height: 18px; }
 .home-variants .daily-habits > div:nth-child(1) svg { color: #67d8f5; }
 .home-variants .daily-habits > div:nth-child(2) svg { color: #70d394; }
 .home-variants .daily-habits > div:nth-child(3) svg { color: #ee8ab4; }
-.home-variants .daily-logs { margin-top: 4px; border: 0; border-radius: 20px; background: transparent; }
+.home-variants .daily-logs { margin-top: 4px; border: 0; border-radius: var(--home-radius-panel); background: transparent; }
 .home-variants .daily-logs h4 { font-size: 15px; font-weight: 500; letter-spacing: -.01em; }
-.home-variants .daily-logs li { background: var(--home-card); border: 0; border-radius: 16px; padding: 18px 16px; gap: 10px; }
+.home-variants .daily-logs li { background: var(--home-card); border: 0; border-radius: var(--home-radius-widget); padding: 16px; gap: 12px; }
 .home-variants .daily-logs li:hover { background: #272b2f; }
 .home-variants .daily-logs li + li { border-color: var(--home-line); }
 
-.home-variants .daily-panel { gap: 28px; }
+.home-variants .daily-panel { gap: 24px; }
 .home-variants .daily-habits .uppercase { text-transform: none; letter-spacing: 0; font-size: 11px; font-weight: 400; }
 .home-variants .daily-habits .text-lg { font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .home-variants .daily-logs > div:first-child { background: transparent; border: 0; padding: 4px 4px 16px; }
-.home-variants .daily-logs ul { display: flex; flex-direction: column; gap: 10px; }
+.home-variants .daily-logs ul { display: flex; flex-direction: column; gap: 12px; }
 .home-variants .daily-logs li > div:first-child { font-size: 14px; font-weight: 500; line-height: 1.5; }
 .home-variants .daily-logs li > div:last-child { opacity: 1; font-size: 11px; }
 .home-variants .daily-logs li .font-semibold { color: var(--home-text); font-weight: 500; font-variant-numeric: tabular-nums; }
@@ -81,6 +106,8 @@ html:not(.dark) .home-variants {
   --home-line: #1f293714;
   --home-text: #1f2937;
   --home-muted: #64748b;
+  --home-control: #f8f7f4;
+  --home-hover: #eef0f2;
   background: var(--home-bg);
   color: var(--home-text);
   color-scheme: light;
@@ -97,6 +124,11 @@ html:not(.dark) .home-variants :is(input, select, textarea) { background-color: 
 html:not(.dark) .home-variants :is(input, select, textarea)::placeholder { color: #64748b; opacity: 1; }
 html:not(.dark) .home-variants :is(.energy-card, .daily-habits > div, .daily-logs li, .daily-logs) { border-color: #d1d5db; }
 html:not(.dark) .home-variants :is(.energy-card, .daily-habits > div) { box-shadow: 0 1px 2px #1f29370d; }
+html:not(.dark) .home-variants .daily-quick-actions button:first-child { background: var(--home-orange); border-color: var(--home-orange); color: #3b2418; }
+html:not(.dark) .home-variants .daily-quick-actions button:first-child:is(:hover, :active):not(:disabled) { background: #e99050; }
+html:not(.dark) .home-variants .daily-habits > div:nth-child(1) svg { color: #0891b2; }
+html:not(.dark) .home-variants .daily-habits > div:nth-child(2) svg { color: #168047; }
+html:not(.dark) .home-variants .daily-habits > div:nth-child(3) svg { color: #be407c; }
 html:not(.dark) .home-variants .record-detail-modal { background: #ffffff; border-color: #cbd5e1; color: #1f2937; }
 html:not(.dark) .home-variants .record-detail-modal > :is(div:first-child, div:last-child) { background: #f8f7f4; border-color: #cbd5e1; }
 html:not(.dark) .home-variants .record-detail-modal .record-detail-main { color: #1f2937; }
@@ -109,19 +141,16 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
 @media (min-width: 640px) {
   .home-variants .energy-card { padding-top: 44px; padding-bottom: 32px; gap: 36px; }
   .home-variants .energy-metrics { max-width: 520px; }
-  .home-variants .daily-habits { gap: 14px; }
+  .home-variants .daily-habits { gap: 16px; }
 }
 @media (max-width: 639px) {
   .home-variants { padding: 8px; }
   .home-variants .daily-panel { gap: 20px; }
   .home-variants .daily-habits { gap: 8px; }
-  .home-variants .daily-habits > div { min-width: 0; min-height: 84px; padding: 12px 6px; gap: 8px; border-radius: 16px; }
-  .home-variants .daily-habits > div > div:first-child { flex-direction: row; gap: 5px; }
+  .home-variants .daily-habits > div { padding: 8px 4px 4px; gap: 4px; }
   .home-variants .daily-habits svg { width: 16px; height: 16px; }
   .home-variants .daily-habits .text-lg { font-size: 18px; line-height: 1.2; }
+  .home-variants .daily-habits > div:nth-child(2) > div:nth-child(2) > span { display: none; }
   .home-variants .daily-habits input { max-width: 100%; }
-  .home-variants .daily-quick-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 0; }
-  .home-variants .daily-quick-actions button { min-width: 0; min-height: 40px; padding: 8px 3px; border-radius: 12px; font-size: 11px; font-weight: 500; border-color: var(--home-line); background: var(--home-card); color: var(--home-text); }
-  .home-variants .daily-quick-actions button[aria-pressed="true"] { background: #f5a064; border-color: #f5a064; color: #3b2418; }
-  .home-variants .daily-quick-actions button:hover { border-color: #f5a064; }
+  .home-variants .daily-quick-actions button { padding: 8px 4px; font-size: 11px; }
 }

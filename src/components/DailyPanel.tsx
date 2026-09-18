@@ -382,8 +382,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     className="w-16 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-cyan-500"
                   />
                 ) : (
-                  <span 
-                    className="cursor-pointer hover:text-cyan-400 transition-colors" 
+                  <button type="button"
+                    className="habit-value cursor-pointer hover:text-cyan-400 transition-colors"
                     onClick={() => {
                       setEditWaterVal(currentRecord.water ? String(currentRecord.water) : '');
                       setIsEditingWater(true);
@@ -391,9 +391,13 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     title="Editar cantidad"
                   >
                     {currentRecord.water.toLocaleString('es-AR')}
-                  </span>
+                  </button>
                 )}
                 <span className="text-[10px] font-normal text-slate-500 dark:text-gray-400 mt-0.5">ml</span>
+              </div>
+              <div className="habit-controls">
+                <button type="button" onClick={() => handleAddWater(-250)} aria-label="Restar 250 ml de agua">−</button>
+                <button type="button" onClick={() => handleAddWater(250)} aria-label="Sumar 250 ml de agua">+250</button>
               </div>
             </div>
 
@@ -425,28 +429,26 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     className="w-16 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-green-500"
                   />
                 ) : (
-                  <span 
-                    className="cursor-pointer hover:text-green-400 transition-colors" 
+                  <button type="button"
+                    className="habit-value cursor-pointer hover:text-green-400 transition-colors"
                     onClick={() => {
                       setEditStepsVal(currentRecord.steps ? String(currentRecord.steps) : '');
                       setIsEditingSteps(true);
                     }}
                     title="Editar pasos"
                   >
-                    {currentRecord.steps.toLocaleString('es-AR')}
-                  </span>
+                    {Number(localSteps || 0).toLocaleString('es-AR')}
+                  </button>
                 )}
                 <span className="text-[10px] font-normal text-slate-500 dark:text-gray-400 mt-0.5">pasos</span>
               </div>
+              <div className="habit-controls">
+                <button type="button" onClick={() => handleAddSteps(-500)} aria-label="Restar 500 pasos">−</button>
+                <button type="button" onClick={() => handleAddSteps(500)} aria-label="Sumar 500 pasos">+500</button>
+              </div>
             </div>
 
-            <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full cursor-pointer hover:border-pink-500/50 transition-colors"
-                 onClick={() => {
-                   setEditWeightVal(currentRecord.weight ? String(currentRecord.weight) : '');
-                   setIsEditingWeight(true);
-                 }}
-                 title="Registrar peso"
-            >
+            <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
               <div className="flex flex-col items-center gap-1">
                 <Scales size={20} className="text-pink-400" />
                 <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Peso</span>
@@ -457,6 +459,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 </span>
                 <span className="text-[10px] font-normal text-slate-500 dark:text-gray-400 mt-0.5">kg</span>
               </div>
+              <button type="button" className="habit-edit"
+                onClick={() => {
+                  setEditWeightVal(currentRecord.weight ? String(currentRecord.weight) : '');
+                  setIsEditingWeight(true);
+                }} title="Registrar peso">Editar</button>
             </div>
           </div>
         )}
@@ -641,7 +648,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         )}
 
         {activeTab === 'pasos-agua' && (
-          <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col md:flex-row gap-8 animate-in fade-in slide-in-from-top-2">
+          <div className="habit-adjustments bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col md:flex-row gap-8 animate-in fade-in slide-in-from-top-2">
             <div className="flex-1 flex flex-col gap-3">
               <h4 className="font-bold flex items-center gap-2"><Sneaker className="text-orange-400" /> Pasos del Día</h4>
               <div className="flex flex-col gap-2">
