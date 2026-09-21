@@ -9,11 +9,11 @@ export default function ProfileView() {
   const { user, activeProfile, updateProfile, resetData } = useAppStore();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState('');
-  const [sex, setSex] = useState<UserSex>('Masculino');
-  const [age, setAge] = useState<number>(30);
-  const [weight, setWeight] = useState<number>(70);
-  const [height, setHeight] = useState<number>(170);
+  const [name, setName] = useState(activeProfile?.name ?? '');
+  const [sex, setSex] = useState<UserSex | null>(activeProfile?.sex ?? null);
+  const [age, setAge] = useState<number | null>(activeProfile?.age ?? null);
+  const [weight, setWeight] = useState<number | null>(activeProfile?.weight ?? null);
+  const [height, setHeight] = useState<number | null>(activeProfile?.height ?? null);
   const [isResetting, setIsResetting] = useState(false);
   const [isResetConfirm, setIsResetConfirm] = useState(false);
 
@@ -37,6 +37,16 @@ export default function ProfileView() {
     initFromProfile();
     setIsEditing(false);
   };
+
+  if (!activeProfile || sex === null || age === null || weight === null || height === null) {
+    return (
+      <div className="premium-view dark profile-view w-full max-w-5xl mx-auto">
+        <div role="status" aria-live="polite" className="profile-loading rounded-3xl border border-slate-200 dark:border-[#ffffff0d] bg-white dark:bg-[#1e2124] p-6 min-h-80">
+          <p className="text-sm text-slate-500 dark:text-gray-400">Cargando perfil…</p>
+        </div>
+      </div>
+    );
+  }
 
   const previewProfile: UserProfile = {
     id: activeProfile?.id || 'temp',
@@ -101,7 +111,7 @@ export default function ProfileView() {
             </div>
             {!isEditing && (
               <button
-                onClick={() => setIsEditing(true)}
+                onClick={() => { initFromProfile(); setIsEditing(true); }}
                 className="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-[#151719] hover:bg-slate-200 dark:hover:bg-[#292d30] text-slate-700 dark:text-gray-300 rounded-xl transition-colors text-sm font-medium border border-slate-200 dark:border-[#ffffff0d]"
               >
                 <PencilSimple size={18} />
