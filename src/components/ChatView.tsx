@@ -1,10 +1,10 @@
 import './PremiumViews.css';
 import { useState, useRef, useEffect, useCallback, type RefObject } from 'react';
-import { Microphone, PaperPlaneRight, Robot, Stop, User } from '@phosphor-icons/react';
+import { ImageSquare, Microphone, PaperPlaneRight, Robot, Stop, User, X } from '@phosphor-icons/react';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
-import { generateAIResponse, validActions, isValidDateStr, type AudioAttachment, type DataAction, type ChatMessage } from '../services/aiService';
+import { generateAIResponse, validActions, isValidDateStr, type MediaAttachment, type DataAction, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
@@ -55,6 +55,48 @@ function conversationDates(userId: string, today: string): string[] {
   }
 }
 
+const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
+const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+
+async function prepareImage(file: File): Promise<Blob> {
+  const sourceUrl = URL.createObjectURL(file);
+  const image = new Image();
+  try {
+    await new Promise<void>((resolve, reject) => {
+      image.onload = () => resolve();
+      image.onerror = () => reject(new Error('No se pudo abrir la imagen.'));
+      image.src = sourceUrl;
+    });
+    if (!image.naturalWidth || !image.naturalHeight) throw new Error('La imagen está vacía.');
+    for (const [maxDimension, quality] of [[1600, 0.82], [1200, 0.75], [900, 0.7]] as const) {
+      const scale = Math.min(1, maxDimension / Math.max(image.naturalWidth, image.naturalHeight));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('No se pudo preparar la imagen.');
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      const blob = await new Promise<Blob>((resolve, reject) =>
+        canvas.toBlob(result => result ? resolve(result) : reject(new Error('No se pudo comprimir la imagen.')), 'image/jpeg', quality));
+      if (blob.size > 0 && blob.size <= MAX_IMAGE_BYTES) return blob;
+    }
+    throw new Error('No pude preparar esta imagen. Probá con una foto más liviana.');
+  } finally {
+    URL.revokeObjectURL(sourceUrl);
+  }
+}
+
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+    reader.onerror = () => reject(new Error('No se pudo leer la imagen.'));
+    reader.readAsDataURL(blob);
+  });
+}
+
 export default function ChatView({ scrollContainer }: { scrollContainer: RefObject<HTMLElement | null> }) {
   const { user, activeProfile, updateRecord } = useAppStore();
   const [today, setToday] = useState(() => formatDateStr(new Date()));
@@ -102,6 +144,12 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
   const [isRecording, setIsRecording] = useState(false);
   const [isRequestingAudio, setIsRequestingAudio] = useState(false);
   const [isProcessingAudio, setIsProcessingAudio] = useState(false);
+  const [isProcessingImage, setIsProcessingImage] = useState(false);
+  const [pendingImage, setPendingImage] = useState<{ blob: Blob; previewUrl: string } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const previewUrlRef = useRef<string | null>(null);
+  const imageSelection = useRef(0);
+  const imageBusy = useRef(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const recordingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -115,6 +163,49 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
   const busy = useRef(false);
   const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[] } | null>(null);
   const [isEditingProposal, setIsEditingProposal] = useState(false);
+
+  const clearPendingImage = () => {
+    imageSelection.current += 1;
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    previewUrlRef.current = null;
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    setPendingImage(null);
+    setIsProcessingImage(false);
+    imageBusy.current = false;
+  };
+
+  const selectImage = async (file?: File) => {
+    if (!file || imageBusy.current || audioBusy.current || busy.current || pending || !activeProfile) return;
+    clearPendingImage();
+    if (/\.(heic|heif)$/i.test(file.name) || /image\/(heic|heif)/i.test(file.type)) {
+      toast.error('Este formato de imagen no es compatible todavía. Probá sacar la foto desde la cámara de la app o usar JPG/PNG.');
+      return;
+    }
+    if (!IMAGE_TYPES.has(file.type) || !file.size) {
+      toast.error('Elegí una imagen JPG, PNG o WebP válida.');
+      return;
+    }
+    const selection = imageSelection.current;
+    imageBusy.current = true;
+    setIsProcessingImage(true);
+    try {
+      const blob = await prepareImage(file);
+      if (!mounted.current || selection !== imageSelection.current) return;
+      const previewUrl = URL.createObjectURL(blob);
+      previewUrlRef.current = previewUrl;
+      setPendingImage({ blob, previewUrl });
+    } catch (error) {
+      if (mounted.current && selection === imageSelection.current) {
+        toast.error(error instanceof Error && error.message.startsWith('No pude preparar')
+          ? error.message : 'No pude preparar esta imagen. Probá con una foto más liviana.');
+      }
+    } finally {
+      if (selection === imageSelection.current) {
+        imageBusy.current = false;
+        if (mounted.current) setIsProcessingImage(false);
+      }
+    }
+  };
 
   const editProposal = (index: number, field: string, value: string | number | undefined) => {
     setPending(prev => prev && ({ ...prev, actions: prev.actions.map((action, i) =>
@@ -205,6 +296,8 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
       if (recordingTimer.current) clearTimeout(recordingTimer.current);
       if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
       streamRef.current?.getTracks().forEach(track => track.stop());
+      imageSelection.current += 1;
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
     };
   }, []);
 
@@ -227,11 +320,12 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
   ];
 
   const startConversation = () => {
-    if (busy.current || audioBusy.current || isPastConversation) return;
+    if (busy.current || audioBusy.current || imageBusy.current || isPastConversation) return;
     try {
       localStorage.removeItem(storageKey);
       setMessages([]);
       setInputValue('');
+      clearPendingImage();
       setPending(null);
       setIsEditingProposal(false);
     } catch {
@@ -249,17 +343,20 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
     return () => cancelAnimationFrame(frame);
   }, [messages, isTyping, hasPending, isEditingProposal, scrollToEnd]);
 
-  const handleSend = async (text: string, attachment?: AudioAttachment) => {
+  const handleSend = async (text: string, attachment?: MediaAttachment) => {
     if ((!text.trim() && !attachment) || (audioBusy.current && !attachment) || busy.current || pending || !activeProfile || isPastConversation || dateStr !== formatDateStr(new Date())) return;
     busy.current = true;
 
     const now = new Date();
     const localTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    const userMsg: Message = { id: Date.now().toString(), role: 'user', text: attachment ? '🎤 Mensaje de voz' : text, localTime };
+    const userMsg: Message = { id: Date.now().toString(), role: 'user',
+      text: attachment?.kind === 'audio' ? '🎤 Mensaje de voz'
+        : attachment?.kind === 'image' ? `📷 Foto de comida${text.trim() ? `\n${text.trim()}` : ''}` : text,
+      localTime };
     const newHistory = [...messages, userMsg];
     
     setMessages(newHistory);
-    if (!attachment) setInputValue('');
+    if (!attachment || attachment.kind === 'image') setInputValue('');
     setIsTyping(true);
 
     try {
@@ -333,12 +430,35 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
     }
   };
 
+  const sendComposer = async () => {
+    if (!pendingImage) {
+      await handleSend(inputValue);
+      return;
+    }
+    if (imageBusy.current || audioBusy.current || busy.current || pending) return;
+    imageBusy.current = true;
+    setIsProcessingImage(true);
+    try {
+      const data = await blobToBase64(pendingImage.blob);
+      if (!data) throw new Error('La imagen está vacía.');
+      if (!mounted.current) return;
+      const attachment: MediaAttachment = { kind: 'image', mimeType: pendingImage.blob.type, data };
+      clearPendingImage();
+      await handleSend(inputValue, attachment);
+    } catch {
+      if (mounted.current) toast.error('No pude preparar esta imagen. Probá con una foto más liviana.');
+    } finally {
+      imageBusy.current = false;
+      if (mounted.current) setIsProcessingImage(false);
+    }
+  };
+
   const stopRecording = () => {
     if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
   };
 
   const startRecording = async () => {
-    if (audioBusy.current || busy.current || pending || !activeProfile || isPastConversation) return;
+    if (audioBusy.current || imageBusy.current || pendingImage || busy.current || pending || !activeProfile || isPastConversation) return;
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
       toast.error('Este navegador no permite grabar audio. Podés escribir tu mensaje.');
       return;
@@ -438,11 +558,11 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           <h2 className="font-bold text-lg text-slate-900 dark:text-white">Asistente Calori</h2>
           <p className="text-xs text-slate-500 dark:text-gray-400">Siempre activo para ayudarte</p>
         </div>
-        <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || !!pending}
+        <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || !!pending}
           aria-expanded={showHistory} className="chat-history-button text-xs font-medium disabled:opacity-50">
           Historial
         </button>
-        <button type="button" onClick={startConversation} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isPastConversation}
+        <button type="button" onClick={startConversation} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isPastConversation}
           className="ml-auto text-xs font-medium text-slate-500 dark:text-gray-400 hover:text-orange-500 disabled:opacity-50">
           Nueva conversación
         </button>
@@ -585,7 +705,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             <button
               key={i}
               onClick={() => handleSend(suggestion)}
-              disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || !!pending || !activeProfile}
+              disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || !!pendingImage || !!pending || !activeProfile}
               className="chat-suggestion flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] text-slate-700 dark:text-gray-300 hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 disabled:opacity-50 transition-colors whitespace-nowrap shadow-none"
             >
               {suggestion}
@@ -593,6 +713,17 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           ))}
         </div>
 
+        {pendingImage && (
+          <div className="chat-image-preview mb-3 flex items-center gap-3 rounded-xl p-2">
+            <img src={pendingImage.previewUrl} alt="Foto de comida adjunta" className="h-14 w-14 rounded-lg object-cover" />
+            <span className="min-w-0 flex-1 text-sm">Foto adjunta</span>
+            <button type="button" onClick={clearPendingImage} aria-label="Quitar foto"
+              className="chat-image-remove flex items-center justify-center rounded-lg">
+              <X size={18} weight="bold" />
+            </button>
+          </div>
+        )}
+        {isProcessingImage && <p className="chat-audio-status text-xs mb-2" role="status">Preparando imagen…</p>}
         {(isRequestingAudio || isRecording || isProcessingAudio) && (
           <p className="chat-audio-status text-xs mb-2" role="status">
             {isRequestingAudio ? 'Solicitando acceso al micrófono…' : isRecording
@@ -600,9 +731,12 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           </p>
         )}
         <form 
-          onSubmit={(e) => { e.preventDefault(); handleSend(inputValue); }}
+          onSubmit={(e) => { e.preventDefault(); void sendComposer(); }}
           className="flex gap-2 relative"
         >
+          <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp"
+            onChange={e => { const file = e.target.files?.[0]; e.target.value = ''; void selectImage(file); }}
+            className="hidden" tabIndex={-1} aria-label="Elegir foto de comida" />
           <input
             type="text"
             value={inputValue}
@@ -612,15 +746,20 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             placeholder="Escribe un mensaje..."
             className="min-w-0 flex-1 bg-white dark:bg-[#1e2124] border border-slate-300 dark:border-[#ffffff0d] rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#f5a064] dark:focus:border-[#f5a064] shadow-none disabled:opacity-50"
           />
+          <button type="button" onClick={() => fileInputRef.current?.click()}
+            disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || !!pending || !activeProfile}
+            aria-label="Adjuntar foto de comida" className="chat-image-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50">
+            <ImageSquare size={20} weight="fill" />
+          </button>
           <button type="button" onClick={isRecording ? stopRecording : startRecording}
-            disabled={isRequestingAudio || isProcessingAudio || isTyping || !!pending || !activeProfile}
+            disabled={isRequestingAudio || isProcessingAudio || isProcessingImage || !!pendingImage || isTyping || !!pending || !activeProfile}
             aria-label={isRecording ? 'Detener y enviar audio' : 'Grabar mensaje de voz'}
             className={`chat-audio-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50 ${isRecording ? 'chat-audio-recording' : ''}`}>
             {isRecording ? <Stop size={19} weight="fill" /> : <Microphone size={20} weight="fill" />}
           </button>
           <button
             type="submit"
-            disabled={!inputValue.trim() || isTyping || isRequestingAudio || isRecording || isProcessingAudio || !!pending || !activeProfile}
+            disabled={(!inputValue.trim() && !pendingImage) || isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || !!pending || !activeProfile}
             aria-label="Enviar mensaje"
             className="p-2 bg-[#f5a064] hover:bg-[#f8b17f] disabled:bg-slate-300 dark:disabled:bg-[#34383b] text-white rounded-xl transition-colors flex items-center justify-center"
           >

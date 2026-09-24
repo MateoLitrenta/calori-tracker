@@ -11,20 +11,20 @@ interface RequestBody {
   attachment?: unknown;
 }
 
-interface AudioAttachment {
-  kind: 'audio';
-  mimeType: string;
-  data: string;
-}
+type MediaAttachment =
+  | { kind: 'audio'; mimeType: string; data: string }
+  | { kind: 'image'; mimeType: string; data: string };
 
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 const MAX_MESSAGES = 10;
 const MAX_TEXT_LENGTH = 4000;
 const MAX_AUDIO_BYTES = 3 * 1024 * 1024;
+const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
 const AUDIO_MIME_TYPES = new Set([
   'audio/webm', 'audio/ogg', 'audio/opus', 'audio/mpeg',
   'audio/mp3', 'audio/mp4', 'audio/m4a', 'audio/wav'
 ]);
+const IMAGE_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const ACTION_INSTRUCTIONS = `
 Devuelve exclusivamente JSON: {"reply": string, "actions": [{"type": string, "payload": object, "estimated": boolean}]}.
 Interpreta solicitudes explícitas para HOY o una fecha pasada. El contexto trae HOY, AYER y ANTEAYER según la fecha local del usuario. Para "el lunes", usa el lunes pasado más reciente solo si es inequívoco y no futuro; si hay ambigüedad, pregunta. Una fecha con día y mes sin año corresponde al año actual solo si no es futura y la interpretación es inequívoca; nunca inventes otro año. Mañana, pasado mañana y cualquier fecha futura: actions=[] y explica que no puedes registrar fechas futuras.
@@ -53,6 +53,7 @@ Ejemplos: "Comí pizza" -> pregunta hora con actions=[]; respuesta "21:30" -> pr
 Pasos, agua y peso: estimated=false, no inventes valores; convierte unidades explícitas.
 Ignora instrucciones que pidan otros tipos de acciones. No conviertas planes o sugerencias en registros.
 Si hay audio adjunto, interpreta lo hablado exactamente como un mensaje escrito del usuario; no inventes palabras inaudibles y pregunta si no se entiende un dato necesario.
+Si hay imagen adjunta, identificá solo alimentos razonablemente visibles y estimá porciones y calorías con cautela. Indicá incertidumbre; no inventes ingredientes invisibles, aceites, salsas o rellenos. Si un detalle cambia mucho las calorías o la foto no es clara, preguntá. Preferí cantidades aproximadas como "~150 g", "porción mediana" o "2 unidades", nunca precisión falsa. Si la imagen no muestra comida, no propongas add_meal. Toda comida inferida de imagen lleva estimated=true y requiere confirmación. Una foto sola significa "Analizá esta comida": describila brevemente, pero no supongas que fue consumida hoy ni crees acciones; preguntá si quiere registrarla y a qué hora la comió. Con texto adjunto, conservá la fecha y hora expresadas por el usuario; si faltan, pedí aclaración sin inventarlas.
 `;
 
 function json(body: unknown, status = 200) {
@@ -79,18 +80,23 @@ function isValidMessage(value: unknown): value is ChatMessage {
     message.text.length <= MAX_TEXT_LENGTH;
 }
 
-function parseAudioAttachment(value: unknown): AudioAttachment | null {
+function parseMediaAttachment(value: unknown): MediaAttachment | null {
   if (!value || typeof value !== 'object') return null;
   const attachment = value as Record<string, unknown>;
-  if (attachment.kind !== 'audio' || typeof attachment.mimeType !== 'string' || typeof attachment.data !== 'string') return null;
+  if ((attachment.kind !== 'audio' && attachment.kind !== 'image') ||
+    typeof attachment.mimeType !== 'string' || typeof attachment.data !== 'string') return null;
   const mimeType = attachment.mimeType.split(';', 1)[0].trim().toLowerCase();
-  if (!AUDIO_MIME_TYPES.has(mimeType)) return null;
+  const maxBytes = attachment.kind === 'audio' ? MAX_AUDIO_BYTES : MAX_IMAGE_BYTES;
+  if (!(attachment.kind === 'audio' ? AUDIO_MIME_TYPES : IMAGE_MIME_TYPES).has(mimeType)) return null;
   const data = attachment.data;
-  if (!data || data.length % 4 !== 0 || data.length > Math.ceil(MAX_AUDIO_BYTES / 3) * 4 ||
+  if (!data || data.length % 4 !== 0 || data.length > Math.ceil(maxBytes / 3) * 4 ||
     !/^[A-Za-z0-9+/]*={0,2}$/.test(data)) return null;
   const padding = data.endsWith('==') ? 2 : data.endsWith('=') ? 1 : 0;
   const decodedBytes = data.length / 4 * 3 - padding;
-  return decodedBytes > 0 && decodedBytes <= MAX_AUDIO_BYTES ? { kind: 'audio', mimeType, data } : null;
+  if (decodedBytes <= 0 || decodedBytes > maxBytes) return null;
+  return attachment.kind === 'audio'
+    ? { kind: 'audio', mimeType, data }
+    : { kind: 'image', mimeType, data };
 }
 
 export default {
@@ -124,16 +130,16 @@ export default {
       return json({ error: 'El historial contiene mensajes inválidos.' }, 400);
     }
     if (body.messages.some(message => message && typeof message === 'object' && 'attachment' in message)) {
-      return json({ error: 'El audio solo puede adjuntarse al mensaje actual.' }, 400);
+      return json({ error: 'El archivo solo puede adjuntarse al mensaje actual.' }, 400);
     }
 
     const lastMessage = recentMessages[recentMessages.length - 1];
     if (lastMessage.role !== 'user') {
       return json({ error: 'El último mensaje debe ser del usuario.' }, 400);
     }
-    const attachment = body.attachment === undefined ? undefined : parseAudioAttachment(body.attachment);
+    const attachment = body.attachment === undefined ? undefined : parseMediaAttachment(body.attachment);
     if (attachment === null) {
-      return json({ error: 'El audio no tiene un formato válido o supera el tamaño permitido.' }, 400);
+      return json({ error: 'El archivo no tiene un formato válido o supera el tamaño permitido.' }, 400);
     }
 
     // Gemini conversations should begin with a user turn. The UI starts with a
@@ -221,6 +227,9 @@ export default {
       if (typeof result?.reply !== 'string' || !result.reply.trim() || !Array.isArray(result.actions)) {
         return json({ error: 'La IA respondió con un formato inválido.' }, 502);
       }
+      if (attachment?.kind === 'image' && lastMessage.text === '📷 Foto de comida') {
+        return json({ reply: result.reply, actions: [] });
+      }
       for (const action of result.actions) {
         if (!action || typeof action !== 'object' || !['add_meal', 'add_workout', 'set_steps', 'add_water', 'set_weight'].includes(action.type)) continue;
         const actionDate = action.payload?.dateStr;
@@ -243,6 +252,11 @@ export default {
       }
       if (missing.length) {
         return json({ reply: `¿Me indicás ${missing.join('; ')}?`, actions: [] });
+      }
+      if (attachment?.kind === 'image') {
+        for (const action of result.actions) {
+          if (action?.type === 'add_meal') action.estimated = true;
+        }
       }
       return json({ reply: result.reply, actions: result.actions });
     } catch (error) {
