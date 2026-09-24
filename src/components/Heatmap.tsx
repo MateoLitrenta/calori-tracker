@@ -231,7 +231,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       <button
         key={dateStr}
         onClick={() => handleBoxClick(dateStr)}
-        className={`${sizeClass} rounded-[2px] transition-all focus:outline-none flex-shrink-0 
+        className={`${sizeClass} heatmap-cell rounded-[2px] transition-all focus:outline-none flex-shrink-0
         ${getHeatmapColor(balance)} 
         ${isSelected ? 'ring-1 ring-white scale-125 z-10' : (hasGym ? 'ring-1 ring-yellow-400 drop-shadow-[0_0_3px_rgba(250,204,21,0.6)]' : 'hover:ring-1 hover:ring-gray-400')}
         ${isToday && !isSelected && !hasGym ? 'ring-1 ring-blue-500' : ''}`}
@@ -252,7 +252,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       <button
         key={label}
         onClick={() => onSelectGroup?.(view, label, dates)}
-        className={`w-[11px] h-[11px] md:w-2.5 md:h-2.5 rounded-[2px] transition-all focus:outline-none flex-shrink-0 ${colorClass} hover:ring-1 hover:ring-gray-400`}
+        className={`w-[11px] h-[11px] md:w-2.5 md:h-2.5 heatmap-cell rounded-[2px] transition-all focus:outline-none flex-shrink-0 ${colorClass} hover:ring-1 hover:ring-gray-400`}
         title={`${label}: ${balanceText}`}
         aria-label={`Seleccionar ${label}`}
       />
@@ -260,17 +260,18 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
   };
 
   return (
-    <div className="p-4 md:p-6 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl shadow-lg w-full overflow-hidden flex flex-col gap-4">
+    <div className="activity-history p-4 md:p-6 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl shadow-lg w-full overflow-hidden flex flex-col gap-4">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">Historial de Actividad</h2>
         
-        <div className="flex bg-slate-200 dark:bg-[#161b22] rounded-md p-1 border border-slate-300 dark:border-gray-800 self-end sm:self-auto">
+        <div className="period-switch flex bg-slate-200 dark:bg-[#161b22] rounded-md p-1 border border-slate-300 dark:border-gray-800 self-end sm:self-auto">
           {(['year', 'month', 'week', 'day'] as Period[]).map((p) => {
             const labels = { year: 'Año', month: 'Mes', week: 'Semana', day: 'Día' };
             return (
               <button
                 key={p}
                 onClick={() => handlePeriodChange(p)}
+                aria-pressed={period === p}
                 className={`px-3 py-1 text-xs font-medium rounded-sm transition-colors ${
                   period === p ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-white' : 'text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
@@ -371,22 +372,24 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       </div>
 
       {/* Legend */}
-      <div className="flex justify-end items-center mt-2 text-xs text-slate-500 dark:text-gray-400 gap-2 flex-wrap">
-        <div className="flex items-center gap-1 mr-2">
+      <div className="activity-legend flex justify-end items-center mt-2 text-xs text-slate-500 dark:text-gray-400 gap-2 flex-wrap">
+        <div className="activity-legend-empty flex items-center gap-1 mr-2">
           <span>Sin datos</span>
           <div className="w-3 h-3 rounded-[2px] bg-slate-200 dark:bg-[#2d333b]" title="Sin registros"></div>
         </div>
-        <span>Déficit</span>
-        <div className="flex gap-1">
-          <div className="w-3 h-3 rounded-[2px] bg-heatmap-deficit-high" title="< -500 kcal"></div>
-          <div className="w-3 h-3 rounded-[2px] bg-heatmap-deficit-medium" title="-500 a -250 kcal"></div>
-          <div className="w-3 h-3 rounded-[2px] bg-heatmap-deficit-low" title="-250 a -100 kcal"></div>
-          <div className="w-3 h-3 rounded-[2px] bg-heatmap-neutral" title="-100 a +100 kcal"></div>
-          <div className="w-3 h-3 rounded-[2px] bg-heatmap-surplus-low" title="+100 a +250 kcal"></div>
-          <div className="w-3 h-3 rounded-[2px] bg-heatmap-surplus-medium" title="+250 a +500 kcal"></div>
-          <div className="w-3 h-3 rounded-[2px] bg-heatmap-surplus-high" title="> +500 kcal"></div>
+        <div className="activity-legend-scale flex items-center">
+          <span>Déficit</span>
+          <div className="flex gap-1">
+            <div className="w-3 h-3 rounded-[2px] bg-heatmap-deficit-high" title="< -500 kcal"></div>
+            <div className="w-3 h-3 rounded-[2px] bg-heatmap-deficit-medium" title="-500 a -250 kcal"></div>
+            <div className="w-3 h-3 rounded-[2px] bg-heatmap-deficit-low" title="-250 a -100 kcal"></div>
+            <div className="w-3 h-3 rounded-[2px] bg-heatmap-neutral" title="-100 a +100 kcal"></div>
+            <div className="w-3 h-3 rounded-[2px] bg-heatmap-surplus-low" title="+100 a +250 kcal"></div>
+            <div className="w-3 h-3 rounded-[2px] bg-heatmap-surplus-medium" title="+250 a +500 kcal"></div>
+            <div className="w-3 h-3 rounded-[2px] bg-heatmap-surplus-high" title="> +500 kcal"></div>
+          </div>
+          <span>Superávit</span>
         </div>
-        <span>Superávit</span>
       </div>
     </div>
   );

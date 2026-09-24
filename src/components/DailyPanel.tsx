@@ -720,7 +720,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
           </div>
           
           {currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 && (
-            <div className="p-8 text-center text-slate-500 dark:text-gray-400">
+            <div className="daily-logs-empty p-8 text-center text-slate-500 dark:text-gray-400">
               No hay registros para este día.
             </div>
           )}
