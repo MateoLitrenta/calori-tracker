@@ -4,11 +4,9 @@ export interface ChatMessage {
   localTime?: string;
 }
 
-export interface AudioAttachment {
-  kind: 'audio';
-  mimeType: string;
-  data: string;
-}
+export type MediaAttachment =
+  | { kind: 'audio'; mimeType: string; data: string }
+  | { kind: 'image'; mimeType: string; data: string };
 
 export interface DataAction {
   type: 'add_meal' | 'add_workout' | 'set_steps' | 'add_water' | 'set_weight';
@@ -59,7 +57,7 @@ export async function generateAIResponse(
   messages: ChatMessage[],
   systemInstruction: string,
   today: string,
-  attachment?: AudioAttachment
+  attachment?: MediaAttachment
 ): Promise<{ reply: string; actions: unknown }> {
   const response = await fetch('/api/ai/chat', {
     method: 'POST',

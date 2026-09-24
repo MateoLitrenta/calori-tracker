@@ -39,6 +39,11 @@ html:not(.dark) .premium-view :is(input, select, textarea)::placeholder { color:
 .assistant-view .chat-confirmation { background: #1e2124; border-color: #ffffff0d; padding: 16px; border-radius: 18px; line-height: 1.8; }
 .assistant-view .chat-composer { background: #151719; padding: 16px; border: 0; }
 .assistant-view .chat-audio-button { flex: 0 0 44px; min-height: 44px; background: #292d30; color: #f5a064; border: 1px solid #ffffff0d; }
+.assistant-view .chat-image-button { flex: 0 0 44px; min-height: 44px; background: #292d30; color: #f5a064; border: 1px solid #ffffff0d; }
+.assistant-view .chat-image-button:not(:disabled):hover { background: #34383b; }
+.assistant-view .chat-image-preview { background: #1e2124; border: 1px solid #ffffff0d; color: #e3e2df; }
+.assistant-view .chat-image-remove { width: 44px; height: 44px; color: #a9abae; }
+.assistant-view .chat-image-remove:hover { background: #34383b; color: #f1f0ec; }
 .assistant-view .chat-audio-button:not(:disabled):hover { background: #34383b; }
 .assistant-view .chat-audio-recording { background: #f5a064; color: #241a13; }
 .assistant-view .chat-audio-status { color: #a9abae; }
@@ -56,6 +61,11 @@ html:not(.dark) .assistant-view .chat-suggestion:hover { border-color: #f5a064; 
 html:not(.dark) .assistant-view .chat-composer input { border-color: #94a3b8; background: #ffffff; color: #1f2937; }
 html:not(.dark) .assistant-view .chat-composer input::placeholder { color: #64748b; }
 html:not(.dark) .assistant-view .chat-audio-button { background: #ffffff; color: #a65b2a; border-color: #cbd5e1; }
+html:not(.dark) .assistant-view .chat-image-button { background: #ffffff; color: #a65b2a; border-color: #cbd5e1; }
+html:not(.dark) .assistant-view .chat-image-button:not(:disabled):hover { background: #fff1e6; }
+html:not(.dark) .assistant-view .chat-image-preview { background: #ffffff; border-color: #cbd5e1; color: #334155; }
+html:not(.dark) .assistant-view .chat-image-remove { color: #64748b; }
+html:not(.dark) .assistant-view .chat-image-remove:hover { background: #f1f5f9; color: #1f2937; }
 html:not(.dark) .assistant-view .chat-audio-button:not(:disabled):hover { background: #fff1e6; }
 html:not(.dark) .assistant-view .chat-audio-recording { background: #f5a064; color: #3b2418; }
 html:not(.dark) .assistant-view .chat-audio-status { color: #64748b; }
