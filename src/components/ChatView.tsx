@@ -4,7 +4,7 @@ import { ImageSquare, Microphone, PaperPlaneRight, Robot, Stop, User, X } from '
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
-import { generateAIResponse, validActions, isValidDateStr, type MediaAttachment, type DataAction, type ChatMessage } from '../services/aiService';
+import { generateAIResponse, transcribeAudio, validActions, isValidDateStr, type MediaAttachment, type DataAction, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
@@ -146,7 +146,11 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
   const [isProcessingAudio, setIsProcessingAudio] = useState(false);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
   const [pendingImage, setPendingImage] = useState<{ blob: Blob; previewUrl: string } | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [showPhotoMenu, setShowPhotoMenu] = useState(false);
+  const galleryInputRef = useRef<HTMLInputElement | null>(null);
+  const cameraInputRef = useRef<HTMLInputElement | null>(null);
+  const photoMenuRef = useRef<HTMLDivElement | null>(null);
+  const textInputRef = useRef<HTMLInputElement | null>(null);
   const previewUrlRef = useRef<string | null>(null);
   const imageSelection = useRef(0);
   const imageBusy = useRef(false);
@@ -168,13 +172,15 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
     imageSelection.current += 1;
     if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
     previewUrlRef.current = null;
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (galleryInputRef.current) galleryInputRef.current.value = '';
+    if (cameraInputRef.current) cameraInputRef.current.value = '';
     setPendingImage(null);
     setIsProcessingImage(false);
     imageBusy.current = false;
   };
 
   const selectImage = async (file?: File) => {
+    setShowPhotoMenu(false);
     if (!file || imageBusy.current || audioBusy.current || busy.current || pending || !activeProfile) return;
     clearPendingImage();
     if (/\.(heic|heif)$/i.test(file.name) || /image\/(heic|heif)/i.test(file.type)) {
@@ -206,6 +212,22 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
       }
     }
   };
+
+  useEffect(() => {
+    if (!showPhotoMenu) return;
+    const closeOnOutside = (event: PointerEvent) => {
+      if (!photoMenuRef.current?.contains(event.target as Node)) setShowPhotoMenu(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setShowPhotoMenu(false);
+    };
+    document.addEventListener('pointerdown', closeOnOutside);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutside);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [showPhotoMenu]);
 
   const editProposal = (index: number, field: string, value: string | number | undefined) => {
     setPending(prev => prev && ({ ...prev, actions: prev.actions.map((action, i) =>
@@ -326,6 +348,7 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
       setMessages([]);
       setInputValue('');
       clearPendingImage();
+      setShowPhotoMenu(false);
       setPending(null);
       setIsEditingProposal(false);
     } catch {
@@ -350,13 +373,12 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
     const now = new Date();
     const localTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     const userMsg: Message = { id: Date.now().toString(), role: 'user',
-      text: attachment?.kind === 'audio' ? '🎤 Mensaje de voz'
-        : attachment?.kind === 'image' ? `📷 Foto de comida${text.trim() ? `\n${text.trim()}` : ''}` : text,
+      text: attachment?.kind === 'image' ? `📷 Foto de comida${text.trim() ? `\n${text.trim()}` : ''}` : text,
       localTime };
     const newHistory = [...messages, userMsg];
     
     setMessages(newHistory);
-    if (!attachment || attachment.kind === 'image') setInputValue('');
+    setInputValue('');
     setIsTyping(true);
 
     try {
@@ -458,7 +480,8 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
   };
 
   const startRecording = async () => {
-    if (audioBusy.current || imageBusy.current || pendingImage || busy.current || pending || !activeProfile || isPastConversation) return;
+    if (audioBusy.current || imageBusy.current || busy.current || pending || !activeProfile || isPastConversation) return;
+    setShowPhotoMenu(false);
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
       toast.error('Este navegador no permite grabar audio. Podés escribir tu mensaje.');
       return;
@@ -521,11 +544,14 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           });
           if (!data) throw new Error('El audio está vacío.');
           if (mounted.current) {
-            setIsProcessingAudio(false);
-            await handleSend('🎤 Mensaje de voz', { kind: 'audio', mimeType: blob.type, data });
+            const transcript = await transcribeAudio({ kind: 'audio', mimeType: blob.type, data });
+            if (mounted.current) {
+              setInputValue(previous => [previous.trim(), transcript].filter(Boolean).join(' '));
+              requestAnimationFrame(() => textInputRef.current?.focus());
+            }
           }
         } catch {
-          if (mounted.current) toast.error('No se pudo procesar el audio. Intentá nuevamente.');
+          if (mounted.current) toast.error('No pude transcribir el audio. Intentá nuevamente.');
         } finally {
           audioBusy.current = false;
           if (mounted.current) setIsProcessingAudio(false);
@@ -727,17 +753,15 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
         {(isRequestingAudio || isRecording || isProcessingAudio) && (
           <p className="chat-audio-status text-xs mb-2" role="status">
             {isRequestingAudio ? 'Solicitando acceso al micrófono…' : isRecording
-              ? 'Grabando… Tocá detener para enviar (máximo 60 segundos).' : 'Procesando audio…'}
+              ? 'Grabando… Tocá detener para transcribir (máximo 60 segundos).' : 'Transcribiendo…'}
           </p>
         )}
         <form 
           onSubmit={(e) => { e.preventDefault(); void sendComposer(); }}
-          className="flex gap-2 relative"
+          className="flex items-center gap-2 relative"
         >
-          <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp"
-            onChange={e => { const file = e.target.files?.[0]; e.target.value = ''; void selectImage(file); }}
-            className="hidden" tabIndex={-1} aria-label="Elegir foto de comida" />
           <input
+            ref={textInputRef}
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -746,13 +770,28 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             placeholder="Escribe un mensaje..."
             className="min-w-0 flex-1 bg-white dark:bg-[#1e2124] border border-slate-300 dark:border-[#ffffff0d] rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#f5a064] dark:focus:border-[#f5a064] shadow-none disabled:opacity-50"
           />
-          <button type="button" onClick={() => fileInputRef.current?.click()}
-            disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || !!pending || !activeProfile}
-            aria-label="Adjuntar foto de comida" className="chat-image-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50">
-            <ImageSquare size={20} weight="fill" />
-          </button>
+          <div ref={photoMenuRef} className="relative flex-none">
+            <input ref={cameraInputRef} type="file" accept="image/*" capture="environment"
+              onChange={e => { const file = e.target.files?.[0]; e.target.value = ''; void selectImage(file); }}
+              className="hidden" tabIndex={-1} aria-label="Tomar foto de comida" />
+            <input ref={galleryInputRef} type="file" accept="image/jpeg,image/png,image/webp"
+              onChange={e => { const file = e.target.files?.[0]; e.target.value = ''; void selectImage(file); }}
+              className="hidden" tabIndex={-1} aria-label="Elegir foto de galería" />
+            <button type="button" onClick={() => setShowPhotoMenu(previous => !previous)}
+              disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || !!pending || !activeProfile}
+              aria-label="Adjuntar foto de comida" aria-haspopup="menu" aria-expanded={showPhotoMenu}
+              className="chat-image-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50">
+              <ImageSquare size={20} weight="fill" />
+            </button>
+            {showPhotoMenu && (
+              <div className="chat-photo-menu" role="menu" aria-label="Opciones de foto">
+                <button type="button" role="menuitem" onClick={() => { setShowPhotoMenu(false); cameraInputRef.current?.click(); }}>Tomar foto</button>
+                <button type="button" role="menuitem" onClick={() => { setShowPhotoMenu(false); galleryInputRef.current?.click(); }}>Elegir de galería</button>
+              </div>
+            )}
+          </div>
           <button type="button" onClick={isRecording ? stopRecording : startRecording}
-            disabled={isRequestingAudio || isProcessingAudio || isProcessingImage || !!pendingImage || isTyping || !!pending || !activeProfile}
+            disabled={isRequestingAudio || isProcessingAudio || isProcessingImage || isTyping || !!pending || !activeProfile}
             aria-label={isRecording ? 'Detener y enviar audio' : 'Grabar mensaje de voz'}
             className={`chat-audio-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50 ${isRecording ? 'chat-audio-recording' : ''}`}>
             {isRecording ? <Stop size={19} weight="fill" /> : <Microphone size={20} weight="fill" />}
