@@ -38,8 +38,28 @@ html:not(.dark) .premium-view :is(input, select, textarea)::placeholder { color:
 .assistant-view .prose p { line-height: 1.65; }
 .assistant-view .chat-confirmation { background: #1e2124; border-color: #ffffff0d; padding: 16px; border-radius: 18px; line-height: 1.8; }
 .assistant-view .chat-composer { background: #151719; padding: 16px; border: 0; }
-.assistant-view .chat-audio-button { flex: 0 0 44px; min-height: 44px; background: #292d30; color: #f5a064; border: 1px solid #ffffff0d; }
-.assistant-view .chat-image-button { flex: 0 0 44px; min-height: 44px; background: #292d30; color: #f5a064; border: 1px solid #ffffff0d; }
+.assistant-view .chat-textarea { min-height: 44px; max-height: 148px; resize: none; overflow-y: hidden; line-height: 20px; border-radius: 14px; border-color: #ffffff0d; }
+.assistant-view .chat-textarea:focus-visible { outline: 2px solid #f5a064; outline-offset: 2px; }
+.assistant-view .chat-recording-bar { background: #1e2124; border: 1px solid #ffffff0d; color: #f1f0ec; }
+.assistant-view .chat-recording-label span { color: #f5a064; margin-right: 4px; }
+.assistant-view .chat-recording-bar button { min-height: 44px; padding: 0 12px; border-radius: 10px; color: #a9abae; }
+.assistant-view .chat-recording-bar button:hover { background: #34383b; }
+.assistant-view .chat-recording-bar .chat-finish-dictation { background: #f5a064; color: #241a13; }
+.assistant-view .chat-transcribe-spinner { width: 14px; height: 14px; border: 2px solid #a9abae66; border-top-color: #f5a064; border-radius: 50%; animation: chat-spin .8s linear infinite; }
+@keyframes chat-spin { to { transform: rotate(360deg); } }
+.chat-camera-overlay { background: #000000b3; }
+.chat-camera-panel { max-height: calc(100dvh - 32px); overflow-y: auto; background: #1e2124; border: 1px solid #ffffff18; color: #f1f0ec; }
+.chat-camera-frame { background: #151719; }
+.chat-camera-loading { background: #151719; color: #a9abae; }
+.chat-camera-cancel { border: 1px solid #ffffff22; color: #a9abae; }
+.chat-camera-capture { background: #f5a064; color: #241a13; }
+.assistant-view .chat-audio-button,
+.assistant-view .chat-image-button { flex: 0 0 44px; width: 44px; height: 44px; min-height: 44px; border-radius: 14px; background: #292d30; color: #f5a064; border: 1px solid #ffffff0d; }
+.assistant-view .chat-composer button[type="submit"] { flex: 0 0 44px; width: 44px; height: 44px; min-height: 44px; border-radius: 14px; background: #f5a064; color: #241a13; }
+.assistant-view .chat-composer button[type="submit"]:disabled { background: #34383b; color: #a9abae; }
+.assistant-view .chat-photo-menu { position: absolute; right: 0; bottom: calc(100% + 8px); z-index: 20; min-width: 180px; padding: 6px; background: #1e2124; border: 1px solid #ffffff18; border-radius: 14px; box-shadow: 0 8px 24px #00000030; }
+.assistant-view .chat-photo-menu button { display: block; width: 100%; padding: 10px 12px; border-radius: 9px; color: #f1f0ec; font-size: 13px; text-align: left; }
+.assistant-view .chat-photo-menu button:hover { background: #34383b; }
 .assistant-view .chat-image-button:not(:disabled):hover { background: #34383b; }
 .assistant-view .chat-image-preview { background: #1e2124; border: 1px solid #ffffff0d; color: #e3e2df; }
 .assistant-view .chat-image-remove { width: 44px; height: 44px; color: #a9abae; }
@@ -51,6 +71,16 @@ html:not(.dark) .premium-view :is(input, select, textarea)::placeholder { color:
 .assistant-view [class~="bg-slate-200"] { background: #292d30; }
 html:not(.dark) .assistant-view .chat-heading,
 html:not(.dark) .assistant-view .chat-composer { background: #f8f7f4; }
+html:not(.dark) .assistant-view .chat-textarea { background: #ffffff; color: #1f2937; border-color: #cbd5e1; }
+html:not(.dark) .assistant-view .chat-textarea::placeholder { color: #64748b; }
+html:not(.dark) .assistant-view .chat-recording-bar { background: #ffffff; border-color: #cbd5e1; color: #1f2937; }
+html:not(.dark) .assistant-view .chat-recording-bar button { color: #475569; }
+html:not(.dark) .assistant-view .chat-recording-bar button:hover { background: #f1f5f9; }
+html:not(.dark) .assistant-view .chat-recording-bar .chat-finish-dictation { background: #f5a064; color: #3b2418; }
+html:not(.dark) .chat-camera-panel { background: #ffffff; border-color: #cbd5e1; color: #1f2937; }
+html:not(.dark) .chat-camera-frame, html:not(.dark) .chat-camera-loading { background: #f1f5f9; }
+html:not(.dark) .chat-camera-loading { color: #64748b; }
+html:not(.dark) .chat-camera-cancel { border-color: #cbd5e1; color: #475569; }
 html:not(.dark) .assistant-view .chat-confirmation,
 html:not(.dark) .assistant-view .chat-suggestion { background: #ffffff; }
 html:not(.dark) .assistant-view .chat-bubble:not(.chat-user) { background: #f1f2f3; color: #1f2937; }
@@ -62,6 +92,9 @@ html:not(.dark) .assistant-view .chat-composer input { border-color: #94a3b8; ba
 html:not(.dark) .assistant-view .chat-composer input::placeholder { color: #64748b; }
 html:not(.dark) .assistant-view .chat-audio-button { background: #ffffff; color: #a65b2a; border-color: #cbd5e1; }
 html:not(.dark) .assistant-view .chat-image-button { background: #ffffff; color: #a65b2a; border-color: #cbd5e1; }
+html:not(.dark) .assistant-view .chat-photo-menu { background: #ffffff; border-color: #cbd5e1; box-shadow: 0 8px 24px #1f293714; }
+html:not(.dark) .assistant-view .chat-photo-menu button { color: #334155; }
+html:not(.dark) .assistant-view .chat-photo-menu button:hover { background: #f1f5f9; }
 html:not(.dark) .assistant-view .chat-image-button:not(:disabled):hover { background: #fff1e6; }
 html:not(.dark) .assistant-view .chat-image-preview { background: #ffffff; border-color: #cbd5e1; color: #334155; }
 html:not(.dark) .assistant-view .chat-image-remove { color: #64748b; }
@@ -146,7 +179,7 @@ html:not(.dark) .assistant-view .chat-history-button { color: #9a4d1f; }
 .assistant-view .chat-confirmation button { min-height: 44px; padding: 8px 12px; border-color: var(--chat-line); }
 .assistant-view .chat-confirmation button:not([class~="bg-[#f5a064]"]) { background: var(--chat-control); }
 .assistant-view .chat-confirmation button:not([class~="bg-[#f5a064]"]):hover:not(:disabled) { background: var(--chat-hover); }
-.assistant-view .chat-composer input { border-radius: 14px; border-color: var(--chat-line); }
+.assistant-view .chat-composer :is(input, textarea) { border-radius: 14px; border-color: var(--chat-line); }
 .assistant-view .chat-composer button[type="submit"] { border-radius: 14px; }
 .assistant-view :is(button, textarea):focus-visible { outline: 2px solid #f5a064; outline-offset: 2px; }
 .assistant-view button:disabled { opacity: .45; cursor: not-allowed; }
@@ -154,7 +187,7 @@ html:not(.dark) .assistant-view .chat-history-button { color: #9a4d1f; }
 html:not(.dark) .assistant-view { --chat-control: #ffffff; --chat-line: #e2e8f0; --chat-muted: #64748b; --chat-hover: #eef0f2; }
 html:not(.dark) .assistant-view .chat-confirmation { border-color: #e2e8f0; }
 html:not(.dark) .assistant-view .chat-confirmation :is(input, select, textarea) { background: #ffffff; border-color: #cbd5e1; }
-html:not(.dark) .assistant-view .chat-composer input { border-color: #cbd5e1; }
+html:not(.dark) .assistant-view .chat-composer :is(input, textarea) { border-color: #cbd5e1; }
 html:not(.dark) .assistant-view .chat-suggestion { border-color: #e2e8f0; }
 html:not(.dark) .assistant-view .chat-heading > button { color: #64748b; }
 html:not(.dark) .assistant-view .chat-heading > button:hover:not(:disabled) { color: #9a4d1f; }

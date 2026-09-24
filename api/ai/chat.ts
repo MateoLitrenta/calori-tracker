@@ -5,6 +5,7 @@ interface ChatMessage {
 }
 
 interface RequestBody {
+  mode?: 'chat' | 'transcribe';
   messages?: ChatMessage[];
   systemInstruction?: string;
   today?: string;
@@ -116,6 +117,43 @@ export default {
       body = await request.json() as RequestBody;
     } catch {
       return json({ error: 'Solicitud inválida.' }, 400);
+    }
+
+    if (body.mode !== undefined && body.mode !== 'chat' && body.mode !== 'transcribe') {
+      return json({ error: 'Modo de solicitud inválido.' }, 400);
+    }
+    if (body.mode === 'transcribe') {
+      const audio = parseMediaAttachment(body.attachment);
+      if (audio?.kind !== 'audio' || body.messages !== undefined) {
+        return json({ error: 'Se requiere un audio válido del mensaje actual.' }, 400);
+      }
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+            body: JSON.stringify({
+              contents: [{ role: 'user', parts: [
+                { text: 'Transcribí fielmente el audio en español. No resumas. No interpretes nutricionalmente. No agregues información. Conservá cantidades, horarios, fechas y nombres tal como se escuchan. Si una parte no se entiende, no la inventes. Respondé exclusivamente JSON: {"transcript": string}.' },
+                { inlineData: { mimeType: audio.mimeType, data: audio.data } }
+              ] }],
+              generationConfig: { responseMimeType: 'application/json', temperature: 0, maxOutputTokens: 1024,
+                thinkingConfig: { thinkingBudget: 0 } }
+            })
+          }
+        );
+        if (!response.ok) return json({ error: 'No se pudo transcribir el audio.' }, 502);
+        const data = await response.json() as any;
+        const text = data?.candidates?.[0]?.content?.parts?.map((part: { text?: string }) => part?.text || '').join('').trim();
+        const result = text ? JSON.parse(text) : null;
+        if (typeof result?.transcript !== 'string' || !result.transcript.trim()) {
+          return json({ error: 'No se pudo entender el audio.' }, 502);
+        }
+        return json({ transcript: result.transcript.trim() });
+      } catch {
+        return json({ error: 'No se pudo transcribir el audio.' }, 502);
+      }
     }
 
     if (!Array.isArray(body.messages) || !body.messages.length) {

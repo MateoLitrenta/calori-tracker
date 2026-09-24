@@ -90,3 +90,21 @@ export async function generateAIResponse(
 
   return { reply: payload.reply.trim(), actions: payload.actions ?? [] };
 }
+
+export async function transcribeAudio(attachment: Extract<MediaAttachment, { kind: 'audio' }>): Promise<string> {
+  const response = await fetch('/api/ai/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mode: 'transcribe', attachment })
+  });
+  let payload: { transcript?: string; error?: string };
+  try {
+    payload = await response.json() as { transcript?: string; error?: string };
+  } catch {
+    throw new Error('La respuesta de transcripción no es válida.');
+  }
+  if (!response.ok || !payload.transcript?.trim()) {
+    throw new Error(payload.error || 'No se pudo transcribir el audio.');
+  }
+  return payload.transcript.trim();
+}

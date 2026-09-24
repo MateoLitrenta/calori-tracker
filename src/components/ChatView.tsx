@@ -1,10 +1,11 @@
 import './PremiumViews.css';
 import { useState, useRef, useEffect, useCallback, type RefObject } from 'react';
-import { ImageSquare, Microphone, PaperPlaneRight, Robot, Stop, User, X } from '@phosphor-icons/react';
+import { createPortal } from 'react-dom';
+import { ImageSquare, Microphone, PaperPlaneRight, Robot, User, X } from '@phosphor-icons/react';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
-import { generateAIResponse, validActions, isValidDateStr, type MediaAttachment, type DataAction, type ChatMessage } from '../services/aiService';
+import { generateAIResponse, transcribeAudio, validActions, isValidDateStr, type MediaAttachment, type DataAction, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
@@ -58,7 +59,7 @@ function conversationDates(userId: string, today: string): string[] {
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
 const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
-async function prepareImage(file: File): Promise<Blob> {
+async function prepareImage(file: Blob): Promise<Blob> {
   const sourceUrl = URL.createObjectURL(file);
   const image = new Image();
   try {
@@ -146,13 +147,24 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
   const [isProcessingAudio, setIsProcessingAudio] = useState(false);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
   const [pendingImage, setPendingImage] = useState<{ blob: Blob; previewUrl: string } | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [showPhotoMenu, setShowPhotoMenu] = useState(false);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [isCameraLoading, setIsCameraLoading] = useState(false);
+  const [isCameraReady, setIsCameraReady] = useState(false);
+  const galleryInputRef = useRef<HTMLInputElement | null>(null);
+  const photoMenuRef = useRef<HTMLDivElement | null>(null);
+  const textInputRef = useRef<HTMLTextAreaElement | null>(null);
+  const cameraVideoRef = useRef<HTMLVideoElement | null>(null);
+  const cameraStreamRef = useRef<MediaStream | null>(null);
+  const cameraRequestId = useRef(0);
+  const cameraCaptureBusy = useRef(false);
   const previewUrlRef = useRef<string | null>(null);
   const imageSelection = useRef(0);
   const imageBusy = useRef(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const recordingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const recordingCancelled = useRef(false);
   const audioBusy = useRef(false);
   const scrollToEnd = useCallback((behavior: ScrollBehavior) => {
     const container = scrollContainer.current;
@@ -168,16 +180,17 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
     imageSelection.current += 1;
     if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
     previewUrlRef.current = null;
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (galleryInputRef.current) galleryInputRef.current.value = '';
     setPendingImage(null);
     setIsProcessingImage(false);
     imageBusy.current = false;
   };
 
-  const selectImage = async (file?: File) => {
+  const selectImage = async (file?: File | Blob) => {
+    setShowPhotoMenu(false);
     if (!file || imageBusy.current || audioBusy.current || busy.current || pending || !activeProfile) return;
     clearPendingImage();
-    if (/\.(heic|heif)$/i.test(file.name) || /image\/(heic|heif)/i.test(file.type)) {
+    if ((file instanceof File && /\.(heic|heif)$/i.test(file.name)) || /image\/(heic|heif)/i.test(file.type)) {
       toast.error('Este formato de imagen no es compatible todavía. Probá sacar la foto desde la cámara de la app o usar JPG/PNG.');
       return;
     }
@@ -206,6 +219,116 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
       }
     }
   };
+
+  const closeCamera = () => {
+    cameraRequestId.current += 1;
+    cameraStreamRef.current?.getTracks().forEach(track => track.stop());
+    cameraStreamRef.current = null;
+    if (cameraVideoRef.current) cameraVideoRef.current.srcObject = null;
+    setIsCameraReady(false);
+    setIsCameraLoading(false);
+    setIsCameraOpen(false);
+  };
+
+  const openCamera = async () => {
+    setShowPhotoMenu(false);
+    if (!navigator.mediaDevices?.getUserMedia || imageBusy.current || audioBusy.current || busy.current || pending) {
+      toast.error('No pude acceder a la cámara. Revisá los permisos o elegí una foto de la galería.');
+      return;
+    }
+    const requestId = ++cameraRequestId.current;
+    setIsCameraReady(false);
+    setIsCameraLoading(true);
+    setIsCameraOpen(true);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' } }, audio: false
+      });
+      if (!mounted.current || requestId !== cameraRequestId.current) {
+        stream.getTracks().forEach(track => track.stop());
+        return;
+      }
+      cameraStreamRef.current = stream;
+      setIsCameraLoading(false);
+    } catch {
+      if (mounted.current && requestId === cameraRequestId.current) {
+        closeCamera();
+        toast.error('No pude acceder a la cámara. Revisá los permisos o elegí una foto de la galería.');
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!isCameraOpen || isCameraLoading || !cameraStreamRef.current || !cameraVideoRef.current) return;
+    const video = cameraVideoRef.current;
+    const stream = cameraStreamRef.current;
+    video.srcObject = stream;
+    void video.play().catch(() => {
+      if (!mounted.current || cameraStreamRef.current !== stream) return;
+      stream.getTracks().forEach(track => track.stop());
+      cameraStreamRef.current = null;
+      cameraRequestId.current += 1;
+      setIsCameraReady(false);
+      setIsCameraOpen(false);
+      toast.error('No pude acceder a la cámara. Revisá los permisos o elegí una foto de la galería.');
+    });
+    return () => { video.srcObject = null; };
+  }, [isCameraOpen, isCameraLoading]);
+
+  const capturePhoto = async () => {
+    const video = cameraVideoRef.current;
+    if (cameraCaptureBusy.current || !isCameraReady || !video?.videoWidth || !video.videoHeight) return;
+    cameraCaptureBusy.current = true;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext('2d');
+    if (!context) {
+      closeCamera();
+      cameraCaptureBusy.current = false;
+      toast.error('No pude preparar esta imagen. Probá con una foto más liviana.');
+      return;
+    }
+    try {
+      context.drawImage(video, 0, 0);
+    } catch {
+      closeCamera();
+      cameraCaptureBusy.current = false;
+      toast.error('No pude preparar esta imagen. Probá con una foto más liviana.');
+      return;
+    }
+    closeCamera();
+    imageBusy.current = true;
+    setIsProcessingImage(true);
+    try {
+      const blob = await new Promise<Blob>((resolve, reject) =>
+        canvas.toBlob(result => result ? resolve(result) : reject(new Error('No se pudo capturar la foto.')), 'image/jpeg', 0.9));
+      imageBusy.current = false;
+      if (mounted.current) await selectImage(blob);
+    } catch {
+      if (mounted.current) toast.error('No pude preparar esta imagen. Probá con una foto más liviana.');
+    } finally {
+      cameraCaptureBusy.current = false;
+      imageBusy.current = false;
+      if (mounted.current) setIsProcessingImage(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!showPhotoMenu) return;
+    const closeOnOutside = (event: PointerEvent) => {
+      if (!photoMenuRef.current?.contains(event.target as Node)) setShowPhotoMenu(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setShowPhotoMenu(false);
+    };
+    document.addEventListener('pointerdown', closeOnOutside);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutside);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [showPhotoMenu]);
 
   const editProposal = (index: number, field: string, value: string | number | undefined) => {
     setPending(prev => prev && ({ ...prev, actions: prev.actions.map((action, i) =>
@@ -296,10 +419,20 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
       if (recordingTimer.current) clearTimeout(recordingTimer.current);
       if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
       streamRef.current?.getTracks().forEach(track => track.stop());
+      cameraRequestId.current += 1;
+      cameraStreamRef.current?.getTracks().forEach(track => track.stop());
       imageSelection.current += 1;
       if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    const textarea = textInputRef.current;
+    if (!textarea) return;
+    textarea.style.height = 'auto';
+    textarea.style.height = `${Math.min(Math.max(textarea.scrollHeight, 44), 148)}px`;
+    textarea.style.overflowY = textarea.scrollHeight > 148 ? 'auto' : 'hidden';
+  }, [inputValue]);
 
   useEffect(() => {
     if (isPastConversation) return;
@@ -320,12 +453,13 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
   ];
 
   const startConversation = () => {
-    if (busy.current || audioBusy.current || imageBusy.current || isPastConversation) return;
+    if (busy.current || audioBusy.current || imageBusy.current || isCameraOpen || isPastConversation) return;
     try {
       localStorage.removeItem(storageKey);
       setMessages([]);
       setInputValue('');
       clearPendingImage();
+      setShowPhotoMenu(false);
       setPending(null);
       setIsEditingProposal(false);
     } catch {
@@ -350,13 +484,12 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
     const now = new Date();
     const localTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     const userMsg: Message = { id: Date.now().toString(), role: 'user',
-      text: attachment?.kind === 'audio' ? '🎤 Mensaje de voz'
-        : attachment?.kind === 'image' ? `📷 Foto de comida${text.trim() ? `\n${text.trim()}` : ''}` : text,
+      text: attachment?.kind === 'image' ? `📷 Foto de comida${text.trim() ? `\n${text.trim()}` : ''}` : text,
       localTime };
     const newHistory = [...messages, userMsg];
     
     setMessages(newHistory);
-    if (!attachment || attachment.kind === 'image') setInputValue('');
+    setInputValue('');
     setIsTyping(true);
 
     try {
@@ -431,6 +564,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
   };
 
   const sendComposer = async () => {
+    if (isRecording || isRequestingAudio || isProcessingAudio || isProcessingImage || isCameraOpen || isTyping || pending) return;
     if (!pendingImage) {
       await handleSend(inputValue);
       return;
@@ -457,8 +591,18 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
     if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
   };
 
+  const cancelRecording = () => {
+    recordingCancelled.current = true;
+    if (recordingTimer.current) clearTimeout(recordingTimer.current);
+    recordingTimer.current = null;
+    stopRecording();
+    streamRef.current?.getTracks().forEach(track => track.stop());
+  };
+
   const startRecording = async () => {
-    if (audioBusy.current || imageBusy.current || pendingImage || busy.current || pending || !activeProfile || isPastConversation) return;
+    if (audioBusy.current || imageBusy.current || isCameraOpen || busy.current || pending || !activeProfile || isPastConversation) return;
+    recordingCancelled.current = false;
+    setShowPhotoMenu(false);
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
       toast.error('Este navegador no permite grabar audio. Podés escribir tu mensaje.');
       return;
@@ -496,7 +640,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
         recorderRef.current = null;
         if (!mounted.current) return;
         setIsRecording(false);
-        if (failed) {
+        if (failed || recordingCancelled.current) {
           audioBusy.current = false;
           return;
         }
@@ -521,11 +665,14 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           });
           if (!data) throw new Error('El audio está vacío.');
           if (mounted.current) {
-            setIsProcessingAudio(false);
-            await handleSend('🎤 Mensaje de voz', { kind: 'audio', mimeType: blob.type, data });
+            const transcript = await transcribeAudio({ kind: 'audio', mimeType: blob.type, data });
+            if (mounted.current) {
+              setInputValue(previous => [previous.trim(), transcript].filter(Boolean).join(' '));
+              requestAnimationFrame(() => textInputRef.current?.focus());
+            }
           }
         } catch {
-          if (mounted.current) toast.error('No se pudo procesar el audio. Intentá nuevamente.');
+          if (mounted.current) toast.error('No pude transcribir el audio. Intentá nuevamente.');
         } finally {
           audioBusy.current = false;
           if (mounted.current) setIsProcessingAudio(false);
@@ -558,11 +705,11 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           <h2 className="font-bold text-lg text-slate-900 dark:text-white">Asistente Calori</h2>
           <p className="text-xs text-slate-500 dark:text-gray-400">Siempre activo para ayudarte</p>
         </div>
-        <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || !!pending}
+        <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pending}
           aria-expanded={showHistory} className="chat-history-button text-xs font-medium disabled:opacity-50">
           Historial
         </button>
-        <button type="button" onClick={startConversation} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isPastConversation}
+        <button type="button" onClick={startConversation} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || isPastConversation}
           className="ml-auto text-xs font-medium text-slate-500 dark:text-gray-400 hover:text-orange-500 disabled:opacity-50">
           Nueva conversación
         </button>
@@ -705,7 +852,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             <button
               key={i}
               onClick={() => handleSend(suggestion)}
-              disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || !!pendingImage || !!pending || !activeProfile}
+              disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || !!pending || !activeProfile}
               className="chat-suggestion flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] text-slate-700 dark:text-gray-300 hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 disabled:opacity-50 transition-colors whitespace-nowrap shadow-none"
             >
               {suggestion}
@@ -724,42 +871,65 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           </div>
         )}
         {isProcessingImage && <p className="chat-audio-status text-xs mb-2" role="status">Preparando imagen…</p>}
-        {(isRequestingAudio || isRecording || isProcessingAudio) && (
-          <p className="chat-audio-status text-xs mb-2" role="status">
-            {isRequestingAudio ? 'Solicitando acceso al micrófono…' : isRecording
-              ? 'Grabando… Tocá detener para enviar (máximo 60 segundos).' : 'Procesando audio…'}
+        {isRecording && (
+          <div className="chat-recording-bar mb-3 flex flex-wrap items-center gap-2 rounded-xl p-2" role="status">
+            <span className="chat-recording-label mr-auto text-sm"><span aria-hidden="true">●</span> Grabando…</span>
+            <button type="button" onClick={cancelRecording}>Cancelar</button>
+            <button type="button" onClick={stopRecording} className="chat-finish-dictation">Finalizar dictado</button>
+          </div>
+        )}
+        {(isRequestingAudio || isProcessingAudio) && (
+          <p className="chat-audio-status mb-2 flex items-center gap-2 text-xs" role="status">
+            {isProcessingAudio && <span className="chat-transcribe-spinner" aria-hidden="true" />}
+            {isRequestingAudio ? 'Solicitando acceso al micrófono…' : 'Transcribiendo…'}
           </p>
         )}
         <form 
           onSubmit={(e) => { e.preventDefault(); void sendComposer(); }}
-          className="flex gap-2 relative"
+          className="flex items-center gap-2 relative"
         >
-          <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp"
-            onChange={e => { const file = e.target.files?.[0]; e.target.value = ''; void selectImage(file); }}
-            className="hidden" tabIndex={-1} aria-label="Elegir foto de comida" />
-          <input
-            type="text"
+          <textarea
+            ref={textInputRef}
+            rows={1}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing && window.matchMedia('(pointer: fine)').matches) {
+                e.preventDefault();
+                void sendComposer();
+              }
+            }}
             onFocus={() => scrollToEnd('smooth')}
             disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || !!pending || !activeProfile}
             placeholder="Escribe un mensaje..."
-            className="min-w-0 flex-1 bg-white dark:bg-[#1e2124] border border-slate-300 dark:border-[#ffffff0d] rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#f5a064] dark:focus:border-[#f5a064] shadow-none disabled:opacity-50"
+            className="chat-textarea min-w-0 flex-1 bg-white dark:bg-[#1e2124] border border-slate-300 dark:border-[#ffffff0d] rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#f5a064] dark:focus:border-[#f5a064] shadow-none disabled:opacity-50"
           />
-          <button type="button" onClick={() => fileInputRef.current?.click()}
-            disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || !!pending || !activeProfile}
-            aria-label="Adjuntar foto de comida" className="chat-image-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50">
-            <ImageSquare size={20} weight="fill" />
-          </button>
-          <button type="button" onClick={isRecording ? stopRecording : startRecording}
-            disabled={isRequestingAudio || isProcessingAudio || isProcessingImage || !!pendingImage || isTyping || !!pending || !activeProfile}
-            aria-label={isRecording ? 'Detener y enviar audio' : 'Grabar mensaje de voz'}
+          <div ref={photoMenuRef} className="relative flex-none">
+            <input ref={galleryInputRef} type="file" accept="image/jpeg,image/png,image/webp"
+              onChange={e => { const file = e.target.files?.[0]; e.target.value = ''; void selectImage(file); }}
+              className="hidden" tabIndex={-1} aria-label="Elegir foto de galería" />
+            <button type="button" onClick={() => setShowPhotoMenu(previous => !previous)}
+              disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pending || !activeProfile}
+              aria-label="Adjuntar foto de comida" aria-haspopup="menu" aria-expanded={showPhotoMenu}
+              className="chat-image-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50">
+              <ImageSquare size={20} weight="fill" />
+            </button>
+            {showPhotoMenu && (
+              <div className="chat-photo-menu" role="menu" aria-label="Opciones de foto">
+                <button type="button" role="menuitem" onClick={() => { void openCamera(); }}>Tomar foto</button>
+                <button type="button" role="menuitem" onClick={() => { setShowPhotoMenu(false); galleryInputRef.current?.click(); }}>Elegir de galería</button>
+              </div>
+            )}
+          </div>
+          <button type="button" onClick={startRecording}
+            disabled={isRecording || isRequestingAudio || isProcessingAudio || isProcessingImage || isCameraOpen || isTyping || !!pending || !activeProfile}
+            aria-label="Iniciar dictado por voz"
             className={`chat-audio-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50 ${isRecording ? 'chat-audio-recording' : ''}`}>
-            {isRecording ? <Stop size={19} weight="fill" /> : <Microphone size={20} weight="fill" />}
+            <Microphone size={20} weight="fill" />
           </button>
           <button
             type="submit"
-            disabled={(!inputValue.trim() && !pendingImage) || isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || !!pending || !activeProfile}
+            disabled={(!inputValue.trim() && !pendingImage) || isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pending || !activeProfile}
             aria-label="Enviar mensaje"
             className="p-2 bg-[#f5a064] hover:bg-[#f8b17f] disabled:bg-slate-300 dark:disabled:bg-[#34383b] text-white rounded-xl transition-colors flex items-center justify-center"
           >
@@ -767,6 +937,23 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           </button>
         </form>
       </div>}
+      {isCameraOpen && createPortal(
+        <div className="chat-camera-overlay fixed inset-0 z-50 flex items-center justify-center p-4" role="presentation">
+          <div className="chat-camera-panel w-full max-w-lg rounded-3xl p-4" role="dialog" aria-modal="true" aria-label="Tomar foto">
+            <h3 className="mb-3 text-lg">Tomar foto</h3>
+            <div className="chat-camera-frame relative overflow-hidden rounded-2xl">
+              <video ref={cameraVideoRef} autoPlay playsInline muted onLoadedMetadata={() => setIsCameraReady(true)}
+                className="aspect-[4/3] w-full object-contain" />
+              {isCameraLoading && <div className="chat-camera-loading absolute inset-0 flex items-center justify-center text-sm">Abriendo cámara…</div>}
+            </div>
+            <div className="mt-4 flex justify-end gap-3">
+              <button type="button" onClick={closeCamera} className="chat-camera-cancel rounded-xl px-4 py-2">Cancelar</button>
+              <button type="button" onClick={() => { void capturePhoto(); }} disabled={!isCameraReady}
+                className="chat-camera-capture rounded-xl px-4 py-2 disabled:opacity-50">Capturar</button>
+            </div>
+          </div>
+        </div>, document.body
+      )}
       <div className="chat-scroll-end" aria-hidden="true" />
       
       <style>{`
