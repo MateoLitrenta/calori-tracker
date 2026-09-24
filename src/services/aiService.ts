@@ -9,8 +9,16 @@ export interface DataAction {
   estimated: boolean;
 }
 
+export function isValidDateStr(value: unknown): value is string {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const [year, month, day] = value.split('-').map(Number);
+  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  return year > 0 && month >= 1 && month <= 12 && day >= 1 && day <= days[month - 1];
+}
+
 export function validActions(value: unknown, today: string): DataAction[] {
-  if (!Array.isArray(value)) return [];
+  if (!Array.isArray(value) || !isValidDateStr(today)) return [];
   const positive = (n: unknown): n is number => typeof n === 'number' && Number.isFinite(n) && n > 0;
   const text = (s: unknown) => typeof s === 'string' && s.trim().length > 0;
   const time = (s: unknown) => typeof s === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(s);
@@ -19,7 +27,8 @@ export function validActions(value: unknown, today: string): DataAction[] {
     if (!a || typeof a !== 'object' || typeof a.estimated !== 'boolean' ||
       !a.payload || typeof a.payload !== 'object' || Array.isArray(a.payload)) return false;
     const p = a.payload;
-    if (p.dateStr !== today) return false;
+    if (!isValidDateStr(p.dateStr) || p.dateStr > today ||
+      ((a.type !== 'add_meal' && a.type !== 'add_workout') && p.dateStr !== today)) return false;
     switch (a.type) {
       case 'add_meal': return text(p.name) && positive(p.calories) && time(p.time) && details(p.details) &&
         ['Desayuno', 'Almuerzo', 'Merienda', 'Cena', 'Snack'].includes(p.type);
@@ -41,14 +50,15 @@ interface AIResponsePayload {
 
 export async function generateAIResponse(
   messages: ChatMessage[],
-  systemInstruction: string
+  systemInstruction: string,
+  today: string
 ): Promise<{ reply: string; actions: unknown }> {
   const response = await fetch('/api/ai/chat', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ messages, systemInstruction })
+    body: JSON.stringify({ messages, systemInstruction, today })
   });
 
   let payload: AIResponsePayload;
