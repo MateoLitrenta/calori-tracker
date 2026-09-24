@@ -1,10 +1,10 @@
 import './PremiumViews.css';
 import { useState, useRef, useEffect, useCallback, type RefObject } from 'react';
-import { PaperPlaneRight, Robot, User } from '@phosphor-icons/react';
+import { Microphone, PaperPlaneRight, Robot, Stop, User } from '@phosphor-icons/react';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
-import { generateAIResponse, validActions, isValidDateStr, type DataAction, type ChatMessage } from '../services/aiService';
+import { generateAIResponse, validActions, isValidDateStr, type AudioAttachment, type DataAction, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
@@ -99,6 +99,13 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
   const [showHistory, setShowHistory] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isRequestingAudio, setIsRequestingAudio] = useState(false);
+  const [isProcessingAudio, setIsProcessingAudio] = useState(false);
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const recordingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const audioBusy = useRef(false);
   const scrollToEnd = useCallback((behavior: ScrollBehavior) => {
     const container = scrollContainer.current;
     container?.scrollTo({ top: container.scrollHeight, behavior });
@@ -193,7 +200,12 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
 
   useEffect(() => {
     mounted.current = true;
-    return () => { mounted.current = false; };
+    return () => {
+      mounted.current = false;
+      if (recordingTimer.current) clearTimeout(recordingTimer.current);
+      if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
+      streamRef.current?.getTracks().forEach(track => track.stop());
+    };
   }, []);
 
   useEffect(() => {
@@ -215,7 +227,7 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
   ];
 
   const startConversation = () => {
-    if (busy.current || isPastConversation) return;
+    if (busy.current || audioBusy.current || isPastConversation) return;
     try {
       localStorage.removeItem(storageKey);
       setMessages([]);
@@ -237,17 +249,17 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
     return () => cancelAnimationFrame(frame);
   }, [messages, isTyping, hasPending, isEditingProposal, scrollToEnd]);
 
-  const handleSend = async (text: string) => {
-    if (!text.trim() || busy.current || pending || !activeProfile || isPastConversation || dateStr !== formatDateStr(new Date())) return;
+  const handleSend = async (text: string, attachment?: AudioAttachment) => {
+    if ((!text.trim() && !attachment) || (audioBusy.current && !attachment) || busy.current || pending || !activeProfile || isPastConversation || dateStr !== formatDateStr(new Date())) return;
     busy.current = true;
 
     const now = new Date();
     const localTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    const userMsg: Message = { id: Date.now().toString(), role: 'user', text, localTime };
+    const userMsg: Message = { id: Date.now().toString(), role: 'user', text: attachment ? '🎤 Mensaje de voz' : text, localTime };
     const newHistory = [...messages, userMsg];
     
     setMessages(newHistory);
-    setInputValue('');
+    if (!attachment) setInputValue('');
     setIsTyping(true);
 
     try {
@@ -270,7 +282,7 @@ Registros de HOY: ${JSON.stringify({ meals: todayRecord?.meals || [], workouts: 
   steps: todayRecord?.steps || 0, water: todayRecord?.water || 0, weight: todayRecord?.weight ?? null })}.
 Sé conciso, directo, motivador, siempre en español y enfócate estrictamente en nutrición, salud y entrenamiento. No des explicaciones médicas complejas, sino consejos accionables.`;
 
-      const response = await generateAIResponse(newHistory, systemPrompt, todayStr);
+      const response = await generateAIResponse(newHistory, systemPrompt, todayStr, attachment);
       if (!mounted.current || dateStr !== formatDateStr(new Date())) return;
       const actions = validActions(response.actions, todayStr);
       const requestedActions = Array.isArray(response.actions) && response.actions.length > 0;
@@ -321,6 +333,99 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
     }
   };
 
+  const stopRecording = () => {
+    if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
+  };
+
+  const startRecording = async () => {
+    if (audioBusy.current || busy.current || pending || !activeProfile || isPastConversation) return;
+    if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+      toast.error('Este navegador no permite grabar audio. Podés escribir tu mensaje.');
+      return;
+    }
+    audioBusy.current = true;
+    setIsRequestingAudio(true);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      if (!mounted.current) {
+        stream.getTracks().forEach(track => track.stop());
+        return;
+      }
+      setIsRequestingAudio(false);
+      streamRef.current = stream;
+      const mimeType = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus']
+        .find(type => MediaRecorder.isTypeSupported?.(type));
+      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      recorderRef.current = recorder;
+      const chunks: Blob[] = [];
+      let failed = false;
+      recorder.ondataavailable = event => {
+        if (event.data.size) chunks.push(event.data);
+      };
+      recorder.onerror = () => {
+        failed = true;
+        if (mounted.current) toast.error('No se pudo grabar el audio. Intentá nuevamente.');
+        stream.getTracks().forEach(track => track.stop());
+        stopRecording();
+      };
+      recorder.onstop = async () => {
+        if (recordingTimer.current) clearTimeout(recordingTimer.current);
+        recordingTimer.current = null;
+        stream.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+        recorderRef.current = null;
+        if (!mounted.current) return;
+        setIsRecording(false);
+        if (failed) {
+          audioBusy.current = false;
+          return;
+        }
+        const blob = new Blob(chunks, { type: recorder.mimeType });
+        if (!blob.size) {
+          toast.error('La grabación está vacía. Intentá nuevamente.');
+          audioBusy.current = false;
+          return;
+        }
+        if (blob.size > 3 * 1024 * 1024) {
+          toast.error('El audio supera el límite de 3 MB. Grabá un mensaje más corto.');
+          audioBusy.current = false;
+          return;
+        }
+        setIsProcessingAudio(true);
+        try {
+          const data = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+            reader.onerror = () => reject(new Error('No se pudo procesar el audio.'));
+            reader.readAsDataURL(blob);
+          });
+          if (!data) throw new Error('El audio está vacío.');
+          if (mounted.current) {
+            setIsProcessingAudio(false);
+            await handleSend('🎤 Mensaje de voz', { kind: 'audio', mimeType: blob.type, data });
+          }
+        } catch {
+          if (mounted.current) toast.error('No se pudo procesar el audio. Intentá nuevamente.');
+        } finally {
+          audioBusy.current = false;
+          if (mounted.current) setIsProcessingAudio(false);
+        }
+      };
+      recorder.start();
+      setIsRecording(true);
+      recordingTimer.current = setTimeout(stopRecording, 60_000);
+    } catch {
+      streamRef.current?.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+      recorderRef.current = null;
+      audioBusy.current = false;
+      if (mounted.current) {
+        setIsRequestingAudio(false);
+        toast.error('No se pudo acceder al micrófono. Revisá los permisos e intentá nuevamente.');
+      }
+    }
+  };
+
   return (
     <div className="premium-view dark assistant-view flex flex-col flex-1 min-h-0 w-full max-w-3xl mx-auto bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
       
@@ -333,11 +438,11 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           <h2 className="font-bold text-lg text-slate-900 dark:text-white">Asistente Calori</h2>
           <p className="text-xs text-slate-500 dark:text-gray-400">Siempre activo para ayudarte</p>
         </div>
-        <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || !!pending}
+        <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || !!pending}
           aria-expanded={showHistory} className="chat-history-button text-xs font-medium disabled:opacity-50">
           Historial
         </button>
-        <button type="button" onClick={startConversation} disabled={isTyping || isPastConversation}
+        <button type="button" onClick={startConversation} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isPastConversation}
           className="ml-auto text-xs font-medium text-slate-500 dark:text-gray-400 hover:text-orange-500 disabled:opacity-50">
           Nueva conversación
         </button>
@@ -480,7 +585,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             <button
               key={i}
               onClick={() => handleSend(suggestion)}
-              disabled={isTyping || !!pending || !activeProfile}
+              disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || !!pending || !activeProfile}
               className="chat-suggestion flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] text-slate-700 dark:text-gray-300 hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 disabled:opacity-50 transition-colors whitespace-nowrap shadow-none"
             >
               {suggestion}
@@ -488,6 +593,12 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           ))}
         </div>
 
+        {(isRequestingAudio || isRecording || isProcessingAudio) && (
+          <p className="chat-audio-status text-xs mb-2" role="status">
+            {isRequestingAudio ? 'Solicitando acceso al micrófono…' : isRecording
+              ? 'Grabando… Tocá detener para enviar (máximo 60 segundos).' : 'Procesando audio…'}
+          </p>
+        )}
         <form 
           onSubmit={(e) => { e.preventDefault(); handleSend(inputValue); }}
           className="flex gap-2 relative"
@@ -497,14 +608,21 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onFocus={() => scrollToEnd('smooth')}
-            disabled={isTyping || !!pending || !activeProfile}
+            disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || !!pending || !activeProfile}
             placeholder="Escribe un mensaje..."
-            className="min-w-0 flex-1 bg-white dark:bg-[#1e2124] border border-slate-300 dark:border-[#ffffff0d] rounded-xl pl-4 pr-12 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#f5a064] dark:focus:border-[#f5a064] shadow-none disabled:opacity-50"
+            className="min-w-0 flex-1 bg-white dark:bg-[#1e2124] border border-slate-300 dark:border-[#ffffff0d] rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#f5a064] dark:focus:border-[#f5a064] shadow-none disabled:opacity-50"
           />
+          <button type="button" onClick={isRecording ? stopRecording : startRecording}
+            disabled={isRequestingAudio || isProcessingAudio || isTyping || !!pending || !activeProfile}
+            aria-label={isRecording ? 'Detener y enviar audio' : 'Grabar mensaje de voz'}
+            className={`chat-audio-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50 ${isRecording ? 'chat-audio-recording' : ''}`}>
+            {isRecording ? <Stop size={19} weight="fill" /> : <Microphone size={20} weight="fill" />}
+          </button>
           <button
             type="submit"
-            disabled={!inputValue.trim() || isTyping || !!pending || !activeProfile}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-[#f5a064] hover:bg-[#f8b17f] disabled:bg-slate-300 dark:disabled:bg-[#34383b] text-white rounded-xl transition-colors flex items-center justify-center"
+            disabled={!inputValue.trim() || isTyping || isRequestingAudio || isRecording || isProcessingAudio || !!pending || !activeProfile}
+            aria-label="Enviar mensaje"
+            className="p-2 bg-[#f5a064] hover:bg-[#f8b17f] disabled:bg-slate-300 dark:disabled:bg-[#34383b] text-white rounded-xl transition-colors flex items-center justify-center"
           >
             <PaperPlaneRight size={18} weight="fill" />
           </button>

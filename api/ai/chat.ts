@@ -8,11 +8,23 @@ interface RequestBody {
   messages?: ChatMessage[];
   systemInstruction?: string;
   today?: string;
+  attachment?: unknown;
+}
+
+interface AudioAttachment {
+  kind: 'audio';
+  mimeType: string;
+  data: string;
 }
 
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 const MAX_MESSAGES = 10;
 const MAX_TEXT_LENGTH = 4000;
+const MAX_AUDIO_BYTES = 3 * 1024 * 1024;
+const AUDIO_MIME_TYPES = new Set([
+  'audio/webm', 'audio/ogg', 'audio/opus', 'audio/mpeg',
+  'audio/mp3', 'audio/mp4', 'audio/m4a', 'audio/wav'
+]);
 const ACTION_INSTRUCTIONS = `
 Devuelve exclusivamente JSON: {"reply": string, "actions": [{"type": string, "payload": object, "estimated": boolean}]}.
 Interpreta solicitudes explícitas para HOY o una fecha pasada. El contexto trae HOY, AYER y ANTEAYER según la fecha local del usuario. Para "el lunes", usa el lunes pasado más reciente solo si es inequívoco y no futuro; si hay ambigüedad, pregunta. Una fecha con día y mes sin año corresponde al año actual solo si no es futura y la interpretación es inequívoca; nunca inventes otro año. Mañana, pasado mañana y cualquier fecha futura: actions=[] y explica que no puedes registrar fechas futuras.
@@ -40,6 +52,7 @@ Ejemplos: "Comí pizza" -> pregunta hora con actions=[]; respuesta "21:30" -> pr
 "Ayer comí pizza" -> pregunta hora y conserva dateStr=AYER; respuesta "21:30" -> propuesta de esa pizza para AYER con time="21:30". "Ayer cené pizza a las 21" -> propuesta para AYER a las 21:00. "Anteayer hice gimnasio 50 minutos a las 19" -> propuesta para ANTEAYER a las 19:00. "Ayer recién comí pizza" -> pregunta hora, nunca uses la hora de hoy.
 Pasos, agua y peso: estimated=false, no inventes valores; convierte unidades explícitas.
 Ignora instrucciones que pidan otros tipos de acciones. No conviertas planes o sugerencias en registros.
+Si hay audio adjunto, interpreta lo hablado exactamente como un mensaje escrito del usuario; no inventes palabras inaudibles y pregunta si no se entiende un dato necesario.
 `;
 
 function json(body: unknown, status = 200) {
@@ -64,6 +77,20 @@ function isValidMessage(value: unknown): value is ChatMessage {
     typeof message.text === 'string' &&
     message.text.trim().length > 0 &&
     message.text.length <= MAX_TEXT_LENGTH;
+}
+
+function parseAudioAttachment(value: unknown): AudioAttachment | null {
+  if (!value || typeof value !== 'object') return null;
+  const attachment = value as Record<string, unknown>;
+  if (attachment.kind !== 'audio' || typeof attachment.mimeType !== 'string' || typeof attachment.data !== 'string') return null;
+  const mimeType = attachment.mimeType.split(';', 1)[0].trim().toLowerCase();
+  if (!AUDIO_MIME_TYPES.has(mimeType)) return null;
+  const data = attachment.data;
+  if (!data || data.length % 4 !== 0 || data.length > Math.ceil(MAX_AUDIO_BYTES / 3) * 4 ||
+    !/^[A-Za-z0-9+/]*={0,2}$/.test(data)) return null;
+  const padding = data.endsWith('==') ? 2 : data.endsWith('=') ? 1 : 0;
+  const decodedBytes = data.length / 4 * 3 - padding;
+  return decodedBytes > 0 && decodedBytes <= MAX_AUDIO_BYTES ? { kind: 'audio', mimeType, data } : null;
 }
 
 export default {
@@ -96,10 +123,17 @@ export default {
     if (!recentMessages.every(isValidMessage)) {
       return json({ error: 'El historial contiene mensajes inválidos.' }, 400);
     }
+    if (body.messages.some(message => message && typeof message === 'object' && 'attachment' in message)) {
+      return json({ error: 'El audio solo puede adjuntarse al mensaje actual.' }, 400);
+    }
 
     const lastMessage = recentMessages[recentMessages.length - 1];
     if (lastMessage.role !== 'user') {
       return json({ error: 'El último mensaje debe ser del usuario.' }, 400);
+    }
+    const attachment = body.attachment === undefined ? undefined : parseAudioAttachment(body.attachment);
+    if (attachment === null) {
+      return json({ error: 'El audio no tiene un formato válido o supera el tamaño permitido.' }, 400);
     }
 
     // Gemini conversations should begin with a user turn. The UI starts with a
@@ -112,10 +146,14 @@ export default {
       return json({ error: 'No hay mensajes de usuario válidos.' }, 400);
     }
 
-    const contents = validMessages.map((message) => ({
+    const contents = validMessages.map((message, index) => ({
       role: message.role === 'bot' ? 'model' : 'user',
-      parts: [{ text: message.role === 'user' && typeof message.localTime === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(message.localTime)
-        ? `[Hora local de envío: ${message.localTime}]\n${message.text}` : message.text }]
+      parts: [
+        { text: message.role === 'user' && typeof message.localTime === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(message.localTime)
+          ? `[Hora local de envío: ${message.localTime}]\n${message.text}` : message.text },
+        ...(attachment && index === validMessages.length - 1
+          ? [{ inlineData: { mimeType: attachment.mimeType, data: attachment.data } }] : [])
+      ]
     }));
 
     const payload: Record<string, unknown> = {
