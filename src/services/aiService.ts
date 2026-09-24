@@ -1,6 +1,13 @@
 export interface ChatMessage {
   role: 'user' | 'bot';
   text: string;
+  localTime?: string;
+}
+
+export interface AudioAttachment {
+  kind: 'audio';
+  mimeType: string;
+  data: string;
 }
 
 export interface DataAction {
@@ -51,14 +58,20 @@ interface AIResponsePayload {
 export async function generateAIResponse(
   messages: ChatMessage[],
   systemInstruction: string,
-  today: string
+  today: string,
+  attachment?: AudioAttachment
 ): Promise<{ reply: string; actions: unknown }> {
   const response = await fetch('/api/ai/chat', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ messages, systemInstruction, today })
+    body: JSON.stringify({
+      messages: messages.map(({ role, text, localTime }) => ({ role, text, localTime })),
+      systemInstruction,
+      today,
+      ...(attachment ? { attachment } : {})
+    })
   });
 
   let payload: AIResponsePayload;
