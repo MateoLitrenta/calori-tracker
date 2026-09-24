@@ -4,7 +4,7 @@ import { PaperPlaneRight, Robot, User } from '@phosphor-icons/react';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
-import { generateAIResponse, validActions, type DataAction, type ChatMessage } from '../services/aiService';
+import { generateAIResponse, validActions, isValidDateStr, type DataAction, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
@@ -129,15 +129,21 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
     }
   };
 
+  const describeDate = (actionDate: string) =>
+    new Date(`${actionDate}T12:00:00`).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
+
   const applyActions = async (actions: DataAction[], actionDate: string) => {
-    if (!mounted.current || !activeProfile || isPastConversation || dateStr !== formatDateStr(new Date()) || actionDate !== dateStr) {
-      throw new Error('La fecha cambió. Pedime registrar los datos de hoy nuevamente.');
+    const currentToday = formatDateStr(new Date());
+    if (!mounted.current || !activeProfile || isPastConversation || dateStr !== currentToday ||
+      !isValidDateStr(actionDate) || actionDate > currentToday) {
+      throw new Error('La fecha cambió o no es válida. Pedime registrar los datos nuevamente.');
     }
-    if (validActions(actions, dateStr).length !== actions.length) {
+    if (validActions(actions, currentToday).length !== actions.length ||
+      actions.some(action => action.payload.dateStr !== actionDate)) {
       throw new Error('Revisá los datos obligatorios antes de confirmar.');
     }
-    const base = activeProfile.records[dateStr] || {
-      dateStr, date: new Date(), meals: [], workouts: [], steps: 0, water: 0,
+    const base = activeProfile.records[actionDate] || {
+      dateStr: actionDate, date: new Date(`${actionDate}T12:00:00`), meals: [], workouts: [], steps: 0, water: 0,
     };
     const record: DailyRecord = { ...base, meals: [...base.meals], workouts: [...base.workouts] };
     for (const a of actions) {
@@ -157,15 +163,16 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
         case 'set_weight': record.weight = p.weight as number; break;
       }
     }
-    if (!await updateRecord(dateStr, record)) {
-      throw new Error('No se pudo completar el guardado. Revisá los registros de hoy antes de reintentar.');
+    if (!await updateRecord(actionDate, record)) {
+      throw new Error('No se pudo completar el guardado. Revisá los registros de esa fecha antes de reintentar.');
     }
-    appendReply(`Registrado hoy: ${actions.map(describeAction).join('; ')}.`);
+    appendReply(`Registrado ${actionDate === currentToday ? 'hoy' : `el ${describeDate(actionDate)}`}: ${actions.map(describeAction).join('; ')}.`);
   };
 
   const confirmActions = async () => {
     if (!pending || busy.current) return;
-    if (validActions(pending.actions, pending.dateStr).length !== pending.actions.length) {
+    if (validActions(pending.actions, formatDateStr(new Date())).length !== pending.actions.length ||
+      pending.actions.some(action => action.payload.dateStr !== pending.dateStr)) {
       toast.error('Revisá nombre/actividad, tipo, calorías, hora y duración. Los valores numéricos deben ser positivos.');
       setIsEditingProposal(true);
       return;
@@ -246,11 +253,15 @@ function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelec
     try {
       // Build Dynamic Context
       const todayStr = formatDateStr(now);
+      const yesterdayStr = formatDateStr(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1));
+      const dayBeforeStr = formatDateStr(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 2));
       const todayRecord = activeProfile?.records?.[todayStr];
       if (!activeProfile) throw new Error('Esperá a que se cargue tu perfil para consultar al asistente.');
       const systemPrompt = `Eres el asistente nutricional de la app Calori Tracker.
 ${buildDailyEnergyContext(activeProfile, todayRecord)}
 HOY: ${todayStr}.
+AYER: ${yesterdayStr}.
+ANTEAYER: ${dayBeforeStr}.
 HORA LOCAL ACTUAL: ${localTime}.
 DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.
 Perfil: ${JSON.stringify({ name: activeProfile.name, age: activeProfile.age, sex: activeProfile.sex,
@@ -259,15 +270,21 @@ Registros de HOY: ${JSON.stringify({ meals: todayRecord?.meals || [], workouts: 
   steps: todayRecord?.steps || 0, water: todayRecord?.water || 0, weight: todayRecord?.weight ?? null })}.
 Sé conciso, directo, motivador, siempre en español y enfócate estrictamente en nutrición, salud y entrenamiento. No des explicaciones médicas complejas, sino consejos accionables.`;
 
-      const response = await generateAIResponse(newHistory, systemPrompt);
+      const response = await generateAIResponse(newHistory, systemPrompt, todayStr);
       if (!mounted.current || dateStr !== formatDateStr(new Date())) return;
       const actions = validActions(response.actions, todayStr);
       const requestedActions = Array.isArray(response.actions) && response.actions.length > 0;
       const proposals = actions.filter(a => a.type === 'add_meal' || a.type === 'add_workout');
       const direct = actions.filter(a => a.type !== 'add_meal' && a.type !== 'add_workout');
+      const rejected = requestedActions ? response.actions as DataAction[] : [];
       const replyText = requestedActions && !actions.length
-        ? 'Por ahora solo puedo registrar datos de hoy. Decime qué querés registrar para hoy.'
-        : response.reply.replace(/(registré|guardé|cargué|anoté|actualicé)/gi, 'puedo ayudarte a registrar');
+        ? rejected.some(a => isValidDateStr(a?.payload?.dateStr) && a.payload.dateStr > todayStr)
+          ? 'Puedo registrar comidas y entrenamientos de hoy o de fechas pasadas, pero no futuras.'
+          : rejected.some(a => isValidDateStr(a?.payload?.dateStr) && a.payload.dateStr < todayStr &&
+            (a.type === 'set_steps' || a.type === 'add_water' || a.type === 'set_weight'))
+            ? 'Por ahora solo puedo registrar agua, pasos y peso del día actual.'
+            : 'Revisá la fecha y los datos necesarios para registrar la comida o el entrenamiento.'
+        : response.reply.replace(/\b(registré|guardé|cargué|anoté|actualicé)\b/gi, 'puedo ayudarte a registrar');
       
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
@@ -277,8 +294,13 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
       setMessages(prev => [...prev, botMsg]);
       if (direct.length) await applyActions(direct, todayStr);
       if (mounted.current && proposals.length) {
-        setIsEditingProposal(false);
-        setPending({ dateStr: todayStr, actions: proposals });
+        const proposalDate = proposals[0].payload.dateStr as string;
+        if (proposals.every(action => action.payload.dateStr === proposalDate)) {
+          setIsEditingProposal(false);
+          setPending({ dateStr: proposalDate, actions: proposals });
+        } else {
+          appendReply('Indicame una fecha por vez para confirmar esos registros.');
+        }
       }
     } catch (error) {
       if (!mounted.current) return;
@@ -343,7 +365,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
       <div className="chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4">
         {pending && (
           <div className="chat-confirmation order-last rounded-xl border border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/20 p-4 text-sm">
-            <p className="font-semibold mb-2">Confirmar registros de hoy</p>
+            <p className="font-semibold mb-2">Confirmar registros del {describeDate(pending.dateStr)}</p>
             {pending.actions.map((action, index) => (
               <div key={index} className="mb-3">
                 {isEditingProposal ? (
@@ -385,6 +407,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
                   </div>
                 ) : (
                   <>
+                    <p className="font-medium">{describeDate(action.payload.dateStr as string)}</p>
                     <p>{describeAction(action)}{action.estimated ? ' (estimado)' : ''}</p>
                     {typeof action.payload.details === 'string' && <p className="whitespace-pre-wrap">{action.payload.details}</p>}
                     {action.payload.distance !== undefined && <p>Distancia: {String(action.payload.distance)} km</p>}
@@ -420,7 +443,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
                 <Robot size={16} className="text-orange-600 dark:text-orange-400" weight="fill" />
               )}
             </div>
-            <div className={`chat-bubble ${msg.role === 'bot' && msg.text.startsWith('Registrado hoy:') ? 'chat-saved' : ''} px-4 py-3 rounded-3xl text-sm shadow-none ${
+            <div className={`chat-bubble ${msg.role === 'bot' && msg.text.startsWith('Registrado ') ? 'chat-saved' : ''} px-4 py-3 rounded-3xl text-sm shadow-none ${
               msg.role === 'user' 
                 ? 'chat-user text-white rounded-tr-sm whitespace-pre-wrap' 
                 : 'bg-slate-100 text-slate-900 dark:bg-[#191c1f] dark:text-gray-100 rounded-tl-sm border border-slate-200 dark:border-[#ffffff0d]'
