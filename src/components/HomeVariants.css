@@ -76,16 +76,17 @@
 .home-variants .daily-habits > div:nth-child(1) svg { color: #67d8f5; }
 .home-variants .daily-habits > div:nth-child(2) svg { color: #70d394; }
 .home-variants .daily-habits > div:nth-child(3) svg { color: #ee8ab4; }
-.home-variants .daily-logs { margin-top: 4px; border: 0; border-radius: var(--home-radius-panel); background: transparent; }
-.home-variants .daily-logs h4 { font-size: 15px; font-weight: 500; letter-spacing: -.01em; }
-.home-variants .daily-logs li { background: var(--home-card); border: 0; border-radius: var(--home-radius-widget); padding: 16px; gap: 12px; }
+.home-variants .daily-logs { margin-top: 0; padding: 16px; border: 1px solid var(--home-line); border-radius: var(--home-radius-panel); background: var(--home-card); box-shadow: none; }
+.home-variants .daily-logs h4 { font-size: 16px; font-weight: 600; letter-spacing: -.02em; }
+.home-variants .daily-logs li { background: var(--home-control); border: 0; border-radius: var(--home-radius-widget); padding: 12px 16px; gap: 8px; }
 .home-variants .daily-logs li:hover { background: #272b2f; }
 .home-variants .daily-logs li + li { border-color: var(--home-line); }
 
 .home-variants .daily-panel { gap: 24px; }
 .home-variants .daily-habits .uppercase { text-transform: none; letter-spacing: 0; font-size: 11px; font-weight: 400; }
 .home-variants .daily-habits .text-lg { font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
-.home-variants .daily-logs > div:first-child { background: transparent; border: 0; padding: 4px 4px 16px; }
+.home-variants .daily-logs > div:first-child { background: transparent; border: 0; padding: 0 0 12px; }
+.home-variants .daily-logs .daily-logs-empty { padding: 12px 8px 4px; font-size: 13px; line-height: 1.5; }
 .home-variants .daily-logs ul { display: flex; flex-direction: column; gap: 12px; }
 .home-variants .daily-logs li > div:first-child { font-size: 14px; font-weight: 500; line-height: 1.5; }
 .home-variants .daily-logs li > div:last-child { opacity: 1; font-size: 11px; }
@@ -115,7 +116,7 @@ html:not(.dark) .home-variants {
 html:not(.dark) .home-variants :is([class~="bg-white"], [class~="bg-slate-50"], [class~="bg-slate-100"]) { background-color: var(--home-card); }
 html:not(.dark) .home-variants :is([class~="text-slate-900"], [class~="text-slate-700"]) { color: var(--home-text); }
 html:not(.dark) .home-variants :is([class~="text-slate-500"], [class~="text-slate-600"]) { color: var(--home-muted); }
-html:not(.dark) .home-variants .daily-logs li { background: var(--home-card); }
+html:not(.dark) .home-variants .daily-logs li { background: var(--home-control); }
 html:not(.dark) .home-variants .daily-logs li:hover { background: #f1f2f3; }
 html:not(.dark) .home-header { background: #ffffff; border-color: #1f293714; }
 html:not(.dark) .home-variants :is([class~="bg-slate-200"], [class~="bg-[#2d333b]"]) { background-color: #e5e7eb; }
@@ -153,4 +154,70 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
   .home-variants .daily-habits > div:nth-child(2) > div:nth-child(2) > span { display: none; }
   .home-variants .daily-habits input { max-width: 100%; }
   .home-variants .daily-quick-actions button { padding: 8px 4px; font-size: 11px; }
+}
+
+.home-variants .activity-history {
+  min-width: 0;
+  padding: 24px;
+  gap: 16px;
+  border: 1px solid var(--home-line);
+  border-radius: var(--home-radius-panel);
+  background: var(--home-card);
+  box-shadow: none;
+}
+.home-variants .activity-history h2 { font-size: 18px; font-weight: 600; letter-spacing: -.02em; }
+.home-variants .activity-history > div:nth-child(2) { min-width: 0; }
+.home-variants .activity-history .period-switch {
+  min-width: 0;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--home-line);
+  border-radius: var(--home-radius-widget);
+  background: var(--home-bg);
+}
+.home-variants .activity-history .period-switch button {
+  min-width: 0;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: var(--home-radius-control);
+  background: transparent;
+  color: var(--home-muted);
+  box-shadow: none;
+}
+.home-variants .activity-history .period-switch button[aria-pressed="true"] {
+  background: var(--home-card);
+  color: var(--home-orange);
+}
+.home-variants .activity-history .period-switch button:hover:not([aria-pressed="true"]) {
+  background: var(--home-hover);
+  color: var(--home-text);
+}
+.home-variants .activity-history .period-switch button:active { background: var(--home-hover); }
+.home-variants .activity-history button:focus-visible { outline: 2px solid var(--home-orange); outline-offset: 2px; }
+.home-variants .activity-history .heatmap-cell { border-radius: 5px; }
+.home-variants .activity-history .heatmap-cell.scale-125 { transform: scale(1.08); }
+.home-variants .activity-history .heatmap-cell[title*="Gimnasio"] { filter: none; }
+.home-variants .activity-history .heatmap-cell:is(.ring-blue-500, .ring-white) { --tw-ring-color: var(--home-orange); }
+.home-variants .activity-legend {
+  justify-content: flex-start;
+  gap: 8px 16px;
+  margin-top: 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--home-muted);
+}
+.home-variants .activity-legend-empty,
+.home-variants .activity-legend-scale { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.home-variants .activity-legend-empty { margin-right: 0; }
+.home-variants .activity-legend :is(.activity-legend-empty, .activity-legend-scale) [class~="w-3"] { border-radius: 5px; }
+html:not(.dark) .home-variants .daily-logs,
+html:not(.dark) .home-variants .activity-history { background: #ffffff; border-color: #e2e8f0; }
+html:not(.dark) .home-variants .activity-history .period-switch { background: #f8f7f4; border-color: #e2e8f0; }
+html:not(.dark) .home-variants .activity-history .period-switch button[aria-pressed="true"] { background: #ffffff; color: #9a4d1f; }
+@media (max-width: 639px) {
+  .home-variants .activity-history { padding: 16px; gap: 12px; }
+  .home-variants .activity-history > div:first-child { gap: 12px; }
+  .home-variants .activity-history .period-switch { align-self: stretch; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .home-variants .activity-history .period-switch button { padding: 8px 4px; }
+  .home-variants .activity-legend { gap: 8px 12px; }
 }
