@@ -1,7 +1,7 @@
 import './PremiumViews.css';
 import { useState, useRef, useEffect, useCallback, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
-import { ImageSquare, Microphone, PaperPlaneRight, Robot, User, X } from '@phosphor-icons/react';
+import { ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, Robot, User, X } from '@phosphor-icons/react';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
@@ -702,17 +702,19 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
           <Robot size={24} weight="fill" />
         </div>
         <div>
-          <h2 className="font-bold text-lg text-slate-900 dark:text-white">Asistente Calori</h2>
-          <p className="text-xs text-slate-500 dark:text-gray-400">Siempre activo para ayudarte</p>
+          <h2 className="font-bold text-lg text-slate-900 dark:text-white"><span className="chat-title-desktop">Asistente Calori</span><span className="chat-title-mobile">Calori</span></h2>
+          <p className="text-xs text-slate-500 dark:text-gray-400"><span className="chat-title-desktop">Siempre activo para ayudarte</span><span className="chat-title-mobile">Asistente personal</span></p>
         </div>
-        <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pending}
-          aria-expanded={showHistory} className="chat-history-button text-xs font-medium disabled:opacity-50">
-          Historial
-        </button>
-        <button type="button" onClick={startConversation} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || isPastConversation}
-          className="ml-auto text-xs font-medium text-slate-500 dark:text-gray-400 hover:text-orange-500 disabled:opacity-50">
-          Nueva conversación
-        </button>
+        <div className="chat-heading-actions ml-auto flex items-center gap-1">
+          <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pending}
+            aria-label="Historial" aria-expanded={showHistory} className="chat-history-button text-xs font-medium disabled:opacity-50">
+            <ClockCounterClockwise className="chat-action-icon" size={19} aria-hidden="true" /><span>Historial</span>
+          </button>
+          <button type="button" onClick={startConversation} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || isPastConversation}
+            aria-label="Nueva conversación" className="text-xs font-medium text-slate-500 dark:text-gray-400 hover:text-orange-500 disabled:opacity-50">
+            <Plus className="chat-action-icon" size={19} aria-hidden="true" /><span>Nueva conversación</span>
+          </button>
+        </div>
       </div>
 
       {showHistory && (
@@ -886,7 +888,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
         )}
         <form 
           onSubmit={(e) => { e.preventDefault(); void sendComposer(); }}
-          className="flex items-center gap-2 relative"
+          className="chat-composer-form flex items-center gap-2 relative"
         >
           <textarea
             ref={textInputRef}
