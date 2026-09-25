@@ -10,6 +10,7 @@ export const useAppStore = () => {
   const [user, setUser] = useState<User | null>(null);
   const [activeProfile, setActiveProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [avatarRevision, setAvatarRevision] = useState(0);
 
   // Auth & Initial Data Load
   useEffect(() => {
@@ -59,11 +60,29 @@ export const useAppStore = () => {
     return () => { isMounted = false; };
   }, [user]);
 
+  useEffect(() => {
+    if (!user) return;
+    const onAvatarUpdated = (event: Event) => {
+      const { userId, path } = (event as CustomEvent<{ userId: string; path: string | null }>).detail;
+      if (userId !== user.id) return;
+      setActiveProfile(prev => prev?.user_id === userId ? { ...prev, avatar_path: path } : prev);
+      setAvatarRevision(value => value + 1);
+    };
+    window.addEventListener('calori-avatar-updated', onAvatarUpdated);
+    return () => window.removeEventListener('calori-avatar-updated', onAvatarUpdated);
+  }, [user]);
+
   const updateProfile = async (updated: UserProfile) => {
     await db.syncProfile(updated);
     setActiveProfile(prev => prev && prev.id === updated.id
       ? { ...prev, ...updated, activity: normalizeActivityLevel(updated.activity), records: prev.records }
       : prev);
+  };
+
+  const updateAvatarPath = async (path: string | null) => {
+    if (!user || !activeProfile || activeProfile.user_id !== user.id) throw new Error('No hay un perfil activo');
+    await db.syncAvatarPath(user.id, path);
+    window.dispatchEvent(new CustomEvent('calori-avatar-updated', { detail: { userId: user.id, path } }));
   };
 
   const updateRecord = async (dateStr: string, record: DailyRecord) => {
@@ -146,8 +165,10 @@ export const useAppStore = () => {
   return {
     user,
     activeProfile,
+    avatarRevision,
     loading,
     updateProfile,
+    updateAvatarPath,
     updateRecord,
     resetData,
     signOut

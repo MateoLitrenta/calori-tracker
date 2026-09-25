@@ -1,7 +1,8 @@
 import './PremiumViews.css';
 import { useState, useRef, useEffect, useCallback, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
-import { ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, User, X } from '@phosphor-icons/react';
+import { ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, X } from '@phosphor-icons/react';
+import UserAvatar from './UserAvatar';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
@@ -99,7 +100,7 @@ function blobToBase64(blob: Blob): Promise<string> {
 }
 
 export default function ChatView({ scrollContainer }: { scrollContainer: RefObject<HTMLElement | null> }) {
-  const { user, activeProfile, updateRecord } = useAppStore();
+  const { user, activeProfile, avatarRevision, updateRecord } = useAppStore();
   const [today, setToday] = useState(() => formatDateStr(new Date()));
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   useEffect(() => {
@@ -126,12 +127,13 @@ export default function ChatView({ scrollContainer }: { scrollContainer: RefObje
   }, [today]);
   if (!user) return null;
   const dateStr = selectedDate ?? today;
-  return <UserChat key={`${user.id}:${today}:${dateStr}`} userId={user.id} activeProfile={activeProfile}
+  return <UserChat key={`${user.id}:${today}:${dateStr}`} userId={user.id} activeProfile={activeProfile} avatarRevision={avatarRevision}
     updateRecord={updateRecord} dateStr={dateStr} today={today} onSelectDate={setSelectedDate} scrollContainer={scrollContainer} />;
 }
 
-function UserChat({ userId, activeProfile, updateRecord, dateStr, today, onSelectDate, scrollContainer }: {
+function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr, today, onSelectDate, scrollContainer }: {
   userId: string; activeProfile: UserProfile | null;
+  avatarRevision: number;
   updateRecord: (dateStr: string, record: DailyRecord) => Promise<boolean>;
   dateStr: string; today: string; onSelectDate: (date: string) => void;
   scrollContainer: RefObject<HTMLElement | null>;
@@ -808,9 +810,10 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
         )}
         {messages.map((msg) => (
           <div key={msg.id} className={`flex gap-3 min-w-0 max-w-[95%] md:max-w-[80%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
-            <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center ${msg.role === 'user' ? 'rounded-full bg-slate-200 dark:bg-gray-800' : ''}`}>
+            <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center">
               {msg.role === 'user' ? (
-                <User size={16} className="text-slate-600 dark:text-gray-300" weight="fill" />
+                <UserAvatar userId={userId} path={activeProfile?.user_id === userId ? activeProfile.avatar_path : null}
+                  revision={avatarRevision} size={32} />
               ) : (
                 <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-message" />
               )}

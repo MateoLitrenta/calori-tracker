@@ -39,6 +39,7 @@ export type DailyRecordsMap = Record<string, DailyRecord>;
 export interface UserProfile {
   id: string;
   user_id?: string;
+  avatar_path?: string | null;
   name: string;
   age: number;
   sex: UserSex;

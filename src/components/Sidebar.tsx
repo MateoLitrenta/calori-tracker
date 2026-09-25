@@ -1,6 +1,7 @@
 import { House, ChatCircle, ChartBar, User, SignOut } from '@phosphor-icons/react';
 import ThemeToggle from './ThemeToggle';
 import { useAppStore } from '../hooks/useAppStore';
+import UserAvatar from './UserAvatar';
 import type { Tab } from './BottomNav';
 
 interface SidebarProps {
@@ -10,7 +11,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarProps) {
-  const { user, activeProfile, signOut } = useAppStore();
+  const { user, activeProfile, avatarRevision, signOut } = useAppStore();
 
   const navItems = [
     { id: 'home', label: 'Inicio', icon: House },
@@ -63,12 +64,12 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
         {user ? (
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0">
-                <User size={20} className="text-slate-500 dark:text-gray-400" />
-              </div>
+              <UserAvatar userId={user.id}
+                path={activeProfile?.user_id === user.id ? activeProfile.avatar_path : null}
+                revision={avatarRevision} size={40} />
               <div className="flex flex-col overflow-hidden">
                 <span className="text-sm font-bold text-slate-900 dark:text-white truncate">
-                  {activeProfile?.name || 'Usuario'}
+                  {activeProfile?.user_id === user.id ? activeProfile.name : 'Usuario'}
                 </span>
                 <span className="text-xs text-slate-500 dark:text-gray-400 truncate">
                   {user.email}

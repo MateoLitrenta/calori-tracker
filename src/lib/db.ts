@@ -67,6 +67,8 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
 
     return {
       id: profile.id,
+      user_id: userId,
+      avatar_path: profile.avatar_path ?? null,
       name: profile.name,
       age: profile.age,
       sex: profile.gender as any,
@@ -128,6 +130,15 @@ export const syncProfile = async (p: UserProfile) => {
     console.error('Error syncing profile:', error);
     throw error;
   }
+};
+
+export const syncAvatarPath = async (userId: string, avatarPath: string | null) => {
+  const { data, error } = await supabase.from('profiles')
+    .update({ avatar_path: avatarPath })
+    .or(`id.eq.${userId},user_id.eq.${userId}`)
+    .select('id')
+    .single();
+  if (error || !data) throw error ?? new Error('No se pudo actualizar la foto del perfil');
 };
 
 export const ensureDailyLog = async (userId: string, record: DailyRecord) => {
