@@ -5,15 +5,15 @@
   --home-text: #f1f0ec;
   --home-muted: #a9abae;
   --home-orange: #f5a064;
-  --home-radius-panel: 24px;
-  --home-radius-widget: 18px;
-  --home-radius-control: 14px;
+  --home-radius-panel: var(--radius-panel);
+  --home-radius-widget: var(--radius-widget);
+  --home-radius-control: var(--radius-control);
   --home-control: #ffffff06;
   --home-hover: #ffffff0d;
   background: var(--home-bg);
   color: var(--home-text);
   padding: clamp(12px, 3vw, 32px);
-  border-radius: 24px;
+  border-radius: var(--radius-panel);
   color-scheme: dark;
 }
 .home-variants button:focus-visible, .home-variants summary:focus-visible { outline: 2px solid var(--home-orange); outline-offset: 4px; }
@@ -32,12 +32,12 @@
 .home-variants .daily-heading { border: 0; padding-bottom: 0; gap: 12px; }
 .home-variants .daily-heading h3 { font-size: 19px; font-weight: 600; letter-spacing: -.025em; }
 .home-variants .daily-heading > span { font-size: 11px; text-align: right; }
-.home-variants .energy-card { padding: clamp(20px, 4vw, 36px); padding-top: 36px; gap: 32px; border: 0; border-radius: 24px; box-shadow: none; }
+.home-variants .energy-card { padding: clamp(20px, 4vw, 36px); padding-top: 36px; gap: 32px; border: 0; border-radius: var(--radius-panel); box-shadow: none; }
 .home-variants .energy-headline { width: 100%; }
 .home-variants .energy-headline > div:first-child { font-size: 12px; letter-spacing: .01em; font-weight: 400; }
 .home-variants .energy-headline > div:first-child svg { display: none; }
 .home-variants .energy-number { font-size: clamp(36px, 7vw, 66px); line-height: 1.15; letter-spacing: -.055em; font-weight: 500; margin: 12px 0; }
-.home-variants .energy-status { background: #f69b5912; color: var(--home-orange); padding: 4px 12px; font-size: 12px; border-radius: 999px; }
+.home-variants .energy-status { background: #f69b5912; color: var(--home-orange); padding: 4px 12px; font-size: 12px; border-radius: var(--radius-pill); }
 .home-variants .energy-metrics { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px 16px; align-items: start; border: 0; padding-top: 0; margin-top: 0; }
 .home-variants .energy-metrics > div:first-child,
 .home-variants .energy-metrics > div:last-child { display: contents; }
@@ -80,6 +80,9 @@
 .home-variants .daily-logs h4 { font-size: 16px; font-weight: 600; letter-spacing: -.02em; }
 .home-variants .daily-logs li { background: var(--home-control); border: 0; border-radius: var(--home-radius-widget); padding: 12px 16px; gap: 8px; }
 .home-variants .daily-logs li:hover { background: #272b2f; }
+.home-variants .record-detail-modal { border-radius: var(--radius-panel); }
+.home-variants :is(.record-detail-details, .record-detail-meta) { border-radius: var(--radius-widget); }
+.home-variants :is(.record-detail-edit, .record-detail-modal button) { border-radius: var(--radius-control); }
 .home-variants .daily-logs li + li { border-color: var(--home-line); }
 
 .home-variants .daily-panel { gap: 24px; }
@@ -94,13 +97,13 @@
 .home-header {
   margin: 10px 12px 0;
   border: 1px solid #ffffff0d;
-  border-radius: 18px;
+  border-radius: var(--radius-panel);
   padding: 12px 16px;
   background: #1e2124;
 }
-.home-header > div:first-child > div:first-child { background: #f5a06416; border-radius: 12px; }
+.home-header > div:first-child > div:first-child { background: #f5a06416; border-radius: var(--radius-control); }
 .home-header h1 { font-size: 16px; letter-spacing: -.02em; }
-.home-header button { border-radius: 10px; }
+.home-header button { border-radius: var(--radius-control); }
 html:not(.dark) .home-variants {
   --home-bg: #f8f7f4;
   --home-card: #ffffff;

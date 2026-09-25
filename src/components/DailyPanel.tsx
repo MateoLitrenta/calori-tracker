@@ -90,13 +90,17 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   };
 
   const handleAddWater = (amount: number) => {
-    const newWater = Math.max(0, currentRecord.water + amount);
-    onUpdateRecord(dateStr, { ...currentRecord, water: newWater });
+    const newWater = Math.max(0, waterValueRef.current + amount);
+    waterValueRef.current = newWater;
+    setLocalWater(newWater);
+    scheduleWaterSave(newWater);
   };
 
   const handleSetWater = (amount: number) => {
     const newWater = Math.max(0, amount);
-    onUpdateRecord(dateStr, { ...currentRecord, water: newWater });
+    waterValueRef.current = newWater;
+    setLocalWater(newWater);
+    scheduleWaterSave(newWater);
   };
 
   const handleSetWeight = (weight: number) => {
@@ -193,14 +197,62 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       document.removeEventListener('click', handleClickOutside as EventListener);
     };
   }, [activeTab]);
+  const [localWater, setLocalWater] = useState(currentRecord.water);
+  const waterValueRef = useRef(currentRecord.water);
+  const waterDateRef = useRef(dateStr);
+  const latestRecordsRef = useRef(records);
+  useEffect(() => {
+    latestRecordsRef.current = records;
+  }, [records]);
+  const waterSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scheduleWaterSave = (water: number) => {
+    if (waterSaveTimerRef.current) clearTimeout(waterSaveTimerRef.current);
+    const saveDate = dateStr;
+    const fallbackRecord = currentRecord;
+    waterSaveTimerRef.current = setTimeout(() => {
+      const latestRecord = latestRecordsRef.current?.[saveDate] || fallbackRecord;
+      const pendingSteps = stepsSaveTimerRef.current && saveDate === stepsDateRef.current ? stepsValueRef.current : undefined;
+      if (stepsSaveTimerRef.current && pendingSteps !== undefined) {
+        clearTimeout(stepsSaveTimerRef.current);
+        stepsSaveTimerRef.current = null;
+      }
+      onUpdateRecord(saveDate, { ...latestRecord, ...(pendingSteps !== undefined ? { steps: pendingSteps } : {}), water });
+      waterSaveTimerRef.current = null;
+    }, 400);
+  };
+
+  useEffect(() => {
+    if (waterDateRef.current !== dateStr) {
+      waterDateRef.current = dateStr;
+      waterValueRef.current = currentRecord.water;
+      setLocalWater(currentRecord.water);
+    } else if (!waterSaveTimerRef.current && waterValueRef.current !== currentRecord.water) {
+      waterValueRef.current = currentRecord.water;
+      setLocalWater(currentRecord.water);
+    }
+  }, [dateStr, currentRecord.water]);
+  useEffect(() => () => {
+    if (waterSaveTimerRef.current) clearTimeout(waterSaveTimerRef.current);
+  }, []);
+
   const [localSteps, setLocalSteps] = useState(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
   const stepsInputRef = useRef<HTMLInputElement>(null);
   const stepsValueRef = useRef(currentRecord.steps);
+  const stepsDateRef = useRef(dateStr);
   const stepsSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scheduleStepsSave = (steps: number) => {
     if (stepsSaveTimerRef.current) clearTimeout(stepsSaveTimerRef.current);
+    const saveDate = dateStr;
+    stepsDateRef.current = saveDate;
+    const fallbackRecord = currentRecord;
     stepsSaveTimerRef.current = setTimeout(() => {
-      onUpdateRecord(dateStr, { ...currentRecord, steps });
+      const latestRecord = latestRecordsRef.current?.[saveDate] || fallbackRecord;
+      const pendingWater = waterSaveTimerRef.current && saveDate === waterDateRef.current ? waterValueRef.current : undefined;
+      if (waterSaveTimerRef.current && pendingWater !== undefined) {
+        clearTimeout(waterSaveTimerRef.current);
+        waterSaveTimerRef.current = null;
+      }
+      onUpdateRecord(saveDate, { ...latestRecord, ...(pendingWater !== undefined ? { water: pendingWater } : {}), steps });
       stepsSaveTimerRef.current = null;
     }, 400);
   };
@@ -385,12 +437,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <button type="button"
                     className="habit-value cursor-pointer hover:text-cyan-400 transition-colors"
                     onClick={() => {
-                      setEditWaterVal(currentRecord.water ? String(currentRecord.water) : '');
+                      setEditWaterVal(localWater ? String(localWater) : '');
                       setIsEditingWater(true);
                     }}
                     title="Editar cantidad"
                   >
-                    {currentRecord.water.toLocaleString('es-AR')}
+                    {localWater.toLocaleString('es-AR')}
                   </button>
                 )}
                 <span className="text-[10px] font-normal text-slate-500 dark:text-gray-400 mt-0.5">ml</span>

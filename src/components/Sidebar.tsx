@@ -23,7 +23,7 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
     <aside className="hidden md:flex flex-col w-64 border-r border-slate-200 dark:border-white/5 bg-white dark:bg-[#1e2124] p-6 justify-between flex-shrink-0 h-full overflow-y-auto">
       <div>
         <div className="flex items-center gap-3 mb-10">
-          <div className="p-2 bg-[#f5a06416] rounded-xl">
+          <div className="p-2 bg-[#f5a06416] rounded-[var(--radius-control)]">
             <Fire size={32} weight="fill" className="text-orange-500" />
           </div>
           <div>
@@ -39,7 +39,7 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
                 <button
                   key={id}
                   onClick={() => onTabChange(id)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-[var(--radius-control)] font-medium transition-colors ${
                     isActive
                       ? 'bg-orange-500/10 text-orange-600 dark:text-orange-500'
                       : 'text-slate-500 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-[#0f141c] hover:text-slate-900 dark:hover:text-white'
@@ -79,7 +79,7 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
             </div>
             <button
               onClick={signOut}
-              className="flex items-center gap-2 px-3 py-2 mt-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors"
+              className="flex items-center gap-2 px-3 py-2 mt-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-[var(--radius-control)] transition-colors"
             >
               <SignOut size={18} />
               Cerrar Sesión
@@ -88,7 +88,7 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
         ) : (
           <button
             onClick={onAuthOpen}
-            className="flex items-center justify-center w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium text-sm transition-colors"
+            className="flex items-center justify-center w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-[var(--radius-control)] font-medium text-sm transition-colors"
           >
             Ingresar / Registrarse
           </button>
