@@ -9,6 +9,24 @@
   --radius-pill: 999px;
 }
 
+.brand-symbol {
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  object-fit: contain;
+  object-position: center;
+  border-radius: var(--radius-control);
+  background: #151719;
+}
+.brand-symbol-sidebar { width: 48px; height: 48px; }
+.brand-symbol-assistant, .brand-symbol-modal { width: 40px; height: 40px; }
+.brand-symbol-auth { width: 72px; height: 72px; border-radius: var(--radius-widget); }
+.brand-symbol-message { width: 32px; height: 32px; }
+@media (max-width: 640px) {
+  .brand-symbol-assistant { width: 36px; height: 36px; }
+}
+
 @layer base {
   body {
     @apply bg-slate-100 text-slate-900 dark:bg-[#0f141c] dark:text-white min-h-screen m-0 p-0 antialiased transition-colors duration-200;

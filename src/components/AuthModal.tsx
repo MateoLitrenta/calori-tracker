@@ -72,7 +72,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
   return (
     <div className="auth-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
       <div className="auth-modal w-full max-w-md flex flex-col overflow-hidden">
-        
+        <div className="flex shrink-0 items-center gap-3 px-5 pt-5 sm:px-6">
+          <img src="/brand/calori-logo-symbol-dark.png" alt="" className="brand-symbol brand-symbol-modal" />
+          <span className="text-lg font-semibold tracking-tight">Calori</span>
+        </div>
         <div className="auth-modal-header flex shrink-0 items-center justify-between gap-2 p-4 sm:px-6">
           <div className="flex gap-3 sm:gap-5">
             <button
