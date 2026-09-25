@@ -30,7 +30,7 @@ function App() {
           <p role="status" className="auth-secondary text-sm">Cargando sesión…</p>
         ) : (
           <main className="auth-entry-card w-full max-w-sm text-center">
-            <img src="/brand/calori-logo-symbol-dark.png" alt="" className="brand-symbol brand-symbol-auth mx-auto mb-6" />
+            <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-auth mx-auto mb-6" />
             <h1 className="text-2xl font-semibold tracking-tight">Calori</h1>
             <p className="auth-secondary mt-3 text-sm leading-relaxed">Ingresá a tu cuenta para ver y registrar tu día.</p>
             <button
@@ -64,7 +64,7 @@ function App() {
           {/* Mobile Header */}
           <header className="home-header md:hidden flex-shrink-0 flex items-center justify-between p-4 border border-slate-200 dark:border-[#ffffff0d] bg-white dark:bg-[#1e2124]">
             <div className="flex items-center gap-3">
-              <img src="/brand/calori-logo-symbol-dark.png" alt="" className="brand-symbol" />
+              <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol" />
               <h1 className="text-lg font-bold">Calori</h1>
             </div>
             <div className="flex items-center gap-2">

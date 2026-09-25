@@ -23,7 +23,7 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
     <aside className="hidden md:flex flex-col w-64 border-r border-slate-200 dark:border-white/5 bg-white dark:bg-[#1e2124] p-6 justify-between flex-shrink-0 h-full overflow-y-auto">
       <div>
         <div className="flex items-center gap-3 mb-10">
-          <img src="/brand/calori-logo-symbol-dark.png" alt="" className="brand-symbol brand-symbol-sidebar" />
+          <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-sidebar" />
           <div>
             <h1 className="text-xl font-bold text-slate-900 dark:text-white">Calori</h1>
           </div>
