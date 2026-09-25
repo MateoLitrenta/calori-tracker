@@ -698,7 +698,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
       
       {/* Header */}
       <div className="chat-heading px-6 py-5 border-b border-slate-200 dark:border-[#ffffff0d] bg-slate-50 dark:bg-[#151719] flex flex-wrap items-center gap-3">
-        <img src="/brand/calori-logo-symbol-dark.png" alt="" className="brand-symbol brand-symbol-assistant" />
+        <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-assistant" />
         <div>
           <h2 className="font-bold text-lg text-slate-900 dark:text-white">Calori</h2>
           <p className="text-xs text-slate-500 dark:text-gray-400">Asistente personal</p>
@@ -812,7 +812,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
               {msg.role === 'user' ? (
                 <User size={16} className="text-slate-600 dark:text-gray-300" weight="fill" />
               ) : (
-                <img src="/brand/calori-logo-symbol-dark.png" alt="" className="brand-symbol brand-symbol-message" />
+                <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-message" />
               )}
             </div>
             <div className={`chat-bubble ${msg.role === 'bot' && msg.text.startsWith('Registrado ') ? 'chat-saved' : ''} px-4 py-3 rounded-3xl text-sm shadow-none ${
@@ -832,7 +832,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
         ))}
         {isTyping && (
           <div className="flex gap-3 max-w-[75%] mr-auto">
-            <img src="/brand/calori-logo-symbol-dark.png" alt="" className="brand-symbol brand-symbol-message" />
+            <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-message" />
             <div className="px-4 py-4 rounded-3xl bg-slate-100 dark:bg-[#191c1f] rounded-tl-sm border border-slate-200 dark:border-[#ffffff0d] flex items-center gap-1">
               <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
               <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />

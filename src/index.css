@@ -17,7 +17,6 @@
   object-fit: contain;
   object-position: center;
   border-radius: var(--radius-control);
-  background: #151719;
 }
 .brand-symbol-sidebar { width: 48px; height: 48px; }
 .brand-symbol-assistant, .brand-symbol-modal { width: 40px; height: 40px; }
