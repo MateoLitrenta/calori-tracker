@@ -1,4 +1,4 @@
-import { Fire, House, ChatCircle, ChartBar, User, SignOut } from '@phosphor-icons/react';
+import { House, ChatCircle, ChartBar, User, SignOut } from '@phosphor-icons/react';
 import ThemeToggle from './ThemeToggle';
 import { useAppStore } from '../hooks/useAppStore';
 import type { Tab } from './BottomNav';
@@ -23,11 +23,9 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
     <aside className="hidden md:flex flex-col w-64 border-r border-slate-200 dark:border-white/5 bg-white dark:bg-[#1e2124] p-6 justify-between flex-shrink-0 h-full overflow-y-auto">
       <div>
         <div className="flex items-center gap-3 mb-10">
-          <div className="p-2 bg-[#f5a06416] rounded-[var(--radius-control)]">
-            <Fire size={32} weight="fill" className="text-orange-500" />
-          </div>
+          <img src="/brand/calori-logo-symbol-dark.png" alt="" className="brand-symbol brand-symbol-sidebar" />
           <div>
-            <h1 className="text-xl font-bold text-slate-900 dark:text-white">Calori Tracker</h1>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white">Calori</h1>
           </div>
         </div>
 

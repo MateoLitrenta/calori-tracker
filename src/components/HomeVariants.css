@@ -101,7 +101,7 @@
   padding: 12px 16px;
   background: #1e2124;
 }
-.home-header > div:first-child > div:first-child { background: #f5a06416; border-radius: var(--radius-control); }
+.home-header .brand-symbol { border-radius: var(--radius-control); }
 .home-header h1 { font-size: 16px; letter-spacing: -.02em; }
 .home-header button { border-radius: var(--radius-control); }
 html:not(.dark) .home-variants {

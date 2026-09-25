@@ -8,7 +8,6 @@ import BottomNav from './components/BottomNav';
 import type { Tab } from './components/BottomNav';
 import AuthModal from './components/AuthModal';
 import ThemeToggle from './components/ThemeToggle';
-import { Fire } from '@phosphor-icons/react';
 import { useAppStore } from './hooks/useAppStore';
 import { Toaster } from 'react-hot-toast';
 
@@ -31,10 +30,8 @@ function App() {
           <p role="status" className="auth-secondary text-sm">Cargando sesión…</p>
         ) : (
           <main className="auth-entry-card w-full max-w-sm text-center">
-            <div className="auth-logo mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl">
-              <Fire size={40} weight="fill" />
-            </div>
-            <h1 className="text-2xl font-semibold tracking-tight">Calori Tracker</h1>
+            <img src="/brand/calori-logo-symbol-dark.png" alt="" className="brand-symbol brand-symbol-auth mx-auto mb-6" />
+            <h1 className="text-2xl font-semibold tracking-tight">Calori</h1>
             <p className="auth-secondary mt-3 text-sm leading-relaxed">Ingresá a tu cuenta para ver y registrar tu día.</p>
             <button
               type="button"
@@ -67,10 +64,8 @@ function App() {
           {/* Mobile Header */}
           <header className="home-header md:hidden flex-shrink-0 flex items-center justify-between p-4 border border-slate-200 dark:border-[#ffffff0d] bg-white dark:bg-[#1e2124]">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-[#f5a06416] rounded-xl">
-                <Fire size={24} weight="fill" className="text-orange-500" />
-              </div>
-              <h1 className="text-lg font-bold">Calori Tracker</h1>
+              <img src="/brand/calori-logo-symbol-dark.png" alt="" className="brand-symbol" />
+              <h1 className="text-lg font-bold">Calori</h1>
             </div>
             <div className="flex items-center gap-2">
               <ThemeToggle />
