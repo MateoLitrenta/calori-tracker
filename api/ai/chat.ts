@@ -1,5 +1,3 @@
-import { sanitizeCoachContext } from './coachContext.ts';
-
 interface ChatMessage {
   role: 'user' | 'bot';
   text: string;
@@ -29,6 +27,59 @@ const AUDIO_MIME_TYPES = new Set([
   'audio/mp3', 'audio/mp4', 'audio/m4a', 'audio/wav'
 ]);
 const IMAGE_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const MAX_COACH_MEALS = 6;
+const MAX_COACH_WORKOUTS = 3;
+const coachText = (value: unknown, limit = 100) => typeof value === 'string' ? value.trim().slice(0, limit) : '';
+const coachNumber = (value: unknown): number | null => typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null;
+const coachObject = (value: unknown): Record<string, unknown> => value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
+
+function recentCoachDates(today: string): string[] {
+  const [year, month, day] = today.split('-').map(Number);
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(0);
+    date.setUTCFullYear(year, month - 1, day - 6 + index);
+    date.setUTCHours(12, 0, 0, 0);
+    return `${date.getUTCFullYear().toString().padStart(4, '0')}-${(date.getUTCMonth() + 1).toString().padStart(2, '0')}-${date.getUTCDate().toString().padStart(2, '0')}`;
+  });
+}
+
+function compactCoachDay(value: unknown, date: string) {
+  const day = coachObject(value);
+  const meals = Array.isArray(day.meals) ? day.meals : [];
+  const workouts = Array.isArray(day.workouts) ? day.workouts : [];
+  return {
+    date,
+    hasData: day.hasData === true,
+    calories: coachNumber(day.calories),
+    steps: coachNumber(day.steps) ?? 0,
+    water: coachNumber(day.water) ?? 0,
+    weight: coachNumber(day.weight),
+    meals: meals.slice(0, MAX_COACH_MEALS).map(value => {
+      const meal = coachObject(value);
+      return { type: coachText(meal.type, 20), description: coachText(meal.description), calories: coachNumber(meal.calories),
+        ...(typeof meal.time === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(meal.time) ? { time: meal.time } : {}) };
+    }),
+    workouts: workouts.slice(0, MAX_COACH_WORKOUTS).map(value => {
+      const workout = coachObject(value);
+      return { name: coachText(workout.name), duration: coachNumber(workout.duration), calories: coachNumber(workout.calories) };
+    }),
+    omittedMeals: Math.max(coachNumber(day.omittedMeals) ?? 0, meals.length - MAX_COACH_MEALS, 0),
+    omittedWorkouts: Math.max(coachNumber(day.omittedWorkouts) ?? 0, workouts.length - MAX_COACH_WORKOUTS, 0),
+  };
+}
+
+function sanitizeCoachContext(value: unknown, today: string) {
+  const source = coachObject(value);
+  const profile = coachObject(source.profile);
+  const current = coachObject(source.today);
+  const days = Array.isArray(source.recentDays) ? source.recentDays.slice(0, 7) : [];
+  return {
+    profile: { name: coachText(profile.name, 60), sex: coachText(profile.sex, 20), age: coachNumber(profile.age),
+      weight: coachNumber(profile.weight), height: coachNumber(profile.height) },
+    today: { ...compactCoachDay(current, today), consumed: coachNumber(current.consumed), expenditure: coachNumber(current.expenditure) },
+    recentDays: recentCoachDates(today).map(date => compactCoachDay(days.find(day => coachObject(day).date === date), date)),
+  };
+}
 const COACH_INSTRUCTIONS = `
 Sos Calori, un coach personal de nutrición y entrenamiento. Respondé en español, práctico, breve por defecto y basado en los datos disponibles. Podés extenderte si piden un plan completo.
 Usá coachContext para preguntas sobre alimentación, actividad, entrenamiento, recuperación, planificación y progreso reciente. Contiene solo una ventana de siete fechas locales, incluyendo HOY, no una semana completa garantizada.
