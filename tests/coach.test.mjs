@@ -49,6 +49,9 @@ test('context bounds descriptions and lists while retaining full calories and om
   const record = day(today, { meals: Array.from({ length: 30 }, () => ({ name: 'x'.repeat(4000), calories: 100, type: 'Snack' })),
     workouts: Array.from({ length: 20 }, () => ({ activity: 'y'.repeat(4000), duration: 10, calories: 50 })) });
   const context = buildCoachContext({ ...profile, records: { [today]: record } }, today);
+  assert.deepEqual(Object.keys(context), ['profile', 'today', 'recentDays']);
+  assert.match(context.today.date, /^\d{4}-\d{2}-\d{2}$/);
+  assert.ok(Array.isArray(context.recentDays));
   assert.equal(context.today.calories, 3000);
   assert.equal(context.today.meals.length, 6);
   assert.equal(context.today.omittedMeals, 24);
@@ -60,6 +63,7 @@ test('context bounds descriptions and lists while retaining full calories and om
   assert.ok(!JSON.stringify(clean).includes('secret'));
   assert.equal(clean.today.omittedMeals, 24);
   assert.deepEqual(sanitizeApiCoachContext(context, today), clean);
+  assert.equal(sanitizeApiCoachContext(buildCoachContext(profile, today), today).today.calories, null);
   assert.deepEqual(sanitizeApiCoachContext(context, '2027-01-02').recentDays.map(day => day.date),
     ['2026-12-27', '2026-12-28', '2026-12-29', '2026-12-30', '2026-12-31', '2027-01-01', '2027-01-02']);
 });

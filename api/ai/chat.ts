@@ -1,3 +1,5 @@
+import { sanitizeCoachContext } from './coachContext.ts';
+
 interface ChatMessage {
   role: 'user' | 'bot';
   text: string;
@@ -187,11 +189,10 @@ export default {
           || JSON.stringify(body.coachContext).length > 24000) {
           return json({ error: 'El contexto del coach no es válido o supera el tamaño permitido.' }, 400);
         }
-        const { sanitizeCoachContext } = await import('./coachContext.ts');
         coachContext = sanitizeCoachContext(body.coachContext, body.today);
       }
     } catch (error) {
-      console.error('Coach context preparation failed:', error instanceof Error ? error.name : 'unknown');
+      console.error('Coach context preparation failed:', error instanceof Error ? `${error.name}: ${error.message}` : 'unknown');
       return json({ error: 'El contexto del coach no es válido.' }, 400);
     }
     const recentMessages = body.messages.slice(-MAX_MESSAGES);
