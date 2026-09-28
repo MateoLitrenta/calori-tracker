@@ -1,3 +1,5 @@
+import type { CoachContext } from '../utils/coachContext';
+
 export interface ChatMessage {
   role: 'user' | 'bot';
   text: string;
@@ -57,7 +59,8 @@ export async function generateAIResponse(
   messages: ChatMessage[],
   systemInstruction: string,
   today: string,
-  attachment?: MediaAttachment
+  attachment?: MediaAttachment,
+  coachContext?: CoachContext
 ): Promise<{ reply: string; actions: unknown }> {
   const response = await fetch('/api/ai/chat', {
     method: 'POST',
@@ -68,6 +71,7 @@ export async function generateAIResponse(
       messages: messages.map(({ role, text, localTime }) => ({ role, text, localTime })),
       systemInstruction,
       today,
+      ...(coachContext ? { coachContext } : {}),
       ...(attachment ? { attachment } : {})
     })
   });
