@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, useCallback, type RefObject } from 'react'
 import { createPortal } from 'react-dom';
 import { ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, X } from '@phosphor-icons/react';
 import UserAvatar from './UserAvatar';
+import { buildCoachContext, coachSuggestions } from '../utils/coachContext';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
@@ -446,13 +447,8 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     }
   }, [messages, storageKey, isPastConversation]);
 
-  const todayRecord = activeProfile?.records[formatDateStr(new Date())];
-  const suggestions = [
-    'Analizá mi día',
-    '¿Cómo está mi balance energético?',
-    !todayRecord?.meals.length ? 'Ayudame a planear mis comidas de hoy'
-      : '¿Cómo puedo equilibrar mi alimentación y actividad?',
-  ];
+  const suggestions = coachSuggestions(activeProfile?.user_id === userId
+    ? buildCoachContext(activeProfile, today) : null);
 
   const startConversation = () => {
     if (busy.current || audioBusy.current || imageBusy.current || isCameraOpen || isPastConversation) return;
@@ -500,21 +496,17 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       const yesterdayStr = formatDateStr(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1));
       const dayBeforeStr = formatDateStr(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 2));
       const todayRecord = activeProfile?.records?.[todayStr];
-      if (!activeProfile) throw new Error('Esperá a que se cargue tu perfil para consultar al asistente.');
-      const systemPrompt = `Eres el asistente nutricional de la app Calori Tracker.
+      if (!activeProfile || activeProfile.user_id !== userId) throw new Error('Esperá a que se cargue tu perfil para consultar al asistente.');
+      const coachContext = buildCoachContext(activeProfile, todayStr);
+      const systemPrompt = `Contexto diario calculado por Calori.
 ${buildDailyEnergyContext(activeProfile, todayRecord)}
 HOY: ${todayStr}.
 AYER: ${yesterdayStr}.
 ANTEAYER: ${dayBeforeStr}.
 HORA LOCAL ACTUAL: ${localTime}.
-DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.
-Perfil: ${JSON.stringify({ name: activeProfile.name, age: activeProfile.age, sex: activeProfile.sex,
-  height: activeProfile.height, weight: activeProfile.weight })}.
-Registros de HOY: ${JSON.stringify({ meals: todayRecord?.meals || [], workouts: todayRecord?.workouts || [],
-  steps: todayRecord?.steps || 0, water: todayRecord?.water || 0, weight: todayRecord?.weight ?? null })}.
-Sé conciso, directo, motivador, siempre en español y enfócate estrictamente en nutrición, salud y entrenamiento. No des explicaciones médicas complejas, sino consejos accionables.`;
+DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
 
-      const response = await generateAIResponse(newHistory, systemPrompt, todayStr, attachment);
+      const response = await generateAIResponse(newHistory, systemPrompt, todayStr, attachment, coachContext);
       if (!mounted.current || dateStr !== formatDateStr(new Date())) return;
       const actions = validActions(response.actions, todayStr);
       const requestedActions = Array.isArray(response.actions) && response.actions.length > 0;
@@ -703,7 +695,7 @@ Sé conciso, directo, motivador, siempre en español y enfócate estrictamente e
         <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-assistant" />
         <div>
           <h2 className="font-bold text-lg text-slate-900 dark:text-white">Calori</h2>
-          <p className="text-xs text-slate-500 dark:text-gray-400">Asistente personal</p>
+          <p className="text-xs text-slate-500 dark:text-gray-400">Coach de nutrición y entrenamiento</p>
         </div>
         <div className="chat-heading-actions ml-auto flex items-center gap-1">
           <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pending}
