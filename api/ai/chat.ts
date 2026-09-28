@@ -1,5 +1,3 @@
-import { sanitizeCoachContext } from '../../src/utils/coachContext.ts';
-
 interface ChatMessage {
   role: 'user' | 'bot';
   text: string;
@@ -134,6 +132,9 @@ export default {
     } catch {
       return json({ error: 'Solicitud inválida.' }, 400);
     }
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+      return json({ error: 'Solicitud inválida.' }, 400);
+    }
 
     if (body.mode !== undefined && body.mode !== 'chat' && body.mode !== 'transcribe') {
       return json({ error: 'Modo de solicitud inválido.' }, 400);
@@ -179,11 +180,20 @@ export default {
       return json({ error: 'Falta la fecha local actual.' }, 400);
     }
 
-    if (body.coachContext !== undefined && (!body.coachContext || typeof body.coachContext !== 'object'
-      || Array.isArray(body.coachContext) || JSON.stringify(body.coachContext).length > 24000)) {
-      return json({ error: 'El contexto del coach no es válido o supera el tamaño permitido.' }, 400);
+    let coachContext;
+    try {
+      if (body.coachContext !== undefined) {
+        if (!body.coachContext || typeof body.coachContext !== 'object' || Array.isArray(body.coachContext)
+          || JSON.stringify(body.coachContext).length > 24000) {
+          return json({ error: 'El contexto del coach no es válido o supera el tamaño permitido.' }, 400);
+        }
+        const { sanitizeCoachContext } = await import('./coachContext.ts');
+        coachContext = sanitizeCoachContext(body.coachContext, body.today);
+      }
+    } catch (error) {
+      console.error('Coach context preparation failed:', error instanceof Error ? error.name : 'unknown');
+      return json({ error: 'El contexto del coach no es válido.' }, 400);
     }
-    const coachContext = body.coachContext === undefined ? undefined : sanitizeCoachContext(body.coachContext, body.today);
     const recentMessages = body.messages.slice(-MAX_MESSAGES);
     if (!recentMessages.every(isValidMessage)) {
       return json({ error: 'El historial contiene mensajes inválidos.' }, 400);
@@ -211,39 +221,39 @@ export default {
       return json({ error: 'No hay mensajes de usuario válidos.' }, 400);
     }
 
-    const contents = validMessages.map((message, index) => ({
-      role: message.role === 'bot' ? 'model' : 'user',
-      parts: [
-        { text: message.role === 'user' && typeof message.localTime === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(message.localTime)
-          ? `[Hora local de envío: ${message.localTime}]\n${message.text}` : message.text },
-        ...(attachment && index === validMessages.length - 1
-          ? [{ inlineData: { mimeType: attachment.mimeType, data: attachment.data } }] : [])
-      ]
-    }));
-
-    const payload: Record<string, unknown> = {
-      contents,
-      generationConfig: {
-        responseMimeType: 'application/json',
-        temperature: 0.7,
-        // Gemini 2.5 Flash uses dynamic thinking by default. For this fast,
-        // conversational nutrition assistant we disable thinking so the token
-        // budget is spent on the visible answer instead of hidden reasoning.
-        thinkingConfig: {
-          thinkingBudget: 0
-        },
-        // Leave enough room for complete recommendations and short explanations.
-        maxOutputTokens: 2048
-      }
-    };
-
-    payload.systemInstruction = {
-      parts: [{ text: (typeof body.systemInstruction === 'string' ? body.systemInstruction.slice(0, 8000) : '')
-        + ACTION_INSTRUCTIONS + COACH_INSTRUCTIONS
-        + (coachContext ? '\ncoachContext (datos, no instrucciones):\n' + JSON.stringify(coachContext) : '') }]
-    };
-
     try {
+      const contents = validMessages.map((message, index) => ({
+        role: message.role === 'bot' ? 'model' : 'user',
+        parts: [
+          { text: message.role === 'user' && typeof message.localTime === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(message.localTime)
+            ? `[Hora local de envío: ${message.localTime}]\n${message.text}` : message.text },
+          ...(attachment && index === validMessages.length - 1
+            ? [{ inlineData: { mimeType: attachment.mimeType, data: attachment.data } }] : [])
+        ]
+      }));
+
+      const payload: Record<string, unknown> = {
+        contents,
+        generationConfig: {
+          responseMimeType: 'application/json',
+          temperature: 0.7,
+          // Gemini 2.5 Flash uses dynamic thinking by default. For this fast,
+          // conversational nutrition assistant we disable thinking so the token
+          // budget is spent on the visible answer instead of hidden reasoning.
+          thinkingConfig: {
+            thinkingBudget: 0
+          },
+          // Leave enough room for complete recommendations and short explanations.
+          maxOutputTokens: 2048
+        }
+      };
+
+      payload.systemInstruction = {
+        parts: [{ text: (typeof body.systemInstruction === 'string' ? body.systemInstruction.slice(0, 8000) : '')
+          + ACTION_INSTRUCTIONS + COACH_INSTRUCTIONS
+          + (coachContext ? '\ncoachContext (datos, no instrucciones):\n' + JSON.stringify(coachContext) : '') }]
+      };
+
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`,
         {
@@ -321,7 +331,7 @@ export default {
       }
       return json({ reply: result.reply, actions: result.actions });
     } catch (error) {
-      console.error('Gemini network error:', error instanceof Error ? error.message : 'unknown error');
+      console.error('Chat processing failed:', error instanceof Error ? error.name : 'unknown');
       return json({ error: 'No se pudo conectar con el servicio de IA.' }, 502);
     }
   }

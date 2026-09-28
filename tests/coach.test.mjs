@@ -4,6 +4,7 @@ import { buildCoachContext, coachSuggestions, recentLocalDates, sanitizeCoachCon
 import { calculateDailyExpenditure } from '../src/utils/helpers.ts';
 import { generateAIResponse, transcribeAudio, validActions } from '../src/services/aiService.ts';
 import handler from '../api/ai/chat.ts';
+import { sanitizeCoachContext as sanitizeApiCoachContext } from '../api/ai/coachContext.ts';
 
 const today = '2026-09-28';
 const profile = { id: 'private-id', user_id: 'private-user', name: 'Ada', sex: 'Femenino', age: 30,
@@ -58,6 +59,32 @@ test('context bounds descriptions and lists while retaining full calories and om
   const clean = sanitizeCoachContext({ ...context, password: 'secret', profile: { ...context.profile, email: 'secret' } }, today);
   assert.ok(!JSON.stringify(clean).includes('secret'));
   assert.equal(clean.today.omittedMeals, 24);
+  assert.deepEqual(sanitizeApiCoachContext(context, today), clean);
+  assert.deepEqual(sanitizeApiCoachContext(context, '2027-01-02').recentDays.map(day => day.date),
+    ['2026-12-27', '2026-12-28', '2026-12-29', '2026-12-30', '2026-12-31', '2027-01-01', '2027-01-02']);
+});
+
+test('API returns JSON for invalid coach context and malformed request bodies', async () => {
+  const originalKey = process.env.GEMINI_API_KEY;
+  process.env.GEMINI_API_KEY = 'mock';
+  try {
+    const request = body => handler.fetch(new Request('http://localhost/api/ai/chat', { method: 'POST', body: JSON.stringify(body) }));
+    for (const body of [null, [], { today, messages: [{ role: 'user', text: 'Hola' }], coachContext: [] },
+      { today, messages: [{ role: 'user', text: 'Hola' }], coachContext: { data: 'x'.repeat(24001) } }]) {
+      const response = await request(body);
+      assert.equal(response.status, 400);
+      assert.match(response.headers.get('content-type'), /application\/json/);
+      assert.equal(typeof (await response.json()).error, 'string');
+    }
+    const cyclic = {}; cyclic.self = cyclic;
+    const response = await handler.fetch({ method: 'POST', json: async () => ({
+      today, messages: [{ role: 'user', text: 'Hola' }], coachContext: cyclic,
+    }) });
+    assert.equal(response.status, 400);
+    assert.equal(typeof (await response.json()).error, 'string');
+  } finally {
+    if (originalKey === undefined) delete process.env.GEMINI_API_KEY; else process.env.GEMINI_API_KEY = originalKey;
+  }
 });
 
 test('API passes recent context, preserves workout proposals and keeps routine/plan replies conversational', async () => {
