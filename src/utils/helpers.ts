@@ -111,26 +111,56 @@ export const aggregateEnergy = (records: DailyRecordsMap, dates: string[], profi
     averageBalance: balance === null ? null : Math.round(balance / days) };
 };
 
-export const getHeatmapColor = (balance: number | null) => {
-  if (balance === null) return 'bg-slate-200 dark:bg-[#2d333b]';
-  if (balance < -500) return 'bg-heatmap-deficit-high';
-  if (balance >= -500 && balance < -250) return 'bg-heatmap-deficit-medium';
-  if (balance >= -250 && balance < -100) return 'bg-heatmap-deficit-low';
-  if (balance >= -100 && balance <= 100) return 'bg-heatmap-neutral';
-  if (balance > 100 && balance <= 250) return 'bg-heatmap-surplus-low';
-  if (balance > 250 && balance <= 500) return 'bg-heatmap-surplus-medium';
-  if (balance > 500) return 'bg-heatmap-surplus-high';
-  return 'bg-slate-200 dark:bg-[#2d333b]';
+type BalanceCategory = 'empty' | 'deficit-high' | 'deficit-medium' | 'deficit-low' |
+  'neutral' | 'surplus-low' | 'surplus-medium' | 'surplus-high';
+
+export const getBalanceCategory = (balance: number | null): BalanceCategory => {
+  if (balance === null) return 'empty';
+  if (balance < -500) return 'deficit-high';
+  if (balance < -250) return 'deficit-medium';
+  if (balance < 0) return 'deficit-low';
+  if (balance === 0) return 'neutral';
+  if (balance <= 250) return 'surplus-low';
+  if (balance <= 500) return 'surplus-medium';
+  return 'surplus-high';
 };
 
-export const getBalanceLabel = (balance: number | null) => {
-  if (balance === null) return 'Sin datos';
-  if (balance < -500) return 'Déficit Alto';
-  if (balance >= -500 && balance < -250) return 'Déficit Moderado';
-  if (balance >= -250 && balance < -100) return 'Déficit Leve';
-  if (balance >= -100 && balance <= 100) return 'Mantenimiento';
-  if (balance > 100 && balance <= 250) return 'Superávit Leve';
-  if (balance > 250 && balance <= 500) return 'Superávit Moderado';
-  if (balance > 500) return 'Superávit Alto';
-  return '';
+const balanceColors: Record<BalanceCategory, string> = {
+  empty: 'bg-slate-200 dark:bg-[#2d333b]',
+  'deficit-high': 'bg-heatmap-deficit-high',
+  'deficit-medium': 'bg-heatmap-deficit-medium',
+  'deficit-low': 'bg-heatmap-deficit-low',
+  neutral: 'bg-heatmap-neutral',
+  'surplus-low': 'bg-heatmap-surplus-low',
+  'surplus-medium': 'bg-heatmap-surplus-medium',
+  'surplus-high': 'bg-heatmap-surplus-high',
+};
+
+const balanceLabels: Record<BalanceCategory, string> = {
+  empty: 'Sin datos',
+  'deficit-high': 'Déficit Alto',
+  'deficit-medium': 'Déficit Moderado',
+  'deficit-low': 'Déficit Leve',
+  neutral: 'Mantenimiento',
+  'surplus-low': 'Superávit Leve',
+  'surplus-medium': 'Superávit Moderado',
+  'surplus-high': 'Superávit Alto',
+};
+
+const balancePillText: Record<BalanceCategory, string> = {
+  empty: 'text-slate-900 dark:text-white',
+  'deficit-high': 'text-white',
+  'deficit-medium': 'text-black',
+  'deficit-low': 'text-black',
+  neutral: 'text-white',
+  'surplus-low': 'text-black',
+  'surplus-medium': 'text-white',
+  'surplus-high': 'text-white',
+};
+
+export const getHeatmapColor = (balance: number | null) => balanceColors[getBalanceCategory(balance)];
+export const getBalanceLabel = (balance: number | null) => balanceLabels[getBalanceCategory(balance)];
+export const getBalancePillColor = (balance: number | null) => {
+  const category = getBalanceCategory(balance);
+  return `${balanceColors[category]} ${balancePillText[category]}`;
 };
