@@ -9,7 +9,6 @@ import {
   ChatsCircle,
   Drop,
   ForkKnife,
-  ImageSquare,
   PersonSimpleWalk,
   Plus,
   Scales,
@@ -26,7 +25,15 @@ type LandingPageProps = {
 };
 
 // Illustrative values only. The public page never reads a user's records.
-const heatmapPattern = [1, 2, 1, 0, 3, 1, 2, 2, 0, 1, 4, 1, 2, 3, 1, 2, 0, 1, 2, 1, 4, 2, 1, 3, 1, 0];
+const heatmapPattern = [1, 2, 1, 5, 3, 1, 2, 2, 0, 1, 4, 1, 2, 3, 1, 2, 5, 1, 2, 1, 4, 2, 1, 3, 1, 0];
+const heatmapColors = [
+  'bg-heatmap-neutral',
+  'bg-heatmap-deficit-medium',
+  'bg-heatmap-deficit-high',
+  'bg-heatmap-deficit-low',
+  'bg-heatmap-surplus-medium',
+  'bg-slate-200 dark:bg-[#2d333b]',
+];
 
 function PublicLink({ path, onNavigate, className, children }: {
   path: PublicPath;
@@ -54,7 +61,7 @@ function DashboardPreview() {
         <div className="lp-preview-content">
           <div className="lp-preview-title"><div><span className="lp-small-label">TODO EN UN LUGAR</span><h2>Tu día, en perspectiva.</h2></div><span className="lp-today">Hoy</span></div>
           <div className="lp-energy-card">
-            <div className="lp-energy-top"><span>Balance energético</span><span className="lp-status">Déficit</span></div>
+            <div className="lp-energy-top"><span>Balance energético</span><span className="lp-status">Déficit Moderado</span></div>
             <div className="lp-energy-value">−420 <span>kcal</span></div>
             <p className="lp-energy-description">Consumidas − gasto estimado</p>
             <div className="lp-energy-columns">
@@ -81,11 +88,11 @@ function PhotoPreview() {
     <figure className="lp-photo-preview lp-example-panel">
       <div className="lp-example-heading"><span><Camera size={19} /> Registrar una comida</span><span className="lp-demo-label">Ejemplo</span></div>
       <div className="lp-photo-upload">
-        <div className="lp-image-thumbnail" aria-hidden="true"><ImageSquare size={32} weight="light" /><span>JPG</span></div>
-        <div><strong>almuerzo.jpg</strong><span>Foto adjunta · lista para analizar</span></div>
+        <img className="lp-image-thumbnail" src="/landing/meal-demo.webp" alt="Plato con pollo a la plancha, arroz y vegetales" width="640" height="640" loading="lazy" decoding="async" />
+        <div><strong>almuerzo.jpg</strong><span>Foto adjunta · analizada con IA</span></div>
         <span className="lp-upload-check"><Check size={16} weight="bold" /></span>
       </div>
-      <div className="lp-detection-heading"><span><Sparkle size={16} weight="fill" /> Esto podría haber en tu plato</span><span className="lp-estimate-tag">Estimación</span></div>
+      <div className="lp-detection-heading"><span><Sparkle size={16} weight="fill" /> Esto podría haber en tu plato</span><span className="lp-estimate-tag">Estimado por IA</span></div>
       <div className="lp-food-rows">
         <div><span className="lp-food-number">01</span><div><strong>Pollo a la plancha</strong><span>Porción mediana</span></div><span>~250 kcal</span></div>
         <div><span className="lp-food-number">02</span><div><strong>Arroz cocido</strong><span>Una taza, aproximadamente</span></div><span>~200 kcal</span></div>
@@ -101,9 +108,9 @@ function HistoryPreview() {
   return (
     <figure className="lp-history-preview lp-example-panel">
       <div className="lp-history-toolbar"><div><span className="lp-small-label">TU HISTORIAL</span><h3>Cada día cuenta una parte.</h3></div><div className="lp-periods" aria-label="Vistas disponibles en el historial, ejemplo de la vista anual"><span>Día</span><span>Semana</span><span>Mes</span><span className="lp-period-current">Año</span></div></div>
-      <div className="lp-heatmap-months" aria-hidden="true">{['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'].map(month => <span key={month}>{month}</span>)}</div>
-      <div className="lp-heatmap-body"><div className="lp-heatmap-days" aria-hidden="true"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div><div className="lp-heatmap" role="img" aria-label="Ejemplo de seis meses de registros. Verde representa déficit, rojo superávit y gris mantenimiento.">{Array.from({ length: 182 }, (_, index) => <span key={index} className={`lp-heat-cell lp-heat-${heatmapPattern[(index * 7 + Math.floor(index / 7)) % heatmapPattern.length]}`} />)}</div></div>
-      <div className="lp-heatmap-footer"><figcaption>El patrón dice más que un día aislado.</figcaption><div className="lp-heatmap-legend"><span><i className="lp-heat-1" />Déficit</span><span><i className="lp-heat-4" />Superávit</span><span><i className="lp-heat-0" />Mantenimiento</span></div></div>
+      <div className="lp-heatmap-viewport"><div className="lp-heatmap-months" aria-hidden="true">{['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'].map(month => <span key={month}>{month}</span>)}</div>
+      <div className="lp-heatmap-body"><div className="lp-heatmap-days" aria-hidden="true"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div><div className="lp-heatmap" role="img" aria-label="Ejemplo de seis meses de registros. Verde representa déficit, rojo superávit y gris mantenimiento; gris claro u oscuro según el tema representa días sin datos.">{Array.from({ length: 182 }, (_, index) => <span key={index} className={`lp-heat-cell ${heatmapColors[heatmapPattern[(index * 7 + Math.floor(index / 7)) % heatmapPattern.length]]}`} />)}</div></div></div>
+      <div className="lp-heatmap-footer"><figcaption>El patrón dice más que un día aislado.</figcaption><div className="lp-heatmap-legend"><span><i className="bg-slate-200 dark:bg-[#2d333b]" />Sin datos</span><span><i className="bg-heatmap-deficit-medium" />Déficit</span><span><i className="bg-heatmap-surplus-medium" />Superávit</span><span><i className="bg-heatmap-neutral" />Mantenimiento</span></div></div>
     </figure>
   );
 }
