@@ -11,30 +11,34 @@ export const useAppStore = () => {
   const [activeProfile, setActiveProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [avatarRevision, setAvatarRevision] = useState(0);
+  const userId = user?.id;
+  const userEmail = user?.email;
 
   // Auth & Initial Data Load
   useEffect(() => {
     let isMounted = true;
+    let sessionUserId: string | null = null;
+    const applyUser = (nextUser: User | null) => {
+      if (!isMounted) return;
+      if (nextUser && nextUser.id !== sessionUserId) {
+        setLoading(true);
+        setActiveProfile(null);
+      }
+      sessionUserId = nextUser?.id ?? null;
+      setUser(nextUser);
+      if (!nextUser) {
+        setActiveProfile(null);
+        setLoading(false);
+      }
+    };
     
     // Check active session on mount
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (isMounted) {
-        setUser(session?.user ?? null);
-        if (!session?.user) {
-          setActiveProfile(null);
-          setLoading(false);
-        }
-      }
+      applyUser(session?.user ?? null);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (isMounted) {
-        setUser(session?.user ?? null);
-        if (!session?.user) {
-          setActiveProfile(null); // Clear state on logout
-          setLoading(false);
-        }
-      }
+      applyUser(session?.user ?? null);
     });
 
     return () => {
@@ -47,9 +51,9 @@ export const useAppStore = () => {
   useEffect(() => {
     let isMounted = true;
     const loadProfile = async () => {
-      if (!user) return;
+      if (!userId) return;
       setLoading(true);
-      const data = await db.fetchUserData(user.id, user.email);
+      const data = await db.fetchUserData(userId, userEmail);
       if (isMounted && data) {
         setActiveProfile(data);
       }
@@ -58,7 +62,7 @@ export const useAppStore = () => {
 
     loadProfile();
     return () => { isMounted = false; };
-  }, [user]);
+  }, [userId, userEmail]);
 
   useEffect(() => {
     if (!user) return;
@@ -83,6 +87,14 @@ export const useAppStore = () => {
     if (!user || !activeProfile || activeProfile.user_id !== user.id) throw new Error('No hay un perfil activo');
     await db.syncAvatarPath(user.id, path);
     window.dispatchEvent(new CustomEvent('calori-avatar-updated', { detail: { userId: user.id, path } }));
+  };
+
+  const completeOnboarding = async (details: Pick<UserProfile, 'name' | 'age' | 'sex' | 'height' | 'weight'>) => {
+    if (!user || activeProfile?.user_id !== user.id) throw new Error('No hay un perfil activo');
+    await db.completeOnboarding(user.id, details);
+    setActiveProfile(prev => prev?.user_id === user.id
+      ? { ...prev, ...details, name: details.name.trim(), onboarding_completed: true }
+      : prev);
   };
 
   const updateRecord = async (dateStr: string, record: DailyRecord) => {
@@ -158,7 +170,8 @@ export const useAppStore = () => {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
     toast.success('Sesión cerrada', { style: { background: '#161b22', color: '#fff' } });
   };
 
@@ -169,6 +182,7 @@ export const useAppStore = () => {
     loading,
     updateProfile,
     updateAvatarPath,
+    completeOnboarding,
     updateRecord,
     resetData,
     signOut

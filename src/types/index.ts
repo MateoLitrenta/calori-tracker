@@ -41,6 +41,7 @@ export interface UserProfile {
   id: string;
   user_id?: string;
   avatar_path?: string | null;
+  onboarding_completed?: boolean;
   name: string;
   age: number;
   sex: UserSex;

@@ -31,7 +31,8 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
           height_cm: 170,
           gender: 'Masculino',
           goal: 'Mantenimiento',
-          activity_level: 'Sedentario'
+          activity_level: 'Sedentario',
+          onboarding_completed: false
         }, { onConflict: 'id' })
         .select()
         .single();
@@ -69,6 +70,7 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
       id: profile.id,
       user_id: userId,
       avatar_path: profile.avatar_path ?? null,
+      onboarding_completed: profile.onboarding_completed !== false,
       name: profile.name,
       age: profile.age,
       sex: profile.gender as any,
@@ -139,6 +141,20 @@ export const syncAvatarPath = async (userId: string, avatarPath: string | null) 
     .select('id')
     .single();
   if (error || !data) throw error ?? new Error('No se pudo actualizar la foto del perfil');
+};
+
+export const completeOnboarding = async (userId: string, details: Pick<UserProfile, 'name' | 'age' | 'sex' | 'height' | 'weight'>) => {
+  if (!details.name.trim() || !Number.isInteger(details.age) || details.age <= 0 ||
+      !['Masculino', 'Femenino'].includes(details.sex) ||
+      !Number.isFinite(details.height) || details.height <= 0 || !Number.isFinite(details.weight) || details.weight <= 0) {
+    throw new Error('Revisá tus datos personales antes de continuar.');
+  }
+  const { data, error } = await supabase.from('profiles').update({
+    name: details.name.trim(), age: details.age, gender: details.sex,
+    height_cm: details.height, weight_kg: details.weight, onboarding_completed: true,
+  }).or(`id.eq.${userId},user_id.eq.${userId}`).select('id,onboarding_completed').single();
+  if (error) throw error;
+  if (data?.onboarding_completed !== true) throw new Error('No pudimos confirmar el guardado. Intentá de nuevo.');
 };
 
 export const ensureDailyLog = async (userId: string, record: DailyRecord) => {
