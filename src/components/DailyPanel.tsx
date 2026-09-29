@@ -3,7 +3,7 @@ import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sn
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap, UserProfile } from '../types';
-import { hasEnergyData, formatDateStr, getCaloriesIngested, generateUUID, aggregateEnergy, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure } from '../utils/helpers';
+import { hasEnergyData, formatDateStr, getCaloriesIngested, generateUUID, aggregateEnergy, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure, getBalanceLabel, getBalancePillColor } from '../utils/helpers';
 
 interface DailyPanelProps {
   record: DailyRecord | undefined;
@@ -50,7 +50,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const summary = aggregateEnergy(records || {}, isGroup ? selectedGroup.dates : [dateStr], profile);
   const ingested = isGroup ? summary.consumed : getCaloriesIngested(currentRecord);
   const balance = emptyHistory ? null : isGroup ? summary.balance : Math.round(ingested - expenditure);
-  const balanceLabel = balance === null ? 'Sin datos' : balance < 0 ? 'Déficit' : balance > 0 ? 'Superávit' : 'Equilibrio';
+  const classifiedBalance = isGroup ? summary.averageBalance : balance;
+  const balanceLabel = getBalanceLabel(classifiedBalance);
 
   let panelTitle = "Resumen del Día";
   let panelSubtitle = dateStr;
@@ -66,17 +67,6 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       panelSubtitle = selectedGroup.label;
     }
   }
-
-  const getPillColor = (bal: number | null) => {
-    if (bal === null) return 'bg-slate-200 dark:bg-gray-800 text-slate-900 dark:text-white';
-    if (bal < -500) return 'bg-heatmap-deficit-high text-white';
-    if (bal >= -500 && bal < -250) return 'bg-heatmap-deficit-medium text-black';
-    if (bal >= -250 && bal < -100) return 'bg-heatmap-deficit-low text-black';
-    if (bal >= -100 && bal <= 100) return 'bg-heatmap-neutral text-white';
-    if (bal > 100 && bal <= 250) return 'bg-heatmap-surplus-low text-black';
-    if (bal > 250 && bal <= 500) return 'bg-heatmap-surplus-medium text-white';
-    return 'bg-heatmap-surplus-high text-white';
-  };
 
   // --- Handlers ---
   const handleDeleteMeal = (id: string) => {
@@ -361,12 +351,17 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         <div className="energy-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl p-4 md:p-6 flex flex-col items-center gap-4">
           <div className="energy-headline flex flex-col items-center text-center">
             <div className="flex items-center gap-2 text-slate-500 dark:text-gray-400 text-sm font-semibold mb-1">
-              <Barbell size={20} className="text-purple-400" /> Balance energético
+              <Barbell size={20} className="text-purple-400" /> {isGroup ? 'Balance acumulado' : 'Balance energético'}
             </div>
             <div className="energy-number text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2 tabular-nums">
               {balance === null ? 'Sin datos' : `${balance > 0 ? '+' : ''}${balance.toLocaleString('es-AR')} kcal`}
             </div>
-            <div className={`energy-status text-xs px-3 py-1 rounded-full font-medium ${getPillColor(balance === null ? null : isGroup ? summary.averageBalance : balance)}`}>
+            {isGroup && classifiedBalance !== null && (
+              <div className="text-xs text-slate-500 dark:text-gray-400 tabular-nums mb-2">
+                Promedio diario: {classifiedBalance > 0 ? '+' : ''}{classifiedBalance.toLocaleString('es-AR')} kcal/día
+              </div>
+            )}
+            <div className={`energy-status text-xs px-3 py-1 rounded-full font-medium ${getBalancePillColor(classifiedBalance)}`}>
               {balanceLabel}
             </div>
           </div>

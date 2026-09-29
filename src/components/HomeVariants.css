@@ -160,6 +160,7 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
 }
 
 .home-variants .activity-history {
+  --heatmap-radius: 3px;
   min-width: 0;
   padding: 24px;
   gap: 16px;
@@ -197,7 +198,8 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
 }
 .home-variants .activity-history .period-switch button:active { background: var(--home-hover); }
 .home-variants .activity-history button:focus-visible { outline: 2px solid var(--home-orange); outline-offset: 2px; }
-.home-variants .activity-history .heatmap-cell { border-radius: 5px; }
+.home-variants .activity-history .heatmap-cell,
+.home-variants .activity-legend [class~="w-3"] { border-radius: var(--heatmap-radius); }
 .home-variants .activity-history .heatmap-cell.scale-125 { transform: scale(1.08); }
 .home-variants .activity-history .heatmap-cell[title*="Gimnasio"] { filter: none; }
 .home-variants .activity-history .heatmap-cell:is(.ring-blue-500, .ring-white) { --tw-ring-color: var(--home-orange); }
@@ -212,7 +214,6 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
 .home-variants .activity-legend-empty,
 .home-variants .activity-legend-scale { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .home-variants .activity-legend-empty { margin-right: 0; }
-.home-variants .activity-legend :is(.activity-legend-empty, .activity-legend-scale) [class~="w-3"] { border-radius: 5px; }
 html:not(.dark) .home-variants .daily-logs,
 html:not(.dark) .home-variants .activity-history { background: #ffffff; border-color: #e2e8f0; }
 html:not(.dark) .home-variants .activity-history .period-switch { background: #f8f7f4; border-color: #e2e8f0; }
