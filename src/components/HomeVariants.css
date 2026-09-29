@@ -29,6 +29,7 @@
 .home-variants .energy-status.bg-heatmap-surplus-medium,
 .home-variants .energy-status.bg-heatmap-surplus-low { background: #f8717120; color: #fca5a5; }
 .home-variants .energy-status.bg-heatmap-neutral { background: #ffffff10; color: var(--home-muted); }
+.home-variants .energy-status.bg-slate-200 { background: #2d333b; color: var(--home-muted); }
 .home-variants .daily-heading { border: 0; padding-bottom: 0; gap: 12px; }
 .home-variants .daily-heading h3 { font-size: 19px; font-weight: 600; letter-spacing: -.025em; }
 .home-variants .daily-heading > span { font-size: 11px; text-align: right; }
@@ -123,6 +124,7 @@ html:not(.dark) .home-variants .daily-logs li { background: var(--home-control);
 html:not(.dark) .home-variants .daily-logs li:hover { background: #f1f2f3; }
 html:not(.dark) .home-header { background: #ffffff; border-color: #1f293714; }
 html:not(.dark) .home-variants :is([class~="bg-slate-200"], [class~="bg-[#2d333b]"]) { background-color: #e5e7eb; }
+html:not(.dark) .home-variants .energy-status.bg-slate-200 { background: #e5e7eb; color: #475569; }
 html:not(.dark) .home-variants :is([class~="bg-[#161b22]"], [class~="bg-[#1e2124]"], [class~="bg-[#0f141c]"], [class~="bg-[#0d1117]"]) { background-color: #ffffff; color: #1f2937; }
 html:not(.dark) .home-variants :is(input, select, textarea) { background-color: #f8f7f4; color: #1f2937; border-color: #94a3b8; }
 html:not(.dark) .home-variants :is(input, select, textarea)::placeholder { color: #64748b; opacity: 1; }
