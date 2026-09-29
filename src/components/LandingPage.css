@@ -58,7 +58,7 @@
 .landing-page .lp-text-link { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; font-size: 13px; font-weight: 550; transition: color 160ms; }
 .landing-page .lp-text-link:hover { color: var(--lp-accent-text); }
 .landing-page .lp-eyebrow { display: flex; align-items: center; gap: 8px; color: var(--lp-accent-text); font-size: 10px; line-height: 1.6; font-weight: 650; letter-spacing: 1.45px; }
-.landing-page .lp-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .98fr); align-items: center; gap: 60px; padding-block: 94px 92px; }
+.landing-page .lp-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .98fr); align-items: center; gap: 60px; padding-block: 76px; }
 .landing-page .lp-hero-copy { position: relative; z-index: 1; }
 .landing-page .lp-hero-copy .lp-eyebrow > span { width: 6px; height: 6px; border-radius: 50%; background: var(--lp-accent-text); }
 .landing-page h1 { margin-top: 22px; font-size: clamp(38px, 4.2vw, 58px); line-height: 1.09; letter-spacing: -.054em; font-weight: 550; text-wrap: balance; }
@@ -116,14 +116,14 @@
 .landing-page .lp-preview-coach strong { font-size: 11px; font-weight: 550; }
 .landing-page .lp-preview-coach p { margin-top: 2px; font-size: 9px; color: var(--lp-muted); }
 .landing-page .lp-showcase > figcaption { text-align: center; margin-top: 18px; color: var(--lp-muted); font-size: 10px; }
-.landing-page .lp-how { padding-block: 58px 76px; border-block: 1px solid var(--lp-line); }
+.landing-page .lp-how { padding-block: 52px 64px; border-block: 1px solid var(--lp-line); }
 .landing-page .lp-section-intro h2 { font-size: 30px; line-height: 1.25; letter-spacing: -1.1px; margin-top: 12px; }
-.landing-page .lp-steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 38px; margin-top: 40px; }
+.landing-page .lp-steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 38px; margin-top: 34px; }
 .landing-page .lp-steps li { display: flex; align-items: flex-start; gap: 17px; }
 .landing-page .lp-step-number { border-top: 1px solid var(--lp-accent); color: var(--lp-accent-text); font-size: 12px; letter-spacing: .5px; padding-top: 9px; flex-shrink: 0; width: 30px; }
 .landing-page .lp-steps h3 { margin-top: 5px; font-size: 15px; letter-spacing: -.3px; }
 .landing-page .lp-steps p { color: var(--lp-muted); font-size: 12px; line-height: 1.8; margin-top: 9px; max-width: 260px; }
-.landing-page .lp-feature { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; gap: 100px; padding-top: 112px; }
+.landing-page .lp-feature { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; gap: 80px; padding-top: 96px; }
 .landing-page .lp-feature-copy h2, .landing-page .lp-history-intro h2 { margin-top: 17px; font-size: clamp(32px, 3.1vw, 42px); line-height: 1.18; letter-spacing: -1.7px; text-wrap: balance; }
 .landing-page .lp-feature-copy > p:not(.lp-eyebrow) { color: var(--lp-muted); font-size: 15px; line-height: 1.85; margin-top: 22px; max-width: 410px; }
 .landing-page .lp-feature-copy > p.lp-feature-aside { margin-top: 17px; padding-left: 16px; border-left: 2px solid var(--lp-accent); font-size: 13px; max-width: 350px; }
@@ -176,18 +176,19 @@
 .landing-page .lp-chat-input > span:first-of-type { flex: 1; font-size: 10px; }
 .landing-page .lp-chat-send { display: grid; place-items: center; width: 26px; height: 26px; background: var(--lp-accent); color: #292019; border-radius: var(--radius-control); flex-shrink: 0; }
 .landing-page .lp-chat-preview figcaption { text-align: right; font-size: 9px; color: var(--lp-muted); margin-top: 11px; }
-.landing-page .lp-movement { margin-top: 72px; display: flex; align-items: center; justify-content: space-between; gap: 40px; padding: 30px 36px; background: var(--lp-soft); border: 1px solid var(--lp-line); border-radius: var(--radius-panel); }
-.landing-page .lp-movement-copy { display: flex; align-items: center; gap: 24px; }
-.landing-page .lp-movement-icon { flex-shrink: 0; color: var(--lp-accent-text); }
-.landing-page .lp-movement h2 { margin-top: 9px; font-size: 21px; line-height: 1.3; letter-spacing: -.6px; }
-.landing-page .lp-movement h2 br { display: none; }
-.landing-page .lp-movement-copy p:last-child { color: var(--lp-muted); font-size: 12px; margin-top: 9px; }
-.landing-page .lp-workout-example { display: flex; align-items: center; gap: 22px; flex-shrink: 0; }
-.landing-page .lp-workout-example strong { display: block; font-size: 20px; font-weight: 500; letter-spacing: -.7px; }
-.landing-page .lp-workout-example small { font-size: 10px; font-weight: 400; letter-spacing: 0; }
-.landing-page .lp-workout-example span { display: block; color: var(--lp-muted); font-size: 9px; margin-top: 3px; }
+.landing-page .lp-movement { margin-top: 64px; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: center; gap: 40px; padding: 36px; background: var(--lp-card); border: 1px solid var(--lp-line); border-radius: var(--radius-panel); }
+.landing-page .lp-movement-copy { display: flex; align-items: flex-start; gap: 20px; min-width: 0; }
+.landing-page .lp-movement-icon { flex-shrink: 0; color: var(--lp-accent-text); margin-top: 4px; }
+.landing-page .lp-movement h2 { margin-top: 12px; font-size: 28px; line-height: 1.2; letter-spacing: -.8px; text-wrap: balance; }
+
+.landing-page .lp-movement-copy p:last-child { color: var(--lp-muted); font-size: 13px; line-height: 1.8; margin-top: 12px; max-width: 360px; }
+.landing-page .lp-workout-example { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.3fr); align-items: center; gap: 20px; min-width: 0; padding: 24px; background: var(--lp-soft); border: 1px solid var(--lp-line); border-radius: var(--radius-widget); }
+.landing-page .lp-workout-example strong { display: block; font-size: 24px; line-height: 1.25; font-weight: 500; letter-spacing: -.7px; }
+.landing-page .lp-workout-example > div:last-child strong { font-size: 36px; color: var(--lp-accent-text); white-space: nowrap; }
+.landing-page .lp-workout-example small { font-size: 12px; font-weight: 400; letter-spacing: 0; }
+.landing-page .lp-workout-example span { display: block; color: var(--lp-muted); font-size: 11px; line-height: 1.6; margin-top: 6px; }
 .landing-page .lp-workout-example > svg { color: var(--lp-muted); }
-.landing-page .lp-history { padding-top: 112px; }
+.landing-page .lp-history { padding-top: 96px; }
 .landing-page .lp-history-intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 50px; margin-bottom: 38px; }
 .landing-page .lp-history-intro > p { max-width: 350px; color: var(--lp-muted); font-size: 14px; line-height: 1.85; padding-bottom: 3px; }
 .landing-page .lp-history-preview { padding: 32px 36px 26px; }
@@ -215,14 +216,16 @@
 .landing-page .lp-benefits svg { color: var(--lp-accent-text); margin-top: 1px; }
 .landing-page .lp-benefits h3 { font-size: 12px; font-weight: 550; }
 .landing-page .lp-benefits p { font-size: 10px; color: var(--lp-muted); margin-top: 5px; line-height: 1.7; }
-.landing-page .lp-final-section { padding-block: 110px 64px; }
-.landing-page .lp-final-cta { display: flex; flex-direction: column; align-items: center; text-align: center; border: 1px solid #f5a06420; border-radius: var(--radius-panel); padding: 48px 24px; background: radial-gradient(ellipse at 50% 0%, #f5a06412, transparent 65%), var(--lp-soft); }
+.landing-page .lp-final-section { padding-block: 96px 52px; }
+.landing-page .lp-final-cta { display: flex; flex-direction: column; align-items: center; text-align: center; border: 1px solid #f5a06420; border-radius: var(--radius-panel); padding: 40px 24px; background: radial-gradient(ellipse at 50% 0%, #f5a06412, transparent 65%), var(--lp-soft); }
 .landing-page .lp-final-cta > img { border-radius: var(--radius-widget); width: 56px; height: 56px; margin-bottom: 20px; }
 .landing-page .lp-final-cta h2 { font-size: clamp(30px, 4vw, 46px); line-height: 1.15; letter-spacing: -1.7px; margin-top: 14px; }
 .landing-page .lp-final-cta > p:not(.lp-eyebrow) { font-size: 14px; color: var(--lp-muted); margin-top: 16px; }
-.landing-page .lp-final-cta .lp-button { margin-top: 25px; }
+.landing-page .lp-final-cta .lp-button { min-width: 200px; margin-top: 24px; }
+.landing-page .lp-final-cta > .lp-text-link { margin-top: 8px; color: var(--lp-muted); font-weight: 500; }
+.landing-page .lp-final-cta > .lp-text-link:hover { color: var(--lp-accent-text); }
 .landing-page .lp-final-note { margin-top: 12px; color: var(--lp-muted); font-size: 11px; }
-.landing-page .lp-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; min-height: 112px; padding-block: 20px 32px; border-top: 1px solid var(--lp-line); }
+.landing-page .lp-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; min-height: 104px; padding-block: 16px 28px; border-top: 1px solid var(--lp-line); }
 .landing-page .lp-footer > div:first-child { display: flex; align-items: center; gap: 24px; }
 .landing-page .lp-footer .lp-brand { font-size: 20px; gap: 6px; }
 .landing-page .lp-footer .lp-brand img { width: 32px; height: 32px; }
@@ -238,27 +241,27 @@
 }
 
 @media (max-width: 1100px) {
-  .landing-page .lp-hero { gap: 32px; padding-block: 70px; }
+  .landing-page .lp-hero { gap: 32px; padding-block: 64px; }
   .landing-page .lp-feature { gap: 60px; }
   .landing-page .lp-movement { padding-inline: 26px; gap: 24px; }
   .landing-page .lp-movement-copy { gap: 17px; }
-  .landing-page .lp-movement h2 { font-size: 19px; }
-  .landing-page .lp-workout-example { gap: 15px; }
+  .landing-page .lp-movement h2 { font-size: 26px; }
+  .landing-page .lp-workout-example { gap: 16px; padding: 20px; }
 }
 
 @media (max-width: 850px) {
   .landing-page .lp-container { width: min(680px, calc(100% - 48px)); }
-  .landing-page .lp-hero { grid-template-columns: minmax(0, 1fr); gap: 44px; padding-block: 60px 56px; }
+  .landing-page .lp-hero { grid-template-columns: minmax(0, 1fr); gap: 44px; padding-block: 60px 48px; }
   .landing-page .lp-hero-copy { max-width: 610px; }
   .landing-page h1 { font-size: 54px; max-width: 620px; }
   .landing-page .lp-hero-description { max-width: 500px; }
   .landing-page .lp-hero-actions { gap: 22px; }
   .landing-page .lp-showcase { width: min(100%, 520px); margin-inline: auto; }
-  .landing-page .lp-how { padding-block: 42px 48px; }
+  .landing-page .lp-how { padding-block: 38px 42px; }
   .landing-page .lp-steps { gap: 22px; }
   .landing-page .lp-steps li { flex-direction: column; gap: 8px; }
   .landing-page .lp-steps h3 { font-size: 14px; }
-  .landing-page .lp-feature { padding-top: 76px; gap: 30px; }
+  .landing-page .lp-feature { padding-top: 64px; gap: 30px; }
   .landing-page .lp-feature-copy h2 { font-size: 32px; }
   .landing-page .lp-feature-copy .lp-eyebrow { font-size: 9px; letter-spacing: 1px; }
   .landing-page .lp-feature-copy > p:not(.lp-eyebrow) { font-size: 13px; margin-top: 17px; }
@@ -273,10 +276,10 @@
   .landing-page .lp-chat-user { margin-left: 12px; }
   .landing-page .lp-chat-context { align-items: flex-start; }
   .landing-page .lp-chat-context svg { margin-top: 2px; }
-  .landing-page .lp-movement { flex-wrap: wrap; margin-top: 50px; }
-  .landing-page .lp-movement h2 { font-size: 21px; }
-  .landing-page .lp-workout-example { padding-left: 46px; gap: 30px; }
-  .landing-page .lp-history { padding-top: 76px; }
+  .landing-page .lp-movement { grid-template-columns: minmax(0, 1fr); margin-top: 48px; gap: 28px; }
+  .landing-page .lp-movement h2 { font-size: 26px; }
+  .landing-page .lp-workout-example { gap: 24px; }
+  .landing-page .lp-history { padding-top: 64px; }
   .landing-page .lp-history-intro { align-items: flex-start; flex-direction: column; gap: 20px; }
   .landing-page .lp-history-intro > p { max-width: 450px; }
   .landing-page .lp-history-preview { padding: 24px; }
@@ -286,7 +289,7 @@
   .landing-page .lp-heat-cell { aspect-ratio: 1; }
   .landing-page .lp-heatmap-footer { flex-wrap: wrap; }
   .landing-page .lp-benefits { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 24px; }
-  .landing-page .lp-final-section { padding-top: 76px; }
+  .landing-page .lp-final-section { padding-top: 64px; }
 }
 
 @media (max-width: 600px) {
@@ -297,14 +300,14 @@
   .landing-page .lp-header nav { gap: 14px; font-size: 11px; }
   .landing-page .lp-button-small { padding-inline: 12px; font-size: 11px; gap: 5px; }
   .landing-page .lp-header .lp-button-small svg { display: none; }
-  .landing-page .lp-hero { padding-top: 48px; gap: 38px; }
+  .landing-page .lp-hero { padding-top: 48px; gap: 48px; }
   .landing-page .lp-eyebrow { font-size: 9px; letter-spacing: 1.1px; }
   .landing-page h1 { font-size: clamp(36px, 9.1vw, 48px); line-height: 1.1; margin-top: 19px; letter-spacing: -.05em; }
   .landing-page .lp-hero-description { font-size: 14px; margin-top: 22px; line-height: 1.85; }
-  .landing-page .lp-hero-actions { flex-direction: column; align-items: stretch; gap: 7px; margin-top: 25px; }
+  .landing-page .lp-hero-actions { flex-direction: column; align-items: stretch; gap: 12px; margin-top: 25px; }
   .landing-page .lp-hero-actions .lp-button { justify-content: space-between; }
   .landing-page .lp-hero-actions .lp-text-link { font-size: 12px; }
-  .landing-page .lp-free-note { justify-content: center; margin-top: 4px; font-size: 11px; }
+  .landing-page .lp-free-note { justify-content: center; margin-top: 12px; font-size: 11px; }
   .landing-page .lp-showcase::before { inset: -24px -12px; }
   .landing-page .lp-preview-topbar { min-height: 49px; padding: 10px 16px; }
   .landing-page .lp-preview-content { padding: 16px; }
@@ -318,7 +321,7 @@
   .landing-page .lp-habits > div { padding: 11px 8px; }
   .landing-page .lp-habits strong { font-size: 19px; }
   .landing-page .lp-habit-note { font-size: 7px; }
-  .landing-page .lp-preview-coach { margin-inline: 16px 12px; padding: 12px; gap: 9px; }
+  .landing-page .lp-preview-coach { margin-inline: 14px; padding: 12px; gap: 9px; }
   .landing-page .lp-preview-coach strong { font-size: 10px; }
   .landing-page .lp-preview-coach p { font-size: 8px; }
   .landing-page .lp-preview-coach .lp-coach-icon { width: 31px; height: 31px; }
@@ -327,7 +330,7 @@
   .landing-page .lp-steps li { flex-direction: row; gap: 18px; }
   .landing-page .lp-steps p { max-width: 100%; margin-top: 5px; }
   .landing-page .lp-steps h3 { font-size: 15px; }
-  .landing-page .lp-feature { grid-template-columns: minmax(0, 1fr); padding-top: 60px; gap: 28px; }
+  .landing-page .lp-feature { grid-template-columns: minmax(0, 1fr); padding-top: 52px; gap: 24px; }
   .landing-page .lp-feature-photo .lp-feature-copy, .landing-page .lp-feature-photo .lp-photo-preview { grid-column: auto; grid-row: auto; }
   .landing-page .lp-feature-copy h2, .landing-page .lp-history-intro h2 { font-size: 33px; letter-spacing: -1.3px; }
   .landing-page .lp-feature-copy > p:not(.lp-eyebrow) { max-width: 100%; font-size: 14px; }
@@ -346,13 +349,14 @@
   .landing-page .lp-movement-copy { align-items: flex-start; gap: 13px; }
   .landing-page .lp-movement-icon { margin-top: 2px; }
   .landing-page .lp-movement-copy .lp-eyebrow { font-size: 8px; letter-spacing: .9px; }
-  .landing-page .lp-movement h2 { font-size: 20px; margin-top: 11px; }
-  .landing-page .lp-movement h2 br { display: initial; }
-  .landing-page .lp-movement-copy p:last-child { font-size: 11px; }
-  .landing-page .lp-workout-example { width: 100%; padding: 20px 0 0; border-top: 1px solid var(--lp-line); justify-content: space-between; gap: 12px; }
+  .landing-page .lp-movement h2 { font-size: 24px; margin-top: 11px; }
+
+  .landing-page .lp-movement-copy p:last-child { font-size: 12px; }
+  .landing-page .lp-workout-example { width: 100%; padding: 18px 14px; gap: 12px; }
   .landing-page .lp-workout-example strong { font-size: 22px; }
-  .landing-page .lp-workout-example span { font-size: 8px; }
-  .landing-page .lp-history { padding-top: 60px; }
+  .landing-page .lp-workout-example > div:last-child strong { font-size: 32px; }
+  .landing-page .lp-workout-example > div:last-child span { font-size: 9px; }
+  .landing-page .lp-history { padding-top: 52px; }
   .landing-page .lp-history-intro { gap: 17px; margin-bottom: 28px; }
   .landing-page .lp-history-intro > p { font-size: 14px; }
   .landing-page .lp-history-preview { padding: 21px 16px; }
@@ -372,12 +376,13 @@
   .landing-page .lp-benefits li { flex-direction: column; gap: 9px; }
   .landing-page .lp-benefits h3 { font-size: 12px; }
   .landing-page .lp-benefits p { font-size: 10px; }
-  .landing-page .lp-final-section { padding-block: 60px 38px; }
-  .landing-page .lp-final-cta { padding: 36px 20px; }
+  .landing-page .lp-final-section { padding-block: 52px 32px; }
+  .landing-page .lp-final-cta { padding: 32px 20px; }
+  .landing-page .lp-final-cta .lp-button { width: min(100%, 320px); }
   .landing-page .lp-final-cta h2 { max-width: 310px; font-size: 33px; letter-spacing: -1.3px; }
   .landing-page .lp-final-cta .lp-eyebrow { font-size: 8px; }
   .landing-page .lp-final-cta > p:not(.lp-eyebrow) { font-size: 12px; }
-  .landing-page .lp-footer { gap: 14px; min-height: 126px; }
+  .landing-page .lp-footer { gap: 14px; min-height: 112px; }
   .landing-page .lp-footer > div:first-child { flex-direction: column; align-items: flex-start; gap: 6px; }
   .landing-page .lp-footer p { font-size: 10px; padding-left: 3px; }
   .landing-page .lp-footer-actions { gap: 14px; }
@@ -409,7 +414,7 @@
   .landing-page .lp-movement { padding: 21px; }
   .landing-page .lp-movement-copy { gap: 10px; }
   .landing-page .lp-movement-copy .lp-eyebrow { font-size: 7px; }
-  .landing-page .lp-movement h2 { font-size: 18px; }
+  .landing-page .lp-movement h2 { font-size: 22px; }
   .landing-page .lp-heatmap { gap: 2px; }
   .landing-page .lp-heatmap-legend { gap: 8px; }
   .landing-page .lp-footer-actions { gap: 10px; }

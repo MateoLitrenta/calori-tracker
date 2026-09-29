@@ -157,7 +157,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
         </section>
 
         <section className="lp-how lp-container" aria-labelledby="lp-how-title" data-lp-reveal>
-          <div className="lp-section-intro"><p className="lp-eyebrow">ASÍ DE SIMPLE</p><h2 id="lp-how-title">Menos pasos para empezar.<br />Más claridad para seguir.</h2></div>
+          <div className="lp-section-intro"><p className="lp-eyebrow">ASÍ DE SIMPLE</p><h2 id="lp-how-title">Empezá en tres pasos.</h2></div>
           <ol className="lp-steps">
             <li><span className="lp-step-number">01</span><div><h3>Contanos sobre vos</h3><p>Creá tu cuenta y completá tu perfil para darle contexto a tu seguimiento.</p></div></li>
             <li><span className="lp-step-number">02</span><div><h3>Registrá a tu manera</h3><p>Una foto, una comida o tu entrenamiento. Sumá lo que pasó en tu día.</p></div></li>
@@ -171,7 +171,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
         </section>
 
         <section className="lp-feature lp-feature-coach lp-container" aria-labelledby="lp-coach-title" data-lp-reveal>
-          <div className="lp-feature-copy"><p className="lp-eyebrow"><ChatsCircle size={17} /> UNA CONVERSACIÓN CON CONTEXTO</p><h2 id="lp-coach-title">Tu día no empieza<br />de cero. Tu Coach tampoco.</h2><p>Conversá sobre tu alimentación y actividad con el contexto de tus registros y de los últimos días. Menos repetir. Más entender cómo venís.</p><div className="lp-context-tags"><span><ForkKnife size={15} /> Comidas</span><span><PersonSimpleWalk size={15} /> Actividad</span><span><ChartBar size={15} /> Últimos días</span></div></div>
+          <div className="lp-feature-copy"><p className="lp-eyebrow"><ChatsCircle size={17} /> UNA CONVERSACIÓN CON CONTEXTO</p><h2 id="lp-coach-title">Un Coach con<br />tu contexto.</h2><p>Conversá sobre tu alimentación y actividad con el contexto de tus registros y de los últimos días. Menos repetir. Más entender cómo venís.</p><div className="lp-context-tags"><span><ForkKnife size={15} /> Comidas</span><span><PersonSimpleWalk size={15} /> Actividad</span><span><ChartBar size={15} /> Últimos días</span></div></div>
           <figure className="lp-chat-preview lp-example-panel">
             <div className="lp-chat-heading"><span className="lp-coach-icon"><Sparkle size={23} weight="fill" /></span><div><strong>Coach Calori</strong><span>Una mirada sobre tus registros</span></div><span className="lp-demo-label">Ejemplo</span></div>
             <div className="lp-chat-messages"><p className="lp-chat-user">Hoy jugué al fútbol. ¿Cómo viene mi semana?</p><div className="lp-chat-answer"><span className="lp-chat-context"><ChartBar size={14} /> Con el contexto de tus últimos días</span><p>En los días que registraste, combinaste comidas y actividad. El fútbol de hoy también suma a tu gasto estimado.</p><p>Podemos mirar la semana completa para entender el patrón.</p></div></div>
@@ -181,7 +181,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
         </section>
 
         <section className="lp-movement lp-container" aria-labelledby="lp-movement-title" data-lp-reveal>
-          <div className="lp-movement-copy"><span className="lp-movement-icon"><SoccerBall size={29} weight="light" /></span><div><p className="lp-eyebrow">TU ACTIVIDAD TAMBIÉN CUENTA</p><h2 id="lp-movement-title">El partido termina.<br />El registro toma un momento.</h2><p>Estimá el gasto según la actividad, su duración y tu perfil.</p></div></div>
+          <div className="lp-movement-copy"><span className="lp-movement-icon"><SoccerBall size={29} weight="light" /></span><div><p className="lp-eyebrow">TU ACTIVIDAD TAMBIÉN CUENTA</p><h2 id="lp-movement-title">Estimá el gasto de<br />tu entrenamiento.</h2><p>Estimá el gasto según la actividad, su duración y tu perfil.</p></div></div>
           <div className="lp-workout-example"><div><strong>Fútbol</strong><span>60 min</span></div><ArrowRight size={21} aria-hidden="true" /><div><strong>540 <small>kcal</small></strong><span>aprox. · ejemplo de estimación</span></div></div>
         </section>
 
