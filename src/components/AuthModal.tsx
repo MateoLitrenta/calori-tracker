@@ -1,224 +1,118 @@
-import React, { useState } from 'react';
-import { X, Spinner } from '@phosphor-icons/react';
+import { useState, useRef, useEffect } from 'react';
+import type { FormEvent } from 'react';
+import { ArrowLeft, X, Spinner, EnvelopeSimple } from '@phosphor-icons/react';
 import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
-import clsx from 'clsx';
+import ThemeToggle from './ThemeToggle';
 import './AuthEntry.css';
 
 interface AuthModalProps {
   onClose: () => void;
+  initialMode?: 'login' | 'register';
+  onModeChange?: (mode: 'login' | 'register') => void;
+  presentation?: 'modal' | 'page';
 }
 
-const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
-  const [isLogin, setIsLogin] = useState(true);
+export default function AuthModal({ onClose, initialMode = 'login', onModeChange, presentation = 'modal' }: AuthModalProps) {
+  const [isLogin, setIsLogin] = useState(initialMode === 'login');
   const [loading, setLoading] = useState(false);
-
-  // Form states
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [age, setAge] = useState<number>(25);
-  const [weight, setWeight] = useState<number>(70);
-  const [height, setHeight] = useState<number>(175);
-  const [sex, setSex] = useState<'Masculino' | 'Femenino'>('Masculino');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [confirmationSent, setConfirmationSent] = useState(false);
+  const busy = useRef(false);
+  const panel = useRef<HTMLDivElement>(null);
+  const page = presentation === 'page';
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  useEffect(() => {
+    if (page) return;
+    const previous = document.activeElement as HTMLElement | null;
+    panel.current?.querySelector<HTMLInputElement>('input')?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+      if (event.key !== 'Tab') return;
+      const nodes = panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled), input, a[href]');
+      if (!nodes?.length) return;
+      const first = nodes[0], last = nodes[nodes.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('keydown', onKey); previous?.focus(); };
+  }, [onClose, page]);
 
-    try {
-      if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
-        if (error) throw error;
-        toast.success('Sesión iniciada', { style: { background: '#161b22', color: '#fff' } });
-        onClose();
-      } else {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password
-        });
-        if (error) throw error;
-        
-        if (data.user) {
-          // Crear perfil
-          const { error: profileError } = await supabase.from('profiles').upsert({
-            id: data.user.id,
-            user_id: data.user.id,
-            name,
-            age,
-            weight_kg: weight,
-            height_cm: height,
-            gender: sex,
-            goal: 'Mantenimiento',
-            activity_level: 'Sedentario'
-          }, { onConflict: 'id' });
-          if (profileError) throw profileError;
-          
-          toast.success('Registro exitoso. ¡Bienvenido!', { style: { background: '#161b22', color: '#fff' } });
-          onClose();
-        }
-      }
-    } catch (error: any) {
-      console.error('Auth error:', error);
-      toast.error(error.message || 'Ocurrió un error en la autenticación', { style: { background: '#161b22', color: '#fff' } });
-    } finally {
-      setLoading(false);
-    }
+  const changeMode = (mode: 'login' | 'register') => {
+    if (busy.current) return;
+    setErrorMessage(''); setConfirmationSent(false);
+    if (onModeChange) onModeChange(mode);
+    else setIsLogin(mode === 'login');
   };
 
-  return (
-    <div className="auth-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="auth-modal w-full max-w-md flex flex-col overflow-hidden">
-        <div className="flex shrink-0 items-center gap-3 px-5 pt-5 sm:px-6">
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (busy.current) return;
+    busy.current = true; setLoading(true); setErrorMessage('');
+    try {
+      if (isLogin) {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        toast.success('Sesión iniciada');
+        onClose();
+      } else {
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) throw error;
+        // The authenticated loader creates the profile, including after email confirmation.
+        // Personal data is collected in onboarding.
+        if (data.session) { toast.success('¡Bienvenido a Calori!'); onClose(); }
+        else { setConfirmationSent(true); setPassword(''); }
+      }
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'No pudimos completar el acceso. Intentá de nuevo.');
+    } finally { busy.current = false; setLoading(false); }
+  };
+
+  return <div className={page ? 'auth-entry auth-page' : 'auth-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm'}>
+    {page && <header className="auth-page-header">
+      <a href="/" onClick={event => { if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) { event.preventDefault(); onClose(); } }} className="auth-back"><ArrowLeft size={18} /> Volver a Calori</a>
+      <ThemeToggle />
+    </header>}
+    <main className={page ? 'auth-page-content' : 'contents'}>
+      <div ref={panel} className="auth-modal w-full max-w-md flex flex-col overflow-hidden" role={page ? undefined : 'dialog'} aria-modal={page ? undefined : true} aria-labelledby="auth-heading">
+        <div className="auth-page-brand">
           <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-modal" />
-          <span className="text-lg font-semibold tracking-tight">Calori</span>
+          <span>Calori</span>
+          {!page && <button type="button" onClick={onClose} aria-label="Cerrar" className="auth-close ml-auto p-3"><X size={22} /></button>}
         </div>
-        <div className="auth-modal-header flex shrink-0 items-center justify-between gap-2 p-4 sm:px-6">
-          <div className="flex gap-3 sm:gap-5">
-            <button
-              onClick={() => setIsLogin(true)}
-              className={clsx(
-                "auth-tab text-sm font-medium transition-colors",
-                isLogin && "auth-tab-active"
-              )}
-            >
-              Iniciar Sesión
-            </button>
-            <button
-              onClick={() => setIsLogin(false)}
-              className={clsx(
-                "auth-tab text-sm font-medium transition-colors",
-                !isLogin && "auth-tab-active"
-              )}
-            >
-              Registrarse
-            </button>
-          </div>
-          <button onClick={onClose} aria-label="Cerrar" className="auth-close shrink-0 p-2 rounded-xl transition-colors">
-            <X size={24} />
-          </button>
+        <div className="auth-page-intro">
+          <h1 id="auth-heading">{isLogin ? 'Volvé a Calori.' : 'Menos esfuerzo. Más contexto.'}</h1>
+          <p className="auth-secondary">{isLogin ? 'Tu día, tus hábitos y tu Coach te esperan.' : 'Creá tu cuenta. Después, te conocemos un poco mejor.'}</p>
         </div>
-
+        <div className="auth-modal-header flex shrink-0 gap-5 px-6">
+          <button type="button" disabled={loading} onClick={() => changeMode('login')} className={`auth-tab text-sm font-medium ${isLogin ? 'auth-tab-active' : ''}`} aria-pressed={isLogin}>Iniciar sesión</button>
+          <button type="button" disabled={loading} onClick={() => changeMode('register')} className={`auth-tab text-sm font-medium ${!isLogin ? 'auth-tab-active' : ''}`} aria-pressed={!isLogin}>Crear cuenta</button>
+        </div>
         <div className="auth-form-scroll min-h-0 overflow-y-auto p-5 sm:p-6">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            
+          {confirmationSent ? <div className="auth-confirmation" role="status">
+            <EnvelopeSimple size={32} aria-hidden="true" />
+            <h2>Revisá tu email</h2>
+            <p className="auth-secondary">Si el registro está disponible para esta dirección, recibirás un enlace de confirmación. Después podés iniciar sesión para completar tu perfil.</p>
+            <button type="button" className="auth-primary w-full py-3 px-4" onClick={() => changeMode('login')}>Ir a iniciar sesión</button>
+          </div> : <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="flex flex-col gap-1">
-              <label className="text-sm text-slate-500 dark:text-gray-400">Email</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
-                placeholder="tu@email.com"
-              />
+              <label htmlFor="auth-email">Email</label>
+              <input id="auth-email" type="email" autoComplete="email" required value={email} onChange={event => setEmail(event.target.value)} placeholder="tu@email.com" disabled={loading} />
             </div>
-            
             <div className="flex flex-col gap-1">
-              <label className="text-sm text-slate-500 dark:text-gray-400">Contraseña</label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
-                placeholder="••••••••"
-                minLength={6}
-              />
+              <label htmlFor="auth-password">Contraseña</label>
+              <input id="auth-password" type="password" autoComplete={isLogin ? 'current-password' : 'new-password'} required minLength={6} value={password} onChange={event => setPassword(event.target.value)} placeholder={isLogin ? 'Tu contraseña' : 'Al menos 6 caracteres'} disabled={loading} />
             </div>
-
-            {!isLogin && (
-              <>
-                <div className="flex flex-col gap-1">
-                  <label className="text-sm text-slate-500 dark:text-gray-400">Nombre completo</label>
-                  <input
-                    type="text"
-                    inputMode="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
-                    placeholder="Ej. Mateo"
-                  />
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-sm text-slate-500 dark:text-gray-400">Edad</label>
-                    <input
-                      type="number"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      required
-                      min={1}
-                      value={age}
-                      onChange={(e) => setAge(Number(e.target.value))}
-                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-sm text-slate-500 dark:text-gray-400">Sexo</label>
-                    <select
-                      value={sex}
-                      onChange={(e) => setSex(e.target.value as any)}
-                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
-                    >
-                      <option value="Masculino">Masculino</option>
-                      <option value="Femenino">Femenino</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-sm text-slate-500 dark:text-gray-400">Peso (kg)</label>
-                    <input
-                      type="number"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      required
-                      min={1}
-                      value={weight}
-                      onChange={(e) => setWeight(Number(e.target.value))}
-                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-sm text-slate-500 dark:text-gray-400">Altura (cm)</label>
-                    <input
-                      type="number"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      required
-                      min={1}
-                      value={height}
-                      onChange={(e) => setHeight(Number(e.target.value))}
-                      className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500 w-full"
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="auth-primary mt-2 w-full flex items-center justify-center py-3 px-4 transition-colors font-medium disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <Spinner size={20} className="animate-spin" />
-              ) : (
-                isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'
-              )}
+            {errorMessage && <p role="alert" className="auth-error">{errorMessage}</p>}
+            <button type="submit" disabled={loading} className="auth-primary mt-2 w-full flex items-center justify-center py-3 px-4 font-medium disabled:cursor-not-allowed">
+              {loading ? <><Spinner size={20} className="animate-spin mr-2" /> Un momento…</> : isLogin ? 'Iniciar sesión' : 'Crear cuenta'}
             </button>
-          </form>
+          </form>}
         </div>
       </div>
-    </div>
-  );
-};
-
-export default AuthModal;
+    </main>
+  </div>;
+}
