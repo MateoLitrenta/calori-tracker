@@ -10,6 +10,24 @@ export type MediaAttachment =
   | { kind: 'audio'; mimeType: string; data: string }
   | { kind: 'image'; mimeType: string; data: string };
 
+interface EstimateResult { calories: number; assumptions: string[]; estimated: true }
+async function estimate(body: Record<string, unknown>): Promise<EstimateResult & { description?: string; activity?: string }> {
+  const response = await fetch('/api/ai/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'estimate', ...body }) });
+  const result = await response.json().catch(() => ({ error: 'La respuesta de IA no es válida.' }));
+  if (!response.ok || result.estimated !== true || !Number.isFinite(result.calories) || result.calories <= 0) {
+    throw new Error(result.error || 'No pude estimar las calorías.');
+  }
+  return result;
+}
+
+export function estimateMeal(input: { name: string; details: string; type: string; attachment?: Extract<MediaAttachment, { kind: 'image' }> }) {
+  return estimate({ estimateType: 'meal', text: input.name, details: `Tipo: ${input.type}. ${input.details}`, attachment: input.attachment }) as Promise<EstimateResult & { description: string }>;
+}
+
+export function estimateWorkout(input: { activity: string; duration: number; details: string; profile: { sex: string; age: number; weight: number; height: number } }) {
+  return estimate({ estimateType: 'workout', text: input.activity, details: input.details, duration: input.duration, profile: input.profile }) as Promise<EstimateResult & { activity: string }>;
+}
+
 export interface DataAction {
   type: 'add_meal' | 'add_workout' | 'set_steps' | 'add_water' | 'set_weight';
   payload: Record<string, unknown>;

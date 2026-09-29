@@ -4,11 +4,14 @@ import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap, UserProfile } from '../types';
 import { hasEnergyData, formatDateStr, getCaloriesIngested, generateUUID, aggregateEnergy, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure, getBalanceLabel, getBalancePillColor } from '../utils/helpers';
+import { estimateMeal, estimateWorkout } from '../services/aiService';
+import { supabase } from '../lib/supabase';
+import { MealPhotoPicker, MealThumbnail } from './MealPhoto';
 
 interface DailyPanelProps {
   record: DailyRecord | undefined;
   dateStr: string;
-  onUpdateRecord: (dateStr: string, updatedRecord: DailyRecord) => void;
+  onUpdateRecord: (dateStr: string, updatedRecord: DailyRecord) => Promise<boolean>;
   profile: UserProfile;
   selectedGroup?: { type: 'day'|'week'|'month'|'year', label: string, dates: string[] } | null;
   records?: DailyRecordsMap;
@@ -69,9 +72,18 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   }
 
   // --- Handlers ---
-  const handleDeleteMeal = (id: string) => {
-    onUpdateRecord(dateStr, { ...currentRecord, meals: currentRecord.meals.filter(m => m.id !== id) });
+  const handleDeleteMeal = async (id: string) => {
+    const meal = currentRecord.meals.find(m => m.id === id);
+    if (!await onUpdateRecord(dateStr, { ...currentRecord, meals: currentRecord.meals.filter(m => m.id !== id) })) return;
     toast.success('Comida eliminada', { style: { background: '#161b22', color: '#fff' }, icon: '🗑️' });
+    if (meal?.photo_path) await removePhoto(meal.photo_path);
+  };
+
+  const removePhoto = async (path: string) => {
+    try {
+      const { error } = await supabase.storage.from('meal-photos').remove([path]);
+      if (error) throw error;
+    } catch (error) { console.error('Meal photo cleanup failed:', error); toast.error('No se pudo borrar la foto de Storage.'); }
   };
 
   const handleDeleteWorkout = (id: string) => {
@@ -127,6 +139,14 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [mealCals, setMealCals] = useState<number | ''>('');
   const [mealDetails, setMealDetails] = useState('');
   const [mealTime, setMealTime] = useState('');
+  const [mealPhoto, setMealPhoto] = useState<Blob | null>(null);
+  const [mealPhotoRemoved, setMealPhotoRemoved] = useState(false);
+  const [mealEstimated, setMealEstimated] = useState(false);
+  const [workEstimated, setWorkEstimated] = useState(false);
+  const [estimating, setEstimating] = useState(false);
+  const [savingMeal, setSavingMeal] = useState(false);
+  const [photoProcessing, setPhotoProcessing] = useState(false);
+  const savingMealRef = useRef(false);
 
   const [editingWorkoutId, setEditingWorkoutId] = useState<string | null>(null);
   const [workActivity, setWorkActivity] = useState('');
@@ -143,6 +163,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setMealCals('');
     setMealDetails('');
     setMealTime('');
+    setMealPhoto(null);
+    setPhotoProcessing(false);
+    setMealPhotoRemoved(false);
+    setMealEstimated(false);
+    setWorkEstimated(false);
     
     setEditingWorkoutId(null);
     setWorkActivity('');
@@ -265,26 +290,61 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     }
   }, [activeTab, editingMealId, editingWorkoutId]);
 
-  const handleAddMeal = (e: React.FormEvent) => {
+  const handleEstimateMeal = async () => {
+    if (estimating || (!mealName.trim() && !mealPhoto)) { toast.error('Describí la comida o agregá una foto.'); return; }
+    setEstimating(true);
+    try {
+      const attachment = mealPhoto ? { kind: 'image' as const, mimeType: 'image/jpeg', data: await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+        reader.onerror = reject; reader.readAsDataURL(mealPhoto);
+      }) } : undefined;
+      const result = await estimateMeal({ name: mealName, details: mealDetails, type: mealType, attachment });
+      setMealCals(result.calories);
+      if (!mealName.trim()) setMealName(result.description);
+      setMealEstimated(true);
+      if (result.assumptions.length) toast(result.assumptions.join(' · '));
+    } catch { toast.error('No pude estimar las calorías. Agregá más detalle o intentá nuevamente.'); }
+    finally { setEstimating(false); }
+  };
+
+  const handleEstimateWorkout = async () => {
+    if (estimating) return;
+    if (!workActivity.trim()) { toast.error('Indicá qué ejercicio hiciste.'); return; }
+    if (!workDuration || workDuration <= 0) { toast.error('Indicá cuánto tiempo entrenaste.'); return; }
+    setEstimating(true);
+    try {
+      const result = await estimateWorkout({ activity: workActivity, duration: Number(workDuration), details: workDetails,
+        profile: { sex: profile.sex, age: profile.age, weight: profile.weight, height: profile.height } });
+      setWorkCals(result.calories); setWorkEstimated(true);
+      if (result.assumptions.length) toast(result.assumptions.join(' · '));
+    } catch { toast.error('No pude estimar el gasto. Revisá actividad y duración.'); }
+    finally { setEstimating(false); }
+  };
+
+  const handleAddMeal = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!mealName || !mealCals) return;
-    
-    if (editingMealId) {
-      const updatedMeals = currentRecord.meals.map(m => 
-        m.id === editingMealId ? { ...m, name: mealName, type: mealType, calories: Number(mealCals), details: mealDetails, time: mealTime || format(new Date(), 'HH:mm') } : m
-      );
-      onUpdateRecord(dateStr, { ...currentRecord, meals: updatedMeals });
-      setEditingMealId(null);
-    } else {
-      const newMeal: MealEntry = { id: generateUUID(), name: mealName, type: mealType, calories: Number(mealCals), time: mealTime || format(new Date(), 'HH:mm'), details: mealDetails };
-      onUpdateRecord(dateStr, { ...currentRecord, meals: [...currentRecord.meals, newMeal] });
-    }
-    
-    setMealName('');
-    setMealCals('');
-    setMealDetails('');
-    setMealTime('');
-    setActiveTab(null);
+    if (!mealName.trim() || !mealCals || savingMealRef.current || photoProcessing) return;
+    savingMealRef.current = true; setSavingMeal(true);
+    const oldMeal = editingMealId ? currentRecord.meals.find(m => m.id === editingMealId) : undefined;
+    const mealId = editingMealId || generateUUID();
+    let uploadedPath: string | null = null;
+    try {
+      if (mealPhoto) {
+        uploadedPath = `${profile.user_id}/${dateStr}/${mealId}-${generateUUID()}.jpg`;
+        const { error } = await supabase.storage.from('meal-photos').upload(uploadedPath, mealPhoto, { contentType: 'image/jpeg' });
+        if (error) throw error;
+      }
+      const meal: MealEntry = { id: mealId, name: mealName, type: mealType, calories: Number(mealCals),
+        time: mealTime || format(new Date(), 'HH:mm'), details: mealDetails,
+        photo_path: uploadedPath || (mealPhotoRemoved ? null : oldMeal?.photo_path ?? null) };
+      const meals = oldMeal ? currentRecord.meals.map(m => m.id === mealId ? meal : m) : [...currentRecord.meals, meal];
+      if (!await onUpdateRecord(dateStr, { ...currentRecord, meals })) throw new Error('No se pudo guardar la comida.');
+      if (oldMeal?.photo_path && oldMeal.photo_path !== meal.photo_path) await removePhoto(oldMeal.photo_path);
+      resetForms(); setActiveTab(null);
+    } catch {
+      if (uploadedPath) await removePhoto(uploadedPath);
+      toast.error('No se pudo guardar la comida con su foto. Intentá nuevamente.');
+    } finally { savingMealRef.current = false; setSavingMeal(false); }
   };
 
   const startEditMeal = (m: MealEntry) => {
@@ -295,6 +355,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setMealCals(m.calories);
     setMealDetails(m.details || '');
     setMealTime(m.time || format(new Date(), 'HH:mm'));
+    setMealPhoto(null); setMealPhotoRemoved(false); setMealEstimated(false);
   };
 
   const handleAddWorkout = (e: React.FormEvent) => {
@@ -337,6 +398,24 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   };
 
   const [detailModalItem, setDetailModalItem] = useState<(MealEntry & { _type: 'meal' }) | (WorkoutEntry & { _type: 'workout' }) | null>(null);
+  const mealPhotoControls = <MealPhotoPicker blob={mealPhoto}
+    path={mealPhotoRemoved ? null : currentRecord.meals.find(m => m.id === editingMealId)?.photo_path}
+    onChange={blob => { setMealPhoto(blob); setMealPhotoRemoved(false); }}
+    onRemove={() => { setMealPhoto(null); setMealPhotoRemoved(true); }} onBusyChange={setPhotoProcessing} />;
+  const mealEstimateControls = <div className="flex flex-col gap-1">
+    <button type="button" disabled={estimating} onClick={() => void handleEstimateMeal()}
+      className="min-h-11 self-start px-4 rounded-[var(--radius-control)] border border-[#f5a064]/50 text-[#b85b22] dark:text-[#f5a064] disabled:opacity-50">
+      {estimating ? 'Estimando…' : 'Estimar con IA'}
+    </button>
+    {mealEstimated && <span className="self-start text-xs px-2 py-1 rounded-[var(--radius-pill)] bg-orange-100 text-orange-800 dark:bg-orange-400/10 dark:text-orange-200">Estimado por IA</span>}
+  </div>;
+  const workEstimateControls = <div className="flex flex-col gap-1">
+    <button type="button" disabled={estimating} onClick={() => void handleEstimateWorkout()}
+      className="min-h-11 self-start px-4 rounded-[var(--radius-control)] border border-[#f5a064]/50 text-[#b85b22] dark:text-[#f5a064] disabled:opacity-50">
+      {estimating ? 'Estimando…' : 'Estimar con IA'}
+    </button>
+    {workEstimated && <span className="self-start text-xs px-2 py-1 rounded-[var(--radius-pill)] bg-orange-100 text-orange-800 dark:bg-orange-400/10 dark:text-orange-200">Estimado por IA</span>}
+  </div>;
 
   return (
     <div className="daily-panel flex flex-col gap-6 w-full">
@@ -569,10 +648,10 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <input 
                 required
                 type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
-                value={mealCals} onChange={e => setMealCals(Number(e.target.value))}
+                value={mealCals} onChange={e => { setMealCals(Number(e.target.value)); setMealEstimated(false); }}
                 className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
               />
-              <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2">
+              <button type="submit" disabled={savingMeal || photoProcessing} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2 disabled:opacity-50">
                 <Check weight="bold" /> Guardar
               </button>
             </div>
@@ -602,6 +681,9 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 className="flex-1 min-w-[200px] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
               />
             </div>
+            <span className="text-xs text-slate-500 dark:text-gray-400">Foto opcional</span>
+            {mealPhotoControls}
+            {mealEstimateControls}
           </form>
         )}
 
@@ -640,7 +722,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <input 
                 required
                 type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
-                value={workCals} onChange={e => setWorkCals(Number(e.target.value))}
+                value={workCals} onChange={e => { setWorkCals(Number(e.target.value)); setWorkEstimated(false); }}
                 className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
               />
             </div>
@@ -686,6 +768,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               </div>
             )}
 
+            {workEstimateControls}
             <div className="flex justify-end">
               <button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2">
                 <Check weight="bold" /> Guardar
@@ -792,8 +875,9 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     onClick={() => setDetailModalItem(meal)}
                     className="p-3.5 hover:bg-white dark:bg-[#161b22] flex flex-col gap-1.5 group transition-colors cursor-pointer"
                   >
-                    <div className="w-full font-medium text-wrap break-words leading-tight">
-                      <ForkKnife size={18} className="inline-block mr-2 text-orange-400" aria-hidden="true" />{meal.name}
+                    <div className="flex items-center gap-3 w-full font-medium text-wrap break-words leading-tight">
+                      {meal.photo_path && <MealThumbnail path={meal.photo_path} />}
+                      <span><ForkKnife size={18} className="inline-block mr-2 text-orange-400" aria-hidden="true" />{meal.name}</span>
                     </div>
                     <div className="flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
                       <span>
@@ -975,7 +1059,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       {/* Edit Modal para Comidas */}
       {editingMealId && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm rounded-2xl shadow-xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl shadow-xl flex flex-col animate-in zoom-in-95 duration-200">
             <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
               <h3 className="font-bold text-lg text-slate-900 dark:text-white">Editar Comida</h3>
               <button 
@@ -1009,7 +1093,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 <input 
                   required
                   type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
-                  value={mealCals} onChange={e => setMealCals(Number(e.target.value))}
+                  value={mealCals} onChange={e => { setMealCals(Number(e.target.value)); setMealEstimated(false); }}
                   className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                 />
               </div>
@@ -1037,8 +1121,10 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                 />
               </div>
+              {mealPhotoControls}
+              {mealEstimateControls}
               <div className="flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
-                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2">
+                <button type="submit" disabled={savingMeal || photoProcessing} className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
                   <Check weight="bold" /> Guardar Cambios
                 </button>
               </div>
@@ -1079,7 +1165,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 <input 
                   required
                   type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
-                  value={workCals} onChange={e => setWorkCals(Number(e.target.value))}
+                  value={workCals} onChange={e => { setWorkCals(Number(e.target.value)); setWorkEstimated(false); }}
                   className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
               </div>
@@ -1122,6 +1208,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 />
               </div>
 
+              {workEstimateControls}
               <div className="flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
                 <button type="submit" className="w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2">
                   <Check weight="bold" /> Guardar Cambios
