@@ -118,8 +118,8 @@ export const getBalanceCategory = (balance: number | null): BalanceCategory => {
   if (balance === null) return 'empty';
   if (balance < -500) return 'deficit-high';
   if (balance < -250) return 'deficit-medium';
-  if (balance < -100) return 'deficit-low';
-  if (balance <= 100) return 'neutral';
+  if (balance < 0) return 'deficit-low';
+  if (balance === 0) return 'neutral';
   if (balance <= 250) return 'surplus-low';
   if (balance <= 500) return 'surplus-medium';
   return 'surplus-high';

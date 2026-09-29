@@ -383,9 +383,9 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
           <div className="flex gap-1">
             <div className="w-3 h-3 bg-heatmap-deficit-high" title={`< -500 ${heatmapUnit}`}></div>
             <div className="w-3 h-3 bg-heatmap-deficit-medium" title={`-500 a < -250 ${heatmapUnit}`}></div>
-            <div className="w-3 h-3 bg-heatmap-deficit-low" title={`-250 a < -100 ${heatmapUnit}`}></div>
-            <div className="w-3 h-3 bg-heatmap-neutral" title={`-100 a +100 ${heatmapUnit}`}></div>
-            <div className="w-3 h-3 bg-heatmap-surplus-low" title={`> +100 a +250 ${heatmapUnit}`}></div>
+            <div className="w-3 h-3 bg-heatmap-deficit-low" title={`-250 a < 0 ${heatmapUnit}`}></div>
+            <div className="w-3 h-3 bg-heatmap-neutral" title={`0 ${heatmapUnit}`}></div>
+            <div className="w-3 h-3 bg-heatmap-surplus-low" title={`> 0 a +250 ${heatmapUnit}`}></div>
             <div className="w-3 h-3 bg-heatmap-surplus-medium" title={`> +250 a +500 ${heatmapUnit}`}></div>
             <div className="w-3 h-3 bg-heatmap-surplus-high" title={`> +500 ${heatmapUnit}`}></div>
           </div>
