@@ -114,11 +114,11 @@ for (const length of [7, 30, 365]) test(`${length}-day aggregation sums actual u
   assert.equal(aggregateEnergy({}, dates, profile).balance, null);
 });
 
-test('Gemini context distinguishes habitual TDEE from dynamic expenditure and target', () => {
+test('Gemini context uses current expenditure and balance without calorie targets', () => {
   const context = buildDailyEnergyContext({ ...profile, activity: 'Activo', goal: 'Déficit' }, active);
-  for (const text of ['TDEE de referencia habitual (no es el gasto de hoy): 2508 kcal',
-    'Gasto estimado hoy: 2348 kcal', 'Meta de hoy: 1948 kcal',
-    'Consumidas hoy (solo comida/bebida): 1200 kcal', 'Restantes para la meta: 748 kcal',
+  for (const text of ['Gasto estimado hoy: 2348 kcal',
+    'Calorías consumidas hoy (solo comida/bebida): 1200 kcal', 'Balance energético hoy (consumidas - gasto): -1148 kcal',
     'Calorías por pasos: 280 kcal', 'Calorías por ejercicio registrado: 450 kcal',
-    'Nunca uses TDEE + pasos + ejercicio', 'sin correcciones arbitrarias']) assert.ok(context.includes(text), text);
+    'sin correcciones arbitrarias']) assert.ok(context.includes(text), text);
+  assert.ok(!context.includes('Meta de hoy:'));
 });

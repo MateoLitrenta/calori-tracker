@@ -57,7 +57,7 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
          water: l.water_ml,
          weight: l.weight,
          meals: (l.meals || []).map((m: any) => ({
-           id: m.id, name: m.description, type: m.meal_type, calories: m.calories, time: m.time_str, details: m.meal_details
+           id: m.id, name: m.description, type: m.meal_type, calories: m.calories, time: m.time_str, details: m.meal_details, photo_path: m.photo_path
          })),
          workouts: (l.workouts || []).map((e: any) => ({
            id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: [], details: e.workout_details, time: e.time_str, distance: e.distance_km, pace: e.pace_str
@@ -103,7 +103,7 @@ export const fetchDailyLog = async (userId: string, dateStr: string): Promise<Da
       water: l.water_ml,
       weight: l.weight,
       meals: (l.meals || []).map((m: any) => ({
-        id: m.id, name: m.description, type: m.meal_type, calories: m.calories, time: m.time_str, details: m.meal_details
+        id: m.id, name: m.description, type: m.meal_type, calories: m.calories, time: m.time_str, details: m.meal_details, photo_path: m.photo_path
       })),
       workouts: (l.workouts || []).map((e: any) => ({
         id: e.id, activity: e.activity_name, duration: e.duration_min, calories: e.calories_burned, muscles: [], details: e.workout_details, time: e.time_str, distance: e.distance_km, pace: e.pace_str
@@ -190,7 +190,8 @@ export const syncAddMeal = async (userId: string, logId: string, meal: MealEntry
     meal_type: meal.type, 
     calories: meal.calories,
     time_str: meal.time || null,
-    meal_details: meal.details || null
+    meal_details: meal.details || null,
+    photo_path: meal.photo_path ?? null
   });
   if (error) {
     console.error('Error adding meal:', error);
@@ -240,7 +241,8 @@ export const syncUpdateMeal = async (meal: MealEntry) => {
     meal_type: meal.type, 
     calories: meal.calories,
     time_str: meal.time || null,
-    meal_details: meal.details || null
+    meal_details: meal.details || null,
+    photo_path: meal.photo_path ?? null
   }).eq('id', meal.id);
   if (error) {
     console.error('Error updating meal:', error);

@@ -10,6 +10,7 @@ export interface MealEntry {
   calories: number;
   time?: string; // Format: HH:mm
   details?: string;
+  photo_path?: string | null;
 }
 
 export interface WorkoutEntry {

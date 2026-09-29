@@ -5,7 +5,12 @@ interface ChatMessage {
 }
 
 interface RequestBody {
-  mode?: 'chat' | 'transcribe';
+  mode?: 'chat' | 'transcribe' | 'estimate';
+  estimateType?: 'meal' | 'workout';
+  text?: string;
+  details?: string;
+  duration?: number;
+  profile?: { sex?: string; age?: number; weight?: number; height?: number };
   messages?: ChatMessage[];
   systemInstruction?: string;
   today?: string;
@@ -189,8 +194,48 @@ export default {
       return json({ error: 'Solicitud inválida.' }, 400);
     }
 
-    if (body.mode !== undefined && body.mode !== 'chat' && body.mode !== 'transcribe') {
+    if (body.mode !== undefined && body.mode !== 'chat' && body.mode !== 'transcribe' && body.mode !== 'estimate') {
       return json({ error: 'Modo de solicitud inválido.' }, 400);
+    }
+    if (body.mode === 'estimate') {
+      const meal = body.estimateType === 'meal';
+      const workout = body.estimateType === 'workout';
+      const text = typeof body.text === 'string' ? body.text.trim().slice(0, 500) : '';
+      const details = typeof body.details === 'string' ? body.details.trim().slice(0, 1000) : '';
+      const attachment = body.attachment === undefined ? undefined : parseMediaAttachment(body.attachment);
+      if ((!meal && !workout) || attachment === null || (attachment && attachment.kind !== 'image') ||
+        (meal && !text && !attachment) ||
+        (workout && (attachment || !text || typeof body.duration !== 'number' || !Number.isFinite(body.duration) || body.duration <= 0 ||
+          typeof body.profile?.weight !== 'number' || !Number.isFinite(body.profile.weight) || body.profile.weight <= 0))) {
+        return json({ error: 'Faltan datos válidos para estimar.' }, 400);
+      }
+      const instruction = meal
+        ? 'Estimá las calorías de la comida descrita y/o visible. Identificá solo alimentos razonablemente visibles o descritos; no inventes ingredientes invisibles. Si falta cantidad, asumí una porción razonable y aclaralo. Si la foto es ambigua, sé conservador. Redondeá a kcal razonables, sin falsa precisión. Si falta información suficiente, devolvé {"error":"Información insuficiente"}. Sin diagnósticos ni consejos. Devolvé exclusivamente JSON {"calories":number,"description":string,"assumptions":string[],"estimated":true}.'
+        : 'Estimá calorías gastadas prudentemente según actividad, duración y peso. No inventes duración ni intensidad. Devolvé exclusivamente JSON {"calories":number,"activity":string,"assumptions":string[],"estimated":true}; si falta información, {"error":"Información insuficiente"}.';
+      const input = meal
+        ? `Comida: ${text}\nDetalles: ${details}`
+        : `Actividad: ${text}\nDuración: ${body.duration} min\nPeso: ${body.profile?.weight} kg\nDetalles: ${details}`;
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+          body: JSON.stringify({ systemInstruction: { parts: [{ text: instruction }] },
+            contents: [{ role: 'user', parts: [{ text: input }, ...(attachment ? [{ inlineData: { mimeType: attachment.mimeType, data: attachment.data } }] : [])] }],
+            generationConfig: { responseMimeType: 'application/json', temperature: 0.2, thinkingConfig: { thinkingBudget: 0 }, maxOutputTokens: 512 } })
+        });
+        if (!response.ok) return json({ error: 'No pude estimar las calorías.' }, 502);
+        const data = await response.json() as any;
+        const raw = data?.candidates?.[0]?.content?.parts?.map((part: { text?: string }) => part.text || '').join('');
+        const result = JSON.parse(raw || '{}');
+        const label = meal ? result.description : result.activity;
+        if (result.estimated !== true || typeof result.calories !== 'number' || !Number.isFinite(result.calories) || result.calories <= 0 ||
+          typeof label !== 'string' || !label.trim() || !Array.isArray(result.assumptions) || !result.assumptions.every((a: unknown) => typeof a === 'string')) {
+          return json({ error: 'No pude estimar las calorías con esos datos.' }, 422);
+        }
+        return json({ calories: Math.round(result.calories), [meal ? 'description' : 'activity']: label.trim().slice(0, 200),
+          assumptions: result.assumptions.slice(0, 4).map((a: string) => a.slice(0, 200)), estimated: true });
+      } catch {
+        return json({ error: 'No pude estimar las calorías.' }, 502);
+      }
     }
     if (body.mode === 'transcribe') {
       const audio = parseMediaAttachment(body.attachment);
