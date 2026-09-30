@@ -23,8 +23,10 @@ function App() {
   const [entryError, setEntryError] = useState('');
   const [path, setPath] = useState(() => window.location.pathname.replace(/\/$/, '') || '/');
   const mainRef = useRef<HTMLElement>(null);
+  const appShellRef = useRef<HTMLDivElement>(null);
   const profileReady = !!user && activeProfile?.user_id === user.id;
   const route = resolveEntryRoute(path, !!user, activeProfile?.onboarding_completed);
+  const isCoachLayout = activeTab === 'chat' && route === '/app' && profileReady;
 
   const navigate = (next: EntryRoute) => {
     if (window.location.pathname !== next) window.history.pushState(null, '', next);
@@ -51,6 +53,35 @@ function App() {
     if (activeTab === 'chat') return;
     mainRef.current?.scrollTo({ top: 0, behavior: 'instant' });
   }, [activeTab]);
+
+  useEffect(() => {
+    if (!isCoachLayout) return;
+    const shell = appShellRef.current;
+    const mobile = window.matchMedia('(max-width: 767px)');
+    const viewport = window.visualViewport;
+    const resize = () => {
+      if (mobile.matches) {
+        shell?.style.setProperty('--coach-viewport-height', `${viewport?.height ?? window.innerHeight}px`);
+        shell?.style.setProperty('--coach-viewport-top', `${viewport?.offsetTop ?? 0}px`);
+      } else {
+        shell?.style.removeProperty('--coach-viewport-height');
+        shell?.style.removeProperty('--coach-viewport-top');
+      }
+    };
+    resize();
+    viewport?.addEventListener('resize', resize);
+    viewport?.addEventListener('scroll', resize);
+    window.addEventListener('resize', resize);
+    mobile.addEventListener('change', resize);
+    return () => {
+      viewport?.removeEventListener('resize', resize);
+      viewport?.removeEventListener('scroll', resize);
+      window.removeEventListener('resize', resize);
+      mobile.removeEventListener('change', resize);
+      shell?.style.removeProperty('--coach-viewport-height');
+      shell?.style.removeProperty('--coach-viewport-top');
+    };
+  }, [isCoachLayout]);
 
   if (loading) {
     return <main className="auth-entry min-h-dvh flex items-center justify-center p-4"><p role="status" className="auth-secondary text-sm">Cargando sesión…</p></main>;
@@ -84,7 +115,7 @@ function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col md:flex-row overflow-hidden bg-slate-50 dark:bg-[#151719] text-slate-900 dark:text-white">
+    <div ref={appShellRef} className={`app-shell ${isCoachLayout ? 'app-shell-coach' : ''} h-screen flex flex-col md:flex-row overflow-hidden bg-slate-50 dark:bg-[#151719] text-slate-900 dark:text-white`}>
       <Toaster position="bottom-right" />
       
       {/* Desktop Sidebar */}
@@ -94,9 +125,9 @@ function App() {
         onAuthOpen={() => setIsAuthOpen(true)}
       />
 
-      <div className="flex-1 flex flex-col h-full overflow-hidden relative">
+      <div className="app-stage flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Main Content Area */}
-        <main ref={mainRef} className="flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8 w-full transition-all duration-300 bg-slate-50 dark:bg-[#151719]">
+        <main ref={mainRef} className="app-main flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8 w-full transition-all duration-300 bg-slate-50 dark:bg-[#151719]">
           {/* Mobile Header */}
           <header className="home-header md:hidden flex-shrink-0 flex items-center justify-between p-4 border border-slate-200 dark:border-[#ffffff0d] bg-white dark:bg-[#1e2124]">
             <div className="flex items-center gap-3">
@@ -107,7 +138,7 @@ function App() {
               <ThemeToggle />
             </div>
           </header>
-          <div className="p-4 md:p-0">
+          <div className="app-content p-4 md:p-0">
             <Suspense fallback={<p role="status" className="text-sm text-slate-500 dark:text-gray-400">Cargando…</p>}>
             {activeTab === 'home' && <HomeView />}
             {activeTab === 'chat' && <ChatView scrollContainer={mainRef} />}

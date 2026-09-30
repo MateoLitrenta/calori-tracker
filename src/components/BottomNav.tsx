@@ -9,7 +9,7 @@ interface BottomNavProps {
 
 const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   return (
-    <div className="fixed bottom-0 left-0 w-full z-50 md:hidden bg-white/95 dark:bg-[#1e2124]/95 backdrop-blur-md border-t border-slate-200 dark:border-white/5 pb-[env(safe-area-inset-bottom)]">
+    <div className="app-bottom-nav fixed bottom-0 left-0 w-full z-50 md:hidden bg-white/95 dark:bg-[#1e2124]/95 backdrop-blur-md border-t border-slate-200 dark:border-white/5 pb-[env(safe-area-inset-bottom)]">
       <div className="flex justify-around items-center h-16 max-w-md mx-auto px-2">
         <button
           onClick={() => onTabChange('home')}
@@ -36,7 +36,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
           }`}
         >
           <ChartBar size={24} weight={activeTab === 'charts' ? 'fill' : 'regular'} />
-          <span className="text-[10px] font-medium">Gráficos</span>
+          <span className="text-[10px] font-medium">Datos</span>
         </button>
         <button
           onClick={() => onTabChange('profile')}

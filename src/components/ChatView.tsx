@@ -169,8 +169,10 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const recordingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const recordingCancelled = useRef(false);
   const audioBusy = useRef(false);
+  const messagesScrollRef = useRef<HTMLElement | null>(null);
   const scrollToEnd = useCallback((behavior: ScrollBehavior) => {
-    const container = scrollContainer.current;
+    const container = window.matchMedia('(max-width: 767px)').matches
+      ? messagesScrollRef.current : scrollContainer.current;
     container?.scrollTo({ top: container.scrollHeight, behavior });
   }, [scrollContainer]);
   const didScroll = useRef(false);
@@ -432,10 +434,27 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   useEffect(() => {
     const textarea = textInputRef.current;
     if (!textarea) return;
+    const maxHeight = window.matchMedia('(max-width: 767px)').matches ? 124 : 148;
     textarea.style.height = 'auto';
-    textarea.style.height = `${Math.min(Math.max(textarea.scrollHeight, 44), 148)}px`;
-    textarea.style.overflowY = textarea.scrollHeight > 148 ? 'auto' : 'hidden';
+    textarea.style.height = `${Math.min(Math.max(textarea.scrollHeight, 44), maxHeight)}px`;
+    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
   }, [inputValue]);
+
+  useEffect(() => {
+    const container = messagesScrollRef.current;
+    if (!container || typeof ResizeObserver === 'undefined') return;
+    const mobile = window.matchMedia('(max-width: 767px)');
+    let previousHeight = container.clientHeight;
+    let previousScrollHeight = container.scrollHeight;
+    const observer = new ResizeObserver(() => {
+      const wasNearEnd = previousScrollHeight - previousHeight - container.scrollTop <= 24;
+      if (mobile.matches && wasNearEnd) container.scrollTop = container.scrollHeight;
+      previousHeight = container.clientHeight;
+      previousScrollHeight = container.scrollHeight;
+    });
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (isPastConversation) return;
@@ -691,10 +710,10 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
     <div className="premium-view dark assistant-view flex flex-col flex-1 min-h-0 w-full max-w-3xl mx-auto bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
       
       {/* Header */}
-      <div className="chat-heading px-6 py-5 border-b border-slate-200 dark:border-[#ffffff0d] bg-slate-50 dark:bg-[#151719] flex flex-wrap items-center gap-3">
+      <header className="chat-heading px-6 py-5 border-b border-slate-200 dark:border-[#ffffff0d] bg-slate-50 dark:bg-[#151719] flex flex-wrap items-center gap-3">
         <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-assistant" />
         <div>
-          <h2 className="font-bold text-lg text-slate-900 dark:text-white">Calori</h2>
+          <h2 className="font-bold text-lg text-slate-900 dark:text-white"><span className="chat-desktop-title">Calori</span><span className="chat-mobile-title">Coach</span></h2>
           <p className="text-xs text-slate-500 dark:text-gray-400">Coach de nutrición y entrenamiento</p>
         </div>
         <div className="chat-heading-actions ml-auto flex items-center gap-1">
@@ -707,7 +726,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             <Plus className="chat-action-icon" size={19} aria-hidden="true" /><span>Nueva conversación</span>
           </button>
         </div>
-      </div>
+      </header>
 
       {showHistory && (
         <label className="chat-history-picker flex flex-col gap-2 px-4 py-3 text-sm">
@@ -728,7 +747,8 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       )}
 
       {/* Messages Area */}
-      <div className="chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4">
+      <section ref={messagesScrollRef} className="chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4"
+        role="log" aria-label="Conversación con Coach" aria-live="polite" aria-relevant="additions text">
         {pending && (
           <div className="chat-confirmation order-last rounded-xl border border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/20 p-4 text-sm">
             <p className="font-semibold mb-2">Confirmar registros del {describeDate(pending.dateStr)}</p>
@@ -794,15 +814,24 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         )}
         {messages.length === 0 && (
           <div className="chat-empty my-auto py-12 text-center">
-            <h3 className="text-lg font-semibold">¿En qué te puedo ayudar hoy?</h3>
+            <h3 className="text-lg font-semibold"><span className="chat-desktop-title">¿En qué te puedo ayudar hoy?</span><span className="chat-mobile-title">¿En qué te puedo ayudar?</span></h3>
             <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
               Tengo en cuenta tus comidas, pasos, entrenamiento y balance energético.
             </p>
+            {!isPastConversation && <div className="chat-empty-suggestions">
+              {suggestions.slice(0, 3).map((suggestion, i) => (
+                <button key={i} type="button" onClick={() => handleSend(suggestion)}
+                  disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || !!pending || !activeProfile}
+                  className="chat-suggestion text-xs">
+                  {suggestion}
+                </button>
+              ))}
+            </div>}
           </div>
         )}
         {messages.map((msg) => (
-          <div key={msg.id} className={`flex gap-3 min-w-0 max-w-[95%] md:max-w-[80%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
-            <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+          <div key={msg.id} className={`chat-message chat-message-${msg.role} flex gap-3 min-w-0 max-w-[95%] md:max-w-[80%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
+            <div className="chat-message-avatar flex-shrink-0 w-8 h-8 flex items-center justify-center">
               {msg.role === 'user' ? (
                 <UserAvatar userId={userId} path={activeProfile?.user_id === userId ? activeProfile.avatar_path : null}
                   revision={avatarRevision} size={32} />
@@ -826,8 +855,8 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           </div>
         ))}
         {isTyping && (
-          <div className="flex gap-3 max-w-[75%] mr-auto">
-            <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-message" />
+          <div className="chat-typing flex gap-3 max-w-[75%] mr-auto" role="status" aria-label="Coach está respondiendo">
+            <img src="/brand/calori-logo-symbol.png" alt="" className="chat-message-avatar brand-symbol brand-symbol-message" />
             <div className="px-4 py-4 rounded-3xl bg-slate-100 dark:bg-[#191c1f] rounded-tl-sm border border-slate-200 dark:border-[#ffffff0d] flex items-center gap-1">
               <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
               <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -835,12 +864,13 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             </div>
           </div>
         )}
-      </div>
+        <div className="chat-scroll-end" aria-hidden="true" />
+      </section>
 
       {/* Input Area */}
-      {!isPastConversation && <div className="chat-composer p-4 border-t border-slate-200 dark:border-[#ffffff0d] bg-slate-50 dark:bg-[#151719]">
+      {!isPastConversation && <footer className={`chat-composer ${isRecording ? 'chat-composer-recording' : ''} p-4 border-t border-slate-200 dark:border-[#ffffff0d] bg-slate-50 dark:bg-[#151719]`}>
         {/* Quick Suggestions */}
-        <div className="flex overflow-x-auto gap-2 pb-3 mb-2 hide-scrollbar">
+        <div className="chat-composer-suggestions flex overflow-x-auto gap-2 pb-3 mb-2 hide-scrollbar">
           {suggestions.map((suggestion, i) => (
             <button
               key={i}
@@ -868,7 +898,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           <div className="chat-recording-bar mb-3 flex flex-wrap items-center gap-2 rounded-xl p-2" role="status">
             <span className="chat-recording-label mr-auto text-sm"><span aria-hidden="true">●</span> Grabando…</span>
             <button type="button" onClick={cancelRecording}>Cancelar</button>
-            <button type="button" onClick={stopRecording} className="chat-finish-dictation">Finalizar dictado</button>
+            <button type="button" onClick={stopRecording} className="chat-finish-dictation"><span className="chat-desktop-title">Finalizar dictado</span><span className="chat-mobile-title">Finalizar</span></button>
           </div>
         )}
         {(isRequestingAudio || isProcessingAudio) && (
@@ -883,6 +913,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         >
           <textarea
             ref={textInputRef}
+            aria-label="Mensaje para Coach"
             rows={1}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -897,7 +928,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             placeholder="Escribe un mensaje..."
             className="chat-textarea min-w-0 flex-1 bg-white dark:bg-[#1e2124] border border-slate-300 dark:border-[#ffffff0d] rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#f5a064] dark:focus:border-[#f5a064] shadow-none disabled:opacity-50"
           />
-          <div ref={photoMenuRef} className="relative flex-none">
+          <div ref={photoMenuRef} className="chat-photo-control relative flex-none">
             <input ref={galleryInputRef} type="file" accept="image/jpeg,image/png,image/webp"
               onChange={e => { const file = e.target.files?.[0]; e.target.value = ''; void selectImage(file); }}
               className="hidden" tabIndex={-1} aria-label="Elegir foto de galería" />
@@ -929,7 +960,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             <PaperPlaneRight size={18} weight="fill" />
           </button>
         </form>
-      </div>}
+      </footer>}
       {isCameraOpen && createPortal(
         <div className="chat-camera-overlay fixed inset-0 z-50 flex items-center justify-center p-4" role="presentation">
           <div className="chat-camera-panel w-full max-w-lg rounded-3xl p-4" role="dialog" aria-modal="true" aria-label="Tomar foto">
@@ -947,7 +978,6 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           </div>
         </div>, document.body
       )}
-      <div className="chat-scroll-end" aria-hidden="true" />
       
       <style>{`
         .hide-scrollbar::-webkit-scrollbar {
