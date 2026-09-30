@@ -289,3 +289,106 @@ html:not(.dark) .charts-insights .charts-surplus { color: #c4413a; }
   .charts-insights .charts-comparison dd span { display: block; }
   .charts-insights .charts-scroll-hint { display: block; }
 }
+.charts-insights .charts-mobile-only { display: none; }
+.charts-insights .charts-detail-hint { margin-top: 20px; }
+@media (max-width: 767px) {
+  .charts-insights { gap: 14px; }
+  .charts-insights .charts-desktop-only { display: none; }
+  .charts-insights .charts-mobile-only { display: inline; }
+  .charts-insights .charts-header { gap: 12px; padding: 16px 14px; }
+  .charts-insights .charts-heading { gap: 10px; }
+  .charts-insights .charts-heading-icon { padding: 8px; }
+  .charts-insights .charts-heading-icon svg { width: 20px; height: 20px; }
+  .charts-insights .charts-heading h2 { font-size: 20px; }
+  .charts-insights .charts-heading .charts-range { margin-top: 4px; font-size: 11px; }
+  .charts-insights .charts-period button { min-height: 40px; }
+  .charts-insights .charts-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 16px 14px 12px; background: var(--charts-surface); border: 1px solid var(--charts-line); border-radius: var(--radius-panel); }
+  .charts-insights .charts-kpi { padding: 0; border: 0; background: transparent; }
+  .charts-insights .charts-kpi h3 { min-height: 0; font-size: 11px; line-height: 1.4; }
+  .charts-insights .charts-value { font-size: clamp(19px, 5.5vw, 24px); margin-top: 8px; line-height: 1.3; }
+  .charts-insights .charts-unit { min-height: 0; font-size: 10px; margin-top: 4px; }
+  .charts-insights .charts-kpi-note { display: none; }
+  .charts-insights .charts-kpi:nth-child(3) .charts-unit { display: none; }
+  .charts-insights .charts-kpi:nth-child(3) .charts-kpi-note { display: block; margin-top: 4px; font-size: 10px; }
+  .charts-insights .charts-registered { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 5px; padding-top: 10px; border-top: 1px solid var(--charts-line); }
+  .charts-insights .charts-registered h3, .charts-insights .charts-registered .charts-kpi-note { display: none; }
+  .charts-insights .charts-registered .charts-value, .charts-insights .charts-registered .charts-unit { margin: 0; font-size: 11px; line-height: 1.5; color: var(--charts-muted); letter-spacing: 0; }
+  .charts-insights .charts-energy > h3 { font-size: 16px; }
+  .charts-insights .charts-plot-scroll { margin-top: 12px; padding: 6px 3px; }
+  .charts-insights .charts-bar-pair { height: 160px; max-width: 36px; }
+  .charts-insights .charts-bucket { gap: 8px; }
+  .charts-insights .charts-legend { gap: 8px 16px; margin-top: 10px; font-size: 11px; }
+  .charts-insights .charts-legend > span:last-child { font-size: 10px; }
+  .charts-insights .charts-detail-hint { margin-top: 12px; font-size: 11px; text-align: center; }
+  .charts-insights .charts-detail { min-height: 0; padding: 12px; margin-top: 12px; }
+  .charts-insights .charts-detail h4 { margin-bottom: 8px; }
+  .charts-insights .charts-detail dl { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .charts-insights .charts-detail dl > div { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .charts-insights .charts-detail dl > div:last-child { grid-column: auto; }
+  .charts-insights .charts-detail dd { margin: 0; font-size: 13px; text-align: right; }
+  .charts-insights .charts-detail dd span { font-size: 10px; }
+  .charts-insights details.charts-method { display: block; margin-top: 12px; font-size: 10px; }
+  .charts-insights .charts-method summary { cursor: pointer; }
+  .charts-insights .charts-method summary:focus-visible { outline: 2px solid #f5a064; outline-offset: 3px; border-radius: var(--radius-micro); }
+  .charts-insights .charts-method p { margin-top: 6px; }
+  .charts-insights .charts-activity { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+  .charts-insights .charts-activity > div { padding: 0; background: transparent; }
+  .charts-insights .charts-activity > div:last-child { grid-column: auto; }
+  .charts-insights .charts-activity svg { display: none; }
+  .charts-insights .charts-activity h4 { min-height: 0; font-size: 11px; }
+  .charts-insights .charts-activity-value { font-size: 18px; line-height: 1.4; margin: 6px 0 4px; overflow-wrap: anywhere; }
+  .charts-insights .charts-activity .charts-secondary { font-size: 10px; line-height: 1.5; }
+  .charts-insights .charts-comparison > h3 { font-size: 14px; }
+  .charts-insights .charts-comparison dl { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; margin: 12px 0 0; }
+  .charts-insights .charts-comparison dl > div { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .charts-insights .charts-comparison dd { margin: 0; font-size: 13px; }
+  .charts-insights .charts-comparison dd span { display: inline; }
+  .charts-insights .charts-streak { font-size: 11px; }
+}
+.assistant-view .chat-mobile-title,
+.assistant-view .chat-empty-suggestions { display: none; }
+@media (max-width: 767px) {
+  .assistant-view { height: 100%; min-height: 0; max-width: none; flex: 1 1 0; border: 0; border-radius: 0; background: transparent; }
+  .assistant-view .chat-heading { flex: 0 0 auto; flex-wrap: nowrap; padding: 8px 12px; gap: 8px; }
+  .assistant-view .chat-heading > div:nth-child(2) { flex: 1; min-width: 0; }
+  .assistant-view .chat-heading h2 { font-size: 15px; }
+  .assistant-view .chat-heading p { display: none; }
+  .assistant-view .chat-heading-actions { flex: 0 0 auto; gap: 2px; }
+  .assistant-view .chat-heading-actions button { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; }
+  .assistant-view .chat-heading-actions button span { display: none; }
+  .assistant-view .chat-action-icon { display: block; }
+  .assistant-view .chat-desktop-title { display: none; }
+  .assistant-view .chat-mobile-title { display: inline; }
+  .assistant-view .chat-history-picker { flex: 0 0 auto; }
+  .assistant-view .chat-messages { flex: 1 1 0; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; padding: 16px 12px; gap: 12px; }
+  .assistant-view .chat-empty { width: 100%; max-width: 340px; margin-block: auto; padding: 16px 8px; }
+  .assistant-view .chat-empty h3 { font-size: 22px; }
+  .assistant-view .chat-empty p { max-width: 270px; margin-inline: auto; font-size: 12px; line-height: 1.5; }
+  .assistant-view .chat-empty-suggestions { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 20px; }
+  .assistant-view .chat-empty-suggestions .chat-suggestion { max-width: 100%; min-height: 44px; padding: 8px 14px; line-height: 1.4; border: 1px solid var(--chat-line); }
+  .assistant-view .chat-message-avatar { display: none; }
+  .assistant-view .chat-message { max-width: 92%; gap: 0; }
+  .assistant-view .chat-message-bot { max-width: 100%; }
+  .assistant-view .chat-bubble { padding: 10px 12px; line-height: 1.55; }
+  .assistant-view .chat-typing > div { padding: 12px; }
+  .assistant-view .chat-scroll-end { min-height: 1px; scroll-margin-bottom: 0; }
+  .assistant-view .chat-composer { flex: 0 0 auto; padding: 10px 8px; border-top: 1px solid var(--chat-line); }
+  .assistant-view .chat-composer-suggestions { display: none; }
+  .assistant-view .chat-composer-form { display: flex; align-items: flex-end; gap: 6px; min-width: 0; }
+  .assistant-view .chat-composer-form .chat-photo-control { order: 0; }
+  .assistant-view .chat-composer-form .chat-audio-button { order: 1; }
+  .assistant-view .chat-composer-form .chat-textarea { order: 2; flex: 1 1 0; width: 0; min-width: 0; min-height: 44px; max-height: 124px; padding: 11px 10px; font-size: 16px; line-height: 20px; }
+  .assistant-view .chat-composer-form button[type="submit"] { order: 3; }
+  .assistant-view .chat-photo-menu { left: 0; right: auto; }
+  .assistant-view .chat-recording-bar { flex-wrap: nowrap; gap: 4px; padding: 4px; margin-bottom: 0; }
+  .assistant-view .chat-recording-label { flex: 1 1 auto; min-width: 0; font-size: 12px; }
+  .assistant-view .chat-recording-bar button { padding: 0 8px; font-size: 12px; }
+  .assistant-view .chat-composer-recording .chat-composer-form { display: none; }
+}
+@media (max-width: 767px) {
+  .app-shell-coach { position: fixed; top: var(--coach-viewport-top, 0px); left: 0; right: 0; height: var(--coach-viewport-height, 100dvh); }
+  .app-shell-coach .app-stage { min-height: 0; }
+  .app-shell-coach .app-main { min-height: 0; overflow: hidden; padding: 0 0 calc(4rem + env(safe-area-inset-bottom)); }
+  .app-shell-coach .app-content { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; padding: 0; }
+  .app-shell-coach > .app-bottom-nav { position: absolute; bottom: 0; }
+}

@@ -77,8 +77,8 @@ const weeklyRecords = {
   '2026-09-30': record('2026-09-30', { meals: [meal(2500)], steps: 3000, workouts: [workout(200)] }),
 };
 function kpis(tree) {
-  return nodes(tree, element => element.props.className === 'charts-kpi').map(element => ({
-    label: nodes(element, child => child.type === 'h3')[0].props.children,
+  return nodes(tree, element => element.props.className?.split(' ').includes('charts-kpi')).map(element => ({
+    label: html(nodes(element, child => child.type === 'h3')[0]).replace(/<[^>]+>/g, ''),
     value: nodes(element, child => typeof child.props.className === 'string' &&
       child.props.className.split(' ').includes('charts-value'))[0].props.children,
   }));
@@ -149,6 +149,8 @@ test('empty periods expose an honest accessible empty state without fake calorie
 
 test('keyboard focus and pointer selection expose exact expenditure and balance in the detail', () => {
   const view = render(weeklyRecords);
+  assert.equal(nodes(view.tree, element => element.props.id === 'charts-bucket-detail').length, 0);
+  assert.match(view.html, /Tocá un período para ver el detalle/);
   const monday = nodes(view.tree, element => element.type === 'button' &&
     element.props['aria-label']?.startsWith('Lunes.'))[0];
   assert.ok(monday);
@@ -181,6 +183,21 @@ test('keyboard focus and pointer selection expose exact expenditure and balance 
   assert.equal(globalThis.__chartsHarness.selectedBucket, null);
 });
 
+test('mobile summary keeps three energy metrics with registered days as secondary data', () => {
+  const { tree } = render(weeklyRecords);
+  const summary = nodes(tree, element => element.props.className === 'charts-kpis')[0];
+  assert.ok(summary);
+  const metrics = nodes(summary, element => element.props.className === 'charts-kpi');
+  assert.equal(metrics.length, 3);
+  assert.deepEqual(metrics.map(metric => nodes(metric, element =>
+    element.props.className?.split(' ').includes('charts-value'))[0].props.children),
+  ['2.250', '2.000', '+290']);
+  const registered = nodes(summary, element => element.props.className?.split(' ').includes('charts-registered'))[0];
+  assert.ok(registered);
+  assert.match(html(registered), /Días registrados/);
+  assert.match(html(registered), />3<\/p>/);
+});
+
 test('activity metrics and previous comparison stay visible only for real recorded periods', () => {
   const records = { ...weeklyRecords,
     '2026-09-21': record('2026-09-21', { meals: [meal(1800)] }),
@@ -188,7 +205,7 @@ test('activity metrics and previous comparison stay visible only for real record
   };
   const { tree, html: markup } = render(records);
   const activity = nodes(tree, element => element.props['aria-labelledby'] === 'charts-activity-heading')[0];
-  assert.match(html(activity), /Pasos promedio/);
+  assert.match(html(activity).replace(/<[^>]+>/g, ''), /Pasos promedio/);
   assert.match(html(activity), />2\.000<\/p>/);
   assert.match(html(activity), /500 kcal/);
   assert.match(html(activity), /Entrenamientos registrados/);
@@ -199,7 +216,7 @@ test('activity metrics and previous comparison stay visible only for real record
   assert.doesNotMatch(sparse.html, /Comparado con el período anterior/);
 });
 
-test('desktop and mobile navigation use Coach while preserving the chat destination', () => {
+test('desktop and mobile navigation use Datos and Coach while preserving destinations', () => {
   globalThis.__chartsHarness.profile = profile;
   for (const component of [Sidebar, BottomNav]) {
     const destinations = [];
@@ -208,7 +225,11 @@ test('desktop and mobile navigation use Coach while preserving the chat destinat
       renderToStaticMarkup(element).includes('Coach'))[0];
     assert.ok(coachButton);
     coachButton.props.onClick();
-    assert.deepEqual(destinations, ['chat']);
-    assert.doesNotMatch(renderToStaticMarkup(tree), /Asistente/);
+    const dataButton = nodes(tree, element => element.type === 'button' &&
+      renderToStaticMarkup(element).includes('Datos'))[0];
+    assert.ok(dataButton);
+    dataButton.props.onClick();
+    assert.deepEqual(destinations, ['chat', 'charts']);
+    assert.doesNotMatch(renderToStaticMarkup(tree), /Asistente|Gráficos/);
   }
 });
