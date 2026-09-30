@@ -1,166 +1,181 @@
 import './PremiumViews.css';
-import { useState, useMemo } from 'react';
-import { useAppStore } from '../hooks/useAppStore';
-import { aggregateEnergy, formatDateStr } from '../utils/helpers';
-import { ChartBar, CheckCircle, Fire, TrendUp } from '@phosphor-icons/react';
-import { format, subWeeks, subMonths, startOfWeek, addDays, startOfMonth, endOfMonth } from 'date-fns';
+import { useMemo, useState } from 'react';
+import { ChartBar, Footprints, Barbell } from '@phosphor-icons/react';
+import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { useAppStore } from '../hooks/useAppStore';
+import { buildChartStats } from '../utils/chartStats';
+import type { ChartPeriod } from '../utils/chartStats';
+import { formatDateStr, getBalanceCategory, getBalanceLabel } from '../utils/helpers';
 
-import { calculateMealStats } from '../utils/mealStats';
-
-type Period = 'Semana' | 'Mes' | 'Año';
+const number = (value: number) => value.toLocaleString('es-AR');
+const signed = (value: number) => `${value > 0 ? '+' : ''}${number(value)}`;
+const kcal = (value: number | null, balance = false) => value === null ? 'Sin datos' : `${balance ? signed(value) : number(value)} kcal`;
+const balanceTone = (value: number | null) => {
+  const category = getBalanceCategory(value);
+  return category.startsWith('deficit') ? 'charts-deficit' : category.startsWith('surplus') ? 'charts-surplus' : 'charts-neutral';
+};
 
 export default function ChartsView() {
   const { activeProfile } = useAppStore();
-  const [period, setPeriod] = useState<Period>('Semana');
+  const [period, setPeriod] = useState<ChartPeriod>('Semana');
+  const [selectedBucket, setSelectedBucket] = useState<string | null>(null);
+  const today = formatDateStr(new Date());
+  const data = useMemo(() => activeProfile ? buildChartStats(activeProfile, period, today) : null,
+    [activeProfile, period, today]);
+  if (!data) return null;
 
-  const records = activeProfile?.records || {};
-
-  // Compute stats and dynamic chart data
-  const { stats, barChartData } = useMemo(() => {
-    const stats = calculateMealStats(records, formatDateStr(new Date()));
-
-    // Dynamic Chart Data Generation
-    const today = new Date();
-    const chartData: { day: string; consumed: number; expenditure: number; hasData: boolean }[] = [];
-
-    const addBucket = (day: string, dates: string[]) => {
-      if (!activeProfile) return;
-      const summary = aggregateEnergy(records, dates.filter(date => date <= formatDateStr(today) && records[date]?.meals.length > 0), activeProfile);
-      chartData.push({ day, consumed: summary.days ? Math.round(summary.consumed / summary.days) : 0,
-        expenditure: summary.days ? Math.round(summary.expenditure / summary.days) : 0, hasData: summary.days > 0 });
-    };
-    if (period === 'Semana') {
-      const start = startOfWeek(today, { weekStartsOn: 1 });
-      for (let i = 0; i < 7; i++) {
-        const day = addDays(start, i);
-        addBucket(format(day, 'EEE', { locale: es }), [formatDateStr(day)]);
-      }
-    } else if (period === 'Mes') {
-      // Preserve the existing four-week view; average only days with data.
-      for (let i = 3; i >= 0; i--) {
-        const start = startOfWeek(subWeeks(today, i), { weekStartsOn: 1 });
-        addBucket(`Sem ${4 - i}`, Array.from({ length: 7 }, (_, j) => formatDateStr(addDays(start, j))));
-      }
-    } else {
-      for (let i = 11; i >= 0; i--) {
-        const day = subMonths(today, i);
-        const start = startOfMonth(day);
-        addBucket(format(day, 'MMM', { locale: es }),
-          Array.from({ length: endOfMonth(day).getDate() }, (_, j) => formatDateStr(addDays(start, j))));
-      }
-    }
-    return { stats, barChartData: chartData };
-  }, [records, activeProfile, period]);
-
-  const maxCals = Math.max(1, ...barChartData.map(d => Math.max(d.consumed, d.expenditure))) * 1.1; // Add 10% headroom
+  const { summary, buckets, comparison } = data;
+  const detail = buckets.find(bucket => bucket.start === selectedBucket);
+  const maxCalories = Math.max(1, ...buckets.flatMap(bucket => [bucket.summary.consumed ?? 0, bucket.summary.expenditure ?? 0])) * 1.1;
+  const averages = period !== 'Semana';
+  const mealDays = `${summary.mealDays} ${summary.mealDays === 1 ? 'día con comidas' : 'días con comidas'}`;
+  const energyDays = `${summary.energyDays} ${summary.energyDays === 1 ? 'día con datos' : 'días con datos'}`;
+  const range = `${format(parseISO(data.start), 'd MMM', { locale: es })} – ${format(parseISO(data.end), 'd MMM yyyy', { locale: es })}`;
 
   return (
-    <div className="premium-view dark charts-view flex flex-col gap-6 w-full max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-300">
-      {/* Header & Filter */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] p-4 rounded-3xl shadow-none">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-[#f5a06416] dark:bg-[#f5a06416] rounded-xl text-[#f5a064] dark:text-[#f5a064]">
-            <ChartBar size={24} weight="fill" />
-          </div>
+    <div className="premium-view charts-view charts-insights w-full max-w-4xl mx-auto">
+      <header className="charts-header charts-panel">
+        <div className="charts-heading">
+          <span className="charts-heading-icon"><ChartBar size={24} weight="fill" aria-hidden="true" /></span>
           <div>
-            <h2 className="font-bold text-lg text-slate-900 dark:text-white">Tu evolución</h2>
-            <p className="text-xs text-slate-500 dark:text-gray-400">Estadísticas de días con comidas registradas</p>
+            <h2>Tu evolución</h2>
+            <p>Entendé cómo cambian tu consumo, gasto y actividad.</p>
+            <p className="charts-range">{range}</p>
           </div>
         </div>
-        
-        <div className="flex bg-slate-100 dark:bg-[#151719] rounded-xl p-1 border border-slate-200 dark:border-[#ffffff0d]">
-          {(['Semana', 'Mes', 'Año'] as Period[]).map(p => (
-            <button
-              key={p}
-              onClick={() => setPeriod(p)}
-              className={`px-4 py-1.5 text-xs font-medium rounded-md transition-colors ${
-                period === p 
-                  ? 'bg-[#f5a06416] text-[#f5a064] shadow-none dark:bg-[#f5a06416] dark:text-[#f5a064]' 
-                  : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              {p}
-            </button>
+        <div className="charts-period" role="group" aria-label="Período">
+          {(['Semana', 'Mes', 'Año'] as ChartPeriod[]).map(value => (
+            <button key={value} type="button" aria-pressed={period === value} onClick={() => {
+              setPeriod(value);
+              setSelectedBucket(null);
+            }}>{value}</button>
           ))}
         </div>
-      </div>
+      </header>
 
-      {/* KPI Cards */}
-      <div className="chart-stats grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] p-5 rounded-3xl shadow-none flex items-center gap-4">
-          <div className="p-3 bg-orange-100 dark:bg-orange-900/20 text-orange-600 dark:text-orange-500 rounded-xl">
-            <Fire size={24} weight="fill" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-slate-500 dark:text-gray-400">Promedio Diario</p>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.avgCalories === null ? 'Sin datos' : <>{stats.avgCalories} <span className="text-sm font-normal text-slate-500">kcal</span></>}</p>
-          </div>
+      <section className="charts-kpis" aria-label={`Resumen de ${period.toLowerCase()}`}>
+        <div className="charts-kpi">
+          <h3>Consumidas promedio</h3>
+          <p className="charts-value">{summary.consumed === null ? 'Sin datos' : number(summary.consumed)}</p>
+          <span className="charts-unit">{summary.consumed === null ? 'Sin comidas registradas' : 'kcal/día'}</span>
+          <p className="charts-kpi-note">{mealDays}</p>
         </div>
-        
-        <div className="bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] p-5 rounded-3xl shadow-none flex items-center gap-4">
-          <div className="p-3 bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-500 rounded-xl">
-            <CheckCircle size={24} weight="fill" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-slate-500 dark:text-gray-400">Días registrados</p>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.registeredDays}</p>
-          </div>
+        <div className="charts-kpi">
+          <h3>Gasto promedio</h3>
+          <p className="charts-value">{summary.expenditure === null ? 'Sin datos' : number(summary.expenditure)}</p>
+          <span className="charts-unit">{summary.expenditure === null ? 'Sin registros energéticos' : 'kcal/día estimadas'}</span>
+          <p className="charts-kpi-note">{energyDays}</p>
         </div>
-
-        <div className="bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] p-5 rounded-3xl shadow-none flex items-center gap-4">
-          <div className="p-3 bg-purple-100 dark:bg-purple-900/20 text-purple-600 dark:text-purple-500 rounded-xl">
-            <TrendUp size={24} weight="fill" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-slate-500 dark:text-gray-400">Racha Actual</p>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.currentStreak} <span className="text-sm font-normal text-slate-500">días</span></p>
-          </div>
+        <div className="charts-kpi">
+          <h3>Balance promedio</h3>
+          <p className={`charts-value ${balanceTone(summary.balance)}`}>{summary.balance === null ? 'Sin datos' : signed(summary.balance)}</p>
+          <span className="charts-unit">{summary.balance === null ? 'Sin comidas registradas' : 'kcal/día · con comidas'}</span>
+          <p className={`charts-kpi-note ${balanceTone(summary.balance)}`}>{getBalanceLabel(summary.balance)}</p>
         </div>
-      </div>
+        <div className="charts-kpi">
+          <h3>Días registrados</h3>
+          <p className="charts-value">{number(summary.energyDays)}</p>
+          <span className="charts-unit">Con comidas o actividad</span>
+          <p className="charts-kpi-note">En este período</p>
+        </div>
+      </section>
 
-      {/* Main Bar Chart */}
-      <div className="bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] p-6 rounded-3xl shadow-none">
-        <h3 className="font-bold text-slate-900 dark:text-white mb-6">Consumidas vs Gasto estimado ({period})</h3>
-        
-        <div className="chart-plot flex items-end justify-between gap-1 sm:gap-2 h-48 mt-4">
-          {barChartData.map((d, i) => {
-            const consumedHeight = `${(d.consumed / maxCals) * 100}%`;
-            const expenditureHeight = `${(d.expenditure / maxCals) * 100}%`;
-
-            return (
-              <div key={i} className="flex flex-col items-center gap-2 flex-1 h-full group">
-                <div className="relative w-full max-w-[3.5rem] flex-1 flex items-end justify-center gap-1">
-                  <div className="w-1/2 h-full flex items-end">
-                    <div className="w-full rounded-t-md bg-[#f5a064] transition-all duration-500 relative" style={{ height: consumedHeight }}>
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
-                        {d.hasData ? `${d.consumed} kcal` : 'Sin datos'}
-                      </div>
+      <section className="charts-panel charts-energy" aria-labelledby="charts-energy-heading">
+        <h3 id="charts-energy-heading">Consumidas vs Gasto estimado</h3>
+        <p className="charts-secondary">{averages ? `Promedios diarios por ${period === 'Mes' ? 'semana' : 'mes'}.` : 'Valores diarios de esta semana.'} Gasto estimado: TMB + pasos + ejercicio registrado.</p>
+        {summary.energyDays === 0 ? (
+          <div className="charts-empty" role="status">
+            <ChartBar size={32} aria-hidden="true" />
+            <p>No hay suficientes registros para este período.</p>
+            <span>Registrá comidas y actividad para ver tu evolución.</span>
+          </div>
+        ) : (
+          <>
+            <div className="charts-plot-scroll">
+              <div className={`charts-bars ${period === 'Año' ? 'charts-bars-year' : ''}`} role="list" aria-label={`Evolución de ${period.toLowerCase()}`}>
+                {buckets.map(bucket => {
+                  const item = bucket.summary;
+                  const accessible = `${bucket.title}. ${averages ? 'Consumidas promedio' : 'Consumidas'}: ${item.consumed === null ? 'Sin comidas registradas' : kcal(item.consumed)}. ${averages ? 'Gasto promedio' : 'Gasto estimado'}: ${kcal(item.expenditure)}. ${averages ? 'Balance promedio' : 'Balance'}: ${kcal(item.balance, true)}. ${getBalanceLabel(item.balance)}.`;
+                  return (
+                    <div key={bucket.start} role="listitem">
+                      <button type="button" className="charts-bucket" aria-label={accessible}
+                        aria-pressed={detail?.start === bucket.start}
+                        aria-describedby={detail?.start === bucket.start ? 'charts-bucket-detail' : undefined}
+                        onMouseEnter={() => setSelectedBucket(bucket.start)}
+                        onFocus={() => setSelectedBucket(bucket.start)}
+                        onClick={() => setSelectedBucket(bucket.start)}>
+                        <span className="charts-bar-pair" aria-hidden="true">
+                          {item.energyDays === 0 && <span className="charts-bar-empty">—</span>}
+                          <span className="charts-bar-track">
+                            {item.consumed !== null && <span className="charts-bar charts-bar-consumed" style={{ height: `${item.consumed / maxCalories * 100}%` }} />}
+                          </span>
+                          <span className="charts-bar-track">
+                            {item.expenditure !== null && <span className="charts-bar charts-bar-expenditure" style={{ height: `${item.expenditure / maxCalories * 100}%` }} />}
+                          </span>
+                        </span>
+                        <span className="charts-bucket-label" aria-hidden="true">{bucket.label}</span>
+                        <span className={`charts-bucket-balance ${balanceTone(item.balance)}`} aria-hidden="true">{item.balance === null ? '—' : signed(item.balance)}</span>
+                      </button>
                     </div>
-                  </div>
-                  <div className="w-1/2 h-full flex items-end">
-                    <div className="w-full rounded-t-md bg-slate-400 dark:bg-slate-500 transition-all duration-500" style={{ height: expenditureHeight }} />
-                  </div>
-                </div>
-                <span className="text-[10px] sm:text-xs text-slate-500 dark:text-gray-400 truncate w-full text-center">{d.day}</span>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-8 pt-4 border-t border-slate-100 dark:border-[#ffffff0d] text-sm">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-[#f5a064]"></span>
-            <span className="text-slate-600 dark:text-gray-400">Consumidas</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-slate-400"></span>
-            <span className="text-slate-600 dark:text-gray-400">Gasto estimado</span>
-          </div>
-          <div className="flex items-center gap-2 hidden sm:flex">
-          </div>
-        </div>
-      </div>
+            </div>
+            {period === 'Año' && <p className="charts-scroll-hint">Deslizá para ver todos los meses.</p>}
+            <div className="charts-legend" aria-label="Leyenda">
+              <span><i className="charts-key-consumed" aria-hidden="true" />Consumidas</span>
+              <span><i className="charts-key-expenditure" aria-hidden="true" />Gasto estimado</span>
+              <span className="charts-secondary">Balance debajo de cada período · kcal</span>
+            </div>
+            <div className="charts-detail" id="charts-bucket-detail" role={detail ? 'tooltip' : undefined}>
+              {detail ? (
+                <>
+                  <h4>{detail.title}</h4>
+                  <dl>
+                    <div><dt>{averages ? 'Consumidas promedio' : 'Consumidas'}</dt><dd>{detail.summary.consumed === null ? 'Sin comidas registradas' : kcal(detail.summary.consumed)}</dd></div>
+                    <div><dt>{averages ? 'Gasto promedio' : 'Gasto estimado'}</dt><dd>{kcal(detail.summary.expenditure)}</dd></div>
+                    <div><dt>{averages ? 'Balance promedio' : 'Balance'}</dt><dd className={balanceTone(detail.summary.balance)}>{kcal(detail.summary.balance, true)}<span>{getBalanceLabel(detail.summary.balance)}</span></dd></div>
+                  </dl>
+                  {averages && <p className="charts-secondary">{detail.summary.mealDays} días con comidas · {detail.summary.energyDays} días con datos energéticos</p>}
+                </>
+              ) : <p className="charts-secondary">Tocá, enfocá o pasá sobre un período para ver consumidas, gasto y balance exactos.</p>}
+            </div>
+          </>
+        )}
+        <p className="charts-method">Consumidas y balance: días con comidas registradas. Gasto: días con comidas, pasos o ejercicio. Los días sin datos y las fechas futuras no se incluyen.</p>
+      </section>
 
+      <section className="charts-panel" aria-labelledby="charts-activity-heading">
+        <h3 id="charts-activity-heading">Actividad</h3>
+        <div className="charts-activity">
+          <div><Footprints size={20} aria-hidden="true" /><h4>Pasos promedio</h4>
+            <p className="charts-activity-value">{summary.steps === null ? 'Sin datos' : number(summary.steps)}</p>
+            <p className="charts-secondary">{summary.steps === null ? 'Sin pasos registrados' : `pasos/día · ${summary.stepDays} ${summary.stepDays === 1 ? 'día' : 'días'} con pasos`}</p>
+          </div>
+          <div><Barbell size={20} aria-hidden="true" /><h4>Ejercicio</h4>
+            <p className="charts-activity-value">{kcal(summary.workoutCalories)}</p>
+            <p className="charts-secondary">kcal registradas en entrenamientos</p>
+          </div>
+          <div><h4>Entrenamientos registrados</h4>
+            <p className="charts-activity-value">{number(summary.workoutCount)}</p>
+            <p className="charts-secondary">En este período</p>
+          </div>
+        </div>
+      </section>
+
+      {comparison && (
+        <section className="charts-panel charts-comparison" aria-labelledby="charts-comparison-heading">
+          <h3 id="charts-comparison-heading">Comparado con el período anterior</h3>
+          <dl>
+            <div><dt>Consumidas</dt><dd>{signed(comparison.consumed)} <span>kcal/día</span></dd></div>
+            <div><dt>Gasto estimado</dt><dd>{signed(comparison.expenditure)} <span>kcal/día</span></dd></div>
+            <div><dt>Balance</dt><dd>{signed(comparison.balance)} <span>kcal/día</span></dd></div>
+          </dl>
+          <p className="charts-secondary">Diferencias entre promedios de {period === 'Semana' ? 'esta semana y la anterior' : period === 'Mes' ? 'este mes y el anterior' : 'este año y el anterior'}, según los días registrados.</p>
+        </section>
+      )}
+      <p className="charts-streak">Racha de comidas en este período: {data.currentStreak} {data.currentStreak === 1 ? 'día' : 'días'}</p>
     </div>
   );
 }

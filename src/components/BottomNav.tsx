@@ -27,7 +27,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
           }`}
         >
           <ChatCircle size={24} weight={activeTab === 'chat' ? 'fill' : 'regular'} />
-          <span className="text-[10px] font-medium">Asistente</span>
+          <span className="text-[10px] font-medium">Coach</span>
         </button>
         <button
           onClick={() => onTabChange('charts')}

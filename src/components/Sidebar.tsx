@@ -15,7 +15,7 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
 
   const navItems = [
     { id: 'home', label: 'Inicio', icon: House },
-    { id: 'chat', label: 'Asistente', icon: ChatCircle },
+    { id: 'chat', label: 'Coach', icon: ChatCircle },
     { id: 'charts', label: 'Gráficos', icon: ChartBar },
     { id: 'profile', label: 'Perfil', icon: User },
   ] as const;
