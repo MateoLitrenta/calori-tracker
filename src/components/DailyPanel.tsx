@@ -1199,12 +1199,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 <input 
                   type="number" step="0.1" inputMode="decimal" placeholder="Distancia (km) opcional" 
                   value={workDistance} onChange={e => setWorkDistance(Number(e.target.value))}
-                  className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
                 <input 
                   type="text" placeholder="Ritmo (min/km) opcional" 
                   value={workPace} onChange={e => setWorkPace(e.target.value)}
-                  className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
               </div>
 
