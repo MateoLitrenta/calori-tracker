@@ -2,14 +2,14 @@ import './PremiumViews.css';
 import { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
 import type { UserProfile, UserSex } from '../types';
-import { User, Check, Trash, PencilSimple, X, LockKey } from '@phosphor-icons/react';
+import { User, Check, Trash, PencilSimple, X, LockKey, SignOut } from '@phosphor-icons/react';
 import { supabase } from '../lib/supabase';
 import { prepareAvatar } from '../lib/avatar';
 import UserAvatar from './UserAvatar';
 import toast from 'react-hot-toast';
 
 export default function ProfileView() {
-  const { user, activeProfile, avatarRevision, updateProfile, updateAvatarPath, resetData } = useAppStore();
+  const { user, activeProfile, avatarRevision, updateProfile, updateAvatarPath, resetData, signOut } = useAppStore();
 
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(activeProfile?.name ?? '');
@@ -26,6 +26,7 @@ export default function ProfileView() {
   const [newPassword, setNewPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const [passwordBusy, setPasswordBusy] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   useEffect(() => () => {
     if (draftAvatar) URL.revokeObjectURL(draftAvatar.url);
@@ -187,6 +188,18 @@ export default function ProfileView() {
       toast.error('No pudimos actualizar la contraseña. Intentá nuevamente.');
     } finally {
       setPasswordBusy(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    if (isSigningOut) return;
+    setIsSigningOut(true);
+    try {
+      await signOut();
+    } catch {
+      toast.error('No pudimos cerrar la sesión. Intentá nuevamente.', { style: { background: 'var(--app-toast-bg)', color: 'var(--app-toast-text)' } });
+    } finally {
+      setIsSigningOut(false);
     }
   };
 
@@ -426,6 +439,15 @@ export default function ProfileView() {
               </div>
             </form>
           )}
+        </section>
+
+        <section aria-labelledby="profile-account-heading" className="bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] rounded-[var(--radius-panel)]">
+          <h2 id="profile-account-heading" className="text-xl text-slate-900 dark:text-white mb-5">Cuenta</h2>
+          <button type="button" onClick={handleSignOut} disabled={isSigningOut} aria-busy={isSigningOut}
+            className="w-full min-h-11 px-4 py-3 flex items-center justify-center gap-2 bg-slate-50 dark:bg-[#191c1f] border border-slate-200 dark:border-[#ffffff0d] text-slate-700 dark:text-gray-300 rounded-[var(--radius-control)] hover:bg-slate-100 dark:hover:bg-[#292d30] disabled:opacity-50 disabled:cursor-not-allowed">
+            <SignOut size={20} aria-hidden="true" />
+            {isSigningOut ? 'Cerrando sesión…' : 'Cerrar sesión'}
+          </button>
         </section>
 
         {/* Danger Zone (Hidden in Edit Mode to avoid clutter) */}

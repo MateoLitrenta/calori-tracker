@@ -19,6 +19,9 @@ const imports = {
   '../lib/db': stub('export const completeOnboarding = (...args) => globalThis.__entryHarness.db.completeOnboarding(...args);'),
   'react-hot-toast': stub('export default globalThis.__entryHarness.toast;'),
   './ThemeToggle': stub('export default () => null;'),
+  '../hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
+  '../lib/avatar': stub('export const prepareAvatar = () => {};'),
+  './UserAvatar': stub('export default () => null;'),
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,
 };
 
@@ -39,6 +42,7 @@ const { default: AuthModal } = await loadModule('../src/components/AuthModal.tsx
 const { default: Onboarding } = await loadModule('../src/components/Onboarding.tsx');
 const { default: LandingPage } = await loadModule('../src/components/LandingPage.tsx');
 const { useAppStore } = await loadModule('../src/hooks/useAppStore.ts');
+const { default: ProfileView } = await loadModule('../src/components/ProfileView.tsx');
 
 function mount(component, props, initial = []) {
   let cursor = 0;
@@ -290,4 +294,47 @@ test('reduced-motion landing content stays visible even with a pending reveal cl
   });
   assert.equal(declarations.opacity, '1');
   assert.equal(declarations.transform, 'none');
+});
+
+test('profile account sign-out uses the store and prevents repeated clicks while pending', async () => {
+  let finish;
+  let calls = 0;
+  globalThis.__entryHarness.profileStore = {
+    user: { id: 'user-a', email: 'ana@example.com' }, activeProfile: profile,
+    signOut: () => { calls++; return new Promise(resolve => { finish = resolve; }); },
+  };
+  const view = mount(ProfileView, {});
+  const findButton = tree => node(tree, element => element.type === 'button' &&
+    (element.props.children?.includes('Cerrar sesión') || element.props.children?.includes('Cerrando sesión…')));
+  const initial = view.render();
+  assert.ok(markup(initial).indexOf('>Cuenta</h2>') < markup(initial).indexOf('Zona de Peligro'));
+  assert.equal(findButton(initial).props.disabled, false);
+  const pending = findButton(initial).props.onClick();
+  const busyButton = findButton(view.render());
+  assert.equal(busyButton.props.disabled, true);
+  assert.equal(busyButton.props['aria-busy'], true);
+  assert.ok(busyButton.props.children.includes('Cerrando sesión…'));
+  await busyButton.props.onClick();
+  assert.equal(calls, 1);
+  finish();
+  await pending;
+  assert.equal(findButton(view.render()).props.disabled, false);
+});
+
+test('failed profile sign-out shows an error and allows retry without changing profile data', async () => {
+  const errors = [];
+  globalThis.__entryHarness.toast.error = message => errors.push(message);
+  const store = {
+    user: { id: 'user-a' }, activeProfile: profile,
+    signOut: async () => { throw new Error('Offline'); },
+  };
+  globalThis.__entryHarness.profileStore = store;
+  const view = mount(ProfileView, {});
+  const button = () => node(view.render(), element => element.type === 'button' &&
+    element.props.children?.includes('Cerrar sesión'));
+  await button().props.onClick();
+  assert.deepEqual(errors, ['No pudimos cerrar la sesión. Intentá nuevamente.']);
+  assert.equal(button().props.disabled, false);
+  assert.equal(store.activeProfile, profile);
+  assert.equal(store.user.id, 'user-a');
 });
