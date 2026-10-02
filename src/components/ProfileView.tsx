@@ -209,7 +209,7 @@ export default function ProfileView() {
   };
 
   return (
-    <div className="premium-view dark profile-view profile-v2 flex flex-col w-full max-w-2xl mx-auto animate-in fade-in duration-300">
+    <div className="premium-view dark profile-view profile-v2 flex flex-col w-full max-w-4xl mx-auto animate-in fade-in duration-300">
       <h1 className="profile-page-title">Perfil</h1>
 
       <section className="profile-panel" aria-labelledby="profile-name">
