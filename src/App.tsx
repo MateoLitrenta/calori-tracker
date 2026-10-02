@@ -24,6 +24,8 @@ function App() {
   const [path, setPath] = useState(() => window.location.pathname.replace(/\/$/, '') || '/');
   const mainRef = useRef<HTMLElement>(null);
   const appShellRef = useRef<HTMLDivElement>(null);
+  const previousUserIdRef = useRef<string | null>(null);
+  const userId = user?.id ?? null;
   const profileReady = !!user && activeProfile?.user_id === user.id;
   const route = resolveEntryRoute(path, !!user, activeProfile?.onboarding_completed);
   const isCoachLayout = activeTab === 'chat' && route === '/app' && profileReady;
@@ -33,6 +35,11 @@ function App() {
     setPath(next);
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
+
+  useEffect(() => {
+    if (userId && userId !== previousUserIdRef.current) setActiveTab('home');
+    previousUserIdRef.current = userId;
+  }, [userId]);
 
   useEffect(() => {
     const onPopState = () => setPath(window.location.pathname.replace(/\/$/, '') || '/');

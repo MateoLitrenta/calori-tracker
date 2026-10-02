@@ -27,6 +27,8 @@ export default function ProfileView() {
   const [repeatPassword, setRepeatPassword] = useState('');
   const [passwordBusy, setPasswordBusy] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const signOutDialogRef = useRef<HTMLDialogElement>(null);
+  const signOutCancelRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => () => {
     if (draftAvatar) URL.revokeObjectURL(draftAvatar.url);
@@ -196,7 +198,9 @@ export default function ProfileView() {
     setIsSigningOut(true);
     try {
       await signOut();
+      signOutDialogRef.current?.close();
     } catch {
+      signOutDialogRef.current?.close();
       toast.error('No pudimos cerrar la sesión. Intentá nuevamente.', { style: { background: 'var(--app-toast-bg)', color: 'var(--app-toast-text)' } });
     } finally {
       setIsSigningOut(false);
@@ -443,7 +447,10 @@ export default function ProfileView() {
 
         <section aria-labelledby="profile-account-heading" className="bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] rounded-[var(--radius-panel)]">
           <h2 id="profile-account-heading" className="text-xl text-slate-900 dark:text-white mb-5">Cuenta</h2>
-          <button type="button" onClick={handleSignOut} disabled={isSigningOut} aria-busy={isSigningOut}
+          <button type="button" onClick={() => {
+            signOutDialogRef.current?.showModal();
+            signOutCancelRef.current?.focus();
+          }} disabled={isSigningOut} aria-busy={isSigningOut}
             className="w-full min-h-11 px-4 py-3 flex items-center justify-center gap-2 bg-slate-50 dark:bg-[#191c1f] border border-slate-200 dark:border-[#ffffff0d] text-slate-700 dark:text-gray-300 rounded-[var(--radius-control)] hover:bg-slate-100 dark:hover:bg-[#292d30] disabled:opacity-50 disabled:cursor-not-allowed">
             <SignOut size={20} aria-hidden="true" />
             {isSigningOut ? 'Cerrando sesión…' : 'Cerrar sesión'}
@@ -490,6 +497,28 @@ export default function ProfileView() {
         )}
 
       </div>
+
+      <dialog ref={signOutDialogRef} role="dialog" aria-modal="true" aria-labelledby="signout-title" aria-describedby="signout-description"
+        onCancel={event => { if (isSigningOut) event.preventDefault(); }}
+        onClick={event => {
+          if (!isSigningOut && event.target === event.currentTarget) event.currentTarget.close();
+        }}
+        className="fixed inset-0 m-auto w-[calc(100vw_-_2rem)] max-w-sm max-h-[calc(100dvh_-_2rem)] overflow-y-auto p-0 bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] rounded-[var(--radius-panel)] backdrop:bg-black/50">
+        <div className="p-6">
+          <h2 id="signout-title" className="text-xl text-slate-900 dark:text-white">¿Cerrar sesión?</h2>
+          <p id="signout-description" className="mt-3 text-sm text-slate-500 dark:text-gray-400">Vas a salir de tu cuenta en este dispositivo.</p>
+          <div className="mt-6 flex gap-3">
+            <button ref={signOutCancelRef} type="button" disabled={isSigningOut} onClick={() => signOutDialogRef.current?.close()}
+              className="flex-1 min-h-11 px-3 py-3 bg-slate-50 dark:bg-[#191c1f] border border-slate-200 dark:border-[#ffffff0d] text-slate-700 dark:text-gray-300 rounded-[var(--radius-control)] hover:bg-slate-100 dark:hover:bg-[#292d30] disabled:opacity-50 disabled:cursor-not-allowed">
+              Cancelar
+            </button>
+            <button type="button" onClick={handleSignOut} disabled={isSigningOut} aria-busy={isSigningOut}
+              className="flex-1 min-h-11 px-3 py-3 bg-[#f5a064] text-[#241a13] rounded-[var(--radius-control)] hover:bg-[#e58b4f] disabled:opacity-50 disabled:cursor-not-allowed">
+              {isSigningOut ? 'Cerrando sesión…' : 'Cerrar sesión'}
+            </button>
+          </div>
+        </div>
+      </dialog>
 
     </div>
   );

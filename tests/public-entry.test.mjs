@@ -14,15 +14,21 @@ globalThis.HTMLElement ??= class HTMLElement {};
 const imports = {
   react: stub(`export const useState = (...args) => globalThis.__entryHarness.hooks.useState(...args);
     export const useRef = (...args) => globalThis.__entryHarness.hooks.useRef(...args);
-    export const useEffect = () => {};`),
+    export const useEffect = (...args) => globalThis.__entryHarness.hooks.useEffect?.(...args);
+    export const lazy = () => () => null;
+    export const Suspense = () => null;`),
   '../lib/supabase': stub('export const supabase = { auth: globalThis.__entryHarness.auth };'),
   '../lib/db': stub('export const completeOnboarding = (...args) => globalThis.__entryHarness.db.completeOnboarding(...args);'),
-  'react-hot-toast': stub('export default globalThis.__entryHarness.toast;'),
+  'react-hot-toast': stub('export default globalThis.__entryHarness.toast; export const Toaster = () => null;'),
   './ThemeToggle': stub('export default () => null;'),
   '../hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
   '../lib/avatar': stub('export const prepareAvatar = () => {};'),
   './UserAvatar': stub('export default () => null;'),
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,
+  './hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
+  './utils/entryRoute': new URL('../src/utils/entryRoute.ts', import.meta.url).href,
+  ...Object.fromEntries(['Sidebar', 'BottomNav', 'AuthModal', 'ThemeToggle', 'LandingPage', 'Onboarding']
+    .map(name => [`./components/${name}`, stub(`export default function ${name}() { return null; }`)])),
 };
 
 async function loadModule(path) {
@@ -43,9 +49,13 @@ const { default: Onboarding } = await loadModule('../src/components/Onboarding.t
 const { default: LandingPage } = await loadModule('../src/components/LandingPage.tsx');
 const { useAppStore } = await loadModule('../src/hooks/useAppStore.ts');
 const { default: ProfileView } = await loadModule('../src/components/ProfileView.tsx');
+const { default: App } = await loadModule('../src/App.tsx');
 
-function mount(component, props, initial = []) {
+function mount(component, props, initial = [], runEffects = false) {
   let cursor = 0;
+  let effectCursor = 0;
+  let pendingEffects = [];
+  const effectDeps = [];
   const slots = [...initial];
   const hooks = {
     useState(value) {
@@ -58,8 +68,22 @@ function mount(component, props, initial = []) {
       if (!(slot in slots)) slots[slot] = { current: value };
       return slots[slot];
     },
+    useEffect(callback, deps) {
+      if (!runEffects) return;
+      const index = effectCursor++;
+      if (!effectDeps[index] || deps.some((value, i) => !Object.is(value, effectDeps[index][i]))) {
+        effectDeps[index] = deps;
+        pendingEffects.push(callback);
+      }
+    },
   };
-  return { slots, render() { cursor = 0; globalThis.__entryHarness.hooks = hooks; return component(props); } };
+  return { slots, render() {
+    cursor = 0; effectCursor = 0; pendingEffects = [];
+    globalThis.__entryHarness.hooks = hooks;
+    const tree = component(props);
+    pendingEffects.forEach(callback => callback());
+    return tree;
+  } };
 }
 
 function nodes(tree, predicate) {
@@ -296,7 +320,36 @@ test('reduced-motion landing content stays visible even with a pending reveal cl
   assert.equal(declarations.transform, 'none');
 });
 
-test('profile account sign-out uses the store and prevents repeated clicks while pending', async () => {
+function profileDialog(view) {
+  const tree = view.render();
+  const element = node(tree, item => item.type === 'dialog');
+  const dialog = { open: false, showModal() { this.open = true; }, close() { this.open = false; } };
+  element.props.ref.current = dialog;
+  node(element, item => item.type === 'button' && item.props.children === 'Cancelar').props.ref.current = { focus() {} };
+  return { dialog, element, open: () => node(view.render(), item => item.type === 'button' &&
+    item.props.children?.includes('Cerrar sesión')).props.onClick(),
+    buttons: () => nodes(node(view.render(), item => item.type === 'dialog'), item => item.type === 'button') };
+}
+
+test('profile sign-out opens an accessible confirmation and cancel does not sign out', () => {
+  let calls = 0;
+  globalThis.__entryHarness.profileStore = {
+    user: { id: 'user-a' }, activeProfile: profile, signOut: () => { calls++; },
+  };
+  const confirmation = profileDialog(mount(ProfileView, {}));
+  confirmation.open();
+  assert.equal(confirmation.dialog.open, true);
+  assert.equal(calls, 0);
+  assert.equal(confirmation.element.props.role, 'dialog');
+  assert.equal(confirmation.element.props['aria-modal'], 'true');
+  assert.match(markup(confirmation.element), /¿Cerrar sesión\?/);
+  assert.match(markup(confirmation.element), /Vas a salir de tu cuenta en este dispositivo\./);
+  confirmation.buttons()[0].props.onClick();
+  assert.equal(confirmation.dialog.open, false);
+  assert.equal(calls, 0);
+});
+
+test('profile confirmation signs out once and disables actions and dismissal while pending', async () => {
   let finish;
   let calls = 0;
   globalThis.__entryHarness.profileStore = {
@@ -304,21 +357,29 @@ test('profile account sign-out uses the store and prevents repeated clicks while
     signOut: () => { calls++; return new Promise(resolve => { finish = resolve; }); },
   };
   const view = mount(ProfileView, {});
-  const findButton = tree => node(tree, element => element.type === 'button' &&
-    (element.props.children?.includes('Cerrar sesión') || element.props.children?.includes('Cerrando sesión…')));
+  const confirmation = profileDialog(view);
   const initial = view.render();
   assert.ok(markup(initial).indexOf('>Cuenta</h2>') < markup(initial).indexOf('Zona de Peligro'));
-  assert.equal(findButton(initial).props.disabled, false);
-  const pending = findButton(initial).props.onClick();
-  const busyButton = findButton(view.render());
+  confirmation.open();
+  assert.equal(calls, 0);
+  const pending = confirmation.buttons()[1].props.onClick();
+  const [cancelButton, busyButton] = confirmation.buttons();
+  assert.equal(cancelButton.props.disabled, true);
   assert.equal(busyButton.props.disabled, true);
   assert.equal(busyButton.props['aria-busy'], true);
-  assert.ok(busyButton.props.children.includes('Cerrando sesión…'));
+  assert.equal(busyButton.props.children, 'Cerrando sesión…');
+  const busyDialog = node(view.render(), item => item.type === 'dialog');
+  let prevented = false;
+  busyDialog.props.onCancel({ preventDefault() { prevented = true; } });
+  assert.equal(prevented, true);
+  busyDialog.props.onClick({ target: confirmation.dialog, currentTarget: confirmation.dialog });
+  assert.equal(confirmation.dialog.open, true);
   await busyButton.props.onClick();
   assert.equal(calls, 1);
   finish();
   await pending;
-  assert.equal(findButton(view.render()).props.disabled, false);
+  assert.equal(confirmation.dialog.open, false);
+  assert.equal(confirmation.buttons()[1].props.disabled, false);
 });
 
 test('failed profile sign-out shows an error and allows retry without changing profile data', async () => {
@@ -330,11 +391,65 @@ test('failed profile sign-out shows an error and allows retry without changing p
   };
   globalThis.__entryHarness.profileStore = store;
   const view = mount(ProfileView, {});
-  const button = () => node(view.render(), element => element.type === 'button' &&
-    element.props.children?.includes('Cerrar sesión'));
-  await button().props.onClick();
+  const confirmation = profileDialog(view);
+  confirmation.open();
+  await confirmation.buttons()[1].props.onClick();
   assert.deepEqual(errors, ['No pudimos cerrar la sesión. Intentá nuevamente.']);
-  assert.equal(button().props.disabled, false);
+  assert.equal(confirmation.buttons()[1].props.disabled, false);
+  assert.equal(confirmation.dialog.open, false);
   assert.equal(store.activeProfile, profile);
   assert.equal(store.user.id, 'user-a');
+  store.signOut = async () => {};
+  confirmation.open();
+  await confirmation.buttons()[1].props.onClick();
+  assert.equal(confirmation.dialog.open, false);
+});
+
+test('App starts each new session on Home and preserves tabs for the same user', () => {
+  const previousWindow = globalThis.window;
+  globalThis.window = {
+    location: { pathname: '/' },
+    history: { replaceState(_state, _title, path) { globalThis.window.location.pathname = path; } },
+    addEventListener() {}, removeEventListener() {}, scrollTo() {},
+    matchMedia: () => ({ matches: false, addEventListener() {}, removeEventListener() {} }),
+  };
+  try {
+    const store = { user: null, activeProfile: null, loading: false };
+    globalThis.__entryHarness.profileStore = store;
+    const view = mount(App, {}, [], true);
+    view.render();
+    assert.equal(view.slots[0], 'home');
+    store.user = { id: 'user-a' };
+    store.activeProfile = { ...profile, onboarding_completed: true };
+    view.render();
+    assert.equal(view.slots[0], 'home');
+    const navigation = () => node(view.render(), element => !!element.props.onTabChange);
+    navigation().props.onTabChange('profile');
+    view.render();
+    assert.equal(view.slots[0], 'profile');
+    store.user = { id: 'user-a', refreshed: true };
+    store.activeProfile = { ...store.activeProfile, avatar_path: 'new-avatar.jpg', name: 'Updated' };
+    view.render();
+    assert.equal(view.slots[0], 'profile');
+    store.user = null;
+    store.activeProfile = null;
+    view.render();
+    assert.equal(globalThis.window.location.pathname, '/');
+    store.user = { id: 'user-a' };
+    store.activeProfile = { ...profile, onboarding_completed: true };
+    view.render();
+    assert.equal(view.slots[0], 'home');
+    navigation().props.onTabChange('charts');
+    store.user = { id: 'user-b' };
+    store.activeProfile = { ...profile, user_id: 'user-b', onboarding_completed: false };
+    view.render();
+    assert.equal(view.slots[0], 'home');
+    assert.equal(globalThis.window.location.pathname, '/onboarding');
+    store.activeProfile = { ...store.activeProfile, onboarding_completed: true };
+    view.render();
+    assert.equal(globalThis.window.location.pathname, '/app');
+    assert.equal(view.slots[0], 'home');
+  } finally {
+    globalThis.window = previousWindow;
+  }
 });
