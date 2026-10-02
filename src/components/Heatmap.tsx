@@ -1,12 +1,14 @@
 import React, { useMemo, useLayoutEffect, useRef, useState } from 'react';
-import { format, parseISO, addDays, subDays, startOfWeek, startOfMonth, endOfMonth, isSameDay, subMonths, addMonths } from 'date-fns';
+import { format, parseISO, addDays, subDays, startOfWeek, startOfMonth, endOfMonth, subMonths, addMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { DailyRecordsMap, UserProfile } from '../types';
-import { getHeatmapColor, getNetBalance, aggregateEnergy } from '../utils/helpers';
+import { getHeatmapColor, getNetBalance, getBalanceLabel, aggregateEnergy } from '../utils/helpers';
+import { getHeatmapActivities, getHeatmapBorder } from '../utils/heatmapActivity';
 
 interface HeatmapProps {
   records: DailyRecordsMap;
   selectedDateStr: string;
+  selectedGroup?: { type: 'day'|'week'|'month'|'year'; dates: string[] } | null;
   onSelectDate: (dateStr: string) => void;
   onSelectGroup?: (type: 'day'|'week'|'month'|'year', label: string, dates: string[]) => void;
   profile: UserProfile;
@@ -14,7 +16,7 @@ interface HeatmapProps {
 
 type Period = 'day' | 'week' | 'month' | 'year';
 
-const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDate, onSelectGroup, profile }) => {
+const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, selectedGroup, onSelectDate, onSelectGroup, profile }) => {
   const [period, setPeriod] = useState<Period>('day');
   const heatmapUnit = period === 'day' ? 'kcal' : 'kcal/día';
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -225,8 +227,10 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     const record = records[dateStr];
     const balance = getNetBalance(record, profile);
     const isSelected = selectedDateStr === dateStr;
-    const isToday = isSameDay(parseISO(dateStr), new Date());
-    const hasGym = record?.workouts?.some(w => w.activity.toLowerCase() === 'gimnasio');
+    const activities = getHeatmapActivities(record?.workouts);
+    const border = getHeatmapBorder(activities, isSelected);
+    const activityText = `${activities.gym ? ' · Gimnasio' : ''}${activities.football ? ' · Fútbol' : ''}`;
+    const stateText = `${getBalanceLabel(balance)}${activityText}${isSelected ? ' · Seleccionado' : ''}`;
     
     return (
       <button
@@ -234,10 +238,11 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
         onClick={() => handleBoxClick(dateStr)}
         className={`${sizeClass} heatmap-cell transition-all focus:outline-none flex-shrink-0
         ${getHeatmapColor(balance)} 
-        ${isSelected ? 'ring-1 ring-white scale-125 z-10' : (hasGym ? 'ring-1 ring-yellow-400 drop-shadow-[0_0_3px_rgba(250,204,21,0.6)]' : 'hover:ring-1 hover:ring-gray-400')}
-        ${isToday && !isSelected && !hasGym ? 'ring-1 ring-blue-500' : ''}`}
-        title={`${dateStr}: ${balance !== null ? balance + ' kcal' : 'Sin datos'}${hasGym ? ' (Día de Gimnasio)' : ''}`}
-        aria-label={`Seleccionar ${dateStr}`}
+        ${border === 'normal' ? 'hover:ring-1 hover:ring-gray-400' : ''}`}
+        data-border={border}
+        title={`${dateStr}: ${stateText}${balance !== null ? ' · ' + balance + ' kcal' : ''}`}
+        aria-label={`Seleccionar ${dateStr} · ${stateText}`}
+        aria-pressed={isSelected}
       />
     );
   };
@@ -248,14 +253,17 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     const avgBalance = getAverageBalance(pastDates);
     const colorClass = getHeatmapColor(avgBalance);
     const balanceText = avgBalance !== null ? `${avgBalance > 0 ? '+' : ''}${avgBalance} kcal/día` : 'Sin datos';
+    const isSelected = selectedGroup?.type === view && selectedGroup.dates[0] === dates[0];
 
     return (
       <button
         key={label}
         onClick={() => onSelectGroup?.(view, label, dates)}
-        className={`w-[11px] h-[11px] md:w-2.5 md:h-2.5 heatmap-cell transition-all focus:outline-none flex-shrink-0 ${colorClass} hover:ring-1 hover:ring-gray-400`}
-        title={`${label}: ${balanceText}`}
-        aria-label={`Seleccionar ${label}`}
+        className={`w-[11px] h-[11px] md:w-2.5 md:h-2.5 heatmap-cell transition-all focus:outline-none flex-shrink-0 ${colorClass} ${isSelected ? '' : 'hover:ring-1 hover:ring-gray-400'}`}
+        data-border={isSelected ? 'selected' : 'normal'}
+        title={`${label}: ${balanceText}${isSelected ? ' · Seleccionado' : ''}`}
+        aria-label={`Seleccionar ${label} · ${getBalanceLabel(avgBalance)}${isSelected ? ' · Seleccionado' : ''}`}
+        aria-pressed={isSelected}
       />
     );
   };
@@ -391,6 +399,12 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
           </div>
           <span>Superávit</span>
         </div>
+      </div>
+      <div className="activity-border-legend flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-500 dark:text-gray-400">
+        <span>Bordes:</span>
+        <span className="inline-flex items-center gap-1"><span className="heatmap-border-key" data-border="selected" aria-hidden="true" />Seleccionado</span>
+        <span className="inline-flex items-center gap-1"><span className="heatmap-border-key" data-border="gym" aria-hidden="true" />Gimnasio</span>
+        <span className="inline-flex items-center gap-1"><span className="heatmap-border-key" data-border="football" aria-hidden="true" />Fútbol</span>
       </div>
     </div>
   );
