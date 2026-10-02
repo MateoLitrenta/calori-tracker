@@ -136,15 +136,17 @@ function App() {
         {/* Main Content Area */}
         <main ref={mainRef} className="app-main flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8 w-full transition-all duration-300 bg-slate-50 dark:bg-[#151719]">
           {/* Mobile Header */}
-          <header className="home-header md:hidden flex-shrink-0 flex items-center justify-between p-4 border border-slate-200 dark:border-[#ffffff0d] bg-white dark:bg-[#1e2124]">
-            <div className="flex items-center gap-3">
-              <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol" />
-              <h1 className="text-lg font-bold">Calori</h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <ThemeToggle />
-            </div>
-          </header>
+          {activeTab === 'home' && route === '/app' && (
+            <header className="home-header md:hidden flex-shrink-0 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol" />
+                <h1 className="text-lg font-bold">Calori</h1>
+              </div>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+              </div>
+            </header>
+          )}
           <div className="app-content p-4 md:p-0">
             <Suspense fallback={<p role="status" className="text-sm text-slate-500 dark:text-gray-400">Cargando…</p>}>
             {activeTab === 'home' && <HomeView />}

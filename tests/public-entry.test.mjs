@@ -508,6 +508,37 @@ test('profile v2 expands energy information and preserves the record deletion co
   assert.ok(deleteButton());
 });
 
+test('App renders the mobile Calori header only on Home and preserves tab navigation and scroll reset', () => {
+  const previousWindow = globalThis.window;
+  globalThis.window = {
+    location: { pathname: '/app' },
+    addEventListener() {}, removeEventListener() {},
+    matchMedia: () => ({ matches: false, addEventListener() {}, removeEventListener() {} }),
+  };
+  try {
+    globalThis.__entryHarness.profileStore = {
+      user: { id: 'user-a' }, activeProfile: { ...profile, onboarding_completed: true }, loading: false,
+    };
+    const view = mount(App, {}, [], true);
+    const initial = view.render();
+    const scrolls = [];
+    node(initial, element => element.type === 'main').props.ref.current = { scrollTo: options => scrolls.push(options) };
+    for (const tab of ['home', 'chat', 'charts', 'profile', 'home']) {
+      node(view.render(), element => !!element.props.onTabChange).props.onTabChange(tab);
+      const tree = view.render();
+      assert.equal(view.slots[0], tab);
+      const headers = nodes(tree, element => element.type === 'header' && element.props.className.includes('home-header'));
+      assert.equal(headers.length, tab === 'home' ? 1 : 0);
+      if (headers.length) assert.match(markup(headers[0]), />Calori<\/h1>/);
+      const shell = node(tree, element => element.props.className?.startsWith('app-shell '));
+      assert.equal(shell.props.className.includes('app-shell-coach'), tab === 'chat');
+    }
+    assert.deepEqual(scrolls, Array.from({ length: 3 }, () => ({ top: 0, behavior: 'instant' })));
+  } finally {
+    globalThis.window = previousWindow;
+  }
+});
+
 test('App starts each new session on Home and preserves tabs for the same user', () => {
   const previousWindow = globalThis.window;
   globalThis.window = {
