@@ -164,7 +164,7 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
 .home-variants .activity-history {
   --heatmap-selected: #3b82f6;
   --heatmap-gym: #facc15;
-  --heatmap-football: #f97316;
+  --heatmap-football: #a855f7;
   min-width: 0;
   padding: 24px;
   gap: 16px;
@@ -208,7 +208,7 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
 .home-variants .activity-history [data-border="gym"] { --heatmap-border: var(--heatmap-gym); }
 .home-variants .activity-history [data-border="football"] { --heatmap-border: var(--heatmap-football); }
 .home-variants .activity-history .heatmap-cell:not([data-border="normal"]),
-.home-variants .activity-history .heatmap-border-key { box-shadow: inset 0 0 0 2px var(--heatmap-border); }
+.home-variants .activity-history .heatmap-border-key { box-shadow: inset 0 0 0 1px var(--heatmap-border); }
 .home-variants .activity-history .heatmap-border-key { display: inline-block; width: 12px; height: 12px; flex: none; border-radius: var(--radius-micro); }
 .home-variants .activity-legend {
   justify-content: flex-start;
@@ -221,7 +221,7 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
 .home-variants .activity-legend-empty,
 .home-variants .activity-legend-scale { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .home-variants .activity-legend-empty { margin-right: 0; }
-html:not(.dark) .home-variants .activity-history { --heatmap-selected: #2563eb; --heatmap-gym: #b58a00; --heatmap-football: #ea580c; }
+html:not(.dark) .home-variants .activity-history { --heatmap-selected: #2563eb; --heatmap-gym: #b58a00; --heatmap-football: #7e22ce; }
 html:not(.dark) .home-variants .daily-logs,
 html:not(.dark) .home-variants .activity-history { background: #ffffff; border-color: #e2e8f0; }
 html:not(.dark) .home-variants .activity-history .period-switch { background: #f8f7f4; border-color: #e2e8f0; }
