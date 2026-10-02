@@ -35,6 +35,7 @@ export default function HomeView() {
       <Heatmap 
         records={records} 
         selectedDateStr={selectedDateStr}
+        selectedGroup={selectedGroup}
         onSelectDate={(dateStr) => {
           setSelectedDateStr(dateStr);
           setSelectedGroup({ type: 'day', label: dateStr, dates: [dateStr] });
