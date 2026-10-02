@@ -359,7 +359,7 @@ test('profile confirmation signs out once and disables actions and dismissal whi
   const view = mount(ProfileView, {});
   const confirmation = profileDialog(view);
   const initial = view.render();
-  assert.ok(markup(initial).indexOf('>Cuenta</h2>') < markup(initial).indexOf('Zona de Peligro'));
+  assert.ok(markup(initial).indexOf('Cuenta y seguridad') < markup(initial).indexOf('Zona de peligro'));
   confirmation.open();
   assert.equal(calls, 0);
   const pending = confirmation.buttons()[1].props.onClick();
@@ -403,6 +403,109 @@ test('failed profile sign-out shows an error and allows retry without changing p
   confirmation.open();
   await confirmation.buttons()[1].props.onClick();
   assert.equal(confirmation.dialog.open, false);
+});
+
+test('profile v2 keeps edit fields, validation, cancel and save within the personal section', async () => {
+  const saved = [];
+  globalThis.__entryHarness.profileStore = {
+    user: { id: 'user-a' }, activeProfile: profile, updateProfile: async value => saved.push(value),
+  };
+  const view = mount(ProfileView, {});
+  const edit = () => node(view.render(), element => element.type === 'button' && markup(element).includes('Editar perfil')).props.onClick();
+  edit();
+  const fields = () => nodes(node(view.render(), element => element.type === 'form'), element => ['input', 'select'].includes(element.type));
+  assert.deepEqual(fields().map(field => field.props.type || field.type), ['text', 'select', 'number', 'number', 'number']);
+  assert.deepEqual(fields().slice(2).map(field => [field.props.min, field.props.max]), [['1', '120'], ['20', '300'], ['50', '250']]);
+  assert.equal(fields()[3].props.step, '0.1');
+  fields()[0].props.onChange({ target: { value: 'Draft name' } });
+  node(node(view.render(), element => element.type === 'form'), element => element.type === 'button' && element.props.children === 'Cancelar').props.onClick();
+  assert.equal(nodes(view.render(), element => element.type === 'form').length, 0);
+  assert.equal(saved.length, 0);
+  edit();
+  assert.equal(fields()[0].props.value, profile.name);
+  fields()[0].props.onChange({ target: { value: 'Ana actualizada' } });
+  fields()[2].props.onChange({ target: { value: '33' } });
+  await submit(view.render());
+  assert.equal(saved.length, 1);
+  assert.equal(saved[0].name, 'Ana actualizada');
+  assert.equal(saved[0].age, 33);
+  assert.equal(saved[0].activity, profile.activity);
+  assert.equal(saved[0].goal, profile.goal);
+  assert.equal(saved[0].avatar_path, profile.avatar_path);
+  assert.equal(saved[0].records, profile.records);
+  assert.equal(nodes(view.render(), element => element.type === 'form').length, 0);
+});
+
+test('profile v2 password form preserves validation, loading and cancel behavior', async () => {
+  const errors = [];
+  const calls = [];
+  let finish;
+  globalThis.__entryHarness.toast.error = message => errors.push(message);
+  globalThis.__entryHarness.auth.updateUser = value => {
+    calls.push(value); return new Promise(resolve => { finish = resolve; });
+  };
+  globalThis.__entryHarness.profileStore = { user: { id: 'user-a' }, activeProfile: profile };
+  const view = mount(ProfileView, {});
+  const open = () => node(view.render(), element => element.props['aria-label'] === 'Cambiar contraseña').props.onClick();
+  const form = () => node(view.render(), element => element.type === 'form');
+  const setPasswords = (first, second) => {
+    const inputs = nodes(form(), element => element.type === 'input');
+    assert.ok(inputs.every(input => input.props.minLength === 8 && input.props.required));
+    inputs[0].props.onChange({ target: { value: first } });
+    inputs[1].props.onChange({ target: { value: second } });
+  };
+  open();
+  setPasswords('short', 'short');
+  await submit(view.render());
+  setPasswords('preview-password', 'other-password');
+  await submit(view.render());
+  assert.equal(calls.length, 0);
+  assert.equal(errors.length, 2);
+  setPasswords('preview-password', 'preview-password');
+  const pending = submit(view.render());
+  assert.ok(nodes(form(), element => element.type === 'button').every(button => button.props.disabled));
+  await submit(view.render());
+  assert.deepEqual(calls, [{ password: 'preview-password' }]);
+  finish({ error: null });
+  await pending;
+  assert.equal(nodes(view.render(), element => element.type === 'form').length, 0);
+  open();
+  assert.ok(nodes(form(), element => element.type === 'input').every(input => input.props.value === ''));
+  setPasswords('another-password', 'another-password');
+  node(form(), element => element.type === 'button' && element.props.children === 'Cancelar').props.onClick();
+  open();
+  assert.ok(nodes(form(), element => element.type === 'input').every(input => input.props.value === ''));
+});
+
+test('profile v2 expands energy information and preserves the record deletion confirmation', async () => {
+  let calls = 0;
+  let finish;
+  globalThis.__entryHarness.profileStore = {
+    user: { id: 'user-a' }, activeProfile: profile,
+    resetData: () => { calls++; return new Promise(resolve => { finish = resolve; }); },
+  };
+  const view = mount(ProfileView, {});
+  const toggle = () => node(view.render(), element => element.props['aria-controls'] === 'profile-energy-details');
+  assert.equal(toggle().props['aria-expanded'], false);
+  toggle().props.onClick();
+  assert.equal(toggle().props['aria-expanded'], true);
+  assert.match(markup(view.render()), /Pasos y ejercicio pueden solaparse/);
+  toggle().props.onClick();
+  assert.equal(toggle().props['aria-expanded'], false);
+  assert.equal(nodes(view.render(), element => element.props.id === 'profile-energy-details').length, 0);
+  const danger = () => node(view.render(), element => element.props.className === 'profile-danger profile-v2-danger');
+  const deleteButton = () => node(danger(), element => element.type === 'button' && element.props.children === 'Borrar todos los registros');
+  deleteButton().props.onClick();
+  assert.equal(calls, 0);
+  node(danger(), element => element.type === 'button' && element.props.children === 'Cancelar').props.onClick();
+  assert.equal(calls, 0);
+  deleteButton().props.onClick();
+  const pending = node(danger(), element => element.type === 'button' && element.props.children === 'Confirmar').props.onClick();
+  assert.ok(nodes(danger(), element => element.type === 'button').every(button => button.props.disabled));
+  assert.equal(calls, 1);
+  finish();
+  await pending;
+  assert.ok(deleteButton());
 });
 
 test('App starts each new session on Home and preserves tabs for the same user', () => {
