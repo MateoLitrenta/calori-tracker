@@ -8,7 +8,7 @@
 .premium-view :is([class~="text-slate-900"], [class~="text-slate-700"]) { color: #f1f0ec; }
 .premium-view :is([class~="text-slate-500"], [class~="text-slate-600"]) { color: #a9abae; }
 .premium-view :is(button, input, select):focus-visible { outline: 2px solid #f5a064; outline-offset: 3px; }
-.premium-view button { transition: background-color .15s, color .15s; }
+.premium-view button { transition: background-color var(--motion-control) var(--motion-ease-control), color var(--motion-control) var(--motion-ease-control); }
 .premium-view button:not(:disabled):hover { filter: brightness(1.08); }
 .premium-view :is(button, input, select)[class~="bg-[#f5a064]"] { color: #241a13; }
 .premium-view input, .premium-view select { min-height: 46px; border-radius: var(--radius-control); }
@@ -385,14 +385,6 @@ html:not(.dark) .charts-insights .charts-surplus { color: #c4413a; }
   .assistant-view .chat-recording-bar button { padding: 0 8px; font-size: 12px; }
   .assistant-view .chat-composer-recording .chat-composer-form { display: none; }
 }
-@media (max-width: 767px) {
-  .app-shell-coach { position: fixed; top: var(--coach-viewport-top, 0px); left: 0; right: 0; height: var(--coach-viewport-height, 100dvh); }
-  .app-shell-coach .app-stage { min-height: 0; }
-  .app-shell-coach .app-main { min-height: 0; overflow: hidden; padding: env(safe-area-inset-top) 0 calc(4rem + env(safe-area-inset-bottom)); }
-  .app-shell-coach .app-content { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; padding: 0; }
-  .app-shell-coach > .app-bottom-nav { position: absolute; bottom: 0; }
-}
-
 .profile-view.profile-v2 {
   --profile-surface: #1e2124; --profile-control: #191c1f; --profile-hover: #292d30;
   --profile-line: #ffffff0d; --profile-text: #f1f0ec; --profile-muted: #a9abae; --profile-danger: #fca5a5;
@@ -443,6 +435,7 @@ html:not(.dark) .profile-v2 .profile-button-accent { color: #9a4d1f; }
 .profile-view.profile-v2 .profile-information { padding: 2px 4px; }
 .profile-v2 .profile-info-toggle { display: flex; width: 100%; align-items: center; gap: 10px; min-height: 44px; padding: 12px 0; text-align: left; font-size: 14px; line-height: 1.6; color: var(--profile-text); }
 .profile-v2 .profile-info-toggle > svg { flex: none; color: var(--profile-muted); }
+.profile-v2 .profile-info-toggle > svg:last-child { transition: transform var(--motion-control) var(--motion-ease-control); }
 .profile-v2 .profile-info-toggle .profile-muted { font-size: 12px; }
 .profile-v2 .profile-energy-details { padding: 0 0 4px 30px; font-size: 13px; line-height: 1.65; }
 .profile-v2 .profile-energy-details p + p { margin-top: 6px; }
@@ -456,3 +449,5 @@ html:not(.dark) .profile-v2 .profile-button-accent { color: #9a4d1f; }
   .profile-v2 .profile-field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .profile-v2 .profile-facts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+.profile-view dialog[open] { animation: calori-dialog var(--motion-control) var(--motion-ease-enter); }
+.profile-view dialog[open]::backdrop { animation: calori-fade var(--motion-control) var(--motion-ease-enter); }

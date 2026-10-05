@@ -13,7 +13,8 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
       <div className="flex justify-around items-center h-16 max-w-md mx-auto px-2">
         <button
           onClick={() => onTabChange('home')}
-          className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${
+          aria-current={activeTab === 'home' ? 'page' : undefined}
+          className={`bottom-nav-item flex flex-col items-center justify-center w-full h-full space-y-1 ${
             activeTab === 'home' ? 'text-[#f5a064]' : 'text-gray-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
@@ -22,7 +23,8 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
         </button>
         <button
           onClick={() => onTabChange('chat')}
-          className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${
+          aria-current={activeTab === 'chat' ? 'page' : undefined}
+          className={`bottom-nav-item flex flex-col items-center justify-center w-full h-full space-y-1 ${
             activeTab === 'chat' ? 'text-[#f5a064]' : 'text-gray-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
@@ -31,7 +33,8 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
         </button>
         <button
           onClick={() => onTabChange('charts')}
-          className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${
+          aria-current={activeTab === 'charts' ? 'page' : undefined}
+          className={`bottom-nav-item flex flex-col items-center justify-center w-full h-full space-y-1 ${
             activeTab === 'charts' ? 'text-[#f5a064]' : 'text-gray-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
@@ -40,7 +43,8 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
         </button>
         <button
           onClick={() => onTabChange('profile')}
-          className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${
+          aria-current={activeTab === 'profile' ? 'page' : undefined}
+          className={`bottom-nav-item flex flex-col items-center justify-center w-full h-full space-y-1 ${
             activeTab === 'profile' ? 'text-[#f5a064]' : 'text-gray-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >

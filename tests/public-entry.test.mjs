@@ -24,6 +24,8 @@ const imports = {
   '../hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
   '../lib/avatar': stub('export const prepareAvatar = () => {};'),
   './UserAvatar': stub('export default () => null;'),
+  './ViewSkeleton': stub('export default props => globalThis.__entryHarness.ViewSkeleton(props);'),
+  './components/ViewSkeleton': stub('export default props => globalThis.__entryHarness.ViewSkeleton(props);'),
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,
   './hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
   './utils/entryRoute': new URL('../src/utils/entryRoute.ts', import.meta.url).href,
@@ -48,6 +50,9 @@ const { default: AuthModal } = await loadModule('../src/components/AuthModal.tsx
 const { default: Onboarding } = await loadModule('../src/components/Onboarding.tsx');
 const { default: LandingPage } = await loadModule('../src/components/LandingPage.tsx');
 const { useAppStore } = await loadModule('../src/hooks/useAppStore.ts');
+const { default: ViewSkeleton } = await loadModule('../src/components/ViewSkeleton.tsx');
+globalThis.__entryHarness.ViewSkeleton = ViewSkeleton;
+const { default: BottomNav } = await loadModule('../src/components/BottomNav.tsx');
 const { default: ProfileView } = await loadModule('../src/components/ProfileView.tsx');
 const { default: App } = await loadModule('../src/App.tsx');
 
@@ -508,11 +513,51 @@ test('profile v2 expands energy information and preserves the record deletion co
   assert.ok(deleteButton());
 });
 
+test('BottomNav preserves labels and navigation, with exactly one current page and filled active icon', () => {
+  const tabs = ['home', 'chat', 'charts', 'profile'];
+  for (const activeTab of tabs) {
+    const selected = [];
+    const tree = BottomNav({ activeTab, onTabChange: tab => selected.push(tab) });
+    const buttons = nodes(tree, element => element.type === 'button');
+    assert.deepEqual(buttons.map(button => button.props.children[1].props.children), ['Inicio', 'Coach', 'Datos', 'Perfil']);
+    assert.equal(buttons.filter(button => button.props['aria-current'] === 'page').length, 1);
+    buttons.forEach((button, index) => {
+      assert.equal(button.props['aria-current'], tabs[index] === activeTab ? 'page' : undefined);
+      assert.equal(button.props.children[0].props.weight, tabs[index] === activeTab ? 'fill' : 'regular');
+      button.props.onClick();
+    });
+    assert.deepEqual(selected, tabs);
+  }
+});
+
+test('lazy view fallback is accessible, matches the selected tab and has no interactive placeholders', () => {
+  const previousWindow = globalThis.window;
+  globalThis.window = { location: { pathname: '/app' } };
+  try {
+    globalThis.__entryHarness.profileStore = { user: { id: 'user-a' }, activeProfile: { ...profile, onboarding_completed: true }, loading: false };
+    const view = mount(App, {});
+    for (const tab of ['home', 'chat', 'charts', 'profile']) {
+      node(view.render(), element => !!element.props.onTabChange).props.onTabChange(tab);
+      const fallback = node(view.render(), element => !!element.props.fallback).props.fallback;
+      assert.equal(fallback.props.view, tab);
+      const skeleton = ViewSkeleton(fallback.props);
+      assert.equal(skeleton.props.role, 'status');
+      assert.equal(skeleton.props['aria-live'], 'polite');
+      assert.match(skeleton.props['aria-label'], /^Cargando /);
+      assert.equal(nodes(skeleton, element => ['button', 'input', 'select'].includes(element.type)).length, 0);
+    }
+    globalThis.__entryHarness.profileStore.activeProfile = null;
+    const profileLoading = mount(ProfileView, {}).render();
+    assert.equal(profileLoading.props.view, 'profile');
+  } finally { globalThis.window = previousWindow; }
+});
+
 test('App renders the mobile Calori header only on Home and preserves tab navigation and scroll reset', () => {
   const previousWindow = globalThis.window;
   globalThis.window = {
     location: { pathname: '/app' },
     addEventListener() {}, removeEventListener() {},
+    setTimeout: () => 0, clearTimeout() {},
     matchMedia: () => ({ matches: false, addEventListener() {}, removeEventListener() {} }),
   };
   try {
@@ -545,6 +590,7 @@ test('App starts each new session on Home and preserves tabs for the same user',
     location: { pathname: '/' },
     history: { replaceState(_state, _title, path) { globalThis.window.location.pathname = path; } },
     addEventListener() {}, removeEventListener() {}, scrollTo() {},
+    setTimeout: () => 0, clearTimeout() {},
     matchMedia: () => ({ matches: false, addEventListener() {}, removeEventListener() {} }),
   };
   try {

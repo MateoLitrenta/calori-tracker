@@ -6,6 +6,7 @@ import { Check, Trash, PencilSimple, LockKey, SignOut, Info, CaretDown } from '@
 import { supabase } from '../lib/supabase';
 import { prepareAvatar } from '../lib/avatar';
 import UserAvatar from './UserAvatar';
+import ViewSkeleton from './ViewSkeleton';
 import toast from 'react-hot-toast';
 
 export default function ProfileView() {
@@ -57,13 +58,7 @@ export default function ProfileView() {
   };
 
   if (!user || !activeProfile || activeProfile.user_id !== user.id || sex === null || age === null || weight === null || height === null) {
-    return (
-      <div className="premium-view dark profile-view w-full max-w-5xl mx-auto">
-        <div role="status" aria-live="polite" className="profile-loading rounded-3xl border border-slate-200 dark:border-[#ffffff0d] bg-white dark:bg-[#1e2124] p-6 min-h-80">
-          <p className="text-sm text-slate-500 dark:text-gray-400">Cargando perfil…</p>
-        </div>
-      </div>
-    );
+    return <ViewSkeleton view="profile" />;
   }
 
   const previewProfile: UserProfile = {
