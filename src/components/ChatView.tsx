@@ -173,7 +173,8 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const scrollToEnd = useCallback((behavior: ScrollBehavior) => {
     const container = window.matchMedia('(max-width: 767px)').matches
       ? messagesScrollRef.current : scrollContainer.current;
-    container?.scrollTo({ top: container.scrollHeight, behavior });
+    container?.scrollTo({ top: container.scrollHeight,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : behavior });
   }, [scrollContainer]);
   const didScroll = useRef(false);
   const mounted = useRef(true);

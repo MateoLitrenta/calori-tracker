@@ -4,6 +4,7 @@ import BottomNav from './components/BottomNav';
 import type { Tab } from './components/BottomNav';
 import AuthModal from './components/AuthModal';
 import ThemeToggle from './components/ThemeToggle';
+import ViewSkeleton from './components/ViewSkeleton';
 import { useAppStore } from './hooks/useAppStore';
 import { Toaster } from 'react-hot-toast';
 import LandingPage from './components/LandingPage';
@@ -12,9 +13,12 @@ import { resolveEntryRoute } from './utils/entryRoute';
 import type { EntryRoute } from './utils/entryRoute';
 
 const HomeView = lazy(() => import('./components/HomeView'));
-const ChatView = lazy(() => import('./components/ChatView'));
-const ChartsView = lazy(() => import('./components/ChartsView'));
-const ProfileView = lazy(() => import('./components/ProfileView'));
+const loadChatView = () => import('./components/ChatView');
+const loadChartsView = () => import('./components/ChartsView');
+const loadProfileView = () => import('./components/ProfileView');
+const ChatView = lazy(loadChatView);
+const ChartsView = lazy(loadChartsView);
+const ProfileView = lazy(loadProfileView);
 
 function App() {
   const { user, loading, activeProfile, completeOnboarding, signOut } = useAppStore();
@@ -60,6 +64,17 @@ function App() {
     if (activeTab === 'chat') return;
     mainRef.current?.scrollTo({ top: 0, behavior: 'instant' });
   }, [activeTab]);
+
+  useEffect(() => {
+    if (loading || !profileReady || route !== '/app') return;
+    const preload = () => { void Promise.allSettled([loadChatView(), loadChartsView(), loadProfileView()]); };
+    if (window.requestIdleCallback) {
+      const idleId = window.requestIdleCallback(preload);
+      return () => window.cancelIdleCallback(idleId);
+    }
+    const timer = window.setTimeout(preload, 1500);
+    return () => window.clearTimeout(timer);
+  }, [loading, profileReady, route]);
 
   useEffect(() => {
     if (!isCoachLayout) return;
@@ -134,7 +149,7 @@ function App() {
 
       <div className="app-stage flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Main Content Area */}
-        <main ref={mainRef} className="app-main flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8 w-full transition-all duration-300 bg-slate-50 dark:bg-[#151719]">
+        <main ref={mainRef} className="app-main flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8 w-full bg-slate-50 dark:bg-[#151719]">
           {/* Mobile Header */}
           {activeTab === 'home' && route === '/app' && (
             <header className="home-header md:hidden flex-shrink-0 flex items-center justify-between">
@@ -148,7 +163,7 @@ function App() {
             </header>
           )}
           <div className="app-content p-4 md:p-0">
-            <Suspense fallback={<p role="status" className="text-sm text-slate-500 dark:text-gray-400">Cargando…</p>}>
+            <Suspense fallback={<ViewSkeleton view={activeTab} />}>
             {activeTab === 'home' && <HomeView />}
             {activeTab === 'chat' && <ChatView scrollContainer={mainRef} />}
             {activeTab === 'charts' && <ChartsView />}

@@ -58,7 +58,7 @@
 .home-variants .daily-habits input { min-width: 0; max-width: 100%; min-height: 44px; border-radius: var(--home-radius-control); }
 .home-variants .daily-habits .habit-value { min-height: 44px; min-width: 44px; border-radius: var(--home-radius-control); }
 .home-variants .habit-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; gap: 4px; }
-.home-variants :is(.habit-controls button, .habit-edit) { min-width: 0; min-height: 44px; border-radius: var(--home-radius-control); background: var(--home-control); color: var(--home-muted); font-size: 12px; font-weight: 500; transition: background-color .15s, color .15s; }
+.home-variants :is(.habit-controls button, .habit-edit) { min-width: 0; min-height: 44px; border-radius: var(--home-radius-control); background: var(--home-control); color: var(--home-muted); font-size: 12px; font-weight: 500; }
 .home-variants .habit-edit { width: 100%; }
 .home-variants :is(.habit-controls button, .habit-edit, .habit-value):hover:not(:disabled) { background: var(--home-hover); color: var(--home-text); }
 .home-variants :is(.daily-habits button, .daily-quick-actions button, .habit-adjustments button):active:not(:disabled) { background: var(--home-hover); color: var(--home-orange); }
@@ -107,6 +107,16 @@
 .home-header .brand-symbol { width: 30px; height: 30px; border-radius: var(--radius-control); }
 .home-header h1 { font-size: 18px; letter-spacing: -.02em; }
 .home-header button { border-radius: var(--radius-control); }
+.home-variants :is(.daily-habits button, .daily-quick-actions button, .habit-adjustments button) {
+  transition: transform var(--motion-fast) var(--motion-ease-control), background-color var(--motion-control) var(--motion-ease-control), border-color var(--motion-control) var(--motion-ease-control), color var(--motion-control) var(--motion-ease-control);
+}
+.home-variants :is(.daily-habits button, .daily-quick-actions button, .habit-adjustments button):active:not(:disabled) { transform: scale(.97); }
+.home-variants .daily-panel form[class~="animate-in"], .home-variants .habit-adjustments,
+.home-variants .energy-metrics details[open] > div { animation: calori-enter var(--motion-control) var(--motion-ease-enter); }
+.home-variants .heatmap-cell { transition: transform var(--motion-fast) var(--motion-ease-control), background-color var(--motion-fast) var(--motion-ease-control); }
+.home-variants .heatmap-cell[aria-pressed="true"] { animation: calori-cell var(--motion-fast) var(--motion-ease-control); }
+.home-variants .daily-panel > .fixed.inset-0 { animation: calori-fade var(--motion-control) var(--motion-ease-enter); }
+.home-variants .daily-panel > .fixed.inset-0 > div { animation: calori-dialog var(--motion-control) var(--motion-ease-enter); }
 html:not(.dark) .home-variants {
   --home-bg: #f8f7f4;
   --home-card: #ffffff;
