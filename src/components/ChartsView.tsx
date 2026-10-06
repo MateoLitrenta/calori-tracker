@@ -1,5 +1,5 @@
 import './PremiumViews.css';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type CSSProperties } from 'react';
 import { ChartBar, Footprints, Barbell } from '@phosphor-icons/react';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -44,7 +44,9 @@ export default function ChartsView() {
             <p className="charts-range">{range}</p>
           </div>
         </div>
-        <div className="charts-period" role="group" aria-label="Período">
+        <div className="charts-period" role="group" aria-label="Período"
+          style={{ '--active-index': (['Semana', 'Mes', 'Año'] as ChartPeriod[]).indexOf(period) } as CSSProperties}>
+          <span className="charts-period-indicator" aria-hidden="true" />
           {(['Semana', 'Mes', 'Año'] as ChartPeriod[]).map(value => (
             <button key={value} type="button" aria-pressed={period === value} onClick={() => {
               setPeriod(value);
@@ -54,7 +56,7 @@ export default function ChartsView() {
         </div>
       </header>
 
-      <section className="charts-kpis" aria-label={`Resumen de ${period.toLowerCase()}`}>
+      <section key={`summary-${period}`} className="charts-kpis" aria-label={`Resumen de ${period.toLowerCase()}`}>
         <div className="charts-kpi">
           <h3>Consumidas<span className="charts-desktop-only"> promedio</span></h3>
           <p className="charts-value">{summary.consumed === null ? 'Sin datos' : number(summary.consumed)}</p>
@@ -92,7 +94,7 @@ export default function ChartsView() {
           </div>
         ) : (
           <>
-            <div className="charts-plot-scroll">
+            <div key={`plot-${period}`} className="charts-plot-scroll">
               <div className={`charts-bars ${period === 'Año' ? 'charts-bars-year' : ''}`} role="list" aria-label={`Evolución de ${period.toLowerCase()}`}>
                 {buckets.map(bucket => {
                   const item = bucket.summary;
@@ -129,7 +131,7 @@ export default function ChartsView() {
               <span className="charts-secondary">Balance debajo de cada período · kcal</span>
             </div>
             {detail ? (
-              <div className="charts-detail" id="charts-bucket-detail" role="tooltip">
+              <div key={detail.start} className="charts-detail" id="charts-bucket-detail" role="tooltip">
                 <h4>{detail.title}</h4>
                 <dl>
                   <div><dt>{averages ? 'Consumidas promedio' : 'Consumidas'}</dt><dd>{detail.summary.consumed === null ? 'Sin comidas registradas' : kcal(detail.summary.consumed)}</dd></div>
@@ -148,7 +150,7 @@ export default function ChartsView() {
         </details>
       </section>
 
-      <section className="charts-panel charts-activity-panel" aria-labelledby="charts-activity-heading">
+      <section key={`activity-${period}`} className="charts-panel charts-activity-panel" aria-labelledby="charts-activity-heading">
         <h3 id="charts-activity-heading">Actividad</h3>
         <div className="charts-activity">
           <div><Footprints size={20} aria-hidden="true" /><h4>Pasos<span className="charts-desktop-only"> promedio</span></h4>
@@ -167,7 +169,7 @@ export default function ChartsView() {
       </section>
 
       {comparison && (
-        <section className="charts-panel charts-comparison" aria-labelledby="charts-comparison-heading">
+        <section key={`comparison-${period}`} className="charts-panel charts-comparison" aria-labelledby="charts-comparison-heading">
           <h3 id="charts-comparison-heading"><span className="charts-desktop-only">Comparado con el período anterior</span><span className="charts-mobile-only">vs período anterior</span></h3>
           <dl>
             <div><dt>Consumidas</dt><dd>{signed(comparison.consumed)} <span>kcal/día</span></dd></div>

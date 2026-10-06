@@ -30,21 +30,22 @@
 }
 @keyframes calori-skeleton { 0%, 100% { opacity: .65; } 50% { opacity: .9; } }
 
-.app-main { transition: background-color var(--motion-panel) var(--motion-ease-control), color var(--motion-panel) var(--motion-ease-control); }
+:is(.app-shell, .app-main, .app-bottom-nav, .home-header) { transition: background-color var(--motion-control) var(--motion-ease-control), border-color var(--motion-control) var(--motion-ease-control), color var(--motion-control) var(--motion-ease-control); }
 .app-content > :is(.home-variants, .charts-view, .profile-view) { animation: calori-enter var(--motion-control) var(--motion-ease-enter); }
 .app-content > .assistant-view { animation: calori-fade var(--motion-control) var(--motion-ease-enter); }
 /* A modal must keep the viewport as its containing block, even during page entry. */
 .app-content > .home-variants:has(.fixed.inset-0), .app-content > .profile-view:has(dialog[open]) { animation: none; }
 
 .app-bottom-nav .bottom-nav-item { position: relative; isolation: isolate; border-radius: var(--radius-control); transition: color var(--motion-control) var(--motion-ease-control), transform var(--motion-fast) var(--motion-ease-control); }
-.bottom-nav-item::before { content: ''; position: absolute; z-index: -1; inset: 7px 8px; border-radius: var(--radius-widget); background: #f5a06414; opacity: 0; transform: scale(.96); transition: opacity var(--motion-control) var(--motion-ease-control), transform var(--motion-control) var(--motion-ease-control); }
-.bottom-nav-item[aria-current="page"]::before { opacity: 1; transform: scale(1); }
+.bottom-nav-track { position: relative; }
+.bottom-nav-indicator { position: absolute; pointer-events: none; top: 8px; left: 8px; width: calc((100% - 16px) / 4); height: 32px; transform: translateX(calc(var(--active-index) * 100%)); transition: transform var(--motion-control) var(--motion-ease-enter); }
+.bottom-nav-indicator::before { content: ''; display: block; width: 44px; height: 100%; margin-inline: auto; border-radius: var(--radius-pill); background: #f5a06414; }
 .bottom-nav-item svg { transition: transform var(--motion-control) var(--motion-ease-control); }
 .bottom-nav-item[aria-current="page"] svg { transform: translateY(-1px); }
 .app-bottom-nav .bottom-nav-item:active { transform: scale(.97); }
 .bottom-nav-item:focus-visible { outline: 2px solid #f5a064; outline-offset: -3px; }
 
-.view-skeleton { --skeleton-surface: #ffffff; --skeleton-fill: #e2e5e8; --skeleton-line: #e2e8f0; display: flex; flex-direction: column; gap: 18px; width: 100%; max-width: 896px; min-width: 0; margin-inline: auto; }
+.view-skeleton { --skeleton-surface: #ffffff; --skeleton-fill: #e2e5e8; --skeleton-line: #e2e8f0; display: flex; flex-direction: column; gap: 18px; width: 100%; max-width: 896px; min-width: 0; margin-inline: auto; animation: calori-fade var(--motion-fast) var(--motion-ease-enter) 140ms both; }
 html.dark .view-skeleton { --skeleton-surface: #1e2124; --skeleton-fill: #34383b; --skeleton-line: #ffffff0d; }
 .skeleton-heading { display: flex; align-items: center; gap: 12px; min-height: 32px; }
 .skeleton-block { display: block; background: var(--skeleton-fill); border-radius: var(--radius-control); animation: calori-skeleton 1600ms ease-in-out infinite; }
@@ -79,8 +80,11 @@ html.dark .view-skeleton { --skeleton-surface: #1e2124; --skeleton-fill: #34383b
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  /* Keep the loading reveal delay, with an instant reveal and no pulse. */
+  .view-skeleton { animation: calori-fade 0s linear 140ms both !important; }
   .app-bottom-nav .bottom-nav-item:active, .bottom-nav-item[aria-current="page"] svg,
-  .home-variants :is(.daily-habits button, .daily-quick-actions button, .habit-adjustments button):active:not(:disabled) { transform: none !important; }
+  .home-variants :is(.daily-habits button, .daily-quick-actions button, .habit-adjustments button):active:not(:disabled),
+  .assistant-view .chat-confirmation button:active:not(:disabled) { transform: none !important; }
 }
 
 .brand-symbol {

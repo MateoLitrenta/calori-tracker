@@ -17,6 +17,7 @@
   color-scheme: dark;
 }
 .home-variants button:focus-visible, .home-variants summary:focus-visible { outline: 2px solid var(--home-orange); outline-offset: 4px; }
+.home-variants, .home-variants :is(.energy-card, .daily-habits > div, .daily-logs) { transition: background-color var(--motion-control) var(--motion-ease-control), border-color var(--motion-control) var(--motion-ease-control), color var(--motion-control) var(--motion-ease-control); }
 .home-variants :is([class~="bg-white"], [class~="bg-slate-50"], [class~="bg-slate-100"]) { background-color: var(--home-card); }
 .home-variants :is([class~="border-slate-200"], [class~="border-slate-300"], [class~="divide-slate-200"] > *) { border-color: var(--home-line); }
 .home-variants :is([class~="text-slate-900"], [class~="text-slate-700"]) { color: var(--home-text); }

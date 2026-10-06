@@ -141,6 +141,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
 }) {
   const storageKey = `calori:assistant:messages:${userId}:${dateStr}`;
   const [messages, setMessages] = useState<Message[]>(() => readDailyHistory(userId, dateStr, today));
+  const [initialMessageIds] = useState(() => new Set(messages.map(message => message.id)));
   const isPastConversation = dateStr !== today;
   const [showHistory, setShowHistory] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -756,7 +757,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             {pending.actions.map((action, index) => (
               <div key={index} className="mb-3">
                 {isEditingProposal ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="chat-proposal-edit grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {(action.type === 'add_meal'
                       ? [{ field: 'name', label: 'Nombre', type: 'text' },
                         { field: 'calories', label: 'Calorías (kcal)', type: 'number' },
@@ -831,7 +832,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           </div>
         )}
         {messages.map((msg) => (
-          <div key={msg.id} className={`chat-message chat-message-${msg.role} flex gap-3 min-w-0 max-w-[95%] md:max-w-[80%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
+          <div key={msg.id} className={`chat-message chat-message-${msg.role} ${initialMessageIds.has(msg.id) ? '' : 'chat-message-new'} flex gap-3 min-w-0 max-w-[95%] md:max-w-[80%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
             <div className="chat-message-avatar flex-shrink-0 w-8 h-8 flex items-center justify-center">
               {msg.role === 'user' ? (
                 <UserAvatar userId={userId} path={activeProfile?.user_id === userId ? activeProfile.avatar_path : null}
@@ -859,9 +860,9 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           <div className="chat-typing flex gap-3 max-w-[75%] mr-auto" role="status" aria-label="Coach está respondiendo">
             <img src="/brand/calori-logo-symbol.png" alt="" className="chat-message-avatar brand-symbol brand-symbol-message" />
             <div className="px-4 py-4 rounded-3xl bg-slate-100 dark:bg-[#191c1f] rounded-tl-sm border border-slate-200 dark:border-[#ffffff0d] flex items-center gap-1">
-              <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-              <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              <span aria-hidden="true" className="chat-typing-dot w-1.5 h-1.5 bg-slate-400 rounded-full" />
+              <span aria-hidden="true" className="chat-typing-dot w-1.5 h-1.5 bg-slate-400 rounded-full" />
+              <span aria-hidden="true" className="chat-typing-dot w-1.5 h-1.5 bg-slate-400 rounded-full" />
             </div>
           </div>
         )}
