@@ -519,6 +519,8 @@ test('BottomNav preserves labels and navigation, with exactly one current page a
     const selected = [];
     const tree = BottomNav({ activeTab, onTabChange: tab => selected.push(tab) });
     const buttons = nodes(tree, element => element.type === 'button');
+    assert.equal(nodes(tree, element => element.props.className === 'bottom-nav-indicator').length, 1);
+    assert.equal(node(tree, element => element.props.style?.['--active-index'] !== undefined).props.style['--active-index'], tabs.indexOf(activeTab));
     assert.deepEqual(buttons.map(button => button.props.children[1].props.children), ['Inicio', 'Coach', 'Datos', 'Perfil']);
     assert.equal(buttons.filter(button => button.props['aria-current'] === 'page').length, 1);
     buttons.forEach((button, index) => {
@@ -543,7 +545,8 @@ test('lazy view fallback is accessible, matches the selected tab and has no inte
       const skeleton = ViewSkeleton(fallback.props);
       assert.equal(skeleton.props.role, 'status');
       assert.equal(skeleton.props['aria-live'], 'polite');
-      assert.match(skeleton.props['aria-label'], /^Cargando /);
+      assert.equal(skeleton.props['aria-label'], 'Cargando');
+      assert.equal(skeleton.key, tab);
       assert.equal(nodes(skeleton, element => ['button', 'input', 'select'].includes(element.type)).length, 0);
     }
     globalThis.__entryHarness.profileStore.activeProfile = null;

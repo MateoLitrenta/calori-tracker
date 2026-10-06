@@ -181,6 +181,16 @@ test('keyboard focus and pointer selection expose exact expenditure and balance 
   periodButton.props.onClick();
   assert.equal(globalThis.__chartsHarness.period, 'Año');
   assert.equal(globalThis.__chartsHarness.selectedBucket, null);
+  const year = render(weeklyRecords, globalThis.__chartsHarness.period);
+  const selector = nodes(year.tree, element => element.props['aria-label'] === 'Período')[0];
+  assert.equal(selector.props.style['--active-index'], 2);
+  assert.equal(nodes(selector, element => element.props.className === 'charts-period-indicator').length, 1);
+  const active = nodes(selector, element => element.props['aria-pressed'] === true);
+  assert.equal(active.length, 1);
+  assert.equal(active[0].props.children, 'Año');
+  const energy = nodes(year.tree, element => element.props.className === 'charts-panel charts-energy')[0];
+  assert.equal(energy.key, null); // Keep the native methodology disclosure mounted across periods.
+  assert.equal(nodes(energy, element => element.props.className === 'charts-plot-scroll')[0].key, 'plot-Año');
 });
 
 test('mobile summary keeps three energy metrics with registered days as secondary data', () => {

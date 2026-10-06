@@ -1,12 +1,10 @@
 import type { Tab } from './BottomNav';
 
-const labels: Record<Tab, string> = { home: 'Inicio', chat: 'Coach', charts: 'Datos', profile: 'Perfil' };
-
 export default function ViewSkeleton({ view }: { view: Tab }) {
   return (
-    <div role="status" aria-live="polite" aria-label={`Cargando ${labels[view]}`}
+    <div key={view} role="status" aria-live="polite" aria-label="Cargando"
       className={`view-skeleton view-skeleton-${view}`}>
-      <span className="sr-only">Cargando {labels[view]}…</span>
+      <span className="sr-only">Cargando…</span>
       <div aria-hidden="true" className="skeleton-heading">
         {view === 'chat' && <span className="skeleton-block skeleton-avatar" />}
         <span className="skeleton-block skeleton-title" />
