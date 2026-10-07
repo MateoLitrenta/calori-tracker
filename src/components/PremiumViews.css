@@ -301,34 +301,34 @@ html:not(.dark) .charts-insights .charts-surplus { color: #c4413a; }
   .charts-insights .charts-heading-icon { padding: 8px; }
   .charts-insights .charts-heading-icon svg { width: 20px; height: 20px; }
   .charts-insights .charts-heading h2 { font-size: 20px; }
-  .charts-insights .charts-heading .charts-range { margin-top: 4px; font-size: 11px; }
+  .charts-insights .charts-heading .charts-range { margin-top: 4px; font-size: 12px; }
   .charts-insights .charts-period button { min-height: 40px; }
   .charts-insights .charts-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 16px 14px 12px; background: var(--charts-surface); border: 1px solid var(--charts-line); border-radius: var(--radius-panel); }
   .charts-insights .charts-kpi { padding: 0; border: 0; background: transparent; }
-  .charts-insights .charts-kpi h3 { min-height: 0; font-size: 11px; line-height: 1.4; }
+  .charts-insights .charts-kpi h3 { min-height: 0; font-size: 12px; line-height: 1.4; }
   .charts-insights .charts-value { font-size: clamp(19px, 5.5vw, 24px); margin-top: 8px; line-height: 1.3; }
-  .charts-insights .charts-unit { min-height: 0; font-size: 10px; margin-top: 4px; }
+  .charts-insights .charts-unit { min-height: 0; font-size: 12px; margin-top: 4px; }
   .charts-insights .charts-kpi-note { display: none; }
   .charts-insights .charts-kpi:nth-child(3) .charts-unit { display: none; }
-  .charts-insights .charts-kpi:nth-child(3) .charts-kpi-note { display: block; margin-top: 4px; font-size: 10px; }
+  .charts-insights .charts-kpi:nth-child(3) .charts-kpi-note { display: block; margin-top: 4px; font-size: 12px; }
   .charts-insights .charts-registered { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 5px; padding-top: 10px; border-top: 1px solid var(--charts-line); }
   .charts-insights .charts-registered h3, .charts-insights .charts-registered .charts-kpi-note { display: none; }
-  .charts-insights .charts-registered .charts-value, .charts-insights .charts-registered .charts-unit { margin: 0; font-size: 11px; line-height: 1.5; color: var(--charts-muted); letter-spacing: 0; }
+  .charts-insights .charts-registered .charts-value, .charts-insights .charts-registered .charts-unit { margin: 0; font-size: 12px; line-height: 1.5; color: var(--charts-muted); letter-spacing: 0; }
   .charts-insights .charts-energy > h3 { font-size: 16px; }
   .charts-insights .charts-plot-scroll { margin-top: 12px; padding: 6px 3px; }
   .charts-insights .charts-bar-pair { height: 160px; max-width: 36px; }
   .charts-insights .charts-bucket { gap: 8px; }
-  .charts-insights .charts-legend { gap: 8px 16px; margin-top: 10px; font-size: 11px; }
-  .charts-insights .charts-legend > span:last-child { font-size: 10px; }
-  .charts-insights .charts-detail-hint { margin-top: 12px; font-size: 11px; text-align: center; }
+  .charts-insights .charts-legend { gap: 8px 16px; margin-top: 10px; font-size: 12px; }
+  .charts-insights .charts-legend > span:last-child { font-size: 12px; }
+  .charts-insights .charts-detail-hint { margin-top: 12px; font-size: 12px; text-align: center; }
   .charts-insights .charts-detail { min-height: 0; padding: 12px; margin-top: 12px; }
   .charts-insights .charts-detail h4 { margin-bottom: 8px; }
   .charts-insights .charts-detail dl { grid-template-columns: minmax(0, 1fr); gap: 6px; }
   .charts-insights .charts-detail dl > div { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
   .charts-insights .charts-detail dl > div:last-child { grid-column: auto; }
   .charts-insights .charts-detail dd { margin: 0; font-size: 13px; text-align: right; }
-  .charts-insights .charts-detail dd span { font-size: 10px; }
-  .charts-insights details.charts-method { display: block; margin-top: 12px; font-size: 10px; }
+  .charts-insights dt, .charts-insights .charts-detail dd span { font-size: 12px; }
+  .charts-insights details.charts-method { display: block; margin-top: 12px; font-size: 12px; }
   .charts-insights .charts-method summary { cursor: pointer; }
   .charts-insights .charts-method summary:focus-visible { outline: 2px solid #f5a064; outline-offset: 3px; border-radius: var(--radius-micro); }
   .charts-insights .charts-method p { margin-top: 6px; }
@@ -336,20 +336,21 @@ html:not(.dark) .charts-insights .charts-surplus { color: #c4413a; }
   .charts-insights .charts-activity > div { padding: 0; background: transparent; }
   .charts-insights .charts-activity > div:last-child { grid-column: auto; }
   .charts-insights .charts-activity svg { display: none; }
-  .charts-insights .charts-activity h4 { min-height: 0; font-size: 11px; }
+  .charts-insights .charts-activity h4 { min-height: 0; font-size: 12px; }
   .charts-insights .charts-activity-value { font-size: 18px; line-height: 1.4; margin: 6px 0 4px; overflow-wrap: anywhere; }
-  .charts-insights .charts-activity .charts-secondary { font-size: 10px; line-height: 1.5; }
+  .charts-insights .charts-activity .charts-secondary { font-size: 12px; line-height: 1.5; }
   .charts-insights .charts-comparison > h3 { font-size: 14px; }
   .charts-insights .charts-comparison dl { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; margin: 12px 0 0; }
   .charts-insights .charts-comparison dl > div { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
   .charts-insights .charts-comparison dd { margin: 0; font-size: 13px; }
   .charts-insights .charts-comparison dd span { display: inline; }
-  .charts-insights .charts-streak { font-size: 11px; }
+  .charts-insights .charts-streak { font-size: 12px; }
 }
 .assistant-view .chat-mobile-title,
 .assistant-view .chat-empty-suggestions { display: none; }
 @media (max-width: 767px) {
   .assistant-view { height: 100%; min-height: 0; max-width: none; flex: 1 1 0; border: 0; border-radius: 0; background: transparent; }
+  .assistant-view .chat-heading p { font-size: 12px; }
   .assistant-view .chat-heading { flex: 0 0 auto; flex-wrap: nowrap; padding: 8px 12px; gap: 8px; }
   .assistant-view .chat-heading > div:nth-child(2) { flex: 1; min-width: 0; }
   .assistant-view .chat-heading h2 { font-size: 15px; }

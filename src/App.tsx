@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, lazy, Suspense } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, useCallback, lazy, Suspense, type ReactNode } from 'react';
 import Sidebar from './components/Sidebar';
 import BottomNav from './components/BottomNav';
 import type { Tab } from './components/BottomNav';
@@ -20,8 +20,17 @@ const ChatView = lazy(loadChatView);
 const ChartsView = lazy(loadChartsView);
 const ProfileView = lazy(loadProfileView);
 
+// Inside Suspense: restore only when the actual view commits, before it paints.
+function RestoreTabScroll({ children, onReady }: {
+  children: ReactNode;
+  onReady: () => void | (() => void);
+}) {
+  useLayoutEffect(onReady, [onReady]);
+  return children;
+}
+
 function App() {
-  const { user, loading, activeProfile, completeOnboarding, signOut } = useAppStore();
+  const { user, loading, activeProfile, updateRecord, completeOnboarding, signOut } = useAppStore();
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [entryError, setEntryError] = useState('');
@@ -29,6 +38,7 @@ function App() {
   const mainRef = useRef<HTMLElement>(null);
   const appShellRef = useRef<HTMLDivElement>(null);
   const previousUserIdRef = useRef<string | null>(null);
+  const scrollPositionsRef = useRef({ home: 0, charts: 0, profile: 0 });
   const userId = user?.id ?? null;
   const profileReady = !!user && activeProfile?.user_id === user.id;
   const route = resolveEntryRoute(path, !!user, activeProfile?.onboarding_completed);
@@ -41,9 +51,37 @@ function App() {
   };
 
   useEffect(() => {
-    if (userId && userId !== previousUserIdRef.current) setActiveTab('home');
+    if (userId && userId !== previousUserIdRef.current) {
+      scrollPositionsRef.current = { home: 0, charts: 0, profile: 0 };
+      setActiveTab('home');
+    }
     previousUserIdRef.current = userId;
   }, [userId]);
+
+  const changeTab = (next: Tab) => {
+    if (next === activeTab) return;
+    if (activeTab !== 'chat') {
+      scrollPositionsRef.current[activeTab] = mainRef.current?.scrollTop ?? 0;
+    }
+    setActiveTab(next);
+  };
+
+  const restoreTabScroll = useCallback(() => {
+    if (activeTab === 'chat' || !mainRef.current) return;
+    const main = mainRef.current;
+    const top = previousUserIdRef.current === userId ? scrollPositionsRef.current[activeTab] : 0;
+    const selector = { home: '.home-variants', charts: '.charts-insights', profile: '.profile-v2' }[activeTab];
+    const restore = () => {
+      if (!main.querySelector(selector)) return false;
+      main.scrollTop = top;
+      return true;
+    };
+    if (restore()) return;
+    // Data inside a loaded chunk may still be pending. Stop watching as soon as its view is ready.
+    const observer = new MutationObserver(() => { if (restore()) observer.disconnect(); });
+    observer.observe(main, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [activeTab, userId]);
 
   useEffect(() => {
     const onPopState = () => setPath(window.location.pathname.replace(/\/$/, '') || '/');
@@ -59,11 +97,6 @@ function App() {
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
   }, [loading, user, profileReady, route, path]);
-
-  useEffect(() => {
-    if (activeTab === 'chat') return;
-    mainRef.current?.scrollTo({ top: 0, behavior: 'instant' });
-  }, [activeTab]);
 
   useEffect(() => {
     if (loading || !profileReady || route !== '/app') return;
@@ -106,6 +139,13 @@ function App() {
   }, [isCoachLayout]);
 
   if (loading) {
+    if (user) {
+      return <div className="app-shell h-screen flex flex-col overflow-hidden bg-slate-50 dark:bg-[#151719] text-slate-900 dark:text-white">
+        <main className="app-main flex-1 overflow-hidden p-4 md:p-8 md:ml-64" aria-busy="true">
+          <ViewSkeleton view="home" />
+        </main>
+      </div>;
+    }
     return <main className="auth-entry min-h-dvh flex items-center justify-center p-4"><p role="status" className="auth-secondary text-sm">Cargando sesión…</p></main>;
   }
 
@@ -143,7 +183,7 @@ function App() {
       {/* Desktop Sidebar */}
       <Sidebar 
         activeTab={activeTab} 
-        onTabChange={setActiveTab} 
+        onTabChange={changeTab}
         onAuthOpen={() => setIsAuthOpen(true)}
       />
 
@@ -164,10 +204,12 @@ function App() {
           )}
           <div className="app-content p-4 md:p-0">
             <Suspense fallback={<ViewSkeleton view={activeTab} />}>
-            {activeTab === 'home' && <HomeView />}
+            <RestoreTabScroll key={`${userId}:${activeTab}`} onReady={restoreTabScroll}>
+            {activeTab === 'home' && <HomeView activeProfile={activeProfile} updateRecord={updateRecord} />}
             {activeTab === 'chat' && <ChatView scrollContainer={mainRef} />}
             {activeTab === 'charts' && <ChartsView />}
             {activeTab === 'profile' && <ProfileView />}
+            </RestoreTabScroll>
             </Suspense>
           </div>
         </main>
@@ -175,7 +217,7 @@ function App() {
       
       {/* Mobile Bottom Nav */}
       {user && (
-        <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+        <BottomNav activeTab={activeTab} onTabChange={changeTab} />
       )}
 
       {isAuthOpen && (

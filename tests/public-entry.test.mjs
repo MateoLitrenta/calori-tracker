@@ -15,6 +15,8 @@ const imports = {
   react: stub(`export const useState = (...args) => globalThis.__entryHarness.hooks.useState(...args);
     export const useRef = (...args) => globalThis.__entryHarness.hooks.useRef(...args);
     export const useEffect = (...args) => globalThis.__entryHarness.hooks.useEffect?.(...args);
+    export const useLayoutEffect = (...args) => globalThis.__entryHarness.hooks.useEffect?.(...args);
+    export const useCallback = callback => callback;
     export const lazy = () => () => null;
     export const Suspense = () => null;`),
   '../lib/supabase': stub('export const supabase = { auth: globalThis.__entryHarness.auth };'),
@@ -24,6 +26,8 @@ const imports = {
   '../hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
   '../lib/avatar': stub('export const prepareAvatar = () => {};'),
   './UserAvatar': stub('export default () => null;'),
+  './Heatmap': stub('export default () => null;'),
+  './DailyPanel': stub('export default () => null;'),
   './ViewSkeleton': stub('export default props => globalThis.__entryHarness.ViewSkeleton(props);'),
   './components/ViewSkeleton': stub('export default props => globalThis.__entryHarness.ViewSkeleton(props);'),
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,
@@ -54,6 +58,7 @@ const { default: ViewSkeleton } = await loadModule('../src/components/ViewSkelet
 globalThis.__entryHarness.ViewSkeleton = ViewSkeleton;
 const { default: BottomNav } = await loadModule('../src/components/BottomNav.tsx');
 const { default: ProfileView } = await loadModule('../src/components/ProfileView.tsx');
+const { default: HomeView } = await loadModule('../src/components/HomeView.tsx');
 const { default: App } = await loadModule('../src/App.tsx');
 
 function mount(component, props, initial = [], runEffects = false) {
@@ -555,8 +560,56 @@ test('lazy view fallback is accessible, matches the selected tab and has no inte
   } finally { globalThis.window = previousWindow; }
 });
 
-test('App renders the mobile Calori header only on Home and preserves tab navigation and scroll reset', () => {
+test('Home uses the ready profile and existing record writer supplied by App without a second loading state', () => {
+  const readyProfile = { ...profile, onboarding_completed: true };
+  const updateRecord = async () => true;
+  const home = mount(HomeView, { activeProfile: readyProfile, updateRecord }).render();
+  const panel = node(home, element => element.props.onUpdateRecord === updateRecord);
+  assert.equal(panel.props.profile, readyProfile);
+  assert.equal(panel.props.records, readyProfile.records);
+  assert.equal(node(home, element => !!element.props.onSelectDate).props.profile, readyProfile);
+  assert.doesNotMatch(markup(home), /Cargando perfil/);
+});
+
+test('App distinguishes public loading, authenticated skeleton, ready views, onboarding and real profile errors', async () => {
   const previousWindow = globalThis.window;
+  let retries = 0;
+  let signedOut = 0;
+  globalThis.window = { location: { pathname: '/app', reload() { retries++; } } };
+  try {
+    const store = { user: null, activeProfile: null, loading: true, updateRecord: async () => true, signOut: async () => { signedOut++; } };
+    globalThis.__entryHarness.profileStore = store;
+    const view = mount(App, {});
+    assert.match(markup(view.render()), /Cargando sesión/);
+    store.user = { id: 'user-a' };
+    const loading = view.render();
+    assert.match(loading.props.className, /app-shell/);
+    assert.equal(node(loading, element => element.type === 'main').props['aria-busy'], 'true');
+    assert.ok(node(loading, element => element.props.view === 'home'));
+    assert.equal(nodes(loading, element => !!element.props.onTabChange || element.type === 'header' || element.type === 'button').length, 0);
+    assert.doesNotMatch(markup(loading), /Cargando perfil|Cargando sesión|No pudimos cargar/);
+    store.loading = false;
+    const error = view.render();
+    assert.match(markup(error), /No pudimos cargar tu perfil/);
+    node(error, element => element.type === 'button' && element.props.children === 'Reintentar').props.onClick();
+    await node(error, element => element.type === 'button' && element.props.children === 'Cerrar sesión').props.onClick();
+    assert.equal(retries, 1);
+    assert.equal(signedOut, 1);
+    store.activeProfile = { ...profile, onboarding_completed: false };
+    assert.equal(view.render().props.children[1].type.name, 'Onboarding');
+    store.activeProfile = { ...profile, onboarding_completed: true };
+    const ready = view.render();
+    assert.equal(nodes(ready, element => !!element.props.onTabChange).length, 2);
+    assert.equal(nodes(ready, element => element.type === 'header').length, 1);
+    assert.equal(node(ready, element => element.props.activeProfile === store.activeProfile).props.updateRecord, store.updateRecord);
+    store.activeProfile = { ...store.activeProfile, user_id: 'someone-else' };
+    assert.match(markup(view.render()), /No pudimos cargar tu perfil/);
+  } finally { globalThis.window = previousWindow; }
+});
+
+test('App preserves independent tab scroll before view paint, excludes Coach and makes repeated tab taps a no-op', () => {
+  const previousWindow = globalThis.window;
+  const previousObserver = globalThis.MutationObserver;
   globalThis.window = {
     location: { pathname: '/app' },
     addEventListener() {}, removeEventListener() {},
@@ -569,21 +622,54 @@ test('App renders the mobile Calori header only on Home and preserves tab naviga
     };
     const view = mount(App, {}, [], true);
     const initial = view.render();
-    const scrolls = [];
-    node(initial, element => element.type === 'main').props.ref.current = { scrollTo: options => scrolls.push(options) };
-    for (const tab of ['home', 'chat', 'charts', 'profile', 'home']) {
+    const main = { scrollTop: 0, querySelector: () => ({}) };
+    node(initial, element => element.type === 'main').props.ref.current = main;
+    const restore = tree => {
+      const boundary = node(tree, element => element.type.name === 'RestoreTabScroll');
+      return mount(boundary.type, boundary.props, [], true).render();
+    };
+    restore(view.render());
+    main.scrollTop = 850;
+    for (const [tab, expected, visitedScroll] of [
+      ['chat', 850, 42], ['home', 850, 851], ['charts', 0, 600],
+      ['profile', 0, 210], ['charts', 600, 601], ['profile', 210, 211], ['home', 851, 852],
+    ]) {
       node(view.render(), element => !!element.props.onTabChange).props.onTabChange(tab);
       const tree = view.render();
+      restore(tree);
+      assert.equal(main.scrollTop, expected);
       assert.equal(view.slots[0], tab);
       const headers = nodes(tree, element => element.type === 'header' && element.props.className.includes('home-header'));
       assert.equal(headers.length, tab === 'home' ? 1 : 0);
       if (headers.length) assert.match(markup(headers[0]), />Calori<\/h1>/);
       const shell = node(tree, element => element.props.className?.startsWith('app-shell '));
       assert.equal(shell.props.className.includes('app-shell-coach'), tab === 'chat');
+      main.scrollTop = visitedScroll;
+      node(view.render(), element => !!element.props.onTabChange).props.onTabChange(tab);
+      assert.equal(main.scrollTop, visitedScroll);
     }
-    assert.deepEqual(scrolls, Array.from({ length: 3 }, () => ({ top: 0, behavior: 'instant' })));
+    assert.deepEqual(view.slots[7].current, { home: 851, charts: 601, profile: 211 });
+    let observed;
+    globalThis.MutationObserver = class {
+      constructor(callback) { this.callback = callback; observed = this; }
+      observe() { this.connected = true; }
+      disconnect() { this.connected = false; }
+    };
+    node(view.render(), element => !!element.props.onTabChange).props.onTabChange('charts');
+    main.scrollTop = 0;
+    main.querySelector = () => null;
+    const boundary = node(view.render(), element => element.type.name === 'RestoreTabScroll');
+    const stop = boundary.props.onReady();
+    assert.equal(observed.connected, true);
+    assert.equal(main.scrollTop, 0); // Do not restore into a short loading placeholder.
+    main.querySelector = () => ({});
+    observed.callback();
+    assert.equal(main.scrollTop, 601);
+    assert.equal(observed.connected, false);
+    stop();
   } finally {
     globalThis.window = previousWindow;
+    globalThis.MutationObserver = previousObserver;
   }
 });
 
@@ -607,13 +693,16 @@ test('App starts each new session on Home and preserves tabs for the same user',
     view.render();
     assert.equal(view.slots[0], 'home');
     const navigation = () => node(view.render(), element => !!element.props.onTabChange);
+    node(view.render(), element => element.type === 'main').props.ref.current = { scrollTop: 500 };
     navigation().props.onTabChange('profile');
     view.render();
     assert.equal(view.slots[0], 'profile');
+    assert.equal(view.slots[7].current.home, 500);
     store.user = { id: 'user-a', refreshed: true };
     store.activeProfile = { ...store.activeProfile, avatar_path: 'new-avatar.jpg', name: 'Updated' };
     view.render();
     assert.equal(view.slots[0], 'profile');
+    assert.equal(view.slots[7].current.home, 500);
     store.user = null;
     store.activeProfile = null;
     view.render();
@@ -622,11 +711,13 @@ test('App starts each new session on Home and preserves tabs for the same user',
     store.activeProfile = { ...profile, onboarding_completed: true };
     view.render();
     assert.equal(view.slots[0], 'home');
+    assert.deepEqual(view.slots[7].current, { home: 0, charts: 0, profile: 0 });
     navigation().props.onTabChange('charts');
     store.user = { id: 'user-b' };
     store.activeProfile = { ...profile, user_id: 'user-b', onboarding_completed: false };
     view.render();
     assert.equal(view.slots[0], 'home');
+    assert.deepEqual(view.slots[7].current, { home: 0, charts: 0, profile: 0 });
     assert.equal(globalThis.window.location.pathname, '/onboarding');
     store.activeProfile = { ...store.activeProfile, onboarding_completed: true };
     view.render();
