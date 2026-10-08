@@ -249,19 +249,19 @@ test('close and backdrop reset drafts and temporary photos; sheet contents do no
   const view = entryView();
   for (const method of ['close', 'backdrop']) {
     open(view, '+ Comida');
-    fill(view, 'Descripción (ej: Ensalada)', 'Borrador');
+    fill(view, 'Ej. pollo con arroz y verduras', 'Borrador');
     node(view(), element => element.type.name === 'MealPhotoPicker').props.onChange(new Blob(['photo']));
     const tree = sheet(view);
     if (method === 'close') node(tree, element => element.props['aria-label'] === 'Cerrar formulario').props.onClick();
     else {
       const backdrop = node(tree, element => element.props.className === 'entry-sheet-backdrop');
       backdrop.props.onClick({ target: {}, currentTarget: backdrop });
-      assert.equal(field(view, 'Descripción (ej: Ensalada)').props.value, 'Borrador');
+      assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, 'Borrador');
       backdrop.props.onClick({ target: backdrop, currentTarget: backdrop });
     }
     assert.equal(nodes(view(), element => element.type === 'form').length, 0);
     open(view, '+ Comida');
-    assert.equal(field(view, 'Descripción (ej: Ensalada)').props.value, '');
+    assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, '');
     assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.blob, null);
     shell(view).props.onClose();
   }
@@ -281,8 +281,8 @@ test('desktop actions keep the same single inline forms and steps-water panel', 
 });
 
 for (const [action, nameField, name, collection] of [
-  ['+ Comida', 'Descripción (ej: Ensalada)', 'Ensalada', 'meals'],
-  ['+ Ejercicio', 'Actividad (ej: Running)', 'Correr', 'workouts'],
+  ['+ Comida', 'Ej. pollo con arroz y verduras', 'Ensalada', 'meals'],
+  ['+ Ejercicio', 'Ej. running, fútbol, gimnasio', 'Correr', 'workouts'],
 ]) {
   test(`${action} closes only after successful persistence and keeps values after failure`, async t => {
     mobileEnvironment(t);
@@ -319,7 +319,7 @@ test('meal photo selection, replacement, removal and AI proposal stay in the exi
   const view = entryView(() => { assert.fail('AI must not save'); });
   globalThis.__entryServices.estimateMeal = async input => { calls.push(input); return { calories: 400, description: 'Ensalada', assumptions: [] }; };
   open(view, '+ Comida');
-  fill(view, 'Descripción (ej: Ensalada)', 'Ensalada');
+  fill(view, 'Ej. pollo con arroz y verduras', 'Ensalada');
   const photo = () => node(view(), element => element.type.name === 'MealPhotoPicker').props;
   const first = new Blob(['first']);
   const replacement = new Blob(['replacement']);
@@ -332,12 +332,15 @@ test('meal photo selection, replacement, removal and AI proposal stay in the exi
   photo().onBusyChange(false);
   photo().onRemove();
   assert.equal(photo().blob, null);
-  await node(view(), element => element.type === 'button' && element.props.children === 'Estimar con IA').props.onClick();
+  await node(view(), element => element.type === 'button' && element.props.children?.includes?.('Estimar con IA')).props.onClick();
   // The UI deliberately starts this async handler without returning its promise.
   await Promise.resolve();
   assert.equal(calls[0].name, 'Ensalada');
   assert.equal(field(view, 'Kcal').props.value, 400);
   assert.match(renderToStaticMarkup(view()), /Estimado por IA/);
+  fill(view, 'Kcal', '450');
+  assert.doesNotMatch(renderToStaticMarkup(view()), /Estimado por IA/);
+  assert.equal(field(view, 'Kcal').props.value, 450);
   assert.ok(shell(view));
 });
 
@@ -434,15 +437,17 @@ test('workout estimation fills the proposal without saving or removing secondary
   globalThis.__entryServices.estimateWorkout = async input => { calls.push(input); return { calories: 280, assumptions: [] }; };
   const view = entryView(() => { assert.fail('AI must not save'); });
   open(view, '+ Ejercicio');
-  fill(view, 'Actividad (ej: Running)', 'Correr');
+  fill(view, 'Ej. running, fútbol, gimnasio', 'Correr');
   fill(view, 'Minutos', '30');
-  await node(view(), element => element.type === 'button' && element.props.children === 'Estimar con IA').props.onClick();
+  await node(view(), element => element.type === 'button' && element.props.children?.includes?.('Estimar con IA')).props.onClick();
   await Promise.resolve();
   assert.equal(calls[0].duration, 30);
   assert.equal(field(view, 'Kcal').props.value, 280);
+  assert.match(renderToStaticMarkup(view()), /Estimado por IA/);
+  fill(view, 'Kcal', '300');
+  assert.doesNotMatch(renderToStaticMarkup(view()), /Estimado por IA/);
   assert.ok(field(view, 'Distancia (km) opc.'));
   assert.ok(field(view, 'Ritmo (ej: 5:30) opc.'));
-  assert.match(renderToStaticMarkup(view()), /Estimado por IA/);
 });
 
 test('photo upload failures keep the meal draft and image available for retry', async t => {
@@ -453,7 +458,7 @@ test('photo upload failures keep the meal draft and image available for retry', 
   globalThis.__entryServices.storage = { upload: async (...args) => { uploads.push(args); return { error: new Error('Offline') }; }, remove: async () => ({ error: null }) };
   const view = entryView(() => { assert.fail('A failed upload must not write the record'); });
   open(view, '+ Comida');
-  fill(view, 'Descripción (ej: Ensalada)', 'Almuerzo');
+  fill(view, 'Ej. pollo con arroz y verduras', 'Almuerzo');
   fill(view, 'Kcal', '450');
   const image = new Blob(['jpeg'], { type: 'image/jpeg' });
   node(view(), element => element.type.name === 'MealPhotoPicker').props.onChange(image);
@@ -461,7 +466,7 @@ test('photo upload failures keep the meal draft and image available for retry', 
   assert.equal(uploads[0][1], image);
   assert.equal(uploads[0][2].contentType, 'image/jpeg');
   assert.equal(errors.length, 1);
-  assert.equal(field(view, 'Descripción (ej: Ensalada)').props.value, 'Almuerzo');
+  assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, 'Almuerzo');
   assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.blob, image);
   assert.ok(shell(view));
 });
@@ -489,3 +494,53 @@ test('global outside-click behavior leaves mobile sheets to their backdrop and s
   view.unmount();
 });
 
+
+test('all four entry modes associate labels, retain mobile CTAs and use accessible time actions', t => {
+  mobileEnvironment(t);
+  const meal = { id: 'm1', name: 'Pizza', type: 'Cena', calories: 600, details: 'Dos porciones', time: '20:00' };
+  const workout = { id: 'w1', activity: 'Correr', duration: 40, calories: 300, details: 'Suave', distance: 5, pace: '8:00', time: '18:00' };
+  for (const [action, record, title, cta] of [
+    ['+ Comida', base, 'Agregar comida', 'Guardar comida'],
+    ['+ Ejercicio', base, 'Agregar ejercicio', 'Guardar ejercicio'],
+    [null, { ...base, meals: [meal] }, 'Editar comida', 'Guardar cambios'],
+    [null, { ...base, workouts: [workout] }, 'Editar ejercicio', 'Guardar cambios'],
+  ]) {
+    const view = entryView(undefined, record);
+    if (action) open(view, action);
+    else {
+      node(view(), e => e.type === 'li').props.onClick();
+      node(view(), e => e.props.className?.includes('record-detail-edit')).props.onClick({ stopPropagation() {} });
+    }
+    const tree = sheet(view);
+    assert.equal(shell(view).props.title, title);
+    const form = node(tree, e => e.type === 'form');
+    const controls = nodes(form, e => ['input', 'select', 'textarea'].includes(e.type));
+    const labels = nodes(form, e => e.type === 'label');
+    for (const control of controls) {
+      assert.ok(control.props.id);
+      assert.equal(labels.filter(label => label.props.htmlFor === control.props.id).length, 1);
+    }
+    const footer = node(form, e => e.props.className?.includes('entry-form-footer'));
+    assert.ok(renderToStaticMarkup(footer).includes(cta));
+    assert.ok(node(form, e => e.props['aria-label'] === 'Usar hora actual'));
+    assert.equal(node(form, e => e.props.id?.endsWith('-notes')).type, 'textarea');
+    assert.equal(node(tree, e => e.props.className === 'entry-sheet-handle').props['aria-hidden'], 'true');
+    const ids = controls.map(e => e.props.id);
+    assert.ok(ids[0].endsWith(title.includes('comida') ? '-description' : '-activity'));
+    assert.ok(ids.at(-1).endsWith('-notes'));
+  }
+});
+
+test('gym notes retain contextual routine copy without changing running field detection', t => {
+  mobileEnvironment(t);
+  const view = entryView();
+  open(view, '+ Ejercicio');
+  fill(view, 'Ej. running, fútbol, gimnasio', 'Gimnasio');
+  const label = node(view(), e => e.type === 'label' && e.props.htmlFor === 'add-workout-notes');
+  assert.match(renderToStaticMarkup(label), /Detalle de la rutina/);
+  assert.match(node(view(), e => e.type === 'textarea').props.placeholder, /Press banca/);
+  assert.equal(nodes(view(), e => e.props.id === 'add-workout-distance').length, 0);
+  fill(view, 'Ej. running, fútbol, gimnasio', 'Correr');
+  assert.ok(node(view(), e => e.props.id === 'add-workout-distance'));
+  assert.ok(node(view(), e => e.props.id === 'add-workout-pace'));
+});

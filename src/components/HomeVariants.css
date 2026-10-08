@@ -85,22 +85,83 @@
 .home-variants .record-detail-modal { border-radius: var(--radius-panel); }
 .home-variants .entry-form-content { display: contents; }
 .home-variants .entry-mobile-footer { display: none; }
-.home-variants.entry-sheet-root { padding: 0; background: transparent; border-radius: 0; }
+.home-variants .entry-fields-grid { display: grid; gap: 16px; align-items: start; }
+.home-variants .entry-meal-fields { grid-template-columns: minmax(0, 1fr) auto 96px auto; grid-template-areas: "title title title title" "description type calories submit" "secondary secondary secondary secondary" "photo photo photo photo" "ai ai ai ai"; }
+.home-variants .entry-meal-fields.entry-edit-fields { grid-template-columns: minmax(0, 1fr) auto 96px; grid-template-areas: "description type calories" "secondary secondary secondary" "photo photo photo" "ai ai ai"; }
+.home-variants .entry-workout-fields { grid-template-columns: minmax(0, 1fr) 96px 96px; grid-template-areas: "title title title" "chips chips chips" "activity duration calories" "secondary secondary secondary" "ai ai ai"; }
+.home-variants .entry-workout-fields.entry-edit-fields { grid-template-areas: "activity duration calories" "secondary secondary secondary" "ai ai ai"; }
+.home-variants .entry-field { min-width: 0; }
+.home-variants .entry-secondary-fields { grid-area: secondary; display: flex; flex-wrap: wrap; gap: 16px; align-items: start; }
+.home-variants .entry-secondary-fields .entry-time { order: 1; }
+.home-variants .entry-secondary-fields .entry-notes { order: 2; flex: 1; min-width: 200px; }
+.home-variants .entry-secondary-fields .entry-workout-metrics { order: 3; width: 100%; }
+.home-variants .entry-field > :is(input, select, textarea) { width: 100%; }
+.home-variants .entry-form-title { grid-area: title; }
+.home-variants .entry-description { grid-area: description; }
+.home-variants .entry-type { grid-area: type; }
+.home-variants .entry-activity { grid-area: activity; }
+.home-variants .entry-duration { grid-area: duration; }
+.home-variants .entry-calories { grid-area: calories; }
+.home-variants .entry-time { grid-area: time; }
+.home-variants .entry-notes { grid-area: notes; }
+.home-variants .entry-photo-section { grid-area: photo; display: flex; flex-direction: column; gap: 16px; }
+.home-variants .entry-ai-controls { grid-area: ai; }
+.home-variants .entry-activity-chips { grid-area: chips; }
+.home-variants .entry-workout-metrics { grid-area: metrics; }
+.home-variants .entry-workout-metrics > div { flex: 1; }
+.home-variants .entry-inline-submit { grid-area: submit; }
+.home-variants :is(.entry-calorie-block, .entry-unit-control) { display: contents; }
+.home-variants :is(.entry-photo-heading, .entry-mobile-copy, .entry-unit, .entry-ai-icon) { display: none; }
+.home-variants .entry-field-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.home-variants .entry-notes textarea { height: 42px; min-height: 42px; resize: vertical; }
+.home-variants .entry-edit-fields.entry-workout-fields { grid-template-columns: minmax(0, 1fr) 96px; grid-template-areas: "activity activity" "duration calories" "secondary secondary" "ai ai"; }
+.home-variants .entry-edit-fields.entry-meal-fields { grid-template-columns: minmax(0, 1fr) 96px; grid-template-areas: "description description" "type calories" "secondary secondary" "photo photo" "ai ai"; }
+.home-variants.entry-sheet-root { --home-control: #191c1f; padding: 0; background: transparent; border-radius: 0; }
 .entry-sheet-root .entry-sheet-backdrop { position: fixed; inset: 0; z-index: 70; background: #00000080; animation: calori-fade var(--motion-control) var(--motion-ease-enter); }
 .entry-sheet-root .entry-bottom-sheet { position: absolute; left: 0; right: 0; bottom: var(--entry-keyboard-offset, 0px); display: flex; flex-direction: column; max-height: 90dvh; max-height: calc(var(--entry-viewport-height, 100dvh) * .9); background: var(--home-card); color: var(--home-text); border: 1px solid var(--home-line); border-bottom: 0; border-radius: var(--radius-panel) var(--radius-panel) 0 0; animation: calori-entry-sheet var(--motion-panel) var(--motion-ease-enter); }
+.entry-sheet-root .entry-sheet-handle { width: 38px; height: 4px; flex: none; align-self: center; margin-top: 10px; border-radius: var(--radius-pill); background: var(--home-muted); opacity: .35; }
 .entry-sheet-root .entry-sheet-header { display: flex; align-items: center; justify-content: space-between; flex: none; gap: 12px; padding: 12px 16px; }
 .entry-sheet-root .entry-sheet-header h3 { font-size: 18px; font-weight: 500; letter-spacing: -.02em; }
 .entry-sheet-root .entry-sheet-header button { display: grid; place-items: center; flex: none; width: 44px; height: 44px; color: var(--home-muted); border-radius: var(--radius-control); }
 .entry-sheet-root .entry-sheet-header button:hover { background: var(--home-hover); color: var(--home-text); }
 .entry-sheet-root .entry-bottom-sheet .entry-form { min-height: 0; padding: 0; gap: 0; border: 0; border-radius: 0; background: transparent; animation: none; }
-.entry-sheet-root .entry-form-content { display: flex; flex-direction: column; min-height: 0; gap: 14px; padding: 4px 16px 16px; overflow-y: auto; overscroll-behavior-y: contain; }
-.entry-sheet-root .entry-form-content > .flex:not(.gap-2) { flex-direction: column; gap: 12px; }
-.entry-sheet-root .entry-form-content :is(input:not([type="file"]), select, textarea) { min-width: 0; max-width: 100%; width: 100%; min-height: 44px; font-size: 16px; color: var(--home-text); background: #191c1f; border-color: var(--home-line); border-radius: var(--radius-control); }
-html:not(.dark) .entry-sheet-root .entry-form-content :is(input, select, textarea) { background: #f8f7f4; color: #1f2937; border-color: #cbd5e1; }
-.entry-sheet-root .entry-form-content :is(input, select, textarea):focus-visible { outline: 2px solid var(--home-orange); outline-offset: 2px; }
+.home-variants.entry-sheet-root .entry-form-content { display: flex; flex-direction: column; align-items: stretch; min-height: 0; gap: 18px; padding: 4px 16px 16px; overflow-y: auto; overscroll-behavior-y: contain; }
+.home-variants.entry-sheet-root .entry-secondary-fields { display: contents; }
+.home-variants.entry-sheet-root .entry-secondary-fields > * { order: 0; }
+.home-variants.entry-sheet-root .entry-secondary-fields .entry-notes { min-width: 0; }
+.home-variants.entry-sheet-root .entry-field { display: flex; flex-direction: column; gap: 6px; }
+.home-variants.entry-sheet-root .entry-field-label { position: static; width: auto; height: auto; overflow: visible; clip-path: none; white-space: normal; font-size: 13px; line-height: 1.4; color: var(--home-muted); }
+.home-variants.entry-sheet-root .entry-field-label span { font-weight: 400; }
+.home-variants.entry-sheet-root .entry-form-content :is(input:not([type="file"]), select, textarea) { min-width: 0; max-width: 100%; width: 100%; min-height: 48px; font-size: 16px; color: var(--home-text); background: var(--home-control); border-color: var(--home-line); border-radius: var(--radius-control); }
+html:not(.dark) .home-variants.entry-sheet-root { --home-control: #f8f7f4; }
+html:not(.dark) .home-variants.entry-sheet-root .entry-form-content :is(input, select, textarea) { background: #f8f7f4; color: #1f2937; border-color: #cbd5e1; }
+.home-variants.entry-sheet-root .entry-form-content :is(input, select, textarea):focus-visible { outline: 2px solid var(--home-orange); outline-offset: 2px; border-color: var(--home-orange); }
+.home-variants.entry-sheet-root .entry-notes textarea { height: 80px; min-height: 80px; }
+.home-variants.entry-sheet-root .entry-calorie-block { display: flex; flex-direction: column; gap: 8px; }
+.home-variants.entry-sheet-root .entry-ai-controls { gap: 8px; }
+.home-variants.entry-sheet-root .entry-ai-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; background: #f5a0640d; border-color: #f5a06440; color: var(--home-orange); font-size: 14px; }
+.home-variants.entry-sheet-root .entry-ai-action:hover:not(:disabled) { background: #f5a06418; }
+html:not(.dark) .home-variants.entry-sheet-root .entry-ai-action { color: #a34e1b; }
+.home-variants.entry-sheet-root .entry-ai-icon { display: block; }
+.home-variants.entry-sheet-root .entry-photo-section { gap: 8px; }
+.home-variants.entry-sheet-root .entry-photo-heading { display: flex; flex-direction: column; gap: 4px; }
+.home-variants.entry-sheet-root .entry-photo-hint { color: var(--home-muted); font-size: 12px; }
+.home-variants.entry-sheet-root .entry-time-row input { flex: 1; }
+.home-variants.entry-sheet-root .entry-time-now { display: grid; place-items: center; flex: none; width: 44px; height: 44px; color: var(--home-muted); background: var(--home-control); border-color: var(--home-line); border-radius: var(--radius-control); }
+.home-variants.entry-sheet-root .entry-time-now:hover { color: var(--home-orange); background: var(--home-hover); }
+.home-variants.entry-sheet-root .entry-unit-control { display: block; position: relative; }
+.home-variants.entry-sheet-root .entry-unit-control input { padding-right: 52px; }
+.home-variants.entry-sheet-root .entry-unit { display: block; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--home-muted); font-size: 14px; pointer-events: none; }
+.home-variants.entry-sheet-root .entry-workout-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.home-variants.entry-sheet-root .entry-activity-chips button { min-height: 44px; border-color: var(--home-line); background: var(--home-control); color: var(--home-muted); }
+.home-variants.entry-sheet-root .entry-activity-chips button[aria-pressed="true"] { color: var(--home-orange); background: #f5a0640d; border-color: #f5a06440; }
+.home-variants.entry-sheet-root .entry-activity-chips button:hover { color: var(--home-orange); }
+.home-variants.entry-sheet-root :is(.entry-desktop-photo-label, .entry-desktop-copy) { display: none; }
+.home-variants.entry-sheet-root .entry-mobile-copy { display: inline; }
+.home-variants.entry-sheet-root :is(.entry-ai-action, .entry-time-now, .entry-activity-chips button):focus-visible { outline: 2px solid var(--home-orange); outline-offset: 2px; }
 .entry-sheet-root :is(.entry-form-title, .entry-inline-submit) { display: none; }
 .entry-sheet-root .entry-form-footer { display: flex; flex: none; margin: 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--home-line); }
-.entry-sheet-root .entry-form-footer button { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; padding: 10px 16px; border-radius: var(--radius-control); background: var(--home-orange); color: #3b2418; font-size: 16px; font-weight: 500; }
+.entry-sheet-root .entry-form-footer button { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; padding: 10px 16px; border-radius: var(--radius-control); background: var(--home-orange); color: #3b2418; font-size: 16px; font-weight: 500; }
 .entry-sheet-root .entry-form-footer button:hover:not(:disabled) { background: #e99050; }
 @keyframes calori-entry-sheet { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 .home-variants :is(.record-detail-details, .record-detail-meta) { border-radius: var(--radius-widget); }

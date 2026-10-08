@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, X, CaretRight, Clock } from '@phosphor-icons/react';
+import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, X, CaretRight, Clock, Sparkle } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap, UserProfile } from '../types';
@@ -396,16 +396,18 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     path={mealPhotoRemoved ? null : currentRecord.meals.find(m => m.id === editingMealId)?.photo_path}
     onChange={blob => { setMealPhoto(blob); setMealPhotoRemoved(false); }}
     onRemove={() => { setMealPhoto(null); setMealPhotoRemoved(true); }} onBusyChange={setPhotoProcessing} />;
-  const mealEstimateControls = <div className="flex flex-col gap-1">
+  const mealEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
     <button type="button" disabled={estimating} onClick={() => void handleEstimateMeal()}
-      className="min-h-11 self-start px-4 rounded-[var(--radius-control)] border border-[#f5a064]/50 text-[#b85b22] dark:text-[#f5a064] disabled:opacity-50">
+      className="entry-ai-action min-h-11 self-start px-4 rounded-[var(--radius-control)] border border-[#f5a064]/50 text-[#b85b22] dark:text-[#f5a064] disabled:opacity-50">
+      <Sparkle className="entry-ai-icon" size={18} aria-hidden="true" />
       {estimating ? 'Estimando…' : 'Estimar con IA'}
     </button>
     {mealEstimated && <span className="self-start text-xs px-2 py-1 rounded-[var(--radius-pill)] bg-orange-100 text-orange-800 dark:bg-orange-400/10 dark:text-orange-200">Estimado por IA</span>}
   </div>;
-  const workEstimateControls = <div className="flex flex-col gap-1">
+  const workEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
     <button type="button" disabled={estimating} onClick={() => void handleEstimateWorkout()}
-      className="min-h-11 self-start px-4 rounded-[var(--radius-control)] border border-[#f5a064]/50 text-[#b85b22] dark:text-[#f5a064] disabled:opacity-50">
+      className="entry-ai-action min-h-11 self-start px-4 rounded-[var(--radius-control)] border border-[#f5a064]/50 text-[#b85b22] dark:text-[#f5a064] disabled:opacity-50">
+      <Sparkle className="entry-ai-icon" size={18} aria-hidden="true" />
       {estimating ? 'Estimando…' : 'Estimar con IA'}
     </button>
     {workEstimated && <span className="self-start text-xs px-2 py-1 rounded-[var(--radius-pill)] bg-orange-100 text-orange-800 dark:bg-orange-400/10 dark:text-orange-200">Estimado por IA</span>}
@@ -618,170 +620,206 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
 
           {/* Forms Area */}
         {activeTab === 'comida' && (
-          <EntryFormShell title="Agregar comida" onClose={closeEntry}>
-          <form onSubmit={handleAddMeal} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
-            <div className="entry-form-content">
-            <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Comida</h4>
-            <div className="flex gap-4 flex-wrap">
-              <input 
-                required
-                type="text"
-                inputMode="text"
-                placeholder="Descripción (ej: Ensalada)" 
-                value={mealName} onChange={e => setMealName(e.target.value)}
-                className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-              />
-              <select 
-                value={mealType} onChange={e => setMealType(e.target.value as MealType)}
-                className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-              >
-                <option value="Desayuno">Desayuno</option>
-                <option value="Almuerzo">Almuerzo</option>
-                <option value="Merienda">Merienda</option>
-                <option value="Cena">Cena</option>
-                <option value="Snack">Snack</option>
-              </select>
-              <input 
-                required
-                type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
-                value={mealCals} onChange={e => { setMealCals(Number(e.target.value)); setMealEstimated(false); }}
-                className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-              />
-              <button type="submit" disabled={savingMeal || photoProcessing} className="entry-inline-submit bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2 disabled:opacity-50">
-                <Check weight="bold" /> Guardar
-              </button>
-            </div>
-            <div className="flex gap-4 flex-wrap">
-              <div className="flex items-center gap-2">
-                <input 
-                  type="time" 
-                  required 
-                  value={mealTime} 
-                  onChange={e => setMealTime(e.target.value)}
-                  className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                />
-                <button 
-                  type="button" 
-                  title="Hora actual" 
-                  onClick={() => setMealTime(format(new Date(), 'HH:mm'))}
-                  className="bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 p-2 rounded-md hover:text-blue-400 text-slate-500 dark:text-gray-400 transition-colors flex-shrink-0"
-                >
-                  <Clock size={18} />
-                </button>
-              </div>
-              <input
-                type="text"
-                placeholder="Notas / Detalles opcionales (ej: Acompañamientos, ingredientes...)"
-                value={mealDetails}
-                onChange={e => setMealDetails(e.target.value)}
-                className="flex-1 min-w-[200px] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <span className="text-xs text-slate-500 dark:text-gray-400">Foto opcional</span>
-            {mealPhotoControls}
-            {mealEstimateControls}
-            </div>
-            <div className="entry-form-footer entry-mobile-footer">
-              <button type="submit" disabled={savingMeal || photoProcessing} className="disabled:opacity-50">
-                <Check weight="bold" /> {savingMeal ? 'Guardando…' : 'Guardar comida'}
-              </button>
-            </div>
-          </form>
-          </EntryFormShell>
+            <EntryFormShell title="Agregar comida" onClose={closeEntry}>
+              <form onSubmit={handleAddMeal} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+                <div className="entry-form-content entry-fields-grid entry-meal-fields">
+                  <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Comida</h4>
+                  <div className="entry-field entry-description">
+                    <label className="entry-field-label" htmlFor="add-meal-description">Descripción</label>
+                    <input id="add-meal-description"
+                      required
+                      type="text"
+                      inputMode="text"
+                      placeholder="Ej. pollo con arroz y verduras"
+                      value={mealName} onChange={e => setMealName(e.target.value)}
+                      className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div className="entry-field entry-type">
+                    <label className="entry-field-label" htmlFor="add-meal-type">Tipo de comida</label>
+                    <select id="add-meal-type"
+                      value={mealType} onChange={e => setMealType(e.target.value as MealType)}
+                      className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                    >
+                      <option value="Desayuno">Desayuno</option>
+                      <option value="Almuerzo">Almuerzo</option>
+                      <option value="Merienda">Merienda</option>
+                      <option value="Cena">Cena</option>
+                      <option value="Snack">Snack</option>
+                    </select>
+                  </div>
+                  <div className="entry-calorie-block">
+                    <div className="entry-field entry-calories">
+                      <label className="entry-field-label" htmlFor="add-meal-calories">Calorías</label>
+                      <input id="add-meal-calories"
+                        required
+                        type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
+                        value={mealCals} onChange={e => { setMealCals(Number(e.target.value)); setMealEstimated(false); }}
+                        className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                    {mealEstimateControls}
+                  </div>
+                  <div className="entry-photo-section">
+                    <div className="entry-photo-heading">
+                      <span className="entry-field-label">Foto de la comida</span>
+                      <span className="entry-photo-hint">Opcional · ayuda a estimar mejor</span></div><span className="entry-desktop-photo-label text-xs text-slate-500 dark:text-gray-400">Foto opcional</span>
+                    {mealPhotoControls}
+                  </div>
+                  <div className="entry-secondary-fields">
+                    <div className="entry-field entry-time">
+                      <label className="entry-field-label" htmlFor="add-meal-time">Hora</label>
+                      <div className="entry-time-row flex items-center gap-2">
+                        <input id="add-meal-time"
+                          type="time"
+                          required
+                          value={mealTime}
+                          onChange={e => setMealTime(e.target.value)}
+                          className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                        />
+                        <button
+                          type="button" aria-label="Usar hora actual"
+                          title="Hora actual"
+                          onClick={() => setMealTime(format(new Date(), 'HH:mm'))}
+                          className="entry-time-now bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 p-2 rounded-md hover:text-blue-400 text-slate-500 dark:text-gray-400 transition-colors flex-shrink-0"
+                        >
+                          <Clock size={18} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="entry-field entry-notes">
+                      <label className="entry-field-label" htmlFor="add-meal-notes">Notas <span>· Opcional</span></label>
+                      <textarea id="add-meal-notes"
+                        placeholder="Agregá detalles si querés."
+                        value={mealDetails}
+                        onChange={e => setMealDetails(e.target.value)}
+                        className="flex-1 min-w-[200px] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                  </div>
+                  <button type="submit" disabled={savingMeal || photoProcessing} className="entry-inline-submit bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2 disabled:opacity-50">
+                    <Check weight="bold" /> Guardar
+                  </button>
+                </div>
+                <div className="entry-form-footer entry-mobile-footer">
+                  <button type="submit" disabled={savingMeal || photoProcessing} className="disabled:opacity-50">
+                    <Check weight="bold" /> {savingMeal ? 'Guardando…' : 'Guardar comida'}
+                  </button>
+                </div>
+              </form>
+            </EntryFormShell>
         )}
 
         {activeTab === 'entrenamiento' && (
-          <EntryFormShell title="Agregar ejercicio" onClose={closeEntry}>
-          <form onSubmit={handleAddWorkout} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
-            <div className="entry-form-content">
-            <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Entrenamiento</h4>
-            
-            <div className="flex flex-wrap gap-2">
-              {['Gimnasio', 'Fútbol', 'Correr', 'Natación', 'Caminata'].map(act => (
-                <button
-                  key={act}
-                  type="button"
-                  onClick={() => setWorkActivity(act)}
-                  className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${workActivity.toLowerCase() === act.toLowerCase() ? 'bg-orange-600 border-orange-500 text-white' : 'bg-slate-100 dark:bg-[#0f141c] border-slate-200 dark:border-gray-800 text-slate-500 dark:text-gray-400 hover:text-white'}`}
-                >
-                  {act}
-                </button>
-              ))}
-            </div>
+            <EntryFormShell title="Agregar ejercicio" onClose={closeEntry}>
+              <form onSubmit={handleAddWorkout} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+                <div className="entry-form-content entry-fields-grid entry-workout-fields">
+                  <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Entrenamiento</h4>
+                  <div className="entry-field entry-activity">
+                    <label className="entry-field-label" htmlFor="add-workout-activity">Actividad</label>
+                    <input id="add-workout-activity"
+                      required
+                      type="text"
+                      inputMode="text"
+                      placeholder="Ej. running, fútbol, gimnasio"
+                      value={workActivity} onChange={e => setWorkActivity(e.target.value)}
+                      className="flex-1 min-w-[150px] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                    />
+                  </div>
+                  <div className="entry-activity-chips flex flex-wrap gap-2">
+                    {['Gimnasio', 'Fútbol', 'Correr', 'Natación', 'Caminata'].map(act => (
+                      <button
+                        key={act}
+                        aria-pressed={workActivity.toLowerCase() === act.toLowerCase()}
+                        type="button"
+                        onClick={() => setWorkActivity(act)}
+                        className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${workActivity.toLowerCase() === act.toLowerCase() ? 'bg-orange-600 border-orange-500 text-white' : 'bg-slate-100 dark:bg-[#0f141c] border-slate-200 dark:border-gray-800 text-slate-500 dark:text-gray-400 hover:text-white'}`}
+                      >
+                        {act}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="entry-field entry-duration">
+                    <label className="entry-field-label" htmlFor="add-workout-duration">Duración</label>
+                    <div className="entry-unit-control">
+                      <input id="add-workout-duration"
+                        required
+                        type="number" inputMode="numeric" pattern="[0-9]*" min="1" placeholder="Minutos"
+                        value={workDuration} onChange={e => setWorkDuration(Number(e.target.value))}
+                        className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                      />
+                      <span className="entry-unit" aria-hidden="true">min</span></div>
+                  </div>
+                  <div className="entry-calorie-block">
+                    <div className="entry-field entry-calories">
+                      <label className="entry-field-label" htmlFor="add-workout-calories">Calorías</label>
+                      <input id="add-workout-calories"
+                        required
+                        type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
+                        value={workCals} onChange={e => { setWorkCals(Number(e.target.value)); setWorkEstimated(false); }}
+                        className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                      />
+                    </div>
+                    {workEstimateControls}
+                  </div>
+                  <div className="entry-secondary-fields">
+                    <div className="entry-field entry-time">
+                      <label className="entry-field-label" htmlFor="add-workout-time">Hora</label>
+                      <div className="entry-time-row flex items-center gap-2">
+                        <input id="add-workout-time"
+                          type="time"
+                          required
+                          value={workTime}
+                          onChange={e => setWorkTime(e.target.value)}
+                          className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                        />
+                        <button
+                          type="button" aria-label="Usar hora actual"
+                          title="Hora actual"
+                          onClick={() => setWorkTime(format(new Date(), 'HH:mm'))}
+                          className="entry-time-now bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 p-2 rounded-md hover:text-orange-400 text-slate-500 dark:text-gray-400 transition-colors flex-shrink-0"
+                        >
+                          <Clock size={18} />
+                        </button>
+                      </div>
+                    </div>
+                    {['correr', 'natación', 'caminata'].includes(workActivity.toLowerCase()) && (<div className="entry-workout-metrics flex gap-4">
+                      <div className="entry-field entry-distance">
+                        <label className="entry-field-label" htmlFor="add-workout-distance">Distancia</label>
+                        <input id="add-workout-distance"
+                          type="number" step="0.01" min="0" placeholder="Distancia (km) opc."
+                          value={workDistance} onChange={e => setWorkDistance(e.target.value === '' ? '' : Number(e.target.value))}
+                          className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
+                        />
+                      </div>
+                      <div className="entry-field entry-pace">
+                        <label className="entry-field-label" htmlFor="add-workout-pace">Ritmo</label>
+                        <input id="add-workout-pace"
+                          type="text" placeholder="Ritmo (ej: 5:30) opc."
+                          value={workPace} onChange={e => setWorkPace(e.target.value)}
+                          className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
+                        />
+                      </div>
+                    </div>)}
+                    <div className="entry-field entry-notes">
+                      <label className="entry-field-label" htmlFor="add-workout-notes">{workActivity.toLowerCase() === 'gimnasio' ? 'Detalle de la rutina' : 'Notas'} <span>· Opcional</span></label>
+                      <textarea id="add-workout-notes"
+                        placeholder={workActivity.toLowerCase() === 'gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Agregá detalles si querés."}
+                        value={workDetails}
+                        onChange={e => setWorkDetails(e.target.value)}
+                        className="flex-1 w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-h-[42px] resize-y min-w-[200px]"
+                      />
+                    </div>
+                  </div>
 
-            <div className="flex gap-4 flex-wrap">
-              <input 
-                required
-                type="text"
-                inputMode="text"
-                placeholder="Actividad (ej: Running)" 
-                value={workActivity} onChange={e => setWorkActivity(e.target.value)}
-                className="flex-1 min-w-[150px] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-              />
-              <input 
-                required
-                type="number" inputMode="numeric" pattern="[0-9]*" min="1" placeholder="Minutos" 
-                value={workDuration} onChange={e => setWorkDuration(Number(e.target.value))}
-                className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-              />
-              <input 
-                required
-                type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
-                value={workCals} onChange={e => { setWorkCals(Number(e.target.value)); setWorkEstimated(false); }}
-                className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-              />
-            </div>
-
-            <div className="flex gap-4 flex-wrap items-start">
-              <div className="flex items-center gap-2">
-                <input 
-                  type="time" 
-                  required 
-                  value={workTime} 
-                  onChange={e => setWorkTime(e.target.value)}
-                  className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                />
-                <button 
-                  type="button" 
-                  title="Hora actual" 
-                  onClick={() => setWorkTime(format(new Date(), 'HH:mm'))}
-                  className="bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 p-2 rounded-md hover:text-orange-400 text-slate-500 dark:text-gray-400 transition-colors flex-shrink-0"
-                >
-                  <Clock size={18} />
-                </button>
-              </div>
-              <textarea
-                placeholder={workActivity.toLowerCase() === 'gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Notas o detalles adicionales..."}
-                value={workDetails}
-                onChange={e => setWorkDetails(e.target.value)}
-                className="flex-1 w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-h-[42px] resize-y min-w-[200px]"
-              />
-            </div>
-
-            {['correr', 'natación', 'caminata'].includes(workActivity.toLowerCase()) && (
-              <div className="flex gap-4">
-                <input 
-                  type="number" step="0.01" min="0" placeholder="Distancia (km) opc." 
-                  value={workDistance} onChange={e => setWorkDistance(e.target.value === '' ? '' : Number(e.target.value))}
-                  className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
-                />
-                <input 
-                  type="text" placeholder="Ritmo (ej: 5:30) opc." 
-                  value={workPace} onChange={e => setWorkPace(e.target.value)}
-                  className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
-                />
-              </div>
-            )}
-
-            {workEstimateControls}
-            </div>
-            <div className="entry-form-footer flex justify-end">
-              <button type="submit" disabled={savingWorkout} className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2 disabled:opacity-50">
-                <Check weight="bold" /> Guardar
-              </button>
-            </div>
-          </form>
-          </EntryFormShell>
+                </div>
+                <div className="entry-form-footer flex justify-end">
+                  <button type="submit" disabled={savingWorkout} className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2 disabled:opacity-50">
+                    <Check weight="bold" /> {savingWorkout ? 'Guardando…' : <><span className="entry-desktop-copy">Guardar</span><span className="entry-mobile-copy">Guardar ejercicio</span></>}
+                  </button>
+                </div>
+              </form>
+            </EntryFormShell>
         )}
 
         {activeTab === 'pasos-agua' && (
@@ -1065,19 +1103,23 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     
       {/* Edit Modal para Comidas */}
       {editingMealId && (
-        <EntryFormShell title="Editar Comida" onClose={closeEntry} desktopModal>
-            <form onSubmit={handleAddMeal} className="entry-form p-4 flex flex-col gap-4">
-              <div className="entry-form-content">
-              <div className="flex gap-4 flex-wrap">
-                <input 
+        <EntryFormShell title="Editar comida" onClose={closeEntry} desktopModal>
+          <form onSubmit={handleAddMeal} className="entry-form p-4 flex flex-col gap-4">
+            <div className="entry-form-content entry-fields-grid entry-meal-fields entry-edit-fields">
+              <div className="entry-field entry-description">
+                <label className="entry-field-label" htmlFor="edit-meal-description">Descripción</label>
+                <input id="edit-meal-description"
                   required
                   type="text"
                   inputMode="text"
-                  placeholder="Descripción (ej: Ensalada)" 
+                  placeholder="Ej. pollo con arroz y verduras"
                   value={mealName} onChange={e => setMealName(e.target.value)}
                   className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                 />
-                <select 
+              </div>
+              <div className="entry-field entry-type">
+                <label className="entry-field-label" htmlFor="edit-meal-type">Tipo de comida</label>
+                <select id="edit-meal-type"
                   value={mealType} onChange={e => setMealType(e.target.value as any)}
                   className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                 >
@@ -1087,122 +1129,158 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <option value="Cena">Cena</option>
                   <option value="Snack">Snack</option>
                 </select>
-                <input 
-                  required
-                  type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
-                  value={mealCals} onChange={e => { setMealCals(Number(e.target.value)); setMealEstimated(false); }}
-                  className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                />
               </div>
-              <div className="flex gap-4 flex-wrap">
-                <div className="flex-1 flex items-center gap-2">
-                  <input 
-                    type="time" 
-                    value={mealTime} 
-                    onChange={e => setMealTime(e.target.value)}
-                    className="w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+              <div className="entry-calorie-block">
+                <div className="entry-field entry-calories">
+                  <label className="entry-field-label" htmlFor="edit-meal-calories">Calorías</label>
+                  <input id="edit-meal-calories"
+                    required
+                    type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
+                    value={mealCals} onChange={e => { setMealCals(Number(e.target.value)); setMealEstimated(false); }}
+                    className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                   />
-                  <button 
-                    type="button"
-                    onClick={() => setMealTime(new Date().toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'}))}
-                    className="p-2 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md hover:bg-slate-200 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-white transition-colors"
-                    title="Hora actual"
-                  >
-                    <Clock size={16} />
-                  </button>
                 </div>
-                <input 
-                  type="text"
-                  placeholder="Notas / Detalles (opcional)" 
-                  value={mealDetails} onChange={e => setMealDetails(e.target.value)}
-                  className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                />
+                {mealEstimateControls}
               </div>
-              {mealPhotoControls}
-              {mealEstimateControls}
+              <div className="entry-photo-section">
+                <div className="entry-photo-heading">
+                  <span className="entry-field-label">Foto de la comida</span>
+                  <span className="entry-photo-hint">Opcional · ayuda a estimar mejor</span></div>
+                {mealPhotoControls}
               </div>
-              <div className="entry-form-footer flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
-                <button type="submit" disabled={savingMeal || photoProcessing} className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
-                  <Check weight="bold" /> Guardar Cambios
-                </button>
+              <div className="entry-secondary-fields">
+                <div className="entry-field entry-time">
+                  <label className="entry-field-label" htmlFor="edit-meal-time">Hora</label>
+                  <div className="entry-time-row flex items-center gap-2">
+                    <input id="edit-meal-time"
+                      type="time"
+                      value={mealTime}
+                      onChange={e => setMealTime(e.target.value)}
+                      className="w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                    />
+                    <button
+                      type="button" aria-label="Usar hora actual"
+                      onClick={() => setMealTime(new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }))}
+                      className="entry-time-now p-2 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md hover:bg-slate-200 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-white transition-colors"
+                      title="Hora actual"
+                    >
+                      <Clock size={16} />
+                    </button>
+                  </div>
+                </div>
+                <div className="entry-field entry-notes">
+                  <label className="entry-field-label" htmlFor="edit-meal-notes">Notas <span>· Opcional</span></label>
+                  <textarea id="edit-meal-notes"
+                    placeholder="Agregá detalles si querés."
+                    value={mealDetails} onChange={e => setMealDetails(e.target.value)}
+                    className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
               </div>
-            </form>
+
+            </div>
+            <div className="entry-form-footer flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
+              <button type="submit" disabled={savingMeal || photoProcessing} className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
+                <Check weight="bold" /> {savingMeal ? 'Guardando…' : <><span className="entry-desktop-copy">Guardar Cambios</span><span className="entry-mobile-copy">Guardar cambios</span></>}
+              </button>
+            </div>
+          </form>
         </EntryFormShell>
       )}
 
       {/* Edit Modal para Entrenamiento */}
       {editingWorkoutId && (
-        <EntryFormShell title="Editar Entrenamiento" onClose={closeEntry} desktopModal>
-            <form onSubmit={handleAddWorkout} className="entry-form p-4 flex flex-col gap-4">
-              <div className="entry-form-content">
-              <div className="flex gap-4 flex-wrap">
-                <input 
+        <EntryFormShell title="Editar ejercicio" onClose={closeEntry} desktopModal>
+          <form onSubmit={handleAddWorkout} className="entry-form p-4 flex flex-col gap-4">
+            <div className="entry-form-content entry-fields-grid entry-workout-fields entry-edit-fields">
+              <div className="entry-field entry-activity">
+                <label className="entry-field-label" htmlFor="edit-workout-activity">Actividad</label>
+                <input id="edit-workout-activity"
                   required
                   type="text"
-                  placeholder="Actividad (ej: Correr)" 
+                  placeholder="Ej. running, fútbol, gimnasio"
                   value={workActivity} onChange={e => setWorkActivity(e.target.value)}
                   className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
-                <input 
-                  required
-                  type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Minutos" 
-                  value={workDuration} onChange={e => setWorkDuration(Number(e.target.value))}
-                  className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                />
-                <input 
-                  required
-                  type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal" 
-                  value={workCals} onChange={e => { setWorkCals(Number(e.target.value)); setWorkEstimated(false); }}
-                  className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                />
               </div>
-
-              <div className="flex gap-4 flex-wrap">
-                <div className="flex-1 flex items-center gap-2">
-                  <input 
-                    type="time" 
-                    value={workTime} 
-                    onChange={e => setWorkTime(e.target.value)}
-                    className="w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+              <div className="entry-field entry-duration">
+                <label className="entry-field-label" htmlFor="edit-workout-duration">Duración</label>
+                <div className="entry-unit-control">
+                  <input id="edit-workout-duration"
+                    required
+                    type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Minutos"
+                    value={workDuration} onChange={e => setWorkDuration(Number(e.target.value))}
+                    className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                   />
-                  <button 
-                    type="button"
-                    onClick={() => setWorkTime(new Date().toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'}))}
-                    className="p-2 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md hover:bg-slate-200 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-white transition-colors"
-                    title="Hora actual"
-                  >
-                    <Clock size={16} />
-                  </button>
+                  <span className="entry-unit" aria-hidden="true">min</span></div>
+              </div>
+              <div className="entry-calorie-block">
+                <div className="entry-field entry-calories">
+                  <label className="entry-field-label" htmlFor="edit-workout-calories">Calorías</label>
+                  <input id="edit-workout-calories"
+                    required
+                    type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
+                    value={workCals} onChange={e => { setWorkCals(Number(e.target.value)); setWorkEstimated(false); }}
+                    className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  />
                 </div>
-                <input 
-                  type="text"
-                  placeholder="Notas / Detalles (opcional)" 
-                  value={workDetails} onChange={e => setWorkDetails(e.target.value)}
-                  className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                />
+                {workEstimateControls}
+              </div>
+              <div className="entry-secondary-fields">
+                <div className="entry-field entry-time">
+                  <label className="entry-field-label" htmlFor="edit-workout-time">Hora</label>
+                  <div className="entry-time-row flex items-center gap-2">
+                    <input id="edit-workout-time"
+                      type="time"
+                      value={workTime}
+                      onChange={e => setWorkTime(e.target.value)}
+                      className="w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                    />
+                    <button
+                      type="button" aria-label="Usar hora actual"
+                      onClick={() => setWorkTime(new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }))}
+                      className="entry-time-now p-2 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md hover:bg-slate-200 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-white transition-colors"
+                      title="Hora actual"
+                    >
+                      <Clock size={16} />
+                    </button>
+                  </div>
+                </div>
+                <div className="entry-workout-metrics flex gap-4">
+                  <div className="entry-field entry-distance">
+                    <label className="entry-field-label" htmlFor="edit-workout-distance">Distancia</label>
+                    <input id="edit-workout-distance"
+                      type="number" step="0.1" inputMode="decimal" placeholder="Distancia (km) opcional"
+                      value={workDistance} onChange={e => setWorkDistance(Number(e.target.value))}
+                      className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                    />
+                  </div>
+                  <div className="entry-field entry-pace">
+                    <label className="entry-field-label" htmlFor="edit-workout-pace">Ritmo</label>
+                    <input id="edit-workout-pace"
+                      type="text" placeholder="Ritmo (min/km) opcional"
+                      value={workPace} onChange={e => setWorkPace(e.target.value)}
+                      className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                    />
+                  </div>
+                </div>
+                <div className="entry-field entry-notes">
+                  <label className="entry-field-label" htmlFor="edit-workout-notes">{workActivity.toLowerCase() === 'gimnasio' ? 'Detalle de la rutina' : 'Notas'} <span>· Opcional</span></label>
+                  <textarea id="edit-workout-notes"
+                    placeholder={workActivity.toLowerCase() === 'gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Agregá detalles si querés."}
+                    value={workDetails} onChange={e => setWorkDetails(e.target.value)}
+                    className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  />
+                </div>
               </div>
 
-              <div className="flex gap-4">
-                <input 
-                  type="number" step="0.1" inputMode="decimal" placeholder="Distancia (km) opcional" 
-                  value={workDistance} onChange={e => setWorkDistance(Number(e.target.value))}
-                  className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                />
-                <input 
-                  type="text" placeholder="Ritmo (min/km) opcional" 
-                  value={workPace} onChange={e => setWorkPace(e.target.value)}
-                  className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                />
-              </div>
-
-              {workEstimateControls}
-              </div>
-              <div className="entry-form-footer flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
-                <button type="submit" disabled={savingWorkout} className="w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
-                  <Check weight="bold" /> Guardar Cambios
-                </button>
-              </div>
-            </form>
+            </div>
+            <div className="entry-form-footer flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
+              <button type="submit" disabled={savingWorkout} className="w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
+                <Check weight="bold" /> {savingWorkout ? 'Guardando…' : <><span className="entry-desktop-copy">Guardar Cambios</span><span className="entry-mobile-copy">Guardar cambios</span></>}
+              </button>
+            </div>
+          </form>
         </EntryFormShell>
       )}
     </div>
