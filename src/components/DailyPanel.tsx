@@ -7,6 +7,7 @@ import { hasEnergyData, formatDateStr, getCaloriesIngested, generateUUID, aggreg
 import { estimateMeal, estimateWorkout } from '../services/aiService';
 import { supabase } from '../lib/supabase';
 import { MealPhotoPicker, MealThumbnail } from './MealPhoto';
+import EntryFormShell from './EntryFormShell';
 
 interface DailyPanelProps {
   record: DailyRecord | undefined;
@@ -20,20 +21,6 @@ interface DailyPanelProps {
 const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord, profile, selectedGroup, records }) => {
   const [activeTab, setActiveTab] = useState<'comida' | 'entrenamiento' | 'pasos-agua' | null>(null);
   const tabContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (tabContainerRef.current && !tabContainerRef.current.contains(event.target as Node)) {
-        setActiveTab(null);
-      }
-    };
-    if (activeTab) {
-      document.addEventListener('click', handleClickOutside as EventListener);
-    }
-    return () => {
-      document.removeEventListener('click', handleClickOutside as EventListener);
-    };
-  }, [activeTab]);
 
   // Default empty record if none exists for this day
   const currentRecord: DailyRecord = record || {
@@ -156,6 +143,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [workDistance, setWorkDistance] = useState<number | ''>('');
   const [workPace, setWorkPace] = useState('');
   const [workTime, setWorkTime] = useState('');
+  const [savingWorkout, setSavingWorkout] = useState(false);
+  const savingWorkoutRef = useRef(false);
 
   const resetForms = () => {
     setEditingMealId(null);
@@ -189,8 +178,14 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     }
   };
 
+  const closeEntry = () => {
+    resetForms();
+    setActiveTab(null);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if ((activeTab === 'comida' || activeTab === 'entrenamiento') && window.matchMedia('(max-width: 767px)').matches) return;
       // Ignore clicks on elements that have been removed from the DOM (like the modal buttons)
       if (!document.contains(event.target as Node)) return;
       
@@ -358,31 +353,30 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setMealPhoto(null); setMealPhotoRemoved(false); setMealEstimated(false);
   };
 
-  const handleAddWorkout = (e: React.FormEvent) => {
+  const handleAddWorkout = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!workActivity || !workDuration || !workCals) return;
-    
-    if (editingWorkoutId) {
-      const updatedWorkouts = currentRecord.workouts.map(w => 
-        w.id === editingWorkoutId ? { ...w, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), details: workDetails, distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined, time: workTime || format(new Date(), 'HH:mm') } : w
-      );
-      onUpdateRecord(dateStr, { ...currentRecord, workouts: updatedWorkouts });
-      setEditingWorkoutId(null);
-    } else {
-      const newWorkout: WorkoutEntry = { 
-        id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [], details: workDetails, time: workTime || format(new Date(), 'HH:mm'), distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined
-      };
-      onUpdateRecord(dateStr, { ...currentRecord, workouts: [...currentRecord.workouts, newWorkout] });
+    if (!workActivity || !workDuration || !workCals || savingWorkoutRef.current) return;
+    savingWorkoutRef.current = true;
+    setSavingWorkout(true);
+    try {
+      if (editingWorkoutId) {
+        const updatedWorkouts = currentRecord.workouts.map(w =>
+          w.id === editingWorkoutId ? { ...w, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), details: workDetails, distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined, time: workTime || format(new Date(), 'HH:mm') } : w
+        );
+        if (!await onUpdateRecord(dateStr, { ...currentRecord, workouts: updatedWorkouts })) return;
+      } else {
+        const newWorkout: WorkoutEntry = {
+          id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [], details: workDetails, time: workTime || format(new Date(), 'HH:mm'), distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined
+        };
+        if (!await onUpdateRecord(dateStr, { ...currentRecord, workouts: [...currentRecord.workouts, newWorkout] })) return;
+      }
+      closeEntry();
+    } catch {
+      toast.error('No se pudo guardar el ejercicio. Intentá nuevamente.');
+    } finally {
+      savingWorkoutRef.current = false;
+      setSavingWorkout(false);
     }
-    
-    setWorkActivity('');
-    setWorkDuration('');
-    setWorkCals('');
-    setWorkDetails('');
-    setWorkDistance('');
-    setWorkPace('');
-    setWorkTime('');
-    setActiveTab(null);
   };
 
   const startEditWorkout = (w: WorkoutEntry) => {
@@ -624,8 +618,10 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
 
           {/* Forms Area */}
         {activeTab === 'comida' && (
-          <form onSubmit={handleAddMeal} className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
-            <h4 className="font-bold text-slate-900 dark:text-white">Agregar Comida</h4>
+          <EntryFormShell title="Agregar comida" onClose={closeEntry}>
+          <form onSubmit={handleAddMeal} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+            <div className="entry-form-content">
+            <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Comida</h4>
             <div className="flex gap-4 flex-wrap">
               <input 
                 required
@@ -651,7 +647,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 value={mealCals} onChange={e => { setMealCals(Number(e.target.value)); setMealEstimated(false); }}
                 className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
               />
-              <button type="submit" disabled={savingMeal || photoProcessing} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2 disabled:opacity-50">
+              <button type="submit" disabled={savingMeal || photoProcessing} className="entry-inline-submit bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2 disabled:opacity-50">
                 <Check weight="bold" /> Guardar
               </button>
             </div>
@@ -684,12 +680,21 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             <span className="text-xs text-slate-500 dark:text-gray-400">Foto opcional</span>
             {mealPhotoControls}
             {mealEstimateControls}
+            </div>
+            <div className="entry-form-footer entry-mobile-footer">
+              <button type="submit" disabled={savingMeal || photoProcessing} className="disabled:opacity-50">
+                <Check weight="bold" /> {savingMeal ? 'Guardando…' : 'Guardar comida'}
+              </button>
+            </div>
           </form>
+          </EntryFormShell>
         )}
 
         {activeTab === 'entrenamiento' && (
-          <form onSubmit={handleAddWorkout} className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
-            <h4 className="font-bold text-slate-900 dark:text-white">Agregar Entrenamiento</h4>
+          <EntryFormShell title="Agregar ejercicio" onClose={closeEntry}>
+          <form onSubmit={handleAddWorkout} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+            <div className="entry-form-content">
+            <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Entrenamiento</h4>
             
             <div className="flex flex-wrap gap-2">
               {['Gimnasio', 'Fútbol', 'Correr', 'Natación', 'Caminata'].map(act => (
@@ -769,12 +774,14 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             )}
 
             {workEstimateControls}
-            <div className="flex justify-end">
-              <button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2">
+            </div>
+            <div className="entry-form-footer flex justify-end">
+              <button type="submit" disabled={savingWorkout} className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2 disabled:opacity-50">
                 <Check weight="bold" /> Guardar
               </button>
             </div>
           </form>
+          </EntryFormShell>
         )}
 
         {activeTab === 'pasos-agua' && (
@@ -1058,19 +1065,9 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     
       {/* Edit Modal para Comidas */}
       {editingMealId && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl shadow-xl flex flex-col animate-in zoom-in-95 duration-200">
-            <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
-              <h3 className="font-bold text-lg text-slate-900 dark:text-white">Editar Comida</h3>
-              <button 
-                type="button"
-                onClick={() => resetForms()}
-                className="text-slate-500 dark:text-gray-400 hover:text-white transition-colors p-1"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            <form onSubmit={handleAddMeal} className="p-4 flex flex-col gap-4">
+        <EntryFormShell title="Editar Comida" onClose={closeEntry} desktopModal>
+            <form onSubmit={handleAddMeal} className="entry-form p-4 flex flex-col gap-4">
+              <div className="entry-form-content">
               <div className="flex gap-4 flex-wrap">
                 <input 
                   required
@@ -1123,31 +1120,21 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               </div>
               {mealPhotoControls}
               {mealEstimateControls}
-              <div className="flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
+              </div>
+              <div className="entry-form-footer flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
                 <button type="submit" disabled={savingMeal || photoProcessing} className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
                   <Check weight="bold" /> Guardar Cambios
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+        </EntryFormShell>
       )}
 
       {/* Edit Modal para Entrenamiento */}
       {editingWorkoutId && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm rounded-2xl shadow-xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
-              <h3 className="font-bold text-lg text-slate-900 dark:text-white">Editar Entrenamiento</h3>
-              <button 
-                type="button"
-                onClick={() => resetForms()}
-                className="text-slate-500 dark:text-gray-400 hover:text-white transition-colors p-1"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            <form onSubmit={handleAddWorkout} className="p-4 flex flex-col gap-4">
+        <EntryFormShell title="Editar Entrenamiento" onClose={closeEntry} desktopModal>
+            <form onSubmit={handleAddWorkout} className="entry-form p-4 flex flex-col gap-4">
+              <div className="entry-form-content">
               <div className="flex gap-4 flex-wrap">
                 <input 
                   required
@@ -1209,14 +1196,14 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               </div>
 
               {workEstimateControls}
-              <div className="flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
-                <button type="submit" className="w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2">
+              </div>
+              <div className="entry-form-footer flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
+                <button type="submit" disabled={savingWorkout} className="w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
                   <Check weight="bold" /> Guardar Cambios
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+        </EntryFormShell>
       )}
     </div>
   );
