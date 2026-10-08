@@ -3,6 +3,8 @@ import { useState, useRef, useEffect, useCallback, type RefObject } from 'react'
 import { createPortal } from 'react-dom';
 import { ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, X } from '@phosphor-icons/react';
 import UserAvatar from './UserAvatar';
+import CoachInsightCard from './CoachInsightCard';
+import { buildCoachCard, parseCoachCard, type CoachCardSnapshot } from '../utils/coachPresentation';
 import { buildCoachContext, coachSuggestions } from '../utils/coachContext';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
@@ -14,6 +16,7 @@ import ReactMarkdown from 'react-markdown';
 interface Message extends ChatMessage {
   id: string;
   localTime?: string;
+  coachCard?: CoachCardSnapshot;
 }
 
 function readHistory(key: string): Message[] {
@@ -22,7 +25,11 @@ function readHistory(key: string): Message[] {
     return Array.isArray(stored) ? stored.filter((message): message is Message =>
       message !== null && typeof message === 'object' &&
       typeof message.id === 'string' && typeof message.text === 'string' &&
-      (message.role === 'user' || message.role === 'bot')) : [];
+      (message.role === 'user' || message.role === 'bot')).map(message => {
+        const { coachCard, ...textMessage } = message;
+        const card = message.role === 'bot' ? parseCoachCard(coachCard) : undefined;
+        return card ? { ...textMessage, coachCard: card } : textMessage;
+      }) : [];
   } catch {
     return [];
   }
@@ -178,6 +185,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : behavior });
   }, [scrollContainer]);
   const didScroll = useRef(false);
+  const cardScrollDecision = useRef<{ id: string; nearEnd: boolean } | null>(null);
   const mounted = useRef(true);
   const busy = useRef(false);
   const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[] } | null>(null);
@@ -489,6 +497,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const hasPending = !!pending;
   useEffect(() => {
     if (!messages.length && !isTyping && !hasPending) return;
+    if (cardScrollDecision.current && cardScrollDecision.current.id === messages.at(-1)?.id && !cardScrollDecision.current.nearEnd) return;
     const frame = requestAnimationFrame(() => {
       scrollToEnd(didScroll.current ? 'smooth' : 'instant');
       didScroll.current = true;
@@ -546,8 +555,15 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: 'bot',
-        text: replyText
+        text: replyText,
+        coachCard: !requestedActions && attachment?.kind !== 'image'
+          ? buildCoachCard(response.presentation, coachContext) : undefined
       };
+      if (botMsg.coachCard) {
+        const container = window.matchMedia('(max-width: 767px)').matches
+          ? messagesScrollRef.current : scrollContainer.current;
+        cardScrollDecision.current = { id: botMsg.id, nearEnd: !container || container.scrollHeight - container.clientHeight - container.scrollTop <= 24 };
+      }
       setMessages(prev => [...prev, botMsg]);
       if (direct.length) await applyActions(direct, todayStr);
       if (mounted.current && proposals.length) {
@@ -841,6 +857,16 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-message" />
               )}
             </div>
+            {msg.role === 'bot' && msg.coachCard ? (
+              <div className="chat-coach-stack">
+                <CoachInsightCard card={msg.coachCard} />
+                <div className="chat-bubble bg-slate-100 text-slate-900 dark:bg-[#191c1f] dark:text-gray-100 rounded-tl-sm text-sm">
+                  <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-snug prose-p:mb-2 prose-ul:my-1 prose-li:my-0 last:prose-p:mb-0">
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
+                  </div>
+                </div>
+              </div>
+            ) : (
             <div className={`chat-bubble ${msg.role === 'bot' && msg.text.startsWith('Registrado ') ? 'chat-saved' : ''} px-4 py-3 rounded-3xl text-sm shadow-none ${
               msg.role === 'user' 
                 ? 'chat-user text-white rounded-tr-sm whitespace-pre-wrap' 
@@ -854,6 +880,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 msg.text
               )}
             </div>
+            )}
           </div>
         ))}
         {isTyping && (

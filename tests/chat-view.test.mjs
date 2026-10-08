@@ -4,16 +4,24 @@ import { readFile } from 'node:fs/promises';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import ts from 'typescript';
+import { buildCoachCard } from '../src/utils/coachPresentation.ts';
+import { buildCoachContext } from '../src/utils/coachContext.ts';
 
 const stub = code => `data:text/javascript,${encodeURIComponent(code)}`;
 const profile = { id: 'profile-a', user_id: 'user-a', name: 'Ana', age: 32,
   sex: 'Femenino', height: 167.5, weight: 63.2, activity: 'Moderado', goal: 'Mantenimiento', records: {} };
 globalThis.__chatViewHarness = { profile };
+const insightSource = await readFile(new URL('../src/components/CoachInsightCard.tsx', import.meta.url), 'utf8');
+const insightCode = ts.transpileModule(insightSource, { compilerOptions: {
+  module: ts.ModuleKind.ESNext, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023,
+} }).outputText.replace(/from ["']([^"']+)["']/g, (_, name) => 'from ' + JSON.stringify(
+  name === '../utils/helpers' ? new URL('../src/utils/helpers.ts', import.meta.url).href : import.meta.resolve(name)));
 const imports = {
+  './CoachInsightCard': 'data:text/javascript;base64,' + Buffer.from(insightCode).toString('base64'),
   react: stub(`export const useState = (...args) => globalThis.__chatViewHarness.hooks.useState(...args);
     export const useRef = (...args) => globalThis.__chatViewHarness.hooks.useRef(...args);
     export const useCallback = callback => callback;
-    export const useEffect = () => {};`),
+    export const useEffect = (...args) => globalThis.__chatViewHarness.hooks.useEffect(...args);`),
   '../hooks/useAppStore': stub(`export const useAppStore = () => ({
     user: { id: 'user-a' }, activeProfile: globalThis.__chatViewHarness.profile,
     avatarRevision: 0, updateRecord: (...args) => globalThis.__chatViewHarness.updateRecord?.(...args) ?? true
@@ -39,19 +47,25 @@ const { default: ChatView } = await import(`data:text/javascript;base64,${Buffer
 function mount(component, props) {
   let cursor = 0;
   const slots = [];
+  let effects = [];
   const hooks = {
     useState(value) {
       const index = cursor++;
       if (!(index in slots)) slots[index] = typeof value === 'function' ? value() : value;
       return [slots[index], next => { slots[index] = typeof next === 'function' ? next(slots[index]) : next; }];
     },
+    useEffect(callback, deps) { effects.push({ callback, deps }); },
     useRef(value) {
       const index = cursor++;
       if (!(index in slots)) slots[index] = { current: value };
       return slots[index];
     },
   };
-  return { render() { cursor = 0; globalThis.__chatViewHarness.hooks = hooks; return component(props); } };
+  return {
+    render() { cursor = 0; effects = []; globalThis.__chatViewHarness.hooks = hooks; return component(props); },
+    flushAnchor() { effects.find(effect => effect.deps?.length === 5 && Array.isArray(effect.deps[0]))?.callback(); },
+    flushPersistence() { effects.find(effect => typeof effect.deps?.[1] === 'string' && effect.deps[1].startsWith('calori:assistant:messages:'))?.callback(); },
+  };
 }
 function nodes(tree, predicate) {
   if (Array.isArray(tree)) return tree.flatMap(child => nodes(child, predicate));
@@ -106,11 +120,12 @@ test('only new interaction messages animate, while confirmation still edits and 
   const typing = get(element => element.props['aria-label'] === 'Coach está respondiendo');
   assert.equal(nodes(typing, element => hasClass(element, 'chat-typing-dot')).length, 3);
   assert.equal(saved.length, 0);
-  finish({ reply: 'Revisá esta estimación.', actions: [{ type: 'add_meal', estimated: true,
+  finish({ presentation: 'today_summary', reply: 'Revisá esta estimación.', actions: [{ type: 'add_meal', estimated: true,
     payload: { dateStr: today, name: 'Manzana', type: 'Snack', calories: 80, time: '12:30' } }] });
   await new Promise(setImmediate);
   assert.equal(nodes(view.render(), element => hasClass(element, 'chat-message-new')).length, 2);
   assert.ok(get(element => hasClass(element, 'chat-confirmation')));
+  assert.equal(nodes(view.render(), element => element.type.name === 'CoachInsightCard').length, 0);
   assert.equal(saved.length, 0);
   get(element => element.type === 'button' && element.props.children === 'Editar').props.onClick();
   assert.ok(get(element => hasClass(element, 'chat-proposal-edit')));
@@ -138,4 +153,122 @@ test('Coach keeps header, accessible message area and composer in layout order',
   const textarea = nodes(layout[composer], element => element.type === 'textarea')[0];
   assert.ok(textarea);
   assert.ok(textarea.props['aria-label']);
+});
+
+test('stored card is a sibling of reply, stays stable and historical messages do not animate', () => {
+  const date = new Date().toLocaleDateString('en-CA');
+  const card = buildCoachCard('today_summary', buildCoachContext(profile, date));
+  const message = { id: 'historic-card', role: 'bot', text: 'Faltan comidas registradas.', coachCard: card };
+  const view = conversation([message, { id: 'old', role: 'bot', text: 'Texto antiguo.' }]);
+  const stack = nodes(view.render(), e => hasClass(e, 'chat-coach-stack'))[0];
+  assert.ok(stack);
+  assert.equal(stack.props.children[0].type.name, 'CoachInsightCard');
+  assert.ok(hasClass(stack.props.children[1], 'chat-bubble'));
+  const html = renderToStaticMarkup(stack);
+  assert.match(html, /Resumen de hoy|Sin datos todavía|Faltan comidas registradas\./);
+  assert.doesNotMatch(html, /0 kcal|Mantenimiento/);
+  assert.equal(nodes(view.render(), e => hasClass(e, 'chat-message-new')).length, 0);
+  view.flushPersistence();
+  const saved = JSON.parse(localStorage.getItem(`calori:assistant:messages:user-a:${date}`));
+  assert.deepEqual(saved[0].coachCard, card);
+  const reloaded = render(saved);
+  assert.deepEqual(nodes(reloaded, e => e.type.name === 'CoachInsightCard')[0].props.card, card);
+  assert.match(renderToStaticMarkup(reloaded), /Texto antiguo\./);
+});
+
+test('malformed cards and user card metadata are dropped without losing any message text', () => {
+  const date = new Date().toLocaleDateString('en-CA');
+  const card = buildCoachCard('today_summary', buildCoachContext(profile, date));
+  const tree = render([
+    { id: 'bad-card', role: 'bot', text: 'Texto conservado.', coachCard: { ...card, type: 'unknown' } },
+    { id: 'user-card', role: 'user', text: 'Mensaje del usuario.', coachCard: card },
+  ]);
+  assert.equal(nodes(tree, e => e.type.name === 'CoachInsightCard').length, 0);
+  const html = renderToStaticMarkup(tree);
+  assert.match(html, /Texto conservado\.|Mensaje del usuario\./);
+  assert.equal(nodes(tree, e => hasClass(e, 'chat-bubble')).length, 2);
+});
+
+test('new response snapshot uses the request context even when records change before the response', async t => {
+  const oldWindow = globalThis.window;
+  globalThis.window = { matchMedia: () => ({ matches: true }) };
+  t.after(() => { globalThis.window = oldWindow; });
+  const oldProfile = globalThis.__chatViewHarness.profile;
+  const date = new Date().toLocaleDateString('en-CA');
+  const current = { ...profile, records: { [date]: { meals: [{ name: 'Comida', type: 'Almuerzo', calories: 500 }], workouts: [], steps: 8500, water: 0 } } };
+  globalThis.__chatViewHarness.profile = current;
+  t.after(() => { globalThis.__chatViewHarness.profile = oldProfile; });
+  const view = conversation();
+  let finish;
+  let sentContext;
+  globalThis.__chatViewHarness.generateAIResponse = (...args) => {
+    sentContext = args[4];
+    return new Promise(resolve => { finish = resolve; });
+  };
+  const get = predicate => nodes(view.render(), predicate)[0];
+  get(e => e.type === 'textarea').props.onChange({ target: { value: '¿Cómo vengo hoy?' } });
+  get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+  current.records[date].meals.push({ name: 'Otra comida', type: 'Cena', calories: 900 });
+  finish({ reply: 'Hay un déficit registrado.', actions: [], presentation: 'today_summary', consumed: 99999 });
+  await new Promise(setImmediate);
+  const rendered = get(e => e.type.name === 'CoachInsightCard');
+  assert.deepEqual(rendered.props.card, buildCoachCard('today_summary', sentContext));
+  assert.equal(rendered.props.card.consumed, 500);
+  assert.match(renderToStaticMarkup(view.render()), /Hay un déficit registrado\./);
+  view.flushPersistence();
+  const stored = JSON.parse(localStorage.getItem(`calori:assistant:messages:user-a:${date}`));
+  assert.deepEqual(stored.at(-1).coachCard, rendered.props.card);
+});
+
+test('rejected actions cannot create a card even if the model supplied a hint', async () => {
+  const view = conversation();
+  globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'No debe mostrarse.', presentation: 'today_summary',
+    actions: [{ type: 'set_steps', estimated: false, payload: { dateStr: new Date().toLocaleDateString('en-CA'), steps: -1 } }] });
+  const get = predicate => nodes(view.render(), predicate)[0];
+  get(e => e.type === 'textarea').props.onChange({ target: { value: 'Pasos' } });
+  get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+  await new Promise(setImmediate);
+  assert.equal(nodes(view.render(), e => e.type.name === 'CoachInsightCard').length, 0);
+  assert.match(renderToStaticMarkup(view.render()), /Revisá la fecha y los datos necesarios/);
+});
+
+test('insight cards use existing balance labels, recorded averages and accessible empty states', () => {
+  const date = new Date().toLocaleDateString('en-CA');
+  const todayCard = buildCoachCard('today_summary', buildCoachContext(profile, date));
+  for (const [balance, label] of [[-1, 'Déficit Leve'], [-373, 'Déficit Moderado'], [1, 'Superávit Leve'], [0, 'Mantenimiento']]) {
+    const html = renderToStaticMarkup(render([{ id: 'balance', role: 'bot', text: 'Explicación.',
+      coachCard: { ...todayCard, consumed: 1800 + balance, expenditure: 1800, balance } }]));
+    assert.ok(html.includes(label));
+    assert.match(html, /aria-label="Resumen de hoy"/);
+  }
+  for (const type of ['nutrition_recent', 'training_recent']) {
+    const html = renderToStaticMarkup(render([{ id: type, role: 'bot', text: 'Explicación.',
+      coachCard: buildCoachCard(type, buildCoachContext(profile, date)) }]));
+    assert.match(html, /Últimos 7 días/);
+    assert.doesNotMatch(html, /0 kcal|Esta semana/);
+    assert.match(html, type === 'nutrition_recent' ? /No hay comidas registradas/ : /Sin actividad registrada/);
+  }
+});
+
+test('incoming cards preserve a reader above the end and keep the current anchor when already near it', async t => {
+  const oldWindow = globalThis.window;
+  const oldFrame = globalThis.requestAnimationFrame;
+  globalThis.window = { matchMedia: query => ({ matches: query.includes('max-width') }) };
+  globalThis.requestAnimationFrame = callback => { callback(); return 1; };
+  t.after(() => { globalThis.window = oldWindow; globalThis.requestAnimationFrame = oldFrame; });
+  for (const [scrollTop, expected] of [[150, 0], [1480, 1]]) {
+    let scrolled = 0;
+    const view = conversation([{ id: 'previous', role: 'bot', text: 'Anterior.' }]);
+    const get = predicate => nodes(view.render(), predicate)[0];
+    const container = { scrollHeight: 2000, clientHeight: 500, scrollTop, scrollTo() { scrolled++; } };
+    get(e => hasClass(e, 'chat-messages')).props.ref.current = container;
+    globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Resumen.', actions: [], presentation: 'today_summary' });
+    get(e => e.type === 'textarea').props.onChange({ target: { value: '¿Cómo vengo hoy?' } });
+    get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+    await new Promise(setImmediate);
+    view.render();
+    view.flushAnchor();
+    assert.equal(scrolled, expected);
+    assert.equal(container.scrollTop, scrollTop);
+  }
 });

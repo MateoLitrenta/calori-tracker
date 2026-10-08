@@ -186,3 +186,67 @@ test('client adds coachContext only to chat, never transcription', async () => {
     assert.equal(requests[1].mode, 'transcribe');
   } finally { globalThis.fetch = originalFetch; }
 });
+
+test('chat API normalizes presentation without altering actions, photo analysis or context boundaries', async () => {
+  const oldFetch = globalThis.fetch;
+  const oldKey = process.env.GEMINI_API_KEY;
+  process.env.GEMINI_API_KEY = 'mock';
+  let result;
+  let sent;
+  globalThis.fetch = async (_url, options) => {
+    sent = JSON.parse(options.body);
+    return Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify(result) }] } }] });
+  };
+  try {
+    const context = buildCoachContext(fixture, today);
+    const action = { type: 'set_steps', payload: { dateStr: today, steps: 8500 }, estimated: false };
+    for (const [hint, actions, coachContext, attachment, expected] of [
+      ['today_summary', [], context, undefined, 'today_summary'],
+      ['nutrition_recent', [], context, undefined, 'nutrition_recent'],
+      ['training_recent', [], context, undefined, 'training_recent'],
+      ['recipe', [], context, undefined, 'none'],
+      [undefined, [], context, undefined, 'none'],
+      [{ type: 'today_summary', calories: 99999 }, [], context, undefined, 'none'],
+      ['today_summary', [action], context, undefined, 'none'],
+      ['today_summary', [], undefined, undefined, 'none'],
+      ['today_summary', [], context, { kind: 'image', mimeType: 'image/jpeg', data: 'YWJj' }, 'none'],
+    ]) {
+      result = { reply: 'Interpretación breve.', actions, presentation: hint };
+      const response = await handler.fetch(new Request('http://localhost/api/ai/chat', { method: 'POST', body: JSON.stringify({
+        today, messages: [{ role: 'user', text: attachment ? '📷 Foto de comida' : '¿Cómo vengo hoy?' }], coachContext, attachment,
+      }) }));
+      assert.equal(response.status, 200);
+      const body = await response.json();
+      assert.equal(body.presentation, expected);
+      assert.equal(body.reply, result.reply);
+      assert.deepEqual(body.actions, actions);
+      assert.match(sent.systemInstruction.parts[0].text, /presentation es solo una sugerencia de UI/);
+      assert.match(sent.systemInstruction.parts[0].text, /rutinas, planes, recetas/);
+    }
+  } finally {
+    globalThis.fetch = oldFetch;
+    if (oldKey === undefined) delete process.env.GEMINI_API_KEY; else process.env.GEMINI_API_KEY = oldKey;
+  }
+});
+
+test('client normalizes hints and excludes card metadata from the conversational history', async () => {
+  const oldFetch = globalThis.fetch;
+  let response;
+  let request;
+  globalThis.fetch = async (_url, options) => { request = JSON.parse(options.body); return Response.json(response); };
+  try {
+    const context = buildCoachContext(fixture, today);
+    for (const hint of ['today_summary', 'nutrition_recent', 'training_recent', 'none', undefined, 'unknown', {}]) {
+      response = { reply: 'Respuesta', actions: [], presentation: hint };
+      const result = await generateAIResponse([{ role: 'bot', text: 'Anterior', localTime: '12:00',
+        coachCard: { type: 'today_summary', consumed: 99999 }, presentation: 'today_summary' }], 'Contexto', today, undefined, context);
+      assert.equal(result.presentation, ['today_summary', 'nutrition_recent', 'training_recent'].includes(hint) ? hint : 'none');
+      assert.deepEqual(request.messages, [{ role: 'bot', text: 'Anterior', localTime: '12:00' }]);
+    }
+    response = { reply: 'Propuesta', actions: [{ type: 'invalid' }], presentation: 'today_summary' };
+    assert.equal((await generateAIResponse([], '', today, undefined, context)).presentation, 'none');
+    response.actions = [];
+    assert.equal((await generateAIResponse([], '', today)).presentation, 'none');
+    assert.equal((await generateAIResponse([], '', today, { kind: 'image', mimeType: 'image/jpeg', data: 'YWJj' }, context)).presentation, 'none');
+  } finally { globalThis.fetch = oldFetch; }
+});
