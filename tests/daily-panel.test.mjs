@@ -64,3 +64,124 @@ test('daily summary has a collapsed breakdown and no profile explanations', () =
   assert.doesNotMatch(html, /TDEE|solaparse|Meta de hoy/);
 });
 
+test('only empty meal and workout lists use the compact records state', () => {
+  const html = record => renderToStaticMarkup(React.createElement(DailyPanel, {
+    profile, record, dateStr, records: {}, onUpdateRecord() {},
+  }));
+  assert.match(html(base), /daily-logs--empty/);
+  assert.match(html(base), /Registros del día/);
+  assert.match(html(base), /Todavía no cargaste comidas ni entrenamientos\./);
+  for (const record of [
+    { ...base, meals: [{ id: 'm', name: 'Ensalada', type: 'Almuerzo', calories: 400 }] },
+    { ...base, workouts: [{ id: 'w', activity: 'Gimnasio', calories: 300, duration: 45 }] },
+  ]) {
+    assert.doesNotMatch(html(record), /daily-logs--empty|Todavía no cargaste/);
+    assert.match(html(record), /<li/);
+    assert.match(html(record), /Registros del día/);
+  }
+});
+
+test('habit controls keep accessible names and daily quick actions', () => {
+  const html = renderToStaticMarkup(React.createElement(DailyPanel, {
+    profile, record: { ...base, steps: 18500, water: 2500, weight: 105 }, dateStr,
+    records: {}, onUpdateRecord() {},
+  }));
+  for (const name of ['Restar 250 ml de agua', 'Sumar 250 ml de agua', 'Restar 500 pasos', 'Sumar 500 pasos']) {
+    assert.ok(html.includes(`aria-label="${name}"`));
+  }
+  for (const label of ['2.500', '18.500', '105', '+ Comida', '+ Ejercicio', 'Pasos/Agua', 'Editar']) {
+    assert.ok(html.includes(label));
+  }
+});
+
+test('grouped periods keep accumulated balance and hide daily controls and records', () => {
+  const records = { [dateStr]: { ...base, steps: 7000, meals: [{ calories: 1200 }] } };
+  for (const type of ['week', 'month', 'year']) {
+    const html = renderToStaticMarkup(React.createElement(DailyPanel, {
+      profile, record: base, dateStr, records, onUpdateRecord() {},
+      selectedGroup: { type, label: 'Período', dates: [dateStr] },
+    }));
+    for (const text of ['Balance acumulado', '-698 kcal', 'Promedio diario:', '1 días con datos.']) {
+      assert.ok(html.includes(text));
+    }
+    assert.doesNotMatch(html, /daily-habits|daily-quick-actions|daily-logs|Ver desglose/);
+  }
+});
+
+// Use the actual event handlers with local hook state; persistence stays mocked.
+const interactiveCode = code.replace(JSON.stringify(import.meta.resolve('react')), JSON.stringify(stub(`
+  export default {};
+  export const useState = value => globalThis.__dailyHooks.useState(value);
+  export const useRef = value => globalThis.__dailyHooks.useRef(value);
+  export const useEffect = () => {};
+`)));
+const { default: InteractiveDailyPanel } = await import(`data:text/javascript;base64,${Buffer.from(interactiveCode).toString('base64')}`);
+function mount(props) {
+  const slots = [];
+  let cursor = 0;
+  const hooks = {
+    useState(value) {
+      const index = cursor++;
+      if (!(index in slots)) slots[index] = value;
+      return [slots[index], next => { slots[index] = typeof next === 'function' ? next(slots[index]) : next; }];
+    },
+    useRef(value) {
+      const index = cursor++;
+      if (!(index in slots)) slots[index] = { current: value };
+      return slots[index];
+    },
+  };
+  return () => { cursor = 0; globalThis.__dailyHooks = hooks; return InteractiveDailyPanel(props); };
+}
+function nodes(tree, predicate) {
+  if (Array.isArray(tree)) return tree.flatMap(child => nodes(child, predicate));
+  if (!React.isValidElement(tree)) return [];
+  return [...(predicate(tree) ? [tree] : []), ...nodes(tree.props.children, predicate)];
+}
+function node(tree, predicate) {
+  const result = nodes(tree, predicate)[0];
+  assert.ok(result, 'Expected control to be rendered');
+  return result;
+}
+
+test('rapid water and step taps update locally and save combined final values once', t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const saves = [];
+  const view = mount({ profile, record: base, dateStr, records: { [dateStr]: base },
+    onUpdateRecord: (date, record) => { saves.push({ date, record }); return Promise.resolve(true); } });
+  const tree = view();
+  for (let i = 0; i < 6; i++) {
+    node(tree, e => e.props['aria-label'] === 'Sumar 250 ml de agua').props.onClick();
+    node(tree, e => e.props['aria-label'] === 'Sumar 500 pasos').props.onClick();
+  }
+  const html = renderToStaticMarkup(view());
+  assert.match(html, />1\.500<\/button>/);
+  assert.match(html, />3\.000<\/button>/);
+  assert.equal(saves.length, 0);
+  t.mock.timers.tick(399);
+  assert.equal(saves.length, 0);
+  t.mock.timers.tick(1);
+  assert.equal(saves.length, 1);
+  assert.equal(saves[0].date, dateStr);
+  assert.equal(saves[0].record.water, 1500);
+  assert.equal(saves[0].record.steps, 3000);
+});
+
+test('quick actions toggle existing forms and values retain inline editing', () => {
+  const view = mount({ profile, record: base, dateStr, records: {}, onUpdateRecord: async () => true });
+  for (const [label, content] of [['+ Comida', 'Agregar Comida'], ['+ Ejercicio', 'Agregar Entrenamiento'], ['Pasos/Agua', 'Pasos del Día']]) {
+    const button = () => node(view(), e => e.type === 'button' && e.props.children?.trim?.() === label);
+    button().props.onClick();
+    assert.ok(renderToStaticMarkup(view()).includes(content));
+    assert.equal(button().props['aria-pressed'], true);
+    button().props.onClick();
+    assert.equal(button().props['aria-pressed'], false);
+  }
+  node(view(), e => e.props.title === 'Editar cantidad').props.onClick();
+  assert.ok(nodes(view(), e => e.type === 'input' && e.props.autoFocus).length);
+  node(view(), e => e.props.title === 'Editar pasos').props.onClick();
+  assert.equal(nodes(view(), e => e.type === 'input' && e.props.autoFocus).length, 2);
+  node(view(), e => e.props.title === 'Registrar peso').props.onClick();
+  assert.match(renderToStaticMarkup(view()), /Registrar Peso/);
+});
+

@@ -844,14 +844,14 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
 
       {/* Logs List */}
       {!isGroup && (
-        <div className="daily-logs bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden">
+        <div className={`daily-logs ${currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 ? 'daily-logs--empty' : ''} bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden`}>
           <div className="bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
-            <h4 className="font-bold text-slate-900 dark:text-white">Registros del Día</h4>
+            <h4 className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
           </div>
           
           {currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 && (
             <div className="daily-logs-empty p-8 text-center text-slate-500 dark:text-gray-400">
-              No hay registros para este día.
+              Todavía no cargaste comidas ni entrenamientos.
             </div>
           )}
 
