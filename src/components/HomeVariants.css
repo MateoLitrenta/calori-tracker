@@ -53,7 +53,7 @@
 .home-variants .energy-metrics > div > div:first-child svg { display: none; }
 .home-variants .energy-metrics > div > div:nth-child(2) { text-align: center; font-size: clamp(20px, 4vw, 26px); font-weight: 500; letter-spacing: -.02em; }
 .home-variants .daily-habits { gap: 12px; }
-.home-variants .daily-habits > div { min-width: 0; padding: 12px 8px 4px; gap: 4px; border: 1px solid var(--home-line); border-radius: var(--home-radius-widget); background: var(--home-card); box-shadow: none; }
+.home-variants .daily-habits > div { min-width: 0; padding: 12px 8px 4px; gap: 4px; border: 1px solid #ffffff08; border-radius: var(--home-radius-widget); background: var(--home-card); box-shadow: none; }
 .home-variants .daily-habits > div > div:first-child { flex-direction: row; gap: 4px; }
 .home-variants .daily-habits > div > div:nth-child(2) { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 4px; min-height: 44px; }
 .home-variants .daily-habits input { min-width: 0; max-width: 100%; min-height: 44px; border-radius: var(--home-radius-control); }
@@ -92,6 +92,8 @@
 .home-variants .daily-habits .text-lg { font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .home-variants .daily-logs > div:first-child { background: transparent; border: 0; padding: 0 0 12px; }
 .home-variants .daily-logs .daily-logs-empty { padding: 12px 8px 4px; font-size: 13px; line-height: 1.5; }
+.home-variants .daily-logs--empty > div:first-child { padding-bottom: 6px; }
+.home-variants .daily-logs--empty .daily-logs-empty { padding: 0; text-align: left; }
 .home-variants .daily-logs ul { display: flex; flex-direction: column; gap: 12px; }
 .home-variants .daily-logs li > div:first-child { font-size: 14px; font-weight: 500; line-height: 1.5; }
 .home-variants .daily-logs li > div:last-child { opacity: 1; font-size: 11px; }
@@ -143,6 +145,7 @@ html:not(.dark) .home-variants :is(input, select, textarea) { background-color: 
 html:not(.dark) .home-variants :is(input, select, textarea)::placeholder { color: #64748b; opacity: 1; }
 html:not(.dark) .home-variants :is(.energy-card, .daily-habits > div, .daily-logs li, .daily-logs) { border-color: #d1d5db; }
 html:not(.dark) .home-variants :is(.energy-card, .daily-habits > div) { box-shadow: 0 1px 2px #1f29370d; }
+html:not(.dark) .home-variants .daily-habits > div { border-color: #e2e8f0; box-shadow: none; }
 html:not(.dark) .home-variants .daily-quick-actions button:first-child { background: var(--home-orange); border-color: var(--home-orange); color: #3b2418; }
 html:not(.dark) .home-variants .daily-quick-actions button:first-child:is(:hover, :active):not(:disabled) { background: #e99050; }
 html:not(.dark) .home-variants .daily-habits > div:nth-child(1) svg { color: #0891b2; }
@@ -175,6 +178,19 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
 }
 
 @media (max-width: 767px) {
+  .home-variants .energy-card { padding-block: 24px; gap: 20px; }
+  .home-variants .energy-headline > div:first-child { margin-bottom: 0; }
+  .home-variants .energy-number { margin-block: 6px; }
+  .home-variants .energy-status { padding: 5px 13px; font-size: 13px; }
+  .home-variants .energy-metrics { gap: 6px 12px; }
+  .home-variants .energy-metrics > div > div:nth-child(2) { font-size: 22px; }
+  .home-variants .energy-metrics details { margin-top: 4px; }
+  .home-variants .daily-habits > div { padding-top: 6px; gap: 2px; }
+  .home-variants .daily-habits .text-lg { font-size: 20px; }
+  .home-variants .daily-habits > div:nth-child(2) > div:nth-child(2) > span { display: inline; }
+  .home-variants .daily-habits .habit-value { font-size: inherit; }
+  .home-variants .daily-habits input { font-size: 16px; }
+  .home-variants .daily-logs--empty { padding: 12px 16px; }
   .home-variants .daily-heading > span,
   .home-variants .energy-metrics details,
   .home-variants .energy-metrics > div > div:first-child,
@@ -182,6 +198,15 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
   .home-variants .daily-logs li > div:last-child,
   .home-variants .daily-quick-actions button { font-size: 12px; }
   .home-variants .daily-habits span:not(.uppercase)[class~="text-[10px]"] { font-size: 11px; }
+}
+
+@media (max-width: 374px) {
+  .home-variants .daily-habits { gap: 6px; }
+  .home-variants .daily-habits > div > div:nth-child(2) { flex-direction: column; flex-wrap: nowrap; gap: 0; }
+  .home-variants .daily-habits .text-lg { font-size: 18px; }
+  .home-variants .habit-controls { grid-template-columns: minmax(0, 1fr); }
+  .home-variants .daily-logs--empty { padding-block: 10px; }
+  .home-variants .daily-logs--empty > div:first-child { padding-bottom: 4px; }
 }
 
 .home-variants .activity-history {
