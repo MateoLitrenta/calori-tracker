@@ -1,6 +1,7 @@
 import './PremiumViews.css';
 import { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
+import { useTheme } from './ThemeProvider';
 import type { UserProfile, UserSex } from '../types';
 import { Check, Trash, PencilSimple, LockKey, SignOut, Info, CaretDown } from '@phosphor-icons/react';
 import { supabase } from '../lib/supabase';
@@ -11,6 +12,7 @@ import toast from 'react-hot-toast';
 
 export default function ProfileView() {
   const { user, activeProfile, avatarRevision, updateProfile, updateAvatarPath, resetData, signOut } = useAppStore();
+  const { theme, setTheme } = useTheme();
 
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(activeProfile?.name ?? '');
@@ -344,7 +346,26 @@ export default function ProfileView() {
       </section>
 
       <section className="profile-information" aria-labelledby="profile-information-heading">
-        <h2 id="profile-information-heading" className="profile-section-title">Información</h2>
+        <h2 id="profile-information-heading" className="profile-section-title">Preferencias e información</h2>
+        <div className="profile-appearance-row">
+          <div>
+            <h3 className="profile-setting-value">Apariencia</h3>
+            <p className="profile-muted profile-appearance-copy">Elegí cómo querés ver Calori.</p>
+          </div>
+          <div className="profile-theme-control" role="group" aria-label="Apariencia">
+            <span className="profile-theme-indicator" aria-hidden="true"
+              style={{ transform: `translateX(${(['system', 'light', 'dark'] as const).indexOf(theme) * 100}%)` }} />
+            {([
+              { value: 'system', label: 'Sistema' },
+              { value: 'light', label: 'Claro' },
+              { value: 'dark', label: 'Oscuro' },
+            ] as const).map(({ value, label }) => (
+              <button key={value} type="button" aria-pressed={theme === value} onClick={() => setTheme(value)}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
         <button type="button" className="profile-info-toggle" aria-expanded={showEnergyInfo} aria-controls="profile-energy-details"
           onClick={() => setShowEnergyInfo(value => !value)}>
           <Info size={20} aria-hidden="true" />

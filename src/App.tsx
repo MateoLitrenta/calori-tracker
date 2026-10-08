@@ -3,7 +3,6 @@ import Sidebar from './components/Sidebar';
 import BottomNav from './components/BottomNav';
 import type { Tab } from './components/BottomNav';
 import AuthModal from './components/AuthModal';
-import ThemeToggle from './components/ThemeToggle';
 import ViewSkeleton from './components/ViewSkeleton';
 import { useAppStore } from './hooks/useAppStore';
 import { Toaster } from 'react-hot-toast';
@@ -192,13 +191,10 @@ function App() {
         <main ref={mainRef} className="app-main flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8 w-full bg-slate-50 dark:bg-[#151719]">
           {/* Mobile Header */}
           {activeTab === 'home' && route === '/app' && (
-            <header className="home-header md:hidden flex-shrink-0 flex items-center justify-between">
+            <header className="home-header md:hidden flex-shrink-0 flex items-center justify-start">
               <div className="flex items-center gap-3">
                 <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol" />
                 <h1 className="text-lg font-bold">Calori</h1>
-              </div>
-              <div className="flex items-center gap-2">
-                <ThemeToggle />
               </div>
             </header>
           )}

@@ -12,7 +12,8 @@ globalThis.__entryHarness = { auth: {}, db: {}, toast: { success() {} } };
 // Effects and DOM focus are left to browser verification.
 globalThis.HTMLElement ??= class HTMLElement {};
 const imports = {
-  react: stub(`export const useState = (...args) => globalThis.__entryHarness.hooks.useState(...args);
+  react: stub(`export { createContext, useContext } from ${JSON.stringify(import.meta.resolve('react'))};
+    export const useState = (...args) => globalThis.__entryHarness.hooks.useState(...args);
     export const useRef = (...args) => globalThis.__entryHarness.hooks.useRef(...args);
     export const useEffect = (...args) => globalThis.__entryHarness.hooks.useEffect?.(...args);
     export const useLayoutEffect = (...args) => globalThis.__entryHarness.hooks.useEffect?.(...args);
@@ -22,7 +23,8 @@ const imports = {
   '../lib/supabase': stub('export const supabase = { auth: globalThis.__entryHarness.auth };'),
   '../lib/db': stub('export const completeOnboarding = (...args) => globalThis.__entryHarness.db.completeOnboarding(...args);'),
   'react-hot-toast': stub('export default globalThis.__entryHarness.toast; export const Toaster = () => null;'),
-  './ThemeToggle': stub('export default () => null;'),
+  './ThemeToggle': stub('export default function ThemeToggle() { return null; }'),
+  './ThemeProvider': stub("export const useTheme = () => globalThis.__entryHarness.themeStore ?? { theme: 'dark', setTheme() {} };"),
   '../hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
   '../lib/avatar': stub('export const prepareAvatar = () => {};'),
   './UserAvatar': stub('export default () => null;'),
@@ -58,6 +60,8 @@ const { default: ViewSkeleton } = await loadModule('../src/components/ViewSkelet
 globalThis.__entryHarness.ViewSkeleton = ViewSkeleton;
 const { default: BottomNav } = await loadModule('../src/components/BottomNav.tsx');
 const { default: ProfileView } = await loadModule('../src/components/ProfileView.tsx');
+const { default: Sidebar } = await loadModule('../src/components/Sidebar.tsx');
+const { ThemeProvider } = await loadModule('../src/components/ThemeProvider.tsx');
 const { default: HomeView } = await loadModule('../src/components/HomeView.tsx');
 const { default: App } = await loadModule('../src/App.tsx');
 
@@ -111,6 +115,96 @@ const markup = tree => renderToStaticMarkup(tree);
 const details = { name: 'Ana', age: 32, sex: 'Femenino', height: 167.5, weight: 63.2 };
 const profile = { id: 'profile-a', user_id: 'user-a', ...details, onboarding_completed: false,
   activity: 'Activo', goal: 'Mantenimiento', avatar_path: 'avatar.jpg', records: { today: { meals: [1] } } };
+
+test('profile appearance reflects the shared preference and delegates all three theme choices', () => {
+  globalThis.__entryHarness.profileStore = { user: { id: 'user-a' }, activeProfile: profile };
+  const calls = [];
+  const themeStore = { theme: 'system', setTheme(value) { calls.push(value); themeStore.theme = value; } };
+  globalThis.__entryHarness.themeStore = themeStore;
+  try {
+    const view = mount(ProfileView, {});
+    const initial = view.render();
+    const section = node(initial, element => element.props['aria-labelledby'] === 'profile-information-heading');
+    assert.match(markup(section), /Preferencias e información/);
+    assert.match(markup(section), /Elegí cómo querés ver Calori\./);
+    assert.ok(markup(section).indexOf('Apariencia') < markup(section).indexOf('Cómo calculamos tu gasto'));
+    const buttons = () => nodes(node(view.render(), element => element.props.role === 'group' &&
+      element.props['aria-label'] === 'Apariencia'), element => element.type === 'button');
+    assert.deepEqual(buttons().map(button => button.props.children), ['Sistema', 'Claro', 'Oscuro']);
+    assert.ok(buttons().every(button => button.props.type === 'button'));
+    for (const value of ['system', 'light', 'dark']) {
+      themeStore.theme = value;
+      assert.deepEqual(buttons().map(button => button.props['aria-pressed']),
+        ['system', 'light', 'dark'].map(option => option === value));
+    }
+    for (const index of [1, 2, 0]) {
+      buttons()[index].props.onClick();
+      assert.equal(buttons()[index].props['aria-pressed'], true);
+      assert.equal(buttons().filter(button => button.props['aria-pressed']).length, 1);
+    }
+    assert.deepEqual(calls, ['light', 'dark', 'system']);
+  } finally { delete globalThis.__entryHarness.themeStore; }
+});
+
+test('the existing theme provider persists preferences across remounts and follows OS changes only in system mode', () => {
+  const previousWindow = globalThis.window;
+  const previousStorage = globalThis.localStorage;
+  const stored = new Map();
+  const classes = new Set();
+  const media = { matches: true, addEventListener(type, callback) { this.callback = callback; }, removeEventListener() {} };
+  globalThis.localStorage = { getItem: key => stored.get(key) ?? null, setItem: (key, value) => stored.set(key, value) };
+  globalThis.window = { document: { documentElement: { classList: {
+    add: value => classes.add(value), remove: value => classes.delete(value),
+  } } }, matchMedia: () => media };
+  globalThis.__entryHarness.profileStore = { user: { id: 'user-a' }, activeProfile: profile };
+  try {
+    const provider = mount(ThemeProvider, { children: null }, [], true);
+    const profileView = mount(ProfileView, {});
+    for (const [value, effectiveDark] of [['system', true], ['light', false], ['dark', true], ['system', true]]) {
+      globalThis.__entryHarness.themeStore = provider.render().props.value;
+      const group = node(profileView.render(), element => element.props.role === 'group');
+      node(group, element => element.type === 'button' &&
+        element.props.children === ({ system: 'Sistema', light: 'Claro', dark: 'Oscuro' })[value]).props.onClick();
+      const updated = provider.render().props.value;
+      assert.equal(updated.theme, value);
+      assert.equal(stored.get('calori-theme'), value);
+      assert.equal(classes.has('dark'), effectiveDark);
+      const reloaded = mount(ThemeProvider, { children: null }, [], true).render().props.value;
+      assert.equal(reloaded.theme, value);
+    }
+    media.matches = false;
+    media.callback();
+    assert.equal(classes.has('dark'), false);
+    assert.equal(provider.render().props.value.theme, 'system');
+    globalThis.__entryHarness.themeStore = provider.render().props.value;
+    const system = node(profileView.render(), element => element.type === 'button' && element.props.children === 'Sistema');
+    assert.equal(system.props['aria-pressed'], true);
+    media.matches = true;
+    media.callback();
+    assert.equal(classes.has('dark'), true);
+    assert.equal(stored.get('calori-theme'), 'system');
+  } finally {
+    globalThis.window = previousWindow;
+    globalThis.localStorage = previousStorage;
+    delete globalThis.__entryHarness.themeStore;
+  }
+});
+
+test('Home mobile header contains only the brand while desktop Sidebar retains its theme control', () => {
+  const previousWindow = globalThis.window;
+  globalThis.window = { location: { pathname: '/app' } };
+  globalThis.__entryHarness.profileStore = {
+    user: { id: 'user-a' }, activeProfile: { ...profile, onboarding_completed: true }, loading: false,
+  };
+  try {
+    const header = node(mount(App, {}).render(), element => element.type === 'header');
+    assert.match(markup(header), />Calori<\/h1>/);
+    assert.equal(nodes(header, element => element.type === 'img').length, 1);
+    assert.equal(nodes(header, element => element.type === 'button' || element.type.name === 'ThemeToggle').length, 0);
+    const sidebar = mount(Sidebar, { activeTab: 'home', onTabChange() {}, onAuthOpen() {} }).render();
+    assert.equal(nodes(sidebar, element => element.type.name === 'ThemeToggle').length, 1);
+  } finally { globalThis.window = previousWindow; }
+});
 
 test('anonymous visitors keep public routes and cannot open protected screens', () => {
   for (const [path, expected] of [['/', '/'], ['/login', '/login'], ['/register', '/register'],
