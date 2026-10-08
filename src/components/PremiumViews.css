@@ -32,6 +32,24 @@ html:not(.dark) .premium-view :is(input, select, textarea)::placeholder { color:
 .assistant-view .chat-empty h3 { font-size: clamp(22px, 4vw, 28px); }
 .assistant-view .chat-empty p { line-height: 1.7; }
 .assistant-view .chat-bubble { min-width: 0; overflow-wrap: anywhere; box-shadow: none; border: 0; border-radius: var(--radius-widget); padding: 12px; line-height: 1.65; }
+.assistant-view .chat-coach-stack { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 460px; min-width: 0; }
+.assistant-view .coach-insight-card { --insight-text: #f1f0ec; --insight-muted: #a9abae; --insight-deficit: #70d394; --insight-surplus: #f09393; min-width: 0; padding: 18px; border: 1px solid #ffffff0d; border-radius: var(--radius-widget); background: #1e2124; color: var(--insight-text); overflow-wrap: anywhere; }
+.assistant-view .coach-insight-card h4 { font-size: 14px; font-weight: 500; margin: 0; color: #f5a064; }
+.assistant-view .coach-insight-period { font-size: 12px; color: var(--insight-muted); margin-top: 4px; }
+.assistant-view .coach-insight-hero { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 18px; }
+.assistant-view .coach-insight-hero > span:first-child { font-size: 12px; color: var(--insight-muted); }
+.assistant-view .coach-insight-hero strong { font-size: clamp(24px, 6vw, 30px); font-weight: 500; line-height: 1.2; letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
+.assistant-view .coach-insight-balance { font-size: 12px; color: var(--insight-muted); }
+.assistant-view .coach-insight-balance.is-deficit { color: var(--insight-deficit); }
+.assistant-view .coach-insight-balance.is-surplus { color: var(--insight-surplus); }
+.assistant-view .coach-insight-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 12px; margin-top: 18px; }
+.assistant-view .coach-insight-metrics > div { min-width: 0; }
+.assistant-view .coach-insight-metrics dt { font-size: 12px; line-height: 1.4; color: var(--insight-muted); }
+.assistant-view .coach-insight-metrics dd { margin: 6px 0 0; font-size: 18px; font-weight: 500; line-height: 1.35; font-variant-numeric: tabular-nums; }
+.assistant-view .coach-insight-primary-metric { grid-column: 1 / -1; }
+.assistant-view .coach-insight-footnote { margin-top: 18px; color: var(--insight-muted); font-size: 12px; line-height: 1.6; }
+html:not(.dark) .assistant-view .coach-insight-card { --insight-text: #1f2937; --insight-muted: #64748b; --insight-deficit: #168047; --insight-surplus: #bc4343; background: #ffffff; border-color: #e2e8f0; }
+html:not(.dark) .assistant-view .coach-insight-card h4 { color: #a34e1b; }
 .assistant-view .chat-user { background: #f5a0641c; color: #f5d8c3; }
 .assistant-view .chat-saved { border-left: 2px solid #70d394; background: #70d3940d; }
 .assistant-view .prose { color: #e3e2df; }

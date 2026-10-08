@@ -70,7 +70,14 @@ export function validActions(value: unknown, today: string): DataAction[] {
 interface AIResponsePayload {
   reply?: string;
   actions?: unknown;
+  presentation?: unknown;
   error?: string;
+}
+
+export type CoachPresentationHint = 'none' | 'today_summary' | 'nutrition_recent' | 'training_recent';
+
+export function normalizeCoachPresentation(value: unknown): CoachPresentationHint {
+  return value === 'today_summary' || value === 'nutrition_recent' || value === 'training_recent' ? value : 'none';
 }
 
 export async function generateAIResponse(
@@ -79,7 +86,7 @@ export async function generateAIResponse(
   today: string,
   attachment?: MediaAttachment,
   coachContext?: CoachContext
-): Promise<{ reply: string; actions: unknown }> {
+): Promise<{ reply: string; actions: unknown; presentation: CoachPresentationHint }> {
   const response = await fetch('/api/ai/chat', {
     method: 'POST',
     headers: {
@@ -110,7 +117,10 @@ export async function generateAIResponse(
     throw new Error('La IA respondió sin contenido.');
   }
 
-  return { reply: payload.reply.trim(), actions: payload.actions ?? [] };
+  const actions = payload.actions ?? [];
+  const presentation = !coachContext || attachment?.kind === 'image' || (Array.isArray(actions) && actions.length > 0)
+    ? 'none' : normalizeCoachPresentation(payload.presentation);
+  return { reply: payload.reply.trim(), actions, presentation };
 }
 
 export async function transcribeAudio(attachment: Extract<MediaAttachment, { kind: 'audio' }>): Promise<string> {
