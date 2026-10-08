@@ -31,6 +31,10 @@ export default function ChartsView() {
   const averages = period !== 'Semana';
   const mealDays = `${summary.mealDays} ${summary.mealDays === 1 ? 'día con comidas' : 'días con comidas'}`;
   const energyDays = `${summary.energyDays} ${summary.energyDays === 1 ? 'día con datos' : 'días con datos'}`;
+  const periodIntro = period === 'Semana' ? 'Esta semana' : period === 'Mes' ? 'Este mes' : 'Este año';
+  const insight = summary.balance === null
+    ? 'Todavía no hay comidas registradas para calcular el balance de este período.'
+    : `${periodIntro} tu balance promedio fue de ${signed(summary.balance)} kcal/día · ${getBalanceLabel(summary.balance)}.`;
   const range = `${format(parseISO(data.start), 'd MMM', { locale: es })} – ${format(parseISO(data.end), 'd MMM yyyy', { locale: es })}`;
 
   return (
@@ -56,36 +60,44 @@ export default function ChartsView() {
         </div>
       </header>
 
-      <section key={`summary-${period}`} className="charts-kpis" aria-label={`Resumen de ${period.toLowerCase()}`}>
-        <div className="charts-kpi">
-          <h3>Consumidas<span className="charts-desktop-only"> promedio</span></h3>
-          <p className="charts-value">{summary.consumed === null ? 'Sin datos' : number(summary.consumed)}</p>
-          <span className="charts-unit">{summary.consumed === null ? 'Sin comidas registradas' : 'kcal/día'}</span>
-          <p className="charts-kpi-note">{mealDays}</p>
+      <section className="charts-panel charts-summary" aria-label={`Resumen de ${period.toLowerCase()}`}>
+        <div key={`summary-${period}`} className="charts-kpis">
+          <h3>Resumen del período</h3>
+          <p className="charts-insight">{insight}</p>
+          <div className="charts-summary-body">
+            <div className="charts-summary-balance">
+              <h4>Balance promedio</h4>
+              <p className={`charts-balance-value ${balanceTone(summary.balance)}`}>{summary.balance === null ? 'Sin datos' : signed(summary.balance)}</p>
+              {summary.balance === null ? (
+                <p className="charts-secondary">Registrá comidas para calcular tu balance.</p>
+              ) : (
+                <>
+                  <span className="charts-unit">kcal/día</span>
+                  <p className={`charts-balance-label ${balanceTone(summary.balance)}`}>{getBalanceLabel(summary.balance)}</p>
+                </>
+              )}
+            </div>
+            <div className="charts-summary-secondary">
+              <dl className="charts-summary-metrics">
+                <div><dt>Consumidas</dt><dd>{summary.consumed === null ? 'Sin datos' : number(summary.consumed)}
+                  <span className="charts-unit">{summary.consumed === null ? 'Sin comidas registradas' : 'kcal/día'}</span></dd></div>
+                <div><dt>Gasto estimado</dt><dd>{summary.expenditure === null ? 'Sin datos' : number(summary.expenditure)}
+                  <span className="charts-unit">{summary.expenditure === null ? 'Sin registros energéticos' : 'kcal/día'}</span></dd></div>
+              </dl>
+              <p className="charts-coverage">{energyDays} · {mealDays}</p>
+            </div>
+          </div>
         </div>
-        <div className="charts-kpi">
-          <h3>Gasto<span className="charts-desktop-only"> promedio</span></h3>
-          <p className="charts-value">{summary.expenditure === null ? 'Sin datos' : number(summary.expenditure)}</p>
-          <span className="charts-unit">{summary.expenditure === null ? 'Sin registros energéticos' : <>kcal/día<span className="charts-desktop-only"> estimadas</span></>}</span>
-          <p className="charts-kpi-note">{energyDays}</p>
-        </div>
-        <div className="charts-kpi">
-          <h3>Balance<span className="charts-desktop-only"> promedio</span></h3>
-          <p className={`charts-value ${balanceTone(summary.balance)}`}>{summary.balance === null ? 'Sin datos' : signed(summary.balance)}</p>
-          <span className="charts-unit">{summary.balance === null ? 'Sin comidas registradas' : 'kcal/día · con comidas'}</span>
-          <p className={`charts-kpi-note ${balanceTone(summary.balance)}`}>{getBalanceLabel(summary.balance)}</p>
-        </div>
-        <div className="charts-kpi charts-registered">
-          <h3>Días registrados</h3>
-          <p className="charts-value">{number(summary.energyDays)}</p>
-          <span className="charts-unit"><span className="charts-desktop-only">Con comidas o actividad</span><span className="charts-mobile-only">días con datos</span></span>
-          <p className="charts-kpi-note">En este período</p>
-        </div>
+        <p className="charts-method charts-desktop-only">Balance y consumidas usan días con comidas. Gasto usa días con cualquier registro energético. Gasto: TMB + pasos + ejercicio registrado. Se excluyen días sin datos y fechas futuras.</p>
+        <details className="charts-method charts-mobile-only">
+          <summary>Cómo se calculan</summary>
+          <p>Balance y consumidas usan días con comidas. Gasto usa días con cualquier registro energético: comidas, pasos o ejercicio. Gasto: TMB + pasos + ejercicio registrado. Se excluyen días sin datos y fechas futuras.</p>
+        </details>
       </section>
 
       <section className="charts-panel charts-energy" aria-labelledby="charts-energy-heading">
-        <h3 id="charts-energy-heading">Consumidas vs Gasto estimado</h3>
-        <p className="charts-secondary">{averages ? `Promedios diarios por ${period === 'Mes' ? 'semana' : 'mes'}.` : 'Valores diarios de esta semana.'}<span className="charts-desktop-only"> Gasto estimado: TMB + pasos + ejercicio registrado.</span></p>
+        <h3 id="charts-energy-heading">Consumidas vs gasto</h3>
+        <p className="charts-secondary">{averages ? `Promedios diarios por ${period === 'Mes' ? 'semana' : 'mes'}.` : 'Valores diarios.'}</p>
         {summary.energyDays === 0 ? (
           <div className="charts-empty" role="status">
             <ChartBar size={32} aria-hidden="true" />
@@ -127,8 +139,8 @@ export default function ChartsView() {
             {period === 'Año' && <p className="charts-scroll-hint">Deslizá para ver todos los meses.</p>}
             <div className="charts-legend" aria-label="Leyenda">
               <span><i className="charts-key-consumed" aria-hidden="true" />Consumidas</span>
-              <span><i className="charts-key-expenditure" aria-hidden="true" />Gasto estimado</span>
-              <span className="charts-secondary">Balance debajo de cada período · kcal</span>
+              <span><i className="charts-key-expenditure" aria-hidden="true" />Gasto<span className="charts-desktop-only"> estimado</span></span>
+              <span className="charts-secondary charts-desktop-only">Balance debajo de cada período · kcal</span>
             </div>
             {detail ? (
               <div key={detail.start} className="charts-detail" id="charts-bucket-detail" role="tooltip">
@@ -143,11 +155,6 @@ export default function ChartsView() {
             ) : <p className="charts-detail-hint charts-secondary"><span className="charts-desktop-only">Tocá, enfocá o pasá sobre un período para ver consumidas, gasto y balance exactos.</span><span className="charts-mobile-only">Tocá un período para ver el detalle.</span></p>}
           </>
         )}
-        <p className="charts-method charts-desktop-only">Consumidas y balance: días con comidas registradas. Gasto: días con comidas, pasos o ejercicio. Los días sin datos y las fechas futuras no se incluyen.</p>
-        <details className="charts-method charts-mobile-only">
-          <summary>Cómo se calculan los promedios</summary>
-          <p>Gasto: TMB + pasos + ejercicio registrado. Consumidas y balance usan días con comidas; gasto usa días con comidas, pasos o ejercicio. Se excluyen días sin datos y fechas futuras.</p>
-        </details>
       </section>
 
       <section key={`activity-${period}`} className="charts-panel charts-activity-panel" aria-labelledby="charts-activity-heading">
@@ -166,6 +173,7 @@ export default function ChartsView() {
             <p className="charts-secondary">En este período</p>
           </div>
         </div>
+        <p className="charts-streak">Racha de comidas · {data.currentStreak} {data.currentStreak === 1 ? 'día' : 'días'}</p>
       </section>
 
       {comparison && (
@@ -179,7 +187,6 @@ export default function ChartsView() {
           <p className="charts-secondary charts-desktop-only">Diferencias entre promedios de {period === 'Semana' ? 'esta semana y la anterior' : period === 'Mes' ? 'este mes y el anterior' : 'este año y el anterior'}, según los días registrados.</p>
         </section>
       )}
-      <p className="charts-streak">Racha de comidas en este período: {data.currentStreak} {data.currentStreak === 1 ? 'día' : 'días'}</p>
     </div>
   );
 }
