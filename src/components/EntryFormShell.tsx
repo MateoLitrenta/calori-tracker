@@ -103,6 +103,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
     <div className="home-variants dark entry-sheet-root">
       <div className="entry-sheet-backdrop" onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
         <div ref={dialogRef} className="entry-bottom-sheet" role="dialog" aria-labelledby={titleId} aria-modal="true">
+          <span className="entry-sheet-handle" aria-hidden="true" />
           {header}
           {children}
         </div>
