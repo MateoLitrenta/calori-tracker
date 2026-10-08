@@ -543,7 +543,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       const proposals = actions.filter(a => a.type === 'add_meal' || a.type === 'add_workout');
       const direct = actions.filter(a => a.type !== 'add_meal' && a.type !== 'add_workout');
       const rejected = requestedActions ? response.actions as DataAction[] : [];
-      const replyText = requestedActions && !actions.length
+      let replyText = requestedActions && !actions.length
         ? rejected.some(a => isValidDateStr(a?.payload?.dateStr) && a.payload.dateStr > todayStr)
           ? 'Puedo registrar comidas y entrenamientos de hoy o de fechas pasadas, pero no futuras.'
           : rejected.some(a => isValidDateStr(a?.payload?.dateStr) && a.payload.dateStr < todayStr &&
@@ -551,6 +551,9 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             ? 'Por ahora solo puedo registrar agua, pasos y peso del día actual.'
             : 'Revisá la fecha y los datos necesarios para registrar la comida o el entrenamiento.'
         : response.reply.replace(/\b(registré|guardé|cargué|anoté|actualicé)\b/gi, 'puedo ayudarte a registrar');
+      if (proposals.length && /\b(?:registrar[eé]|(?:lo\s+)?voy\s+a\s+(?:registrar(?:lo)?|cargar(?:lo)?))(?!\w)/iu.test(replyText)) {
+        replyText = 'Preparé este registro para que lo confirmes.';
+      }
       
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),

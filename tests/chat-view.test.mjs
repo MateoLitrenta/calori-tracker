@@ -6,6 +6,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import ts from 'typescript';
 import { buildCoachCard } from '../src/utils/coachPresentation.ts';
 import { buildCoachContext } from '../src/utils/coachContext.ts';
+import chatHandler from '../api/ai/chat.ts';
 
 const stub = code => `data:text/javascript,${encodeURIComponent(code)}`;
 const profile = { id: 'profile-a', user_id: 'user-a', name: 'Ana', age: 32,
@@ -153,6 +154,76 @@ test('Coach keeps header, accessible message area and composer in layout order',
   const textarea = nodes(layout[composer], element => element.type === 'textarea')[0];
   assert.ok(textarea);
   assert.ok(textarea.props['aria-label']);
+});
+
+test('pending proposals neutralize automatic future save claims without changing confirmation', async () => {
+  const today = new Date().toLocaleDateString('en-CA');
+  for (const reply of ['Registraré un café negro solo.', 'Lo registraré.', 'Voy a registrar un café.', 'Lo voy a registrar.', 'Voy a cargarlo.']) {
+    const view = conversation();
+    const get = predicate => nodes(view.render(), predicate)[0];
+    let writes = 0;
+    globalThis.__chatViewHarness.updateRecord = async () => { writes++; return true; };
+    globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply, presentation: 'none', actions: [
+      { type: 'add_meal', estimated: true, payload: { dateStr: today, name: 'Café negro', type: 'Snack', calories: 3, time: '10:15' } },
+    ] });
+    get(e => e.type === 'textarea').props.onChange({ target: { value: 'recién tomé un café negro' } });
+    await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+    const html = renderToStaticMarkup(view.render());
+    assert.match(html, /Preparé este registro para que lo confirmes\./);
+    assert.ok(!html.includes(reply));
+    assert.ok(get(e => hasClass(e, 'chat-confirmation')));
+    assert.equal(writes, 0);
+    assert.equal(nodes(view.render(), e => e.type.name === 'CoachInsightCard').length, 0);
+  }
+});
+
+test('coffee sequence asks preparation, proposes with first message time, and saves only on Confirmar', async t => {
+  const oldFetch = globalThis.fetch;
+  const oldKey = process.env.GEMINI_API_KEY;
+  process.env.GEMINI_API_KEY = 'mock';
+  t.after(() => {
+    globalThis.fetch = oldFetch;
+    if (oldKey === undefined) delete process.env.GEMINI_API_KEY; else process.env.GEMINI_API_KEY = oldKey;
+  });
+  const view = conversation();
+  const get = predicate => nodes(view.render(), predicate)[0];
+  const requests = [];
+  const saved = [];
+  globalThis.__chatViewHarness.updateRecord = async (...args) => { saved.push(args); return true; };
+  globalThis.fetch = async (_url, options) => {
+    const payload = JSON.parse(options.body);
+    const result = requests.length === 1
+      ? { reply: '¿Era café solo o llevaba leche/azúcar?', actions: [] }
+      : { reply: 'Te propongo este registro.', actions: [{ type: 'add_meal', estimated: true,
+        payload: { dateStr: requests.at(-1).today, name: 'Café negro solo', type: 'Snack', calories: 3, details: '' } }] };
+    assert.match(payload.contents[0].parts[0].text, /Inmediatez explícita: sí/);
+    return Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify(result) }] } }] });
+  };
+  globalThis.__chatViewHarness.generateAIResponse = async (messages, systemInstruction, today, attachment, coachContext) => {
+    const body = { messages, systemInstruction, today, attachment, coachContext };
+    requests.push(body);
+    const response = await chatHandler.fetch(new Request('http://localhost/api/ai/chat', { method: 'POST', body: JSON.stringify(body) }));
+    assert.equal(response.status, 200);
+    return response.json();
+  };
+  for (const text of ['recien me tome un cafe', 'era negro solo']) {
+    get(e => e.type === 'textarea').props.onChange({ target: { value: text } });
+    await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+    await new Promise(setImmediate);
+  }
+  assert.equal(requests.length, 2);
+  const html = renderToStaticMarkup(view.render());
+  assert.ok(!html.includes('¿A qué hora'));
+  assert.ok(!html.includes('calorías estimas'));
+  assert.match(html, /Café negro solo/);
+  assert.equal(saved.length, 0);
+  await get(e => e.type === 'button' && e.props.children === 'Confirmar').props.onClick();
+  assert.equal(saved.length, 1);
+  const record = saved[0][1].meals.at(-1);
+  assert.equal(record.name, 'Café negro solo');
+  assert.equal(record.time, requests[0].messages[0].localTime);
+  assert.equal(record.calories, 3);
+  assert.match(renderToStaticMarkup(view.render()), /Registrado hoy/);
 });
 
 test('stored card is a sibling of reply, stays stable and historical messages do not animate', () => {
