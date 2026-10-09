@@ -22,6 +22,16 @@ const countMeals = (day: CoachCardContext['today'] | CoachCardContext['recentDay
 const countWorkouts = (day: CoachCardContext['today'] | CoachCardContext['recentDays'][number]) => day.workouts.length + day.omittedWorkouts;
 const nonnegative = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0;
 
+// Official registered-day denominators, shared by cards and habit windows.
+export function aggregateCoachMetrics(days: { calories: number | null; steps: number; mealCount: number; workoutCount: number }[]) {
+  const meals = days.filter(day => day.calories !== null);
+  const steps = days.filter(day => day.steps > 0);
+  return { mealDays: meals.length, mealCount: days.reduce((sum, day) => sum + day.mealCount, 0),
+    averageCalories: meals.length ? Math.round(meals.reduce((sum, day) => sum + day.calories!, 0) / meals.length) : null,
+    workoutDays: days.filter(day => day.workoutCount > 0).length, workoutCount: days.reduce((sum, day) => sum + day.workoutCount, 0),
+    stepDays: steps.length, averageSteps: steps.length ? Math.round(steps.reduce((sum, day) => sum + day.steps, 0) / steps.length) : null };
+}
+
 export function buildCoachCard(hint: CoachCardHint, context: CoachCardContext | null): CoachCardSnapshot | undefined {
   if (!context) return;
   if (hint === 'today_summary') {
@@ -35,14 +45,11 @@ export function buildCoachCard(hint: CoachCardHint, context: CoachCardContext | 
   const days = context.recentDays;
   if (days.length !== 7) return;
   const dates = { startDate: days[0].date, endDate: days[6].date };
+  const metrics = aggregateCoachMetrics(days.map(day => ({ ...day, mealCount: countMeals(day), workoutCount: countWorkouts(day) })));
   if (hint === 'nutrition_recent') {
-    const mealDays = days.filter(day => day.calories !== null);
-    return { type: hint, ...dates, mealDays: mealDays.length,
-      averageCalories: mealDays.length ? Math.round(mealDays.reduce((sum, day) => sum + day.calories!, 0) / mealDays.length) : null,
-      mealCount: days.reduce((sum, day) => sum + countMeals(day), 0) };
+    return { type: hint, ...dates, mealDays: metrics.mealDays, averageCalories: metrics.averageCalories, mealCount: metrics.mealCount };
   }
   if (hint === 'training_recent') {
-    const stepDays = days.filter(day => day.steps > 0);
     const recentActivities: string[] = [];
     // Newest visible activities first; omission counts are used only for totals.
     for (const day of [...days].reverse()) for (const workout of day.workouts) {
@@ -51,9 +58,9 @@ export function buildCoachCard(hint: CoachCardHint, context: CoachCardContext | 
         recentActivities.push(name);
       }
     }
-    return { type: hint, ...dates, workoutDays: days.filter(day => countWorkouts(day) > 0).length,
-      workoutCount: days.reduce((sum, day) => sum + countWorkouts(day), 0), stepDays: stepDays.length,
-      averageSteps: stepDays.length ? Math.round(stepDays.reduce((sum, day) => sum + day.steps, 0) / stepDays.length) : null,
+    return { type: hint, ...dates, workoutDays: metrics.workoutDays,
+      workoutCount: metrics.workoutCount, stepDays: metrics.stepDays,
+      averageSteps: metrics.averageSteps,
       recentActivities };
   }
 }

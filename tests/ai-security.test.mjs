@@ -6,6 +6,7 @@ import { PGlite } from '@electric-sql/pglite';
 import handler from '../api/ai/chat.ts';
 import { supabaseUrl } from '../src/lib/supabaseConfig.ts';
 import { validActions } from '../src/services/aiService.ts';
+import { buildCoachContext } from '../src/utils/coachContext.ts';
 
 const own = '00000000-0000-0000-0000-000000000001';
 const other = '00000000-0000-0000-0000-000000000002';
@@ -394,4 +395,24 @@ test('action business validation and presentation normalization do not produce p
   assert.deepEqual(await response.json(), { reply: 'Revisá la propuesta.', actions: [action], presentation: 'none' });
   assert.equal(mock.calls, cases.length + 1);
   assert.equal(mock.reservations.length, cases.length + 1);
+});
+
+test('habit insights preserve verified identity, quota isolation, private logs and one model call per query', async t => {
+  const mock = infrastructure(t);
+  const context = buildCoachContext({ name: 'Synthetic', sex: 'Masculino', age: 30, weight: 70, height: 170,
+    goal: 'Déficit', records: {} }, '2026-10-09');
+  for (const length of [7, 14, 30]) {
+    const body = { coachContext: context, messages: [{ role: 'user', text: `¿Qué hábitos detectaste en ${length} días?` }], userId: other };
+    const calls = mock.calls, reservations = mock.reservations.length;
+    assert.equal((await mock.request(body, '')).status, 401);
+    assert.equal(mock.calls, calls); assert.equal(mock.reservations.length, reservations);
+    assert.equal((await mock.request(body)).status, 200);
+    assert.equal(mock.calls, calls + 1); assert.equal(mock.reservations.length, reservations + 1);
+    assert.equal(mock.reservations.at(-1).p_user_id, own); assert.equal(mock.reservations.at(-1).p_category, 'text');
+    assert.equal(JSON.parse(mock.logs.at(-1)).providerCalls, 1);
+  }
+  process.env.AI_TEXT_DAILY_LIMIT = '3';
+  assert.equal((await mock.request({ coachContext: context, messages: [{ role: 'user', text: '¿Qué debería mejorar?' }] })).status, 429);
+  assert.equal(mock.calls, 3);
+  for (const sensitive of ['Synthetic', 'Déficit', 'historyDays', 'habitInsights', token, own]) assert.ok(!mock.logs.join('\n').includes(sensitive));
 });

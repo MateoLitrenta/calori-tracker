@@ -32,7 +32,9 @@ test('coach context includes seven local dates, real recent activity and no acco
   assert.equal(context.recentDays[5].weight, 69.8);
   assert.equal(context.today.expenditure, calculateDailyExpenditure(fixture));
   const serialized = JSON.stringify(context);
-  for (const forbidden of ['private-', 'secret-', 'email', 'avatar', 'password', '2026-09-01', '2026-09-29']) assert.ok(!serialized.includes(forbidden));
+  for (const forbidden of ['private-', 'secret-', 'email', 'avatar', 'password', '2026-09-29']) assert.ok(!serialized.includes(forbidden));
+  assert.ok(context.recentDays.every(day => day.date >= recentLocalDates(today)[0]));
+  assert.equal(context.historyDays.length, 60);
   assert.deepEqual(coachSuggestions(context), ['¿Cómo vengo entrenando?', 'Armame una rutina para hoy', '¿Cómo comí esta semana?']);
 });
 
@@ -50,7 +52,7 @@ test('context bounds descriptions and lists while retaining full calories and om
   const record = day(today, { meals: Array.from({ length: 30 }, () => ({ name: 'x'.repeat(4000), calories: 100, type: 'Snack' })),
     workouts: Array.from({ length: 20 }, () => ({ activity: 'y'.repeat(4000), duration: 10, calories: 50 })) });
   const context = buildCoachContext({ ...profile, records: { [today]: record } }, today);
-  assert.deepEqual(Object.keys(context), ['profile', 'today', 'recentDays']);
+  assert.deepEqual(Object.keys(context), ['profile', 'today', 'recentDays', 'historyDays']);
   assert.match(context.today.date, /^\d{4}-\d{2}-\d{2}$/);
   assert.ok(Array.isArray(context.recentDays));
   assert.equal(context.today.calories, 3000);
