@@ -175,8 +175,11 @@ test('observable clarification, duration-only questions and non-immediate time q
   assert.equal(model.calls.length, 4);
 });
 
-test('API temporal detection remains self-contained with no frontend/Coach imports', async () => {
+test('API shares only a dependency-free metric builder and keeps temporal detection self-contained', async () => {
   const source = await readFile(new URL('../api/ai/chat.ts', import.meta.url), 'utf8');
-  assert.ok(!/\b(?:import|require)\s*(?:\(|.*from)/.test(source));
+  const imports = source.match(/^import .*from .*;$/gm);
+  assert.deepEqual(imports, ["import { buildCoachCard } from '../../src/utils/coachCardMetrics.ts';"]);
+  const metrics = await readFile(new URL('../src/utils/coachCardMetrics.ts', import.meta.url), 'utf8');
+  assert.ok(!/\b(?:import|require)\s*(?:\(|.*from)/.test(metrics));
   assert.ok(!source.includes('date-fns'));
 });
