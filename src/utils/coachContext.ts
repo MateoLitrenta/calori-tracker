@@ -1,5 +1,5 @@
 import type { DailyRecord, UserProfile } from '../types';
-import { calculateDailyExpenditure, formatDateStr, getCaloriesIngested } from './helpers.ts';
+import { calculateDailyCalorieTarget, calculateDailyExpenditure, formatDateStr, getCaloriesIngested } from './helpers.ts';
 
 const MAX_MEALS = 6;
 const MAX_WORKOUTS = 3;
@@ -46,7 +46,7 @@ export function sanitizeCoachContext(value: unknown, today: string) {
   return {
     profile: { name: text(profile.name, 60), sex: text(profile.sex, 20), age: number(profile.age),
       weight: number(profile.weight), height: number(profile.height) },
-    today: { ...compactDay(current, today), consumed: number(current.consumed), expenditure: number(current.expenditure) },
+    today: { ...compactDay(current, today), consumed: number(current.consumed), expenditure: number(current.expenditure), target: number(current.target) },
     recentDays: recentLocalDates(today).map(date => compactDay(days.find(day => object(day).date === date), date)),
   };
 }
@@ -68,7 +68,7 @@ export function buildCoachContext(profile: UserProfile, today: string): CoachCon
   const record = profile.records[today];
   return sanitizeCoachContext({
     profile: { name: profile.name, sex: profile.sex, age: profile.age, weight: profile.weight, height: profile.height },
-    today: { ...summarizeDay(record, today), consumed: getCaloriesIngested(record), expenditure: calculateDailyExpenditure(profile, record) },
+    today: { ...summarizeDay(record, today), consumed: getCaloriesIngested(record), expenditure: calculateDailyExpenditure(profile, record), target: calculateDailyCalorieTarget(profile, record) },
     recentDays: recentLocalDates(today).map(date => summarizeDay(profile.records[date], date)),
   }, today);
 }
