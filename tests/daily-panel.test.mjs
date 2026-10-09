@@ -7,6 +7,7 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import ts from 'typescript';
 import { formatDateStr } from '../src/utils/helpers.ts';
+import { AIRequestError } from '../src/services/aiTransport.ts';
 
 
 const source = await readFile(new URL('../src/components/DailyPanel.tsx', import.meta.url), 'utf8');
@@ -21,6 +22,7 @@ globalThis.__entryServices = { estimateMeal: async () => ({}), estimateWorkout: 
 const imports = {
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,
   '../services/aiService': stub('export const estimateMeal = (...args) => globalThis.__entryServices.estimateMeal(...args); export const estimateWorkout = (...args) => globalThis.__entryServices.estimateWorkout(...args);'),
+  '../services/aiTransport': new URL('../src/services/aiTransport.ts', import.meta.url).href,
   '../lib/supabase': stub('export const supabase = { storage: { from: () => globalThis.__entryServices.storage } };'),
   'react-hot-toast': stub('export default globalThis.__entryServices.toast;'),
   './MealPhoto': stub('export function MealPhotoPicker() { return null; } export const MealThumbnail = () => null;'),
@@ -448,6 +450,54 @@ test('workout estimation fills the proposal without saving or removing secondary
   assert.doesNotMatch(renderToStaticMarkup(view()), /Estimado por IA/);
   assert.ok(field(view, 'Distancia (km) opc.'));
   assert.ok(field(view, 'Ritmo (ej: 5:30) opc.'));
+});
+
+test('AI estimation forms show session/quota/service errors and retain drafts without saving or automatic retries', async t => {
+  mobileEnvironment(t);
+  const errors = [];
+  t.mock.method(globalThis.__entryServices.toast, 'error', message => errors.push(message));
+  const previousReader = globalThis.FileReader;
+  globalThis.FileReader = class {
+    readAsDataURL() { this.result = 'data:image/jpeg;base64,YWJj'; queueMicrotask(() => this.onload()); }
+  };
+  t.after(() => { globalThis.FileReader = previousReader; });
+  let failure;
+  const requests = [];
+  const failEstimate = async input => { requests.push(input); throw failure; };
+  t.mock.method(globalThis.__entryServices, 'estimateMeal', failEstimate);
+  t.mock.method(globalThis.__entryServices, 'estimateWorkout', failEstimate);
+  for (const kind of ['meal', 'workout']) {
+    for (const error of [
+      new AIRequestError('Tu sesión expiró. Volvé a iniciar sesión.', 401, 'unauthorized'),
+      new AIRequestError('Alcanzaste el límite de consultas por hoy para esta modalidad.', 429, 'quota_exceeded', 60),
+      new AIRequestError('No pudimos conectar con el asistente. Intentá nuevamente.', 503, 'service_unavailable'),
+      new Error('private_provider_detail'),
+    ]) {
+      failure = error;
+      const view = entryView(() => assert.fail('An estimation failure must not save a record'));
+      const meal = kind === 'meal';
+      const description = meal ? 'Ej. pollo con arroz y verduras' : 'Ej. running, fútbol, gimnasio';
+      const name = meal ? 'Ensalada' : 'Correr';
+      open(view, meal ? '+ Comida' : '+ Ejercicio');
+      fill(view, description, name);
+      const image = new Blob(['synthetic image'], { type: 'image/jpeg' });
+      if (meal) node(view(), element => element.type.name === 'MealPhotoPicker').props.onChange(image);
+      else fill(view, 'Minutos', '30');
+      const before = requests.length;
+      node(view(), element => element.type === 'button' && element.props.children?.includes?.('Estimar con IA')).props.onClick();
+      await new Promise(setImmediate);
+      assert.equal(requests.length, before + 1);
+      if (error instanceof AIRequestError) assert.equal(errors.at(-1), error.message);
+      else assert.ok(!errors.at(-1).includes('private_provider_detail'));
+      assert.equal(field(view, description).props.value, name);
+      assert.equal(field(view, 'Kcal').props.value, '');
+      if (meal) {
+        assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.blob, image);
+        assert.equal(requests.at(-1).attachment.kind, 'image');
+      } else assert.equal(field(view, 'Minutos').props.value, 30);
+      assert.ok(shell(view));
+    }
+  }
 });
 
 test('photo upload failures keep the meal draft and image available for retry', async t => {

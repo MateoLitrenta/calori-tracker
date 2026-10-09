@@ -584,7 +584,6 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         ? error.message
         : 'Ha ocurrido un error al intentar conectarme al servidor de IA.';
 
-      console.error('Chat AI error:', error);
       toast.error(errorMessage);
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
@@ -705,8 +704,8 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
               requestAnimationFrame(() => textInputRef.current?.focus());
             }
           }
-        } catch {
-          if (mounted.current) toast.error('No pude transcribir el audio. Intentá nuevamente.');
+        } catch (error) {
+          if (mounted.current) toast.error(error instanceof Error ? error.message : 'No pude transcribir el audio. Intentá nuevamente.');
         } finally {
           audioBusy.current = false;
           if (mounted.current) setIsProcessingAudio(false);

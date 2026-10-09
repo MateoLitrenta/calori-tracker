@@ -1,0 +1,14 @@
+{
+  "displayName": "Calori Gemini — piloto mensual",
+  "budgetFilter": {
+    "projects": ["projects/REPLACE_WITH_VERIFIED_GEMINI_PROJECT_NUMBER"],
+    "services": ["services/REPLACE_WITH_VERIFIED_GEMINI_BILLING_SERVICE_ID"],
+    "calendarPeriod": "MONTH"
+  },
+  "amount": { "specifiedAmount": { "currencyCode": "USD", "units": "20" } },
+  "thresholdRules": [
+    { "thresholdPercent": 0.5, "spendBasis": "CURRENT_SPEND" },
+    { "thresholdPercent": 0.8, "spendBasis": "CURRENT_SPEND" },
+    { "thresholdPercent": 1.0, "spendBasis": "CURRENT_SPEND" }
+  ]
+}

@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import handler from '../api/ai/chat.ts';
+import apiHandler from '../api/ai/chat.ts';
+import { authorizedAIHandler } from './fixtures/ai-auth-mock.mjs';
+const handler = authorizedAIHandler(apiHandler);
 
 test('estimate mode handles meal text, image, combined input, and workout without chat actions', async () => {
   const oldFetch = globalThis.fetch;

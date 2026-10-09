@@ -12,7 +12,7 @@ globalThis.__entryHarness = { auth: {}, db: {}, toast: { success() {} } };
 // Effects and DOM focus are left to browser verification.
 globalThis.HTMLElement ??= class HTMLElement {};
 const imports = {
-  react: stub(`export { createContext, useContext } from ${JSON.stringify(import.meta.resolve('react'))};
+  react: stub(`export { createContext, createElement, useContext } from ${JSON.stringify(import.meta.resolve('react'))};
     export const useState = (...args) => globalThis.__entryHarness.hooks.useState(...args);
     export const useRef = (...args) => globalThis.__entryHarness.hooks.useRef(...args);
     export const useEffect = (...args) => globalThis.__entryHarness.hooks.useEffect?.(...args);
@@ -55,7 +55,10 @@ const { resolveEntryRoute } = await loadModule('../src/utils/entryRoute.ts');
 const { default: AuthModal } = await loadModule('../src/components/AuthModal.tsx');
 const { default: Onboarding } = await loadModule('../src/components/Onboarding.tsx');
 const { default: LandingPage } = await loadModule('../src/components/LandingPage.tsx');
-const { useAppStore } = await loadModule('../src/hooks/useAppStore.ts');
+const { AppStoreProvider } = await loadModule('../src/hooks/useAppStore.ts');
+// Exercise the provider's persistence methods with the existing hook harness.
+// Shared context/navigation are covered separately with real React and a DOM.
+const useAppStore = () => AppStoreProvider({ children: null }).props.value;
 const { default: ViewSkeleton } = await loadModule('../src/components/ViewSkeleton.tsx');
 globalThis.__entryHarness.ViewSkeleton = ViewSkeleton;
 const { default: BottomNav } = await loadModule('../src/components/BottomNav.tsx');

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { createContext, createElement, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { UserProfile, DailyRecord } from '../types';
 import * as db from '../lib/db';
 import { supabase } from '../lib/supabase';
@@ -6,7 +6,7 @@ import { normalizeActivityLevel } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import type { User } from '@supabase/supabase-js';
 
-export const useAppStore = () => {
+const useAppStoreState = () => {
   const [user, setUser] = useState<User | null>(null);
   const [activeProfile, setActiveProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -98,12 +98,12 @@ export const useAppStore = () => {
   };
 
   const updateRecord = async (dateStr: string, record: DailyRecord) => {
-    if (!activeProfile || !user) return false;
+    if (!activeProfile || !user || activeProfile.user_id !== user.id) return false;
     const oldRecord = activeProfile.records[dateStr] || { meals: [], workouts: [] };
 
-    // Optmistic Update
+    // Optimistic update, scoped to the profile that initiated the save.
     setActiveProfile(prev => {
-      if (!prev) return prev;
+      if (!prev || prev.id !== activeProfile.id || prev.user_id !== user.id) return prev;
       return { ...prev, records: { ...prev.records, [dateStr]: record } };
     });
 
@@ -138,7 +138,7 @@ export const useAppStore = () => {
       const refreshedLog = await db.fetchDailyLog(user.id, dateStr);
       if (refreshedLog) {
         setActiveProfile(prev => {
-          if (!prev) return prev;
+          if (!prev || prev.id !== activeProfile.id || prev.user_id !== user.id) return prev;
           return { ...prev, records: { ...prev.records, [dateStr]: refreshedLog } };
         });
       }
@@ -149,7 +149,7 @@ export const useAppStore = () => {
       toast.error('Error al guardar en la nube', { style: { background: '#161b22', color: '#fff' } });
       const saved = await db.fetchDailyLog(user.id, dateStr);
       setActiveProfile(prev => {
-        if (!prev || prev.id !== activeProfile.id) return prev;
+        if (!prev || prev.id !== activeProfile.id || prev.user_id !== user.id) return prev;
         const records = { ...prev.records };
         if (saved) records[dateStr] = saved;
         else if (activeProfile.records[dateStr]) records[dateStr] = activeProfile.records[dateStr];
@@ -187,4 +187,17 @@ export const useAppStore = () => {
     resetData,
     signOut
   };
+};
+
+// One owner for Auth, profile and records. Calling useAppStore from another
+// screen subscribes to this state rather than creating another local copy.
+const AppStoreContext = createContext<ReturnType<typeof useAppStoreState> | null>(null);
+
+export const AppStoreProvider = ({ children }: { children: ReactNode }) =>
+  createElement(AppStoreContext.Provider, { value: useAppStoreState() }, children);
+
+export const useAppStore = () => {
+  const store = useContext(AppStoreContext);
+  if (!store) throw new Error('useAppStore debe usarse dentro de AppStoreProvider');
+  return store;
 };
