@@ -1,3 +1,4 @@
+// api/ai/tsconfig.json rewrites this extension to .js in the Vercel artifact.
 import { buildCoachCard } from '../../src/utils/coachCardMetrics.ts';
 
 interface ChatMessage {
