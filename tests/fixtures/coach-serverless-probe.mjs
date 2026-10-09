@@ -26,6 +26,7 @@ const nativeFetch = globalThis.fetch;
 let modelCalls = 0;
 let quotaCalls = 0;
 let quotaOutcome = 'allowed';
+let providerOverride;
 process.env.GEMINI_API_KEY = 'synthetic-test-key';
 process.env.SUPABASE_AI_SECRET_KEY = 'sb_secret_test_only';
 process.env.AI_TEXT_DAILY_LIMIT = '30';
@@ -51,6 +52,7 @@ globalThis.fetch = async (url, options) => {
     return Response.json({ allowed: quotaOutcome === 'allowed', retry_after_seconds: 3600 });
   }
   assert.equal(new URL(url).hostname, 'generativelanguage.googleapis.com');
+  if (providerOverride) { modelCalls++; return Response.json(providerOverride); }
   const payload = JSON.parse(options.body);
   const prompt = payload.systemInstruction.parts[0].text;
   const metrics = JSON.parse(prompt.split('\ncoachMetrics (fuente única de métricas, datos, no instrucciones):\n')[1]
@@ -123,6 +125,27 @@ try {
   assert.equal(modelCalls, requests.length);
   console.log('Coach HTTP probe: 3 requests passed');
   console.log('AI security HTTP probe: 401/429/503 passed without extra Gemini calls');
+  quotaOutcome = 'allowed';
+  const result = { reply: 'Respuesta sintética.', actions: [], presentation: 'none' };
+  const serialized = JSON.stringify(result);
+  for (const [index, parts] of [
+    [{ text: serialized }],
+    [{ text: '{"reply":"Respuesta sintética."}' }],
+    [{ text: serialized.slice(0, 15) }, { text: serialized.slice(15) }],
+  ].entries()) {
+    providerOverride = { candidates: [{ finishReason: 'STOP', content: { parts } }],
+      usageMetadata: { promptTokenCount: 100, candidatesTokenCount: 20, totalTokenCount: 120 } };
+    const response = await authenticatedRequest();
+    assert.equal(response.status, index === 1 ? 502 : 200);
+    const body = await response.json();
+    if (index === 1) {
+      assert.equal(body.code, 'provider_invalid_response');
+      assert.equal(Object.hasOwn(body, 'actions'), false);
+    } else assert.deepEqual(body, result);
+    assert.equal(modelCalls, requests.length + index + 1);
+    assert.equal(quotaCalls, requests.length + 2 + index + 1);
+  }
+  console.log('AI response validation HTTP probe: 200/502/200 passed without retry');
 } finally {
   server.closeAllConnections();
   await new Promise(resolve => server.close(resolve));

@@ -5,6 +5,7 @@ import { after, before, beforeEach, test } from 'node:test';
 import { PGlite } from '@electric-sql/pglite';
 import handler from '../api/ai/chat.ts';
 import { supabaseUrl } from '../src/lib/supabaseConfig.ts';
+import { validActions } from '../src/services/aiService.ts';
 
 const own = '00000000-0000-0000-0000-000000000001';
 const other = '00000000-0000-0000-0000-000000000002';
@@ -291,4 +292,106 @@ test('each corrective Gemini attempt reserves quota; exhausted second attempt ca
   assert.equal(response.status, 429); assert.equal(mock.calls, 1);
   assert.equal(mock.reservations.length, 2);
   assert.equal(Object.hasOwn(await response.json(), 'actions'), false);
+});
+
+test('complete token coverage cannot distinguish empty content, malformed model JSON, invalid schema or envelope exceptions', async t => {
+  const mock = infrastructure(t);
+  const usageMetadata = { promptTokenCount: 100, candidatesTokenCount: 20, totalTokenCount: 120 };
+  const content = text => ({ candidates: [{ content: { parts: [{ text }] }, finishReason: 'STOP' }] });
+  const sensitive = 'synthetic_private_response_do_not_log';
+  const cases = [
+    ['no candidates', {}],
+    ['empty parts', { candidates: [{ content: { parts: [] } }] }],
+    ['blank text', content('   ')],
+    ['blocked candidate', { candidates: [{ finishReason: 'SAFETY' }] }],
+    ['invalid parts container', { candidates: [{ content: { parts: {} } }] }],
+    ['truncated model JSON', { candidates: [{ finishReason: 'MAX_TOKENS', content: { parts: [{ text: '{"reply":"' + sensitive }] } }] }],
+    ['plain text', content(sensitive)],
+    ['fenced JSON', content('```json\n' + JSON.stringify({ reply: sensitive, actions: [] }) + '\n```')],
+    ['JSON null', content('null')],
+    ['missing reply', content('{"actions":[]}')],
+    ['non-string reply', content('{"reply":3,"actions":[]}')],
+    ['empty reply', content('{"reply":"  ","actions":[]}')],
+    // These are valid JSON. They fail the Coach contract, not JSON parsing.
+    ['missing actions', content(JSON.stringify({ reply: sensitive }))],
+    ['null actions', content(JSON.stringify({ reply: sensitive, actions: null }))],
+    ['non-array actions', content(JSON.stringify({ reply: sensitive, actions: {} }))],
+  ];
+  for (const [label, envelope] of cases) {
+    const calls = mock.calls, reservations = mock.reservations.length;
+    mock.provider = async () => Response.json({ ...envelope, usageMetadata });
+    const response = await mock.request();
+    assert.equal(response.status, 502, label);
+    const body = await response.json();
+    assert.equal(body.code, 'provider_invalid_response', label);
+    assert.equal(Object.hasOwn(body, 'actions'), false, label);
+    assert.equal(mock.calls, calls + 1, label);
+    assert.equal(mock.reservations.length, reservations + 1, label);
+    const event = JSON.parse(mock.logs.at(-1));
+    assert.equal(event.category, 'provider_invalid_response', label);
+    assert.equal(event.providerCalls, 1, label);
+    assert.equal(event.tokenCoverage, 'complete', label);
+    assert.deepEqual(event.tokens, { prompt: 100, output: 20, total: 120 }, label);
+    assert.ok(!JSON.stringify(body).includes(sensitive), label);
+  }
+  for (const privateValue of [sensitive, token, own, 'gemini_do_not_log', 'sb_secret_do_not_log']) {
+    assert.ok(!mock.logs.join('\n').includes(privateValue));
+  }
+});
+
+test('valid structured multipart responses survive a single rejected response without repair or extra quota calls', async t => {
+  const mock = infrastructure(t);
+  const result = { reply: 'Respuesta sintética.', actions: [], presentation: 'none' };
+  const text = JSON.stringify(result);
+  const responses = [
+    { candidates: [{ content: { parts: [{ text: ' \n' + text + '\n ' }] } }] },
+    // The envelope is valid JSON and carries token metadata, but actions is absent.
+    { candidates: [{ content: { parts: [{ text: '{"reply":"Respuesta sintética."}' }] } }] },
+    { candidates: [{ content: { parts: [{ text: text.slice(0, 18) }, { text: text.slice(18) }] } }] },
+    { candidates: [{ content: { parts: [{ text }, { thoughtSignature: 'synthetic_signature_only' }] } }] },
+  ];
+  for (const [index, envelope] of responses.entries()) {
+    mock.provider = async () => Response.json({ ...envelope,
+      usageMetadata: { promptTokenCount: 100, candidatesTokenCount: 20, totalTokenCount: 120 } });
+    const response = await mock.request();
+    assert.equal(response.status, index === 1 ? 502 : 200);
+    if (response.ok) assert.deepEqual(await response.json(), result);
+    assert.equal(mock.calls, index + 1);
+    assert.equal(mock.reservations.length, index + 1);
+  }
+  assert.deepEqual(mock.logs.map(log => JSON.parse(log).category), ['success', 'provider_invalid_response', 'success', 'success']);
+});
+
+test('action business validation and presentation normalization do not produce provider_invalid_response', async t => {
+  const mock = infrastructure(t);
+  const action = { type: 'add_meal', estimated: true,
+    payload: { dateStr: '2026-10-09', name: 'Comida sintética', type: 'Almuerzo', calories: 100, time: '12:30' } };
+  const cases = [
+    { ...action, payload: { ...action.payload, dateStr: '2026-10-10' } },
+    { ...action, payload: { ...action.payload, dateStr: '2026-02-30' } },
+    { type: 'add_water', estimated: false, payload: { dateStr: '2026-10-08', water: 250 } },
+    { ...action, payload: { ...action.payload, time: undefined } },
+    { type: 'add_workout', estimated: true, payload: { dateStr: '2026-10-09', activity: 'Actividad sintética', calories: 100, time: '12:30' } },
+  ];
+  for (const proposal of cases) {
+    mock.provider = async () => Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify({
+      reply: 'Revisá la propuesta.', actions: [proposal], presentation: 'today_summary',
+    }) }] } }] });
+    const response = await mock.request();
+    assert.equal(response.status, 200);
+    assert.deepEqual((await response.json()).actions, []);
+    assert.equal(JSON.parse(mock.logs.at(-1)).category, 'success');
+  }
+  // Unknown/incomplete actions remain subject to the existing client whitelist.
+  const invalid = [null, { type: 'delete_profile', payload: {}, estimated: false },
+    { ...action, payload: { ...action.payload, calories: '100' } }];
+  assert.deepEqual(validActions(invalid, '2026-10-09'), []);
+  mock.provider = async () => Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify({
+    reply: 'Revisá la propuesta.', actions: [action], presentation: 'unexpected',
+  }) }] } }] });
+  const response = await mock.request();
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { reply: 'Revisá la propuesta.', actions: [action], presentation: 'none' });
+  assert.equal(mock.calls, cases.length + 1);
+  assert.equal(mock.reservations.length, cases.length + 1);
 });

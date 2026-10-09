@@ -175,3 +175,49 @@ La confirmación explícita de comidas/ejercicios y sus mensajes se conservan: �
 - **Preview real:** el usuario aportó el fallo previo. La corrección no está validada por el agente con una sesión real en Preview: Deployment Protection y falta de acceso autorizado impiden esa comprobación. El estado Ready del despliegue no demuestra esta interacción. Repetir allí propuesta → Confirmar → Inicio → Datos sin recargar, verificar balance y una sola fila, y comprobar error de guardado con un entorno/cuenta de prueba autorizados.
 
 Se actualiza únicamente el PR #54, sin merge, cambios de variables remotas, cuotas ni registros de usuarios.
+
+## Investigación del 502 `provider_invalid_response`
+
+### Incidente y alcance de la evidencia
+
+El usuario aportó un evento real del Preview del 9 de octubre de 2026 a las **12:08:44 Argentina (15:08:44 UTC)**: `/api/ai/chat`, HTTP 502, mode=chat, modality=text, category=provider_invalid_response, providerCalls=1, durationMs=833 y tokenCoverage=complete. Las solicitudes anteriores y posteriores respondieron 200 y la app se recuperó. No se obtuvo el contenido del proveedor, el estado del candidato ni el punto de validación que falló. No se solicitaron conversaciones, tokens ni respuestas sensibles.
+
+La categoría **no identifica una excepción única ni significa necesariamente JSON malformado**. `json(..., 502)` en `api/ai/chat.ts` asigna ese código a varias rutas; el catch general de chat lo usa también para excepciones de lectura/procesamiento que no son `AIError`.
+
+### Condiciones exactas del código actual
+
+| Ruta | Condición que termina en esa categoría |
+| --- | --- |
+| `server/aiSecurity.ts`, `timedJSON()` | Un HTTP exitoso del proveedor cuyo cuerpo externo falla `response.json()` con `SyntaxError`. No se leen los conteos; con una sola llamada deja tokenCoverage=unavailable. |
+| Chat: contenido | No hay primer candidato/partes/texto, o el texto concatenado está vacío después de trim. Esto puede incluir un candidato bloqueado sin contenido; no demuestra por sí solo un bloqueo. |
+| Chat: JSON interno | `JSON.parse(reply)` falla. Ejemplos sintéticos: texto plano, JSON truncado o JSON envuelto en fences Markdown. |
+| Chat: contrato estructurado | El parseo fue exitoso, pero reply no es string/no contiene texto, o actions no es un array. JSON válido con actions ausente, null u objeto produce el mismo 502. |
+| Chat: catch general | Cualquier otra excepción no-AIError en el bloque: por ejemplo, `content.parts` como objeto produce un TypeError al llamar map. La categoría no distingue este caso del parseo. |
+| Estimate, mismo endpoint | JSON ilegible, estructura inesperada, estimated distinto de true, calories no finitas/positivas, etiqueta ausente o assumptions inválidas. También incluye la respuesta de insuficiencia de información del proveedor. El mode=chat del incidente excluye esta ruta. |
+| Transcribe, mismo endpoint | JSON ilegible, estructura inesperada o transcript ausente/no string/vacío. El mode=chat excluye esta ruta. |
+
+Auth inválida, cuota agotada, fallos de almacenamiento, red/timeouts y HTTP de error del proveedor tienen otros códigos. Un HTTP 4xx del proveedor puede producir 502, pero con `provider_unavailable`, no `provider_invalid_response`.
+
+`fetchGemini()` registra los tres conteos numéricos de usageMetadata **antes** de validar el contenido del candidato. `complete` significa que cada llamada reportó esos tres conteos válidos; no demuestra que el contenido exista, que el JSON interno sea parseable ni que cumpla el contrato. En este evento de una sola llamada permite descartar el fallo de parseo del cuerpo HTTP externo, pero no distingue las restantes rutas de chat. No se puede inferir truncamiento, bloqueo, formato incorrecto ni falta de actions a partir de 833 ms o de los tokens. `providerCalls=1` no muestra una segunda llamada del mecanismo temporal existente.
+
+### Formatos y acciones revisados
+
+El request usa `responseMimeType: application/json`, thinkingBudget=0 y maxOutputTokens=2048; **no envía responseSchema/responseJsonSchema**. El contrato de campos se solicita en instrucciones y se valida después. La [referencia oficial de Google](https://ai.google.dev/api/generate-content) distingue MIME de esquema y documenta finishReason, promptFeedback y las partes de contenido. Esos indicadores del candidato no se conservan en el log actual; no atribuirles un valor retrospectivamente.
+
+Se aceptan espacios/saltos de línea y JSON repartido entre varias partes textuales. Una parte de firma de pensamiento sin texto no rompe el parseo. El código concatena todas las partes con text; una parte textual adicional, incluido thought=true, puede alterar el JSON concatenado. No se verificó que el modelo configurado con pensamiento desactivado haya devuelto tal parte en este incidente. Tampoco se verificó la presencia de fences ni una respuesta truncada/bloqueada.
+
+Un presentation ausente/desconocido se normaliza a none; no genera 502. Las acciones con fechas inválidas/futuras, agua/pasos/peso fuera de hoy o falta de hora/duración generan aclaraciones HTTP 200 con actions vacías. La whitelist y los tipos numéricos del cliente siguen rechazando acciones desconocidas/incompletas antes de persistir. El endpoint de IA solo propone; no guarda registros. La confirmación y el mensaje de éxito posterior al guardado permanecen intactos.
+
+### Decisión y pruebas
+
+No se identificó un defecto funcional reproducible dentro del contrato vigente ni se reprodujo la **causa exacta del evento real**. Se mantienen parser, configuración de Gemini, validaciones y reglas de negocio. No se agregó reparación de JSON, fallback de actions ausentes, cambio de esquema ni reintentos por formato: serían decisiones sin evidencia del caso. Una mejora futura de diagnóstico podría usar únicamente un motivo de validación y finishReason/blockReason de una whitelist fija, nunca text, finishMessage, errores crudos o respuestas completas; no se activó esa instrumentación en este cambio.
+
+La reserva ya consumida por una llamada que termina en 502 no se devuelve; el proveedor pudo generar y facturar esa respuesta. Se conserva la corrección temporal existente de máximo dos intentos, cada uno con reserva atómica propia. No se agregó otro intento, consumo ni coste por solicitud para tratar respuestas inválidas.
+
+Se agregan tres tests en `tests/ai-security.test.mjs`: 15 variantes sintéticas que producen el mismo 502 con cobertura completa; formatos válidos y recuperación independiente 200 → 502 → 200; reglas de acciones y normalización de presentación. Verifican una reserva/llamada por solicitud, ausencia de acciones en errores y privacidad de logs. Estos son casos simulados, no reconstrucciones de la conversación real.
+
+El probe serverless ejecuta POST HTTP contra el handler compilado, con TypeScript nativo desactivado: JSON válido sin actions → 502 y solicitud posterior multipart válida → 200, sin reparación ni llamada adicional. Se repite sobre el artefacto del builder oficial de Vercel. Auth, cuotas y Gemini están simulados. No se prueba Gemini ni el Preview real con esos mocks.
+
+Validación: **236/236 tests**, TypeScript del cliente y del endpoint, lint sin errores (13 advertencias existentes), build, `git diff --check` y probe serverless. El primer intento de HTTP local fue bloqueado por el sandbox (`EACCES` a 127.0.0.1); se habilitó red y se repitió la validación. No se interpreta ese bloqueo del entorno como un fallo del endpoint.
+
+El evento real permanece sin causa exacta atribuible. Los resultados 200 anteriores/posteriores los aportó el usuario; no se afirma una nueva prueba real en Preview. Este cambio actualiza únicamente tests y documentación del PR #54, sin merge ni cambios de producción, cuotas, datos o logging del proveedor.
