@@ -16,14 +16,16 @@ globalThis.__resetHarness = {
   db: { deleteUserRecords: () => remove() },
 };
 let source = await readFile(new URL('../src/hooks/useAppStore.ts', import.meta.url), 'utf8');
-source = source.replace("import { useState, useEffect } from 'react';",
-  'const {useState, useEffect} = globalThis.__resetHarness.react;')
+source = source.replace("import { createContext, createElement, useContext, useState, useEffect, type ReactNode } from 'react';",
+  `import { createContext, createElement, useContext } from ${JSON.stringify(import.meta.resolve('react'))};
+   const {useState, useEffect} = globalThis.__resetHarness.react;`)
   .replace("import * as db from '../lib/db';", 'const db = globalThis.__resetHarness.db;')
   .replace("import { supabase } from '../lib/supabase';", 'const supabase = {};')
   .replace("import toast from 'react-hot-toast';", 'const toast = {};')
   .replace("'../utils/helpers'", JSON.stringify(new URL('../src/utils/helpers.ts', import.meta.url).href));
 const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext } }).outputText;
-const { useAppStore: runHook } = await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
+const { AppStoreProvider } = await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
+const runHook = () => AppStoreProvider({ children: null }).props.value;
 const profile = { id: 'u', activity: 'Activo', name: 'Test', records: { today: { meals: [1] } } };
 function setup() { state = [{ id: 'u' }, profile, false]; index = 0; return runHook(); }
 

@@ -149,3 +149,29 @@ from pg_proc where oid = 'public.reserve_ai_quota(uuid,text,integer)'::regproced
 Para `anon`/`authenticated`, acceso de esquema, privilegios de tabla y ejecución RPC deben ser falsos; para `service_role`, ejecución RPC verdadera. Esperado: RLS habilitada y ninguna política que permita acceso de clientes; función SECURITY DEFINER y `search_path` vacío. No se exige FORCE RLS: la función del servidor debe poder reservar como propietario sin una política pública. Si alguna comprobación difiere, investigar antes del merge; no ejecutar otra migración automáticamente.
 
 Las alertas de presupuesto y la activación de Production siguen siendo tareas separadas pendientes. La rama y el PR #54 permanecen en borrador, sin merge. Ningún paso de v1.1 modificó variables remotas, Production, cuentas, límites ni contadores de la cuenta habitual.
+
+## Corrección de sincronización Coach → Inicio / Datos
+
+### Causa comprobada, 9 de octubre
+
+`useAppStore()` era un hook con `useState` local: cada llamada de App, Coach, Datos o Perfil creaba otra copia de `activeProfile` y otra suscripción a Auth. `applyActions()` creaba un registro nuevo sin mutar sus arrays; `updateRecord()` persistía en Supabase y refrescaba únicamente la copia de Coach. Inicio recibía la copia de App, que conservaba los registros anteriores. Recargar ejecutaba otra lectura de Supabase y hacía visible lo ya guardado.
+
+Se reprodujo antes de cambiar el producto con React/ReactDOM reales: confirmar una comida sintética de 500 kcal guardaba una sola comida y mostraba “Registrado hoy”, pero navegar a Inicio mostraba **0 kcal**. No se atribuye el problema a Gemini, fórmulas o cuotas. El store de `main` (`c0139f5`) y el de la rama anterior a esta corrección (`50ca15e`) tienen el mismo blob `bf3a38bd44c4608ed006f53ccb0c6c0c0a05502f`. `applyActions()` y `confirmActions()` tampoco cambiaron en el PR #54: el defecto ya existía en main. No se inspeccionaron las filas ni las peticiones Supabase del caso real del usuario; la reproducción y comparación del código demuestran el fallo de estado compartido.
+
+### Cambio mínimo
+
+`src/hooks/useAppStore.ts` ahora mantiene la misma lógica de Auth, carga y persistencia dentro de `AppStoreProvider`; `useAppStore()` consume ese contexto. `src/main.tsx` monta un único provider para toda la app. Todas las pantallas observan el mismo perfil y mapa de registros, con las actualizaciones inmutables existentes; no se agregan recargas, polling, nuevos cálculos ni escrituras adicionales.
+
+Se reprodujo también una carrera durante el guardado: al cambiar la cuenta mientras `ensureDailyLog()` esperaba, el resultado podía copiar el registro de la cuenta anterior al perfil nuevo. Las actualizaciones optimista, final y de recuperación ahora verifican el perfil y usuario que iniciaron la operación. La escritura iniciada sigue asociada a su usuario original; su resultado no modifica otro perfil.
+
+La confirmación explícita de comidas/ejercicios y sus mensajes se conservan: éxito solo después de `await updateRecord()` exitoso; error cuando falla el guardado. Agua, pasos y peso conservan su flujo actual. No se modificaron ChatView, db, fórmulas energéticas, pantallas, endpoint, autenticación del servidor ni cuotas.
+
+### Evidencia y límites
+
+- `tests/coach-store-sync.test.mjs` monta el entry point real bajo StrictMode, App, provider, Coach, Inicio/DailyPanel y Datos/ChartsView en JSDOM. Simula exclusivamente Auth, persistencia, respuesta de IA y dependencias visuales ajenas al caso; no reemplaza los hooks de React ni el store.
+- Siete regresiones: propuesta sin guardado previo, doble clic en Confirmar con una única escritura, éxito después de resolver el guardado, comida/calorías/balance y lista visibles al navegar Inicio → Datos → Coach, registros compartidos con historial, comida/ejercicio, agua, pasos, peso, recuperación sin falso éxito y aislamiento al cambiar cuenta con escritura pendiente. La navegación no causa nuevas lecturas del perfil. El historial recibe el mismo mapa de registros; su render gráfico está simulado.
+- `tests/public-entry.test.mjs` y `tests/reset-data.test.mjs` adaptan sus harnesses al provider y conservan las pruebas anteriores de onboarding, sesión y borrado. `jsdom@26.1.0` es una dependencia solo de desarrollo compatible con Node usado en estas pruebas.
+- Suite completa **233/233**, `tsc -p api/ai/tsconfig.json --noEmit`, TypeScript del cliente mediante `npm run build`, lint sin errores (**13 advertencias existentes**), build y `git diff --check`. La suite conserva el POST HTTP al endpoint compilado con Auth/cuotas/Gemini simulados; no se usa el build como prueba funcional.
+- **Preview real:** el usuario aportó el fallo previo. La corrección no está validada por el agente con una sesión real en Preview: Deployment Protection y falta de acceso autorizado impiden esa comprobación. El estado Ready del despliegue no demuestra esta interacción. Repetir allí propuesta → Confirmar → Inicio → Datos sin recargar, verificar balance y una sola fila, y comprobar error de guardado con un entorno/cuenta de prueba autorizados.
+
+Se actualiza únicamente el PR #54, sin merge, cambios de variables remotas, cuotas ni registros de usuarios.
