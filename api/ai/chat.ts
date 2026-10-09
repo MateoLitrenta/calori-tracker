@@ -1,5 +1,9 @@
 // api/ai/tsconfig.json rewrites this extension to .js in the Vercel artifact.
 import { buildCoachCard } from '../../src/utils/coachCardMetrics.ts';
+import { AIError, aiErrorResponse, authenticateAIRequest, fetchGemini, logAIRequest, readAIRequest,
+  type AIRequestState } from '../../server/aiSecurity.ts';
+
+export const config = { maxDuration: 60 };
 
 interface ChatMessage {
   role: 'user' | 'bot';
@@ -196,9 +200,11 @@ function asksForRecordTime(reply: string): boolean {
 }
 
 function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
+  const code = status === 400 ? 'invalid_request' : status === 405 ? 'method_not_allowed'
+    : status === 502 ? 'provider_invalid_response' : 'internal_error';
+  return new Response(JSON.stringify(status >= 400 ? { ...body as object, code } : body), {
     status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8' }
+    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }
   });
 }
 
@@ -238,22 +244,17 @@ function parseMediaAttachment(value: unknown): MediaAttachment | null {
     : { kind: 'image', mimeType, data };
 }
 
-export default {
-  async fetch(request: Request) {
-    if (request.method !== 'POST') {
-      return json({ error: 'Método no permitido.' }, 405);
-    }
-
+async function handleAIRequest(request: Request, userId: string, state: AIRequestState): Promise<Response> {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      console.error('GEMINI_API_KEY is not configured.');
-      return json({ error: 'El asistente de IA no está configurado en el servidor.' }, 500);
+      throw new AIError('ai_configuration', 503, 'El asistente no está disponible temporalmente. Intentá nuevamente.', 60);
     }
 
     let body: RequestBody;
     try {
-      body = await request.json() as RequestBody;
-    } catch {
+      body = await readAIRequest(request) as RequestBody;
+    } catch (error) {
+      if (error instanceof AIError) throw error;
       return json({ error: 'Solicitud inválida.' }, 400);
     }
     if (!body || typeof body !== 'object' || Array.isArray(body)) {
@@ -263,6 +264,11 @@ export default {
     if (body.mode !== undefined && body.mode !== 'chat' && body.mode !== 'transcribe' && body.mode !== 'estimate') {
       return json({ error: 'Modo de solicitud inválido.' }, 400);
     }
+    state.mode = body.mode || 'chat';
+    const rawAttachment = coachObject(body.attachment);
+    state.modality = body.mode === 'transcribe' || rawAttachment.kind === 'audio' ? 'audio'
+      : rawAttachment.kind === 'image' ? 'image' : 'text';
+    const callGemini = (url: string, options: RequestInit) => fetchGemini(userId, state.modality!, state, url, options);
     if (body.mode === 'estimate') {
       const meal = body.estimateType === 'meal';
       const workout = body.estimateType === 'workout';
@@ -282,24 +288,24 @@ export default {
         ? `Comida: ${text}\nDetalles: ${details}`
         : `Actividad: ${text}\nDuración: ${body.duration} min\nPeso: ${body.profile?.weight} kg\nDetalles: ${details}`;
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`, {
+        const response = await callGemini(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`, {
           method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
           body: JSON.stringify({ systemInstruction: { parts: [{ text: instruction }] },
             contents: [{ role: 'user', parts: [{ text: input }, ...(attachment ? [{ inlineData: { mimeType: attachment.mimeType, data: attachment.data } }] : [])] }],
             generationConfig: { responseMimeType: 'application/json', temperature: 0.2, thinkingConfig: { thinkingBudget: 0 }, maxOutputTokens: 512 } })
         });
-        if (!response.ok) return json({ error: 'No pude estimar las calorías.' }, 502);
         const data = await response.json() as any;
         const raw = data?.candidates?.[0]?.content?.parts?.map((part: { text?: string }) => part.text || '').join('');
         const result = JSON.parse(raw || '{}');
         const label = meal ? result.description : result.activity;
         if (result.estimated !== true || typeof result.calories !== 'number' || !Number.isFinite(result.calories) || result.calories <= 0 ||
           typeof label !== 'string' || !label.trim() || !Array.isArray(result.assumptions) || !result.assumptions.every((a: unknown) => typeof a === 'string')) {
-          return json({ error: 'No pude estimar las calorías con esos datos.' }, 422);
+          return json({ error: 'No pude estimar las calorías con esos datos.' }, 502);
         }
         return json({ calories: Math.round(result.calories), [meal ? 'description' : 'activity']: label.trim().slice(0, 200),
           assumptions: result.assumptions.slice(0, 4).map((a: string) => a.slice(0, 200)), estimated: true });
-      } catch {
+      } catch (error) {
+        if (error instanceof AIError) throw error;
         return json({ error: 'No pude estimar las calorías.' }, 502);
       }
     }
@@ -309,7 +315,7 @@ export default {
         return json({ error: 'Se requiere un audio válido del mensaje actual.' }, 400);
       }
       try {
-        const response = await fetch(
+        const response = await callGemini(
           `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`,
           {
             method: 'POST',
@@ -324,7 +330,6 @@ export default {
             })
           }
         );
-        if (!response.ok) return json({ error: 'No se pudo transcribir el audio.' }, 502);
         const data = await response.json() as any;
         const text = data?.candidates?.[0]?.content?.parts?.map((part: { text?: string }) => part?.text || '').join('').trim();
         const result = text ? JSON.parse(text) : null;
@@ -332,7 +337,8 @@ export default {
           return json({ error: 'No se pudo entender el audio.' }, 502);
         }
         return json({ transcript: result.transcript.trim() });
-      } catch {
+      } catch (error) {
+        if (error instanceof AIError) throw error;
         return json({ error: 'No se pudo transcribir el audio.' }, 502);
       }
     }
@@ -353,8 +359,7 @@ export default {
         }
         coachContext = sanitizeCoachContext(body.coachContext, body.today);
       }
-    } catch (error) {
-      console.error('Coach context preparation failed:', error instanceof Error ? `${error.name}: ${error.message}` : 'unknown');
+    } catch {
       return json({ error: 'El contexto del coach no es válido.' }, 400);
     }
     const recentMessages = body.messages.slice(-MAX_MESSAGES);
@@ -427,7 +432,7 @@ export default {
       const immediateTime = attachment ? undefined : immediateRequestTime(validMessages, body.today);
       let result;
       for (let attempt = 0; attempt < 2; attempt++) {
-        const response = await fetch(
+        const response = await callGemini(
           `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`,
           {
             method: 'POST',
@@ -441,29 +446,13 @@ export default {
 
         const data = await response.json() as any;
 
-        if (!response.ok) {
-          console.error('Gemini API error:', response.status, data?.error?.status || data?.error?.message || 'unknown');
-          const message = response.status === 429
-            ? 'El asistente alcanzó temporalmente su límite de uso. Intenta nuevamente en unos instantes.'
-            : response.status === 401 || response.status === 403
-              ? 'La credencial de IA del servidor no es válida o no tiene permisos.'
-              : 'No se pudo obtener una respuesta de la IA.';
-          return json({ error: message }, 502);
-        }
-
         const candidate = data?.candidates?.[0];
-        const finishReason = candidate?.finishReason;
         const reply = candidate?.content?.parts
           ?.map((part: { text?: string }) => part?.text || '')
           .join('')
           .trim();
 
-        if (finishReason === 'MAX_TOKENS') {
-          console.warn('Gemini response reached MAX_TOKENS before completing.');
-        }
-
         if (!reply) {
-          console.error('Gemini returned an empty response.', { finishReason: finishReason || 'unknown' });
           return json({ error: 'La IA respondió sin contenido.' }, 502);
         }
 
@@ -517,8 +506,27 @@ export default {
         presentation: !coachContext || result.actions.length > 0 || attachment?.kind === 'image'
           ? 'none' : normalizePresentation(result.presentation) });
     } catch (error) {
-      console.error('Chat processing failed:', error instanceof Error ? error.name : 'unknown');
+      if (error instanceof AIError) throw error;
       return json({ error: 'No se pudo conectar con el servicio de IA.' }, 502);
     }
+}
+
+export default {
+  async fetch(request: Request): Promise<Response> {
+    const state: AIRequestState = { startedAt: Date.now(), providerCalls: 0, promptTokens: null, outputTokens: null,
+      totalTokens: null, usageReportedCalls: 0 };
+    let response: Response;
+    let code: string | undefined;
+    try {
+      if (request.method !== 'POST') throw new AIError('method_not_allowed', 405, 'Método no permitido.');
+      const userId = await authenticateAIRequest(request);
+      response = await handleAIRequest(request, userId, state);
+      if (!response.ok) code = (await response.clone().json()).code;
+    } catch (error) {
+      response = aiErrorResponse(error);
+      code = error instanceof AIError ? error.code : 'internal_error';
+    }
+    logAIRequest(state, response, code);
+    return response;
   }
 };

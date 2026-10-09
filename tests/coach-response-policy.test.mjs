@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import handler from '../api/ai/chat.ts';
+import apiHandler from '../api/ai/chat.ts';
+import { authorizedAIHandler } from './fixtures/ai-auth-mock.mjs';
+const handler = authorizedAIHandler(apiHandler);
 import { buildCoachContext, sanitizeCoachContext } from '../src/utils/coachContext.ts';
 import { buildCoachCard } from '../src/utils/coachPresentation.ts';
 import { buildDailyEnergyContext, calculateDailyCalorieTarget, calculateDailyExpenditure } from '../src/utils/helpers.ts';

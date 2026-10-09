@@ -6,7 +6,9 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import ts from 'typescript';
 import { buildCoachCard } from '../src/utils/coachPresentation.ts';
 import { buildCoachContext } from '../src/utils/coachContext.ts';
-import chatHandler from '../api/ai/chat.ts';
+import apiHandler from '../api/ai/chat.ts';
+import { authorizedAIHandler } from './fixtures/ai-auth-mock.mjs';
+const chatHandler = authorizedAIHandler(apiHandler);
 
 const stub = code => `data:text/javascript,${encodeURIComponent(code)}`;
 const profile = { id: 'profile-a', user_id: 'user-a', name: 'Ana', age: 32,
@@ -409,4 +411,38 @@ test('new conversation clears structured history and sends only the new temporal
   assert.equal(sent[2], date);
   assert.equal(sent[4].today.date, date);
   assert.equal(nodes(view.render(), e => hasClass(e, 'chat-confirmation')).length, 0);
+});
+
+test('session, quota and provider errors preserve saved history/cards and cannot create duplicate records on retry', async () => {
+  const date = new Date().toLocaleDateString('en-CA');
+  const card = buildCoachCard('training_recent', buildCoachContext(profile, date));
+  for (const message of ['Tu sesión expiró. Volvé a iniciar sesión.', 'Alcanzaste el límite de consultas por hoy.',
+    'No pudimos conectar con el asistente. Intentá nuevamente.']) {
+    const view = conversation([{ id: 'old', role: 'bot', text: 'Historial anterior.', coachCard: card }]);
+    const saved = [];
+    let calls = 0;
+    globalThis.__chatViewHarness.updateRecord = async (...args) => { saved.push(args); return true; };
+    globalThis.__chatViewHarness.generateAIResponse = async () => {
+      calls++;
+      if (calls === 1) throw new Error(message);
+      return { reply: 'Revisá esta propuesta.', actions: [{ type: 'add_meal', estimated: true,
+        payload: { dateStr: date, name: 'Manzana', type: 'Snack', calories: 80, time: '12:30' } }], presentation: 'none' };
+    };
+    const get = predicate => nodes(view.render(), predicate)[0];
+    const send = async () => {
+      get(e => e.type === 'textarea').props.onChange({ target: { value: 'Comí una manzana.' } });
+      await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+    };
+    await send(); view.flushPersistence();
+    const stored = JSON.parse(localStorage.getItem(`calori:assistant:messages:user-a:${date}`));
+    assert.equal(stored[0].text, 'Historial anterior.');
+    assert.deepEqual(stored[0].coachCard, card);
+    assert.match(renderToStaticMarkup(view.render()), /Historial anterior/);
+    assert.equal(saved.length, 0); assert.equal(calls, 1);
+    await send();
+    assert.equal(saved.length, 0);
+    await get(e => e.type === 'button' && e.props.children === 'Confirmar').props.onClick();
+    assert.equal(saved.length, 1);
+    assert.equal(calls, 2);
+  }
 });

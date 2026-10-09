@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readFile } from 'node:fs/promises';
-import handler from '../api/ai/chat.ts';
+import apiHandler from '../api/ai/chat.ts';
+import { authorizedAIHandler } from './fixtures/ai-auth-mock.mjs';
+const handler = authorizedAIHandler(apiHandler);
 
 const today = '2026-10-08';
 const user = (text, localTime = '10:15') => ({ role: 'user', text, localTime });
@@ -175,10 +177,11 @@ test('observable clarification, duration-only questions and non-immediate time q
   assert.equal(model.calls.length, 4);
 });
 
-test('API shares only a dependency-free metric builder and keeps temporal detection self-contained', async () => {
+test('API shares a pure metric builder and uses server security without frontend state or temporal dependencies', async () => {
   const source = await readFile(new URL('../api/ai/chat.ts', import.meta.url), 'utf8');
-  const imports = source.match(/^import .*from .*;$/gm);
-  assert.deepEqual(imports, ["import { buildCoachCard } from '../../src/utils/coachCardMetrics.ts';"]);
+  assert.match(source, /import \{ buildCoachCard \} from '..\/..\/src\/utils\/coachCardMetrics\.ts'/);
+  assert.match(source, /from '..\/..\/server\/aiSecurity\.ts'/);
+  assert.ok(!source.includes('useAppStore'));
   const metrics = await readFile(new URL('../src/utils/coachCardMetrics.ts', import.meta.url), 'utf8');
   assert.ok(!/\b(?:import|require)\s*(?:\(|.*from)/.test(metrics));
   assert.ok(!source.includes('date-fns'));

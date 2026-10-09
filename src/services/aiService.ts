@@ -1,4 +1,5 @@
 import type { CoachContext } from '../utils/coachContext';
+import { requestAI } from './aiTransport.ts';
 
 export interface ChatMessage {
   role: 'user' | 'bot';
@@ -12,10 +13,9 @@ export type MediaAttachment =
 
 interface EstimateResult { calories: number; assumptions: string[]; estimated: true }
 async function estimate(body: Record<string, unknown>): Promise<EstimateResult & { description?: string; activity?: string }> {
-  const response = await fetch('/api/ai/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'estimate', ...body }) });
-  const result = await response.json().catch(() => ({ error: 'La respuesta de IA no es válida.' }));
-  if (!response.ok || result.estimated !== true || !Number.isFinite(result.calories) || result.calories <= 0) {
-    throw new Error(result.error || 'No pude estimar las calorías.');
+  const result = await requestAI({ mode: 'estimate', ...body });
+  if (result.estimated !== true || !Number.isFinite(result.calories) || result.calories <= 0) {
+    throw new Error('No pude estimar las calorías con esa respuesta. Intentá nuevamente.');
   }
   return result;
 }
@@ -67,13 +67,6 @@ export function validActions(value: unknown, today: string): DataAction[] {
   });
 }
 
-interface AIResponsePayload {
-  reply?: string;
-  actions?: unknown;
-  presentation?: unknown;
-  error?: string;
-}
-
 export type CoachPresentationHint = 'none' | 'today_summary' | 'nutrition_recent' | 'training_recent';
 
 export function normalizeCoachPresentation(value: unknown): CoachPresentationHint {
@@ -87,33 +80,14 @@ export async function generateAIResponse(
   attachment?: MediaAttachment,
   coachContext?: CoachContext
 ): Promise<{ reply: string; actions: unknown; presentation: CoachPresentationHint }> {
-  const response = await fetch('/api/ai/chat', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      messages: messages.map(({ role, text, localTime }) => ({ role, text, localTime })),
-      systemInstruction,
-      today,
-      ...(coachContext ? { coachContext } : {}),
-      ...(attachment ? { attachment } : {})
-    })
+  const payload = await requestAI({
+    messages: messages.map(({ role, text, localTime }) => ({ role, text, localTime })),
+    systemInstruction,
+    today,
+    ...(coachContext ? { coachContext } : {}),
+    ...(attachment ? { attachment } : {})
   });
-
-  let payload: AIResponsePayload;
-
-  try {
-    payload = await response.json() as AIResponsePayload;
-  } catch {
-    throw new Error('La respuesta del servidor de IA no es válida.');
-  }
-
-  if (!response.ok) {
-    throw new Error(payload.error || 'No se pudo conectar con el servidor de IA.');
-  }
-
-  if (!payload.reply?.trim()) {
+  if (typeof payload.reply !== 'string' || !payload.reply.trim()) {
     throw new Error('La IA respondió sin contenido.');
   }
 
@@ -124,19 +98,9 @@ export async function generateAIResponse(
 }
 
 export async function transcribeAudio(attachment: Extract<MediaAttachment, { kind: 'audio' }>): Promise<string> {
-  const response = await fetch('/api/ai/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ mode: 'transcribe', attachment })
-  });
-  let payload: { transcript?: string; error?: string };
-  try {
-    payload = await response.json() as { transcript?: string; error?: string };
-  } catch {
-    throw new Error('La respuesta de transcripción no es válida.');
-  }
-  if (!response.ok || !payload.transcript?.trim()) {
-    throw new Error(payload.error || 'No se pudo transcribir el audio.');
+  const payload = await requestAI({ mode: 'transcribe', attachment });
+  if (typeof payload.transcript !== 'string' || !payload.transcript.trim()) {
+    throw new Error('No se pudo entender el audio. Intentá nuevamente.');
   }
   return payload.transcript.trim();
 }

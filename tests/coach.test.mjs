@@ -3,7 +3,9 @@ import { test } from 'node:test';
 import { buildCoachContext, coachSuggestions, recentLocalDates, sanitizeCoachContext } from '../src/utils/coachContext.ts';
 import { calculateDailyExpenditure } from '../src/utils/helpers.ts';
 import { generateAIResponse, transcribeAudio, validActions } from '../src/services/aiService.ts';
-import handler from '../api/ai/chat.ts';
+import apiHandler from '../api/ai/chat.ts';
+import { authorizedAIHandler } from './fixtures/ai-auth-mock.mjs';
+const handler = authorizedAIHandler(apiHandler);
 
 const today = '2026-09-28';
 const profile = { id: 'private-id', user_id: 'private-user', name: 'Ada', sex: 'Femenino', age: 30,

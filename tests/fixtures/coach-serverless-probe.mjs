@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
 import handler from './api/ai/chat.js';
+import { supabaseUrl } from './src/lib/supabaseConfig.js';
 
 // Synthetic records only. Gemini is mocked; the compiled handler, ESM imports,
 // JSON request/response contracts and real HTTP transport are exercised.
@@ -24,7 +25,23 @@ const requests = [
 const nativeFetch = globalThis.fetch;
 let modelCalls = 0;
 process.env.GEMINI_API_KEY = 'synthetic-test-key';
+process.env.SUPABASE_AI_SECRET_KEY = 'sb_secret_test_only';
+process.env.AI_TEXT_DAILY_LIMIT = '30';
+process.env.AI_IMAGE_DAILY_LIMIT = '10';
+process.env.AI_AUDIO_DAILY_LIMIT = '10';
+const userId = '00000000-0000-0000-0000-000000000001';
+// Synthetic claims only; Auth is mocked and no real signing key is present.
+const accessToken = [Buffer.from(JSON.stringify({ alg: 'HS256' })).toString('base64url'), Buffer.from(JSON.stringify({ sub: userId,
+  iss: `${supabaseUrl}/auth/v1`, role: 'authenticated', aud: 'authenticated',
+  exp: Math.floor(Date.now() / 1000) + 3600 })).toString('base64url'), 'synthetic_signature'].join('.');
 globalThis.fetch = async (url, options) => {
+  if (url === `${supabaseUrl}/auth/v1/user`) return Response.json({ id: userId });
+  if (url === `${supabaseUrl}/rest/v1/rpc/reserve_ai_quota`) {
+    const reservation = JSON.parse(options.body);
+    assert.equal(reservation.p_user_id, userId);
+    assert.equal(reservation.p_limit, 30);
+    return Response.json({ allowed: true, retry_after_seconds: 3600 });
+  }
   assert.equal(new URL(url).hostname, 'generativelanguage.googleapis.com');
   const payload = JSON.parse(options.body);
   const prompt = payload.systemInstruction.parts[0].text;
@@ -60,9 +77,15 @@ const server = createServer(async (incoming, outgoing) => {
 server.listen(0, '127.0.0.1');
 await once(server, 'listening');
 try {
+  const denied = await nativeFetch(`http://127.0.0.1:${server.address().port}/api/ai/chat`, {
+    method: 'POST', body: '{}',
+  });
+  assert.equal(denied.status, 401);
+  assert.equal((await denied.json()).code, 'unauthorized');
+  assert.equal(modelCalls, 0);
   for (const [question, presentation, reply] of requests) {
     const response = await nativeFetch(`http://127.0.0.1:${server.address().port}/api/ai/chat`, {
-      method: 'POST', headers: { 'content-type': 'application/json' },
+      method: 'POST', headers: { 'content-type': 'application/json', Authorization: `Bearer ${accessToken}` },
       body: JSON.stringify({ today, messages: [{ role: 'user', text: question }], coachContext }),
     });
     assert.equal(response.status, 200);
