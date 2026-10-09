@@ -343,3 +343,70 @@ test('incoming cards preserve a reader above the end and keep the current anchor
     assert.equal(container.scrollTop, scrollTop);
   }
 });
+
+test('weekly interpretations persist with their snapshots and remain isolated by user and date', () => {
+  const today = new Date().toLocaleDateString('en-CA');
+  for (const [type, text] of [
+    ['nutrition_recent', 'Los registros de los últimos siete días son insuficientes para evaluar tu alimentación.'],
+    ['training_recent', 'En los últimos siete días falta información para identificar una tendencia de entrenamiento.'],
+  ]) {
+    const card = buildCoachCard(type, buildCoachContext(profile, today));
+    const view = conversation([{ id: type, role: 'bot', text, coachCard: card }]);
+    view.render();
+    view.flushPersistence();
+    const outer = mount(ChatView, { scrollContainer: { current: null } }).render();
+    const reload = mount(outer.type, outer.props).render();
+    assert.deepEqual(nodes(reload, e => e.type.name === 'CoachInsightCard')[0].props.card, card);
+    assert.ok(renderToStaticMarkup(reload).includes(text));
+    for (const props of [{ ...outer.props, userId: 'user-b' }, { ...outer.props, dateStr: '2020-01-01' }]) {
+      const other = mount(outer.type, props).render();
+      assert.equal(nodes(other, e => e.type.name === 'CoachInsightCard').length, 0);
+      assert.ok(!renderToStaticMarkup(other).includes(text));
+    }
+  }
+});
+
+test('cardless and invalid-hint replies retain explicit numeric details through persistence', async () => {
+  for (const presentation of ['none', undefined, 'unknown']) {
+    const view = conversation();
+    const reply = 'El martes registraste 700 kcal.\nEl miércoles no hay comidas registradas; eso no significa que no hayas comido.';
+    globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply, actions: [], presentation });
+    const get = predicate => nodes(view.render(), predicate)[0];
+    get(e => e.type === 'textarea').props.onChange({ target: { value: 'Decime las calorías de cada día.' } });
+    await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+    assert.equal(nodes(view.render(), e => e.type.name === 'CoachInsightCard').length, 0);
+    assert.match(renderToStaticMarkup(view.render()), /700 kcal/);
+    view.flushPersistence();
+    const date = new Date().toLocaleDateString('en-CA');
+    const stored = JSON.parse(localStorage.getItem(`calori:assistant:messages:user-a:${date}`));
+    assert.equal(stored.at(-1).text, reply);
+    assert.equal(stored.at(-1).coachCard, undefined);
+    assert.match(renderToStaticMarkup(render(stored)), /eso no significa que no hayas comido/);
+  }
+});
+
+test('new conversation clears structured history and sends only the new temporal context', async () => {
+  const date = new Date().toLocaleDateString('en-CA');
+  const card = buildCoachCard('training_recent', buildCoachContext(profile, date));
+  const view = conversation([
+    { id: 'old-user', role: 'user', text: 'Recién tomé un café.', localTime: '10:15' },
+    { id: 'old-bot', role: 'bot', text: '¿Era solo?', coachCard: card },
+  ]);
+  const get = predicate => nodes(view.render(), predicate)[0];
+  get(e => e.type === 'button' && e.props['aria-label'] === 'Nueva conversación').props.onClick();
+  assert.equal(nodes(view.render(), e => e.type.name === 'CoachInsightCard').length, 0);
+  assert.equal(localStorage.getItem(`calori:assistant:messages:user-a:${date}`), null);
+  let sent;
+  globalThis.__chatViewHarness.generateAIResponse = async (...args) => {
+    sent = args;
+    return { reply: '¿Cuánto duró la sesión?', actions: [], presentation: 'none' };
+  };
+  get(e => e.type === 'textarea').props.onChange({ target: { value: 'Acabo de entrenar gimnasio.' } });
+  await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+  assert.equal(sent[0].length, 1);
+  assert.equal(sent[0][0].text, 'Acabo de entrenar gimnasio.');
+  assert.match(sent[0][0].localTime, /^\d{2}:\d{2}$/);
+  assert.equal(sent[2], date);
+  assert.equal(sent[4].today.date, date);
+  assert.equal(nodes(view.render(), e => hasClass(e, 'chat-confirmation')).length, 0);
+});
