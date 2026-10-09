@@ -1,5 +1,5 @@
 import type { DailyRecord, UserProfile } from '../types';
-import { calculateDailyCalorieTarget, calculateDailyExpenditure, formatDateStr, getCaloriesIngested } from './helpers.ts';
+import { calculateDailyCalorieTarget, calculateDailyExpenditure, formatDateStr, getCaloriesIngested, hasEnergyData } from './helpers.ts';
 
 const MAX_MEALS = 6;
 const MAX_WORKOUTS = 3;
@@ -20,6 +20,7 @@ function compactDay(value: unknown, date: string) {
     date,
     hasData: day.hasData === true,
     calories: number(day.calories),
+    expenditure: number(day.expenditure),
     steps: number(day.steps) ?? 0,
     water: number(day.water) ?? 0,
     weight: number(day.weight),
@@ -53,11 +54,12 @@ export function sanitizeCoachContext(value: unknown, today: string) {
 
 export type CoachContext = ReturnType<typeof sanitizeCoachContext>;
 
-function summarizeDay(record: DailyRecord | undefined, date: string) {
+function summarizeDay(profile: UserProfile, record: DailyRecord | undefined, date: string) {
   return {
     date,
     hasData: Boolean(record && (record.meals.length || record.workouts.length || record.steps || record.water || record.weight)),
     calories: record?.meals.length ? getCaloriesIngested(record) : null,
+    expenditure: hasEnergyData(record) ? calculateDailyExpenditure(profile, record) : null,
     meals: record?.meals.map(meal => ({ type: meal.type, description: meal.name, calories: meal.calories, time: meal.time })) ?? [],
     workouts: record?.workouts.map(workout => ({ name: workout.activity, duration: workout.duration, calories: workout.calories })) ?? [],
     steps: record?.steps ?? 0, water: record?.water ?? 0, weight: record?.weight ?? null,
@@ -68,8 +70,8 @@ export function buildCoachContext(profile: UserProfile, today: string): CoachCon
   const record = profile.records[today];
   return sanitizeCoachContext({
     profile: { name: profile.name, sex: profile.sex, age: profile.age, weight: profile.weight, height: profile.height },
-    today: { ...summarizeDay(record, today), consumed: getCaloriesIngested(record), expenditure: calculateDailyExpenditure(profile, record), target: calculateDailyCalorieTarget(profile, record) },
-    recentDays: recentLocalDates(today).map(date => summarizeDay(profile.records[date], date)),
+    today: { ...summarizeDay(profile, record, today), consumed: getCaloriesIngested(record), expenditure: calculateDailyExpenditure(profile, record), target: calculateDailyCalorieTarget(profile, record) },
+    recentDays: recentLocalDates(today).map(date => summarizeDay(profile, profile.records[date], date)),
   }, today);
 }
 
