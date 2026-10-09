@@ -19,9 +19,12 @@ test('all AI modes send the current session bearer and never a client user ID', 
     estimated: true, calories: 100, description: 'Comida', activity: 'Actividad', assumptions: [] }));
   await generateAIResponse([{ role: 'user', text: 'Hola' }], 'contexto', '2026-10-09');
   await transcribeAudio({ kind: 'audio', mimeType: 'audio/webm', data: 'YWJj' });
-  await estimateMeal({ name: 'Comida', details: '', type: 'Snack' });
+  const image = { kind: 'image', mimeType: 'image/jpeg', data: 'YWJj' };
+  await estimateMeal({ name: 'Comida', details: '', type: 'Snack', attachment: image });
   await estimateWorkout({ activity: 'Actividad', duration: 10, details: '', profile: { sex: 'Masculino', age: 30, weight: 80, height: 180 } });
   assert.equal(mock.requests.length, 4);
+  assert.deepEqual(JSON.parse(mock.requests[2].body).attachment, image);
+  assert.equal(JSON.parse(mock.requests[1].body).mode, 'transcribe');
   for (const request of mock.requests) {
     assert.equal(request.headers.Authorization, 'Bearer test-access-token');
     assert.equal(JSON.parse(request.body).userId, undefined);
@@ -47,11 +50,15 @@ test('HTTP status takes precedence over malformed/HTML error bodies and messages
   for (const [value, message] of [[400, /Revisá los datos/], [401, /sesión expiró/], [429, /límite/],
     [500, /Intentá nuevamente/], [502, /Intentá nuevamente/], [503, /Intentá nuevamente/]]) {
     status = value;
-    await assert.rejects(generateAIResponse([], '', '2026-10-09'), error => {
-      assert.ok(error instanceof AIRequestError); assert.equal(error.status, status);
-      assert.equal(error.retryAfterSeconds, 60); assert.match(error.message, message);
-      assert.ok(!error.message.includes('secret')); return true;
-    });
+    for (const call of [() => generateAIResponse([], '', '2026-10-09'),
+      () => transcribeAudio({ kind: 'audio', mimeType: 'audio/webm', data: 'YWJj' }),
+      () => estimateMeal({ name: 'Comida', details: '', type: 'Snack', attachment: { kind: 'image', mimeType: 'image/jpeg', data: 'YWJj' } })]) {
+      await assert.rejects(call(), error => {
+        assert.ok(error instanceof AIRequestError); assert.equal(error.status, status);
+        assert.equal(error.retryAfterSeconds, 60); assert.match(error.message, message);
+        assert.ok(!error.message.includes('secret')); return true;
+      });
+    }
   }
 });
 

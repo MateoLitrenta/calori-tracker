@@ -100,3 +100,52 @@ Los tests usan mocks de Auth/Gemini y PostgreSQL local PGlite para ejecutar la m
 La regresión del endpoint compila sus dependencias reales y ejecuta solo JavaScript con TypeScript nativo desactivado, haciendo POST HTTP a la función. Se conserva `rewriteRelativeImportExtensions` del #53 y se validan las importaciones nuevas del servidor/configuración pública. La compilación y mocks no validan firma/configuración Supabase real, disponibilidad del RPC desplegado, Gemini real ni presupuesto/alertas reales. No afirmar ejecución remota sin esa evidencia.
 
 Validación del 9 de octubre: suite completa **224/224**, TypeScript del cliente y del endpoint, lint sin errores (13 advertencias en líneas existentes), build de producción y `git diff --check`. Además se generó localmente el artefacto con el builder oficial `@vercel/node@23.0.0`, TypeScript 6.0.3 y runtime Node.js: cargó con TypeScript nativo desactivado y pasó un POST sin token (401) y tres POST de Coach (200), con Auth/cuotas/Gemini simulados. La inspección de los 18 archivos de `dist` no encontró los identificadores de variables privadas ni las claves sintéticas de las pruebas. No se aplicaron migraciones, variables ni alertas remotas.
+
+## Actualización de validación v1.1 (9 de octubre de 2026)
+
+La evidencia anterior corresponde a la implementación inicial. Posteriormente el usuario informó que aplicó la migración en el proyecto correcto, configuró `SUPABASE_AI_SECRET_KEY` y cupos 30/10/10 **solo en el Preview de esta rama**, y redesplegó. Reportó dos consultas reales de Coach con Gemini, tarjetas y valores correctos y contador de texto `used=1` y luego `used=2`, con `daily_limit=30`. También comprobó existencia de tabla/RPC y permisos de ejecución: `anon` y `authenticated` denegados; `service_role` permitido. **Son comprobaciones remotas aportadas por el usuario, no ejecutadas por el agente.** Production y las alertas de presupuesto no se consideran configuradas por estos resultados.
+
+### Evidencia ejecutada en v1.1
+
+- Validación final después de la corrección: **226/226 tests**, TypeScript del endpoint y del cliente, lint sin errores (13 advertencias existentes), build de producción y `git diff --check` correctos. El bundle de 18 archivos no contiene identificadores de variables privadas ni claves sintéticas de las pruebas.
+- No se encontró una vulnerabilidad o regresión nueva en el endpoint. Se confirmó un defecto de comunicación de errores en los formularios de estimación de comida/ejercicio: un 401 de sesión expirada mostraba “Agregá más detalle” en lugar de indicar la sesión; también ocultaban cuota y servicio no disponible. Una prueba falló antes de corregirlo y pasó después. `DailyPanel.tsx` ahora muestra únicamente mensajes de `AIRequestError` (transporte seguro), manteniendo el fallback para errores ajenos al transporte. No cambia diseño, campos, confirmación, llamadas al proveedor ni persistencia. Los 23 tests de formularios pasan, incluyendo conservación de foto/datos, cero guardados y ausencia de reintentos automáticos. Los demás cambios de v1.1 son pruebas y documentación.
+- Se corrigió una posible intermitencia de la fixture de firma inválida: alterar el último carácter Base64url puede modificar únicamente bits de relleno y conservar los bytes originales. Ahora se altera el primer carácter de la firma, garantizando una firma distinta. No cambia la verificación del servidor.
+- El endpoint real importado en los tests rechaza bearer ausente, malformado, firma inválida y expiración con 401, sin reserva ni llamada al modelo; las restricciones de issuer/audience/role/nbf se mantienen. Los logs no incluyen token/identidad/secretos.
+- PostgreSQL local PGlite ejecuta la migración original y verifica permisos de esquema/tabla para `anon` y `authenticated`, RLS habilitada sin políticas de acceso de clientes, RPC reservado al servidor, aislamiento por usuario/modalidad, agotamiento y fallo seguro de almacenamiento. 25 solicitudes simultáneas al handler con cupo sintético 5 producen 5 respuestas 200, 20 respuestas 429 y solo 5 invocaciones al modelo simulado. **PGlite serializa consultas: esto no es una carga distribuida contra PostgREST remoto.**
+- Una base PGlite adicional, desechable, reemplaza exclusivamente la dependencia de reloj `pg_catalog.statement_timestamp()` mediante una función de prueba. La migración se carga sin editarla. Con zona de base `America/Argentina/Buenos_Aires`, a `2026-10-09 23:59:59 UTC` se agota un cupo 1 y Retry-After es 1; a `2026-10-10 00:00:00 UTC` se permite otra llamada en un bucket distinto y Retry-After es 86400. El reloj simulado existe únicamente en esa base temporal, nunca en una migración o proyecto real.
+- Imagen y audio: el cliente transmite el bearer y el adjunto; los contadores PostgreSQL de la prueba quedan texto=1, imagen=2 y audio=1 después de chat, estimación de imagen, propuesta de comida por imagen y transcripción. Agotar los buckets sintéticos de imagen/audio produce 429 sin invocar Gemini ni agotar texto. Los errores 400/401/429/500/502/503 se comprueban en los tres flujos. Estimaciones siguen sin acciones de escritura; Coach solo devuelve propuestas y la UI conserva Confirmar. La transcripción llena el cuadro de texto; enviar ese texto posteriormente es otra solicitud de texto, iniciada por el usuario, no un consumo automático de texto al transcribir.
+- Artefacto compilado: POST HTTP sin bearer, con token inventado/malformado/expirado → 401 y cero reservas/modelo; cuota simulada agotada → 429 y Retry-After; almacenamiento simulado caído → 503; ambos sin llamadas adicionales a Gemini. Se conservan las tres consultas exitosas y métricas oficiales del #53. Se repitió además el mismo probe sobre el artefacto generado por el builder oficial de Vercel, con TypeScript nativo desactivado. Auth, cuotas y Gemini de este probe están simulados.
+- Remoto, ejecutado por el agente contra la **API pública del proyecto Calori**: Auth rechaza un token inventado con 403; el handler convierte ese rechazo en 401 (comprobado localmente). Un RPC anónimo con identidad nula y límite 0 devuelve 401 / `42501` (permiso denegado); la identidad nula impide reservar aun ante un permiso accidental. Acceso REST a `ai_private` con límite de resultados 0 devuelve 406 / `PGRST106` (esquema no expuesto). No se leyeron filas privadas ni se usaron sesiones o secretos reales. Estas comprobaciones no sustituyen inspección de ACL/RLS remota ni prueban `/api/ai/chat` desplegado.
+- Acceso al Preview: el comentario de Vercel identifica el redespliegue como Ready; el intento de acceso autenticado mediante el conector protegido devuelve 403. No hay CLI autenticada ni OIDC local. Se conservó Deployment Protection. El conector Supabase sigue apuntando a un proyecto distinto; no se ejecutó SQL allí.
+
+### Comprobaciones remotas pendientes
+
+No existe acceso verificado a un Supabase aislado ni a usuarios de prueba autorizados. **No reducir el cupo de la cuenta habitual, borrar sus contadores ni crear cuentas reales para agotar cuotas.** La prueba remota de agotamiento/concurrencia/reinicio entre instancias requiere una base aislada y usuarios de prueba autorizados; hasta entonces queda pendiente. El mínimo observado se conserva durante todo el bucket UTC, también entre despliegues.
+
+Desde un navegador con acceso legítimo al Preview, comprobar POST sin bearer, bearer inventado y una sesión de prueba realmente expirada, manteniendo Deployment Protection. Una respuesta `Protected deployment` pertenece a Vercel y no demuestra el 401 del handler. Para demostrar cero reservas/modelo ante rechazo, correlacionar con Runtime Logs (`providerCalls=0`, `category=unauthorized`) y, en la base aislada, contadores antes/después. No reutilizar tokens de usuarios reales en logs, capturas o ejemplos públicos.
+
+Imagen y audio con Gemini real siguen pendientes: usar medios sintéticos sin datos personales y una cuenta de prueba autorizada; comprobar respectivos contadores, errores y confirmación antes de guardar registros. Las dos consultas reales aportadas solo validan texto/Coach. Preservar el cupo y los registros de la cuenta habitual.
+
+Para completar la revisión de permisos del proyecto correcto, el administrador puede ejecutar **solo estas consultas de catálogo, sin modificar cuotas ni devolver identidades de usuarios**:
+
+```sql
+select role_name,
+  has_schema_privilege(role_name, 'ai_private', 'USAGE') as private_schema_usage,
+  has_table_privilege(role_name, 'ai_private.daily_usage',
+    'SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER') as any_table_privilege,
+  has_function_privilege(role_name, 'public.reserve_ai_quota(uuid,text,integer)', 'EXECUTE') as rpc_execute
+from (values ('anon'), ('authenticated'), ('service_role')) as roles(role_name);
+
+select relrowsecurity, relforcerowsecurity
+from pg_class where oid = 'ai_private.daily_usage'::regclass;
+
+select policyname, roles, cmd, qual, with_check
+from pg_policies where schemaname = 'ai_private' and tablename = 'daily_usage';
+
+select prosecdef, proconfig
+from pg_proc where oid = 'public.reserve_ai_quota(uuid,text,integer)'::regprocedure;
+```
+
+Para `anon`/`authenticated`, acceso de esquema, privilegios de tabla y ejecución RPC deben ser falsos; para `service_role`, ejecución RPC verdadera. Esperado: RLS habilitada y ninguna política que permita acceso de clientes; función SECURITY DEFINER y `search_path` vacío. No se exige FORCE RLS: la función del servidor debe poder reservar como propietario sin una política pública. Si alguna comprobación difiere, investigar antes del merge; no ejecutar otra migración automáticamente.
+
+Las alertas de presupuesto y la activación de Production siguen siendo tareas separadas pendientes. La rama y el PR #54 permanecen en borrador, sin merge. Ningún paso de v1.1 modificó variables remotas, Production, cuentas, límites ni contadores de la cuenta habitual.

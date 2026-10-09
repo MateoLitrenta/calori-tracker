@@ -80,12 +80,18 @@ function infrastructure(t) {
 
 test('missing, invalid signature, malformed and expired tokens are 401 without quota or Gemini', async t => {
   const mock = infrastructure(t);
-  for (const accessToken of ['', 'not-a-token', token.slice(0, -1) + 'X', sign({ exp: 1 })]) {
+  const invalidSignature = token.split('.');
+  // Change meaningful bits; the last base64url character can contain padding
+  // bits and a different spelling may still decode to the same signature.
+  invalidSignature[2] = (invalidSignature[2][0] === 'A' ? 'B' : 'A') + invalidSignature[2].slice(1);
+  for (const accessToken of ['', 'not-a-token', invalidSignature.join('.'), sign({ exp: 1 })]) {
     const response = await mock.request({}, accessToken);
     assert.equal(response.status, 401);
     assert.equal((await response.json()).code, 'unauthorized');
   }
   assert.equal(mock.calls, 0); assert.equal(mock.reservations.length, 0);
+  const logged = mock.logs.join('\n');
+  for (const value of [token, own, 'gemini_do_not_log', 'sb_secret_do_not_log']) assert.ok(!logged.includes(value));
 });
 
 test('verified tokens also enforce issuer, audience, role and not-before', async t => {
@@ -106,6 +112,9 @@ test('chat, image estimates and transcription all authenticate and reserve the v
     [{}, 'text', { reply: 'Hola', actions: [] }],
     [{ mode: 'estimate', estimateType: 'meal', attachment: image }, 'image',
       { estimated: true, calories: 100, description: 'Comida', assumptions: [] }],
+    [{ attachment: image }, 'image', { reply: 'Revisá la propuesta.', presentation: 'none',
+      actions: [{ type: 'add_meal', estimated: true,
+        payload: { dateStr: '2026-10-09', name: 'Comida', type: 'Almuerzo', calories: 100, time: '12:30' } }] }],
     [{ mode: 'transcribe', attachment: audio, messages: undefined }, 'audio', { transcript: 'Audio de prueba' }],
   ];
   for (const [body, category, result] of requests) {
@@ -119,6 +128,18 @@ test('chat, image estimates and transcription all authenticate and reserve the v
     assert.equal(event.tokenCoverage, 'unavailable');
     assert.equal(event.tokens.total, null);
   }
+  await db.exec('reset role');
+  const counters = await db.query('select category, used from ai_private.daily_usage order by category');
+  assert.deepEqual(counters.rows, [{ category: 'audio', used: 1 }, { category: 'image', used: 2 }, { category: 'text', used: 1 }]);
+  await db.exec('set role service_role');
+  const calls = mock.calls;
+  // Exhaust only synthetic media buckets, leaving the text bucket available.
+  process.env.AI_IMAGE_DAILY_LIMIT = '1'; process.env.AI_AUDIO_DAILY_LIMIT = '1';
+  assert.equal((await mock.request({ mode: 'estimate', estimateType: 'meal', attachment: image })).status, 429);
+  assert.equal((await mock.request({ mode: 'transcribe', attachment: audio, messages: undefined })).status, 429);
+  assert.equal(mock.calls, calls);
+  mock.provider = async () => Response.json({ candidates: [{ content: { parts: [{ text: '{"reply":"Hola","actions":[]}' }] } }] });
+  assert.equal((await mock.request()).status, 200);
 });
 
 test('valid session reaches Gemini; client identifiers cannot choose another user quota', async t => {
@@ -151,11 +172,22 @@ test('concurrent authenticated calls cannot exceed the persistent quota; users a
 });
 
 test('database denies browser RPC/table access and validates reservations; previous days do not block today', async () => {
+  await db.exec('reset role');
+  for (const role of ['anon', 'authenticated']) {
+    const privileges = await db.query(`select has_schema_privilege($1, 'ai_private', 'USAGE') as schema_access,
+      has_table_privilege($1, 'ai_private.daily_usage', 'SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER') as table_access`, [role]);
+    assert.deepEqual(privileges.rows[0], { schema_access: false, table_access: false });
+  }
+  const rls = await db.query(`select relrowsecurity from pg_class where oid = 'ai_private.daily_usage'::regclass`);
+  assert.equal(rls.rows[0].relrowsecurity, true);
+  assert.equal((await db.query(`select count(*)::integer as count from pg_policies
+    where schemaname = 'ai_private' and tablename = 'daily_usage'`)).rows[0].count, 0);
   await db.exec('reset role; set role authenticated');
   await assert.rejects(db.query('select public.reserve_ai_quota($1::uuid, $2, 999999)', [other, 'text']), /permission denied/);
   await assert.rejects(db.query('select * from ai_private.daily_usage'), /permission denied/);
   await db.exec('reset role; set role anon');
   await assert.rejects(db.query('select public.reserve_ai_quota($1::uuid, $2, 999999)', [own, 'text']), /permission denied/);
+  await assert.rejects(db.query('select * from ai_private.daily_usage'), /permission denied/);
   await db.exec(`reset role; insert into ai_private.daily_usage(user_id, quota_day, category, used, daily_limit, last_allowed)
     values ('${own}', current_date - 1, 'text', 999, 999, false); set role service_role;`);
   assert.equal((await db.query('select public.reserve_ai_quota($1::uuid, $2, 1) as quota', [own, 'text'])).rows[0].quota.allowed, true);
@@ -163,6 +195,34 @@ test('database denies browser RPC/table access and validates reservations; previ
   await assert.rejects(db.query('select public.reserve_ai_quota($1::uuid, $2, 1)', [own, 'unsupported']), /Invalid quota/);
   assert.equal((await db.query('select public.reserve_ai_quota($1::uuid, $2, 999) as quota', [own, 'text'])).rows[0].quota.allowed, false);
   assert.equal((await db.query('select public.reserve_ai_quota($1::uuid, $2, 999) as quota', [own, 'image'])).rows[0].quota.allowed, false);
+});
+
+test('the unchanged quota migration resets at UTC midnight with a different database timezone', async t => {
+  const isolated = new PGlite();
+  t.after(() => isolated.close());
+  await isolated.exec(`create role anon; create role authenticated; create role service_role;
+    create schema auth; create table auth.users(id uuid primary key);
+    insert into auth.users values ('${own}');
+    -- Replace only the clock dependency in this disposable database, never in
+    -- a real project or in the migration, to cross midnight deterministically.
+    create or replace function pg_catalog.statement_timestamp()
+      returns timestamptz language sql volatile as $$ select current_setting('test.quota_time')::timestamptz $$;
+    set timezone = 'America/Argentina/Buenos_Aires';
+    set test.quota_time = '2026-10-09 23:59:59+00';`);
+  await isolated.exec(await readFile(new URL('../supabase/migrations/202610090001_ai_usage_quotas.sql', import.meta.url), 'utf8'));
+  await isolated.exec('set role service_role');
+  const reserve = async () => (await isolated.query('select public.reserve_ai_quota($1::uuid, $2, 1) as quota', [own, 'text'])).rows[0].quota;
+  assert.deepEqual(await reserve(), { allowed: true, retry_after_seconds: 1 });
+  assert.deepEqual(await reserve(), { allowed: false, retry_after_seconds: 1 });
+  await isolated.exec(`set test.quota_time = '2026-10-10 00:00:00+00'`);
+  assert.deepEqual(await reserve(), { allowed: true, retry_after_seconds: 86400 });
+  assert.deepEqual(await reserve(), { allowed: false, retry_after_seconds: 86400 });
+  await isolated.exec('reset role');
+  const buckets = await isolated.query(`select quota_day::text, used, daily_limit from ai_private.daily_usage order by quota_day`);
+  assert.deepEqual(buckets.rows, [
+    { quota_day: '2026-10-09', used: 1, daily_limit: 1 },
+    { quota_day: '2026-10-10', used: 1, daily_limit: 1 },
+  ]);
 });
 
 test('missing/invalid config, quota outage and Auth outage block Gemini and remain retryable', async t => {

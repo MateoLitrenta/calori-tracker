@@ -24,6 +24,8 @@ const requests = [
 ];
 const nativeFetch = globalThis.fetch;
 let modelCalls = 0;
+let quotaCalls = 0;
+let quotaOutcome = 'allowed';
 process.env.GEMINI_API_KEY = 'synthetic-test-key';
 process.env.SUPABASE_AI_SECRET_KEY = 'sb_secret_test_only';
 process.env.AI_TEXT_DAILY_LIMIT = '30';
@@ -34,13 +36,19 @@ const userId = '00000000-0000-0000-0000-000000000001';
 const accessToken = [Buffer.from(JSON.stringify({ alg: 'HS256' })).toString('base64url'), Buffer.from(JSON.stringify({ sub: userId,
   iss: `${supabaseUrl}/auth/v1`, role: 'authenticated', aud: 'authenticated',
   exp: Math.floor(Date.now() / 1000) + 3600 })).toString('base64url'), 'synthetic_signature'].join('.');
+const expiredToken = [Buffer.from(JSON.stringify({ alg: 'HS256' })).toString('base64url'),
+  Buffer.from(JSON.stringify({ sub: userId, iss: `${supabaseUrl}/auth/v1`, role: 'authenticated',
+    aud: 'authenticated', exp: 1 })).toString('base64url'), 'synthetic_signature'].join('.');
 globalThis.fetch = async (url, options) => {
-  if (url === `${supabaseUrl}/auth/v1/user`) return Response.json({ id: userId });
+  if (url === `${supabaseUrl}/auth/v1/user`) return options.headers.Authorization === `Bearer ${accessToken}`
+    ? Response.json({ id: userId }) : Response.json({}, { status: 401 });
   if (url === `${supabaseUrl}/rest/v1/rpc/reserve_ai_quota`) {
+    quotaCalls++;
     const reservation = JSON.parse(options.body);
     assert.equal(reservation.p_user_id, userId);
     assert.equal(reservation.p_limit, 30);
-    return Response.json({ allowed: true, retry_after_seconds: 3600 });
+    if (quotaOutcome === 'unavailable') throw new Error('Synthetic quota outage');
+    return Response.json({ allowed: quotaOutcome === 'allowed', retry_after_seconds: 3600 });
   }
   assert.equal(new URL(url).hostname, 'generativelanguage.googleapis.com');
   const payload = JSON.parse(options.body);
@@ -77,12 +85,16 @@ const server = createServer(async (incoming, outgoing) => {
 server.listen(0, '127.0.0.1');
 await once(server, 'listening');
 try {
-  const denied = await nativeFetch(`http://127.0.0.1:${server.address().port}/api/ai/chat`, {
-    method: 'POST', body: '{}',
-  });
-  assert.equal(denied.status, 401);
-  assert.equal((await denied.json()).code, 'unauthorized');
+  const endpoint = `http://127.0.0.1:${server.address().port}/api/ai/chat`;
+  for (const bearer of ['', 'invented-token', 'invented.payload.signature', expiredToken]) {
+    const denied = await nativeFetch(endpoint, {
+      method: 'POST', body: '{}', headers: bearer ? { Authorization: `Bearer ${bearer}` } : {},
+    });
+    assert.equal(denied.status, 401);
+    assert.equal((await denied.json()).code, 'unauthorized');
+  }
   assert.equal(modelCalls, 0);
+  assert.equal(quotaCalls, 0);
   for (const [question, presentation, reply] of requests) {
     const response = await nativeFetch(`http://127.0.0.1:${server.address().port}/api/ai/chat`, {
       method: 'POST', headers: { 'content-type': 'application/json', Authorization: `Bearer ${accessToken}` },
@@ -93,7 +105,24 @@ try {
     assert.deepEqual(await response.json(), { reply, actions: [], presentation });
   }
   assert.equal(modelCalls, requests.length);
+  assert.equal(quotaCalls, requests.length);
+  const authenticatedRequest = () => nativeFetch(endpoint, {
+    method: 'POST', headers: { 'content-type': 'application/json', Authorization: `Bearer ${accessToken}` },
+    body: JSON.stringify({ today, messages: [{ role: 'user', text: 'Hola' }] }),
+  });
+  quotaOutcome = 'denied';
+  const exhausted = await authenticatedRequest();
+  assert.equal(exhausted.status, 429);
+  assert.equal(exhausted.headers.get('Retry-After'), '3600');
+  assert.equal((await exhausted.json()).code, 'quota_exceeded');
+  quotaOutcome = 'unavailable';
+  const unavailable = await authenticatedRequest();
+  assert.equal(unavailable.status, 503);
+  assert.equal((await unavailable.json()).code, 'quota_unavailable');
+  assert.equal(quotaCalls, requests.length + 2);
+  assert.equal(modelCalls, requests.length);
   console.log('Coach HTTP probe: 3 requests passed');
+  console.log('AI security HTTP probe: 401/429/503 passed without extra Gemini calls');
 } finally {
   server.closeAllConnections();
   await new Promise(resolve => server.close(resolve));

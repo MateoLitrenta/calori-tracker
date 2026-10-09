@@ -36,4 +36,5 @@ test('compiled Coach function loads without TypeScript sources and serves both f
   const { stdout } = await run(process.execPath, ['--no-experimental-strip-types',
     path.join(artifact, 'probe.mjs')], { timeout: 30_000 });
   assert.match(stdout, /Coach HTTP probe: 3 requests passed/);
+  assert.match(stdout, /AI security HTTP probe: 401\/429\/503 passed without extra Gemini calls/);
 });

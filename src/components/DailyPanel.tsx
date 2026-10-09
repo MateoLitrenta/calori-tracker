@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap, UserProfile } from '../types';
 import { hasEnergyData, formatDateStr, getCaloriesIngested, generateUUID, aggregateEnergy, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure, getBalanceLabel, getBalancePillColor } from '../utils/helpers';
 import { estimateMeal, estimateWorkout } from '../services/aiService';
+import { AIRequestError } from '../services/aiTransport';
 import { supabase } from '../lib/supabase';
 import { MealPhotoPicker, MealThumbnail } from './MealPhoto';
 import EntryFormShell from './EntryFormShell';
@@ -298,7 +299,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       if (!mealName.trim()) setMealName(result.description);
       setMealEstimated(true);
       if (result.assumptions.length) toast(result.assumptions.join(' · '));
-    } catch { toast.error('No pude estimar las calorías. Agregá más detalle o intentá nuevamente.'); }
+    } catch (error) { toast.error(error instanceof AIRequestError ? error.message : 'No pude estimar las calorías. Agregá más detalle o intentá nuevamente.'); }
     finally { setEstimating(false); }
   };
 
@@ -312,7 +313,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         profile: { sex: profile.sex, age: profile.age, weight: profile.weight, height: profile.height } });
       setWorkCals(result.calories); setWorkEstimated(true);
       if (result.assumptions.length) toast(result.assumptions.join(' · '));
-    } catch { toast.error('No pude estimar el gasto. Revisá actividad y duración.'); }
+    } catch (error) { toast.error(error instanceof AIRequestError ? error.message : 'No pude estimar el gasto. Revisá actividad y duración.'); }
     finally { setEstimating(false); }
   };
 
