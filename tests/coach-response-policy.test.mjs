@@ -158,7 +158,9 @@ test('weekly observations distinguish food coverage, exercise distribution and e
     assert.equal(serverContext.recentDays.filter(day => day.calories !== null).length, 3);
     assert.equal(serverContext.recentDays.filter(day => day.steps > 0).length, 3);
     assert.equal(serverContext.recentDays.filter(day => day.workouts.length).length, 1);
-    assert.deepEqual(serverContext, buildCoachContext(input, today));
+    const { historyDays, ...visibleContext } = buildCoachContext(input, today);
+    assert.equal(historyDays.length, 60);
+    assert.deepEqual(serverContext, visibleContext);
   }
   assert.equal(mock.calls.length, 2);
 });
@@ -231,7 +233,9 @@ test('insufficient and omitted data reach the model with evidence rules and no i
     assert.match(prompt, /Ausencia de registros no significa inactividad real/);
     assert.match(prompt, /No inventes entrenamientos, comidas ni hábitos/);
     assert.match(prompt, /listas recortadas o fechas fuera de la ventana, explica qué falta/);
-    assert.deepEqual(serverContext, buildCoachContext(input, today));
+    const { historyDays, ...visibleContext } = buildCoachContext(input, today);
+    assert.equal(historyDays.length, 60);
+    assert.deepEqual(serverContext, visibleContext);
     if (input.records[today]?.meals.length === 9) {
       assert.equal(serverContext.today.omittedMeals, 3);
       assert.equal(serverContext.today.omittedWorkouts, 2);

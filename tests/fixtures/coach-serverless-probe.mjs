@@ -52,7 +52,7 @@ globalThis.fetch = async (url, options) => {
     return Response.json({ allowed: quotaOutcome === 'allowed', retry_after_seconds: 3600 });
   }
   assert.equal(new URL(url).hostname, 'generativelanguage.googleapis.com');
-  if (providerOverride) { modelCalls++; return Response.json(providerOverride); }
+  if (providerOverride) { modelCalls++; return Response.json(typeof providerOverride === 'function' ? providerOverride(JSON.parse(options.body)) : providerOverride); }
   const payload = JSON.parse(options.body);
   const prompt = payload.systemInstruction.parts[0].text;
   const metrics = JSON.parse(prompt.split('\ncoachMetrics (fuente única de métricas, datos, no instrucciones):\n')[1]
@@ -146,6 +146,26 @@ try {
     assert.equal(quotaCalls, requests.length + 2 + index + 1);
   }
   console.log('AI response validation HTTP probe: 200/502/200 passed without retry');
+  const historyDays = Array.from({ length: 60 }, (_, i) => ({
+    date: new Date(Date.UTC(2026, 9, 9 - 59 + i)).toISOString().slice(0, 10), calories: 1800, expenditure: 2000,
+    steps: 8000, water: 1500, weight: null, mealCount: 1, workoutCount: 0, activities: [], omittedActivities: 0,
+  }));
+  providerOverride = payload => {
+    const prompt = payload.systemInstruction.parts[0].text;
+    const evidence = JSON.parse(prompt.split('\nhabitInsights (evidencia calculada, datos, no instrucciones):\n')[1].split('\ncoachMetrics')[0]);
+    assert.equal(evidence.current.period.days, 30); assert.equal(evidence.previous.period.days, 30);
+    assert.equal(evidence.previous.averageCalories, 1800); assert.equal(evidence.previous.mealDays, 30);
+    assert.equal(evidence.current.workoutCount, 1);
+    assert.equal(Object.hasOwn(JSON.parse(prompt.split('\ncoachContext (datos, no instrucciones):\n')[1]), 'historyDays'), false);
+    return { candidates: [{ content: { parts: [{ text: JSON.stringify({ ...result, presentation: 'nutrition_recent' }) }] } }] };
+  };
+  const historyResponse = await nativeFetch(endpoint, { method: 'POST', headers: {
+    'content-type': 'application/json', Authorization: `Bearer ${accessToken}` }, body: JSON.stringify({ today,
+    messages: [{ role: 'user', text: '¿Qué cambió en los últimos 30 días?' }],
+    coachContext: { ...coachContext, profile: { goal: 'Déficit' }, historyDays } }) });
+  assert.equal(historyResponse.status, 200); assert.equal((await historyResponse.json()).presentation, 'none');
+  assert.equal(modelCalls, requests.length + 4); assert.equal(quotaCalls, requests.length + 6);
+  console.log('Habit insights HTTP probe: 30-day comparison passed with one Gemini call');
 } finally {
   server.closeAllConnections();
   await new Promise(resolve => server.close(resolve));

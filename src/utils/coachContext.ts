@@ -1,56 +1,10 @@
 import type { DailyRecord, UserProfile } from '../types';
-import { calculateDailyCalorieTarget, calculateDailyExpenditure, formatDateStr, getCaloriesIngested, hasEnergyData } from './helpers.ts';
+import { calculateDailyCalorieTarget, calculateDailyExpenditure, getCaloriesIngested, hasEnergyData } from './helpers.ts';
+import { coachDates } from './coachDates.ts';
+import { sanitizeCoachContext } from './coachContextContract.ts';
+export { sanitizeCoachContext } from './coachContextContract.ts';
 
-const MAX_MEALS = 6;
-const MAX_WORKOUTS = 3;
-const text = (value: unknown, limit = 100) => typeof value === 'string' ? value.trim().slice(0, limit) : '';
-const number = (value: unknown): number | null => typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null;
-const object = (value: unknown): Record<string, unknown> => value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
-
-export function recentLocalDates(today: string): string[] {
-  const [year, month, day] = today.split('-').map(Number);
-  return Array.from({ length: 7 }, (_, index) => formatDateStr(new Date(year, month - 1, day - 6 + index, 12)));
-}
-
-function compactDay(value: unknown, date: string) {
-  const day = object(value);
-  const meals = Array.isArray(day.meals) ? day.meals : [];
-  const workouts = Array.isArray(day.workouts) ? day.workouts : [];
-  return {
-    date,
-    hasData: day.hasData === true,
-    calories: number(day.calories),
-    expenditure: number(day.expenditure),
-    steps: number(day.steps) ?? 0,
-    water: number(day.water) ?? 0,
-    weight: number(day.weight),
-    meals: meals.slice(0, MAX_MEALS).map(value => {
-      const meal = object(value);
-      return { type: text(meal.type, 20), description: text(meal.description), calories: number(meal.calories),
-        ...(typeof meal.time === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(meal.time) ? { time: meal.time } : {}) };
-    }),
-    workouts: workouts.slice(0, MAX_WORKOUTS).map(value => {
-      const workout = object(value);
-      return { name: text(workout.name), duration: number(workout.duration), calories: number(workout.calories) };
-    }),
-    omittedMeals: Math.max(number(day.omittedMeals) ?? 0, meals.length - MAX_MEALS, 0),
-    omittedWorkouts: Math.max(number(day.omittedWorkouts) ?? 0, workouts.length - MAX_WORKOUTS, 0),
-  };
-}
-
-// Whitelist and bound client context again at the API boundary. Never forward whole objects.
-export function sanitizeCoachContext(value: unknown, today: string) {
-  const source = object(value);
-  const profile = object(source.profile);
-  const current = object(source.today);
-  const days = Array.isArray(source.recentDays) ? source.recentDays.slice(0, 7) : [];
-  return {
-    profile: { name: text(profile.name, 60), sex: text(profile.sex, 20), age: number(profile.age),
-      weight: number(profile.weight), height: number(profile.height) },
-    today: { ...compactDay(current, today), consumed: number(current.consumed), expenditure: number(current.expenditure), target: number(current.target) },
-    recentDays: recentLocalDates(today).map(date => compactDay(days.find(day => object(day).date === date), date)),
-  };
-}
+export const recentLocalDates = coachDates;
 
 export type CoachContext = ReturnType<typeof sanitizeCoachContext>;
 
@@ -68,11 +22,27 @@ function summarizeDay(profile: UserProfile, record: DailyRecord | undefined, dat
 
 export function buildCoachContext(profile: UserProfile, today: string): CoachContext {
   const record = profile.records[today];
-  return sanitizeCoachContext({
-    profile: { name: profile.name, sex: profile.sex, age: profile.age, weight: profile.weight, height: profile.height },
+  const context = sanitizeCoachContext({
+    profile: { name: profile.name, sex: profile.sex, age: profile.age, weight: profile.weight, height: profile.height, goal: profile.goal },
     today: { ...summarizeDay(profile, record, today), consumed: getCaloriesIngested(record), expenditure: calculateDailyExpenditure(profile, record), target: calculateDailyCalorieTarget(profile, record) },
     recentDays: recentLocalDates(today).map(date => summarizeDay(profile, profile.records[date], date)),
+    historyDays: coachDates(today, 60).map(date => {
+      const record = profile.records[date];
+      const activities = [...new Set(record?.workouts.map(workout => workout.activity.trim()).filter(Boolean) ?? [])];
+      return { date, calories: record?.meals.length ? getCaloriesIngested(record) : null,
+        expenditure: hasEnergyData(record) ? calculateDailyExpenditure(profile, record) : null,
+        mealCount: record?.meals.length ?? 0, workoutCount: record?.workouts.length ?? 0,
+        steps: record?.steps ?? 0, water: record?.water ?? 0, weight: record?.weight ?? null,
+        activities: activities.slice(0, 2), omittedActivities: Math.max(0, activities.length - 2) };
+    }),
   }, today);
+  // Keep the established request context budget even with pathological labels.
+  // Drop descriptive labels only; every total and day remains available.
+  if (JSON.stringify(context).length > 23000) for (const day of context.historyDays) {
+    day.omittedActivities += day.activities.length;
+    day.activities = [];
+  }
+  return context;
 }
 
 export function coachSuggestions(context: CoachContext | null): string[] {
