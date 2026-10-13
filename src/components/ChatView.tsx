@@ -4,6 +4,9 @@ import { createPortal } from 'react-dom';
 import { ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, X } from '@phosphor-icons/react';
 import UserAvatar from './UserAvatar';
 import CoachInsightCard from './CoachInsightCard';
+import CoachGoalConfirmation from './CoachGoalConfirmation';
+import { confirmCoachGoal } from '../services/coachGoals';
+import type { CoachGoalProposal } from '../utils/coachGoals';
 import { buildCoachCard, parseCoachCard, type CoachCardSnapshot } from '../utils/coachPresentation';
 import { buildCoachContext, coachSuggestions } from '../utils/coachContext';
 import { useAppStore } from '../hooks/useAppStore';
@@ -189,6 +192,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const mounted = useRef(true);
   const busy = useRef(false);
   const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[] } | null>(null);
+  const [pendingGoal, setPendingGoal] = useState<CoachGoalProposal | null>(null);
   const [isEditingProposal, setIsEditingProposal] = useState(false);
 
   const clearPendingImage = () => {
@@ -203,7 +207,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
 
   const selectImage = async (file?: File | Blob) => {
     setShowPhotoMenu(false);
-    if (!file || imageBusy.current || audioBusy.current || busy.current || pending || !activeProfile) return;
+    if (!file || imageBusy.current || audioBusy.current || busy.current || pending || pendingGoal || !activeProfile) return;
     clearPendingImage();
     if ((file instanceof File && /\.(heic|heif)$/i.test(file.name)) || /image\/(heic|heif)/i.test(file.type)) {
       toast.error('Este formato de imagen no es compatible todavía. Probá sacar la foto desde la cámara de la app o usar JPG/PNG.');
@@ -247,7 +251,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
 
   const openCamera = async () => {
     setShowPhotoMenu(false);
-    if (!navigator.mediaDevices?.getUserMedia || imageBusy.current || audioBusy.current || busy.current || pending) {
+    if (!navigator.mediaDevices?.getUserMedia || imageBusy.current || audioBusy.current || busy.current || pending || pendingGoal) {
       toast.error('No pude acceder a la cámara. Revisá los permisos o elegí una foto de la galería.');
       return;
     }
@@ -427,6 +431,22 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     }
   };
 
+  const confirmGoal = async () => {
+    if (!pendingGoal || busy.current || isPastConversation || dateStr !== formatDateStr(new Date())) return;
+    busy.current = true; setIsTyping(true);
+    const proposal = pendingGoal;
+    try {
+      const saved = await confirmCoachGoal(proposal, today, userId);
+      if (!mounted.current) return;
+      setPendingGoal(null);
+      appendReply(saved.status === 'cancelled' ? 'Objetivo cancelado. Tus registros no cambiaron.'
+        : proposal.operation === 'update' ? 'Objetivo actualizado y guardado. Lo usaré para evaluar tus registros del período.'
+          : 'Objetivo aceptado y guardado. Podés consultarlo en otras conversaciones para revisar tus registros del período.');
+    } catch (error) {
+      if (mounted.current) appendReply(error instanceof Error ? error.message : 'No se pudo guardar el objetivo.');
+    } finally { busy.current = false; if (mounted.current) setIsTyping(false); }
+  };
+
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -494,7 +514,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     }
   };
 
-  const hasPending = !!pending;
+  const hasPending = !!pending || !!pendingGoal;
   useEffect(() => {
     if (!messages.length && !isTyping && !hasPending) return;
     if (cardScrollDecision.current && cardScrollDecision.current.id === messages.at(-1)?.id && !cardScrollDecision.current.nearEnd) return;
@@ -517,6 +537,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     const newHistory = [...messages, userMsg];
     
     setMessages(newHistory);
+    setPendingGoal(null);
     setInputValue('');
     setIsTyping(true);
 
@@ -554,12 +575,15 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       if (proposals.length && /\b(?:registrar[eé]|(?:lo\s+)?voy\s+a\s+(?:registrar(?:lo)?|cargar(?:lo)?))(?!\w)/iu.test(replyText)) {
         replyText = 'Preparé este registro para que lo confirmes.';
       }
+      if (response.goalProposal && /\b(?:guard[eé]|registr[eé]|cancel[eé]|modifiqu[eé]|acept[eé]|actualic[eé])\b|objetivo (?:guardado|aceptado|cancelado|actualizado)/iu.test(response.reply)) {
+        replyText = 'Preparé esta propuesta de objetivo para que la revises y confirmes. Todavía no está guardada.';
+      }
       
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: 'bot',
         text: replyText,
-        coachCard: !requestedActions && attachment?.kind !== 'image'
+        coachCard: !requestedActions && !response.goalProposal && attachment?.kind !== 'image'
           ? buildCoachCard(response.presentation, coachContext) : undefined
       };
       if (botMsg.coachCard) {
@@ -568,6 +592,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         cardScrollDecision.current = { id: botMsg.id, nearEnd: !container || container.scrollHeight - container.clientHeight - container.scrollTop <= 24 };
       }
       setMessages(prev => [...prev, botMsg]);
+      if (response.goalProposal && !requestedActions) setPendingGoal(response.goalProposal);
       if (direct.length) await applyActions(direct, todayStr);
       if (mounted.current && proposals.length) {
         const proposalDate = proposals[0].payload.dateStr as string;
@@ -602,7 +627,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       await handleSend(inputValue);
       return;
     }
-    if (imageBusy.current || audioBusy.current || busy.current || pending) return;
+    if (imageBusy.current || audioBusy.current || busy.current || pending || pendingGoal) return;
     imageBusy.current = true;
     setIsProcessingImage(true);
     try {
@@ -633,7 +658,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
   };
 
   const startRecording = async () => {
-    if (audioBusy.current || imageBusy.current || isCameraOpen || busy.current || pending || !activeProfile || isPastConversation) return;
+    if (audioBusy.current || imageBusy.current || isCameraOpen || busy.current || pending || pendingGoal || !activeProfile || isPastConversation) return;
     recordingCancelled.current = false;
     setShowPhotoMenu(false);
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
@@ -737,7 +762,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           <p className="text-xs text-slate-500 dark:text-gray-400">Coach de nutrición y entrenamiento</p>
         </div>
         <div className="chat-heading-actions ml-auto flex items-center gap-1">
-          <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pending}
+          <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || hasPending}
             aria-label="Historial" aria-expanded={showHistory} className="chat-history-button text-xs font-medium disabled:opacity-50">
             <ClockCounterClockwise className="chat-action-icon" size={19} aria-hidden="true" /><span>Historial</span>
           </button>
@@ -769,6 +794,8 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       {/* Messages Area */}
       <section ref={messagesScrollRef} className="chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4"
         role="log" aria-label="Conversación con Coach" aria-live="polite" aria-relevant="additions text">
+        {pendingGoal && <CoachGoalConfirmation proposal={pendingGoal} busy={isTyping}
+          onConfirm={() => { void confirmGoal(); }} onDismiss={() => setPendingGoal(null)} />}
         {pending && (
           <div className="chat-confirmation order-last rounded-xl border border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/20 p-4 text-sm">
             <p className="font-semibold mb-2">Confirmar registros del {describeDate(pending.dateStr)}</p>
@@ -841,7 +868,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             {!isPastConversation && <div className="chat-empty-suggestions">
               {suggestions.slice(0, 3).map((suggestion, i) => (
                 <button key={i} type="button" onClick={() => handleSend(suggestion)}
-                  disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || !!pending || !activeProfile}
+                  disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !activeProfile}
                   className="chat-suggestion text-xs">
                   {suggestion}
                 </button>
@@ -906,7 +933,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             <button
               key={i}
               onClick={() => handleSend(suggestion)}
-              disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || !!pending || !activeProfile}
+              disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !activeProfile}
               className="chat-suggestion flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] text-slate-700 dark:text-gray-300 hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 disabled:opacity-50 transition-colors whitespace-nowrap shadow-none"
             >
               {suggestion}
@@ -964,7 +991,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
               onChange={e => { const file = e.target.files?.[0]; e.target.value = ''; void selectImage(file); }}
               className="hidden" tabIndex={-1} aria-label="Elegir foto de galería" />
             <button type="button" onClick={() => setShowPhotoMenu(previous => !previous)}
-              disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pending || !activeProfile}
+              disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || hasPending || !activeProfile}
               aria-label="Adjuntar foto de comida" aria-haspopup="menu" aria-expanded={showPhotoMenu}
               className="chat-image-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50">
               <ImageSquare size={20} weight="fill" />
@@ -977,7 +1004,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             )}
           </div>
           <button type="button" onClick={startRecording}
-            disabled={isRecording || isRequestingAudio || isProcessingAudio || isProcessingImage || isCameraOpen || isTyping || !!pending || !activeProfile}
+            disabled={isRecording || isRequestingAudio || isProcessingAudio || isProcessingImage || isCameraOpen || isTyping || hasPending || !activeProfile}
             aria-label="Iniciar dictado por voz"
             className={`chat-audio-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50 ${isRecording ? 'chat-audio-recording' : ''}`}>
             <Microphone size={20} weight="fill" />

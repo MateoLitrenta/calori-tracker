@@ -23,6 +23,7 @@ const boundaries = {
     'syncDeleteMeal', 'syncDeleteWorkout', 'syncUpdateMeal', 'syncUpdateWorkout', 'syncProfile',
     'syncAvatarPath', 'completeOnboarding', 'deleteUserRecords'].map(name =>
     `export const ${name} = (...args) => globalThis.__syncHarness.db.${name}(...args);`).join('\n'),
+  'services/coachGoals.ts': 'export const confirmCoachGoal = (...args) => globalThis.__syncHarness.confirmGoal(...args);',
   'components/ThemeProvider.tsx': 'export const ThemeProvider = ({children}) => children;',
   'components/Sidebar.tsx': blank,
   'components/ProfileView.tsx': blank,
@@ -87,7 +88,8 @@ async function mountApp(t, actions, fail = false) {
   state.getSession = async () => ({ data: { session: { user: { id: state.currentProfile.user_id } } } });
   state.subscribe = callback => { state.listeners.add(callback); return { data: { subscription: {
     unsubscribe: () => state.listeners.delete(callback) } } }; };
-  state.ai = async () => { state.aiCalls++; return { reply: 'Revisá esta propuesta.', actions, presentation: 'none' }; };
+  state.ai = async () => { state.aiCalls++; return { reply: 'Revisá esta propuesta.', actions, presentation: 'none',
+    ...(state.goalProposal ? { goalProposal: state.goalProposal } : {}) }; };
   state.db = {
     fetchUserData: async () => { state.reads++; return structuredClone({ ...state.currentProfile,
       records: state.persisted && state.persistedUser === state.currentProfile.user_id ? { [today]: state.persisted } : {} }); },
@@ -220,4 +222,61 @@ test('a pending Coach save cannot publish another account’s records after a se
   assert.equal(state.historyRecords[today], undefined);
   assert.equal(state.persistedUser, profile.user_id);
   assert.equal(state.mealWrites, 1);
+});
+
+const goalProposal = { operation: 'accept', id: '00000000-0000-0000-0000-000000000055', type: 'workout_sessions',
+  target: 3, startDate: today, endDate: today, stepThreshold: null };
+function prepareGoal(state, failure = false) {
+  state.goalProposal = goalProposal; state.goalWrites = 0;
+  state.confirmGoal = async (proposed, _today, userId) => {
+    state.goalWrites++; await state.goalGate;
+    if (failure) throw new Error('No se pudo guardar el objetivo.');
+    state.savedGoalOwner = userId;
+    return { ...proposed, status:'active',version:1,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString() };
+  };
+  state.goalGate = new Promise(resolve => { state.releaseGoal = resolve; });
+}
+test('a suggested goal writes once only after confirmation and does not create activities across Home/Data navigation', async t => {
+  const state = await mountApp(t, []); prepareGoal(state); await sendActions(state);
+  assert.equal(state.goalWrites,0); assert.match(state.document.querySelector('.chat-messages').textContent,/Solo se guarda al confirmar/);
+  assert.match(state.document.querySelector('.chat-messages').textContent,/Revisá esta propuesta/);
+  const button = [...state.document.querySelectorAll('button')].find(element => element.textContent === 'Aceptar objetivo');
+  await act(async () => { button.click(); button.click(); await turn(); });
+  assert.equal(state.goalWrites,1); assert.ok(!state.document.querySelector('.chat-messages').textContent.includes('Objetivo aceptado y guardado'));
+  await act(async () => { state.releaseGoal(); await turn(); });
+  assert.match(state.document.querySelector('.chat-messages').textContent,/Objetivo aceptado y guardado/);
+  await click(state,'Inicio'); await click(state,'Datos'); await click(state,'Coach');
+  assert.equal(state.logWrites,0); assert.equal(state.workoutWrites,0); assert.equal(state.mealWrites,0);
+  assert.equal(state.aiCalls,1); assert.equal(state.goalWrites,1);
+});
+test('failed goal persistence never claims acceptance; dismissing a proposal performs no write', async t => {
+  const state = await mountApp(t, []); prepareGoal(state,true); await sendActions(state);
+  await click(state,'Aceptar objetivo'); await act(async () => { state.releaseGoal(); await turn(); });
+  assert.match(state.document.querySelector('.chat-messages').textContent,/No se pudo guardar el objetivo/);
+  assert.ok(!state.document.querySelector('.chat-messages').textContent.includes('Objetivo aceptado y guardado'));
+  await click(state,'Descartar propuesta'); assert.equal(state.document.querySelector('.chat-confirmation'),null);
+  assert.equal(state.goalWrites,1); assert.equal(state.logWrites,0);
+});
+test('a pending goal confirmation cannot publish success into a different account’s conversation', async t => {
+  const state=await mountApp(t,[]); prepareGoal(state); await sendActions(state); await click(state,'Aceptar objetivo');
+  state.currentProfile={...profile,id:'profile-other',user_id:'user-other'};
+  await act(async () => { for(const listener of state.listeners) listener('SIGNED_IN',{user:{id:state.currentProfile.user_id}}); await turn(); });
+  await act(async () => { state.releaseGoal(); await turn(); });
+  await click(state,'Coach');
+  assert.ok(!state.document.querySelector('.chat-messages').textContent.includes('Objetivo aceptado y guardado'));
+  assert.equal(state.savedGoalOwner,profile.user_id); assert.equal(state.logWrites,0);
+});
+test('a proposed goal can be personalized conversationally before acceptance without writing either goal',async t=>{
+  const state=await mountApp(t,[]);prepareGoal(state);await sendActions(state);
+  const oldId=state.goalProposal.id;
+  state.goalProposal={...goalProposal,id:'00000000-0000-0000-0000-000000000066',target:2};
+  await act(async()=>{
+    const input=state.document.querySelector('textarea');assert.equal(input.disabled,false);
+    Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype,'value').set.call(input,'¿Y si solo puedo entrenar dos días?');
+    input.dispatchEvent(new window.Event('input',{bubbles:true}));
+  });
+  await act(async()=>{state.document.querySelector('form').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));await turn();});
+  assert.notEqual(state.goalProposal.id,oldId);assert.equal(state.goalWrites,0);
+  assert.match(state.document.querySelector('.chat-confirmation').textContent,/2 sesiones/);
+  assert.equal(state.aiCalls,2);assert.equal(state.logWrites,0);
 });

@@ -1,5 +1,6 @@
 import type { CoachContext } from '../utils/coachContext';
 import { requestAI } from './aiTransport.ts';
+import { parseGoalProposal, type CoachGoalProposal } from '../utils/coachGoals.ts';
 
 export interface ChatMessage {
   role: 'user' | 'bot';
@@ -79,7 +80,7 @@ export async function generateAIResponse(
   today: string,
   attachment?: MediaAttachment,
   coachContext?: CoachContext
-): Promise<{ reply: string; actions: unknown; presentation: CoachPresentationHint }> {
+): Promise<{ reply: string; actions: unknown; presentation: CoachPresentationHint; goalProposal?: CoachGoalProposal }> {
   const payload = await requestAI({
     messages: messages.map(({ role, text, localTime }) => ({ role, text, localTime })),
     systemInstruction,
@@ -94,7 +95,8 @@ export async function generateAIResponse(
   const actions = payload.actions ?? [];
   const presentation = !coachContext || attachment?.kind === 'image' || (Array.isArray(actions) && actions.length > 0)
     ? 'none' : normalizeCoachPresentation(payload.presentation);
-  return { reply: payload.reply.trim(), actions, presentation };
+  const goalProposal = !attachment && Array.isArray(actions) && actions.length === 0 ? parseGoalProposal(payload.goalProposal) : undefined;
+  return { reply: payload.reply.trim(), actions, presentation, ...(goalProposal ? { goalProposal } : {}) };
 }
 
 export async function transcribeAudio(attachment: Extract<MediaAttachment, { kind: 'audio' }>): Promise<string> {

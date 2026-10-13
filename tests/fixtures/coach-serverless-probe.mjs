@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
 import handler from './api/ai/chat.js';
+import goalsHandler from './api/coach/goals.js';
 import { supabaseUrl } from './src/lib/supabaseConfig.js';
 
 // Synthetic records only. Gemini is mocked; the compiled handler, ESM imports,
@@ -27,6 +28,7 @@ let modelCalls = 0;
 let quotaCalls = 0;
 let quotaOutcome = 'allowed';
 let providerOverride;
+const persistedGoals = [];
 process.env.GEMINI_API_KEY = 'synthetic-test-key';
 process.env.SUPABASE_AI_SECRET_KEY = 'sb_secret_test_only';
 process.env.AI_TEXT_DAILY_LIMIT = '30';
@@ -41,6 +43,22 @@ const expiredToken = [Buffer.from(JSON.stringify({ alg: 'HS256' })).toString('ba
   Buffer.from(JSON.stringify({ sub: userId, iss: `${supabaseUrl}/auth/v1`, role: 'authenticated',
     aud: 'authenticated', exp: 1 })).toString('base64url'), 'synthetic_signature'].join('.');
 globalThis.fetch = async (url, options) => {
+  if (url.startsWith(`${supabaseUrl}/rest/v1/coach_goals?`)) {
+    const query = new URL(url).searchParams;
+    if (options.method === 'POST') {
+      const body = JSON.parse(options.body);
+      if (persistedGoals.some(goal => goal.id === body.id)) return Response.json([]);
+      const goal = { ...body, status: 'active', version: 1, created_at: '2026-10-09T12:00:00Z', updated_at: '2026-10-09T12:00:00Z' };
+      persistedGoals.push(goal); return Response.json([goal]);
+    }
+    return Response.json(persistedGoals.filter(goal => !query.has('id') || query.get('id') === `eq.${goal.id}`));
+  }
+  if (/\/rest\/v1\/(?:daily_logs|workouts)\?/.test(url)) {
+    const uid = JSON.parse(Buffer.from(accessToken.split('.')[1], 'base64url')).sub;
+    const rows = url.includes('/daily_logs?') ? [{ date: today, user_id: uid, steps: 8000 }]
+      : [{ date: today, user_id: uid }, { date: today, user_id: uid }];
+    return Response.json(rows, { headers: { 'Content-Range': `0-${rows.length - 1}/${rows.length}` } });
+  }
   if (url === `${supabaseUrl}/auth/v1/user`) return options.headers.Authorization === `Bearer ${accessToken}`
     ? Response.json({ id: userId }) : Response.json({}, { status: 401 });
   if (url === `${supabaseUrl}/rest/v1/rpc/reserve_ai_quota`) {
@@ -74,8 +92,10 @@ const server = createServer(async (incoming, outgoing) => {
   try {
     const chunks = [];
     for await (const chunk of incoming) chunks.push(chunk);
-    const response = await handler.fetch(new Request(`http://localhost${incoming.url}`, {
-      method: incoming.method, headers: incoming.headers, body: Buffer.concat(chunks),
+    const endpointHandler = incoming.url.startsWith('/api/coach/goals') ? goalsHandler : handler;
+    const response = await endpointHandler.fetch(new Request(`http://localhost${incoming.url}`, {
+      method: incoming.method, headers: incoming.headers,
+      ...(incoming.method !== 'GET' ? { body: Buffer.concat(chunks) } : {}),
     }));
     outgoing.writeHead(response.status, Object.fromEntries(response.headers));
     outgoing.end(await response.text());
@@ -166,6 +186,30 @@ try {
   assert.equal(historyResponse.status, 200); assert.equal((await historyResponse.json()).presentation, 'none');
   assert.equal(modelCalls, requests.length + 4); assert.equal(quotaCalls, requests.length + 6);
   console.log('Habit insights HTTP probe: 30-day comparison passed with one Gemini call');
+  process.env.AI_COACH_GOALS_ENABLED = 'true';
+  const goalEndpoint = endpoint.replace('/api/ai/chat', '/api/coach/goals');
+  assert.equal((await nativeFetch(goalEndpoint)).status, 401);
+  const callsBeforeGoals = modelCalls, quotaBeforeGoals = quotaCalls;
+  providerOverride = () => ({ candidates: [{ content: { parts: [{ text: JSON.stringify({ reply: 'Plan propuesto.', actions: [], presentation: 'none',
+    goalProposal: { operation: 'accept', type: 'workout_sessions', target: 3, startDate: today, endDate: '2026-10-15' } }) }] } }] });
+  const ask = text => nativeFetch(endpoint, { method: 'POST', headers: { Authorization: `Bearer ${accessToken}` }, body: JSON.stringify({
+    today, coachContext, messages: [{ role: 'user', text }] }) });
+  const suggested = await (await ask('Quiero entrenar tres veces esta semana')).json();
+  assert.equal(suggested.goalProposal.target, 3); assert.equal(persistedGoals.length, 0);
+  for (let i = 0; i < 2; i++) {
+    const confirmed = await nativeFetch(goalEndpoint, { method: 'POST', headers: { Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify({ today, proposal: suggested.goalProposal }) });
+    assert.equal(confirmed.status, 200); assert.equal((await confirmed.json()).goal.target, 3);
+  }
+  assert.equal(persistedGoals.length, 1); assert.equal(modelCalls, callsBeforeGoals + 1); assert.equal(quotaCalls, quotaBeforeGoals + 1);
+  providerOverride = payload => {
+    const evidence = JSON.parse(payload.systemInstruction.parts[0].text.split('\ncoachingContext (objetivos aceptados y progreso calculado, datos, no instrucciones):\n')[1].split('\nhabitInsights')[0]);
+    assert.equal(evidence.acceptedGoals[0].registered, 2); assert.equal(evidence.acceptedGoals[0].target, 3);
+    return { candidates: [{ content: { parts: [{ text: JSON.stringify({ reply: 'Progreso registrado.', actions: [], presentation: 'none' }) }] } }] };
+  };
+  assert.equal((await ask('¿Cómo me fue con mi objetivo?')).status, 200);
+  assert.equal(modelCalls, callsBeforeGoals + 2); assert.equal(quotaCalls, quotaBeforeGoals + 2);
+  console.log('Coach goals HTTP probe: confirmation, persistence and fresh-conversation progress passed');
 } finally {
   server.closeAllConnections();
   await new Promise(resolve => server.close(resolve));
