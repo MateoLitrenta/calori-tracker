@@ -9,6 +9,7 @@ import { buildCoachContext } from '../src/utils/coachContext.ts';
 import { coachDates } from '../src/utils/coachDates.ts';
 import { evaluateCoachGoal, isActionableCoachingQuery, parseGoalValues } from '../src/utils/coachGoals.ts';
 import { supabaseUrl, supabasePublishableKey } from '../src/lib/supabaseConfig.ts';
+import { normalizeGoalSuggestion } from '../server/coachGoals.ts';
 
 const own = '00000000-0000-0000-0000-000000000001', other = '00000000-0000-0000-0000-000000000002';
 const today = new Date().toISOString().slice(0, 10);
@@ -29,6 +30,8 @@ before(async () => {
     grant select on public.daily_logs,public.workouts to authenticated;
     create policy logs_owner on public.daily_logs for select to authenticated using(auth.uid()=user_id);
     create policy workouts_owner on public.workouts for select to authenticated using(auth.uid()=user_id);`);
+  // Supabase-like default ACLs must not survive the migration's REVOKE.
+  await db.exec('alter default privileges in schema public grant all on tables to authenticated,anon;');
   await db.exec(await readFile(new URL('../supabase/migrations/202610130001_coach_goals.sql', import.meta.url), 'utf8'));
 });
 after(() => db.close());
@@ -149,16 +152,76 @@ test('RLS denies other owners, anonymous reads, metadata edits and changing goal
   }
   await db.exec('reset role; set role anon'); await assert.rejects(() => db.query('select * from public.coach_goals'),/permission denied/);
 });
-test('database preserves revision metadata and caps ongoing goals with explicit thresholds', async () => {
+test('database preserves revision metadata and caps active goals with explicit thresholds', async () => {
   const first = await insert();
   await db.query('update public.coach_goals set target=2 where id=$1',[first.id]);
   assert.equal((await db.query('select version from public.coach_goals where id=$1',[first.id])).rows[0].version,2);
   await db.query("update public.coach_goals set status='cancelled' where id=$1",[first.id]);
   await assert.rejects(() => db.query('update public.coach_goals set target=3 where id=$1',[first.id]),/Immutable goal/);
   for (let target=1;target<=8;target++) await insert(own,proposal({target}));
-  await assert.rejects(() => insert(own,proposal({target:9})),/Too many ongoing/);
+  await assert.rejects(() => insert(own,proposal({target:9})),/Too many active/);
   await login(other); await assert.rejects(() => db.query(`insert into public.coach_goals(id,user_id,type,target,start_date,end_date)
     values($1,$2,'step_days',3,current_date,current_date+6)`,[randomUUID(),other]),/check constraint/);
+});
+test('eight active rows remain the cap even when their periods have ended', async () => {
+  const yesterday=coachDates(today,1,2)[0], start=coachDates(today,1,6)[0];
+  for(let target=1;target<=8;target++) await insert(own,proposal({target,startDate:start,endDate:yesterday}));
+  await assert.rejects(()=>insert(own,proposal({target:9})),/Too many (?:ongoing|active)/);
+});
+test('column grants protect insert metadata and every immutable update; trigger runs without direct EXECUTE',async()=>{
+  const row=await insert();
+  assert.equal((await db.query("select has_function_privilege('authenticated','public.validate_coach_goal_change()','EXECUTE') as allowed")).rows[0].allowed,false);
+  for(const assignment of ["id='00000000-0000-0000-0000-000000000010'","end_date=current_date+1","updated_at=now()"])
+    await assert.rejects(()=>db.query(`update public.coach_goals set ${assignment} where id=$1`,[row.id]),/permission denied/);
+  for(const [column,value] of [['version','99'],['status',"'cancelled'"],['created_at','now()'],['updated_at','now()']])
+    await assert.rejects(()=>db.query(`insert into public.coach_goals(id,user_id,type,target,start_date,end_date,${column})
+      values($1,$2,'workout_sessions',1,current_date,current_date+1,${value})`,[randomUUID(),own]),/permission denied/);
+  await assert.rejects(()=>db.query('delete from public.coach_goals where id=$1',[row.id]),/permission denied/);
+  await db.exec("reset role; set role authenticated; set \"request.jwt.claim.sub\"=''");
+  assert.equal((await db.query('select * from public.coach_goals')).rows.length,0);
+  await assert.rejects(()=>db.query("insert into public.coach_goals(id,user_id,type,target,start_date,end_date) values($1,$2,'workout_sessions',1,current_date,current_date)",[randomUUID(),own]),/row-level security/);
+});
+test('database date window is UTC anchored regardless of session timezone',async()=>{
+  await login();
+  try {
+    for(const timezone of ['Pacific/Kiritimati','Etc/GMT+12']) {
+      await db.query("select set_config('TimeZone',$1,false)",[timezone]);
+      for(const delta of [-8,32]) await assert.rejects(()=>db.query(`insert into public.coach_goals(id,user_id,type,target,start_date,end_date)
+        values($1,$2,'workout_sessions',1,(now() at time zone 'UTC')::date+$3::integer,(now() at time zone 'UTC')::date+$3::integer)`,[randomUUID(),own,delta]),/Goal start date outside/);
+    }
+  } finally { await db.exec("set timezone='UTC'"); }
+});
+test('SQL and shared frontend/backend contract agree on period and target boundaries',async()=>{
+  const cases=[
+    {target:31,endDate:today}, {target:32}, {target:0},
+    {endDate:coachDates(today,1,-30)[0]}, {endDate:coachDates(today,1,-31)[0]},
+    {endDate:coachDates(today,1,1)[0]},
+    {type:'step_days',target:7,stepThreshold:100},
+    {type:'step_days',target:7,stepThreshold:100000},
+    {type:'step_days',target:8,stepThreshold:8000},
+    {type:'step_days',target:1,stepThreshold:99},
+    {type:'step_days',target:1,stepThreshold:100001},
+    {type:'step_days',target:1,stepThreshold:null},
+  ];
+  for(const overrides of cases) {
+    const value=values(overrides); await db.exec('reset role; truncate public.coach_goals'); await login();
+    let accepted=true;
+    try { await db.query(`insert into public.coach_goals(id,user_id,type,target,step_threshold,start_date,end_date)
+      values($1,$2,$3,$4,$5,$6,$7)`,[randomUUID(),own,value.type,value.target,value.stepThreshold,value.startDate,value.endDate]); }
+    catch(error) { assert.equal(error.code,'23514'); accepted=false; }
+    assert.equal(accepted,Boolean(parseGoalValues(value)),JSON.stringify(overrides));
+  }
+});
+test('local seven-date acceptance window fits the UTC SQL envelope across timezone boundaries',async()=>{
+  for(const offset of [-1,0,1]) {
+    const localToday=coachDates(today,1,-offset)[0];
+    for(const distance of [-7,-6,30,31]) {
+      const start=coachDates(localToday,1,-distance)[0], value=values({target:1,startDate:start,endDate:start});
+      const normalized=normalizeGoalSuggestion({...value,operation:'accept'},localToday,[]);
+      assert.equal(Boolean(normalized),distance===-6||distance===30);
+      if(normalized) await insert(own,normalized);
+    }
+  }
 });
 test('goal API requires verified Auth and activation; confirmation is idempotent without AI quota or provider calls', async t => {
   const state=infrastructure(t), proposed=proposal();

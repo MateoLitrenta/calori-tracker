@@ -31,19 +31,24 @@ create policy coach_goals_insert_owner on public.coach_goals for insert to authe
 create policy coach_goals_update_owner on public.coach_goals for update to authenticated
   using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
-create function public.validate_coach_goal_change() returns trigger language plpgsql
-  security invoker set search_path = pg_catalog, public as $$
+create function public.validate_coach_goal_change() returns trigger language plpgsql volatile
+  security invoker set search_path = pg_catalog, public set timezone = 'UTC' as $$
 begin
   if tg_op = 'INSERT' then
+    -- The count after the lock needs a fresh snapshot. A repeatable-read
+    -- transaction can otherwise miss a committed concurrent eighth goal.
+    if current_setting('transaction_isolation') not in ('read committed', 'read uncommitted') then
+      raise exception 'Goal inserts require read committed isolation' using errcode = '25000';
+    end if;
     if new.start_date < current_date - 7 or new.start_date > current_date + 31 then
       raise exception 'Goal start date outside acceptance window' using errcode = '23514';
     end if;
-    -- Bound ongoing commitments atomically, including concurrent devices.
+    -- Bound all active goals, including ended periods, across devices.
     perform pg_advisory_xact_lock(hashtextextended(new.user_id::text, 0));
     -- Same-ID retries remain idempotent; other owners are invisible via RLS.
     if not exists (select 1 from public.coach_goals where id = new.id) and
-      (select count(*) from public.coach_goals where user_id = new.user_id and status = 'active' and end_date >= current_date - 1) >= 8 then
-      raise exception 'Too many ongoing goals' using errcode = '23514';
+      (select count(*) from public.coach_goals where user_id = new.user_id and status = 'active') >= 8 then
+      raise exception 'Too many active goals' using errcode = '23514';
     end if;
   else
     if old.status = 'cancelled' or new.id <> old.id or new.user_id <> old.user_id or new.type <> old.type
