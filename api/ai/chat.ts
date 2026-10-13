@@ -3,7 +3,8 @@ import { buildCoachCard } from '../../src/utils/coachCardMetrics.ts';
 import { sanitizeCoachContext } from '../../src/utils/coachContextContract.ts';
 import { buildHabitInsights, isHabitQuery, requestsHabitDetails, resolveHabitPeriod } from '../../src/utils/habitInsights.ts';
 import { evaluateCoachGoal, isActionableCoachingQuery, type CoachGoal } from '../../src/utils/coachGoals.ts';
-import { coachGoalsEnabled, normalizeGoalSuggestion, readCoachGoals, readGoalActivity } from '../../server/coachGoals.ts';
+import { coachGoalsEnabled, readCoachGoals, readGoalActivity } from '../../server/coachGoals.ts';
+import { resolveCoachGoalProposal } from '../../server/coachGoalProposal.ts';
 import { ACTIONABLE_COACHING_INSTRUCTIONS } from '../../server/coachCoaching.ts';
 import { coachDates } from '../../src/utils/coachDates.ts';
 import { AIError, aiErrorResponse, authenticateAIRequest, fetchGemini, logAIRequest, readAIRequest,
@@ -502,9 +503,10 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
           if (action?.type === 'add_meal') action.estimated = true;
         }
       }
-      const goalProposal = actionableQuery && goalAvailability === 'available' && result.actions.length === 0
-        ? normalizeGoalSuggestion(result.goalProposal, body.today, acceptedGoals) : undefined;
-      return json({ reply: result.reply, actions: result.actions, ...(goalProposal ? { goalProposal } : {}),
+      const goalResult = actionableQuery && result.actions.length === 0
+        ? resolveCoachGoalProposal({ text: lastMessage.text, today: body.today, reply: result.reply,
+          suggestion: result.goalProposal, availability: goalAvailability, goals: acceptedGoals }) : { reply: result.reply };
+      return json({ ...goalResult, actions: result.actions,
         presentation: actionableQuery || !coachContext || habitPeriod !== 7 || result.actions.length > 0 || attachment?.kind === 'image'
           ? 'none' : normalizePresentation(result.presentation) });
     } catch (error) {

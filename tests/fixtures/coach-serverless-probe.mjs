@@ -190,12 +190,14 @@ try {
   const goalEndpoint = endpoint.replace('/api/ai/chat', '/api/coach/goals');
   assert.equal((await nativeFetch(goalEndpoint)).status, 401);
   const callsBeforeGoals = modelCalls, quotaBeforeGoals = quotaCalls;
-  providerOverride = () => ({ candidates: [{ content: { parts: [{ text: JSON.stringify({ reply: 'Plan propuesto.', actions: [], presentation: 'none',
-    goalProposal: { operation: 'accept', type: 'workout_sessions', target: 3, startDate: today, endDate: '2026-10-15' } }) }] } }] });
+  providerOverride = () => ({ candidates: [{ content: { parts: [{ text: JSON.stringify({ reply: 'Te propongo un objetivo de tres sesiones. ¿Quieres confirmarlo?', actions: [], presentation: 'none' }) }] } }] });
   const ask = text => nativeFetch(endpoint, { method: 'POST', headers: { Authorization: `Bearer ${accessToken}` }, body: JSON.stringify({
     today, coachContext, messages: [{ role: 'user', text }] }) });
-  const suggested = await (await ask('Quiero entrenar tres veces esta semana')).json();
+  const explicitGoal='Quiero establecer un objetivo de tres entrenamientos durante los próximos siete días y guardarlo en Calori';
+  const suggested = await (await ask(explicitGoal)).json();
   assert.equal(suggested.goalProposal.target, 3); assert.equal(persistedGoals.length, 0);
+  assert.equal(suggested.goalProposal.startDate,today);assert.equal(suggested.goalProposal.endDate,'2026-10-15');
+  assert.match(suggested.reply,/todavía no está guardada/);
   for (let i = 0; i < 2; i++) {
     const confirmed = await nativeFetch(goalEndpoint, { method: 'POST', headers: { Authorization: `Bearer ${accessToken}` },
       body: JSON.stringify({ today, proposal: suggested.goalProposal }) });
@@ -210,6 +212,18 @@ try {
   assert.equal((await ask('¿Cómo me fue con mi objetivo?')).status, 200);
   assert.equal(modelCalls, callsBeforeGoals + 2); assert.equal(quotaCalls, quotaBeforeGoals + 2);
   console.log('Coach goals HTTP probe: confirmation, persistence and fresh-conversation progress passed');
+  providerOverride=()=>({candidates:[{content:{parts:[{text:JSON.stringify({reply:'Propuesta válida.',actions:[],
+    goalProposal:{operation:'accept',type:'workout_sessions',target:2,startDate:today,endDate:'2026-10-15'}})}]}}]});
+  assert.equal((await (await ask('Quiero entrenar dos veces esta semana')).json()).goalProposal.target,2);
+  process.env.AI_COACH_GOALS_ENABLED='false';
+  const disabled=await (await ask(explicitGoal)).json();assert.equal(disabled.goalProposal,undefined);assert.match(disabled.reply,/no están habilitados/);
+  process.env.AI_COACH_GOALS_ENABLED='true';
+  providerOverride=()=>({candidates:[{content:{parts:[{text:JSON.stringify({reply:'El objetivo está listo para guardar. ¿Quieres confirmarlo?',actions:[],
+    goalProposal:{operation:'accept',type:'workout_sessions',target:3,startDate:'2026-02-30',endDate:today}})}]}}]});
+  const invalid=await (await ask('Quiero establecer un objetivo de entrenamiento')).json();assert.equal(invalid.goalProposal,undefined);assert.match(invalid.reply,/No pude preparar/);
+  const before429=modelCalls;quotaOutcome='denied';assert.equal((await ask(explicitGoal)).status,429);
+  assert.equal(modelCalls,before429);assert.equal(persistedGoals.length,1);
+  console.log('Coach goal confirmation HTTP probe: omitted object, valid object, invalid dates, disabled flag and 429 passed');
 } finally {
   server.closeAllConnections();
   await new Promise(resolve => server.close(resolve));
