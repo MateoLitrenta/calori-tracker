@@ -63,7 +63,7 @@ function infrastructure(t) {
       try { return Response.json({ id: JSON.parse(Buffer.from(header.split('.')[1], 'base64url').toString()).sub }); }
       catch { return new Response('', { status: 401 }); }
     }
-    if (url === `${supabaseUrl}/rest/v1/rpc/reserve_ai_quota`) { state.quotas++; return Response.json({ allowed: true, retry_after_seconds: 3600 }); }
+    if (url === `${supabaseUrl}/rest/v1/rpc/reserve_ai_quota`) { state.quotas++; return Response.json({ allowed: !state.quotaDenied, retry_after_seconds: 3600 }); }
     if (/\/rest\/v1\/(?:daily_logs|workouts)\?/.test(url)) {
       assert.equal(options.headers.apikey,supabasePublishableKey); assert.equal(options.headers.Prefer,'count=exact');
       if(state.activityDown) return new Response('private activity error',{status:500});
@@ -320,4 +320,38 @@ test('bounded goal context has measurable overhead and preserves existing messag
   assert.equal(ctx.historyDays.length,60);assert.ok(JSON.stringify(ctx).length<24000);
   await state.chat(users(Array.from({length:20},()=> '¿Cómo me fue con mi objetivo?')),ctx);
   assert.equal(state.prompts.at(-1).contents.length,10);assert.equal(state.modelCalls,3);assert.equal(state.quotas,3);
+});
+test('exact seven-day goal is confirmable when Gemini only replies with text, with no write before acceptance',async t=>{
+  const state=infrastructure(t);
+  state.result={reply:'Te propongo establecer un objetivo de 3 sesiones. ¿Quieres confirmarlo?',actions:[],presentation:'none'};
+  const response=await state.chat(users(['Quiero establecer un objetivo de 3 sesiones de entrenamiento durante los próximos 7 días. Quiero guardarlo en Calori para que puedas hacer seguimiento de mi progreso.']),context({}));
+  assert.equal(response.status,200);const body=await response.json();
+  assert.equal(body.goalProposal.target,3);assert.equal(body.goalProposal.startDate,today);
+  assert.equal(body.goalProposal.endDate,coachDates(today,1,-6)[0]);assert.match(body.reply,/todavía no está guardada/);
+  assert.equal(state.writes,0);assert.equal(state.modelCalls,1);assert.equal(state.quotas,1);
+  state.quotaDenied=true;
+  assert.equal((await state.goals({proposal:body.goalProposal})).status,200);
+  assert.equal(state.writes,1);assert.equal(state.modelCalls,1);assert.equal(state.quotas,1);
+  state.result={reply:'Progreso registrado.',actions:[],presentation:'none'};state.quotaDenied=false;
+  assert.equal((await state.chat(users(['¿Cómo me fue con mi objetivo?']),context({}))).status,200);
+  assert.equal(coaching(state.prompts.at(-1)).acceptedGoals[0].id,body.goalProposal.id);
+});
+test('invalid, ambiguous and disabled goal responses cannot promise nonexistent confirmation or persistence',async t=>{
+  const state=infrastructure(t);
+  state.result={reply:'Tu objetivo está listo para guardar. ¿Quieres confirmarlo?',actions:[],presentation:'none',
+    goalProposal:{...values(),operation:'accept',startDate:'2026-02-30'}};
+  for(const text of ['Quiero establecer un objetivo de entrenamiento','No quiero guardar un objetivo','Si quisiera establecer un objetivo','¿Cuáles son mis objetivos?']) {
+    const response=await state.chat(users([text]),context({}));assert.equal(response.status,200);
+    const body=await response.json();assert.equal(body.goalProposal,undefined);assert.ok(!body.reply.includes('listo para guardar'));
+  }
+  process.env.AI_COACH_GOALS_ENABLED='false';
+  const disabled=await (await state.chat(users(['Quiero establecer un objetivo de tres entrenamientos durante los próximos siete días y guardarlo en Calori']),context({}))).json();
+  assert.equal(disabled.goalProposal,undefined);assert.match(disabled.reply,/no están habilitados/);
+  assert.equal(state.writes,0);
+});
+test('429 on a goal request reserves quota once without provider calls or unconfirmed writes',async t=>{
+  const state=infrastructure(t);state.quotaDenied=true;
+  const response=await state.chat(users(['Quiero establecer un objetivo de tres entrenamientos durante los próximos siete días y guardarlo en Calori']),context({}));
+  assert.equal(response.status,429);assert.equal(state.quotas,1);assert.equal(state.modelCalls,0);assert.equal(state.writes,0);
+  const body=await response.json();assert.equal(body.goalProposal,undefined);assert.ok(body.error);
 });

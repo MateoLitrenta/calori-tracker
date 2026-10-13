@@ -40,4 +40,5 @@ test('compiled Coach function loads without TypeScript sources and serves both f
   assert.match(stdout, /AI response validation HTTP probe: 200\/502\/200 passed without retry/);
   assert.match(stdout, /Habit insights HTTP probe: 30-day comparison passed with one Gemini call/);
   assert.match(stdout, /Coach goals HTTP probe: confirmation, persistence and fresh-conversation progress passed/);
+  assert.match(stdout, /Coach goal confirmation HTTP probe: omitted object, valid object, invalid dates, disabled flag and 429 passed/);
 });

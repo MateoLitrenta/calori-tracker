@@ -7,6 +7,9 @@ import { act } from 'react';
 import { JSDOM } from 'jsdom';
 import ts from 'typescript';
 import { calculateDailyExpenditure, formatDateStr } from '../src/utils/helpers.ts';
+import chatHandler from '../api/ai/chat.ts';
+import goalsHandler from '../api/coach/goals.ts';
+import { supabaseUrl } from '../src/lib/supabaseConfig.ts';
 
 // Real React, root entry point, store, navigation and screen event handlers.
 // Only persistence/Auth/AI and unrelated visual dependencies are simulated.
@@ -69,7 +72,7 @@ const today = formatDateStr(new Date());
 const profile = { id: 'profile-test', user_id: 'user-test', name: 'Test', age: 30, sex: 'Masculino',
   weight: 70, height: 170, goal: 'Mantenimiento', activity: 'Moderado', onboarding_completed: true, records: {} };
 const turn = () => new Promise(setImmediate);
-async function mountApp(t, actions, fail = false) {
+async function mountApp(t, actions, fail = false, setup) {
   const dom = new JSDOM('<div id="root"></div>', { url: 'https://calori.test/app', pretendToBeVisual: true });
   const savedGlobals = {};
   for (const name of ['window', 'document', 'HTMLElement', 'MutationObserver', 'localStorage', 'requestAnimationFrame', 'cancelAnimationFrame']) {
@@ -104,6 +107,7 @@ async function mountApp(t, actions, fail = false) {
     syncAddWorkout: async (_user, _log, workout) => { state.workoutWrites++; state.persisted.workouts.push(structuredClone(workout)); },
     fetchDailyLog: async () => structuredClone(state.persisted),
   };
+  if(setup) setup(state);
   globalThis.__syncHarness = state;
   t.after(async () => {
     await act(async () => state.root.unmount()); dom.window.close();
@@ -123,11 +127,11 @@ async function click(state, label) {
   assert.ok(button, `Missing button: ${label}`);
   await act(async () => { button.dispatchEvent(new window.MouseEvent('click', { bubbles: true })); await turn(); });
 }
-async function sendActions(state, hasProposal = true) {
+async function sendActions(state, hasProposal = true, text = 'Registrá estos datos de prueba.') {
   await click(state, 'Coach');
   await act(async () => {
     const input = state.document.querySelector('textarea'); assert.ok(input);
-    Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(input, 'Registrá estos datos de prueba.');
+    Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(input, text);
     input.dispatchEvent(new window.Event('input', { bubbles: true }));
   });
   await act(async () => { state.document.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })); await turn(); });
@@ -279,4 +283,51 @@ test('a proposed goal can be personalized conversationally before acceptance wit
   assert.notEqual(state.goalProposal.id,oldId);assert.equal(state.goalWrites,0);
   assert.match(state.document.querySelector('.chat-confirmation').textContent,/2 sesiones/);
   assert.equal(state.aiCalls,2);assert.equal(state.logWrites,0);
+});
+test('text-only Gemini goal response passes real API/client validation into the existing confirmation button',async t=>{
+  const owner='00000000-0000-0000-0000-000000000001';
+  const token=['eyJhbGciOiJIUzI1NiJ9',Buffer.from(JSON.stringify({sub:owner,iss:`${supabaseUrl}/auth/v1`,
+    aud:'authenticated',role:'authenticated',exp:Math.floor(Date.now()/1000)+3600})).toString('base64url'),'synthetic_signature'].join('.');
+  const envKeys=['AI_COACH_GOALS_ENABLED','GEMINI_API_KEY','SUPABASE_AI_SECRET_KEY','AI_TEXT_DAILY_LIMIT'];
+  const previous=Object.fromEntries(envKeys.map(key=>[key,process.env[key]]));
+  Object.assign(process.env,{AI_COACH_GOALS_ENABLED:'true',GEMINI_API_KEY:'synthetic',SUPABASE_AI_SECRET_KEY:'sb_secret_synthetic',AI_TEXT_DAILY_LIMIT:'30'});
+  const state=await mountApp(t,[],false,current=>{
+    current.currentProfile={...profile,user_id:owner};current.goalWrites=0;current.modelCalls=0;current.quotaCalls=0;
+    current.getSession=async()=>({data:{session:{access_token:token,user:{id:owner}}}});
+  });
+  const oldFetch=globalThis.fetch;let persisted;
+  t.after(()=>{globalThis.fetch=oldFetch;for(const key of envKeys){if(previous[key]===undefined)delete process.env[key];else process.env[key]=previous[key];}});
+  globalThis.fetch=async(url,options={})=>{
+    if(url==='/api/ai/chat') return chatHandler.fetch(new Request('http://local/api/ai/chat',options));
+    if(url===`${supabaseUrl}/auth/v1/user`) return Response.json({id:owner});
+    if(url===`${supabaseUrl}/rest/v1/rpc/reserve_ai_quota`){state.quotaCalls++;return Response.json({allowed:!state.quotaDenied,retry_after_seconds:3600});}
+    if(url.startsWith(`${supabaseUrl}/rest/v1/coach_goals?`)){
+      if(options.method==='POST'){
+        state.goalWrites++;persisted={...JSON.parse(options.body),status:'active',version:1,created_at:new Date().toISOString(),updated_at:new Date().toISOString()};
+        return Response.json([persisted]);
+      }
+      return Response.json(persisted?[persisted]:[]);
+    }
+    assert.equal(new URL(url).hostname,'generativelanguage.googleapis.com');state.modelCalls++;
+    return Response.json({candidates:[{content:{parts:[{text:JSON.stringify({reply:'Te propongo un objetivo de tres sesiones. ¿Quieres confirmarlo?',actions:[]})}]}}]});
+  };
+  const realAI=await import(await compile(path.join(rootDir,'services/aiService.ts')));
+  state.ai=async(...args)=>{state.aiCalls++;return realAI.generateAIResponse(...args);};
+  state.confirmGoal=async(proposal,localToday,expectedOwner)=>{
+    assert.equal(expectedOwner,owner);
+    const response=await goalsHandler.fetch(new Request('http://local/api/coach/goals',{method:'POST',headers:{Authorization:`Bearer ${token}`},body:JSON.stringify({today:localToday,proposal})}));
+    assert.equal(response.status,200);return (await response.json()).goal;
+  };
+  await sendActions(state,true,'Quiero establecer un objetivo de tres entrenamientos durante los próximos siete días y guardarlo en Calori');
+  assert.match(state.document.querySelector('.chat-confirmation').textContent,/3 sesiones de entrenamiento/);
+  assert.equal(state.goalWrites,0);assert.equal(state.modelCalls,1);assert.equal(state.quotaCalls,1);
+  state.quotaDenied=true;await click(state,'Aceptar objetivo');
+  assert.match(state.document.querySelector('.chat-messages').textContent,/Objetivo aceptado y guardado/);
+  assert.equal(state.goalWrites,1);assert.equal(state.modelCalls,1);assert.equal(state.quotaCalls,1);
+  assert.equal(persisted.user_id,owner);assert.equal(state.logWrites,0);assert.equal(state.workoutWrites,0);
+});
+test('discarding an unaccepted goal proposal never calls persistence',async t=>{
+  const state=await mountApp(t,[]);prepareGoal(state);await sendActions(state);
+  await click(state,'Descartar propuesta');assert.equal(state.document.querySelector('.chat-confirmation'),null);
+  assert.equal(state.goalWrites,0);assert.equal(state.logWrites,0);assert.equal(state.aiCalls,1);
 });
