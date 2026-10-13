@@ -26,7 +26,7 @@ test('compiled Coach function loads without TypeScript sources and serves both f
       types: ['node'], typeRoots: [path.join(root, 'node_modules/@types')],
       rootDir: root, outDir: artifact, noEmit: false, incremental: false, composite: false,
       declaration: false, noCheck: true },
-    files: [entrypoint], include: [], exclude: [],
+    files: [entrypoint, path.join(root, 'api/coach/goals.ts')], include: [], exclude: [],
   }));
   await run(process.execPath, [path.join(root, 'node_modules/typescript/bin/tsc'),
     '-p', path.join(artifact, 'tsconfig.json')]);
@@ -39,4 +39,5 @@ test('compiled Coach function loads without TypeScript sources and serves both f
   assert.match(stdout, /AI security HTTP probe: 401\/429\/503 passed without extra Gemini calls/);
   assert.match(stdout, /AI response validation HTTP probe: 200\/502\/200 passed without retry/);
   assert.match(stdout, /Habit insights HTTP probe: 30-day comparison passed with one Gemini call/);
+  assert.match(stdout, /Coach goals HTTP probe: confirmation, persistence and fresh-conversation progress passed/);
 });

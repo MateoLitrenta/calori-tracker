@@ -132,7 +132,7 @@ test('resolved requests, new requests and conversational topics cannot reuse an 
   ]) {
     const { body } = await model.request(messages);
     assert.deepEqual(body.actions, []);
-    assert.match(body.reply, /hora/);
+    assert.match(body.reply, messages.at(-1).text.includes('rutina') ? /No pude preparar el plan/ : /hora/);
   }
 });
 

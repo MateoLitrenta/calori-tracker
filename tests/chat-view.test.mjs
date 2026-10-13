@@ -21,6 +21,8 @@ const insightCode = ts.transpileModule(insightSource, { compilerOptions: {
   name === '../utils/helpers' ? new URL('../src/utils/helpers.ts', import.meta.url).href : import.meta.resolve(name)));
 const imports = {
   './CoachInsightCard': 'data:text/javascript;base64,' + Buffer.from(insightCode).toString('base64'),
+  './CoachGoalConfirmation': stub('export default () => null;'),
+  '../services/coachGoals': stub('export const confirmCoachGoal = () => { throw new Error("Goal confirmation uses its dedicated integration harness"); };'),
   react: stub(`export const useState = (...args) => globalThis.__chatViewHarness.hooks.useState(...args);
     export const useRef = (...args) => globalThis.__chatViewHarness.hooks.useRef(...args);
     export const useCallback = callback => callback;
