@@ -68,7 +68,7 @@
 .home-variants .habit-adjustments { gap: 24px; border-radius: var(--home-radius-panel); }
 .home-variants .habit-adjustments :is(button, input) { min-height: 44px; border-radius: var(--home-radius-control); border-color: var(--home-line); background: var(--home-control); color: var(--home-text); }
 .home-variants .habit-adjustments button:hover:not(:disabled) { background: var(--home-hover); border-color: var(--home-orange); }
-.home-variants .daily-quick-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 0; }
+.home-variants .daily-quick-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 0; }
 .home-variants .daily-quick-actions button { min-width: 0; min-height: 44px; padding: 8px 12px; border-radius: var(--home-radius-control); font-size: 14px; font-weight: 500; border: 1px solid var(--home-line); background: var(--home-card); color: var(--home-text); }
 .home-variants .daily-quick-actions button[aria-pressed="true"] { border-color: var(--home-orange); color: var(--home-orange); }
 .home-variants .daily-quick-actions button:first-child { background: var(--home-orange); border-color: var(--home-orange); color: #3b2418; }
@@ -314,7 +314,7 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
 }
 .home-variants .activity-history .period-switch button {
   min-width: 0;
-  min-height: 40px;
+  min-height: 44px;
   padding: 8px 12px;
   border-radius: var(--home-radius-control);
   background: transparent;
@@ -322,9 +322,9 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
   box-shadow: none;
 }
 .home-variants .activity-history .period-switch button[aria-pressed="true"] {
-  background: var(--home-card);
   color: var(--home-orange);
 }
+.home-variants .period-switch-indicator { background: var(--home-card); border-radius: var(--home-radius-control); }
 .home-variants .activity-history .period-switch button:hover:not([aria-pressed="true"]) {
   background: var(--home-hover);
   color: var(--home-text);
@@ -354,11 +354,44 @@ html:not(.dark) .home-variants .activity-history { --heatmap-selected: #2563eb; 
 html:not(.dark) .home-variants .daily-logs,
 html:not(.dark) .home-variants .activity-history { background: #ffffff; border-color: #e2e8f0; }
 html:not(.dark) .home-variants .activity-history .period-switch { background: #f8f7f4; border-color: #e2e8f0; }
-html:not(.dark) .home-variants .activity-history .period-switch button[aria-pressed="true"] { background: #ffffff; color: #9a4d1f; }
+html:not(.dark) .home-variants .activity-history .period-switch button[aria-pressed="true"] { color: #9a4d1f; }
+html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 @media (max-width: 639px) {
   .home-variants .activity-history { padding: 16px; gap: 12px; }
   .home-variants .activity-history > div:first-child { gap: 12px; }
   .home-variants .activity-history .period-switch { align-self: stretch; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .home-variants .activity-history .period-switch button { padding: 8px 4px; }
   .home-variants .activity-legend { gap: 8px 12px; }
+}
+
+/* Full values stay readable inside narrow cards; units may wrap naturally. */
+.home-variants .daily-heading { flex-wrap: wrap; }
+.home-variants :is(.energy-headline, .energy-number, .energy-metrics > div > div, .daily-habits .text-lg) {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.home-variants .daily-habits .text-lg { width: 100%; font-variant-numeric: tabular-nums; }
+.home-variants .daily-habits .habit-value { max-width: 100%; padding-inline: 0; }
+.home-variants .energy-number { width: 100%; }
+.home-variants .daily-habits button:focus-visible,
+.home-variants .daily-quick-actions button:focus-visible { outline: 2px solid var(--home-orange); outline-offset: 2px; }
+
+/* Weekday labels are siblings of the only horizontal scrollport. Row sizes,
+   gaps and the month band are shared, including after viewport resizing. */
+.home-variants .heatmap-frame { --history-cell: 11px; --history-gap: 2px; display: flex; align-items: center; width: 100%; height: 135px; }
+.home-variants .heatmap-layout { display: flex; align-items: flex-start; width: 100%; min-width: 0; }
+.home-variants .heatmap-weekdays { flex: none; width: 28px; display: flex; flex-direction: column; gap: var(--history-gap); padding: 22px 6px 2px 0; }
+.home-variants .heatmap-weekdays span { height: var(--history-cell); line-height: var(--history-cell); font-size: 9px; text-align: right; color: var(--home-muted); }
+.home-variants .heatmap-scroll { flex: 1; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; }
+.home-variants .heatmap-scroll:focus-visible { outline: 2px solid var(--home-orange); outline-offset: -2px; }
+.home-variants .heatmap-content { width: max-content; margin-inline: auto; }
+.home-variants .heatmap-months { position: relative; height: 16px; margin-bottom: 4px; }
+.home-variants .heatmap-months span { position: absolute; font-size: 10px; text-transform: capitalize; color: var(--home-muted); }
+.home-variants .heatmap-grid { display: flex; gap: var(--history-gap); padding: 2px; }
+.home-variants .heatmap-column { display: flex; flex-direction: column; gap: var(--history-gap); }
+.home-variants .heatmap-grid :is(.heatmap-cell, .heatmap-date) { width: var(--history-cell); height: var(--history-cell); flex: none; }
+@media (min-width: 768px) {
+  .home-variants .heatmap-frame { --history-cell: 10px; --history-gap: 4px; }
+  .home-variants .heatmap-weekdays { width: 36px; }
 }

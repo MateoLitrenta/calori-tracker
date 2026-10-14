@@ -1,0 +1,24 @@
+/* Same indicator geometry and motion for Home and Datos. */
+.period-selector {
+  --period-count: 3;
+  --period-total-gap: 16px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--period-count), minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+}
+.period-selector > span[aria-hidden="true"] {
+  position: absolute;
+  pointer-events: none;
+  left: 4px;
+  top: 4px;
+  bottom: 4px;
+  width: calc((100% - var(--period-total-gap)) / var(--period-count));
+  transform: translateX(calc(var(--active-index) * (100% + 4px)));
+  transition: transform var(--motion-control) var(--motion-ease-enter);
+}
+.period-selector button { position: relative; min-width: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .period-selector > span[aria-hidden="true"] { transition: none; }
+}

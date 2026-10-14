@@ -1,4 +1,5 @@
 import './PremiumViews.css';
+import './PeriodSelector.css';
 import { useMemo, useState, type CSSProperties } from 'react';
 import { ChartBar, Footprints, Barbell } from '@phosphor-icons/react';
 import { format, parseISO } from 'date-fns';
@@ -48,7 +49,7 @@ export default function ChartsView() {
             <p className="charts-range">{range}</p>
           </div>
         </div>
-        <div className="charts-period" role="group" aria-label="Período"
+        <div className="charts-period period-selector" role="group" aria-label="Período"
           style={{ '--active-index': (['Semana', 'Mes', 'Año'] as ChartPeriod[]).indexOf(period) } as CSSProperties}>
           <span className="charts-period-indicator" aria-hidden="true" />
           {(['Semana', 'Mes', 'Año'] as ChartPeriod[]).map(value => (
