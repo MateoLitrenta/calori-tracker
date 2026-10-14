@@ -100,9 +100,12 @@ test('habit controls keep accessible names and daily quick actions', () => {
   for (const name of ['Restar 250 ml de agua', 'Sumar 250 ml de agua', 'Restar 500 pasos', 'Sumar 500 pasos']) {
     assert.ok(html.includes(`aria-label="${name}"`));
   }
-  for (const label of ['2.500', '18.500', '105', '+ Comida', '+ Ejercicio', 'Pasos/Agua', 'Editar']) {
+  for (const label of ['2.500', '18.500', '105', '+ Comida', '+ Ejercicio', 'Editar']) {
     assert.ok(html.includes(label));
   }
+  assert.doesNotMatch(html,/Pasos\/Agua|habit-adjustments/);
+  assert.match(html,/aria-label="Editar cantidad de agua"/);
+  assert.match(html,/aria-label="Editar total de pasos"/);
 });
 
 test('grouped periods keep accumulated balance and hide daily controls and records', () => {
@@ -197,7 +200,7 @@ test('rapid water and step taps update locally and save combined final values on
 
 test('quick actions toggle existing forms and values retain inline editing', () => {
   const view = mount({ profile, record: base, dateStr, records: {}, onUpdateRecord: async () => true });
-  for (const [label, content] of [['+ Comida', 'Agregar Comida'], ['+ Ejercicio', 'Agregar Entrenamiento'], ['Pasos/Agua', 'Pasos del Día']]) {
+  for (const [label, content] of [['+ Comida', 'Agregar Comida'], ['+ Ejercicio', 'Agregar Entrenamiento']]) {
     const button = () => node(view(), e => e.type === 'button' && e.props.children?.trim?.() === label);
     button().props.onClick();
     assert.ok(renderToStaticMarkup(view()).includes(content));
@@ -241,9 +244,10 @@ test('mobile meal and workout actions open a named modal dialog; steps and water
     assert.equal(nodes(dialog, element => element.type === 'form').length, 1);
     assert.ok(node(dialog, element => element.props.className?.includes('entry-form-footer')));
   }
-  open(view, 'Pasos/Agua');
+  shell(view).props.onClose();
+  node(view(), e => e.props.title === 'Editar pasos').props.onClick();
   assert.equal(nodes(view(), element => element.type.name === 'EntryFormShell').length, 0);
-  assert.match(renderToStaticMarkup(view()), /Pasos del Día/);
+  assert.ok(node(view(), element => element.type === 'input' && element.props.autoFocus));
 });
 
 test('close and backdrop reset drafts and temporary photos; sheet contents do not dismiss it', t => {
@@ -278,8 +282,40 @@ test('desktop actions keep the same single inline forms and steps-water panel', 
     assert.equal(inline.type, 'form');
     assert.equal(nodes(inline, element => element.props.role === 'dialog').length, 0);
   }
-  open(view, 'Pasos/Agua');
+  shell(view).props.onClose();
+  node(view(), e => e.props.title === 'Editar cantidad').props.onClick();
   assert.equal(nodes(view(), element => element.type === 'form').length, 0);
+});
+
+test('steps cards keep one visible label and complete localized large values',()=>{
+  for(const steps of [10000,25000,100000]) {
+    const html=renderToStaticMarkup(React.createElement(DailyPanel,{profile,record:{...base,steps},dateStr,records:{},onUpdateRecord(){}}));
+    const stepCard=html.split('>Pasos</span>')[1].split('>Peso</span>')[0];
+    assert.ok(stepCard.includes(steps.toLocaleString('es-AR')));
+    assert.doesNotMatch(stepCard,/>pasos<|>Pasos</);
+    assert.match(stepCard,/Sumar 500 pasos/);assert.match(stepCard,/Editar total de pasos/);
+  }
+});
+
+test('upper cards retain manual totals and the former double increments without another panel',t=>{
+  const timers=new Map();let next=0;
+  t.mock.method(globalThis,'setTimeout',callback=>{timers.set(++next,callback);return next;});
+  t.mock.method(globalThis,'clearTimeout',id=>timers.delete(id));
+  const saves=[];const view=entryView(async(date,record)=>{saves.push({date,record});return true;});
+  const flush=()=>{for(const [id,callback] of [...timers])if(timers.delete(id))callback();};
+  for(const label of ['Sumar 500 pasos','Sumar 500 pasos','Sumar 250 ml de agua','Sumar 250 ml de agua'])
+    node(view(),e=>e.props['aria-label']===label).props.onClick();
+  flush();
+  assert.equal(saves.length,1);
+  assert.equal(saves.at(-1).record.steps,1000);assert.equal(saves.at(-1).record.water,500);
+  for(const [title,value,field] of [['Editar pasos','25000','steps'],['Editar cantidad','3000','water']]) {
+    node(view(),e=>e.props.title===title).props.onClick();
+    const input=node(view(),e=>e.type==='input'&&e.props.autoFocus);
+    input.props.onChange({target:{value}});
+    node(view(),e=>e.type==='input'&&e.props.autoFocus).props.onBlur();
+    flush();
+    assert.equal(saves.at(-1).record[field],Number(value));
+  }
 });
 
 for (const [action, nameField, name, collection] of [

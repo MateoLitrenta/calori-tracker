@@ -1,4 +1,5 @@
-import React, { useMemo, useLayoutEffect, useRef, useState } from 'react';
+import React, { useMemo, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import './PeriodSelector.css';
 import { format, parseISO, addDays, subDays, startOfWeek, startOfMonth, endOfMonth, subMonths, addMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { DailyRecordsMap, UserProfile } from '../types';
@@ -71,16 +72,12 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, selectedGro
     }
   };
 
-  // Scroll to the right when period changes or on mount
+  // Each period selects the current group. Reveal it once, without a delayed
+  // second reset that can undo a user's first scroll gesture.
   useLayoutEffect(() => {
     if (scrollContainerRef.current) {
       const scrollEl = scrollContainerRef.current;
       scrollEl.scrollLeft = scrollEl.scrollWidth;
-      
-      const timer = setTimeout(() => {
-        if (scrollEl) scrollEl.scrollLeft = scrollEl.scrollWidth;
-      }, 100);
-      return () => clearTimeout(timer);
     }
   }, [period]);
 
@@ -273,7 +270,11 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, selectedGro
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">Historial de Actividad</h2>
         
-        <div className="period-switch flex bg-slate-200 dark:bg-[#161b22] rounded-md p-1 border border-slate-300 dark:border-gray-800 self-end sm:self-auto">
+        <div className="period-switch period-selector bg-slate-200 dark:bg-[#161b22] rounded-md p-1 border border-slate-300 dark:border-gray-800 self-end sm:self-auto"
+          role="group" aria-label="Período del historial"
+          style={{ '--active-index': (['year', 'month', 'week', 'day'] as Period[]).indexOf(period),
+            '--period-count': 4, '--period-total-gap': '20px' } as CSSProperties}>
+          <span className="period-switch-indicator" aria-hidden="true" />
           {(['year', 'month', 'week', 'day'] as Period[]).map((p) => {
             const labels = { year: 'Año', month: 'Mes', week: 'Semana', day: 'Día' };
             return (
@@ -281,9 +282,8 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, selectedGro
                 key={p}
                 onClick={() => handlePeriodChange(p)}
                 aria-pressed={period === p}
-                className={`px-3 py-1 text-xs font-medium rounded-sm transition-colors ${
-                  period === p ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-white' : 'text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+                type="button"
+                className="px-3 py-1 text-xs font-medium rounded-sm transition-colors text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
               >
                 {labels[p]}
               </button>
@@ -292,92 +292,40 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, selectedGro
         </div>
       </div>
       
-      <div className="h-[135px] md:h-[135px] w-full flex items-center justify-center">
-        {period === 'day' ? (
-          <div className="flex w-full overflow-x-auto md:overflow-x-hidden custom-scrollbar md:justify-center h-full items-center" ref={scrollContainerRef}>
-            <div className="flex flex-col w-max pr-8 md:pr-0">
-              
-              <div className="flex mb-1 ml-[24px] md:ml-[32px] relative h-4">
-                {monthLabels.map((month, i) => (
-                  <div 
-                    key={i} 
-                    className="absolute text-[10px] text-slate-500 dark:text-gray-400 capitalize"
-                    style={{ 
-                      left: `calc(${month.colIndex} * var(--col-width, 13px))` 
-                    }}
-                  >
-                    {month.label}
+      <div className="heatmap-frame">
+        <div className="heatmap-layout">
+          {period === 'day' && (
+            <div className="heatmap-weekdays" aria-hidden="true">
+              {weekDays.map((day, i) => <span key={day}>{i % 2 !== 0 ? day : ''}</span>)}
+            </div>
+          )}
+          <div className="heatmap-scroll custom-scrollbar" ref={scrollContainerRef}
+            tabIndex={0} role="region" aria-label="Fechas del historial de actividad">
+            <div className="heatmap-content">
+              <div className="heatmap-months">
+                {period === 'day' && monthLabels.map((month, i) => (
+                  <span key={i} style={{ left: `calc(2px + ${month.colIndex} * (var(--history-cell) + var(--history-gap)))` }}>{month.label}</span>
+                ))}
+              </div>
+              <div className="heatmap-grid">
+                {period === 'day' ? weeksArray.map((week, i) => (
+                  <div key={i} className="heatmap-column">
+                    {week.map((dateStr, j) => (
+                      <React.Fragment key={dateStr || `empty-${i}-${j}`}>
+                        {renderBox(dateStr, 'heatmap-date')}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                )) : chunkedGroupedData.map((col, i) => (
+                  <div key={i} className="heatmap-column">
+                    {col.map(group => renderGroupedBox(group.dates, group.label, period as 'week'|'month'|'year'))}
+                    {Array.from({ length: 7 - col.length }, (_, j) => <div key={`empty-${j}`} className="heatmap-date invisible" />)}
                   </div>
                 ))}
               </div>
-
-              <div className="flex">
-                <div className="flex flex-col gap-[2px] md:gap-1 pr-2 mt-[2px]">
-                  {weekDays.map((day, i) => (
-                    <div key={day} className="text-[9px] text-slate-500 dark:text-gray-400 h-[11px] md:h-2.5 leading-[11px] md:leading-[10px] pr-1 text-right w-5 md:w-7">
-                      {i % 2 !== 0 ? day : ''}
-                    </div>
-                  ))}
-                </div>
-
-                <div 
-                  className="flex gap-[2px] md:gap-1"
-                  style={{ '--col-width': '13px' } as any}
-                  ref={(el) => {
-                    if (el) {
-                      el.parentElement?.parentElement?.style.setProperty('--col-width', window.innerWidth >= 768 ? '14px' : '13px');
-                    }
-                  }}
-                >
-                  {weeksArray.map((week, i) => (
-                    <div key={i} className="flex flex-col gap-[2px] md:gap-1">
-                      {week.map((dateStr, j) => (
-                        <React.Fragment key={dateStr || `empty-${i}-${j}`}>
-                          {renderBox(dateStr, 'w-[11px] h-[11px] md:w-2.5 md:h-2.5')}
-                        </React.Fragment>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
-        ) : (
-          <div className="flex w-full overflow-x-auto md:overflow-x-hidden custom-scrollbar md:justify-center h-full items-center" ref={scrollContainerRef}>
-            <div className="flex flex-col w-max pr-8 md:pr-0">
-              
-              <div className="flex mb-1 ml-[24px] md:ml-[32px] relative h-4">
-                {/* Empty spacer for X-axis alignment */}
-              </div>
-
-              <div className="flex">
-                <div className="flex flex-col gap-[2px] md:gap-1 pr-2 mt-[2px] invisible">
-                  {weekDays.map((day, i) => (
-                    <div key={`inv-${day}`} className="text-[9px] text-slate-500 dark:text-gray-400 h-[11px] md:h-2.5 leading-[11px] md:leading-[10px] pr-1 text-right w-5 md:w-7">
-                      {i % 2 !== 0 ? day : ''}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-[2px] md:gap-1">
-                  {chunkedGroupedData.map((col, i) => (
-                    <div key={i} className="flex flex-col gap-[2px] md:gap-1">
-                      {col.map((group) => (
-                        <React.Fragment key={group.label}>
-                          {renderGroupedBox(group.dates, group.label, period as 'week'|'month'|'year')}
-                        </React.Fragment>
-                      ))}
-                      {/* pad with invisible if < 7 */}
-                      {Array.from({ length: 7 - col.length }).map((_, j) => (
-                        <div key={`empty-${j}`} className="w-[11px] h-[11px] md:w-2.5 md:h-2.5 invisible" />
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
 
       {/* Legend */}

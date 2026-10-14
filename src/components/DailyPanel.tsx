@@ -20,7 +20,7 @@ interface DailyPanelProps {
 }
 
 const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord, profile, selectedGroup, records }) => {
-  const [activeTab, setActiveTab] = useState<'comida' | 'entrenamiento' | 'pasos-agua' | null>(null);
+  const [activeTab, setActiveTab] = useState<'comida' | 'entrenamiento' | null>(null);
   const tabContainerRef = useRef<HTMLDivElement>(null);
 
   // Default empty record if none exists for this day
@@ -169,7 +169,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     setWorkTime('');
   };
 
-  const handleTabToggle = (tab: 'comida' | 'entrenamiento' | 'pasos-agua') => {
+  const handleTabToggle = (tab: 'comida' | 'entrenamiento') => {
     if (activeTab === tab) {
       setActiveTab(null);
       resetForms();
@@ -512,6 +512,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                       setIsEditingWater(true);
                     }}
                     title="Editar cantidad"
+                    aria-label="Editar cantidad de agua"
                   >
                     {localWater.toLocaleString('es-AR')}
                   </button>
@@ -532,6 +533,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <div className="text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
                 {isEditingSteps ? (
                   <input
+                    ref={stepsInputRef}
                     type="number"
                     inputMode="numeric"
                     pattern="[0-9]*"
@@ -559,11 +561,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                       setIsEditingSteps(true);
                     }}
                     title="Editar pasos"
+                    aria-label="Editar total de pasos"
                   >
                     {Number(localSteps || 0).toLocaleString('es-AR')}
                   </button>
                 )}
-                <span className="text-[10px] font-normal text-slate-500 dark:text-gray-400 mt-0.5">pasos</span>
               </div>
               <div className="habit-controls">
                 <button type="button" onClick={() => handleAddSteps(-500)} aria-label="Restar 500 pasos">−</button>
@@ -610,13 +612,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             >
               + Ejercicio
             </button>
-            <button 
-              onClick={() => handleTabToggle('pasos-agua')}
-              aria-pressed={activeTab === 'pasos-agua'}
-              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'pasos-agua' ? 'bg-cyan-600 border-cyan-500 text-white' : 'bg-white dark:bg-[#161b22] border-slate-200 dark:border-gray-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-[#0f141c]'}`}
-            >
-              Pasos/Agua
-            </button>
+
           </div>
 
           {/* Forms Area */}
@@ -823,68 +819,6 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             </EntryFormShell>
         )}
 
-        {activeTab === 'pasos-agua' && (
-          <div className="habit-adjustments bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col md:flex-row gap-8 animate-in fade-in slide-in-from-top-2">
-            <div className="flex-1 flex flex-col gap-3">
-              <h4 className="font-bold flex items-center gap-2"><Sneaker className="text-orange-400" /> Pasos del Día</h4>
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-2">
-                  <button onClick={() => handleAddSteps(500)} className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:border-orange-500 hover:text-orange-400 py-2 rounded-md text-sm transition-colors">
-                    + 500
-                  </button>
-                  <button onClick={() => handleAddSteps(1000)} className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:border-orange-500 hover:text-orange-400 py-2 rounded-md text-sm transition-colors">
-                    + 1.000
-                  </button>
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => handleAddSteps(-500)} className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:border-red-500 hover:text-red-400 py-2 rounded-md text-sm transition-colors">
-                    - 500
-                  </button>
-                  <button onClick={() => handleAddSteps(-1000)} className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:border-red-500 hover:text-red-400 py-2 rounded-md text-sm transition-colors">
-                    - 1.000
-                  </button>
-                </div>
-                <div className="flex gap-2 mt-1">
-                  <input 
-                    ref={stepsInputRef}
-                    type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Editar manual..."
-                    value={localSteps}
-                    onChange={e => setLocalSteps(e.target.value)}
-                    onBlur={e => handleUpdateSteps(Number(e.target.value) || 0)}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') {
-                        handleUpdateSteps(Number(localSteps) || 0);
-                        (e.target as HTMLInputElement).blur();
-                      }
-                    }}
-                    className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flex-1 flex flex-col gap-3">
-              <h4 className="font-bold flex items-center gap-2"><Drop className="text-cyan-400" /> Registro de Agua</h4>
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-2">
-                  <button onClick={() => handleAddWater(250)} className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:border-cyan-500 hover:text-cyan-400 py-2 rounded-md text-sm transition-colors">
-                    + 250 ml
-                  </button>
-                  <button onClick={() => handleAddWater(500)} className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:border-cyan-500 hover:text-cyan-400 py-2 rounded-md text-sm transition-colors">
-                    + 500 ml
-                  </button>
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => handleAddWater(-250)} className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:border-red-500 hover:text-red-400 py-2 rounded-md text-sm transition-colors">
-                    - 250 ml
-                  </button>
-                  <button onClick={() => handleAddWater(-500)} className="flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:border-red-500 hover:text-red-400 py-2 rounded-md text-sm transition-colors">
-                    - 500 ml
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
         </div>
       )}
 
