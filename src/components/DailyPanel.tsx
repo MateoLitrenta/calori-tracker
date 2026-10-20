@@ -9,6 +9,7 @@ import { AIRequestError } from '../services/aiTransport';
 import { supabase } from '../lib/supabase';
 import { MealPhotoPicker, MealThumbnail } from './MealPhoto';
 import EntryFormShell from './EntryFormShell';
+import AutoResizeTextarea from './AutoResizeTextarea';
 
 interface DailyPanelProps {
   record: DailyRecord | undefined;
@@ -623,9 +624,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Comida</h4>
                   <div className="entry-field entry-description">
                     <label className="entry-field-label" htmlFor="add-meal-description">Descripción</label>
-                    <input id="add-meal-description"
+                    <AutoResizeTextarea id="add-meal-description"
                       required
-                      type="text"
                       inputMode="text"
                       placeholder="Ej. pollo con arroz y verduras"
                       value={mealName} onChange={e => setMealName(e.target.value)}
@@ -686,7 +686,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     </div>
                     <div className="entry-field entry-notes">
                       <label className="entry-field-label" htmlFor="add-meal-notes">Notas <span>· Opcional</span></label>
-                      <textarea id="add-meal-notes"
+                      <AutoResizeTextarea id="add-meal-notes"
                         placeholder="Agregá detalles si querés."
                         value={mealDetails}
                         onChange={e => setMealDetails(e.target.value)}
@@ -800,11 +800,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     </div>)}
                     <div className="entry-field entry-notes">
                       <label className="entry-field-label" htmlFor="add-workout-notes">{workActivity.toLowerCase() === 'gimnasio' ? 'Detalle de la rutina' : 'Notas'} <span>· Opcional</span></label>
-                      <textarea id="add-workout-notes"
+                      <AutoResizeTextarea id="add-workout-notes"
                         placeholder={workActivity.toLowerCase() === 'gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Agregá detalles si querés."}
                         value={workDetails}
                         onChange={e => setWorkDetails(e.target.value)}
-                        className="flex-1 w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-h-[42px] resize-y min-w-[200px]"
+                        className="flex-1 w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-[200px]"
                       />
                     </div>
                   </div>
@@ -1043,9 +1043,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             <div className="entry-form-content entry-fields-grid entry-meal-fields entry-edit-fields">
               <div className="entry-field entry-description">
                 <label className="entry-field-label" htmlFor="edit-meal-description">Descripción</label>
-                <input id="edit-meal-description"
+                <AutoResizeTextarea id="edit-meal-description"
                   required
-                  type="text"
                   inputMode="text"
                   placeholder="Ej. pollo con arroz y verduras"
                   value={mealName} onChange={e => setMealName(e.target.value)}
@@ -1105,7 +1104,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 </div>
                 <div className="entry-field entry-notes">
                   <label className="entry-field-label" htmlFor="edit-meal-notes">Notas <span>· Opcional</span></label>
-                  <textarea id="edit-meal-notes"
+                  <AutoResizeTextarea id="edit-meal-notes"
                     placeholder="Agregá detalles si querés."
                     value={mealDetails} onChange={e => setMealDetails(e.target.value)}
                     className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
@@ -1201,7 +1200,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 </div>
                 <div className="entry-field entry-notes">
                   <label className="entry-field-label" htmlFor="edit-workout-notes">{workActivity.toLowerCase() === 'gimnasio' ? 'Detalle de la rutina' : 'Notas'} <span>· Opcional</span></label>
-                  <textarea id="edit-workout-notes"
+                  <AutoResizeTextarea id="edit-workout-notes"
                     placeholder={workActivity.toLowerCase() === 'gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Agregá detalles si querés."}
                     value={workDetails} onChange={e => setWorkDetails(e.target.value)}
                     className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
