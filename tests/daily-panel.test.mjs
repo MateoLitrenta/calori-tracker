@@ -18,6 +18,11 @@ const shellCode = ts.transpileModule(shellSource, { compilerOptions: { module: t
   .replace(/from ["']([^"']+)["']/g, (_, specifier) => `from ${JSON.stringify(specifier === 'react-dom'
     ? stub('export const createPortal = children => children;') : import.meta.resolve(specifier))}`);
 const shellUrl = `data:text/javascript;base64,${Buffer.from(shellCode).toString('base64')}`;
+const textareaSource = await readFile(new URL('../src/components/AutoResizeTextarea.tsx', import.meta.url), 'utf8');
+const textareaCode = ts.transpileModule(textareaSource, { compilerOptions: { module: ts.ModuleKind.ESNext,
+  jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText
+  .replace(/from ["']([^"']+)["']/g, (_, specifier) => `from ${JSON.stringify(import.meta.resolve(specifier))}`);
+const textareaUrl = `data:text/javascript;base64,${Buffer.from(textareaCode).toString('base64')}`;
 globalThis.__entryServices = { estimateMeal: async () => ({}), estimateWorkout: async () => ({}), toast: { error() {} } };
 const imports = {
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,
@@ -27,6 +32,7 @@ const imports = {
   'react-hot-toast': stub('export default globalThis.__entryServices.toast;'),
   './MealPhoto': stub('export function MealPhotoPicker() { return null; } export const MealThumbnail = () => null;'),
   './EntryFormShell': shellUrl,
+  './AutoResizeTextarea': textareaUrl,
 };
 const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext,
   jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText
@@ -167,6 +173,8 @@ function mount(props, component = InteractiveDailyPanel, effects = false) {
 function nodes(tree, predicate) {
   if (Array.isArray(tree)) return tree.flatMap(child => nodes(child, predicate));
   if (!React.isValidElement(tree)) return [];
+  // This handler harness traverses shallow trees; DOM resizing is tested with real React separately.
+  if (tree.type.name === 'AutoResizeTextarea') tree = React.createElement('textarea', tree.props);
   return [...(predicate(tree) ? [tree] : []), ...nodes(tree.props.children, predicate)];
 }
 function node(tree, predicate) {
@@ -392,11 +400,65 @@ test('editing closes the record detail and opens the same responsive shell with 
     node(view(), element => element.props.className?.includes('record-detail-edit')).props.onClick({ stopPropagation() {} });
     assert.equal(nodes(view(), element => element.props.className?.includes('record-detail-modal')).length, 0);
     assert.ok(node(sheet(view), element => element.props.role === 'dialog'));
-    assert.ok(nodes(view(), element => element.type === 'input').some(input => input.props.value === expected));
+    assert.ok(nodes(view(), element => element.props.value === expected).length);
     if (expected === 'Pizza') assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.path, 'existing.jpg');
     else for (const value of [40, 300, 5, '8:00']) assert.ok(nodes(view(), element => element.type === 'input').some(input => input.props.value === value));
   }
 });
+
+for (const kind of ['meal', 'workout']) {
+  test(`${kind} long text survives add, failed edit, successful edit and reopening without truncation or duplicates`, async t => {
+    mobileEnvironment(t);
+    const description = 'Pollo con arroz, verduras y una preparación muy detallada. '.repeat(12) + '\nSegunda línea 🌱';
+    const notes = 'Ingredientes, cantidades y observaciones. '.repeat(15) + '\nSin recortar el final.';
+    const collection = kind === 'meal' ? 'meals' : 'workouts';
+    const prefix = kind === 'meal' ? 'meal' : 'workout';
+    const nameId = kind === 'meal' ? 'description' : 'activity';
+    const name = kind === 'meal' ? description : 'Gimnasio';
+    const saves = [];
+    let succeeds = true;
+    const persist = async (_date, record) => { saves.push(structuredClone(record)); return succeeds; };
+    const set = (view, id, value) => node(view(), e => e.props.id === id).props.onChange({ target: { value } });
+    const edit = record => {
+      const view = entryView(persist, record);
+      node(view(), e => e.type === 'li').props.onClick();
+      node(view(), e => e.props.className?.includes('record-detail-edit')).props.onClick({ stopPropagation() {} });
+      return view;
+    };
+    const view = entryView(persist);
+    open(view, kind === 'meal' ? '+ Comida' : '+ Ejercicio');
+    set(view, `add-${prefix}-${nameId}`, name);
+    set(view, `add-${prefix}-notes`, notes);
+    fill(view, 'Kcal', '350');
+    if (kind === 'workout') fill(view, 'Minutos', '45');
+    const markup = renderToStaticMarkup(view());
+    assert.match(markup, new RegExp(`<textarea[^>]+id="add-${prefix}-notes"`));
+    if (kind === 'meal') assert.match(markup, /<textarea[^>]+id="add-meal-description"[^>]+required/);
+    await submit(view);
+    // Simulate a persistence round trip; the actual backend and save handlers are unchanged.
+    const saved = JSON.parse(JSON.stringify(saves.at(-1)));
+    assert.equal(saved[collection].length, 1);
+    assert.equal(saved[collection][0].details, notes);
+    assert.equal(saved[collection][0][kind === 'meal' ? 'name' : 'activity'], name);
+    const editing = edit(saved);
+    assert.equal(node(editing(), e => e.props.id === `edit-${prefix}-${nameId}`).props.value, name);
+    assert.equal(node(editing(), e => e.props.id === `edit-${prefix}-notes`).props.value, notes);
+    const changedNotes = notes + '\nEdición con contenido completo.';
+    set(editing, `edit-${prefix}-notes`, changedNotes);
+    if (kind === 'meal') set(editing, 'edit-meal-description', description + '\nDescripción editada.');
+    succeeds = false;
+    await submit(editing);
+    assert.equal(node(editing(), e => e.props.id === `edit-${prefix}-notes`).props.value, changedNotes);
+    succeeds = true;
+    await submit(editing);
+    const edited = saves.at(-1);
+    assert.equal(edited[collection].length, 1);
+    assert.equal(edited[collection][0].id, saved[collection][0].id);
+    const reopened = edit(edited);
+    assert.equal(node(reopened(), e => e.props.id === `edit-${prefix}-notes`).props.value, changedNotes);
+    if (kind === 'meal') assert.equal(node(reopened(), e => e.props.id === 'edit-meal-description').props.value, description + '\nDescripción editada.');
+  });
+}
 
 test('mobile shell locks background scroll, contains focus, handles Escape and restores focus and viewport listeners', t => {
   const previous = { window: globalThis.window, document: globalThis.document, HTMLElement: globalThis.HTMLElement };

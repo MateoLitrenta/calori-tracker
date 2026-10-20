@@ -113,7 +113,7 @@
 .home-variants :is(.entry-calorie-block, .entry-unit-control) { display: contents; }
 .home-variants :is(.entry-photo-heading, .entry-mobile-copy, .entry-unit, .entry-ai-icon) { display: none; }
 .home-variants .entry-field-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.home-variants .entry-notes textarea { height: 42px; min-height: 42px; resize: vertical; }
+.home-variants :is(.entry-description, .entry-notes) textarea { display: block; min-height: 42px; }
 .home-variants .entry-edit-fields.entry-workout-fields { grid-template-columns: minmax(0, 1fr) 96px; grid-template-areas: "activity activity" "duration calories" "secondary secondary" "ai ai"; }
 .home-variants .entry-edit-fields.entry-meal-fields { grid-template-columns: minmax(0, 1fr) 96px; grid-template-areas: "description description" "type calories" "secondary secondary" "photo photo" "ai ai"; }
 .home-variants.entry-sheet-root { --home-control: #191c1f; padding: 0; background: transparent; border-radius: 0; }
@@ -136,7 +136,6 @@
 html:not(.dark) .home-variants.entry-sheet-root { --home-control: #f8f7f4; }
 html:not(.dark) .home-variants.entry-sheet-root .entry-form-content :is(input, select, textarea) { background: #f8f7f4; color: #1f2937; border-color: #cbd5e1; }
 .home-variants.entry-sheet-root .entry-form-content :is(input, select, textarea):focus-visible { outline: 2px solid var(--home-orange); outline-offset: 2px; border-color: var(--home-orange); }
-.home-variants.entry-sheet-root .entry-notes textarea { height: 80px; min-height: 80px; }
 .home-variants.entry-sheet-root .entry-calorie-block { display: flex; flex-direction: column; gap: 8px; }
 .home-variants.entry-sheet-root .entry-ai-controls { gap: 8px; }
 .home-variants.entry-sheet-root .entry-ai-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; background: #f5a0640d; border-color: #f5a06440; color: var(--home-orange); font-size: 14px; }
