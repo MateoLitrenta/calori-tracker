@@ -27,20 +27,35 @@ async function environment(t, mobile = false) {
   // JSDOM has no layout engine: simulate only wrapping geometry, use real React and DOM events.
   let columns = 30;
   const observers = new Set();
+  const frames = new Map();
+  let frameId = 0;
+  window.requestAnimationFrame = callback => { frames.set(++frameId, callback); return frameId; };
+  window.cancelAnimationFrame = id => frames.delete(id);
   window.ResizeObserver = class {
     constructor(callback) { this.callback = callback; observers.add(this); }
     observe() {}
     disconnect() { observers.delete(this); }
   };
   Object.defineProperty(window.HTMLTextAreaElement.prototype, 'scrollHeight', { get() {
+    assert.notEqual(document.querySelector('textarea:not([aria-hidden])')?.style.height, '0px',
+      'Measuring must not temporarily collapse the visible field and its scroll container');
     return this.value.split('\n').reduce((lines, line) => lines + Math.max(1, Math.ceil(line.length / columns)), 0) * 20 + 16;
   } });
   window.HTMLTextAreaElement.prototype.getBoundingClientRect = function () {
-    return { width: columns * 8, top: 300, bottom: 300 + parseFloat(this.style.height) };
+    const top = 300 - (this.closest('.entry-form-content')?.scrollTop || 0);
+    return { width: columns * 8, top, bottom: top + parseFloat(this.style.height) };
   };
+  Object.defineProperty(window.HTMLSpanElement.prototype, 'offsetTop', { get() {
+    const prefix = this.previousSibling?.textContent || '';
+    const lines = prefix.split('\n');
+    const row = lines.slice(0, -1).reduce((total, line) => total + Math.max(1, Math.ceil(line.length / columns)), 0)
+      + Math.max(0, Math.ceil(lines.at(-1).length / columns) - 1);
+    return 8 + row * 20;
+  } });
   t.after(async () => {
     await act(() => root.unmount());
     assert.equal(observers.size, 0, 'ResizeObserver is cleaned up');
+    assert.equal(frames.size, 0, 'Pending caret scroll is cancelled');
     dom.window.close();
     for (const [name, value] of Object.entries(previous)) globalThis[name] = value;
   });
@@ -48,10 +63,11 @@ async function environment(t, mobile = false) {
   const render = async (value, extra = {}) => act(() => root.render(React.createElement(AutoResizeTextarea,
     { value, onChange() {}, style, 'aria-label': 'Descripción', ...extra })));
   return { root, style, render, observers,
+    flushFrames: async () => act(() => { for (const [id, callback] of [...frames]) if (frames.delete(id)) callback(); }),
     resize: async width => act(() => { columns = width; observers.forEach(observer => observer.callback()); }) };
 }
 
-test('typing and pasting long content grows to six lines, scrolls internally and shrinks on deletion', async t => {
+test('typing and pasting more than 6, 15 and 30 lines grows to the entire value and shrinks on deletion', async t => {
   const env = await environment(t);
   let currentValue = '';
   function Form() {
@@ -64,19 +80,29 @@ test('typing and pasting long content grows to six lines, scrolls internally and
   assert.equal(field.rows, 1); assert.equal(field.wrap, 'soft'); assert.equal(field.required, true);
   assert.equal(field.style.height, '42px'); assert.equal(field.style.resize, 'none');
   assert.equal(field.style.overflowWrap, 'anywhere');
-  const input = async value => act(() => {
+  field.focus();
+  const input = async (value, inputType = 'insertText') => act(() => {
     Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(field, value);
-    field.dispatchEvent(new window.Event('input', { bubbles: true }));
+    field.dispatchEvent(new window.InputEvent('input', { bubbles: true, inputType,
+      isComposing: inputType === 'insertCompositionText' }));
   });
   await input('Uno\nDos\nTres');
   assert.equal(field.style.height, '78px'); assert.equal(field.style.overflowY, 'hidden');
-  const long = 'Una descripción extensa con acentos y emojis 🌱. '.repeat(30) + '\nFinal sin truncar';
-  await input(long);
-  assert.equal(currentValue, long); assert.equal(field.value, long);
-  assert.equal(field.style.height, '138px'); assert.equal(field.style.overflowY, 'auto');
+  for (const lines of [7, 16, 31]) {
+    const long = Array.from({ length: lines }, (_, i) => `Línea ${i} 🌱`).join('\n');
+    await input(long, 'insertFromPaste');
+    assert.equal(currentValue, long); assert.equal(field.value, long);
+    assert.equal(field.style.height, `${lines * 20 + 18}px`);
+    assert.equal(field.style.overflowY, 'hidden'); assert.equal(field.scrollTop, 0);
+    assert.equal(field.style.maxHeight, 'none'); assert.equal(field.style.flex, '0 0 auto');
+    assert.equal(document.activeElement, field);
+    assert.equal(field.selectionStart, long.length); assert.equal(field.selectionEnd, long.length);
+  }
   assert.equal(field.maxLength, -1);
   const enter = new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
   assert.equal(field.dispatchEvent(enter), true, 'Enter retains native multiline behavior');
+  await input('Nota con 日本語', 'insertCompositionText');
+  assert.equal(currentValue, 'Nota con 日本語'); assert.equal(document.activeElement, field);
   await input('Corto');
   assert.equal(field.style.height, '42px'); assert.equal(field.style.overflowY, 'hidden');
   await input(''); assert.equal(field.style.height, '42px');
@@ -90,7 +116,7 @@ test('existing values and width changes recalculate wrapping without losing focu
   assert.equal(field.style.height, '118px');
   field.focus(); field.setSelectionRange(10, 25);
   await env.resize(10);
-  assert.equal(field.style.height, '138px'); assert.equal(field.style.overflowY, 'auto');
+  assert.equal(field.style.height, `${Math.ceil(value.length / 10) * 20 + 18}px`); assert.equal(field.style.overflowY, 'hidden');
   await env.resize(100);
   assert.equal(field.style.height, '58px'); assert.equal(field.style.overflowY, 'hidden');
   assert.equal(document.activeElement, field); assert.equal(field.selectionStart, 10); assert.equal(field.selectionEnd, 25);
@@ -99,29 +125,86 @@ test('existing values and width changes recalculate wrapping without losing focu
   assert.equal(field.value, 'Editado\nSegunda línea'); assert.equal(field.style.height, '58px');
 });
 
-test('mobile bottom sheet keeps its viewport handling and focused multiline content during simulated keyboard resize', async t => {
+test('unbroken words wrap and expand without horizontal or vertical internal scrolling', async t => {
+  const env = await environment(t);
+  const word = 'abcdefghij'.repeat(60);
+  await env.render(word);
+  const field = document.querySelector('textarea');
+  assert.equal(field.value, word); assert.equal(field.style.height, '418px');
+  assert.equal(field.style.overflowWrap, 'anywhere');
+  assert.equal(field.style.overflowX, 'hidden'); assert.equal(field.style.overflowY, 'hidden');
+  field.focus(); field.setSelectionRange(125, 125);
+  await env.resize(10);
+  assert.equal(field.style.height, '1218px'); assert.equal(field.scrollTop, 0);
+  assert.equal(field.selectionStart, 125); assert.equal(field.selectionEnd, 125);
+  await env.render('Corto'); assert.equal(field.style.height, '42px');
+  assert.equal(document.querySelectorAll('textarea').length, 1, 'Measurement copies are removed');
+});
+
+test('mobile form scrolls to the caret after paste, selection and keyboard resize while Guardar stays outside its scrollport', async t => {
   const env = await environment(t, true);
   const viewport = new window.EventTarget();
   viewport.height = window.innerHeight; viewport.offsetTop = 0;
   Object.defineProperty(window, 'visualViewport', { value: viewport });
   const EntryFormShell = await load('EntryFormShell');
-  await act(() => env.root.render(React.createElement(EntryFormShell, { title: 'Agregar comida', onClose() {} },
-    React.createElement('form', { className: 'entry-form' }, React.createElement('div', { className: 'entry-form-content' },
-      React.createElement(AutoResizeTextarea, { value: 'Texto largo\n'.repeat(10), onChange() {}, style: env.style, 'aria-label': 'Descripción' }))))));
+  let saves = 0;
+  function Form() {
+    const [value, setValue] = useState('');
+    return React.createElement(EntryFormShell, { title: 'Agregar comida', onClose() {} },
+      React.createElement('form', { className: 'entry-form', onSubmit: event => { event.preventDefault(); saves++; } },
+        React.createElement('div', { className: 'entry-form-content' },
+          React.createElement('div', { className: 'entry-field' }, React.createElement(AutoResizeTextarea,
+            { value, onChange: event => setValue(event.target.value), style: env.style, 'aria-label': 'Descripción' }))),
+        React.createElement('div', { className: 'entry-form-footer' }, React.createElement('button', { type: 'submit' }, 'Guardar'))));
+  }
+  await act(() => env.root.render(React.createElement(Form)));
   const field = document.querySelector('textarea');
   const content = document.querySelector('.entry-form-content');
-  content.getBoundingClientRect = () => ({ top: 150, bottom: 400 });
+  content.getBoundingClientRect = () => ({ top: 100, bottom: viewport.height - 80 });
   field.focus();
   viewport.height = 360;
   await act(() => viewport.dispatchEvent(new window.Event('resize')));
   const dialog = document.querySelector('[role="dialog"]');
   assert.equal(dialog.style.getPropertyValue('--entry-viewport-height'), '360px');
   assert.equal(dialog.style.getPropertyValue('--entry-keyboard-offset'), `${window.innerHeight - 360}px`);
-  assert.equal(field.style.height, '138px'); assert.equal(field.style.overflowY, 'auto');
-  assert.ok(content.scrollTop > 0); assert.equal(document.activeElement, field);
+  const text = Array.from({ length: 31 }, (_, i) => `Línea ${i}`).join('\n');
+  await act(() => {
+    Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(field, text);
+    field.dispatchEvent(new window.InputEvent('input', { bubbles: true, inputType: 'insertFromPaste' }));
+  });
+  await env.flushFrames();
+  assert.equal(field.style.height, '638px'); assert.equal(field.style.overflowY, 'hidden');
+  assert.ok(content.scrollTop > 0); assert.equal(field.scrollTop, 0);
+  assert.equal(document.activeElement, field); assert.equal(field.selectionEnd, text.length);
+  const atEnd = content.scrollTop;
+  // Opening/resizing the keyboard with the cursor at the beginning must not jump to line 31.
+  field.setSelectionRange(0, 0);
+  viewport.height = 320; viewport.offsetTop = 10;
+  await act(() => viewport.dispatchEvent(new window.Event('resize')));
+  assert.ok(content.scrollTop < atEnd);
+  assert.equal(field.selectionStart, 0); assert.equal(document.activeElement, field);
+  assert.equal(dialog.style.getPropertyValue('--entry-keyboard-offset'), `${window.innerHeight - 330}px`);
+  field.setSelectionRange(text.length, text.length);
+  await act(() => field.dispatchEvent(new window.Event('select', { bubbles: true })));
+  await env.flushFrames(); assert.ok(content.scrollTop > atEnd);
+  field.setSelectionRange(0, text.length, 'backward');
+  await act(() => document.dispatchEvent(new window.Event('selectionchange')));
+  await env.flushFrames(); assert.ok(content.scrollTop < atEnd);
+  assert.equal(field.selectionDirection, 'backward');
   assert.equal(document.body.style.overflow, 'hidden');
   await env.resize(15);
-  assert.equal(field.value, 'Texto largo\n'.repeat(10)); assert.equal(document.activeElement, field);
+  assert.equal(field.value, text); assert.equal(document.activeElement, field);
+  const save = document.querySelector('.entry-form-footer button');
+  assert.equal(content.contains(save), false);
+  save.focus(); await act(() => save.click()); assert.equal(saves, 1);
   await act(() => env.root.unmount());
   assert.equal(document.body.style.overflow, '');
+});
+
+test('bottom sheet gives scrolling to the content, prevents field compression and keeps the save footer fixed in its flex layout', async () => {
+  const css = await readFile(new URL('../src/components/HomeVariants.css', import.meta.url), 'utf8');
+  assert.match(css, /\.entry-form-content\s*\{[^}]*min-height: 0;[^}]*overflow-y: auto/);
+  assert.match(css, /\.entry-field\s*\{[^}]*flex-shrink: 0/);
+  assert.match(css, /\.entry-form-footer\s*\{[^}]*flex: none/);
+  assert.match(css, /\.entry-bottom-sheet\s*\{[^}]*max-height: calc\(var\(--entry-viewport-height/);
 });

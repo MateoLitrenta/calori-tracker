@@ -9,6 +9,34 @@ interface EntryFormShellProps {
   desktopModal?: boolean;
 }
 
+// A tall textarea cannot fit in the viewport. Follow its caret rather than its bottom edge.
+function focusedBounds(field: HTMLElement) {
+  const bounds = field.getBoundingClientRect();
+  if (field.tagName !== 'TEXTAREA') return bounds;
+  const textarea = field as HTMLTextAreaElement;
+  const computed = window.getComputedStyle(field);
+  const mirror = document.createElement('div');
+  for (const property of ['font-family', 'font-size', 'font-weight', 'font-style', 'font-variant',
+    'line-height', 'letter-spacing', 'word-spacing', 'text-indent',
+    'text-transform', 'tab-size', 'padding', 'border']) {
+    mirror.style.setProperty(property, computed.getPropertyValue(property));
+  }
+  Object.assign(mirror.style, { position: 'fixed', visibility: 'hidden', pointerEvents: 'none',
+    top: '0', left: '0', boxSizing: 'border-box', width: `${bounds.width}px`,
+    whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' });
+  mirror.setAttribute('aria-hidden', 'true');
+  const caret = document.createElement('span');
+  const position = textarea.selectionDirection === 'backward' ? textarea.selectionStart : textarea.selectionEnd;
+  mirror.textContent = textarea.value.slice(0, position);
+  caret.textContent = textarea.value.slice(position) || '.';
+  mirror.append(caret);
+  document.body.append(mirror);
+  const top = bounds.top + caret.offsetTop;
+  const height = parseFloat(computed.lineHeight) || parseFloat(computed.fontSize) * 1.2 || 20;
+  mirror.remove();
+  return { top, bottom: top + height };
+}
+
 export default function EntryFormShell({ title, onClose, children, desktopModal = false }: EntryFormShellProps) {
   const [mobile, setMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -69,20 +97,34 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
       const field = document.activeElement;
       if (!content || !(field instanceof HTMLElement) || !content.contains(field)) return;
       const visible = content.getBoundingClientRect();
-      const bounds = field.getBoundingClientRect();
+      const bounds = focusedBounds(field);
       if (bounds.bottom > visible.bottom) content.scrollTop += bounds.bottom - visible.bottom + 12;
       else if (bounds.top < visible.top) content.scrollTop -= visible.top - bounds.top + 12;
+    };
+    let scrollFrame: number | undefined;
+    const followCaret = () => {
+      if (document.activeElement?.tagName !== 'TEXTAREA' || !dialog.contains(document.activeElement)) return;
+      if (scrollFrame !== undefined) window.cancelAnimationFrame(scrollFrame);
+      // React commits the new value and textarea height before the next frame.
+      scrollFrame = window.requestAnimationFrame(() => { scrollFrame = undefined; updateViewport(); });
     };
     updateViewport();
     viewport?.addEventListener('resize', updateViewport);
     viewport?.addEventListener('scroll', updateViewport);
     window.addEventListener('resize', updateViewport);
     dialog.addEventListener('focusin', updateViewport);
+    dialog.addEventListener('input', followCaret);
+    dialog.addEventListener('select', followCaret);
+    document.addEventListener('selectionchange', followCaret);
     return () => {
+      if (scrollFrame !== undefined) window.cancelAnimationFrame(scrollFrame);
       viewport?.removeEventListener('resize', updateViewport);
       viewport?.removeEventListener('scroll', updateViewport);
       window.removeEventListener('resize', updateViewport);
       dialog.removeEventListener('focusin', updateViewport);
+      dialog.removeEventListener('input', followCaret);
+      dialog.removeEventListener('select', followCaret);
+      document.removeEventListener('selectionchange', followCaret);
       document.removeEventListener('keydown', keyboard);
       document.removeEventListener('focusin', containFocus);
       background.forEach((element, index) => { element.inert = previousInert[index]; });

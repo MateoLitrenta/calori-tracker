@@ -129,7 +129,7 @@
 .home-variants.entry-sheet-root .entry-secondary-fields { display: contents; }
 .home-variants.entry-sheet-root .entry-secondary-fields > * { order: 0; }
 .home-variants.entry-sheet-root .entry-secondary-fields .entry-notes { min-width: 0; }
-.home-variants.entry-sheet-root .entry-field { display: flex; flex-direction: column; gap: 6px; }
+.home-variants.entry-sheet-root .entry-field { display: flex; flex-direction: column; flex-shrink: 0; gap: 6px; }
 .home-variants.entry-sheet-root .entry-field-label { position: static; width: auto; height: auto; overflow: visible; clip-path: none; white-space: normal; font-size: 13px; line-height: 1.4; color: var(--home-muted); }
 .home-variants.entry-sheet-root .entry-field-label span { font-weight: 400; }
 .home-variants.entry-sheet-root .entry-form-content :is(input:not([type="file"]), select, textarea) { min-width: 0; max-width: 100%; width: 100%; min-height: 48px; font-size: 16px; color: var(--home-text); background: var(--home-control); border-color: var(--home-line); border-radius: var(--radius-control); }
