@@ -6,6 +6,7 @@ import { evaluateCoachGoal, isActionableCoachingQuery, type CoachGoal } from '..
 import { goalProgressQuery } from '../../src/utils/coachGoalPresentation.ts';
 import { coachGoalsEnabled, readCoachGoals, readGoalActivity } from '../../server/coachGoals.ts';
 import { resolveCoachGoalProposal } from '../../server/coachGoalProposal.ts';
+import { workoutGoalConversation } from '../../server/coachGoalConversation.ts';
 import { ACTIONABLE_COACHING_INSTRUCTIONS } from '../../server/coachCoaching.ts';
 import { coachDates } from '../../src/utils/coachDates.ts';
 import { AIError, aiErrorResponse, authenticateAIRequest, fetchGemini, logAIRequest, readAIRequest,
@@ -351,8 +352,14 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
       return json({ error: 'No hay mensajes de usuario válidos.' }, 400);
     }
 
+    // Keep a bounded local draft across clarification turns without expanding
+    // Gemini's ten-message payload. Older messages must pass the same validator;
+    // they supply user intent only, never evidence of a persisted goal.
+    const goalMessages = body.messages.slice(-MAX_MESSAGES * 2);
+    const goalHistory = goalMessages.every(isValidMessage) ? goalMessages : validMessages;
+
     const habitPeriod = resolveHabitPeriod(validMessages);
-    const actionableQuery = !attachment && isActionableCoachingQuery(validMessages);
+    const actionableQuery = !attachment && (isActionableCoachingQuery(validMessages) || !!workoutGoalConversation(goalHistory, body.today));
     const goalContextRequested = actionableQuery || (!attachment && !!goalProgressQuery(lastMessage.text));
     const habitQuery = isHabitQuery(validMessages) || goalContextRequested;
     const habitInsights = coachContext && !attachment && (habitPeriod !== 7 || habitQuery)
@@ -506,7 +513,7 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
         }
       }
       const goalResult = actionableQuery && result.actions.length === 0
-        ? resolveCoachGoalProposal({ text: lastMessage.text, today: body.today, reply: result.reply,
+        ? resolveCoachGoalProposal({ text: lastMessage.text, messages: goalHistory, today: body.today, reply: result.reply,
           suggestion: result.goalProposal, availability: goalAvailability, goals: acceptedGoals }) : { reply: result.reply };
       return json({ ...goalResult, actions: result.actions,
         presentation: actionableQuery || !coachContext || habitPeriod !== 7 || result.actions.length > 0 || attachment?.kind === 'image'

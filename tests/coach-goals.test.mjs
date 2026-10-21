@@ -109,8 +109,8 @@ function infrastructure(t) {
   state.goals = (body, id = own, bearer = token(id)) => goalsHandler.fetch(new Request('http://local/api/coach/goals', {
     method: body ? 'POST' : 'GET', headers: { Authorization: `Bearer ${bearer}`, 'Content-Type': 'application/json' },
     ...(body ? { body: JSON.stringify({ today, ...body }) } : {}) }));
-  state.chat = (messages, context, id = own) => chatHandler.fetch(new Request('http://local/api/ai/chat', { method: 'POST',
-    headers: { Authorization: `Bearer ${token(id)}` }, body: JSON.stringify({ today, messages,
+  state.chat = (messages, context, id = own, localToday = today) => chatHandler.fetch(new Request('http://local/api/ai/chat', { method: 'POST',
+    headers: { Authorization: `Bearer ${token(id)}` }, body: JSON.stringify({ today: localToday, messages,
       coachContext: context, acceptedGoals: [{ invented: 'ignored' }] }) }));
   return state;
 }
@@ -366,4 +366,57 @@ test('429 on a goal request reserves quota once without provider calls or unconf
   const response=await state.chat(users(['Quiero establecer un objetivo de tres entrenamientos durante los próximos siete días y guardarlo en Calori']),context({}));
   assert.equal(response.status,429);assert.equal(state.quotas,1);assert.equal(state.modelCalls,0);assert.equal(state.writes,0);
   const body=await response.json();assert.equal(body.goalProposal,undefined);assert.ok(body.error);
+});
+
+test('full observed conversation routes month corrections and save references through the goal contract with one call per turn', async t => {
+  const state = infrastructure(t), messages = [];
+  state.result = { reply: 'Tu meta será ir al gimnasio tres veces por semana. Te ayudaré a seguir tu progreso.', actions: [],
+    goalProposal: { operation: 'accept', ...values({ target: 12, startDate: '2026-11-01', endDate: '2026-11-30' }) } };
+  const texts = ['Quiero ir al gimnasio 3 veces por semana durante el mes de noviembre', 'Septiembre',
+    'Perdón, es para el mes de noviembre', 'No quiero otras metas', '¿Podés guardar mi objetivo?'];
+  for (const [index, text] of texts.entries()) {
+    messages.push({ role: 'user', text });
+    const response = await state.chat(messages, undefined, own, '2026-10-21'); assert.equal(response.status, 200);
+    const body = await response.json(); assert.equal(body.goalProposal, undefined); assert.deepEqual(body.actions, []);
+    assert.match(body.reply, index === 1 ? /período ya pasó/ : /3 sesiones por semana/);
+    assert.doesNotMatch(body.reply, /Tu meta será|Te ayudaré|propuesta confirmable/);
+    assert.equal(coaching(state.prompts.at(-1)).availability, 'available');
+    assert.equal(state.writes, 0); assert.equal(state.modelCalls, index + 1); assert.equal(state.quotas, index + 1);
+    messages.push({ role: 'bot', text: body.reply });
+  }
+  // The root is now outside Gemini's ten-message window. Keep the local draft
+  // so choosing the offered option does not require repeating the original goal.
+  messages.push({ role: 'user', text: 'Prefiero la opción semanal' });
+  const selected = await (await state.chat(messages, undefined, own, '2026-10-21')).json();
+  assert.equal(selected.goalProposal.target, 3); assert.equal(selected.goalProposal.endDate, '2026-10-27');
+  assert.ok(state.prompts.at(-1).contents.length <= 10); assert.equal(state.modelCalls, 6); assert.equal(state.quotas, 6);
+  assert.equal(state.writes, 0);
+});
+
+test('a clarified weekly alternative can be confirmed idempotently and recovered in a fresh conversation', async t => {
+  const state = infrastructure(t);
+  state.result = { reply: 'Tu objetivo está establecido.', actions: [], goalProposal: null };
+  const messages = users(['Quiero ir al gimnasio 3 veces por semana', 'Prefiero la opción semanal']);
+  const response = await state.chat(messages, context({})); assert.equal(response.status, 200);
+  const body = await response.json(); assert.equal(body.goalProposal.target, 3);
+  assert.equal(body.goalProposal.startDate, today); assert.equal(body.goalProposal.endDate, coachDates(today, 1, -6)[0]);
+  assert.match(body.reply, /todavía no está guardada/); assert.equal(state.writes, 0);
+  assert.equal((await state.goals({ proposal: body.goalProposal })).status, 200);
+  assert.equal((await state.goals({ proposal: body.goalProposal })).status, 200);
+  assert.equal((await (await state.goals()).json()).goals.length, 1);
+  await state.chat(users(['¿Cuál es mi objetivo?']), context({}));
+  assert.equal(coaching(state.prompts.at(-1)).acceptedGoals[0].id, body.goalProposal.id);
+  assert.equal(state.modelCalls, 2); assert.equal(state.quotas, 2);
+});
+
+test('clarified goals retain quota and database-failure guards without writes or invented persistence', async t => {
+  const state = infrastructure(t), messages = users(['Quiero entrenar 3 veces', 'los próximos 7 días']);
+  state.quotaDenied = true;
+  assert.equal((await state.chat(messages, context({}))).status, 429);
+  assert.equal(state.modelCalls, 0); assert.equal(state.quotas, 1);
+  state.quotaDenied = false; state.goalsDown = true;
+  state.result = { reply: 'Tu meta ya está guardada.', actions: [], goalProposal: { operation: 'accept', ...values() } };
+  const body = await (await state.chat(messages, context({}))).json();
+  assert.equal(body.goalProposal, undefined); assert.match(body.reply, /No pude consultar tus objetivos/);
+  assert.equal(state.writes, 0); assert.equal(state.modelCalls, 1); assert.equal(state.quotas, 2);
 });

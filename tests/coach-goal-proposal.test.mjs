@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { explicitWorkoutGoal, resolveCoachGoalProposal } from '../server/coachGoalProposal.ts';
+import { workoutGoalConversation } from '../server/coachGoalConversation.ts';
 
 const today='2026-10-13';
 const explicit='Quiero establecer un objetivo de tres entrenamientos durante los próximos siete días y guardarlo en Calori';
@@ -24,6 +25,91 @@ test('whole-message extraction supports only explicit counts and relative inclus
     'Quiero establecer un objetivo de tres entrenamientos durante los próximos 0 días',
     'Quiero establecer un objetivo de tres entrenamientos', '¿Cómo vengo entrenando?', 'sí',
   ]) assert.equal(explicitWorkoutGoal(text,today),undefined,text);
+});
+
+const conversationToday = '2026-10-21';
+const conversation = texts => texts.flatMap(text => [{ role: 'user', text }, { role: 'bot', text: 'Tu meta será entrenar tres veces por semana. Ya está guardada.' }]).slice(0, -1);
+const resolveConversation = (texts, overrides = {}) => resolveCoachGoalProposal({ today: conversationToday,
+  text: texts.at(-1), messages: conversation(texts), availability: 'available', goals: [],
+  reply: 'Tu meta será ir al gimnasio tres veces por semana. Te ayudaré a seguir tu progreso.',
+  suggestion: { ...values, operation: 'accept', target: 12, startDate: '2026-11-01', endDate: '2026-11-30' }, ...overrides });
+
+test('observed conversation keeps the weekly count through September/November corrections without inventing a monthly total', () => {
+  const texts = ['Quiero ir al gimnasio 3 veces por semana durante el mes de noviembre',
+    'Septiembre', 'Perdón, es para el mes de noviembre', 'No quiero otras metas', '¿Podés guardar mi objetivo?'];
+  for (let length = 1; length <= texts.length; length++) {
+    const result = resolveConversation(texts.slice(0, length));
+    assert.equal(result.goalProposal, undefined);
+    assert.doesNotMatch(result.reply, /Tu meta será|Te ayudaré|12 entrenamientos|propuesta confirmable/);
+    assert.match(result.reply, length === 2 ? /período ya pasó/ : /3 sesiones por semana/);
+    assert.match(result.reply, /no se guardó/);
+  }
+  const corrected = resolveConversation([texts[0], 'Septiembre', 'Perdón, quise decir noviembre, no septiembre']);
+  assert.match(corrected.reply, /no puede exigir una frecuencia cada semana/);
+});
+
+test('natural workout requests and explicit monthly totals produce exact inclusive dates even when Gemini omits or contradicts the object', () => {
+  for (const suggestion of [null, undefined, { operation: 'accept', ...values, target: 31 }]) {
+    for (const [text, target, startDate, endDate] of [
+      ['Quiero entrenar 3 veces durante los próximos 7 días', 3, conversationToday, '2026-10-27'],
+      ['Quiero una meta de 12 entrenamientos durante noviembre', 12, '2026-11-01', '2026-11-30'],
+      ['Quiero un objetivo de 12 entrenamientos del 2026-11-01 al 2026-11-30', 12, '2026-11-01', '2026-11-30'],
+      ['Quiero una meta de 12 entrenamientos durante noviembre de 2026', 12, '2026-11-01', '2026-11-30'],
+    ]) {
+      const result = resolveConversation([text], { suggestion });
+      assert.deepEqual({ ...result.goalProposal, id: undefined }, { type: 'workout_sessions', target, startDate, endDate, stepThreshold: null, operation: 'accept', id: undefined });
+      assert.match(result.reply, /todavía no está guardada/);
+    }
+  }
+});
+
+test('safe clarifications reuse only user counts and the corrected month; save references work without repeating the request', () => {
+  for (const correction of ['Perdón, es para el mes de noviembre', 'Perdón, quise decir noviembre, no septiembre']) {
+    const result = resolveConversation(['Quiero una meta de 12 entrenamientos', 'Septiembre', correction, 'Quiero guardar el objetivo que acabamos de definir']);
+    assert.equal(result.goalProposal.target, 12);
+    assert.equal(result.goalProposal.startDate, '2026-11-01'); assert.equal(result.goalProposal.endDate, '2026-11-30');
+  }
+  assert.match(resolveConversation(['Quiero entrenar 3 veces']).reply, /Conservo tu meta de 3 sesiones/);
+  const result = resolveConversation(['Quiero entrenar 3 veces', 'los próximos 7 días']);
+  assert.equal(result.goalProposal.target, 3); assert.equal(result.goalProposal.endDate, '2026-10-27');
+});
+
+test('weekly alternatives require an explicit choice; monthly totals are never multiplied from a weekly frequency', () => {
+  const initial = 'Quiero ir al gimnasio 3 veces por semana durante noviembre';
+  for (const followup of ['sí', 'dale', '¿Podés guardar mi objetivo?']) assert.equal(resolveConversation([initial, followup]).goalProposal, undefined);
+  const weekly = resolveConversation([initial, 'Prefiero la opción semanal']);
+  assert.equal(weekly.goalProposal.target, 3); assert.equal(weekly.goalProposal.startDate, conversationToday);
+  assert.equal(weekly.goalProposal.endDate, '2026-10-27');
+  const monthly = resolveConversation([initial, 'Acepto una meta total de 10 entrenamientos para noviembre, sin exigir tres sesiones cada semana']);
+  assert.equal(monthly.goalProposal.target, 10); assert.equal(monthly.goalProposal.endDate, '2026-11-30');
+});
+
+test('negations, quotes, hypothetical/ambiguous turns and topic changes cannot revive a previous draft or trust a bot claim', () => {
+  const initial = 'Quiero entrenar 3 veces durante los próximos 7 días';
+  for (const text of ['No quiero guardar mi objetivo', 'No lo guardes', 'Si puedo', '¿Y si entreno tres veces?',
+    'Quiero una meta de 12 entrenamientos durante noviembre o diciembre', 'Mi amigo dijo: "Quiero entrenar 3 veces"',
+    '¿Cuántas calorías tiene una manzana?', 'Registrá una comida hoy']) {
+    assert.equal(resolveConversation([initial, text, '¿Podés guardar mi objetivo?']).goalProposal, undefined, text);
+  }
+  assert.equal(resolveConversation(['¿Podés guardar mi objetivo?']).goalProposal, undefined);
+  assert.equal(workoutGoalConversation([{ role: 'bot', text: initial }, { role: 'user', text: 'Noviembre' }], conversationToday), undefined);
+  assert.equal(workoutGoalConversation(conversation([initial, 'sí']), conversationToday), undefined);
+});
+
+test('invalid dates, targets, past months and distant starts request a concrete correction without silent coercion', () => {
+  for (const [text, expected] of [
+    ['Quiero una meta de 12 entrenamientos durante septiembre', /período ya pasó/],
+    ['Quiero una meta de 12 entrenamientos durante diciembre', /inicio debe estar/],
+    ['Quiero entrenar 3 veces durante los próximos 32 días', /período debe tener/],
+    ['Quiero una meta de 32 entrenamientos durante noviembre', /meta debe ser/],
+    ['Quiero un objetivo de 3 entrenamientos del 2026-11-01 al 2026-11-31', /fechas válidas/],
+  ]) {
+    const result = resolveConversation([text]); assert.equal(result.goalProposal, undefined); assert.match(result.reply, expected);
+  }
+  for (const availability of ['disabled', 'unavailable']) {
+    const result = resolveConversation(['Quiero entrenar 3 veces', 'los próximos 7 días'], { availability });
+    assert.equal(result.goalProposal, undefined); assert.match(result.reply, availability === 'disabled' ? /no están habilitados/ : /No pude consultar/);
+  }
 });
 test('missing, malformed and contradictory provider proposals cannot override an exact user request',()=>{
   for(const suggestion of [null,undefined,{...values,operation:'accept',startDate:'2026-02-30'},
@@ -68,7 +154,7 @@ test('disabled and unavailable persistence produce explicit responses, with no g
   }
   assert.match(resolve('Quiero establecer un objetivo',{reply:'Guardé el objetivo.'}).reply,/No se guardó ningún cambio/);
   const savedClaim=resolve('Quiero entrenar tres veces esta semana',{reply:'Tu objetivo fue guardado.',suggestion:{...values,operation:'accept'}});
-  assert.ok(savedClaim.goalProposal);assert.match(savedClaim.reply,/Todavía no se guardó ningún cambio/);
+  assert.ok(savedClaim.goalProposal);assert.match(savedClaim.reply,/todavía no está guardada/);
   assert.equal(resolve('sí',{reply:'Ya lo guardé.'}).goalProposal,undefined);
   assert.ok(!resolve('sí',{reply:'Ya lo guardé.'}).reply.includes('guardé'));
 });
