@@ -1,10 +1,14 @@
 import './PremiumViews.css';
 import { useState, useRef, useEffect, useCallback, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
-import { ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, X } from '@phosphor-icons/react';
+import { ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, Target, X } from '@phosphor-icons/react';
 import UserAvatar from './UserAvatar';
 import CoachInsightCard from './CoachInsightCard';
 import CoachGoalConfirmation from './CoachGoalConfirmation';
+import CoachGoalsPanel from './CoachGoalsPanel';
+import { CoachGoalCards } from './CoachGoalCard';
+import { useCoachGoals, type CoachGoalsResource } from '../hooks/useCoachGoals';
+import { goalProgressQuery } from '../utils/coachGoalPresentation';
 import { confirmCoachGoal } from '../services/coachGoals';
 import type { CoachGoalProposal } from '../utils/coachGoals';
 import { buildCoachCard, parseCoachCard, type CoachCardSnapshot } from '../utils/coachPresentation';
@@ -20,6 +24,7 @@ interface Message extends ChatMessage {
   id: string;
   localTime?: string;
   coachCard?: CoachCardSnapshot;
+  goalProgress?: 'all' | 'workout_sessions' | 'step_days';
 }
 
 function readHistory(key: string): Message[] {
@@ -29,9 +34,10 @@ function readHistory(key: string): Message[] {
       message !== null && typeof message === 'object' &&
       typeof message.id === 'string' && typeof message.text === 'string' &&
       (message.role === 'user' || message.role === 'bot')).map(message => {
-        const { coachCard, ...textMessage } = message;
+        const { coachCard, goalProgress, ...textMessage } = message;
         const card = message.role === 'bot' ? parseCoachCard(coachCard) : undefined;
-        return card ? { ...textMessage, coachCard: card } : textMessage;
+        return { ...textMessage, ...(card ? { coachCard: card } : {}),
+          ...(message.role === 'bot' && typeof goalProgress === 'string' && ['all', 'workout_sessions', 'step_days'].includes(goalProgress) ? { goalProgress } : {}) };
       }) : [];
   } catch {
     return [];
@@ -114,6 +120,7 @@ export default function ChatView({ scrollContainer }: { scrollContainer: RefObje
   const { user, activeProfile, avatarRevision, updateRecord } = useAppStore();
   const [today, setToday] = useState(() => formatDateStr(new Date()));
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const goals = useCoachGoals(user?.id);
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
     const checkDate = () => {
@@ -139,21 +146,23 @@ export default function ChatView({ scrollContainer }: { scrollContainer: RefObje
   if (!user) return null;
   const dateStr = selectedDate ?? today;
   return <UserChat key={`${user.id}:${today}:${dateStr}`} userId={user.id} activeProfile={activeProfile} avatarRevision={avatarRevision}
-    updateRecord={updateRecord} dateStr={dateStr} today={today} onSelectDate={setSelectedDate} scrollContainer={scrollContainer} />;
+    updateRecord={updateRecord} dateStr={dateStr} today={today} onSelectDate={setSelectedDate} scrollContainer={scrollContainer} goals={goals} />;
 }
 
-function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr, today, onSelectDate, scrollContainer }: {
+function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr, today, onSelectDate, scrollContainer, goals }: {
   userId: string; activeProfile: UserProfile | null;
   avatarRevision: number;
   updateRecord: (dateStr: string, record: DailyRecord) => Promise<boolean>;
   dateStr: string; today: string; onSelectDate: (date: string) => void;
   scrollContainer: RefObject<HTMLElement | null>;
+  goals: CoachGoalsResource;
 }) {
   const storageKey = `calori:assistant:messages:${userId}:${dateStr}`;
   const [messages, setMessages] = useState<Message[]>(() => readDailyHistory(userId, dateStr, today));
   const [initialMessageIds] = useState(() => new Set(messages.map(message => message.id)));
   const isPastConversation = dateStr !== today;
   const [showHistory, setShowHistory] = useState(false);
+  const [showGoals, setShowGoals] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -439,11 +448,15 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       const saved = await confirmCoachGoal(proposal, today, userId);
       if (!mounted.current) return;
       setPendingGoal(null);
+      void goals.reload();
       appendReply(saved.status === 'cancelled' ? 'Objetivo cancelado. Tus registros no cambiaron.'
         : proposal.operation === 'update' ? 'Objetivo actualizado y guardado. Lo usaré para evaluar tus registros del período.'
           : 'Objetivo aceptado y guardado. Podés consultarlo en otras conversaciones para revisar tus registros del período.');
     } catch (error) {
-      if (mounted.current) appendReply(error instanceof Error ? error.message : 'No se pudo guardar el objetivo.');
+      if (mounted.current) {
+        appendReply(error instanceof Error ? error.message : 'No se pudo guardar el objetivo.');
+        void goals.reload();
+      }
     } finally { busy.current = false; if (mounted.current) setIsTyping(false); }
   };
 
@@ -496,8 +509,8 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     }
   }, [messages, storageKey, isPastConversation]);
 
-  const suggestions = coachSuggestions(activeProfile?.user_id === userId
-    ? buildCoachContext(activeProfile, today) : null);
+  const currentContext = activeProfile?.user_id === userId ? buildCoachContext(activeProfile, today) : null;
+  const suggestions = coachSuggestions(currentContext);
 
   const startConversation = () => {
     if (busy.current || audioBusy.current || imageBusy.current || isCameraOpen || isPastConversation) return;
@@ -583,9 +596,11 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         id: (Date.now() + 1).toString(),
         role: 'bot',
         text: replyText,
+        goalProgress: !requestedActions && !response.goalProposal && !attachment ? goalProgressQuery(text) : undefined,
         coachCard: !requestedActions && !response.goalProposal && attachment?.kind !== 'image'
           ? buildCoachCard(response.presentation, coachContext) : undefined
       };
+      if (botMsg.goalProgress) void goals.reload();
       if (botMsg.coachCard) {
         const container = window.matchMedia('(max-width: 767px)').matches
           ? messagesScrollRef.current : scrollContainer.current;
@@ -762,6 +777,11 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           <p className="text-xs text-slate-500 dark:text-gray-400">Coach de nutrición y entrenamiento</p>
         </div>
         <div className="chat-heading-actions ml-auto flex items-center gap-1">
+          <button type="button" onClick={() => { setShowGoals(true); void goals.reload(); }}
+            disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || hasPending}
+            aria-label="Mis objetivos" aria-haspopup="dialog" aria-expanded={showGoals} className="text-xs font-medium disabled:opacity-50">
+            <Target className="chat-action-icon" size={19} aria-hidden="true" /><span>Mis objetivos</span>
+          </button>
           <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || hasPending}
             aria-label="Historial" aria-expanded={showHistory} className="chat-history-button text-xs font-medium disabled:opacity-50">
             <ClockCounterClockwise className="chat-action-icon" size={19} aria-hidden="true" /><span>Historial</span>
@@ -772,6 +792,8 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           </button>
         </div>
       </header>
+      {showGoals && <CoachGoalsPanel resource={goals} history={currentContext?.historyDays ?? []} today={today} userId={userId}
+        onClose={() => setShowGoals(false)} />}
 
       {showHistory && (
         <label className="chat-history-picker flex flex-col gap-2 px-4 py-3 text-sm">
@@ -886,9 +908,10 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-message" />
               )}
             </div>
-            {msg.role === 'bot' && msg.coachCard ? (
+            {msg.role === 'bot' && (msg.coachCard || msg.goalProgress) ? (
               <div className="chat-coach-stack">
-                <CoachInsightCard card={msg.coachCard} />
+                {msg.goalProgress && (msg.goalProgress === 'all' || goals.status !== 'ready' || goals.goals.some(goal => goal.status === 'active' && goal.type === msg.goalProgress)) ? <CoachGoalCards resource={goals} history={currentContext?.historyDays ?? []} today={today}
+                  type={msg.goalProgress === 'all' ? undefined : msg.goalProgress} limit={2} /> : msg.coachCard && <CoachInsightCard card={msg.coachCard} />}
                 <div className="chat-bubble bg-slate-100 text-slate-900 dark:bg-[#191c1f] dark:text-gray-100 rounded-tl-sm text-sm">
                   <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-snug prose-p:mb-2 prose-ul:my-1 prose-li:my-0 last:prose-p:mb-0">
                     <ReactMarkdown>{msg.text}</ReactMarkdown>

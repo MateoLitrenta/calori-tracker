@@ -271,6 +271,18 @@ test('step-day progress uses persisted entries, ignores forged client totals and
   }
   assert.equal(state.modelCalls,3);assert.equal(state.quotas,3);
 });
+
+test('contextual goal progress queries give Gemini the same official accepted goal evidence in one call', async t => {
+  const state=infrastructure(t), proposed=proposal();
+  await state.goals({proposal:proposed});
+  await db.exec('reset role'); await db.query('insert into public.workouts values($1,$2)',[own,today]);
+  for(const text of ['¿Cuál es mi objetivo?', '¿Cómo voy con mis entrenamientos?', '¿Cuántas sesiones me faltan?']) {
+    assert.equal((await state.chat(users([text]),context({}))).status,200);
+    const goal=coaching(state.prompts.at(-1)).acceptedGoals[0];
+    assert.equal(goal.registered,1); assert.equal(goal.remainingToRegister,2); assert.equal(goal.id,proposed.id);
+  }
+  assert.equal(state.modelCalls,3); assert.equal(state.quotas,3); assert.equal(state.writes,1);
+});
 test('suggestions remain unaccepted; invalid/foreign proposals and unavailable persistence cannot create goals', async t => {
   const state=infrastructure(t), suggested=values(); state.result.goalProposal={...suggested,operation:'accept'};
   const response=await state.chat(users(['Quiero entrenar tres veces esta semana']),context({}));

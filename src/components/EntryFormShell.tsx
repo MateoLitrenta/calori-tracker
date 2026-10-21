@@ -51,13 +51,16 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
   }, []);
 
   useEffect(() => {
-    if (!mobile || !dialogRef.current) return;
+    if ((!mobile && !desktopModal) || !dialogRef.current) return;
     const dialog = dialogRef.current;
     const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const main = document.querySelector<HTMLElement>('.app-main');
     const previousOverflow = main?.style.overflowY;
     const bodyOverflow = document.body.style.overflow;
-    const background = Array.from(document.querySelectorAll<HTMLElement>('.app-main, .app-bottom-nav, .app-shell > aside'));
+    // Mobile sheets are portalled; desktop dialogs can be inside .app-main.
+    // Never make an ancestor inert, which would disable the dialog itself.
+    const background = Array.from(document.querySelectorAll<HTMLElement>('.app-main, .app-bottom-nav, .app-shell > aside'))
+      .filter(element => mobile || !element.contains(dialog));
     const previousInert = background.map(element => element.inert);
     background.forEach(element => { element.inert = true; });
     if (main) main.style.overflowY = 'hidden';
@@ -89,6 +92,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
 
     const viewport = window.visualViewport;
     const updateViewport = () => {
+      if (!mobile) return;
       const height = viewport?.height ?? window.innerHeight;
       const offset = Math.max(0, window.innerHeight - height - (viewport?.offsetTop ?? 0));
       dialog.style.setProperty('--entry-viewport-height', `${height}px`);
@@ -132,7 +136,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
       document.body.style.overflow = bodyOverflow;
       if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     };
-  }, [mobile]);
+  }, [mobile, desktopModal]);
 
   const header = <div className="entry-sheet-header">
     <h3 id={titleId}>{title}</h3>
@@ -154,10 +158,10 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
   );
 
   if (desktopModal) return <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-    <div className="entry-desktop-modal bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl shadow-xl flex flex-col animate-in zoom-in-95 duration-200">
+    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} className="entry-desktop-modal bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl shadow-xl flex flex-col animate-in zoom-in-95 duration-200">
       <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
-        <h3 className="font-bold text-lg text-slate-900 dark:text-white">{title}</h3>
-        <button type="button" onClick={onClose} className="text-slate-500 dark:text-gray-400 hover:text-white transition-colors p-1" aria-label="Cerrar formulario"><X size={20} /></button>
+        <h3 id={titleId} className="font-bold text-lg text-slate-900 dark:text-white">{title}</h3>
+        <button ref={closeRef} type="button" onClick={onClose} className="text-slate-500 dark:text-gray-400 hover:text-white transition-colors p-1" aria-label="Cerrar formulario"><X size={20} /></button>
       </div>
       {children}
     </div>

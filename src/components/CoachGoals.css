@@ -1,0 +1,31 @@
+.coach-goal-list { display: grid; gap: 12px; min-width: 0; }
+.coach-goal-card { min-width: 0; padding: 16px; border: 1px solid #ffffff14; border-radius: var(--radius-widget, 18px); background: #191c1f; color: #f1f0ec; overflow-wrap: anywhere; }
+.coach-goal-card h3 { margin: 8px 0 4px; font-size: 17px; font-weight: 500; letter-spacing: -.02em; }
+.coach-goal-card p { margin: 8px 0 0; font-size: 13px; line-height: 1.5; }
+.coach-goal-top, .coach-goal-count { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; }
+.coach-goal-top, .coach-goal-period, .coach-goal-note { color: #a9abae; }
+.coach-goal-state { color: #f5a064; }
+.coach-goal-count { margin-top: 16px; }
+.coach-goal-count strong { font-size: 22px; font-weight: 500; }
+.coach-goal-card progress { display: block; width: 100%; height: 6px; margin-top: 8px; border: 0; border-radius: 999px; overflow: hidden; appearance: none; background: #ffffff14; }
+.coach-goal-card progress::-webkit-progress-bar { background: #ffffff14; }
+.coach-goal-card progress::-webkit-progress-value { background: #f5a064; border-radius: 999px; }
+.coach-goal-card progress::-moz-progress-bar { background: #f5a064; border-radius: 999px; }
+.coach-goals-panel { color: #f1f0ec; min-width: 0; }
+.coach-goals-content > * { flex-shrink: 0; }
+.coach-goals-panel .coach-goals-content { gap: 16px; }
+.coach-goal-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.coach-goals-panel button, .coach-goal-list button { min-height: 44px; padding: 8px 12px; border: 1px solid #ffffff24; border-radius: var(--radius-control, 14px); color: inherit; background: #24272b; font-size: 13px; }
+.coach-goals-panel button:disabled { opacity: .5; }
+.coach-goal-edit { display: grid; gap: 12px; margin-top: 16px; }
+.coach-goal-edit label { display: grid; gap: 6px; font-size: 13px; }
+.coach-goal-edit input { width: 100%; min-width: 0; min-height: 48px; padding: 8px 12px; border: 1px solid #ffffff24; border-radius: var(--radius-control, 14px); color: #f1f0ec; background: #191c1f; font-size: 16px; }
+.coach-goals-panel :is(button, input):focus-visible, .coach-goal-list button:focus-visible { outline: 2px solid #f5a064; outline-offset: 2px; }
+.coach-goals-panel .chat-confirmation { margin-top: 16px; overflow-wrap: anywhere; }
+.coach-goals-panel .chat-confirmation > div { flex-wrap: wrap; }
+@media (max-width: 374px) { .coach-goal-card { padding: 12px; } .coach-goal-top { align-items: start; } }
+html:not(.dark) .coach-goal-card { background: #fff; color: #1f2937; border-color: #cbd5e1; }
+html:not(.dark) :is(.coach-goal-top, .coach-goal-period, .coach-goal-note) { color: #64748b; }
+html:not(.dark) .coach-goal-state { color: #9a4d1f; }
+html:not(.dark) .coach-goals-panel { color: #1f2937; }
+html:not(.dark) .coach-goals-panel :is(input, button) { color: #1f2937; background: #f8f7f4; border-color: #cbd5e1; }
