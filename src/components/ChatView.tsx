@@ -190,9 +190,9 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const recordingCancelled = useRef(false);
   const audioBusy = useRef(false);
   const messagesScrollRef = useRef<HTMLElement | null>(null);
+  const messagesContentRef = useRef<HTMLDivElement | null>(null);
   const scrollToEnd = useCallback((behavior: ScrollBehavior) => {
-    const container = window.matchMedia('(max-width: 767px)').matches
-      ? messagesScrollRef.current : scrollContainer.current;
+    const container = messagesScrollRef.current ?? scrollContainer.current;
     container?.scrollTo({ top: container.scrollHeight,
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : behavior });
   }, [scrollContainer]);
@@ -486,16 +486,16 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   useEffect(() => {
     const container = messagesScrollRef.current;
     if (!container || typeof ResizeObserver === 'undefined') return;
-    const mobile = window.matchMedia('(max-width: 767px)');
     let previousHeight = container.clientHeight;
     let previousScrollHeight = container.scrollHeight;
     const observer = new ResizeObserver(() => {
       const wasNearEnd = previousScrollHeight - previousHeight - container.scrollTop <= 24;
-      if (mobile.matches && wasNearEnd) container.scrollTop = container.scrollHeight;
+      if (wasNearEnd) container.scrollTop = container.scrollHeight;
       previousHeight = container.clientHeight;
       previousScrollHeight = container.scrollHeight;
     });
     observer.observe(container);
+    if (messagesContentRef.current) observer.observe(messagesContentRef.current);
     return () => observer.disconnect();
   }, []);
 
@@ -601,11 +601,8 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           ? buildCoachCard(response.presentation, coachContext) : undefined
       };
       if (botMsg.goalProgress) void goals.reload();
-      if (botMsg.coachCard) {
-        const container = window.matchMedia('(max-width: 767px)').matches
-          ? messagesScrollRef.current : scrollContainer.current;
-        cardScrollDecision.current = { id: botMsg.id, nearEnd: !container || container.scrollHeight - container.clientHeight - container.scrollTop <= 24 };
-      }
+      const container = messagesScrollRef.current ?? scrollContainer.current;
+      cardScrollDecision.current = { id: botMsg.id, nearEnd: !container || container.scrollHeight - container.clientHeight - container.scrollTop <= 24 };
       setMessages(prev => [...prev, botMsg]);
       if (response.goalProposal && !requestedActions) setPendingGoal(response.goalProposal);
       if (direct.length) await applyActions(direct, todayStr);
@@ -816,6 +813,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       {/* Messages Area */}
       <section ref={messagesScrollRef} className="chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4"
         role="log" aria-label="Conversación con Coach" aria-live="polite" aria-relevant="additions text">
+        <div ref={messagesContentRef} className="chat-message-list flex flex-col grow shrink-0 min-w-0" style={{ gap: 'inherit' }}>
         {pendingGoal && <CoachGoalConfirmation proposal={pendingGoal} busy={isTyping}
           onConfirm={() => { void confirmGoal(); }} onDismiss={() => setPendingGoal(null)} />}
         {pending && (
@@ -946,6 +944,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           </div>
         )}
         <div className="chat-scroll-end" aria-hidden="true" />
+        </div>
       </section>
 
       {/* Input Area */}

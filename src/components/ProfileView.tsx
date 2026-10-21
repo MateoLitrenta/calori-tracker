@@ -209,7 +209,7 @@ export default function ProfileView() {
     <div className="premium-view dark profile-view profile-v2 flex flex-col w-full max-w-4xl mx-auto animate-in fade-in duration-300">
       <h1 className="profile-page-title">Perfil</h1>
 
-      <section className="profile-panel" aria-labelledby="profile-name">
+      <section className="profile-panel profile-personal-panel" aria-labelledby="profile-name">
         <div className="profile-identity">
           {draftAvatar ? (
             <img src={draftAvatar.url} alt="Vista previa de la foto de perfil" className="w-20 h-20 flex-none rounded-full object-cover" />
@@ -300,7 +300,7 @@ export default function ProfileView() {
         )}
       </section>
 
-      <section className="profile-panel" aria-labelledby="profile-account-heading">
+      <section className="profile-panel profile-account-panel" aria-labelledby="profile-account-heading">
         <h2 id="profile-account-heading" className="profile-section-title"><LockKey size={20} aria-hidden="true" /> Cuenta y seguridad</h2>
         <div className="profile-setting-row">
           <div className="min-w-0"><p className="profile-label">Email</p><p className="profile-setting-value profile-email">{user.email}</p></div>
