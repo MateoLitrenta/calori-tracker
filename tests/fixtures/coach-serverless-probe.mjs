@@ -224,6 +224,30 @@ try {
   const before429=modelCalls;quotaOutcome='denied';assert.equal((await ask(explicitGoal)).status,429);
   assert.equal(modelCalls,before429);assert.equal(persistedGoals.length,1);
   console.log('Coach goal confirmation HTTP probe: omitted object, valid object, invalid dates, disabled flag and 429 passed');
+  quotaOutcome = 'allowed';
+  providerOverride = () => ({ candidates: [{ content: { parts: [{ text: JSON.stringify({
+    reply: 'Tu meta será entrenar tres veces por semana. Ya está guardada.', actions: [],
+    goalProposal: { operation: 'accept', type: 'workout_sessions', target: 12, startDate: '2026-11-01', endDate: '2026-11-30' },
+  }) }] } }] });
+  const conversation = [], beforeConversation = modelCalls, quotaBeforeConversation = quotaCalls;
+  for (const text of ['Quiero ir al gimnasio 3 veces por semana durante el mes de noviembre', 'Septiembre',
+    'Perdón, quise decir noviembre, no septiembre', 'No quiero otras metas', '¿Podés guardar mi objetivo?']) {
+    conversation.push({ role: 'user', text });
+    const response = await nativeFetch(endpoint, { method: 'POST', headers: { Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify({ today: '2026-10-21', messages: conversation }) });
+    assert.equal(response.status, 200); const body = await response.json();
+    assert.equal(body.goalProposal, undefined); assert.deepEqual(body.actions, []);
+    assert.match(body.reply, text === 'Septiembre' ? /período ya pasó/ : /3 sesiones por semana/);
+    conversation.push({ role: 'bot', text: body.reply });
+  }
+  assert.equal(modelCalls, beforeConversation + 5); assert.equal(quotaCalls, quotaBeforeConversation + 5);
+  const clarified = await nativeFetch(endpoint, { method: 'POST', headers: { Authorization: `Bearer ${accessToken}` },
+    body: JSON.stringify({ today, messages: [{ role: 'user', text: 'Quiero entrenar 3 veces' },
+      { role: 'bot', text: '¿Qué período?' }, { role: 'user', text: 'los próximos 7 días' }] }) });
+  assert.equal(clarified.status, 200); const clarifiedBody = await clarified.json();
+  assert.equal(clarifiedBody.goalProposal.target, 3); assert.equal(clarifiedBody.goalProposal.endDate, '2026-10-15');
+  assert.equal(persistedGoals.length, 1);
+  console.log('Conversational goals HTTP probe: month correction, recurrence guard and clarified proposal passed with one call per turn');
 } finally {
   server.closeAllConnections();
   await new Promise(resolve => server.close(resolve));

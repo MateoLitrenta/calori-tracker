@@ -293,7 +293,7 @@ test('a proposed goal can be personalized conversationally before acceptance wit
   assert.match(state.document.querySelector('.chat-confirmation').textContent,/2 sesiones/);
   assert.equal(state.aiCalls,2);assert.equal(state.logWrites,0);
 });
-test('text-only Gemini goal response passes real API/client validation into the existing confirmation button',async t=>{
+test('conversational weekly choice passes real API/client validation into confirmation, Mis objetivos and a new conversation',async t=>{
   const owner='00000000-0000-0000-0000-000000000001';
   const token=['eyJhbGciOiJIUzI1NiJ9',Buffer.from(JSON.stringify({sub:owner,iss:`${supabaseUrl}/auth/v1`,
     aud:'authenticated',role:'authenticated',exp:Math.floor(Date.now()/1000)+3600})).toString('base64url'),'synthetic_signature'].join('.');
@@ -322,18 +322,31 @@ test('text-only Gemini goal response passes real API/client validation into the 
   };
   const realAI=await import(await compile(path.join(rootDir,'services/aiService.ts')));
   state.ai=async(...args)=>{state.aiCalls++;return realAI.generateAIResponse(...args);};
+  state.fetchGoals=async()=>{
+    const response=await goalsHandler.fetch(new Request('http://local/api/coach/goals',{headers:{Authorization:`Bearer ${token}`}}));
+    assert.equal(response.status,200);return response.json();
+  };
   state.confirmGoal=async(proposal,localToday,expectedOwner)=>{
     assert.equal(expectedOwner,owner);
     const response=await goalsHandler.fetch(new Request('http://local/api/coach/goals',{method:'POST',headers:{Authorization:`Bearer ${token}`},body:JSON.stringify({today:localToday,proposal})}));
     assert.equal(response.status,200);return (await response.json()).goal;
   };
-  await sendActions(state,true,'Quiero establecer un objetivo de tres entrenamientos durante los próximos siete días y guardarlo en Calori');
+  await sendActions(state,false,'Quiero ir al gimnasio 3 veces por semana durante el mes de noviembre');
+  assert.equal(state.document.querySelector('.chat-confirmation'),null);
+  for (const text of ['Septiembre', 'Perdón, es para el mes de noviembre', 'No quiero otras metas', '¿Podés guardar mi objetivo?']) {
+    await sendActions(state,false,text);assert.equal(state.document.querySelector('.chat-confirmation'),null);
+  }
+  await sendActions(state,true,'Prefiero la opción semanal');
   assert.match(state.document.querySelector('.chat-confirmation').textContent,/3 sesiones de entrenamiento/);
-  assert.equal(state.goalWrites,0);assert.equal(state.modelCalls,1);assert.equal(state.quotaCalls,1);
+  assert.equal(state.goalWrites,0);assert.equal(state.modelCalls,6);assert.equal(state.quotaCalls,6);
   state.quotaDenied=true;await click(state,'Aceptar objetivo');
   assert.match(state.document.querySelector('.chat-messages').textContent,/Objetivo aceptado y guardado/);
-  assert.equal(state.goalWrites,1);assert.equal(state.modelCalls,1);assert.equal(state.quotaCalls,1);
+  assert.equal(state.goalWrites,1);assert.equal(state.modelCalls,6);assert.equal(state.quotaCalls,6);
   assert.equal(persisted.user_id,owner);assert.equal(state.logWrites,0);assert.equal(state.workoutWrites,0);
+  await click(state,'Mis objetivos');assert.match(state.document.querySelector('.coach-goal-card').textContent,/0\/3/);
+  await click(state,'Cerrar formulario');await click(state,'Nueva conversación');
+  await click(state,'Mis objetivos');assert.match(state.document.querySelector('.coach-goal-card').textContent,/0\/3/);
+  assert.equal(state.goalWrites,1);assert.equal(state.modelCalls,6);
 });
 test('discarding an unaccepted goal proposal never calls persistence',async t=>{
   const state=await mountApp(t,[]);prepareGoal(state);await sendActions(state);
