@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { confirmCoachGoal } from '../src/services/coachGoals.ts';
+import { confirmCoachGoal, fetchCoachGoals, CoachGoalsError } from '../src/services/coachGoals.ts';
 import { supabase } from '../src/lib/supabase.ts';
 
 const proposal={operation:'accept',id:'00000000-0000-0000-0000-000000000055',type:'step_days',target:5,
@@ -39,4 +39,25 @@ test('unchanged revision and invalid success payload cannot confirm an update',a
   await assert.rejects(()=>confirmCoachGoal({...proposal,operation:'update',expectedVersion:1},'2026-10-13','owner'),/no confirmó/);
   state.response=Response.json({goal:{...saved,id:'00000000-0000-0000-0000-000000000066'}});
   await assert.rejects(()=>confirmCoachGoal(proposal,'2026-10-13','owner'),/no confirmó/);
+});
+
+test('goal list uses the current owner bearer, no cache, no model call and rejects incomplete or malformed lists', async t => {
+  const state=mock(t);
+  state.response=Response.json({goals:[saved],hasMore:true});
+  const result=await fetchCoachGoals('owner');
+  assert.equal(result.goals[0].target,5); assert.equal(result.hasMore,true);
+  assert.equal(state.options.cache,'no-store'); assert.equal(state.options.headers.Authorization,'Bearer synthetic-token');
+  assert.equal(state.options.body,undefined); assert.equal(state.url,'/api/coach/goals');
+  for(const payload of [{goals:[]},{goals:[saved,{...saved}] ,hasMore:false},{goals:[{...saved,target:0}],hasMore:false},{}]) {
+    state.response=Response.json(payload);
+    await assert.rejects(()=>fetchCoachGoals('owner'),/consultar/);
+  }
+});
+
+test('disabled flag and a changed account during a list read never expose previous goals', async t => {
+  const state=mock(t);
+  state.response=Response.json({error:'private',code:'goals_disabled'},{status:503});
+  await assert.rejects(()=>fetchCoachGoals('owner'),error=>error instanceof CoachGoalsError && error.code==='goals_disabled' && !error.message.includes('private'));
+  globalThis.fetch=async()=>{state.session.user.id='other';return Response.json({goals:[saved],hasMore:false});};
+  await assert.rejects(()=>fetchCoachGoals('owner'),/sesión cambió/);
 });

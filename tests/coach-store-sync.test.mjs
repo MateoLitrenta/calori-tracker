@@ -3,13 +3,14 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
-import { act } from 'react';
+import React, { act } from 'react';
 import { JSDOM } from 'jsdom';
 import ts from 'typescript';
 import { calculateDailyExpenditure, formatDateStr } from '../src/utils/helpers.ts';
 import chatHandler from '../api/ai/chat.ts';
 import goalsHandler from '../api/coach/goals.ts';
 import { supabaseUrl } from '../src/lib/supabaseConfig.ts';
+import { buildCoachContext } from '../src/utils/coachContext.ts';
 
 // Real React, root entry point, store, navigation and screen event handlers.
 // Only persistence/Auth/AI and unrelated visual dependencies are simulated.
@@ -26,7 +27,9 @@ const boundaries = {
     'syncDeleteMeal', 'syncDeleteWorkout', 'syncUpdateMeal', 'syncUpdateWorkout', 'syncProfile',
     'syncAvatarPath', 'completeOnboarding', 'deleteUserRecords'].map(name =>
     `export const ${name} = (...args) => globalThis.__syncHarness.db.${name}(...args);`).join('\n'),
-  'services/coachGoals.ts': 'export const confirmCoachGoal = (...args) => globalThis.__syncHarness.confirmGoal(...args);',
+  'services/coachGoals.ts': `export class CoachGoalsError extends Error { constructor(message, code) { super(message); this.code=code; } }
+    export const confirmCoachGoal = (...args) => globalThis.__syncHarness.confirmGoal(...args);
+    export const fetchCoachGoals = (...args) => globalThis.__syncHarness.fetchGoals(...args);`,
   'components/ThemeProvider.tsx': 'export const ThemeProvider = ({children}) => children;',
   'components/Sidebar.tsx': blank,
   'components/ProfileView.tsx': blank,
@@ -37,7 +40,6 @@ const boundaries = {
   'components/UserAvatar.tsx': blank,
   'components/Heatmap.tsx': 'export default ({records}) => { globalThis.__syncHarness.historyRecords = records; return null; };',
   'components/MealPhoto.tsx': 'export const MealPhotoPicker = () => null; export const MealThumbnail = () => null;',
-  'components/EntryFormShell.tsx': blank,
 };
 async function compile(file) {
   if (cache.has(file)) return cache.get(file);
@@ -85,6 +87,10 @@ async function mountApp(t, actions, fail = false, setup) {
   dom.window.HTMLElement.prototype.scrollTo = () => {};
   const state = { reads: 0, logWrites: 0, mealWrites: 0, workoutWrites: 0, persisted: null,
     historyRecords: {}, listeners: new Set(), aiCalls: 0, currentProfile: profile };
+  state.goals = [];
+  state.goalOwner = profile.user_id;
+  state.goalReads = 0;
+  state.fetchGoals = async owner => { state.goalReads++; return { goals: structuredClone(owner === state.goalOwner ? state.goals : []), hasMore: false }; };
   let release;
   const writeGate = new Promise(resolve => { release = resolve; });
   state.release = release;
@@ -123,7 +129,7 @@ async function mountApp(t, actions, fail = false, setup) {
   return state;
 }
 async function click(state, label) {
-  const button = [...state.document.querySelectorAll('button')].find(element => element.textContent.trim() === label);
+  const button = [...state.document.querySelectorAll('button')].find(element => element.textContent.trim() === label || element.getAttribute('aria-label') === label);
   assert.ok(button, `Missing button: ${label}`);
   await act(async () => { button.dispatchEvent(new window.MouseEvent('click', { bubbles: true })); await turn(); });
 }
@@ -236,7 +242,10 @@ function prepareGoal(state, failure = false) {
     state.goalWrites++; await state.goalGate;
     if (failure) throw new Error('No se pudo guardar el objetivo.');
     state.savedGoalOwner = userId;
-    return { ...proposed, status:'active',version:1,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString() };
+    const saved = { ...proposed, status:'active',version:1,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString() };
+    state.goals = [saved, ...state.goals.filter(goal => goal.id !== saved.id)];
+    state.goalOwner = userId;
+    return saved;
   };
   state.goalGate = new Promise(resolve => { state.releaseGoal = resolve; });
 }
@@ -330,4 +339,186 @@ test('discarding an unaccepted goal proposal never calls persistence',async t=>{
   const state=await mountApp(t,[]);prepareGoal(state);await sendActions(state);
   await click(state,'Descartar propuesta');assert.equal(state.document.querySelector('.chat-confirmation'),null);
   assert.equal(state.goalWrites,0);assert.equal(state.logWrites,0);assert.equal(state.aiCalls,1);
+});
+
+const acceptedGoal = (overrides = {}) => ({ ...goalProposal, status: 'active', version: 1,
+  createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), ...overrides });
+const inputValue = async (state, selector, value) => act(async () => {
+  const field = state.document.querySelector(selector); assert.ok(field, `Missing ${selector}`);
+  const prototype = field.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+  Object.getOwnPropertyDescriptor(prototype, 'value').set.call(field, value);
+  field.dispatchEvent(new window.Event('input', { bubbles: true })); await turn();
+});
+async function goalManagement(state) {
+  const { CoachGoalsError } = await import(await compile(path.join(rootDir, 'services/coachGoals.ts')));
+  state.goalWrites = 0;
+  state.confirmGoal = async proposed => {
+    state.goalWrites++;
+    if (state.writeGate) await state.writeGate;
+    if (state.writeFailure) throw new CoachGoalsError('No se pudo guardar el objetivo.', 'goals_unavailable');
+    const current = state.goals.find(goal => goal.id === proposed.id);
+    if (current?.version !== proposed.expectedVersion) throw new CoachGoalsError('El objetivo cambió. Consultalo nuevamente.', 'goal_conflict');
+    const saved = { ...current, target: proposed.target, stepThreshold: proposed.stepThreshold,
+      status: proposed.operation === 'cancel' ? 'cancelled' : 'active', version: current.version + 1, updatedAt: new Date().toISOString() };
+    state.goals = state.goals.map(goal => goal.id === saved.id ? saved : goal);
+    return structuredClone(saved);
+  };
+}
+
+test('goal cards use the official aggregator for zero/partial/reached/ended/missing/future/cancelled periods and step days', async () => {
+  const { default: Card } = await import(await compile(path.join(rootDir, 'components/CoachGoalCard.tsx')));
+  const { renderToStaticMarkup } = await import('react-dom/server');
+  const localToday = '2026-10-21';
+  const goal = acceptedGoal({ startDate: '2026-10-19', endDate: '2026-10-25' });
+  const context = (count, steps = 0) => buildCoachContext({ ...profile, records: { [localToday]: {
+    meals: [], workouts: Array.from({ length: count }, () => ({ activity: 'Gimnasio', calories: 100, duration: 20 })), steps, water: 0,
+  } } }, localToday).historyDays;
+  const markup = (target, history, date = localToday) => renderToStaticMarkup(React.createElement(Card, { goal: target, history, today: date }));
+  for (const [count, percent, remaining] of [[0, 0, 3], [1, 33, 2], [3, 100, 0], [5, 100, 0]]) {
+    const html = markup(goal, context(count));
+    assert.match(html, new RegExp(`${count}/3`)); assert.match(html, new RegExp(`value="${percent}"`));
+    assert.ok(html.includes(remaining ? `${remaining} sesiones pendientes` : 'Meta cubierta'));
+  }
+  assert.match(markup(goal, context(0)), /No confirman incumplimiento/);
+  assert.match(markup({ ...goal, endDate: '2026-10-20' }, context(0)), /Período finalizado/);
+  assert.match(markup({ ...goal, startDate: '2026-10-22' }, context(0)), /Por empezar/);
+  assert.match(markup({ ...goal, status: 'cancelled' }, context(0)), /Cancelado/);
+  const unavailable = markup(goal, []);
+  assert.match(unavailable, /Progreso no disponible/); assert.doesNotMatch(unavailable, /<progress|0\/3/);
+  const stepsGoal = { ...goal, type: 'step_days', target: 5, stepThreshold: 8000 };
+  assert.match(markup(stepsGoal, context(0, 30000)), /1\/5/);
+  assert.match(markup(stepsGoal, context(0, 7999)), /0\/5/);
+  assert.match(markup(stepsGoal, context(0, 8000)), /1\/5/);
+});
+
+test('Mis objetivos reviews edits and cancellations explicitly, saves once, refreshes cards and restores focus without AI calls', async t => {
+  const state = await mountApp(t, [], false, current => { current.goals = [acceptedGoal()]; });
+  await goalManagement(state); await click(state, 'Coach');
+  const trigger = state.document.querySelector('[aria-label="Mis objetivos"]'); trigger.focus();
+  await click(state, 'Mis objetivos');
+  const dialog = state.document.querySelector('[role="dialog"]'); assert.ok(dialog);
+  assert.equal(dialog.getAttribute('aria-modal'), 'true');
+  for (let ancestor = dialog.parentElement; ancestor; ancestor = ancestor.parentElement) assert.notEqual(ancestor.inert, true, 'A desktop modal must never have an inert ancestor');
+  assert.equal(state.document.activeElement.getAttribute('aria-label'), 'Cerrar formulario');
+  assert.match(dialog.textContent, /0\/3/);
+  await click(state, 'Modificar'); await inputValue(state, '.coach-goal-edit input', '2');
+  await click(state, 'Revisar cambio');
+  assert.match(dialog.textContent, /Antes: 3 entrenamientos. Nueva meta: 2 entrenamientos/);
+  assert.equal(state.goalWrites, 0);
+  await click(state, 'Descartar propuesta'); assert.equal(state.goalWrites, 0);
+  await click(state, 'Modificar'); await inputValue(state, '.coach-goal-edit input', '2'); await click(state, 'Revisar cambio');
+  let release; state.writeGate = new Promise(resolve => { release = resolve; });
+  const confirm = [...dialog.querySelectorAll('button')].find(button => button.textContent === 'Confirmar modificación');
+  await act(async () => { confirm.click(); confirm.click(); await turn(); });
+  assert.equal(state.goalWrites, 1); assert.ok(!dialog.textContent.includes('Objetivo actualizado.'));
+  await act(async () => { release(); await turn(); await turn(); });
+  assert.equal(state.goals[0].target, 2); assert.equal(state.goals[0].version, 2);
+  assert.match(dialog.textContent, /Objetivo actualizado/); assert.match(dialog.textContent, /0\/2/);
+  await click(state, 'Cancelar objetivo'); assert.equal(state.goalWrites, 1);
+  await click(state, 'Descartar propuesta'); assert.equal(state.goals[0].status, 'active');
+  await click(state, 'Cancelar objetivo'); await click(state, 'Confirmar cancelación');
+  assert.equal(state.goals[0].status, 'cancelled'); assert.equal(state.goals[0].version, 3);
+  assert.equal(state.goalWrites, 2); assert.match(dialog.textContent, /Cancelado/);
+  await act(() => state.document.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
+  assert.equal(state.document.querySelector('[role="dialog"]'), null); assert.equal(state.document.activeElement, trigger);
+  assert.equal(state.aiCalls, 0); assert.equal(state.logWrites, 0); assert.equal(state.workoutWrites, 0);
+});
+
+test('failed saves and reads hide previous progress; version conflicts require a fresh explicit review', async t => {
+  const state = await mountApp(t, [], false, current => { current.goals = [acceptedGoal()]; });
+  await goalManagement(state); await click(state, 'Coach'); await click(state, 'Mis objetivos');
+  const normalRead = state.fetchGoals;
+  state.fetchGoals = async (...args) => { if (state.readFailure) throw new Error('No pudimos consultar tus objetivos.'); return normalRead(...args); };
+  await click(state, 'Modificar'); await inputValue(state, '.coach-goal-edit input', '2'); await click(state, 'Revisar cambio');
+  state.writeFailure = true; state.readFailure = true;
+  await click(state, 'Confirmar modificación');
+  assert.equal(state.goals[0].target, 3); assert.equal(state.goals[0].version, 1);
+  assert.equal(state.document.querySelector('.coach-goal-card'), null);
+  assert.match(state.document.querySelector('[role="dialog"]').textContent, /No se pudo guardar/);
+  assert.ok(!state.document.querySelector('[role="dialog"]').textContent.includes('Objetivo actualizado.'));
+  await click(state, 'Volver a objetivos'); state.readFailure = false; state.writeFailure = false;
+  await click(state, 'Volver a consultar');
+  await click(state, 'Modificar'); await inputValue(state, '.coach-goal-edit input', '2'); await click(state, 'Revisar cambio');
+  state.goals[0] = { ...state.goals[0], target: 4, version: 2 };
+  await click(state, 'Confirmar modificación');
+  assert.equal(state.goals[0].target, 4); assert.equal(state.goals[0].version, 2);
+  const dialog = state.document.querySelector('[role="dialog"]');
+  assert.match(dialog.textContent, /objetivo cambió/); assert.match(dialog.textContent, /0\/4/);
+  assert.ok(!dialog.textContent.includes('Confirmar modificación'));
+  assert.equal(state.aiCalls, 0); assert.equal(state.logWrites, 0);
+});
+
+test('late goal reads and pending goal edits cannot cross accounts; disabled flag removes cards and write actions', async t => {
+  const state = await mountApp(t, [], false, current => { current.goals = [acceptedGoal()]; });
+  await goalManagement(state); await click(state, 'Coach'); await click(state, 'Mis objetivos');
+  const { CoachGoalsError } = await import(await compile(path.join(rootDir, 'services/coachGoals.ts')));
+  const normalRead = state.fetchGoals;
+  state.fetchGoals = async () => { throw new CoachGoalsError('Deshabilitado.', 'goals_disabled'); };
+  await click(state, 'Actualizar objetivos');
+  assert.match(state.document.querySelector('[role="dialog"]').textContent, /no están habilitados/);
+  assert.equal(state.document.querySelector('.coach-goal-card'), null);
+  assert.equal(state.document.querySelector('.coach-goal-actions'), null);
+  state.fetchGoals = normalRead;
+  await click(state, 'Cerrar formulario'); await click(state, 'Mis objetivos');
+  await click(state, 'Modificar'); await inputValue(state, '.coach-goal-edit input', '2'); await click(state, 'Revisar cambio');
+  let releaseWrite; state.writeGate = new Promise(resolve => { releaseWrite = resolve; });
+  await click(state, 'Confirmar modificación');
+  let releaseRead;
+  state.fetchGoals = owner => owner === profile.user_id ? new Promise(resolve => { releaseRead = resolve; }) : Promise.resolve({ goals: [], hasMore: false });
+  await act(async () => { window.dispatchEvent(new window.Event('focus')); await turn(); });
+  state.currentProfile = { ...profile, id: 'other-profile', user_id: 'other-owner' };
+  await act(async () => { for (const listener of state.listeners) listener('SIGNED_IN', { user: { id: 'other-owner' } }); await turn(); });
+  await act(async () => { releaseRead({ goals: [acceptedGoal()], hasMore: false }); releaseWrite(); await turn(); });
+  await click(state, 'Coach'); await click(state, 'Mis objetivos');
+  const text = state.document.querySelector('[role="dialog"]').textContent;
+  assert.match(text, /No tenés objetivos/); assert.ok(!text.includes('0/3') && !text.includes('Objetivo actualizado'));
+});
+
+test('goals follow shared Home workout add/edit/delete and step changes across new conversations and application reload', async t => {
+  const state = await mountApp(t, [], false, current => {
+    current.goals = [acceptedGoal(), acceptedGoal({ id: '00000000-0000-0000-0000-000000000066', type: 'step_days', target: 1, stepThreshold: 8000 })];
+    current.db.ensureDailyLog = async (owner, record) => {
+      current.logWrites++; current.persistedUser = owner;
+      current.persisted = { ...structuredClone(record), meals: current.persisted?.meals ?? [], workouts: current.persisted?.workouts ?? [] }; return 'log-test';
+    };
+    current.db.syncUpdateWorkout = async workout => { current.persisted.workouts = current.persisted.workouts.map(item => item.id === workout.id ? structuredClone(workout) : item); };
+    current.db.syncDeleteWorkout = async id => { current.persisted.workouts = current.persisted.workouts.filter(item => item.id !== id); };
+  });
+  state.ai = async () => { state.aiCalls++; return { reply: 'Texto del modelo: 999 sesiones.', actions: [], presentation: 'none' }; };
+  await click(state, 'Coach'); await click(state, 'Mis objetivos');
+  assert.equal(state.document.querySelectorAll('.coach-goal-card').length, 2); assert.equal(state.aiCalls, 0);
+  await click(state, 'Cerrar formulario'); await click(state, 'Inicio'); await click(state, '+ Ejercicio');
+  await inputValue(state, '#add-workout-activity', 'Gimnasio');
+  await inputValue(state, '#add-workout-duration', '30'); await inputValue(state, '#add-workout-calories', '200');
+  await act(async () => { state.document.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })); await turn(); });
+  await sendActions(state, false, '¿Cómo voy con mis entrenamientos?');
+  assert.match(state.document.querySelector('.coach-goal-card').textContent, /1\/3/);
+  assert.ok(!state.document.querySelector('.coach-goal-card').textContent.includes('999'));
+  await click(state, 'Inicio');
+  await act(() => state.document.querySelector('.daily-logs li').click());
+  await act(() => state.document.querySelector('.record-detail-edit').click());
+  await inputValue(state, '#edit-workout-duration', '40');
+  await act(async () => { state.document.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })); await turn(); });
+  assert.equal(state.persisted.workouts[0].duration, 40);
+  await click(state, 'Coach'); assert.match(state.document.querySelector('.coach-goal-card').textContent, /1\/3/);
+  await click(state, 'Inicio'); await act(() => state.document.querySelector('.daily-logs li').click()); await click(state, 'Eliminar');
+  await act(async () => { state.document.querySelector('[title="Editar pasos"]').click(); await turn(); });
+  await inputValue(state, '.daily-habits input', '8000');
+  await act(async () => { state.document.querySelector('.daily-habits input').blur(); await new Promise(resolve => setTimeout(resolve, 450)); });
+  await sendActions(state, false, '¿Cuál es mi objetivo?');
+  const cards = state.document.querySelectorAll('.coach-goal-card');
+  assert.equal(cards.length, 3); // Previous workout response plus the new contextual pair, all live.
+  assert.match(cards[0].textContent, /0\/3/);
+  assert.match(cards[2].textContent, /1\/1/);
+  await click(state, 'Nueva conversación');
+  assert.equal(state.document.querySelectorAll('.coach-goal-card').length, 0);
+  await sendActions(state, false, '¿Cuál es mi objetivo?');
+  assert.equal(state.document.querySelectorAll('.coach-goal-card').length, 2);
+  const main = await compile(path.join(rootDir, 'main.tsx'));
+  await act(async () => { state.root.unmount(); instance++; await import(main + `#reload-${instance}`); await turn(); });
+  await click(state, 'Coach');
+  assert.equal(state.document.querySelectorAll('.coach-goal-card').length, 2);
+  assert.match(state.document.querySelector('.chat-messages').textContent, /0\/3[\s\S]*1\/1/);
+  assert.equal(state.persisted.workouts.length, 0); assert.equal(state.persisted.steps, 8000);
+  assert.equal(state.aiCalls, 3);
 });

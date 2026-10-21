@@ -3,6 +3,7 @@ import { buildCoachCard } from '../../src/utils/coachCardMetrics.ts';
 import { sanitizeCoachContext } from '../../src/utils/coachContextContract.ts';
 import { buildHabitInsights, isHabitQuery, requestsHabitDetails, resolveHabitPeriod } from '../../src/utils/habitInsights.ts';
 import { evaluateCoachGoal, isActionableCoachingQuery, type CoachGoal } from '../../src/utils/coachGoals.ts';
+import { goalProgressQuery } from '../../src/utils/coachGoalPresentation.ts';
 import { coachGoalsEnabled, readCoachGoals, readGoalActivity } from '../../server/coachGoals.ts';
 import { resolveCoachGoalProposal } from '../../server/coachGoalProposal.ts';
 import { ACTIONABLE_COACHING_INSTRUCTIONS } from '../../server/coachCoaching.ts';
@@ -352,7 +353,8 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
 
     const habitPeriod = resolveHabitPeriod(validMessages);
     const actionableQuery = !attachment && isActionableCoachingQuery(validMessages);
-    const habitQuery = isHabitQuery(validMessages) || actionableQuery;
+    const goalContextRequested = actionableQuery || (!attachment && !!goalProgressQuery(lastMessage.text));
+    const habitQuery = isHabitQuery(validMessages) || goalContextRequested;
     const habitInsights = coachContext && !attachment && (habitPeriod !== 7 || habitQuery)
       ? buildHabitInsights(coachContext.historyDays, body.today, habitPeriod, requestsHabitDetails(validMessages)) : undefined;
     // Raw history is used only by the deterministic engine. Gemini receives
@@ -363,7 +365,7 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
     let goalsTruncated = false;
     let progressHistory: Parameters<typeof evaluateCoachGoal>[1] = [];
     let progressAvailability: 'not_needed' | 'available' | 'unavailable' = 'not_needed';
-    if (actionableQuery && coachGoalsEnabled()) {
+    if (goalContextRequested && coachGoalsEnabled()) {
       try {
         const stored = await readCoachGoals(request, userId);
         acceptedGoals = stored.goals; goalsTruncated = stored.hasMore; goalAvailability = 'available';
@@ -376,7 +378,7 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
     const queryToday = body.today;
     const weekday = new Date(queryToday + 'T12:00:00Z').getUTCDay();
     const calendarWeek = coachDates(body.today, 7, -((7 - weekday) % 7));
-    const coachingContext = actionableQuery ? { availability: goalAvailability, goalsTruncated, progressAvailability,
+    const coachingContext = goalContextRequested ? { availability: goalAvailability, goalsTruncated, progressAvailability,
       calendarWeek: { startDate: calendarWeek[0], endDate: calendarWeek[6] },
       acceptedGoals: acceptedGoals.map(goal => evaluateCoachGoal(goal, progressHistory, queryToday)) } : undefined;
 
@@ -455,7 +457,7 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
         }
         // A habit recommendation is evidence/interpretation, never permission
         // to create records. Explicit registration requests keep their flow.
-        if (actionableQuery || (habitInsights && habitQuery)) {
+        if (goalContextRequested || (habitInsights && habitQuery)) {
           if (actionableQuery && result.actions.length > 0 && /\bregistro\b|\b(?:guard[eé]|registr[eé]|cargu[eé])\b/iu.test(result.reply)) {
             result.reply = 'No pude preparar el plan con esta respuesta. Podés volver a pedirlo con las restricciones que quieras conservar.';
           }

@@ -22,6 +22,9 @@ const insightCode = ts.transpileModule(insightSource, { compilerOptions: {
 const imports = {
   './CoachInsightCard': 'data:text/javascript;base64,' + Buffer.from(insightCode).toString('base64'),
   './CoachGoalConfirmation': stub('export default () => null;'),
+  './CoachGoalsPanel': stub('export default () => null;'),
+  './CoachGoalCard': stub('export const CoachGoalCards = () => null;'),
+  '../hooks/useCoachGoals': stub('export const useCoachGoals = () => ({status:"ready",goals:[],hasMore:false,reload:async()=>{}});'),
   '../services/coachGoals': stub('export const confirmCoachGoal = () => { throw new Error("Goal confirmation uses its dedicated integration harness"); };'),
   react: stub(`export const useState = (...args) => globalThis.__chatViewHarness.hooks.useState(...args);
     export const useRef = (...args) => globalThis.__chatViewHarness.hooks.useRef(...args);
