@@ -156,7 +156,9 @@ test('empty periods expose an honest accessible empty state without fake calorie
 
 test('keyboard focus and pointer selection expose exact expenditure and balance in the detail', () => {
   const view = render(weeklyRecords);
-  assert.equal(nodes(view.tree, element => element.props.id === 'charts-bucket-detail').length, 0);
+  const initialDetail = nodes(view.tree, element => element.props.id === 'charts-bucket-detail')[0];
+  assert.equal(initialDetail.props['data-selected'], false);
+  assert.equal(nodes(initialDetail, element => element.type === 'dd')[0].props.children, '—');
   assert.match(view.html, /Tocá un período para ver el detalle/);
   const monday = nodes(view.tree, element => element.type === 'button' &&
     element.props['aria-label']?.startsWith('Lunes.'))[0];
@@ -167,8 +169,10 @@ test('keyboard focus and pointer selection expose exact expenditure and balance 
   assert.equal(monday.props.disabled, undefined);
   monday.props.onFocus();
   const selected = render(weeklyRecords, 'Semana', globalThis.__chartsHarness.selectedBucket);
-  const detail = nodes(selected.tree, element => element.props.role === 'tooltip')[0];
+  const detail = nodes(selected.tree, element => element.props.id === 'charts-bucket-detail')[0];
   assert.ok(detail);
+  assert.equal(detail.props.role, 'group');
+  assert.equal(detail.props['data-selected'], true);
   assert.match(html(detail), /Consumidas<\/dt><dd>2\.000 kcal/);
   assert.match(html(detail), /Gasto estimado<\/dt><dd>1\.820 kcal/);
   assert.match(html(detail), /\+180 kcal/);
@@ -179,7 +183,7 @@ test('keyboard focus and pointer selection expose exact expenditure and balance 
   assert.equal(focused.props['aria-pressed'], true);
 
   const month = render(weeklyRecords, 'Mes', '2026-09-29');
-  const monthDetail = nodes(month.tree, element => element.props.role === 'tooltip')[0];
+  const monthDetail = nodes(month.tree, element => element.props.id === 'charts-bucket-detail')[0];
   assert.match(html(monthDetail), /Consumidas promedio/);
   assert.match(html(monthDetail), /Gasto promedio/);
   assert.match(html(monthDetail), /Balance promedio/);
@@ -204,25 +208,53 @@ test('keyboard focus and pointer selection expose exact expenditure and balance 
   assert.equal(nodes(summary, element => element.props.className === 'charts-kpis')[0].key, 'summary-Año');
 });
 
-test('chart selection replaces the hint inside the same reserved detail region, keeping exact values and lower panels', () => {
+test('chart selection updates the same compact metric strip without a reserved empty panel or changing other data', () => {
   for (const period of ['Semana', 'Mes', 'Año']) {
     const initial = render(weeklyRecords, period);
-    const slot = nodes(initial.tree, element => element.props.className === 'charts-detail-slot')[0];
-    assert.ok(slot);
-    assert.equal(slot.props['data-averages'], period !== 'Semana');
-    assert.equal(nodes(slot, element => element.props.role === 'tooltip').length, 0);
+    const strip = nodes(initial.tree, element => element.props.id === 'charts-bucket-detail')[0];
+    assert.ok(strip);
+    assert.equal(strip.props['data-selected'], false);
+    assert.equal(nodes(initial.tree, element => element.props.className === 'charts-detail-slot').length, 0);
+    assert.equal(nodes(strip, element => element.type === 'dd').length, 3);
+    const clear = nodes(strip, element => element.props['aria-label'] === 'Limpiar selección del gráfico')[0];
+    assert.equal(clear.props.disabled, true);
     const bucket = nodes(initial.tree, element => element.type === 'button' && element.props.className === 'charts-bucket')[0];
     bucket.props.onFocus();
     const selected = render(weeklyRecords, period, globalThis.__chartsHarness.selectedBucket);
-    const selectedSlot = nodes(selected.tree, element => element.props.className === 'charts-detail-slot')[0];
-    assert.equal(selectedSlot.type, slot.type);
-    assert.equal(selectedSlot.key, slot.key);
-    assert.equal(nodes(selectedSlot, element => element.props.role === 'tooltip').length, 1);
-    assert.equal(nodes(selectedSlot, element => element.type === 'dd').length, 3);
+    const selectedStrip = nodes(selected.tree, element => element.props.id === 'charts-bucket-detail')[0];
+    assert.equal(selectedStrip.type, strip.type);
+    assert.equal(selectedStrip.key, strip.key);
+    assert.equal(selectedStrip.props['data-selected'], true);
+    assert.equal(nodes(selectedStrip, element => element.type === 'dd').length, 3);
+    assert.equal(nodes(selectedStrip, element => element.type === 'h4').length, 1);
     const activity = tree => nodes(tree, element => element.props['aria-labelledby'] === 'charts-activity-heading')[0];
     assert.equal(html(activity(selected.tree)), html(activity(initial.tree)));
     assert.deepEqual(kpis(selected.tree), kpis(initial.tree));
+    const selectedClear = nodes(selectedStrip, element => element.props['aria-label'] === 'Limpiar selección del gráfico')[0];
+    assert.equal(selectedClear.props.disabled, false);
+    selectedClear.props.onClick();
+    assert.equal(globalThis.__chartsHarness.selectedBucket, null);
+    const selectedBucket = nodes(selected.tree, element => element.type === 'button' && element.props.className === 'charts-bucket')[0];
+    selectedBucket.props.onClick();
+    const reopened = render(weeklyRecords, period, globalThis.__chartsHarness.selectedBucket);
+    const energy = nodes(reopened.tree, element => element.props['aria-labelledby'] === 'charts-energy-heading')[0];
+    let stopped = false;
+    energy.props.onKeyDown({ key: 'Escape', stopPropagation() { stopped = true; } });
+    assert.equal(globalThis.__chartsHarness.selectedBucket, null);
+    assert.equal(stopped, true);
   }
+});
+
+test('chart detail keeps missing values honest in the compact strip', () => {
+  const { tree } = render(weeklyRecords, 'Semana', '2026-09-29');
+  const detail = nodes(tree, element => element.props.id === 'charts-bucket-detail')[0];
+  assert.match(html(detail), /Sin comidas registradas/);
+  const consumed = nodes(detail, element => element.type === 'dd')[0];
+  assert.equal(consumed.props.children, 'Sin comidas');
+  assert.equal(consumed.props.title, 'Sin comidas registradas');
+  assert.match(html(detail), /2\.080 kcal/);
+  assert.match(html(detail), /Sin datos/);
+  assert.doesNotMatch(html(detail), />0 kcal</);
 });
 
 test('one summary surface places balance first, two secondary averages and coverage metadata', () => {
