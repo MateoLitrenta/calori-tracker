@@ -3,8 +3,9 @@ import { test } from 'node:test';
 import { readFile } from 'node:fs/promises';
 
 
-import React from 'react';
+import React, { act } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { JSDOM } from 'jsdom';
 import ts from 'typescript';
 import { formatDateStr } from '../src/utils/helpers.ts';
 import { AIRequestError } from '../src/services/aiTransport.ts';
@@ -99,7 +100,7 @@ test('only empty meal and workout lists use the compact records state', () => {
 });
 
 test('journal keeps every record and its full description in chronological DOM order at all densities', () => {
-  for (const count of [0, 1, 5, 32]) {
+  for (const count of [0, 1, 2, 3, 4, 5, 8, 32]) {
     const records = Array.from({ length: count }, (_, index) => ({
       id: `m-${index}`, name: `Registro ${String(index).padStart(2, '0')} ${'descripcionlarga'.repeat(20)}`,
       type: 'Almuerzo', calories: 1234567, time: `${String(Math.floor(index / 2)).padStart(2, '0')}:${index % 2 ? '30' : '00'}`,
@@ -110,7 +111,7 @@ test('journal keeps every record and its full description in chronological DOM o
     assert.equal((html.match(/<li\b/g) || []).length, count);
     assert.equal((html.match(/Registros del día/g) || []).length, 1);
     assert.match(html, new RegExp(`data-record-count="${count}"`));
-    assert.equal(html.includes('daily-records--columns'), count >= 4);
+    assert.equal(html.includes('daily-records--columns'), count >= 2);
     for (let index = 0; index < count; index++) {
       assert.ok(html.includes(records[index].name), 'Long descriptions must remain complete');
       assert.ok(html.includes(`+${records[index].calories} kcal`));
@@ -155,6 +156,7 @@ const hookUrl = stub(`
   export default {};
   export const useState = value => globalThis.__dailyHooks.useState(value);
   export const useRef = value => globalThis.__dailyHooks.useRef(value);
+  export const useId = () => globalThis.__dailyHooks.useRef('daily-records-test').current;
   export const useEffect = (...args) => globalThis.__dailyHooks.useEffect(...args);
 `);
 const interactiveCode = code.replace(JSON.stringify(import.meta.resolve('react')), JSON.stringify(hookUrl));
@@ -418,7 +420,7 @@ test('editing closes the record detail and opens the same responsive shell with 
   const workout = { id: 'w1', activity: 'Correr', duration: 40, calories: 300, details: 'Suave', distance: 5, pace: '8:00', time: '18:00' };
   for (const [record, expected] of [[{ ...base, meals: [meal] }, 'Pizza'], [{ ...base, workouts: [workout] }, 'Correr']]) {
     const view = entryView(undefined, record);
-    node(view(), element => element.type === 'li').props.onClick();
+    node(view(), element => element.props.className?.split(' ').includes('daily-record-open')).props.onClick();
     node(view(), element => element.props.className?.includes('record-detail-edit')).props.onClick({ stopPropagation() {} });
     assert.equal(nodes(view(), element => element.props.className?.includes('record-detail-modal')).length, 0);
     assert.ok(node(sheet(view), element => element.props.role === 'dialog'));
@@ -443,7 +445,7 @@ for (const kind of ['meal', 'workout']) {
     const set = (view, id, value) => node(view(), e => e.props.id === id).props.onChange({ target: { value } });
     const edit = record => {
       const view = entryView(persist, record);
-      node(view(), e => e.type === 'li').props.onClick();
+      node(view(), e => e.props.className?.split(' ').includes('daily-record-open')).props.onClick();
       node(view(), e => e.props.className?.includes('record-detail-edit')).props.onClick({ stopPropagation() {} });
       return view;
     };
@@ -678,7 +680,7 @@ test('all four entry modes associate labels, retain mobile CTAs and use accessib
     const view = entryView(undefined, record);
     if (action) open(view, action);
     else {
-      node(view(), e => e.type === 'li').props.onClick();
+      node(view(), e => e.props.className?.split(' ').includes('daily-record-open')).props.onClick();
       node(view(), e => e.props.className?.includes('record-detail-edit')).props.onClick({ stopPropagation() {} });
     }
     const tree = sheet(view);
@@ -713,4 +715,180 @@ test('gym notes retain contextual routine copy without changing running field de
   fill(view, 'Ej. running, fútbol, gimnasio', 'Correr');
   assert.ok(node(view(), e => e.props.id === 'add-workout-distance'));
   assert.ok(node(view(), e => e.props.id === 'add-workout-pace'));
+});
+
+const journalRecord = (count, day = dateStr) => {
+  const entries = Array.from({ length: count }, (_, index) => ({
+    id: `${day}-${index}`, time: `${String(8 + index).padStart(2, '0')}:00`,
+    calories: 100 + index, details: `Detalle completo ${index}`,
+    ...(index % 2 ? { activity: `Ejercicio ${index}`, duration: 30, muscles: [] }
+      : { name: `Comida ${index}`, type: 'Almuerzo' }),
+  }));
+  return { ...base, dateStr: day, meals: entries.filter((_, index) => index % 2 === 0).reverse(),
+    workouts: entries.filter((_, index) => index % 2 === 1).reverse() };
+};
+
+// Real React owns the keyed disclosure state and real DOM events. Persistence
+// stays simulated; viewport visibility remains a real-browser acceptance check.
+async function journalDOM(t, initial = {}) {
+  const dom = new JSDOM('<main class="app-main"><div id="root"></div></main>', { pretendToBeVisual: true });
+  const previous = {};
+  for (const name of ['window', 'document', 'HTMLElement', 'IS_REACT_ACT_ENVIRONMENT']) previous[name] = globalThis[name];
+  globalThis.window = dom.window; globalThis.document = dom.window.document;
+  globalThis.HTMLElement = dom.window.HTMLElement; globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+  let mobile = false;
+  const mediaListeners = new Set();
+  window.matchMedia = () => ({ get matches() { return mobile; },
+    addEventListener(_type, handler) { mediaListeners.add(handler); },
+    removeEventListener(_type, handler) { mediaListeners.delete(handler); } });
+  const { createRoot } = await import('react-dom/client');
+  const root = createRoot(document.getElementById('root'));
+  const saves = [];
+  let props = { profile, record: journalRecord(8), dateStr, records: {},
+    onUpdateRecord: async (day, record) => { saves.push({ day, record: structuredClone(record) }); return true; }, ...initial };
+  const render = async (next = {}) => {
+    props = { ...props, ...next };
+    await act(() => root.render(React.createElement(DailyPanel, props)));
+  };
+  t.after(async () => {
+    await act(() => root.unmount()); dom.window.close();
+    for (const [name, value] of Object.entries(previous)) globalThis[name] = value;
+  });
+  await render();
+  return { saves, render, get props() { return props; },
+    list: () => document.querySelector('.daily-records'),
+    toggle: () => document.querySelector('.daily-records-toggle'),
+    resize: async value => act(() => { mobile = value; mediaListeners.forEach(handler => handler()); window.dispatchEvent(new window.Event('resize')); }),
+  };
+}
+
+test('journal disclosure keeps complete mixed chronological records and accessible controls at 0/1/2/3/4/5/8 entries', async t => {
+  const view = await journalDOM(t);
+  for (const count of [0, 1, 2, 3, 4, 5, 8]) {
+    const record = journalRecord(count);
+    const snapshot = structuredClone(record);
+    await view.render({ record });
+    const list = view.list();
+    assert.equal(list.children.length, count);
+    assert.equal(list.dataset.expanded, 'false');
+    assert.equal(list.classList.contains('daily-records--columns'), count >= 2);
+    assert.deepEqual([...list.querySelectorAll('.daily-record-title')].map(element => element.textContent.trim()),
+      Array.from({ length: count }, (_, index) => `${index % 2 ? 'Ejercicio' : 'Comida'} ${index}`));
+    assert.deepEqual(record, snapshot, 'Sorting the combined list must not mutate source records');
+    if (count <= 4) { assert.equal(view.toggle(), null); continue; }
+    const toggle = view.toggle();
+    assert.equal(toggle.getAttribute('aria-controls'), list.id);
+    assert.equal(toggle.getAttribute('aria-expanded'), 'false');
+    assert.match(toggle.textContent, new RegExp(`Ver todos los registros \\(${count}\\)`));
+    toggle.focus();
+    await act(() => toggle.click());
+    assert.equal(view.list(), list, 'Expansion must retain the same record nodes');
+    assert.equal(list.dataset.expanded, 'true');
+    assert.equal(toggle.getAttribute('aria-expanded'), 'true');
+    assert.equal(toggle.textContent, 'Mostrar menos');
+    await act(() => toggle.click());
+    assert.equal(list.dataset.expanded, 'false');
+    assert.equal(document.activeElement, toggle, 'Collapsing must retain focus on its disclosure control');
+    assert.equal(list.children.length, count);
+  }
+  assert.equal(view.saves.length, 0, 'Disclosure is presentation only');
+});
+
+test('journal refresh and mobile resizing retain all records while only date/profile/group changes reset expansion', async t => {
+  const view = await journalDOM(t);
+  await act(() => view.toggle().click());
+  const originalList = view.list();
+  await view.render({ record: structuredClone(view.props.record) });
+  assert.equal(view.list(), originalList);
+  assert.equal(view.list().dataset.expanded, 'true');
+  await view.resize(true);
+  assert.equal(view.list().children.length, 8);
+  assert.equal(view.list().dataset.expanded, 'true');
+  assert.ok([...view.list().children].every(item => !item.hidden && !item.hasAttribute('aria-hidden') && !item.style.display),
+    'Desktop disclosure must not set attributes or inline styles that also hide mobile records');
+  await view.resize(false);
+  assert.equal(view.list().dataset.expanded, 'true');
+  const add = [...document.querySelectorAll('button')].find(button => button.textContent.trim() === '+ Comida');
+  await act(() => add.click());
+  const draft = document.getElementById('add-meal-description');
+  await act(() => {
+    Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(draft, 'Borrador que se conserva');
+    draft.dispatchEvent(new window.Event('input', { bubbles: true }));
+  });
+  const nextDay = '2025-12-20';
+  await view.render({ dateStr: nextDay, record: journalRecord(8, nextDay) });
+  assert.notEqual(view.list(), originalList);
+  assert.equal(view.list().dataset.expanded, 'false');
+  assert.equal(document.getElementById('add-meal-description'), draft, 'A date change must not remount the entry form');
+  assert.equal(draft.value, 'Borrador que se conserva');
+  await act(() => view.toggle().click());
+  await view.render({ profile: { ...profile, id: 'other-profile' } });
+  assert.equal(view.list().dataset.expanded, 'false');
+  await act(() => view.toggle().click());
+  await view.render({ selectedGroup: { type: 'week', label: 'Semana', dates: [nextDay] } });
+  assert.equal(view.list(), null);
+  await view.render({ selectedGroup: { type: 'day', label: nextDay, dates: [nextDay] } });
+  assert.equal(view.list().dataset.expanded, 'false');
+  assert.equal(view.saves.length, 0);
+});
+
+test('journal expansion and collapse preserve an open meal form and its draft through real bubbling clicks', async t => {
+  const view = await journalDOM(t);
+  const add = [...document.querySelectorAll('button')].find(button => button.textContent.trim() === '+ Comida');
+  await act(() => add.click());
+  const draft = document.getElementById('add-meal-description');
+  assert.ok(draft);
+  await act(() => {
+    Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(draft, 'Comida todavía sin guardar');
+    draft.dispatchEvent(new window.Event('input', { bubbles: true }));
+  });
+  const form = draft.closest('form');
+  for (const expanded of ['true', 'false']) {
+    await act(() => view.toggle().click());
+    assert.equal(view.list().dataset.expanded, expanded);
+    assert.equal(document.getElementById('add-meal-description'), draft, 'The disclosure click must not dismiss or remount the entry form');
+    assert.equal(draft.closest('form'), form);
+    assert.equal(draft.value, 'Comida todavía sin guardar');
+  }
+  assert.equal(view.saves.length, 0);
+});
+
+test('visible and expanded journal rows open the same edit dialog and save once without duplicates or collapsing', async t => {
+  const view = await journalDOM(t);
+  for (const index of [0, 5]) {
+    if (index >= 4) await act(() => view.toggle().click());
+    const list = view.list();
+    const trigger = list.children[index].querySelector('.daily-record-open');
+    assert.equal(trigger.tagName, 'BUTTON');
+    assert.equal(trigger.type, 'button');
+    trigger.focus();
+    assert.equal(document.activeElement, trigger);
+    await act(() => trigger.click());
+    await act(() => document.querySelector('.record-detail-edit').click());
+    const kind = index % 2 ? 'workout' : 'meal';
+    const expectedName = `${index % 2 ? 'Ejercicio' : 'Comida'} ${index}`;
+    assert.equal(document.querySelector('.record-detail-modal'), null);
+    const dialog = document.querySelector('[role="dialog"]');
+    assert.ok(dialog);
+    assert.equal(dialog.getAttribute('aria-modal'), 'true');
+    assert.equal(document.getElementById(`edit-${kind}-${kind === 'meal' ? 'description' : 'activity'}`).value, expectedName);
+    assert.equal(document.getElementById(`edit-${kind}-notes`).value, `Detalle completo ${index}`);
+    const notes = document.getElementById(`edit-${kind}-notes`);
+    await act(() => {
+      Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(notes, `Nota editada ${index}`);
+      notes.dispatchEvent(new window.Event('input', { bubbles: true }));
+    });
+    await act(async () => { dialog.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })); });
+    assert.equal(view.saves.length, index === 0 ? 1 : 2);
+    const saved = view.saves.at(-1).record;
+    const all = [...saved.meals, ...saved.workouts];
+    assert.equal(all.length, 8);
+    assert.equal(new Set(all.map(item => item.id)).size, 8);
+    assert.equal(all.filter(item => item.id === `${dateStr}-${index}`).length, 1);
+    assert.equal(all.find(item => item.id === `${dateStr}-${index}`).details, `Nota editada ${index}`);
+    assert.equal(document.querySelector('[role="dialog"]'), null);
+    await view.render({ record: saved });
+    assert.equal(view.list(), list);
+    assert.equal(view.list().dataset.expanded, index >= 4 ? 'true' : 'false');
+  }
 });

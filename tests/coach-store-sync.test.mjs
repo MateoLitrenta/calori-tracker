@@ -508,13 +508,13 @@ test('goals follow shared Home workout add/edit/delete and step changes across n
   assert.match(state.document.querySelector('.coach-goal-card').textContent, /1\/3/);
   assert.ok(!state.document.querySelector('.coach-goal-card').textContent.includes('999'));
   await click(state, 'Inicio');
-  await act(() => state.document.querySelector('.daily-logs li').click());
+  await act(() => state.document.querySelector('.daily-record-open').click());
   await act(() => state.document.querySelector('.record-detail-edit').click());
   await inputValue(state, '#edit-workout-duration', '40');
   await act(async () => { state.document.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })); await turn(); });
   assert.equal(state.persisted.workouts[0].duration, 40);
   await click(state, 'Coach'); assert.match(state.document.querySelector('.coach-goal-card').textContent, /1\/3/);
-  await click(state, 'Inicio'); await act(() => state.document.querySelector('.daily-logs li').click()); await click(state, 'Eliminar');
+  await click(state, 'Inicio'); await act(() => state.document.querySelector('.daily-record-open').click()); await click(state, 'Eliminar');
   await act(async () => { state.document.querySelector('[title="Editar pasos"]').click(); await turn(); });
   await inputValue(state, '.daily-habits input', '8000');
   await act(async () => { state.document.querySelector('.daily-habits input').blur(); await new Promise(resolve => setTimeout(resolve, 450)); });
