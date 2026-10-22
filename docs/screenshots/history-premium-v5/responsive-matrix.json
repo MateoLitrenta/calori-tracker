@@ -1,0 +1,3296 @@
+[
+  {
+    "columns": 53,
+    "dailyScroll": {
+      "client": 1362,
+      "scroll": 1362
+    },
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 1398,
+      "x": 384,
+      "y": 934.6640625
+    },
+    "energy": {
+      "height": 163.796875,
+      "width": 788.8828125,
+      "x": 363,
+      "y": 76
+    },
+    "frame": {
+      "height": 199.8671875,
+      "width": 1398,
+      "x": 384,
+      "y": 722.796875
+    },
+    "group": null,
+    "groups": 0,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 631.109375,
+      "x": 1171.8828125,
+      "y": 76
+    },
+    "height": 1080,
+    "history": {
+      "height": 543.15625,
+      "width": 1440,
+      "x": 363,
+      "y": 579.796875
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 1398,
+      "x": 384,
+      "y": 1042.65625
+    },
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 1920,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 11,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 1398,
+      "x": 384,
+      "y": 986.796875
+    },
+    "energy": {
+      "height": 163.796875,
+      "width": 788.8828125,
+      "x": 363,
+      "y": 76
+    },
+    "frame": {
+      "height": 252,
+      "width": 1398,
+      "x": 384,
+      "y": 722.796875
+    },
+    "group": {
+      "height": 44,
+      "width": 119.8125,
+      "x": 384,
+      "y": 722.796875
+    },
+    "groups": 53,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 631.109375,
+      "x": 1171.8828125,
+      "y": 76
+    },
+    "height": 1080,
+    "history": {
+      "height": 595.2890625,
+      "width": 1440,
+      "x": 363,
+      "y": 579.796875
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 1398,
+      "x": 384,
+      "y": 1094.7890625
+    },
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 1920,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 4,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 1398,
+      "x": 384,
+      "y": 978.796875
+    },
+    "energy": {
+      "height": 163.796875,
+      "width": 788.8828125,
+      "x": 363,
+      "y": 76
+    },
+    "frame": {
+      "height": 244,
+      "width": 1398,
+      "x": 384,
+      "y": 722.796875
+    },
+    "group": {
+      "height": 76,
+      "width": 343.5,
+      "x": 384,
+      "y": 722.796875
+    },
+    "groups": 12,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 631.109375,
+      "x": 1171.8828125,
+      "y": 76
+    },
+    "height": 1080,
+    "history": {
+      "height": 587.2890625,
+      "width": 1440,
+      "x": 363,
+      "y": 579.796875
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 1398,
+      "x": 384,
+      "y": 1086.7890625
+    },
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 1920,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 2,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 1398,
+      "x": 384,
+      "y": 902.796875
+    },
+    "energy": {
+      "height": 163.796875,
+      "width": 788.8828125,
+      "x": 363,
+      "y": 76
+    },
+    "frame": {
+      "height": 168,
+      "width": 1398,
+      "x": 384,
+      "y": 722.796875
+    },
+    "group": {
+      "height": 164,
+      "width": 695,
+      "x": 384,
+      "y": 724.796875
+    },
+    "groups": 2,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 631.109375,
+      "x": 1171.8828125,
+      "y": 76
+    },
+    "height": 1080,
+    "history": {
+      "height": 511.2890625,
+      "width": 1440,
+      "x": 363,
+      "y": 579.796875
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 1398,
+      "x": 384,
+      "y": 1010.7890625
+    },
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 1920,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 53,
+    "dailyScroll": {
+      "client": 1048,
+      "scroll": 1048
+    },
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 1084,
+      "x": 301,
+      "y": 895
+    },
+    "energy": {
+      "height": 156,
+      "width": 614.4375,
+      "x": 280,
+      "y": 76
+    },
+    "frame": {
+      "height": 168,
+      "width": 1084,
+      "x": 301,
+      "y": 715
+    },
+    "group": null,
+    "groups": 0,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 491.5625,
+      "x": 914.4375,
+      "y": 76
+    },
+    "height": 900,
+    "history": {
+      "height": 511.2890625,
+      "width": 1126,
+      "x": 280,
+      "y": 572
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 1084,
+      "x": 301,
+      "y": 1002.9921875
+    },
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 1440,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 11,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 1084,
+      "x": 301,
+      "y": 979
+    },
+    "energy": {
+      "height": 156,
+      "width": 614.4375,
+      "x": 280,
+      "y": 76
+    },
+    "frame": {
+      "height": 252,
+      "width": 1084,
+      "x": 301,
+      "y": 715
+    },
+    "group": {
+      "height": 44,
+      "width": 91.265625,
+      "x": 301,
+      "y": 715
+    },
+    "groups": 53,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 491.5625,
+      "x": 914.4375,
+      "y": 76
+    },
+    "height": 900,
+    "history": {
+      "height": 595.2890625,
+      "width": 1126,
+      "x": 280,
+      "y": 572
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 1084,
+      "x": 301,
+      "y": 1086.9921875
+    },
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 1440,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 4,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 1084,
+      "x": 301,
+      "y": 971
+    },
+    "energy": {
+      "height": 156,
+      "width": 614.4375,
+      "x": 280,
+      "y": 76
+    },
+    "frame": {
+      "height": 244,
+      "width": 1084,
+      "x": 301,
+      "y": 715
+    },
+    "group": {
+      "height": 76,
+      "width": 265,
+      "x": 301,
+      "y": 715
+    },
+    "groups": 12,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 491.5625,
+      "x": 914.4375,
+      "y": 76
+    },
+    "height": 900,
+    "history": {
+      "height": 587.2890625,
+      "width": 1126,
+      "x": 280,
+      "y": 572
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 1084,
+      "x": 301,
+      "y": 1078.9921875
+    },
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 1440,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 2,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 1084,
+      "x": 301,
+      "y": 895
+    },
+    "energy": {
+      "height": 156,
+      "width": 614.4375,
+      "x": 280,
+      "y": 76
+    },
+    "frame": {
+      "height": 168,
+      "width": 1084,
+      "x": 301,
+      "y": 715
+    },
+    "group": {
+      "height": 164,
+      "width": 538,
+      "x": 301,
+      "y": 717
+    },
+    "groups": 2,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 491.5625,
+      "x": 914.4375,
+      "y": 76
+    },
+    "height": 900,
+    "history": {
+      "height": 511.2890625,
+      "width": 1126,
+      "x": 280,
+      "y": 572
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 1084,
+      "x": 301,
+      "y": 1002.9921875
+    },
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 1440,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 53,
+    "dailyScroll": {
+      "client": 974,
+      "scroll": 974
+    },
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 1010,
+      "x": 301,
+      "y": 895
+    },
+    "energy": {
+      "height": 156,
+      "width": 573.328125,
+      "x": 280,
+      "y": 76
+    },
+    "frame": {
+      "height": 168,
+      "width": 1010,
+      "x": 301,
+      "y": 715
+    },
+    "group": null,
+    "groups": 0,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 458.6640625,
+      "x": 873.328125,
+      "y": 76
+    },
+    "height": 768,
+    "history": {
+      "height": 511.2890625,
+      "width": 1052,
+      "x": 280,
+      "y": 572
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 1010,
+      "x": 301,
+      "y": 1002.9921875
+    },
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 1366,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 11,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 1010,
+      "x": 301,
+      "y": 979
+    },
+    "energy": {
+      "height": 156,
+      "width": 573.328125,
+      "x": 280,
+      "y": 76
+    },
+    "frame": {
+      "height": 252,
+      "width": 1010,
+      "x": 301,
+      "y": 715
+    },
+    "group": {
+      "height": 44,
+      "width": 84.5390625,
+      "x": 301,
+      "y": 715
+    },
+    "groups": 53,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 458.6640625,
+      "x": 873.328125,
+      "y": 76
+    },
+    "height": 768,
+    "history": {
+      "height": 595.2890625,
+      "width": 1052,
+      "x": 280,
+      "y": 572
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 1010,
+      "x": 301,
+      "y": 1086.9921875
+    },
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 1366,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 4,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 1010,
+      "x": 301,
+      "y": 971
+    },
+    "energy": {
+      "height": 156,
+      "width": 573.328125,
+      "x": 280,
+      "y": 76
+    },
+    "frame": {
+      "height": 244,
+      "width": 1010,
+      "x": 301,
+      "y": 715
+    },
+    "group": {
+      "height": 76,
+      "width": 246.5,
+      "x": 301,
+      "y": 715
+    },
+    "groups": 12,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 458.6640625,
+      "x": 873.328125,
+      "y": 76
+    },
+    "height": 768,
+    "history": {
+      "height": 587.2890625,
+      "width": 1052,
+      "x": 280,
+      "y": 572
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 1010,
+      "x": 301,
+      "y": 1078.9921875
+    },
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 1366,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 2,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 1010,
+      "x": 301,
+      "y": 895
+    },
+    "energy": {
+      "height": 156,
+      "width": 573.328125,
+      "x": 280,
+      "y": 76
+    },
+    "frame": {
+      "height": 168,
+      "width": 1010,
+      "x": 301,
+      "y": 715
+    },
+    "group": {
+      "height": 164,
+      "width": 501,
+      "x": 301,
+      "y": 717
+    },
+    "groups": 2,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 458.6640625,
+      "x": 873.328125,
+      "y": 76
+    },
+    "height": 768,
+    "history": {
+      "height": 511.2890625,
+      "width": 1052,
+      "x": 280,
+      "y": 572
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 1010,
+      "x": 301,
+      "y": 1002.9921875
+    },
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 1366,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 53,
+    "dailyScroll": {
+      "client": 888,
+      "scroll": 888
+    },
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 924,
+      "x": 301,
+      "y": 895
+    },
+    "energy": {
+      "height": 156,
+      "width": 525.5546875,
+      "x": 280,
+      "y": 76
+    },
+    "frame": {
+      "height": 168,
+      "width": 924,
+      "x": 301,
+      "y": 715
+    },
+    "group": null,
+    "groups": 0,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 420.4453125,
+      "x": 825.5546875,
+      "y": 76
+    },
+    "height": 720,
+    "history": {
+      "height": 511.2890625,
+      "width": 966,
+      "x": 280,
+      "y": 572
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 924,
+      "x": 301,
+      "y": 1002.9921875
+    },
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 1280,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 11,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 924,
+      "x": 301,
+      "y": 979
+    },
+    "energy": {
+      "height": 156,
+      "width": 525.5546875,
+      "x": 280,
+      "y": 76
+    },
+    "frame": {
+      "height": 252,
+      "width": 924,
+      "x": 301,
+      "y": 715
+    },
+    "group": {
+      "height": 44,
+      "width": 76.7265625,
+      "x": 301,
+      "y": 715
+    },
+    "groups": 53,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 420.4453125,
+      "x": 825.5546875,
+      "y": 76
+    },
+    "height": 720,
+    "history": {
+      "height": 595.2890625,
+      "width": 966,
+      "x": 280,
+      "y": 572
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 924,
+      "x": 301,
+      "y": 1086.9921875
+    },
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 1280,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 4,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 924,
+      "x": 301,
+      "y": 971
+    },
+    "energy": {
+      "height": 156,
+      "width": 525.5546875,
+      "x": 280,
+      "y": 76
+    },
+    "frame": {
+      "height": 244,
+      "width": 924,
+      "x": 301,
+      "y": 715
+    },
+    "group": {
+      "height": 76,
+      "width": 225,
+      "x": 301,
+      "y": 715
+    },
+    "groups": 12,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 420.4453125,
+      "x": 825.5546875,
+      "y": 76
+    },
+    "height": 720,
+    "history": {
+      "height": 587.2890625,
+      "width": 966,
+      "x": 280,
+      "y": 572
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 924,
+      "x": 301,
+      "y": 1078.9921875
+    },
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 1280,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 2,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 924,
+      "x": 301,
+      "y": 895
+    },
+    "energy": {
+      "height": 156,
+      "width": 525.5546875,
+      "x": 280,
+      "y": 76
+    },
+    "frame": {
+      "height": 168,
+      "width": 924,
+      "x": 301,
+      "y": 715
+    },
+    "group": {
+      "height": 164,
+      "width": 458,
+      "x": 301,
+      "y": 717
+    },
+    "groups": 2,
+    "habits": 3,
+    "habitsRect": {
+      "height": 152,
+      "width": 420.4453125,
+      "x": 825.5546875,
+      "y": 76
+    },
+    "height": 720,
+    "history": {
+      "height": 511.2890625,
+      "width": 966,
+      "x": 280,
+      "y": 572
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 924,
+      "x": 301,
+      "y": 1002.9921875
+    },
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 1280,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 53,
+    "dailyScroll": {
+      "client": 563,
+      "scroll": 1060
+    },
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 598.5625,
+      "x": 335.71875,
+      "y": 1741.1171875
+    },
+    "energy": {
+      "height": 340.8984375,
+      "width": 648.5625,
+      "x": 310.71875,
+      "y": 110.71875
+    },
+    "frame": {
+      "height": 170,
+      "width": 598.5625,
+      "x": 335.71875,
+      "y": 1555.1171875
+    },
+    "group": null,
+    "groups": 0,
+    "habits": 3,
+    "habitsRect": {
+      "height": 132,
+      "width": 648.5625,
+      "x": 310.71875,
+      "y": 467.6171875
+    },
+    "height": 768,
+    "history": {
+      "height": 541.2890625,
+      "width": 648.5625,
+      "x": 310.71875,
+      "y": 1400.1171875
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 598.5625,
+      "x": 335.71875,
+      "y": 1853.109375
+    },
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 1024,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 11,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 598.5625,
+      "x": 335.71875,
+      "y": 1888.1171875
+    },
+    "energy": {
+      "height": 340.8984375,
+      "width": 648.5625,
+      "x": 310.71875,
+      "y": 110.71875
+    },
+    "frame": {
+      "height": 252,
+      "width": 598.5625,
+      "x": 335.71875,
+      "y": 1620.1171875
+    },
+    "group": {
+      "height": 44,
+      "width": 47.140625,
+      "x": 335.71875,
+      "y": 1620.1171875
+    },
+    "groups": 53,
+    "habits": 3,
+    "habitsRect": {
+      "height": 132,
+      "width": 648.5625,
+      "x": 310.71875,
+      "y": 467.6171875
+    },
+    "height": 768,
+    "history": {
+      "height": 704.7890625,
+      "width": 648.5625,
+      "x": 310.71875,
+      "y": 1400.1171875
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 598.5625,
+      "x": 335.71875,
+      "y": 2000.109375
+    },
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 1024,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 4,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 598.5625,
+      "x": 335.71875,
+      "y": 1892.7109375
+    },
+    "energy": {
+      "height": 340.8984375,
+      "width": 648.5625,
+      "x": 310.71875,
+      "y": 110.71875
+    },
+    "frame": {
+      "height": 256.59375,
+      "width": 598.5625,
+      "x": 335.71875,
+      "y": 1620.1171875
+    },
+    "group": {
+      "height": 76,
+      "width": 143.640625,
+      "x": 335.71875,
+      "y": 1620.1171875
+    },
+    "groups": 12,
+    "habits": 3,
+    "habitsRect": {
+      "height": 132,
+      "width": 648.5625,
+      "x": 310.71875,
+      "y": 467.6171875
+    },
+    "height": 768,
+    "history": {
+      "height": 709.3828125,
+      "width": 648.5625,
+      "x": 310.71875,
+      "y": 1400.1171875
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 598.5625,
+      "x": 335.71875,
+      "y": 2004.703125
+    },
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 1024,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 2,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 598.5625,
+      "x": 335.71875,
+      "y": 1739.1171875
+    },
+    "energy": {
+      "height": 340.8984375,
+      "width": 648.5625,
+      "x": 310.71875,
+      "y": 110.71875
+    },
+    "frame": {
+      "height": 168,
+      "width": 598.5625,
+      "x": 335.71875,
+      "y": 1555.1171875
+    },
+    "group": {
+      "height": 164,
+      "width": 295.28125,
+      "x": 335.71875,
+      "y": 1557.1171875
+    },
+    "groups": 2,
+    "habits": 3,
+    "habitsRect": {
+      "height": 132,
+      "width": 648.5625,
+      "x": 310.71875,
+      "y": 467.6171875
+    },
+    "height": 768,
+    "history": {
+      "height": 555.7890625,
+      "width": 648.5625,
+      "x": 310.71875,
+      "y": 1400.1171875
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 598.5625,
+      "x": 335.71875,
+      "y": 1851.109375
+    },
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 1024,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 53,
+    "dailyScroll": {
+      "client": 322,
+      "scroll": 1060
+    },
+    "day": "2026-10-22",
+    "detail": {
+      "height": 95.9921875,
+      "width": 357.921875,
+      "x": 328.0390625,
+      "y": 1810.359375
+    },
+    "energy": {
+      "height": 326.8203125,
+      "width": 407.921875,
+      "x": 303.0390625,
+      "y": 103.0390625
+    },
+    "frame": {
+      "height": 170,
+      "width": 357.921875,
+      "x": 328.0390625,
+      "y": 1624.359375
+    },
+    "group": null,
+    "groups": 0,
+    "habits": 3,
+    "habitsRect": {
+      "height": 132,
+      "width": 407.921875,
+      "x": 303.0390625,
+      "y": 445.859375
+    },
+    "height": 1024,
+    "history": {
+      "height": 677.2890625,
+      "width": 407.921875,
+      "x": 303.0390625,
+      "y": 1378.359375
+    },
+    "legend": {
+      "height": 59.296875,
+      "width": 357.921875,
+      "x": 328.0390625,
+      "y": 1922.3515625
+    },
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 768,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 8,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 159.984375,
+      "width": 357.921875,
+      "x": 328.0390625,
+      "y": 1996.359375
+    },
+    "energy": {
+      "height": 326.8203125,
+      "width": 407.921875,
+      "x": 303.0390625,
+      "y": 103.0390625
+    },
+    "frame": {
+      "height": 356,
+      "width": 357.921875,
+      "x": 328.0390625,
+      "y": 1624.359375
+    },
+    "group": {
+      "height": 44,
+      "width": 37.734375,
+      "x": 328.0390625,
+      "y": 1624.359375
+    },
+    "groups": 53,
+    "habits": 3,
+    "habitsRect": {
+      "height": 132,
+      "width": 407.921875,
+      "x": 303.0390625,
+      "y": 445.859375
+    },
+    "height": 1024,
+    "history": {
+      "height": 915.28125,
+      "width": 407.921875,
+      "x": 303.0390625,
+      "y": 1378.359375
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 357.921875,
+      "x": 328.0390625,
+      "y": 2172.34375
+    },
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 768,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 4,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 159.984375,
+      "width": 357.921875,
+      "x": 328.0390625,
+      "y": 2051.71875
+    },
+    "energy": {
+      "height": 326.8203125,
+      "width": 407.921875,
+      "x": 303.0390625,
+      "y": 103.0390625
+    },
+    "frame": {
+      "height": 411.359375,
+      "width": 357.921875,
+      "x": 328.0390625,
+      "y": 1624.359375
+    },
+    "group": {
+      "height": 126.1875,
+      "width": 83.4765625,
+      "x": 328.0390625,
+      "y": 1624.359375
+    },
+    "groups": 12,
+    "habits": 3,
+    "habitsRect": {
+      "height": 132,
+      "width": 407.921875,
+      "x": 303.0390625,
+      "y": 445.859375
+    },
+    "height": 1024,
+    "history": {
+      "height": 970.640625,
+      "width": 407.921875,
+      "x": 303.0390625,
+      "y": 1378.359375
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 357.921875,
+      "x": 328.0390625,
+      "y": 2227.703125
+    },
+    "mainOverflow": false,
+    "minTarget": 126.1875,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 768,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 2,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 159.984375,
+      "width": 357.921875,
+      "x": 328.0390625,
+      "y": 1808.359375
+    },
+    "energy": {
+      "height": 326.8203125,
+      "width": 407.921875,
+      "x": 303.0390625,
+      "y": 103.0390625
+    },
+    "frame": {
+      "height": 168,
+      "width": 357.921875,
+      "x": 328.0390625,
+      "y": 1624.359375
+    },
+    "group": {
+      "height": 164,
+      "width": 174.9609375,
+      "x": 328.0390625,
+      "y": 1626.359375
+    },
+    "groups": 2,
+    "habits": 3,
+    "habitsRect": {
+      "height": 132,
+      "width": 407.921875,
+      "x": 303.0390625,
+      "y": 445.859375
+    },
+    "height": 1024,
+    "history": {
+      "height": 727.28125,
+      "width": 407.921875,
+      "x": 303.0390625,
+      "y": 1378.359375
+    },
+    "legend": {
+      "height": 30.796875,
+      "width": 357.921875,
+      "x": 328.0390625,
+      "y": 1984.34375
+    },
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 768,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 53,
+    "dailyScroll": {
+      "client": 302,
+      "scroll": 1060
+    },
+    "day": "2026-10-22",
+    "detail": {
+      "height": 151.1875,
+      "width": 338,
+      "x": 41,
+      "y": 1717.8984375
+    },
+    "energy": {
+      "height": 243.3984375,
+      "width": 372,
+      "x": 24,
+      "y": 132
+    },
+    "frame": {
+      "height": 170,
+      "width": 338,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "group": null,
+    "groups": 0,
+    "habits": 3,
+    "habitsRect": {
+      "height": 122,
+      "width": 372,
+      "x": 24,
+      "y": 391.3984375
+    },
+    "height": 932,
+    "history": {
+      "height": 711.8828125,
+      "width": 372,
+      "x": 24,
+      "y": 1305.8984375
+    },
+    "legend": {
+      "height": 74.6953125,
+      "width": 338,
+      "x": 41,
+      "y": 1881.0859375
+    },
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 430,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 5,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 173.1875,
+      "width": 338,
+      "x": 41,
+      "y": 2111.8984375
+    },
+    "energy": {
+      "height": 243.3984375,
+      "width": 372,
+      "x": 24,
+      "y": 132
+    },
+    "frame": {
+      "height": 564,
+      "width": 338,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "group": {
+      "height": 44,
+      "width": 61.1953125,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "groups": 53,
+    "habits": 3,
+    "habitsRect": {
+      "height": 122,
+      "width": 372,
+      "x": 24,
+      "y": 391.3984375
+    },
+    "height": 932,
+    "history": {
+      "height": 1115.8828125,
+      "width": 372,
+      "x": 24,
+      "y": 1305.8984375
+    },
+    "legend": {
+      "height": 46.1953125,
+      "width": 338,
+      "x": 41,
+      "y": 2297.0859375
+    },
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 430,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 2,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 173.1875,
+      "width": 338,
+      "x": 41,
+      "y": 2056.4921875
+    },
+    "energy": {
+      "height": 243.3984375,
+      "width": 372,
+      "x": 24,
+      "y": 132
+    },
+    "frame": {
+      "height": 508.59375,
+      "width": 338,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "group": {
+      "height": 76,
+      "width": 165,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "groups": 12,
+    "habits": 3,
+    "habitsRect": {
+      "height": 122,
+      "width": 372,
+      "x": 24,
+      "y": 391.3984375
+    },
+    "height": 932,
+    "history": {
+      "height": 1060.4765625,
+      "width": 372,
+      "x": 24,
+      "y": 1305.8984375
+    },
+    "legend": {
+      "height": 46.1953125,
+      "width": 338,
+      "x": 41,
+      "y": 2241.6796875
+    },
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 430,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 1,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 173.1875,
+      "width": 338,
+      "x": 41,
+      "y": 1819.8984375
+    },
+    "energy": {
+      "height": 243.3984375,
+      "width": 372,
+      "x": 24,
+      "y": 132
+    },
+    "frame": {
+      "height": 272,
+      "width": 338,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "group": {
+      "height": 132,
+      "width": 338,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "groups": 2,
+    "habits": 3,
+    "habitsRect": {
+      "height": 122,
+      "width": 372,
+      "x": 24,
+      "y": 391.3984375
+    },
+    "height": 932,
+    "history": {
+      "height": 823.8828125,
+      "width": 372,
+      "x": 24,
+      "y": 1305.8984375
+    },
+    "legend": {
+      "height": 46.1953125,
+      "width": 338,
+      "x": 41,
+      "y": 2005.0859375
+    },
+    "mainOverflow": false,
+    "minTarget": 132,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 430,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 53,
+    "dailyScroll": {
+      "client": 247,
+      "scroll": 1060
+    },
+    "day": "2026-10-22",
+    "detail": {
+      "height": 151.1875,
+      "width": 283,
+      "x": 41,
+      "y": 1717.8984375
+    },
+    "energy": {
+      "height": 243.3984375,
+      "width": 317,
+      "x": 24,
+      "y": 132
+    },
+    "frame": {
+      "height": 170,
+      "width": 283,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "group": null,
+    "groups": 0,
+    "habits": 3,
+    "habitsRect": {
+      "height": 122,
+      "width": 317,
+      "x": 24,
+      "y": 391.3984375
+    },
+    "height": 812,
+    "history": {
+      "height": 728.3828125,
+      "width": 317,
+      "x": 24,
+      "y": 1305.8984375
+    },
+    "legend": {
+      "height": 74.6953125,
+      "width": 283,
+      "x": 41,
+      "y": 1881.0859375
+    },
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 375,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 5,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 191.1875,
+      "width": 283,
+      "x": 41,
+      "y": 2111.8984375
+    },
+    "energy": {
+      "height": 243.3984375,
+      "width": 317,
+      "x": 24,
+      "y": 132
+    },
+    "frame": {
+      "height": 564,
+      "width": 283,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "group": {
+      "height": 44,
+      "width": 50.1953125,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "groups": 53,
+    "habits": 3,
+    "habitsRect": {
+      "height": 122,
+      "width": 317,
+      "x": 24,
+      "y": 391.3984375
+    },
+    "height": 812,
+    "history": {
+      "height": 1162.3828125,
+      "width": 317,
+      "x": 24,
+      "y": 1305.8984375
+    },
+    "legend": {
+      "height": 74.6953125,
+      "width": 283,
+      "x": 41,
+      "y": 2315.0859375
+    },
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 375,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 2,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 191.1875,
+      "width": 283,
+      "x": 41,
+      "y": 2119.4609375
+    },
+    "energy": {
+      "height": 243.3984375,
+      "width": 317,
+      "x": 24,
+      "y": 132
+    },
+    "frame": {
+      "height": 571.5625,
+      "width": 283,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "group": {
+      "height": 88.59375,
+      "width": 137.5,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "groups": 12,
+    "habits": 3,
+    "habitsRect": {
+      "height": 122,
+      "width": 317,
+      "x": 24,
+      "y": 391.3984375
+    },
+    "height": 812,
+    "history": {
+      "height": 1169.9453125,
+      "width": 317,
+      "x": 24,
+      "y": 1305.8984375
+    },
+    "legend": {
+      "height": 74.6953125,
+      "width": 283,
+      "x": 41,
+      "y": 2322.6484375
+    },
+    "mainOverflow": false,
+    "minTarget": 88.59375,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 375,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 1,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 191.1875,
+      "width": 283,
+      "x": 41,
+      "y": 1819.8984375
+    },
+    "energy": {
+      "height": 243.3984375,
+      "width": 317,
+      "x": 24,
+      "y": 132
+    },
+    "frame": {
+      "height": 272,
+      "width": 283,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "group": {
+      "height": 132,
+      "width": 283,
+      "x": 41,
+      "y": 1535.8984375
+    },
+    "groups": 2,
+    "habits": 3,
+    "habitsRect": {
+      "height": 122,
+      "width": 317,
+      "x": 24,
+      "y": 391.3984375
+    },
+    "height": 812,
+    "history": {
+      "height": 870.3828125,
+      "width": 317,
+      "x": 24,
+      "y": 1305.8984375
+    },
+    "legend": {
+      "height": 74.6953125,
+      "width": 283,
+      "x": 41,
+      "y": 2023.0859375
+    },
+    "mainOverflow": false,
+    "minTarget": 132,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 375,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 53,
+    "dailyScroll": {
+      "client": 192,
+      "scroll": 1060
+    },
+    "day": "2026-10-22",
+    "detail": {
+      "height": 173.1875,
+      "width": 228,
+      "x": 41,
+      "y": 1890.09375
+    },
+    "energy": {
+      "height": 259.3984375,
+      "width": 262,
+      "x": 24,
+      "y": 132
+    },
+    "frame": {
+      "height": 170,
+      "width": 228,
+      "x": 41,
+      "y": 1708.09375
+    },
+    "group": null,
+    "groups": 0,
+    "habits": 3,
+    "habitsRect": {
+      "height": 185.1953125,
+      "width": 262,
+      "x": 24,
+      "y": 407.3984375
+    },
+    "height": 740,
+    "history": {
+      "height": 768.3828125,
+      "width": 262,
+      "x": 24,
+      "y": 1460.09375
+    },
+    "legend": {
+      "height": 74.6953125,
+      "width": 228,
+      "x": 41,
+      "y": 2075.28125
+    },
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 320,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 4,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 191.1875,
+      "width": 228,
+      "x": 41,
+      "y": 2458.09375
+    },
+    "energy": {
+      "height": 259.3984375,
+      "width": 262,
+      "x": 24,
+      "y": 132
+    },
+    "frame": {
+      "height": 720,
+      "width": 228,
+      "x": 41,
+      "y": 1726.09375
+    },
+    "group": {
+      "height": 44,
+      "width": 51,
+      "x": 41,
+      "y": 1726.09375
+    },
+    "groups": 53,
+    "habits": 3,
+    "habitsRect": {
+      "height": 185.1953125,
+      "width": 262,
+      "x": 24,
+      "y": 407.3984375
+    },
+    "height": 740,
+    "history": {
+      "height": 1370.8828125,
+      "width": 262,
+      "x": 24,
+      "y": 1460.09375
+    },
+    "legend": {
+      "height": 74.6953125,
+      "width": 228,
+      "x": 41,
+      "y": 2661.28125
+    },
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 320,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 2,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 191.1875,
+      "width": 228,
+      "x": 41,
+      "y": 2351.25
+    },
+    "energy": {
+      "height": 259.3984375,
+      "width": 262,
+      "x": 24,
+      "y": 132
+    },
+    "frame": {
+      "height": 613.15625,
+      "width": 228,
+      "x": 41,
+      "y": 1726.09375
+    },
+    "group": {
+      "height": 109.390625,
+      "width": 110,
+      "x": 41,
+      "y": 1726.09375
+    },
+    "groups": 12,
+    "habits": 3,
+    "habitsRect": {
+      "height": 185.1953125,
+      "width": 262,
+      "x": 24,
+      "y": 407.3984375
+    },
+    "height": 740,
+    "history": {
+      "height": 1264.0390625,
+      "width": 262,
+      "x": 24,
+      "y": 1460.09375
+    },
+    "legend": {
+      "height": 74.6953125,
+      "width": 228,
+      "x": 41,
+      "y": 2554.4375
+    },
+    "mainOverflow": false,
+    "minTarget": 88.59375,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 320,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "columns": 1,
+    "dailyScroll": null,
+    "day": "2026-10-22",
+    "detail": {
+      "height": 191.1875,
+      "width": 228,
+      "x": 41,
+      "y": 1992.09375
+    },
+    "energy": {
+      "height": 259.3984375,
+      "width": 262,
+      "x": 24,
+      "y": 132
+    },
+    "frame": {
+      "height": 272,
+      "width": 228,
+      "x": 41,
+      "y": 1708.09375
+    },
+    "group": {
+      "height": 132,
+      "width": 228,
+      "x": 41,
+      "y": 1708.09375
+    },
+    "groups": 2,
+    "habits": 3,
+    "habitsRect": {
+      "height": 185.1953125,
+      "width": 262,
+      "x": 24,
+      "y": 407.3984375
+    },
+    "height": 740,
+    "history": {
+      "height": 904.8828125,
+      "width": 262,
+      "x": 24,
+      "y": 1460.09375
+    },
+    "legend": {
+      "height": 74.6953125,
+      "width": 228,
+      "x": 41,
+      "y": 2195.28125
+    },
+    "mainOverflow": false,
+    "minTarget": 132,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 320,
+    "scenario": "varied",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Con datos energéticosBalance del día+752 kcalConsumidas3.150 kcalGasto estimado2.398 kcal",
+    "empty": 0,
+    "frameHeight": 199.8671875,
+    "groups": 0,
+    "habits": 3,
+    "height": 1080,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 1920,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20265 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 52,
+    "frameHeight": 252,
+    "groups": 53,
+    "habits": 3,
+    "height": 1080,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 1920,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20265 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 11,
+    "frameHeight": 244,
+    "groups": 12,
+    "habits": 3,
+    "height": 1080,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 1920,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20265 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 1,
+    "frameHeight": 168,
+    "groups": 2,
+    "habits": 3,
+    "height": 1080,
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 1920,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Con datos energéticosBalance del día+752 kcalConsumidas3.150 kcalGasto estimado2.398 kcal",
+    "empty": 0,
+    "frameHeight": 168,
+    "groups": 0,
+    "habits": 3,
+    "height": 900,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 1440,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20265 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 52,
+    "frameHeight": 252,
+    "groups": 53,
+    "habits": 3,
+    "height": 900,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 1440,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20265 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 11,
+    "frameHeight": 244,
+    "groups": 12,
+    "habits": 3,
+    "height": 900,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 1440,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20265 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 1,
+    "frameHeight": 168,
+    "groups": 2,
+    "habits": 3,
+    "height": 900,
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 1440,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Con datos energéticosBalance del día+752 kcalConsumidas3.150 kcalGasto estimado2.398 kcal",
+    "empty": 0,
+    "frameHeight": 168,
+    "groups": 0,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 1366,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20265 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 52,
+    "frameHeight": 252,
+    "groups": 53,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 1366,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20265 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 11,
+    "frameHeight": 244,
+    "groups": 12,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 1366,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20265 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 1,
+    "frameHeight": 168,
+    "groups": 2,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 1366,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Con datos energéticosBalance del día+752 kcalConsumidas3.150 kcalGasto estimado2.398 kcal",
+    "empty": 0,
+    "frameHeight": 168,
+    "groups": 0,
+    "habits": 3,
+    "height": 720,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 1280,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20265 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 52,
+    "frameHeight": 252,
+    "groups": 53,
+    "habits": 3,
+    "height": 720,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 1280,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20265 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 11,
+    "frameHeight": 244,
+    "groups": 12,
+    "habits": 3,
+    "height": 720,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 1280,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20265 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 1,
+    "frameHeight": 168,
+    "groups": 2,
+    "habits": 3,
+    "height": 720,
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 1280,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Con datos energéticosBalance del día+752 kcalConsumidas3.150 kcalGasto estimado2.398 kcal",
+    "empty": 0,
+    "frameHeight": 170,
+    "groups": 0,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 1024,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20265 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 52,
+    "frameHeight": 252,
+    "groups": 53,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 1024,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20265 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 11,
+    "frameHeight": 256.59375,
+    "groups": 12,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 1024,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20265 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 1,
+    "frameHeight": 168,
+    "groups": 2,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 1024,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Con datos energéticosBalance del día+752 kcalConsumidas3.150 kcalGasto estimado2.398 kcal",
+    "empty": 0,
+    "frameHeight": 170,
+    "groups": 0,
+    "habits": 3,
+    "height": 1024,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 768,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20265 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 52,
+    "frameHeight": 356,
+    "groups": 53,
+    "habits": 3,
+    "height": 1024,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 768,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20265 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 11,
+    "frameHeight": 360.96875,
+    "groups": 12,
+    "habits": 3,
+    "height": 1024,
+    "mainOverflow": false,
+    "minTarget": 109.390625,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 768,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20265 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 1,
+    "frameHeight": 168,
+    "groups": 2,
+    "habits": 3,
+    "height": 1024,
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 768,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Con datos energéticosBalance del día+752 kcalConsumidas3.150 kcalGasto estimado2.398 kcal",
+    "empty": 0,
+    "frameHeight": 170,
+    "groups": 0,
+    "habits": 3,
+    "height": 932,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 430,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20265 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 52,
+    "frameHeight": 564,
+    "groups": 53,
+    "habits": 3,
+    "height": 932,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 430,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20265 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 11,
+    "frameHeight": 508.59375,
+    "groups": 12,
+    "habits": 3,
+    "height": 932,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 430,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20265 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 1,
+    "frameHeight": 272,
+    "groups": 2,
+    "habits": 3,
+    "height": 932,
+    "mainOverflow": false,
+    "minTarget": 132,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 430,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Con datos energéticosBalance del día+752 kcalConsumidas3.150 kcalGasto estimado2.398 kcal",
+    "empty": 0,
+    "frameHeight": 170,
+    "groups": 0,
+    "habits": 3,
+    "height": 812,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 375,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20265 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 52,
+    "frameHeight": 564,
+    "groups": 53,
+    "habits": 3,
+    "height": 812,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 375,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20265 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 11,
+    "frameHeight": 508.59375,
+    "groups": 12,
+    "habits": 3,
+    "height": 812,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 375,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20265 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 1,
+    "frameHeight": 272,
+    "groups": 2,
+    "habits": 3,
+    "height": 812,
+    "mainOverflow": false,
+    "minTarget": 132,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 375,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Con datos energéticosBalance del día+752 kcalConsumidas3.150 kcalGasto estimado2.398 kcal",
+    "empty": 0,
+    "frameHeight": 170,
+    "groups": 0,
+    "habits": 3,
+    "height": 740,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 7,
+    "width": 320,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20265 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 52,
+    "frameHeight": 720,
+    "groups": 53,
+    "habits": 3,
+    "height": 740,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 7,
+    "width": 320,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20265 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 11,
+    "frameHeight": 613.15625,
+    "groups": 12,
+    "habits": 3,
+    "height": 740,
+    "mainOverflow": false,
+    "minTarget": 88.59375,
+    "overflow": false,
+    "period": "month",
+    "records": 7,
+    "width": 320,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20265 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedio+40 kcal/díaBalance acumulado+200 kcalConsumidas10.350 kcalGasto estimado10.150 kcal",
+    "empty": 1,
+    "frameHeight": 272,
+    "groups": 2,
+    "habits": 3,
+    "height": 740,
+    "mainOverflow": false,
+    "minTarget": 132,
+    "overflow": false,
+    "period": "year",
+    "records": 7,
+    "width": 320,
+    "scenario": "sparse",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Sin datos energéticosBalance del díaSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 0,
+    "frameHeight": 199.8671875,
+    "groups": 0,
+    "habits": 3,
+    "height": 1080,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 0,
+    "width": 1920,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20260 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 53,
+    "frameHeight": 252,
+    "groups": 53,
+    "habits": 3,
+    "height": 1080,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 0,
+    "width": 1920,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20260 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 12,
+    "frameHeight": 244,
+    "groups": 12,
+    "habits": 3,
+    "height": 1080,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 0,
+    "width": 1920,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20260 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 2,
+    "frameHeight": 168,
+    "groups": 2,
+    "habits": 3,
+    "height": 1080,
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 0,
+    "width": 1920,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Sin datos energéticosBalance del díaSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 0,
+    "frameHeight": 168,
+    "groups": 0,
+    "habits": 3,
+    "height": 900,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 0,
+    "width": 1440,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20260 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 53,
+    "frameHeight": 252,
+    "groups": 53,
+    "habits": 3,
+    "height": 900,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 0,
+    "width": 1440,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20260 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 12,
+    "frameHeight": 244,
+    "groups": 12,
+    "habits": 3,
+    "height": 900,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 0,
+    "width": 1440,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20260 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 2,
+    "frameHeight": 168,
+    "groups": 2,
+    "habits": 3,
+    "height": 900,
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 0,
+    "width": 1440,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Sin datos energéticosBalance del díaSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 0,
+    "frameHeight": 168,
+    "groups": 0,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 0,
+    "width": 1366,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20260 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 53,
+    "frameHeight": 252,
+    "groups": 53,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 0,
+    "width": 1366,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20260 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 12,
+    "frameHeight": 244,
+    "groups": 12,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 0,
+    "width": 1366,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20260 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 2,
+    "frameHeight": 168,
+    "groups": 2,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 0,
+    "width": 1366,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Sin datos energéticosBalance del díaSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 0,
+    "frameHeight": 168,
+    "groups": 0,
+    "habits": 3,
+    "height": 720,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 0,
+    "width": 1280,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20260 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 53,
+    "frameHeight": 252,
+    "groups": 53,
+    "habits": 3,
+    "height": 720,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 0,
+    "width": 1280,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20260 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 12,
+    "frameHeight": 244,
+    "groups": 12,
+    "habits": 3,
+    "height": 720,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 0,
+    "width": 1280,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20260 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 2,
+    "frameHeight": 168,
+    "groups": 2,
+    "habits": 3,
+    "height": 720,
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 0,
+    "width": 1280,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Sin datos energéticosBalance del díaSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 0,
+    "frameHeight": 170,
+    "groups": 0,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 0,
+    "width": 1024,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20260 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 53,
+    "frameHeight": 252,
+    "groups": 53,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 0,
+    "width": 1024,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20260 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 12,
+    "frameHeight": 256.59375,
+    "groups": 12,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 0,
+    "width": 1024,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20260 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 2,
+    "frameHeight": 168,
+    "groups": 2,
+    "habits": 3,
+    "height": 768,
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 0,
+    "width": 1024,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Sin datos energéticosBalance del díaSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 0,
+    "frameHeight": 170,
+    "groups": 0,
+    "habits": 3,
+    "height": 1024,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 0,
+    "width": 768,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20260 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 53,
+    "frameHeight": 356,
+    "groups": 53,
+    "habits": 3,
+    "height": 1024,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 0,
+    "width": 768,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20260 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 12,
+    "frameHeight": 360.96875,
+    "groups": 12,
+    "habits": 3,
+    "height": 1024,
+    "mainOverflow": false,
+    "minTarget": 109.390625,
+    "overflow": false,
+    "period": "month",
+    "records": 0,
+    "width": 768,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20260 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 2,
+    "frameHeight": 168,
+    "groups": 2,
+    "habits": 3,
+    "height": 1024,
+    "mainOverflow": false,
+    "minTarget": 164,
+    "overflow": false,
+    "period": "year",
+    "records": 0,
+    "width": 768,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Sin datos energéticosBalance del díaSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 0,
+    "frameHeight": 170,
+    "groups": 0,
+    "habits": 3,
+    "height": 932,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 0,
+    "width": 430,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20260 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 53,
+    "frameHeight": 564,
+    "groups": 53,
+    "habits": 3,
+    "height": 932,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 0,
+    "width": 430,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20260 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 12,
+    "frameHeight": 508.59375,
+    "groups": 12,
+    "habits": 3,
+    "height": 932,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 0,
+    "width": 430,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20260 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 2,
+    "frameHeight": 272,
+    "groups": 2,
+    "habits": 3,
+    "height": 932,
+    "mainOverflow": false,
+    "minTarget": 132,
+    "overflow": false,
+    "period": "year",
+    "records": 0,
+    "width": 430,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Sin datos energéticosBalance del díaSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 0,
+    "frameHeight": 170,
+    "groups": 0,
+    "habits": 3,
+    "height": 812,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 0,
+    "width": 375,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20260 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 53,
+    "frameHeight": 564,
+    "groups": 53,
+    "habits": 3,
+    "height": 812,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 0,
+    "width": 375,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20260 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 12,
+    "frameHeight": 508.59375,
+    "groups": 12,
+    "habits": 3,
+    "height": 812,
+    "mainOverflow": false,
+    "minTarget": 76,
+    "overflow": false,
+    "period": "month",
+    "records": 0,
+    "width": 375,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20260 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 2,
+    "frameHeight": 272,
+    "groups": 2,
+    "habits": 3,
+    "height": 812,
+    "mainOverflow": false,
+    "minTarget": 132,
+    "overflow": false,
+    "period": "year",
+    "records": 0,
+    "width": 375,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "22 octubre 2026Sin datos energéticosBalance del díaSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 0,
+    "frameHeight": 170,
+    "groups": 0,
+    "habits": 3,
+    "height": 740,
+    "mainOverflow": false,
+    "minTarget": null,
+    "overflow": false,
+    "period": "day",
+    "records": 0,
+    "width": 320,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "18 oct 2026 – 24 oct 20260 de 5 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 53,
+    "frameHeight": 720,
+    "groups": 53,
+    "habits": 3,
+    "height": 740,
+    "mainOverflow": false,
+    "minTarget": 44,
+    "overflow": false,
+    "period": "week",
+    "records": 0,
+    "width": 320,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "octubre 20260 de 22 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 12,
+    "frameHeight": 613.15625,
+    "groups": 12,
+    "habits": 3,
+    "height": 740,
+    "mainOverflow": false,
+    "minTarget": 88.59375,
+    "overflow": false,
+    "period": "month",
+    "records": 0,
+    "width": 320,
+    "scenario": "empty",
+    "dailyPreserved": true
+  },
+  {
+    "day": "2026-10-22",
+    "detail": "20260 de 295 días transcurridos con datos · En curso, hasta 22 octBalance promedioSin datosBalance acumuladoSin datosConsumidasSin datosGasto estimadoSin datos",
+    "empty": 2,
+    "frameHeight": 272,
+    "groups": 2,
+    "habits": 3,
+    "height": 740,
+    "mainOverflow": false,
+    "minTarget": 132,
+    "overflow": false,
+    "period": "year",
+    "records": 0,
+    "width": 320,
+    "scenario": "empty",
+    "dailyPreserved": true
+  }
+]

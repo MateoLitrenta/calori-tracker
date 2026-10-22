@@ -1,0 +1,74 @@
+[
+  {
+    "cell": {
+      "bottom": 420.6796875,
+      "height": 10,
+      "left": 789,
+      "right": 799,
+      "top": 410.6796875,
+      "width": 10,
+      "x": 789,
+      "y": 410.6796875
+    },
+    "dailyControls": false,
+    "frame": {
+      "bottom": 506.6796875,
+      "height": 118,
+      "left": 301,
+      "right": 1385,
+      "top": 388.6796875,
+      "width": 1084,
+      "x": 301,
+      "y": 388.6796875
+    },
+    "period": "week"
+  },
+  {
+    "cell": {
+      "bottom": 420.6796875,
+      "height": 10,
+      "left": 831,
+      "right": 841,
+      "top": 410.6796875,
+      "width": 10,
+      "x": 831,
+      "y": 410.6796875
+    },
+    "dailyControls": false,
+    "frame": {
+      "bottom": 506.6796875,
+      "height": 118,
+      "left": 301,
+      "right": 1385,
+      "top": 388.6796875,
+      "width": 1084,
+      "x": 301,
+      "y": 388.6796875
+    },
+    "period": "month"
+  },
+  {
+    "cell": {
+      "bottom": 420.6796875,
+      "height": 10,
+      "left": 838,
+      "right": 848,
+      "top": 410.6796875,
+      "width": 10,
+      "x": 838,
+      "y": 410.6796875
+    },
+    "dailyControls": false,
+    "frame": {
+      "bottom": 506.6796875,
+      "height": 118,
+      "left": 301,
+      "right": 1385,
+      "top": 388.6796875,
+      "width": 1084,
+      "x": 301,
+      "y": 388.6796875
+    },
+    "period": "year"
+  }
+]

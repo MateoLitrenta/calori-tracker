@@ -1,0 +1,98 @@
+[
+  {
+    "background": "rgb(255, 255, 255)",
+    "foreground": "rgb(31, 41, 55)",
+    "light": true,
+    "overflow": false,
+    "period": "day",
+    "width": 1440
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "foreground": "rgb(31, 41, 55)",
+    "light": true,
+    "overflow": false,
+    "period": "week",
+    "width": 1440
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "foreground": "rgb(31, 41, 55)",
+    "light": true,
+    "overflow": false,
+    "period": "month",
+    "width": 1440
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "foreground": "rgb(31, 41, 55)",
+    "light": true,
+    "overflow": false,
+    "period": "year",
+    "width": 1440
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "foreground": "rgb(31, 41, 55)",
+    "light": true,
+    "overflow": false,
+    "period": "day",
+    "width": 375
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "foreground": "rgb(31, 41, 55)",
+    "light": true,
+    "overflow": false,
+    "period": "week",
+    "width": 375
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "foreground": "rgb(31, 41, 55)",
+    "light": true,
+    "overflow": false,
+    "period": "month",
+    "width": 375
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "foreground": "rgb(31, 41, 55)",
+    "light": true,
+    "overflow": false,
+    "period": "year",
+    "width": 375
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "foreground": "rgb(31, 41, 55)",
+    "light": true,
+    "overflow": false,
+    "period": "day",
+    "width": 320
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "foreground": "rgb(31, 41, 55)",
+    "light": true,
+    "overflow": false,
+    "period": "week",
+    "width": 320
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "foreground": "rgb(31, 41, 55)",
+    "light": true,
+    "overflow": false,
+    "period": "month",
+    "width": 320
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "foreground": "rgb(31, 41, 55)",
+    "light": true,
+    "overflow": false,
+    "period": "year",
+    "width": 320
+  }
+]
