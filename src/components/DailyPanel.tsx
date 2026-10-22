@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useId } from 'react';
 import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, X, CaretRight, Clock, Sparkle } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
@@ -10,6 +10,26 @@ import { supabase } from '../lib/supabase';
 import { MealPhotoPicker, MealThumbnail } from './MealPhoto';
 import EntryFormShell from './EntryFormShell';
 import AutoResizeTextarea from './AutoResizeTextarea';
+
+// Only disclosure state belongs here. A date/profile change remounts this small
+// presentation component without touching entry forms or pending habit saves.
+function DailyRecords({ count, children }: { count: number; children: React.ReactNode }) {
+  const [expanded, setExpanded] = useState(false);
+  const listId = useId();
+  return <>
+    <ul id={listId} data-expanded={expanded}
+      className={`daily-records ${count >= 2 ? 'daily-records--columns' : ''} divide-y divide-slate-200 dark:divide-gray-800`}>
+      {children}
+    </ul>
+    {count > 4 && <button type="button" className="daily-records-toggle"
+      aria-expanded={expanded} aria-controls={listId} onClick={event => {
+        event.stopPropagation();
+        setExpanded(value => !value);
+      }}>
+      {expanded ? 'Mostrar menos' : `Ver todos los registros (${count})`}
+    </button>}
+  </>;
+}
 
 interface DailyPanelProps {
   record: DailyRecord | undefined;
@@ -478,12 +498,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         {/* Hábitos Compactos */}
         {!isGroup && (
           <div className="daily-habits grid grid-cols-3 gap-2">
-            <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
-              <div className="flex flex-col items-center gap-1">
+            <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
+              <div className="habit-header flex flex-col items-center gap-1">
                 <Drop size={20} className="text-cyan-400" />
-                <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Agua</span>
+                <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Agua</span>
               </div>
-              <div className="text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
+              <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
                 {isEditingWater ? (
                   <input
                     type="number"
@@ -526,12 +546,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
-              <div className="flex flex-col items-center gap-1">
+            <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
+              <div className="habit-header flex flex-col items-center gap-1">
                 <Sneaker size={20} className="text-green-400" />
-                <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Pasos</span>
+                <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Pasos</span>
               </div>
-              <div className="text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
+              <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
                 {isEditingSteps ? (
                   <input
                     ref={stepsInputRef}
@@ -574,12 +594,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
-              <div className="flex flex-col items-center gap-1">
+            <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
+              <div className="habit-header flex flex-col items-center gap-1">
                 <Scales size={20} className="text-pink-400" />
-                <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Peso</span>
+                <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Peso</span>
               </div>
-              <div className="text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
+              <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
                 <span className="hover:text-pink-400 transition-colors">
                   {currentRecord.weight ? currentRecord.weight.toLocaleString('es-AR') : '--'}
                 </span>
@@ -596,7 +616,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       </div>
 
       {!isGroup && (
-        <div className="daily-journal contents">
+        <div className="daily-journal contents" data-record-count={currentRecord.meals.length + currentRecord.workouts.length}>
         <div ref={tabContainerRef} className="daily-entry flex flex-col gap-4">
           {/* Action Buttons */}
           <div className="daily-quick-actions flex gap-2 mt-2">
@@ -823,7 +843,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         </div>
       {/* Logs List */}
         <div className={`daily-logs ${currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 ? 'daily-logs--empty' : ''} bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden`}>
-          <div className="bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
+          <div className="daily-logs-heading bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
             <h4 className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
           </div>
           
@@ -833,7 +853,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             </div>
           )}
 
-        <ul className="divide-y divide-slate-200 dark:divide-gray-800">
+        <DailyRecords key={`${profile.id}:${dateStr}:${selectedGroup?.type || 'day'}`}
+          count={currentRecord.meals.length + currentRecord.workouts.length}>
           {
             [
               ...currentRecord.meals.map(m => ({ ...m, _type: 'meal' as const })),
@@ -850,22 +871,23 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 return (
                   <li 
                     key={`meal-${meal.id}`} 
-                    onClick={() => setDetailModalItem(meal)}
                     className="p-3.5 hover:bg-white dark:bg-[#161b22] flex flex-col gap-1.5 group transition-colors cursor-pointer"
                   >
-                    <div className="flex items-center gap-3 w-full font-medium text-wrap break-words leading-tight">
+                    <button type="button" className="daily-record-open" onClick={() => setDetailModalItem(meal)}>
+                    <span className="daily-record-title flex items-center gap-3 w-full font-medium text-wrap break-words leading-tight">
                       {meal.photo_path && <MealThumbnail path={meal.photo_path} />}
                       <span><ForkKnife size={18} className="inline-block mr-2 text-orange-400" aria-hidden="true" />{meal.name}</span>
-                    </div>
-                    <div className="flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
+                    </span>
+                    <span className="daily-record-meta flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
                       <span>
                         {meal.time ? `${meal.time} hs • ` : ''}{meal.type}
                       </span>
-                      <div className="flex items-center gap-1.5">
+                      <span className="flex items-center gap-1.5">
                         <span className="font-semibold text-blue-400 whitespace-nowrap text-sm">+{meal.calories} kcal</span>
                         <CaretRight size={14} className="text-slate-500 dark:text-gray-400 group-hover:text-white transition-colors" />
-                      </div>
-                    </div>
+                      </span>
+                    </span>
+                    </button>
                   </li>
                 );
               } else {
@@ -873,27 +895,28 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 return (
                   <li 
                     key={`workout-${workout.id}`} 
-                    onClick={() => setDetailModalItem(workout)}
                     className="p-3.5 hover:bg-white dark:bg-[#161b22] flex flex-col gap-1.5 group transition-colors cursor-pointer"
                   >
-                    <div className="w-full font-medium text-wrap break-words leading-tight">
+                    <button type="button" className="daily-record-open" onClick={() => setDetailModalItem(workout)}>
+                    <span className="daily-record-title block w-full font-medium text-wrap break-words leading-tight">
                       <Barbell size={18} className="inline-block mr-2 text-orange-400" aria-hidden="true" />{workout.activity}
-                    </div>
-                    <div className="flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
+                    </span>
+                    <span className="daily-record-meta flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
                       <span>
                         {workout.time ? `${workout.time} hs • ` : ''}Ejercicio · {workout.duration} min
                       </span>
-                      <div className="flex items-center gap-1.5">
+                      <span className="flex items-center gap-1.5">
                         <span className="font-semibold text-orange-400 whitespace-nowrap text-sm">-{workout.calories} kcal</span>
                         <CaretRight size={14} className="text-slate-500 dark:text-gray-400 group-hover:text-white transition-colors" />
-                      </div>
-                    </div>
+                      </span>
+                    </span>
+                    </button>
                   </li>
                 );
               }
             })
           }
-        </ul>
+        </DailyRecords>
       </div>
       </div>
       )}

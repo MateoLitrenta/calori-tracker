@@ -1,0 +1,1275 @@
+{
+  "source": "Real browser, synthetic local fixture, 2026-10-22",
+  "checks": [
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 397.296875,
+      "height": 1080,
+      "historyBottom": 761.0625,
+      "mainScrollHeight": 1080,
+      "toggle": false,
+      "total": 0,
+      "width": 1920,
+      "calendarWidth": 1362,
+      "scenario": "empty",
+      "visible": 0,
+      "cell": {
+        "h": 21.6953125,
+        "w": 21.6953125
+      },
+      "calendarScroll": 1362
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 389.5,
+      "height": 900,
+      "historyBottom": 711.8125,
+      "mainScrollHeight": 900,
+      "toggle": false,
+      "total": 0,
+      "width": 1440,
+      "calendarWidth": 1048,
+      "scenario": "empty",
+      "visible": 0,
+      "cell": {
+        "h": 15.7734375,
+        "w": 15.7734375
+      },
+      "calendarScroll": 1048
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 389.5,
+      "height": 768,
+      "historyBottom": 702.0234375,
+      "mainScrollHeight": 768,
+      "toggle": false,
+      "total": 0,
+      "width": 1366,
+      "calendarWidth": 974,
+      "scenario": "empty",
+      "visible": 0,
+      "cell": {
+        "h": 14.375,
+        "w": 14.375
+      },
+      "calendarScroll": 974
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 389.5,
+      "height": 720,
+      "historyBottom": 690.6484375,
+      "mainScrollHeight": 720,
+      "toggle": false,
+      "total": 0,
+      "width": 1280,
+      "calendarWidth": 888,
+      "scenario": "empty",
+      "visible": 0,
+      "cell": {
+        "h": 12.75,
+        "w": 12.75
+      },
+      "calendarScroll": 888
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 777.359375,
+      "height": 1024,
+      "historyBottom": 1098.2578125,
+      "mainScrollHeight": 1121,
+      "toggle": false,
+      "total": 0,
+      "width": 768,
+      "calendarWidth": 322,
+      "scenario": "empty",
+      "visible": 0,
+      "cell": {
+        "h": 10,
+        "w": 10
+      },
+      "calendarScroll": 742
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 696.8984375,
+      "height": 932,
+      "historyBottom": 1027.796875,
+      "mainScrollHeight": 1148,
+      "toggle": false,
+      "total": 0,
+      "width": 430,
+      "calendarWidth": 310,
+      "scenario": "empty",
+      "visible": 0,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 696.8984375,
+      "height": 812,
+      "historyBottom": 1027.796875,
+      "mainScrollHeight": 1148,
+      "toggle": false,
+      "total": 0,
+      "width": 375,
+      "calendarWidth": 255,
+      "scenario": "empty",
+      "visible": 0,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 789.59375,
+      "height": 740,
+      "historyBottom": 1164.390625,
+      "mainScrollHeight": 1284,
+      "toggle": false,
+      "total": 0,
+      "width": 320,
+      "calendarWidth": 200,
+      "scenario": "empty",
+      "visible": 0,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 446.796875,
+      "height": 1080,
+      "historyBottom": 810.5625,
+      "mainScrollHeight": 1080,
+      "toggle": false,
+      "total": 1,
+      "width": 1920,
+      "calendarWidth": 1362,
+      "scenario": "one",
+      "visible": 1,
+      "cell": {
+        "h": 21.6953125,
+        "w": 21.6953125
+      },
+      "calendarScroll": 1362
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 439,
+      "height": 900,
+      "historyBottom": 761.3125,
+      "mainScrollHeight": 900,
+      "toggle": false,
+      "total": 1,
+      "width": 1440,
+      "calendarWidth": 1048,
+      "scenario": "one",
+      "visible": 1,
+      "cell": {
+        "h": 15.7734375,
+        "w": 15.7734375
+      },
+      "calendarScroll": 1048
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 439,
+      "height": 768,
+      "historyBottom": 751.5234375,
+      "mainScrollHeight": 768,
+      "toggle": false,
+      "total": 1,
+      "width": 1366,
+      "calendarWidth": 974,
+      "scenario": "one",
+      "visible": 1,
+      "cell": {
+        "h": 14.375,
+        "w": 14.375
+      },
+      "calendarScroll": 974
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 439,
+      "height": 720,
+      "historyBottom": 740.1484375,
+      "mainScrollHeight": 740,
+      "toggle": false,
+      "total": 1,
+      "width": 1280,
+      "calendarWidth": 888,
+      "scenario": "one",
+      "visible": 1,
+      "cell": {
+        "h": 12.75,
+        "w": 12.75
+      },
+      "calendarScroll": 888
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 841.359375,
+      "height": 1024,
+      "historyBottom": 1162.2578125,
+      "mainScrollHeight": 1185,
+      "toggle": false,
+      "total": 1,
+      "width": 768,
+      "calendarWidth": 322,
+      "scenario": "one",
+      "visible": 1,
+      "cell": {
+        "h": 10,
+        "w": 10
+      },
+      "calendarScroll": 742
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 768.8984375,
+      "height": 932,
+      "historyBottom": 1099.796875,
+      "mainScrollHeight": 1220,
+      "toggle": false,
+      "total": 1,
+      "width": 430,
+      "calendarWidth": 310,
+      "scenario": "one",
+      "visible": 1,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 768.8984375,
+      "height": 812,
+      "historyBottom": 1099.796875,
+      "mainScrollHeight": 1220,
+      "toggle": false,
+      "total": 1,
+      "width": 375,
+      "calendarWidth": 255,
+      "scenario": "one",
+      "visible": 1,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 848.09375,
+      "height": 740,
+      "historyBottom": 1222.890625,
+      "mainScrollHeight": 1343,
+      "toggle": false,
+      "total": 1,
+      "width": 320,
+      "calendarWidth": 200,
+      "scenario": "one",
+      "visible": 1,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 446.796875,
+      "height": 1080,
+      "historyBottom": 810.5625,
+      "mainScrollHeight": 1080,
+      "toggle": false,
+      "total": 2,
+      "width": 1920,
+      "calendarWidth": 1362,
+      "scenario": "two",
+      "visible": 2,
+      "cell": {
+        "h": 21.6953125,
+        "w": 21.6953125
+      },
+      "calendarScroll": 1362
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 439,
+      "height": 900,
+      "historyBottom": 761.3125,
+      "mainScrollHeight": 900,
+      "toggle": false,
+      "total": 2,
+      "width": 1440,
+      "calendarWidth": 1048,
+      "scenario": "two",
+      "visible": 2,
+      "cell": {
+        "h": 15.7734375,
+        "w": 15.7734375
+      },
+      "calendarScroll": 1048
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 439,
+      "height": 768,
+      "historyBottom": 751.5234375,
+      "mainScrollHeight": 768,
+      "toggle": false,
+      "total": 2,
+      "width": 1366,
+      "calendarWidth": 974,
+      "scenario": "two",
+      "visible": 2,
+      "cell": {
+        "h": 14.375,
+        "w": 14.375
+      },
+      "calendarScroll": 974
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 439,
+      "height": 720,
+      "historyBottom": 740.1484375,
+      "mainScrollHeight": 740,
+      "toggle": false,
+      "total": 2,
+      "width": 1280,
+      "calendarWidth": 888,
+      "scenario": "two",
+      "visible": 2,
+      "cell": {
+        "h": 12.75,
+        "w": 12.75
+      },
+      "calendarScroll": 888
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 930.859375,
+      "height": 1024,
+      "historyBottom": 1251.7578125,
+      "mainScrollHeight": 1275,
+      "toggle": false,
+      "total": 2,
+      "width": 768,
+      "calendarWidth": 322,
+      "scenario": "two",
+      "visible": 2,
+      "cell": {
+        "h": 10,
+        "w": 10
+      },
+      "calendarScroll": 742
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 858.3984375,
+      "height": 932,
+      "historyBottom": 1189.296875,
+      "mainScrollHeight": 1309,
+      "toggle": false,
+      "total": 2,
+      "width": 430,
+      "calendarWidth": 310,
+      "scenario": "two",
+      "visible": 2,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 858.3984375,
+      "height": 812,
+      "historyBottom": 1189.296875,
+      "mainScrollHeight": 1309,
+      "toggle": false,
+      "total": 2,
+      "width": 375,
+      "calendarWidth": 255,
+      "scenario": "two",
+      "visible": 2,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 949.59375,
+      "height": 740,
+      "historyBottom": 1324.390625,
+      "mainScrollHeight": 1444,
+      "toggle": false,
+      "total": 2,
+      "width": 320,
+      "calendarWidth": 200,
+      "scenario": "two",
+      "visible": 2,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 523.796875,
+      "height": 1080,
+      "historyBottom": 887.5625,
+      "mainScrollHeight": 1080,
+      "toggle": false,
+      "total": 3,
+      "width": 1920,
+      "calendarWidth": 1362,
+      "scenario": "three",
+      "visible": 3,
+      "cell": {
+        "h": 21.6953125,
+        "w": 21.6953125
+      },
+      "calendarScroll": 1362
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 516,
+      "height": 900,
+      "historyBottom": 838.3125,
+      "mainScrollHeight": 900,
+      "toggle": false,
+      "total": 3,
+      "width": 1440,
+      "calendarWidth": 1048,
+      "scenario": "three",
+      "visible": 3,
+      "cell": {
+        "h": 15.7734375,
+        "w": 15.7734375
+      },
+      "calendarScroll": 1048
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 516,
+      "height": 768,
+      "historyBottom": 828.5234375,
+      "mainScrollHeight": 829,
+      "toggle": false,
+      "total": 3,
+      "width": 1366,
+      "calendarWidth": 974,
+      "scenario": "three",
+      "visible": 3,
+      "cell": {
+        "h": 14.375,
+        "w": 14.375
+      },
+      "calendarScroll": 974
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 516,
+      "height": 720,
+      "historyBottom": 817.1484375,
+      "mainScrollHeight": 817,
+      "toggle": false,
+      "total": 3,
+      "width": 1280,
+      "calendarWidth": 888,
+      "scenario": "three",
+      "visible": 3,
+      "cell": {
+        "h": 12.75,
+        "w": 12.75
+      },
+      "calendarScroll": 888
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1020.359375,
+      "height": 1024,
+      "historyBottom": 1341.2578125,
+      "mainScrollHeight": 1364,
+      "toggle": false,
+      "total": 3,
+      "width": 768,
+      "calendarWidth": 322,
+      "scenario": "three",
+      "visible": 3,
+      "cell": {
+        "h": 10,
+        "w": 10
+      },
+      "calendarScroll": 742
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 947.8984375,
+      "height": 932,
+      "historyBottom": 1278.796875,
+      "mainScrollHeight": 1399,
+      "toggle": false,
+      "total": 3,
+      "width": 430,
+      "calendarWidth": 310,
+      "scenario": "three",
+      "visible": 3,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 947.8984375,
+      "height": 812,
+      "historyBottom": 1278.796875,
+      "mainScrollHeight": 1399,
+      "toggle": false,
+      "total": 3,
+      "width": 375,
+      "calendarWidth": 255,
+      "scenario": "three",
+      "visible": 3,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1060.09375,
+      "height": 740,
+      "historyBottom": 1434.890625,
+      "mainScrollHeight": 1555,
+      "toggle": false,
+      "total": 3,
+      "width": 320,
+      "calendarWidth": 200,
+      "scenario": "three",
+      "visible": 3,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 579.796875,
+      "height": 1080,
+      "historyBottom": 943.5625,
+      "mainScrollHeight": 1080,
+      "toggle": true,
+      "total": 5,
+      "width": 1920,
+      "calendarWidth": 1362,
+      "scenario": "five",
+      "visible": 4,
+      "cell": {
+        "h": 21.6953125,
+        "w": 21.6953125
+      },
+      "calendarScroll": 1362
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 572,
+      "height": 900,
+      "historyBottom": 894.3125,
+      "mainScrollHeight": 900,
+      "toggle": true,
+      "total": 5,
+      "width": 1440,
+      "calendarWidth": 1048,
+      "scenario": "five",
+      "visible": 4,
+      "cell": {
+        "h": 15.7734375,
+        "w": 15.7734375
+      },
+      "calendarScroll": 1048
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 572,
+      "height": 768,
+      "historyBottom": 884.5234375,
+      "mainScrollHeight": 885,
+      "toggle": true,
+      "total": 5,
+      "width": 1366,
+      "calendarWidth": 974,
+      "scenario": "five",
+      "visible": 4,
+      "cell": {
+        "h": 14.375,
+        "w": 14.375
+      },
+      "calendarScroll": 974
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 572,
+      "height": 720,
+      "historyBottom": 873.1484375,
+      "mainScrollHeight": 873,
+      "toggle": true,
+      "total": 5,
+      "width": 1280,
+      "calendarWidth": 888,
+      "scenario": "five",
+      "visible": 4,
+      "cell": {
+        "h": 12.75,
+        "w": 12.75
+      },
+      "calendarScroll": 888
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1199.359375,
+      "height": 1024,
+      "historyBottom": 1520.2578125,
+      "mainScrollHeight": 1543,
+      "toggle": false,
+      "total": 5,
+      "width": 768,
+      "calendarWidth": 322,
+      "scenario": "five",
+      "visible": 5,
+      "cell": {
+        "h": 10,
+        "w": 10
+      },
+      "calendarScroll": 742
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1126.8984375,
+      "height": 932,
+      "historyBottom": 1457.796875,
+      "mainScrollHeight": 1578,
+      "toggle": false,
+      "total": 5,
+      "width": 430,
+      "calendarWidth": 310,
+      "scenario": "five",
+      "visible": 5,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1126.8984375,
+      "height": 812,
+      "historyBottom": 1457.796875,
+      "mainScrollHeight": 1578,
+      "toggle": false,
+      "total": 5,
+      "width": 375,
+      "calendarWidth": 255,
+      "scenario": "five",
+      "visible": 5,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1281.09375,
+      "height": 740,
+      "historyBottom": 1655.890625,
+      "mainScrollHeight": 1776,
+      "toggle": false,
+      "total": 5,
+      "width": 320,
+      "calendarWidth": 200,
+      "scenario": "five",
+      "visible": 5,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 579.796875,
+      "height": 1080,
+      "historyBottom": 943.5625,
+      "mainScrollHeight": 1080,
+      "toggle": true,
+      "total": 8,
+      "width": 1920,
+      "calendarWidth": 1362,
+      "scenario": "eight",
+      "visible": 4,
+      "cell": {
+        "h": 21.6953125,
+        "w": 21.6953125
+      },
+      "calendarScroll": 1362
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 572,
+      "height": 900,
+      "historyBottom": 894.3125,
+      "mainScrollHeight": 900,
+      "toggle": true,
+      "total": 8,
+      "width": 1440,
+      "calendarWidth": 1048,
+      "scenario": "eight",
+      "visible": 4,
+      "cell": {
+        "h": 15.7734375,
+        "w": 15.7734375
+      },
+      "calendarScroll": 1048
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 572,
+      "height": 768,
+      "historyBottom": 884.5234375,
+      "mainScrollHeight": 885,
+      "toggle": true,
+      "total": 8,
+      "width": 1366,
+      "calendarWidth": 974,
+      "scenario": "eight",
+      "visible": 4,
+      "cell": {
+        "h": 14.375,
+        "w": 14.375
+      },
+      "calendarScroll": 974
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 572,
+      "height": 720,
+      "historyBottom": 873.1484375,
+      "mainScrollHeight": 873,
+      "toggle": true,
+      "total": 8,
+      "width": 1280,
+      "calendarWidth": 888,
+      "scenario": "eight",
+      "visible": 4,
+      "cell": {
+        "h": 12.75,
+        "w": 12.75
+      },
+      "calendarScroll": 888
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1467.859375,
+      "height": 1024,
+      "historyBottom": 1788.7578125,
+      "mainScrollHeight": 1812,
+      "toggle": false,
+      "total": 8,
+      "width": 768,
+      "calendarWidth": 322,
+      "scenario": "eight",
+      "visible": 8,
+      "cell": {
+        "h": 10,
+        "w": 10
+      },
+      "calendarScroll": 742
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1395.3984375,
+      "height": 932,
+      "historyBottom": 1726.296875,
+      "mainScrollHeight": 1846,
+      "toggle": false,
+      "total": 8,
+      "width": 430,
+      "calendarWidth": 310,
+      "scenario": "eight",
+      "visible": 8,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1395.3984375,
+      "height": 812,
+      "historyBottom": 1726.296875,
+      "mainScrollHeight": 1846,
+      "toggle": false,
+      "total": 8,
+      "width": 375,
+      "calendarWidth": 255,
+      "scenario": "eight",
+      "visible": 8,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1507.59375,
+      "height": 740,
+      "historyBottom": 1882.390625,
+      "mainScrollHeight": 2002,
+      "toggle": false,
+      "total": 8,
+      "width": 320,
+      "calendarWidth": 200,
+      "scenario": "eight",
+      "visible": 8,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 658.171875,
+      "height": 1080,
+      "historyBottom": 1021.9375,
+      "mainScrollHeight": 1080,
+      "toggle": true,
+      "total": 32,
+      "width": 1920,
+      "calendarWidth": 1362,
+      "scenario": "large",
+      "visible": 4,
+      "cell": {
+        "h": 21.6953125,
+        "w": 21.6953125
+      },
+      "calendarScroll": 1362
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 650.375,
+      "height": 900,
+      "historyBottom": 972.6875,
+      "mainScrollHeight": 973,
+      "toggle": true,
+      "total": 32,
+      "width": 1440,
+      "calendarWidth": 1048,
+      "scenario": "large",
+      "visible": 4,
+      "cell": {
+        "h": 15.7734375,
+        "w": 15.7734375
+      },
+      "calendarScroll": 1048
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 689.5625,
+      "height": 768,
+      "historyBottom": 1002.0859375,
+      "mainScrollHeight": 1002,
+      "toggle": true,
+      "total": 32,
+      "width": 1366,
+      "calendarWidth": 974,
+      "scenario": "large",
+      "visible": 4,
+      "cell": {
+        "h": 14.375,
+        "w": 14.375
+      },
+      "calendarScroll": 974
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 689.5625,
+      "height": 720,
+      "historyBottom": 990.7109375,
+      "mainScrollHeight": 991,
+      "toggle": true,
+      "total": 32,
+      "width": 1280,
+      "calendarWidth": 888,
+      "scenario": "large",
+      "visible": 4,
+      "cell": {
+        "h": 12.75,
+        "w": 12.75
+      },
+      "calendarScroll": 888
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 3636.859375,
+      "height": 1024,
+      "historyBottom": 3957.7578125,
+      "mainScrollHeight": 3981,
+      "toggle": false,
+      "total": 32,
+      "width": 768,
+      "calendarWidth": 322,
+      "scenario": "large",
+      "visible": 32,
+      "cell": {
+        "h": 10,
+        "w": 10
+      },
+      "calendarScroll": 742
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 3564.3984375,
+      "height": 932,
+      "historyBottom": 3895.296875,
+      "mainScrollHeight": 4015,
+      "toggle": false,
+      "total": 32,
+      "width": 430,
+      "calendarWidth": 310,
+      "scenario": "large",
+      "visible": 32,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 3564.3984375,
+      "height": 812,
+      "historyBottom": 3895.296875,
+      "mainScrollHeight": 4015,
+      "toggle": false,
+      "total": 32,
+      "width": 375,
+      "calendarWidth": 255,
+      "scenario": "large",
+      "visible": 32,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 3758.59375,
+      "height": 740,
+      "historyBottom": 4133.390625,
+      "mainScrollHeight": 4253,
+      "toggle": false,
+      "total": 32,
+      "width": 320,
+      "calendarWidth": 200,
+      "scenario": "large",
+      "visible": 32,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 579.796875,
+      "height": 1080,
+      "historyBottom": 943.5625,
+      "mainScrollHeight": 1080,
+      "toggle": true,
+      "total": 7,
+      "width": 1920,
+      "calendarWidth": 1362,
+      "scenario": "sparse",
+      "visible": 4,
+      "cell": {
+        "h": 21.6953125,
+        "w": 21.6953125
+      },
+      "calendarScroll": 1362
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 572,
+      "height": 900,
+      "historyBottom": 894.3125,
+      "mainScrollHeight": 900,
+      "toggle": true,
+      "total": 7,
+      "width": 1440,
+      "calendarWidth": 1048,
+      "scenario": "sparse",
+      "visible": 4,
+      "cell": {
+        "h": 15.7734375,
+        "w": 15.7734375
+      },
+      "calendarScroll": 1048
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 572,
+      "height": 768,
+      "historyBottom": 884.5234375,
+      "mainScrollHeight": 885,
+      "toggle": true,
+      "total": 7,
+      "width": 1366,
+      "calendarWidth": 974,
+      "scenario": "sparse",
+      "visible": 4,
+      "cell": {
+        "h": 14.375,
+        "w": 14.375
+      },
+      "calendarScroll": 974
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 572,
+      "height": 720,
+      "historyBottom": 873.1484375,
+      "mainScrollHeight": 873,
+      "toggle": true,
+      "total": 7,
+      "width": 1280,
+      "calendarWidth": 888,
+      "scenario": "sparse",
+      "visible": 4,
+      "cell": {
+        "h": 12.75,
+        "w": 12.75
+      },
+      "calendarScroll": 888
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1378.359375,
+      "height": 1024,
+      "historyBottom": 1699.2578125,
+      "mainScrollHeight": 1722,
+      "toggle": false,
+      "total": 7,
+      "width": 768,
+      "calendarWidth": 322,
+      "scenario": "sparse",
+      "visible": 7,
+      "cell": {
+        "h": 10,
+        "w": 10
+      },
+      "calendarScroll": 742
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1305.8984375,
+      "height": 932,
+      "historyBottom": 1636.796875,
+      "mainScrollHeight": 1757,
+      "toggle": false,
+      "total": 7,
+      "width": 430,
+      "calendarWidth": 310,
+      "scenario": "sparse",
+      "visible": 7,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1305.8984375,
+      "height": 812,
+      "historyBottom": 1636.796875,
+      "mainScrollHeight": 1757,
+      "toggle": false,
+      "total": 7,
+      "width": 375,
+      "calendarWidth": 255,
+      "scenario": "sparse",
+      "visible": 7,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    },
+    {
+      "listOverflow": "visible",
+      "pageOverflow": false,
+      "historyTop": 1460.09375,
+      "height": 740,
+      "historyBottom": 1834.890625,
+      "mainScrollHeight": 1955,
+      "toggle": false,
+      "total": 7,
+      "width": 320,
+      "calendarWidth": 200,
+      "scenario": "sparse",
+      "visible": 7,
+      "cell": {
+        "h": 11,
+        "w": 11
+      },
+      "calendarScroll": 691
+    }
+  ],
+  "mobile375BeforeAfterIdentical": true,
+  "targets": [
+    {
+      "height": 44,
+      "name": "Editar cantidad de agua",
+      "width": 64.015625
+    },
+    {
+      "height": 44,
+      "name": "Restar 250 ml de agua",
+      "width": 44
+    },
+    {
+      "height": 44,
+      "name": "Sumar 250 ml de agua",
+      "width": 56
+    },
+    {
+      "height": 44,
+      "name": "Editar total de pasos",
+      "width": 74.4765625
+    },
+    {
+      "height": 44,
+      "name": "Restar 500 pasos",
+      "width": 44
+    },
+    {
+      "height": 44,
+      "name": "Sumar 500 pasos",
+      "width": 56
+    },
+    {
+      "height": 44,
+      "name": "Editar",
+      "width": 80
+    },
+    {
+      "height": 44,
+      "name": "+ Comida",
+      "width": 156
+    },
+    {
+      "height": 44,
+      "name": "+ Ejercicio",
+      "width": 156
+    },
+    {
+      "height": 44,
+      "name": "Ver todos los registros (8)",
+      "width": 180.453125
+    }
+  ],
+  "mobile375CaptureSha256": "E2C743E6D4D71B6049929E2C726ED157BC971B8A193B84ABA08B18292CBECFB0"
+}

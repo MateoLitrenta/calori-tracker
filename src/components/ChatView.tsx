@@ -897,7 +897,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           </div>
         )}
         {messages.map((msg) => (
-          <div key={msg.id} className={`chat-message chat-message-${msg.role} ${initialMessageIds.has(msg.id) ? '' : 'chat-message-new'} flex gap-3 min-w-0 max-w-[95%] md:max-w-[80%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
+          <div key={msg.id} className={`chat-message chat-message-${msg.role} ${msg.role === 'bot' && (msg.coachCard || msg.goalProgress) ? 'chat-message-structured' : ''} ${initialMessageIds.has(msg.id) ? '' : 'chat-message-new'} flex gap-3 min-w-0 max-w-[95%] md:max-w-[80%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
             <div className="chat-message-avatar flex-shrink-0 w-8 h-8 flex items-center justify-center">
               {msg.role === 'user' ? (
                 <UserAvatar userId={userId} path={activeProfile?.user_id === userId ? activeProfile.avatar_path : null}

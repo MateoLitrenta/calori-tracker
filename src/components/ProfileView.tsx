@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
 import { useTheme } from './ThemeProvider';
 import type { UserProfile, UserSex } from '../types';
-import { Check, Trash, PencilSimple, LockKey, SignOut, Info, CaretDown } from '@phosphor-icons/react';
+import { Check, Trash, PencilSimple, LockKey, SignOut, Info, CaretDown, SlidersHorizontal } from '@phosphor-icons/react';
 import { supabase } from '../lib/supabase';
 import { prepareAvatar } from '../lib/avatar';
 import UserAvatar from './UserAvatar';
@@ -346,7 +346,7 @@ export default function ProfileView() {
       </section>
 
       <section className="profile-information" aria-labelledby="profile-information-heading">
-        <h2 id="profile-information-heading" className="profile-section-title">Preferencias e información</h2>
+        <h2 id="profile-information-heading" className="profile-section-title"><SlidersHorizontal size={20} aria-hidden="true" /> Preferencias e información</h2>
         <div className="profile-appearance-row">
           <div>
             <h3 className="profile-setting-value">Apariencia</h3>

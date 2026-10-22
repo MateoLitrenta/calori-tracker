@@ -12,22 +12,18 @@ const rule = selector => {
 };
 const value = (item, property) => item.nodes.find(node => node.prop === property)?.value;
 
-test('desktop reflow is isolated from mobile; tablet keeps the existing dashboard and only Coach gets a bounded scroll layout', () => {
+test('desktop shell is isolated from mobile and only Coach gets a bounded scroll layout', () => {
   styles.walkRules(item => {
     assert.equal(item.parent.type, 'atrule'); assert.equal(item.parent.name, 'media');
     assert.ok(['(min-width: 768px)', '(min-width: 1280px)'].includes(item.parent.params));
     for (const selector of item.selectors) assert.ok(selector.startsWith('.app-shell'), selector);
   });
-  for (const selector of ['.app-shell .home-variants', '.app-shell .charts-insights', '.app-shell .profile-view.profile-v2']) {
-    const item = rule(selector);
-    assert.equal(item.parent.params, '(min-width: 1280px)'); assert.equal(value(item, 'display'), 'grid');
-    assert.ok(!item.nodes.some(node => ['height', 'overflow', 'overflow-y'].includes(node.prop)), 'Normal views must remain able to grow/scroll');
-  }
+  assert.doesNotMatch(source, /charts-insights|profile-v2|home-variants/, 'Each view owns its desktop composition without a second override layer');
   assert.equal(value(rule('.app-shell-coach .app-main'), 'overflow'), 'hidden');
   const log = rule('.app-shell-coach .assistant-view .chat-messages');
   assert.equal(value(log, 'min-height'), '0'); assert.equal(value(log, 'overflow-y'), 'auto');
   const fixed = rule('.app-shell-coach .assistant-view .chat-heading');
   assert.equal(value(fixed, 'flex'), '0 0 auto');
-  assert.equal(value(rule('.app-shell .home-variants .daily-logs ul'), 'overflow-y'), 'auto');
+  assert.doesNotMatch(source, /daily-logs[^{}]*\{[^}]*\b(?:max-height|overflow-y)\s*:/, 'Journal must grow with the normal page scroll');
   assert.doesNotMatch(source, /\b(?:animation|transition|order)\s*:/, 'Keep existing motion/reduced-motion rules and DOM reading order');
 });

@@ -1,0 +1,1010 @@
+{
+  "reader": {
+    "readerBefore": {
+      "gap": 900.5,
+      "top": 1090.5
+    },
+    "readerAfter": {
+      "gap": 860.5,
+      "top": 1090.5
+    }
+  },
+  "selection": [
+    {
+      "width": 1280,
+      "period": "Semana",
+      "before": 93.59375,
+      "selected": {
+        "height": 93.59375,
+        "overflow": false,
+        "text": "JuevesLimpiarConsumidas1.004.500 kcalGasto estimado5.918 kcalBalance+998.582 kcalSuperávit AltoValores registrados del día seleccionado."
+      },
+      "empty": 93.59375
+    },
+    {
+      "width": 1280,
+      "period": "Mes",
+      "before": 107.59375,
+      "selected": {
+        "height": 107.59375,
+        "overflow": false,
+        "text": "Semana 4 · 22–28LimpiarConsumidas promedio1.004.500 kcalGasto promedio5.918 kcalBalance promedio+998.582 kcalSuperávit Alto1 días con comidas · 1 días con datos energéticos"
+      },
+      "empty": 107.59375
+    },
+    {
+      "width": 1280,
+      "period": "Año",
+      "before": 107.59375,
+      "selected": {
+        "height": 107.59375,
+        "overflow": false,
+        "text": "OctubreLimpiarConsumidas promedio47.377 kcalGasto promedio2.173 kcalBalance promedio+45.204 kcalSuperávit Alto22 días con comidas · 22 días con datos energéticos"
+      },
+      "empty": 107.59375
+    },
+    {
+      "width": 1440,
+      "period": "Semana",
+      "before": 93.59375,
+      "selected": {
+        "height": 93.59375,
+        "overflow": false,
+        "text": "JuevesLimpiarConsumidas1.004.500 kcalGasto estimado5.918 kcalBalance+998.582 kcalSuperávit AltoValores registrados del día seleccionado."
+      },
+      "empty": 93.59375
+    },
+    {
+      "width": 1440,
+      "period": "Mes",
+      "before": 93.59375,
+      "selected": {
+        "height": 93.59375,
+        "overflow": false,
+        "text": "Semana 4 · 22–28LimpiarConsumidas promedio1.004.500 kcalGasto promedio5.918 kcalBalance promedio+998.582 kcalSuperávit Alto1 días con comidas · 1 días con datos energéticos"
+      },
+      "empty": 93.59375
+    },
+    {
+      "width": 1440,
+      "period": "Año",
+      "before": 93.59375,
+      "selected": {
+        "height": 93.59375,
+        "overflow": false,
+        "text": "OctubreLimpiarConsumidas promedio47.377 kcalGasto promedio2.173 kcalBalance promedio+45.204 kcalSuperávit Alto22 días con comidas · 22 días con datos energéticos"
+      },
+      "empty": 93.59375
+    }
+  ],
+  "source": "Browser DOM measurements, synthetic local fixture, 2026-10-22",
+  "responsive": [
+    {
+      "screen": "Inicio",
+      "h": 1080,
+      "main": {
+        "height": 1080,
+        "scroll": 1108,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 302,
+          "name": "daily-records daily-records--columns divide-y divide-slate-200 dark:divide-gray-800",
+          "overflow": "visible",
+          "scrollHeight": 302,
+          "scrollWidth": 1390,
+          "width": 1390
+        },
+        {
+          "height": 199,
+          "name": "heatmap-scroll custom-scrollbar",
+          "overflow": "auto",
+          "scrollHeight": 199,
+          "scrollWidth": 1354,
+          "width": 1354
+        }
+      ],
+      "w": 1920
+    },
+    {
+      "screen": "Datos",
+      "h": 1080,
+      "main": {
+        "height": 1080,
+        "scroll": 1080,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 239,
+          "name": "charts-plot-scroll",
+          "overflow": "auto",
+          "scrollHeight": 239,
+          "scrollWidth": 707,
+          "width": 707
+        }
+      ],
+      "w": 1920
+    },
+    {
+      "screen": "Perfil",
+      "h": 1080,
+      "main": {
+        "height": 1080,
+        "scroll": 1080,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [],
+      "w": 1920
+    },
+    {
+      "screen": "Coach",
+      "composer": {
+        "bottom": 1055,
+        "height": 128,
+        "left": 514,
+        "right": 1662,
+        "top": 927,
+        "width": 1148,
+        "x": 514,
+        "y": 927
+      },
+      "h": 1080,
+      "heading": {
+        "bottom": 101,
+        "height": 76,
+        "left": 514,
+        "right": 1662,
+        "top": 25,
+        "width": 1148,
+        "x": 514,
+        "y": 25
+      },
+      "main": {
+        "height": 1080,
+        "scroll": 1080,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 826,
+          "name": "chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4",
+          "overflow": "auto",
+          "scrollHeight": 2637,
+          "scrollWidth": 1138,
+          "width": 1138
+        }
+      ],
+      "w": 1920
+    },
+    {
+      "screen": "Inicio",
+      "h": 900,
+      "main": {
+        "height": 900,
+        "scroll": 1064,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 302,
+          "name": "daily-records daily-records--columns divide-y divide-slate-200 dark:divide-gray-800",
+          "overflow": "visible",
+          "scrollHeight": 302,
+          "scrollWidth": 1076,
+          "width": 1076
+        },
+        {
+          "height": 157,
+          "name": "heatmap-scroll custom-scrollbar",
+          "overflow": "auto",
+          "scrollHeight": 157,
+          "scrollWidth": 1040,
+          "width": 1040
+        }
+      ],
+      "w": 1440
+    },
+    {
+      "screen": "Datos",
+      "h": 900,
+      "main": {
+        "height": 900,
+        "scroll": 900,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 214,
+          "name": "charts-plot-scroll",
+          "overflow": "auto",
+          "scrollHeight": 214,
+          "scrollWidth": 539,
+          "width": 539
+        }
+      ],
+      "w": 1440
+    },
+    {
+      "screen": "Perfil",
+      "h": 900,
+      "main": {
+        "height": 900,
+        "scroll": 900,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [],
+      "w": 1440
+    },
+    {
+      "screen": "Coach",
+      "composer": {
+        "bottom": 875,
+        "height": 128,
+        "left": 281,
+        "right": 1415,
+        "top": 747,
+        "width": 1134,
+        "x": 281,
+        "y": 747
+      },
+      "h": 900,
+      "heading": {
+        "bottom": 101,
+        "height": 76,
+        "left": 281,
+        "right": 1415,
+        "top": 25,
+        "width": 1134,
+        "x": 281,
+        "y": 25
+      },
+      "main": {
+        "height": 900,
+        "scroll": 900,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 646,
+          "name": "chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4",
+          "overflow": "auto",
+          "scrollHeight": 2637,
+          "scrollWidth": 1124,
+          "width": 1124
+        }
+      ],
+      "w": 1440
+    },
+    {
+      "screen": "Inicio",
+      "h": 768,
+      "main": {
+        "height": 768,
+        "scroll": 1054,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 302,
+          "name": "daily-records daily-records--columns divide-y divide-slate-200 dark:divide-gray-800",
+          "overflow": "visible",
+          "scrollHeight": 302,
+          "scrollWidth": 1002,
+          "width": 1002
+        },
+        {
+          "height": 148,
+          "name": "heatmap-scroll custom-scrollbar",
+          "overflow": "auto",
+          "scrollHeight": 148,
+          "scrollWidth": 966,
+          "width": 966
+        }
+      ],
+      "w": 1366
+    },
+    {
+      "screen": "Datos",
+      "h": 768,
+      "main": {
+        "height": 768,
+        "scroll": 912,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 207,
+          "name": "charts-plot-scroll",
+          "overflow": "auto",
+          "scrollHeight": 207,
+          "scrollWidth": 500,
+          "width": 500
+        }
+      ],
+      "w": 1366
+    },
+    {
+      "screen": "Perfil",
+      "h": 768,
+      "main": {
+        "height": 768,
+        "scroll": 768,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [],
+      "w": 1366
+    },
+    {
+      "screen": "Coach",
+      "composer": {
+        "bottom": 743,
+        "height": 128,
+        "left": 281,
+        "right": 1341,
+        "top": 615,
+        "width": 1060,
+        "x": 281,
+        "y": 615
+      },
+      "h": 768,
+      "heading": {
+        "bottom": 101,
+        "height": 76,
+        "left": 281,
+        "right": 1341,
+        "top": 25,
+        "width": 1060,
+        "x": 281,
+        "y": 25
+      },
+      "main": {
+        "height": 768,
+        "scroll": 768,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 514,
+          "name": "chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4",
+          "overflow": "auto",
+          "scrollHeight": 2637,
+          "scrollWidth": 1050,
+          "width": 1050
+        }
+      ],
+      "w": 1366
+    },
+    {
+      "screen": "Inicio",
+      "h": 720,
+      "main": {
+        "height": 720,
+        "scroll": 1043,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 302,
+          "name": "daily-records daily-records--columns divide-y divide-slate-200 dark:divide-gray-800",
+          "overflow": "visible",
+          "scrollHeight": 302,
+          "scrollWidth": 916,
+          "width": 916
+        },
+        {
+          "height": 136,
+          "name": "heatmap-scroll custom-scrollbar",
+          "overflow": "auto",
+          "scrollHeight": 136,
+          "scrollWidth": 880,
+          "width": 880
+        }
+      ],
+      "w": 1280
+    },
+    {
+      "screen": "Datos",
+      "h": 720,
+      "main": {
+        "height": 720,
+        "scroll": 949,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 207,
+          "name": "charts-plot-scroll",
+          "overflow": "auto",
+          "scrollHeight": 207,
+          "scrollWidth": 454,
+          "width": 454
+        }
+      ],
+      "w": 1280
+    },
+    {
+      "screen": "Perfil",
+      "h": 720,
+      "main": {
+        "height": 720,
+        "scroll": 720,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [],
+      "w": 1280
+    },
+    {
+      "screen": "Coach",
+      "composer": {
+        "bottom": 695,
+        "height": 128,
+        "left": 281,
+        "right": 1255,
+        "top": 567,
+        "width": 974,
+        "x": 281,
+        "y": 567
+      },
+      "h": 720,
+      "heading": {
+        "bottom": 101,
+        "height": 76,
+        "left": 281,
+        "right": 1255,
+        "top": 25,
+        "width": 974,
+        "x": 281,
+        "y": 25
+      },
+      "main": {
+        "height": 720,
+        "scroll": 720,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 466,
+          "name": "chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4",
+          "overflow": "auto",
+          "scrollHeight": 2637,
+          "scrollWidth": 964,
+          "width": 964
+        }
+      ],
+      "w": 1280
+    },
+    {
+      "screen": "Inicio",
+      "h": 768,
+      "main": {
+        "height": 768,
+        "scroll": 1750,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 615,
+          "name": "daily-records daily-records--columns divide-y divide-slate-200 dark:divide-gray-800",
+          "overflow": "visible",
+          "scrollHeight": 615,
+          "scrollWidth": 615,
+          "width": 615
+        },
+        {
+          "height": 118,
+          "name": "heatmap-scroll custom-scrollbar",
+          "overflow": "auto",
+          "scrollHeight": 118,
+          "scrollWidth": 742,
+          "width": 563
+        }
+      ],
+      "w": 1024
+    },
+    {
+      "screen": "Datos",
+      "h": 768,
+      "main": {
+        "height": 768,
+        "scroll": 1528,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 299,
+          "name": "charts-plot-scroll",
+          "overflow": "auto",
+          "scrollHeight": 299,
+          "scrollWidth": 660,
+          "width": 660
+        }
+      ],
+      "w": 1024
+    },
+    {
+      "screen": "Perfil",
+      "h": 768,
+      "main": {
+        "height": 768,
+        "scroll": 1041,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [],
+      "w": 1024
+    },
+    {
+      "screen": "Coach",
+      "composer": {
+        "bottom": 743,
+        "height": 128,
+        "left": 281,
+        "right": 999,
+        "top": 615,
+        "width": 718,
+        "x": 281,
+        "y": 615
+      },
+      "h": 768,
+      "heading": {
+        "bottom": 101,
+        "height": 76,
+        "left": 281,
+        "right": 999,
+        "top": 25,
+        "width": 718,
+        "x": 281,
+        "y": 25
+      },
+      "main": {
+        "height": 768,
+        "scroll": 768,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 514,
+          "name": "chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4",
+          "overflow": "auto",
+          "scrollHeight": 2897,
+          "scrollWidth": 708,
+          "width": 708
+        }
+      ],
+      "w": 1024
+    },
+    {
+      "screen": "Inicio",
+      "h": 1024,
+      "main": {
+        "height": 1024,
+        "scroll": 1722,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 615,
+          "name": "daily-records daily-records--columns divide-y divide-slate-200 dark:divide-gray-800",
+          "overflow": "visible",
+          "scrollHeight": 615,
+          "scrollWidth": 374,
+          "width": 374
+        },
+        {
+          "height": 118,
+          "name": "heatmap-scroll custom-scrollbar",
+          "overflow": "auto",
+          "scrollHeight": 118,
+          "scrollWidth": 742,
+          "width": 322
+        }
+      ],
+      "w": 768
+    },
+    {
+      "screen": "Datos",
+      "h": 1024,
+      "main": {
+        "height": 1024,
+        "scroll": 1708,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 299,
+          "name": "charts-plot-scroll",
+          "overflow": "auto",
+          "scrollHeight": 299,
+          "scrollWidth": 404,
+          "width": 404
+        }
+      ],
+      "w": 768
+    },
+    {
+      "screen": "Perfil",
+      "h": 1024,
+      "main": {
+        "height": 1024,
+        "scroll": 1072,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [],
+      "w": 768
+    },
+    {
+      "screen": "Coach",
+      "composer": {
+        "bottom": 999,
+        "height": 128,
+        "left": 281,
+        "right": 743,
+        "top": 871,
+        "width": 462,
+        "x": 281,
+        "y": 871
+      },
+      "h": 1024,
+      "heading": {
+        "bottom": 153,
+        "height": 128,
+        "left": 281,
+        "right": 743,
+        "top": 25,
+        "width": 462,
+        "x": 281,
+        "y": 25
+      },
+      "main": {
+        "height": 1024,
+        "scroll": 1024,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 718,
+          "name": "chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4",
+          "overflow": "auto",
+          "scrollHeight": 3688,
+          "scrollWidth": 452,
+          "width": 452
+        }
+      ],
+      "w": 768
+    },
+    {
+      "screen": "Inicio",
+      "h": 932,
+      "main": {
+        "height": 932,
+        "scroll": 1757,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 615,
+          "name": "daily-records daily-records--columns divide-y divide-slate-200 dark:divide-gray-800",
+          "overflow": "visible",
+          "scrollHeight": 615,
+          "scrollWidth": 338,
+          "width": 338
+        },
+        {
+          "height": 113,
+          "name": "heatmap-scroll custom-scrollbar",
+          "overflow": "auto",
+          "scrollHeight": 113,
+          "scrollWidth": 691,
+          "width": 310
+        }
+      ],
+      "w": 430
+    },
+    {
+      "screen": "Datos",
+      "h": 932,
+      "main": {
+        "height": 932,
+        "scroll": 1500,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 266,
+          "name": "charts-plot-scroll",
+          "overflow": "auto",
+          "scrollHeight": 266,
+          "scrollWidth": 358,
+          "width": 358
+        }
+      ],
+      "w": 430
+    },
+    {
+      "screen": "Perfil",
+      "h": 932,
+      "main": {
+        "height": 932,
+        "scroll": 1268,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [],
+      "w": 430
+    },
+    {
+      "screen": "Coach",
+      "composer": {
+        "bottom": 868,
+        "height": 65,
+        "left": 0,
+        "right": 430,
+        "top": 803,
+        "width": 430,
+        "x": 0,
+        "y": 803
+      },
+      "h": 932,
+      "heading": {
+        "bottom": 60,
+        "height": 60,
+        "left": 0,
+        "right": 430,
+        "top": 0,
+        "width": 430,
+        "x": 0,
+        "y": 0
+      },
+      "main": {
+        "height": 932,
+        "scroll": 932,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 743,
+          "name": "chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4",
+          "overflow": "auto",
+          "scrollHeight": 2756,
+          "scrollWidth": 420,
+          "width": 420
+        }
+      ],
+      "w": 430
+    },
+    {
+      "screen": "Inicio",
+      "h": 812,
+      "main": {
+        "height": 812,
+        "scroll": 1757,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 615,
+          "name": "daily-records daily-records--columns divide-y divide-slate-200 dark:divide-gray-800",
+          "overflow": "visible",
+          "scrollHeight": 615,
+          "scrollWidth": 283,
+          "width": 283
+        },
+        {
+          "height": 113,
+          "name": "heatmap-scroll custom-scrollbar",
+          "overflow": "auto",
+          "scrollHeight": 113,
+          "scrollWidth": 691,
+          "width": 255
+        }
+      ],
+      "w": 375
+    },
+    {
+      "screen": "Datos",
+      "h": 812,
+      "main": {
+        "height": 812,
+        "scroll": 1500,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 266,
+          "name": "charts-plot-scroll",
+          "overflow": "auto",
+          "scrollHeight": 266,
+          "scrollWidth": 303,
+          "width": 303
+        }
+      ],
+      "w": 375
+    },
+    {
+      "screen": "Perfil",
+      "h": 812,
+      "main": {
+        "height": 812,
+        "scroll": 1268,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [],
+      "w": 375
+    },
+    {
+      "screen": "Coach",
+      "composer": {
+        "bottom": 748,
+        "height": 65,
+        "left": 0,
+        "right": 375,
+        "top": 683,
+        "width": 375,
+        "x": 0,
+        "y": 683
+      },
+      "h": 812,
+      "heading": {
+        "bottom": 60,
+        "height": 60,
+        "left": 0,
+        "right": 375,
+        "top": 0,
+        "width": 375,
+        "x": 0,
+        "y": 0
+      },
+      "main": {
+        "height": 812,
+        "scroll": 812,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 623,
+          "name": "chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4",
+          "overflow": "auto",
+          "scrollHeight": 3025,
+          "scrollWidth": 365,
+          "width": 365
+        }
+      ],
+      "w": 375
+    },
+    {
+      "screen": "Inicio",
+      "h": 740,
+      "main": {
+        "height": 740,
+        "scroll": 1955,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 690,
+          "name": "daily-records daily-records--columns divide-y divide-slate-200 dark:divide-gray-800",
+          "overflow": "visible",
+          "scrollHeight": 690,
+          "scrollWidth": 228,
+          "width": 228
+        },
+        {
+          "height": 113,
+          "name": "heatmap-scroll custom-scrollbar",
+          "overflow": "auto",
+          "scrollHeight": 113,
+          "scrollWidth": 691,
+          "width": 200
+        }
+      ],
+      "w": 320
+    },
+    {
+      "screen": "Datos",
+      "h": 740,
+      "main": {
+        "height": 740,
+        "scroll": 1518,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 266,
+          "name": "charts-plot-scroll",
+          "overflow": "auto",
+          "scrollHeight": 266,
+          "scrollWidth": 248,
+          "width": 248
+        }
+      ],
+      "w": 320
+    },
+    {
+      "screen": "Perfil",
+      "h": 740,
+      "main": {
+        "height": 740,
+        "scroll": 1268,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [],
+      "w": 320
+    },
+    {
+      "screen": "Coach",
+      "composer": {
+        "bottom": 676,
+        "height": 83,
+        "left": 0,
+        "right": 320,
+        "top": 593,
+        "width": 320,
+        "x": 0,
+        "y": 593
+      },
+      "h": 740,
+      "heading": {
+        "bottom": 60,
+        "height": 60,
+        "left": 0,
+        "right": 320,
+        "top": 0,
+        "width": 320,
+        "x": 0,
+        "y": 0
+      },
+      "main": {
+        "height": 740,
+        "scroll": 740,
+        "top": 0
+      },
+      "overflow": false,
+      "scrollports": [
+        {
+          "height": 533,
+          "name": "chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4",
+          "overflow": "auto",
+          "scrollHeight": 3172,
+          "scrollWidth": 310,
+          "width": 310
+        }
+      ],
+      "w": 320
+    }
+  ]
+}

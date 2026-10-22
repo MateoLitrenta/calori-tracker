@@ -1,7 +1,7 @@
 import './PremiumViews.css';
 import './PeriodSelector.css';
 import { useMemo, useState, type CSSProperties } from 'react';
-import { ChartBar, Footprints, Barbell } from '@phosphor-icons/react';
+import { ChartBar, Footprints, Barbell, X } from '@phosphor-icons/react';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useAppStore } from '../hooks/useAppStore';
@@ -96,7 +96,13 @@ export default function ChartsView() {
         </details>
       </section>
 
-      <section className="charts-panel charts-energy" aria-labelledby="charts-energy-heading">
+      <section className="charts-panel charts-energy" aria-labelledby="charts-energy-heading"
+        onKeyDown={event => {
+          if (event.key === 'Escape' && detail) {
+            event.stopPropagation();
+            setSelectedBucket(null);
+          }
+        }}>
         <h3 id="charts-energy-heading">Consumidas vs gasto</h3>
         <p className="charts-secondary">{averages ? `Promedios diarios por ${period === 'Mes' ? 'semana' : 'mes'}.` : 'Valores diarios.'}</p>
         {summary.energyDays === 0 ? (
@@ -143,19 +149,29 @@ export default function ChartsView() {
               <span><i className="charts-key-expenditure" aria-hidden="true" />Gasto<span className="charts-desktop-only"> estimado</span></span>
               <span className="charts-secondary charts-desktop-only">Balance debajo de cada período · kcal</span>
             </div>
-            <div className="charts-detail-slot" data-averages={averages}>
-            {detail ? (
-              <div key={detail.start} className="charts-detail" id="charts-bucket-detail" role="tooltip">
-                <h4>{detail.title}</h4>
+              <div className="charts-detail" id="charts-bucket-detail" role="group" aria-label="Detalle del gráfico"
+                data-selected={Boolean(detail)}>
+                <div className="charts-detail-header">
+                  <h4>{detail?.title ?? 'Detalle'}</h4>
+                  <button type="button" className="charts-detail-clear" disabled={!detail}
+                    aria-label="Limpiar selección del gráfico" onClick={() => setSelectedBucket(null)}>
+                    <X size={16} aria-hidden="true" /><span>Limpiar</span>
+                  </button>
+                </div>
                 <dl>
-                  <div><dt>{averages ? 'Consumidas promedio' : 'Consumidas'}</dt><dd>{detail.summary.consumed === null ? 'Sin comidas registradas' : kcal(detail.summary.consumed)}</dd></div>
-                  <div><dt>{averages ? 'Gasto promedio' : 'Gasto estimado'}</dt><dd>{kcal(detail.summary.expenditure)}</dd></div>
-                  <div><dt>{averages ? 'Balance promedio' : 'Balance'}</dt><dd className={balanceTone(detail.summary.balance)}>{kcal(detail.summary.balance, true)}<span>{getBalanceLabel(detail.summary.balance)}</span></dd></div>
+                  <div><dt>{averages ? 'Consumidas promedio' : 'Consumidas'}</dt><dd title={detail?.summary.consumed === null ? 'Sin comidas registradas' : undefined}>{!detail ? '—' : detail.summary.consumed === null ? 'Sin comidas' : kcal(detail.summary.consumed)}</dd></div>
+                  <div><dt>{averages ? 'Gasto promedio' : 'Gasto estimado'}</dt><dd>{detail ? kcal(detail.summary.expenditure) : '—'}</dd></div>
+                  <div><dt>{averages ? 'Balance promedio' : 'Balance'}</dt><dd className={balanceTone(detail?.summary.balance ?? null)}>{detail ? kcal(detail.summary.balance, true) : '—'}</dd></div>
                 </dl>
-                {averages && <p className="charts-secondary charts-desktop-only">{detail.summary.mealDays} días con comidas · {detail.summary.energyDays} días con datos energéticos</p>}
+                <p className="charts-secondary charts-detail-caption">
+                  <span className={`charts-detail-category ${balanceTone(detail?.summary.balance ?? null)}`}>{detail ? getBalanceLabel(detail.summary.balance) : 'Sin selección'}</span>
+                  <span className="charts-detail-guidance">{!detail
+                  ? <><span className="charts-desktop-only">Elegí una barra para ver sus valores exactos.</span><span className="charts-mobile-only">Tocá un período para ver el detalle.</span></>
+                  : averages
+                    ? <span className="charts-desktop-only">{detail.summary.mealDays} días con comidas · {detail.summary.energyDays} días con datos energéticos</span>
+                    : <span className="charts-desktop-only">Valores registrados del día seleccionado.</span>}</span>
+                </p>
               </div>
-            ) : <p className="charts-detail-hint charts-secondary"><span className="charts-desktop-only">Tocá, enfocá o pasá sobre un período para ver consumidas, gasto y balance exactos.</span><span className="charts-mobile-only">Tocá un período para ver el detalle.</span></p>}
-            </div>
           </>
         )}
       </section>
