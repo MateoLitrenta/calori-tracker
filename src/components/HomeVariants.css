@@ -295,6 +295,8 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
   --heatmap-selected: #3b82f6;
   --heatmap-gym: #facc15;
   --heatmap-football: #a855f7;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   padding: 24px;
   gap: 16px;
@@ -333,7 +335,7 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
 .home-variants .activity-history .period-switch button:active { background: var(--home-hover); }
 .home-variants .activity-history button:focus-visible { outline: 2px solid var(--home-orange); outline-offset: 2px; }
 .home-variants .activity-history .heatmap-cell,
-.home-variants .activity-legend [class~="w-3"] { border-radius: var(--radius-micro); }
+.home-variants .history-legend-swatch { border-radius: var(--radius-micro); }
 .home-variants .activity-history [data-border="selected"] { --heatmap-border: var(--heatmap-selected); }
 .home-variants .activity-history [data-border="gym"] { --heatmap-border: var(--heatmap-gym); }
 .home-variants .activity-history [data-border="football"] { --heatmap-border: var(--heatmap-football); }
@@ -378,25 +380,88 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 .home-variants .daily-habits button:focus-visible,
 .home-variants .daily-quick-actions button:focus-visible { outline: 2px solid var(--home-orange); outline-offset: 2px; }
 
-/* Weekday labels are siblings of the only horizontal scrollport. Row sizes,
-   gaps and the month band are shared, including after viewport resizing. */
-.home-variants .heatmap-frame { --history-cell: 11px; --history-gap: 2px; display: flex; align-items: center; width: 100%; height: 135px; }
-.home-variants .heatmap-layout { display: flex; align-items: flex-start; width: 100%; min-width: 0; }
-.home-variants .heatmap-weekdays { flex: none; width: 28px; display: flex; flex-direction: column; gap: var(--history-gap); padding: 22px 6px 2px 0; }
-.home-variants .heatmap-weekdays span { height: var(--history-cell); line-height: var(--history-cell); font-size: 9px; text-align: right; color: var(--home-muted); }
+/* Each scale has its own geometry. Only the daily calendar scrolls horizontally. */
+.home-variants .activity-history-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.home-variants .activity-history-header > div:first-child { min-width: 0; }
+.home-variants :is(.history-scope, .history-help) { color: var(--home-muted); font-size: 12px; line-height: 1.5; }
+.home-variants .history-scope { margin-top: 4px; }
+.home-variants .history-navigation { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; }
+.home-variants .history-navigation p { color: var(--home-muted); font-size: 12px; }
+.home-variants .history-navigation label { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--home-muted); }
+.home-variants .history-navigation input { min-width: 0; min-height: 44px; max-width: 100%; padding: 8px 10px; font-size: 13px; border: 1px solid var(--home-line); border-radius: var(--home-radius-control); color: var(--home-text); background: var(--home-control); }
+.home-variants .heatmap-frame { --history-cell: 16px; --history-gap: 4px; display: flex; align-items: center; width: 100%; min-width: 0; min-block-size: 168px; container-type: inline-size; }
+.home-variants .heatmap-layout { display: flex; align-items: flex-start; width: 100%; min-width: 0; --history-cell: clamp(16px, calc((100cqw - 40px - (var(--history-columns) - 1) * var(--history-gap)) / var(--history-columns)), 22px); }
+.home-variants .heatmap-weekdays { flex: none; width: 36px; display: flex; flex-direction: column; gap: var(--history-gap); padding: 22px 6px 2px 0; }
+.home-variants .heatmap-weekdays span { height: var(--history-cell); line-height: var(--history-cell); font-size: 10px; text-align: right; color: var(--home-muted); }
 .home-variants .heatmap-scroll { flex: 1; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; }
 .home-variants .heatmap-scroll:focus-visible { outline: 2px solid var(--home-orange); outline-offset: -2px; }
 .home-variants .heatmap-content { width: max-content; margin-inline: auto; }
 .home-variants .heatmap-months { position: relative; height: 16px; margin-bottom: 4px; }
-.home-variants .heatmap-months span { position: absolute; font-size: 10px; text-transform: capitalize; color: var(--home-muted); }
+.home-variants .heatmap-months span { position: absolute; font-size: 11px; text-transform: capitalize; color: var(--home-muted); }
 .home-variants .heatmap-grid { display: flex; gap: var(--history-gap); padding: 2px; }
 .home-variants .heatmap-column { display: flex; flex-direction: column; gap: var(--history-gap); }
 .home-variants .heatmap-grid :is(.heatmap-cell, .heatmap-date) { width: var(--history-cell); height: var(--history-cell); flex: none; }
-@media (min-width: 768px) {
-  .home-variants .heatmap-frame { --history-cell: 10px; --history-gap: 4px; }
-  .home-variants .heatmap-weekdays { width: 36px; }
+.home-variants .heatmap-cell { border-radius: 3px; transition: opacity var(--motion-control) var(--motion-ease-control); }
+.home-variants .heatmap-cell:hover { opacity: .8; }
+.home-variants .history-period-grid { display: grid; grid-template-columns: repeat(var(--history-grid-columns), minmax(0, 1fr)); width: 100%; gap: 8px; }
+.home-variants .history-period-grid--week { --history-grid-columns: 11; }
+.home-variants .history-period-grid--month { --history-grid-columns: 4; }
+.home-variants .history-period-grid--year { --history-grid-columns: 2; }
+.home-variants .history-period { display: flex; flex-direction: column; justify-content: center; gap: 8px; position: relative; min-width: 0; min-height: 44px; padding: 10px 12px 14px; overflow: hidden; text-align: left; border: 1px solid var(--home-line); border-radius: 12px; background: var(--home-control); color: var(--home-text); transition: background-color var(--motion-control) var(--motion-ease-control), border-color var(--motion-control) var(--motion-ease-control); }
+.home-variants .history-period:hover { background: var(--home-hover); }
+.home-variants .history-period[aria-pressed="true"] { border-color: var(--heatmap-selected); box-shadow: inset 0 0 0 1px var(--heatmap-selected); }
+.home-variants .history-period-heading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; }
+.home-variants .history-period-name { font-size: 14px; font-weight: 500; text-transform: capitalize; }
+.home-variants :is(.history-period-secondary, .history-period-coverage) { color: var(--home-muted); font-size: 12px; line-height: 1.4; }
+.home-variants .history-period-grid--week .history-period { padding: 10px 8px 14px; text-align: center; }
+.home-variants .history-period-grid--week .history-period-heading { justify-content: center; }
+.home-variants .history-period-grid--week .history-period-name { font-size: 12px; white-space: nowrap; }
+.home-variants .history-period-grid--month .history-period { min-height: 76px; }
+.home-variants .history-period-grid--year .history-period { min-height: 164px; padding: 20px; }
+.home-variants .history-period-grid--year .history-period-name { font-size: 18px; }
+.home-variants .history-year-balance { font-size: 28px; font-weight: 500; letter-spacing: -.03em; line-height: 1.2; }
+.home-variants .history-year-balance small { color: var(--home-muted); font-size: 12px; font-weight: 400; letter-spacing: 0; }
+.home-variants .history-period-swatch { position: absolute; left: 8px; right: 8px; bottom: 4px; height: 3px; border-radius: 3px; }
+.home-variants .history-period[data-empty="true"] .history-period-swatch { height: 3px; outline: 1px dashed var(--home-muted); outline-offset: -1px; }
+.home-variants .history-detail { display: flex; flex-direction: column; gap: 12px; padding-top: 16px; border-top: 1px solid var(--home-line); }
+.home-variants .history-detail-heading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; }
+.home-variants .history-detail h3 { color: var(--home-text); font-size: 14px; font-weight: 500; text-transform: capitalize; }
+.home-variants .history-detail-heading p { color: var(--home-muted); font-size: 12px; line-height: 1.5; }
+.home-variants .history-detail-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 20px; }
+.home-variants .history-detail-metrics--day { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.home-variants .history-detail-metrics dt { color: var(--home-muted); font-size: 12px; line-height: 1.4; }
+.home-variants .history-detail-metrics dd { margin-top: 4px; font-size: 18px; font-weight: 500; line-height: 1.4; overflow-wrap: anywhere; }
+.home-variants .history-detail-metrics small { font-size: 11px; font-weight: 400; color: var(--home-muted); }
+.home-variants :is(.history-detail-metrics, .history-year-balance, .history-period-coverage) { font-variant-numeric: tabular-nums; }
+.home-variants .activity-history-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px 16px; }
+.home-variants .activity-border-legend { display: flex; flex-wrap: wrap; gap: 8px 12px; color: var(--home-muted); font-size: 11px; }
+.home-variants .history-key { display: inline-flex; align-items: center; gap: 6px; }
+.home-variants .history-legend-colors { display: flex; gap: 3px; }
+.home-variants .history-legend-swatch { display: inline-block; flex: none; width: 12px; height: 12px; border-radius: 3px; }
+.home-variants .history-help { font-size: 11px; }
+@media (max-width: 1023px) {
+  .home-variants .history-period-grid--week { --history-grid-columns: 8; }
 }
-
+@media (max-width: 639px) {
+  .home-variants .heatmap-frame[data-period="day"] { min-block-size: 0; }
+  .home-variants .history-period-grid--week { --history-grid-columns: 5; }
+  .home-variants .history-period-grid--month { --history-grid-columns: 2; }
+  .home-variants .history-period-grid--year { --history-grid-columns: 1; }
+  .home-variants .history-detail-metrics, .home-variants .history-detail-metrics--day { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .home-variants .history-period { padding-inline: 10px; }
+  .home-variants .history-period-grid--week .history-period { padding-inline: 4px; }
+  .home-variants .history-period-grid--week .history-period-name { font-size: 11px; }
+  .home-variants .history-period-grid--year .history-period { min-height: 132px; padding: 16px; }
+  .home-variants .activity-legend-scale { gap: 5px; white-space: normal; }
+  .home-variants .history-legend-unit { display: block; }
+  .home-variants .history-detail-metrics dd { font-size: 17px; }
+}
+@media (max-width: 374px) {
+  .home-variants .history-period-grid--week { --history-grid-columns: 4; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-variants :is(.heatmap-cell, .history-period) { transition: none; }
+}
 /* Desktop has three real rows: summary, journal and annual activity. Normal
    content grows with the page; only the calendar can scroll horizontally. */
 @media (min-width: 1280px) {
@@ -443,7 +508,7 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 
   /* One geometry drives dates, weekday rows and month offsets. cqw comes from
      this full-width frame; the minimum leaves usable cells in narrow windows. */
-  .app-shell .home-variants .heatmap-frame { height: auto; container-type: inline-size; }
+  .app-shell .home-variants .heatmap-frame { container-type: inline-size; }
   .app-shell .home-variants .heatmap-frame[data-period="day"] .heatmap-layout { --history-cell: clamp(12px, calc((100cqw - 40px - (var(--history-columns) - 1) * var(--history-gap)) / var(--history-columns)), 22px); }
   .app-shell .home-variants .heatmap-weekdays span { font-size: 10px; }
   .app-shell .home-variants .heatmap-months span { font-size: 11px; }
