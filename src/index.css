@@ -13,6 +13,23 @@
   --motion-panel: 300ms;
   --motion-ease-control: cubic-bezier(.2, .8, .2, 1);
   --motion-ease-enter: cubic-bezier(.16, 1, .3, 1);
+  --scroll-thumb: #94a3b8;
+  --scroll-thumb-hover: #64748b;
+}
+
+html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
+
+/* Keep necessary scrollports discoverable. Styling does not create a scrollport
+   or suppress keyboard/touch scrolling; normal cards retain natural height. */
+:where(.app-main, .app-sidebar, .chat-messages, .chat-textarea, .heatmap-scroll, .charts-plot-scroll, .entry-form-content, .entry-desktop-modal, .chat-camera-panel) {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) transparent;
+}
+:where(.app-main, .app-sidebar, .chat-messages, .chat-textarea, .heatmap-scroll, .charts-plot-scroll, .entry-form-content, .entry-desktop-modal, .chat-camera-panel):hover {
+  scrollbar-color: var(--scroll-thumb-hover) transparent;
+}
+@media (min-width: 768px) {
+  .app-shell:not(.app-shell-coach) .app-main { scrollbar-gutter: stable; }
 }
 
 @keyframes calori-enter {

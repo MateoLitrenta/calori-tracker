@@ -8,17 +8,20 @@
   /* Only the conversation scrolls: both ends stay in the flex layout. */
   .app-shell-coach .app-main { overflow: hidden; }
   .app-shell-coach .app-content { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
-  .app-shell-coach .assistant-view { max-width: 1150px; min-height: 0; }
+  .app-shell-coach .assistant-view { --chat-message-gap: 20px; max-width: 1150px; min-height: 0; }
   .app-shell-coach .assistant-view .chat-heading,
   .app-shell-coach .assistant-view .chat-composer,
   .app-shell-coach .assistant-view .chat-history-picker { flex: 0 0 auto; }
-  .app-shell-coach .assistant-view .chat-messages { min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; }
+  .app-shell-coach .assistant-view .chat-messages { min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; gap: var(--chat-message-gap); }
   .app-shell-coach .assistant-view .chat-heading-actions button { min-height: 44px; }
+  .app-shell-coach .assistant-view .chat-message { align-items: flex-start; }
   .app-shell-coach .assistant-view .chat-message-user { max-width: min(80%, 680px); }
   .app-shell-coach .assistant-view .chat-message-bot { max-width: min(92%, 840px); }
-  .app-shell-coach .assistant-view .chat-message-bot:has(.chat-coach-stack) { width: min(92%, 840px); }
-  .app-shell-coach .assistant-view .chat-coach-stack { max-width: 760px; }
-  .app-shell-coach .assistant-view .chat-bubble { max-width: 640px; }
+  .app-shell-coach .assistant-view .chat-message-structured { width: min(92%, 840px); }
+  .app-shell-coach .assistant-view .chat-coach-stack { max-width: 760px; gap: 12px; }
+  .app-shell-coach .assistant-view .chat-bubble { max-width: 640px; font-size: 15px; line-height: 1.65; }
+  .app-shell-coach .assistant-view .chat-bubble .prose { font-size: inherit; line-height: inherit; }
+  .app-shell-coach .assistant-view .chat-coach-stack > .chat-bubble { width: 100%; max-width: none; }
   .app-shell-coach .view-skeleton-chat { max-width: 1150px; }
 }
 
@@ -27,6 +30,7 @@
 @media (min-width: 1280px) {
   /* One desktop rhythm; surfaces and radii come from the existing view tokens. */
   .app-shell { --desktop-gap: 24px; --desktop-padding: 24px; --desktop-inset: 16px; --desktop-heading: 17px; --desktop-metric: 28px; }
+  .app-shell-coach .assistant-view { --chat-message-gap: 24px; }
   .app-shell-coach .assistant-view .chat-coach-stack .coach-goal-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .app-shell-coach .assistant-view .chat-coach-stack .coach-goal-list > :not(.coach-goal-card) { grid-column: 1 / -1; }
 }

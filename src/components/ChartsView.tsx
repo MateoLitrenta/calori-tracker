@@ -152,7 +152,7 @@ export default function ChartsView() {
               <div className="charts-detail" id="charts-bucket-detail" role="group" aria-label="Detalle del gráfico"
                 data-selected={Boolean(detail)}>
                 <div className="charts-detail-header">
-                  <h4>{detail?.title ?? 'Detalle del período'}</h4>
+                  <h4>{detail?.title ?? 'Detalle'}</h4>
                   <button type="button" className="charts-detail-clear" disabled={!detail}
                     aria-label="Limpiar selección del gráfico" onClick={() => setSelectedBucket(null)}>
                     <X size={16} aria-hidden="true" /><span>Limpiar</span>
