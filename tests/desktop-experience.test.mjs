@@ -18,7 +18,7 @@ test('desktop reflow is isolated from mobile; tablet keeps the existing dashboar
     assert.ok(['(min-width: 768px)', '(min-width: 1280px)'].includes(item.parent.params));
     for (const selector of item.selectors) assert.ok(selector.startsWith('.app-shell'), selector);
   });
-  for (const selector of ['.app-shell .home-variants', '.app-shell .charts-insights', '.app-shell .profile-v2']) {
+  for (const selector of ['.app-shell .home-variants', '.app-shell .charts-insights', '.app-shell .profile-view.profile-v2']) {
     const item = rule(selector);
     assert.equal(item.parent.params, '(min-width: 1280px)'); assert.equal(value(item, 'display'), 'grid');
     assert.ok(!item.nodes.some(node => ['height', 'overflow', 'overflow-y'].includes(node.prop)), 'Normal views must remain able to grow/scroll');

@@ -596,6 +596,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       </div>
 
       {!isGroup && (
+        <div className="daily-journal contents">
         <div ref={tabContainerRef} className="daily-entry flex flex-col gap-4">
           {/* Action Buttons */}
           <div className="daily-quick-actions flex gap-2 mt-2">
@@ -820,10 +821,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         )}
 
         </div>
-      )}
-
       {/* Logs List */}
-      {!isGroup && (
         <div className={`daily-logs ${currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 ? 'daily-logs--empty' : ''} bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden`}>
           <div className="bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
             <h4 className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
@@ -896,6 +894,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             })
           }
         </ul>
+      </div>
       </div>
       )}
 

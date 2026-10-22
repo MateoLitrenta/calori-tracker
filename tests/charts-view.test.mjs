@@ -204,6 +204,27 @@ test('keyboard focus and pointer selection expose exact expenditure and balance 
   assert.equal(nodes(summary, element => element.props.className === 'charts-kpis')[0].key, 'summary-Año');
 });
 
+test('chart selection replaces the hint inside the same reserved detail region, keeping exact values and lower panels', () => {
+  for (const period of ['Semana', 'Mes', 'Año']) {
+    const initial = render(weeklyRecords, period);
+    const slot = nodes(initial.tree, element => element.props.className === 'charts-detail-slot')[0];
+    assert.ok(slot);
+    assert.equal(slot.props['data-averages'], period !== 'Semana');
+    assert.equal(nodes(slot, element => element.props.role === 'tooltip').length, 0);
+    const bucket = nodes(initial.tree, element => element.type === 'button' && element.props.className === 'charts-bucket')[0];
+    bucket.props.onFocus();
+    const selected = render(weeklyRecords, period, globalThis.__chartsHarness.selectedBucket);
+    const selectedSlot = nodes(selected.tree, element => element.props.className === 'charts-detail-slot')[0];
+    assert.equal(selectedSlot.type, slot.type);
+    assert.equal(selectedSlot.key, slot.key);
+    assert.equal(nodes(selectedSlot, element => element.props.role === 'tooltip').length, 1);
+    assert.equal(nodes(selectedSlot, element => element.type === 'dd').length, 3);
+    const activity = tree => nodes(tree, element => element.props['aria-labelledby'] === 'charts-activity-heading')[0];
+    assert.equal(html(activity(selected.tree)), html(activity(initial.tree)));
+    assert.deepEqual(kpis(selected.tree), kpis(initial.tree));
+  }
+});
+
 test('one summary surface places balance first, two secondary averages and coverage metadata', () => {
   const { tree } = render(weeklyRecords);
   const summaries = nodes(tree, element => element.props.className === 'charts-panel charts-summary');

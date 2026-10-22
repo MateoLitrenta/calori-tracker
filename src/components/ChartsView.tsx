@@ -143,6 +143,7 @@ export default function ChartsView() {
               <span><i className="charts-key-expenditure" aria-hidden="true" />Gasto<span className="charts-desktop-only"> estimado</span></span>
               <span className="charts-secondary charts-desktop-only">Balance debajo de cada período · kcal</span>
             </div>
+            <div className="charts-detail-slot" data-averages={averages}>
             {detail ? (
               <div key={detail.start} className="charts-detail" id="charts-bucket-detail" role="tooltip">
                 <h4>{detail.title}</h4>
@@ -154,6 +155,7 @@ export default function ChartsView() {
                 {averages && <p className="charts-secondary charts-desktop-only">{detail.summary.mealDays} días con comidas · {detail.summary.energyDays} días con datos energéticos</p>}
               </div>
             ) : <p className="charts-detail-hint charts-secondary"><span className="charts-desktop-only">Tocá, enfocá o pasá sobre un período para ver consumidas, gasto y balance exactos.</span><span className="charts-mobile-only">Tocá un período para ver el detalle.</span></p>}
+            </div>
           </>
         )}
       </section>
