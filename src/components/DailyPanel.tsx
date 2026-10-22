@@ -596,7 +596,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       </div>
 
       {!isGroup && (
-        <div className="daily-journal contents">
+        <div className="daily-journal contents" data-record-count={currentRecord.meals.length + currentRecord.workouts.length}>
         <div ref={tabContainerRef} className="daily-entry flex flex-col gap-4">
           {/* Action Buttons */}
           <div className="daily-quick-actions flex gap-2 mt-2">
@@ -823,7 +823,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         </div>
       {/* Logs List */}
         <div className={`daily-logs ${currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 ? 'daily-logs--empty' : ''} bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden`}>
-          <div className="bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
+          <div className="daily-logs-heading bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
             <h4 className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
           </div>
           
@@ -833,7 +833,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             </div>
           )}
 
-        <ul className="divide-y divide-slate-200 dark:divide-gray-800">
+        <ul className={`daily-records ${currentRecord.meals.length + currentRecord.workouts.length >= 4 ? 'daily-records--columns' : ''} divide-y divide-slate-200 dark:divide-gray-800`}>
           {
             [
               ...currentRecord.meals.map(m => ({ ...m, _type: 'meal' as const })),
@@ -853,11 +853,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     onClick={() => setDetailModalItem(meal)}
                     className="p-3.5 hover:bg-white dark:bg-[#161b22] flex flex-col gap-1.5 group transition-colors cursor-pointer"
                   >
-                    <div className="flex items-center gap-3 w-full font-medium text-wrap break-words leading-tight">
+                    <div className="daily-record-title flex items-center gap-3 w-full font-medium text-wrap break-words leading-tight">
                       {meal.photo_path && <MealThumbnail path={meal.photo_path} />}
                       <span><ForkKnife size={18} className="inline-block mr-2 text-orange-400" aria-hidden="true" />{meal.name}</span>
                     </div>
-                    <div className="flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
+                    <div className="daily-record-meta flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
                       <span>
                         {meal.time ? `${meal.time} hs • ` : ''}{meal.type}
                       </span>
@@ -876,10 +876,10 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                     onClick={() => setDetailModalItem(workout)}
                     className="p-3.5 hover:bg-white dark:bg-[#161b22] flex flex-col gap-1.5 group transition-colors cursor-pointer"
                   >
-                    <div className="w-full font-medium text-wrap break-words leading-tight">
+                    <div className="daily-record-title w-full font-medium text-wrap break-words leading-tight">
                       <Barbell size={18} className="inline-block mr-2 text-orange-400" aria-hidden="true" />{workout.activity}
                     </div>
-                    <div className="flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
+                    <div className="daily-record-meta flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
                       <span>
                         {workout.time ? `${workout.time} hs • ` : ''}Ejercicio · {workout.duration} min
                       </span>

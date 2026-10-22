@@ -36,6 +36,8 @@ test('weekday labels remain outside the scrollport; date selection keeps title, 
   assert.ok(day.title.includes(String(getNetBalance(record,profile))));
   await act(()=>day.click());assert.equal(selects,1);assert.equal(selection.dates[0],today);assert.equal(scroll.scrollLeft,123);
   const initialColumns=document.querySelectorAll('.heatmap-column').length;assert.ok(initialColumns>=52);
+  assert.equal(document.querySelector('.heatmap-frame').style.getPropertyValue('--history-columns'),String(initialColumns));
+  assert.equal(document.querySelector('.heatmap-frame').dataset.period,'day');
   assert.ok([...document.querySelectorAll('.heatmap-column')].every(column=>column.children.length===7));
   const selector=document.querySelector('[aria-label="Período del historial"]');
   assert.equal(selector.style.getPropertyValue('--active-index'),'3');
@@ -45,6 +47,7 @@ test('weekday labels remain outside the scrollport; date selection keeps title, 
   for(const [label,type,index] of [['Semana','week','2'],['Mes','month','1'],['Año','year','0'],['Día','day','3']]) {
     await act(()=>[...selector.querySelectorAll('button')].find(button=>button.textContent===label).click());
     assert.equal(selection.type,type);assert.ok(selection.dates.length>0);
+    assert.equal(document.querySelector('.heatmap-frame').dataset.period,type);
     assert.equal(selector.style.getPropertyValue('--active-index'),index);
     assert.equal(selector.querySelectorAll('[aria-pressed="true"]').length,1);
     assert.equal(left,800);const calls=resets;

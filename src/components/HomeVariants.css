@@ -170,9 +170,9 @@ html:not(.dark) .home-variants.entry-sheet-root .entry-ai-action { color: #a34e1
 .home-variants .daily-panel { gap: 24px; }
 .home-variants .daily-habits .uppercase { text-transform: none; letter-spacing: 0; font-size: 11px; font-weight: 400; }
 .home-variants .daily-habits .text-lg { font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
-.home-variants .daily-logs > div:first-child { background: transparent; border: 0; padding: 0 0 12px; }
+.home-variants .daily-logs-heading { background: transparent; border: 0; padding: 0 0 12px; }
 .home-variants .daily-logs .daily-logs-empty { padding: 12px 8px 4px; font-size: 13px; line-height: 1.5; }
-.home-variants .daily-logs--empty > div:first-child { padding-bottom: 6px; }
+.home-variants .daily-logs--empty .daily-logs-heading { padding-bottom: 6px; }
 .home-variants .daily-logs--empty .daily-logs-empty { padding: 0; text-align: left; }
 .home-variants .daily-logs ul { display: flex; flex-direction: column; gap: 12px; }
 .home-variants .daily-logs li > div:first-child { font-size: 14px; font-weight: 500; line-height: 1.5; }
@@ -286,7 +286,7 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
   .home-variants .daily-habits .text-lg { font-size: 18px; }
   .home-variants .habit-controls { grid-template-columns: minmax(0, 1fr); }
   .home-variants .daily-logs--empty { padding-block: 10px; }
-  .home-variants .daily-logs--empty > div:first-child { padding-bottom: 4px; }
+  .home-variants .daily-logs--empty .daily-logs-heading { padding-bottom: 4px; }
 }
 
 .home-variants .activity-history {
@@ -302,7 +302,7 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
   box-shadow: none;
 }
 .home-variants .activity-history h2 { font-size: 18px; font-weight: 600; letter-spacing: -.02em; }
-.home-variants .activity-history > div:nth-child(2) { min-width: 0; }
+.home-variants .heatmap-frame { min-width: 0; }
 .home-variants .activity-history .period-switch {
   min-width: 0;
   gap: 4px;
@@ -357,7 +357,7 @@ html:not(.dark) .home-variants .activity-history .period-switch button[aria-pres
 html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 @media (max-width: 639px) {
   .home-variants .activity-history { padding: 16px; gap: 12px; }
-  .home-variants .activity-history > div:first-child { gap: 12px; }
+  .home-variants .activity-history-header { gap: 12px; }
   .home-variants .activity-history .period-switch { align-self: stretch; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .home-variants .activity-history .period-switch button { padding: 8px 4px; }
   .home-variants .activity-legend { gap: 8px 12px; }
@@ -393,4 +393,43 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 @media (min-width: 768px) {
   .home-variants .heatmap-frame { --history-cell: 10px; --history-gap: 4px; }
   .home-variants .heatmap-weekdays { width: 36px; }
+}
+
+/* Desktop has three real rows: summary, journal and annual activity. Normal
+   content grows with the page; only the calendar can scroll horizontally. */
+@media (min-width: 1280px) {
+  .app-shell .home-variants { max-width: 1440px; padding: 0; gap: var(--desktop-gap); }
+  .app-shell .home-variants .daily-panel { gap: var(--desktop-gap); }
+  .app-shell .home-variants .daily-summary { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--desktop-gap); align-items: stretch; }
+  .app-shell .home-variants .energy-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, .9fr); padding: var(--desktop-padding); gap: var(--desktop-inset); align-items: center; }
+  .app-shell .home-variants .energy-number { font-size: clamp(40px, 3.2vw, 60px); margin-block: 10px; }
+  .app-shell .home-variants .energy-metrics { display: flex; flex-direction: column; align-items: stretch; gap: 6px; }
+  .app-shell .home-variants .daily-habits { gap: 10px; }
+  .app-shell .home-variants .daily-habits > div { padding: 16px 10px 10px; }
+
+  /* The wrappers are presentation-only. Keeping their DOM order preserves the
+     established mobile actions, sheet and records without duplicating nodes. */
+  .app-shell .home-variants .daily-journal { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 360px); gap: var(--desktop-inset) var(--desktop-gap); align-items: center; min-width: 0; padding: var(--desktop-padding); background: var(--home-card); border: 1px solid var(--home-line); border-radius: var(--radius-panel); }
+  .app-shell .home-variants :is(.daily-entry, .daily-logs) { display: contents; }
+  .app-shell .home-variants .daily-logs-heading { grid-column: 1; grid-row: 1; padding: 0; }
+  .app-shell .home-variants .daily-quick-actions { grid-column: 2; grid-row: 1; margin: 0; }
+  .app-shell .home-variants :is(.entry-form, .daily-records, .daily-logs-empty) { grid-column: 1 / -1; min-width: 0; }
+  .app-shell .home-variants .daily-logs h4,
+  .app-shell .home-variants .activity-history h2 { font-size: var(--desktop-heading); font-weight: 500; line-height: 1.4; }
+  .app-shell .home-variants .daily-logs-empty { padding: 0; text-align: left; }
+  .app-shell .home-variants .daily-records { gap: 8px; }
+  .app-shell .home-variants .daily-records li { padding: 12px 16px; gap: 4px; }
+  .app-shell .home-variants .daily-records:empty { display: none; }
+  .app-shell .home-variants .daily-records--columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .app-shell .home-variants :is(.daily-records li, .daily-record-title, .daily-record-title > span, .daily-record-meta) { min-width: 0; overflow-wrap: anywhere; }
+  .app-shell .home-variants .daily-record-title { line-height: 1.4; }
+  .app-shell .home-variants .daily-record-meta { flex-wrap: wrap; gap: 6px; margin-top: 0; }
+  .app-shell .home-variants .activity-history { width: 100%; padding: var(--desktop-padding); gap: var(--desktop-inset); }
+
+  /* One geometry drives dates, weekday rows and month offsets. cqw comes from
+     this full-width frame; the minimum leaves usable cells in narrow windows. */
+  .app-shell .home-variants .heatmap-frame { height: auto; container-type: inline-size; }
+  .app-shell .home-variants .heatmap-frame[data-period="day"] .heatmap-layout { --history-cell: clamp(12px, calc((100cqw - 40px - (var(--history-columns) - 1) * var(--history-gap)) / var(--history-columns)), 22px); }
+  .app-shell .home-variants .heatmap-weekdays span { font-size: 10px; }
+  .app-shell .home-variants .heatmap-months span { font-size: 11px; }
 }

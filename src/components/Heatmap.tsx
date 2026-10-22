@@ -267,7 +267,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, selectedGro
 
   return (
     <div className="activity-history p-4 md:p-6 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl shadow-lg w-full overflow-hidden flex flex-col gap-4">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="activity-history-header flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">Historial de Actividad</h2>
         
         <div className="period-switch period-selector bg-slate-200 dark:bg-[#161b22] rounded-md p-1 border border-slate-300 dark:border-gray-800 self-end sm:self-auto"
@@ -292,7 +292,8 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, selectedGro
         </div>
       </div>
       
-      <div className="heatmap-frame">
+      <div className="heatmap-frame" data-period={period}
+        style={{ '--history-columns': weeksArray.length } as CSSProperties}>
         <div className="heatmap-layout">
           {period === 'day' && (
             <div className="heatmap-weekdays" aria-hidden="true">

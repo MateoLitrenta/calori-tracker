@@ -98,6 +98,28 @@ test('only empty meal and workout lists use the compact records state', () => {
   }
 });
 
+test('journal keeps every record and its full description in chronological DOM order at all densities', () => {
+  for (const count of [0, 1, 5, 32]) {
+    const records = Array.from({ length: count }, (_, index) => ({
+      id: `m-${index}`, name: `Registro ${String(index).padStart(2, '0')} ${'descripcionlarga'.repeat(20)}`,
+      type: 'Almuerzo', calories: 1234567, time: `${String(Math.floor(index / 2)).padStart(2, '0')}:${index % 2 ? '30' : '00'}`,
+    }));
+    const html = renderToStaticMarkup(React.createElement(DailyPanel, {
+      profile, record: { ...base, meals: [...records].reverse() }, dateStr, records: {}, onUpdateRecord() {},
+    }));
+    assert.equal((html.match(/<li\b/g) || []).length, count);
+    assert.equal((html.match(/Registros del día/g) || []).length, 1);
+    assert.match(html, new RegExp(`data-record-count="${count}"`));
+    assert.equal(html.includes('daily-records--columns'), count >= 4);
+    for (let index = 0; index < count; index++) {
+      assert.ok(html.includes(records[index].name), 'Long descriptions must remain complete');
+      assert.ok(html.includes(`+${records[index].calories} kcal`));
+      if (index) assert.ok(html.indexOf(records[index - 1].name) < html.indexOf(records[index].name));
+    }
+    assert.ok(html.indexOf('+ Comida') < html.indexOf('Registros del día'), 'Keep the existing mobile reading order');
+  }
+});
+
 test('habit controls keep accessible names and daily quick actions', () => {
   const html = renderToStaticMarkup(React.createElement(DailyPanel, {
     profile, record: { ...base, steps: 18500, water: 2500, weight: 105 }, dateStr,

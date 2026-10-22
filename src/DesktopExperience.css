@@ -29,30 +29,6 @@
   .app-shell { --desktop-gap: 24px; --desktop-padding: 24px; --desktop-inset: 16px; --desktop-heading: 17px; --desktop-metric: 28px; }
   .app-shell-coach .assistant-view .chat-coach-stack .coach-goal-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .app-shell-coach .assistant-view .chat-coach-stack .coach-goal-list > :not(.coach-goal-card) { grid-column: 1 / -1; }
-  .app-shell .home-variants { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--desktop-gap); max-width: 1440px; padding: 0; align-items: start; }
-  .app-shell .home-variants .daily-panel { display: contents; }
-  .app-shell .home-variants .daily-heading { grid-column: 1 / -1; }
-  .app-shell .home-variants .daily-summary { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--desktop-gap); align-items: stretch; }
-  .app-shell .home-variants .energy-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, .9fr); padding: 24px; gap: 16px; align-items: center; }
-  .app-shell .home-variants .energy-number { font-size: clamp(40px, 3.2vw, 60px); margin-block: 10px; }
-  .app-shell .home-variants .energy-metrics { display: flex; flex-direction: column; align-items: stretch; gap: 6px; }
-  .app-shell .home-variants .daily-habits { gap: 10px; }
-  .app-shell .home-variants .daily-habits > div { padding: 16px 10px 10px; }
-  .app-shell .home-variants .daily-journal { display: flex; flex-direction: column; grid-column: 1; min-width: 0; gap: var(--desktop-inset); padding: var(--desktop-padding); background: var(--home-card); border: 1px solid var(--home-line); border-radius: var(--radius-panel); }
-  .app-shell .home-variants .daily-entry { min-width: 0; }
-  .app-shell .home-variants .daily-quick-actions { margin: 0; }
-  .app-shell .home-variants .daily-logs { min-width: 0; margin: 0; padding: 0; background: transparent; border: 0; border-radius: 0; }
-  .app-shell .home-variants .daily-logs h4,
-  .app-shell .home-variants .activity-history h2 { font-size: var(--desktop-heading); font-weight: 500; line-height: 1.4; }
-  .app-shell .home-variants .daily-logs :is(li, li > div, li > div > span) { min-width: 0; overflow-wrap: anywhere; }
-  .app-shell .home-variants .daily-logs li > div:last-child { flex-wrap: wrap; gap: 6px; }
-  .app-shell .home-variants .daily-logs ul { max-height: clamp(180px, 24dvh, 240px); overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; }
-  .app-shell .home-variants .activity-history { grid-column: 1 / -1; min-width: 0; padding: var(--desktop-padding); gap: var(--desktop-inset); }
-  .app-shell .home-variants:has(.daily-journal) .activity-history { grid-column: 2; grid-row: 3; }
-  .app-shell .home-variants .activity-history > div:first-child { flex-wrap: wrap; }
-  .app-shell .home-variants .daily-journal:has(.entry-form) { grid-column: 1 / -1; }
-  .app-shell .home-variants:has(.entry-form) .activity-history { grid-column: 1 / -1; grid-row: auto; }
-
   .app-shell .charts-insights { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); max-width: 1440px; gap: var(--desktop-gap); align-items: stretch; }
   .app-shell .charts-insights .charts-panel { padding: var(--desktop-padding); }
   .app-shell .charts-insights .charts-header { grid-column: 1 / -1; padding: var(--desktop-inset) var(--desktop-padding); }
