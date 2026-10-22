@@ -535,3 +535,36 @@ test('goals follow shared Home workout add/edit/delete and step changes across n
   assert.equal(state.persisted.workouts.length, 0); assert.equal(state.persisted.steps, 8000);
   assert.equal(state.aiCalls, 3);
 });
+
+test('Coach keeps header/composer outside its log and anchors delayed content only for a reader near the end on desktop', async t => {
+  const previousObserver = globalThis.ResizeObserver, observers = [];
+  globalThis.ResizeObserver = class {
+    targets = [];
+    constructor(callback) { this.callback = callback; observers.push(this); }
+    observe(target) { this.targets.push(target); }
+    disconnect() { this.targets = []; }
+  };
+  t.after(() => { globalThis.ResizeObserver = previousObserver; });
+  const state = await mountApp(t, []);
+  await click(state, 'Coach');
+  const log = state.document.querySelector('[role="log"]'), main = state.document.querySelector('.app-main');
+  const heading = state.document.querySelector('.chat-heading'), composer = state.document.querySelector('.chat-composer');
+  assert.equal(log.contains(heading), false); assert.equal(log.contains(composer), false);
+  assert.equal(heading.parentElement, log.parentElement); assert.equal(composer.parentElement, log.parentElement);
+  for (const name of ['Mis objetivos', 'Historial', 'Nueva conversación']) assert.ok(heading.querySelector(`[aria-label="${name}"]`));
+  for (const name of ['Iniciar dictado por voz', 'Enviar mensaje']) assert.ok(composer.querySelector(`[aria-label="${name}"]`));
+  const observer = observers.find(item => item.targets.includes(log)); assert.ok(observer);
+  assert.ok(observer.targets.includes(state.document.querySelector('.chat-message-list')), 'Late card/image content must be observed, not only the viewport');
+  let total = 2000;
+  Object.defineProperty(log, 'scrollHeight', { get: () => total, configurable: true });
+  Object.defineProperty(log, 'clientHeight', { value: 500, configurable: true });
+  main.scrollTop = 87; log.scrollTop = 1500;
+  observer.callback(); // Establish dimensions after mounting.
+  total = 2400; observer.callback();
+  assert.ok(log.scrollTop >= 1900, 'A reader at the end follows newly loaded content');
+  assert.equal(main.scrollTop, 87, 'Desktop auto-scroll must not move the outer page');
+  log.scrollTop = 150; total = 2800; observer.callback();
+  assert.equal(log.scrollTop, 150, 'Reading older messages must not jump to the end');
+  await click(state, 'Historial'); assert.ok(state.document.querySelector('.chat-history-picker'));
+  assert.equal(log.contains(state.document.querySelector('.chat-history-picker')), false);
+});

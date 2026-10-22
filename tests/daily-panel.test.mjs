@@ -628,7 +628,7 @@ test('global outside-click behavior leaves mobile sheets to their backdrop and s
   globalThis.window.matchMedia = () => ({ matches: true });
   const view = mount({ profile, record: base, dateStr, records: {}, onUpdateRecord: async () => true }, InteractiveDailyPanel, true);
   let tree = view();
-  node(tree, element => element.props.ref && element.props.className === 'flex flex-col gap-4').props.ref.current = { contains: () => false };
+  node(tree, element => element.props.ref && element.props.className?.split(' ').includes('daily-entry')).props.ref.current = { contains: () => false };
   view.flushEffects();
   open(view, '+ Comida');
   tree = view();

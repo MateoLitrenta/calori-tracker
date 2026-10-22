@@ -10,6 +10,7 @@ import LandingPage from './components/LandingPage';
 import Onboarding from './components/Onboarding';
 import { resolveEntryRoute } from './utils/entryRoute';
 import type { EntryRoute } from './utils/entryRoute';
+import './DesktopExperience.css';
 
 const HomeView = lazy(() => import('./components/HomeView'));
 const loadChatView = () => import('./components/ChatView');

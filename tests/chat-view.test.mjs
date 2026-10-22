@@ -328,19 +328,19 @@ test('insight cards use existing balance labels, recorded averages and accessibl
   }
 });
 
-test('incoming cards preserve a reader above the end and keep the current anchor when already near it', async t => {
+test('incoming cards and text replies preserve a reader above the end and follow the current anchor when near it', async t => {
   const oldWindow = globalThis.window;
   const oldFrame = globalThis.requestAnimationFrame;
   globalThis.window = { matchMedia: query => ({ matches: query.includes('max-width') }) };
   globalThis.requestAnimationFrame = callback => { callback(); return 1; };
   t.after(() => { globalThis.window = oldWindow; globalThis.requestAnimationFrame = oldFrame; });
-  for (const [scrollTop, expected] of [[150, 0], [1480, 1]]) {
+  for (const presentation of ['today_summary', 'none']) for (const [scrollTop, expected] of [[150, 0], [1480, 1]]) {
     let scrolled = 0;
     const view = conversation([{ id: 'previous', role: 'bot', text: 'Anterior.' }]);
     const get = predicate => nodes(view.render(), predicate)[0];
     const container = { scrollHeight: 2000, clientHeight: 500, scrollTop, scrollTo() { scrolled++; } };
     get(e => hasClass(e, 'chat-messages')).props.ref.current = container;
-    globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Resumen.', actions: [], presentation: 'today_summary' });
+    globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Resumen.', actions: [], presentation });
     get(e => e.type === 'textarea').props.onChange({ target: { value: '¿Cómo vengo hoy?' } });
     get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
     await new Promise(setImmediate);
