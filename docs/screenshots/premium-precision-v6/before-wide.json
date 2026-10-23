@@ -1,0 +1,26 @@
+[
+  {
+    "className": "home-variants dark flex flex-col gap-6 w-full max-w-4xl mx-auto",
+    "height": 1098.953125,
+    "width": 1440,
+    "x": 363
+  },
+  {
+    "className": "premium-view charts-view charts-insights w-full max-w-4xl mx-auto",
+    "height": 888.6796875,
+    "width": 1440,
+    "x": 363
+  },
+  {
+    "className": "premium-view dark profile-view profile-v2 flex flex-col w-full max-w-4xl mx-auto animate-in fade-in duration-300",
+    "height": 687.3828125,
+    "width": 1160,
+    "x": 503
+  },
+  {
+    "className": "premium-view dark assistant-view flex flex-col flex-1 min-h-0 w-full max-w-3xl mx-auto bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-300",
+    "height": 1032,
+    "width": 1150,
+    "x": 513
+  }
+]

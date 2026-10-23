@@ -1,0 +1,44 @@
+{
+  "cards": [
+    {
+      "class": "profile-panel profile-account-panel",
+      "rect": {
+        "bottom": 639.2890625,
+        "height": 352.2890625,
+        "left": 280,
+        "right": 831,
+        "top": 287,
+        "width": 551,
+        "x": 280,
+        "y": 287
+      }
+    },
+    {
+      "class": "profile-information",
+      "rect": {
+        "bottom": 627.7265625,
+        "height": 340.7265625,
+        "left": 855,
+        "right": 1406,
+        "top": 287,
+        "width": 551,
+        "x": 855,
+        "y": 287
+      }
+    },
+    {
+      "class": "profile-danger profile-v2-danger",
+      "rect": {
+        "bottom": 814.28125,
+        "height": 150.9921875,
+        "left": 280,
+        "right": 831,
+        "top": 663.2890625,
+        "width": 551,
+        "x": 280,
+        "y": 663.2890625
+      }
+    }
+  ],
+  "overflow": false
+}

@@ -1,0 +1,48 @@
+{
+  "before": {
+    "composer": {
+      "bottom": 875,
+      "height": 128,
+      "left": 281,
+      "right": 1405,
+      "top": 747,
+      "width": 1124,
+      "x": 281,
+      "y": 747
+    },
+    "heading": {
+      "bottom": 101,
+      "height": 76,
+      "left": 281,
+      "right": 1405,
+      "top": 25,
+      "width": 1124,
+      "x": 281,
+      "y": 25
+    },
+    "scroll": 1990.5
+  },
+  "after": {
+    "composer": {
+      "bottom": 875,
+      "height": 128,
+      "left": 281,
+      "right": 1405,
+      "top": 747,
+      "width": 1124,
+      "x": 281,
+      "y": 747
+    },
+    "heading": {
+      "bottom": 101,
+      "height": 76,
+      "left": 281,
+      "right": 1405,
+      "top": 25,
+      "width": 1124,
+      "x": 281,
+      "y": 25
+    },
+    "scroll": 0
+  }
+}

@@ -14,6 +14,11 @@ const value = (item, property) => item.nodes.find(node => node.prop === property
 
 test('desktop shell is isolated from mobile and only Coach gets a bounded scroll layout', () => {
   styles.walkRules(item => {
+    if (item.parent.type === 'root') {
+      assert.equal(item.selector, '.app-shell');
+      assert.ok(item.nodes.every(node => node.type === 'decl' && node.prop.startsWith('--')), 'Only shared app tokens may apply outside desktop media queries');
+      return;
+    }
     assert.equal(item.parent.type, 'atrule'); assert.equal(item.parent.name, 'media');
     assert.ok(['(min-width: 768px)', '(min-width: 1280px)'].includes(item.parent.params));
     for (const selector of item.selectors) assert.ok(selector.startsWith('.app-shell'), selector);

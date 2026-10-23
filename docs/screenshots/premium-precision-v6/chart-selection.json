@@ -1,0 +1,182 @@
+[
+  {
+    "period": "Semana",
+    "before": [
+      {
+        "class": "charts-header charts-panel",
+        "h": 86.796875,
+        "y": 24
+      },
+      {
+        "class": "charts-panel charts-summary",
+        "h": 429.7890625,
+        "y": 134.796875
+      },
+      {
+        "class": "charts-panel charts-energy",
+        "h": 429.7890625,
+        "y": 134.796875
+      },
+      {
+        "class": "charts-panel charts-activity-panel",
+        "h": 257.890625,
+        "y": 588.5859375
+      },
+      {
+        "class": "charts-panel charts-comparison",
+        "h": 221.1953125,
+        "y": 588.5859375
+      }
+    ],
+    "after": [
+      {
+        "class": "charts-header charts-panel",
+        "h": 86.796875,
+        "y": 24
+      },
+      {
+        "class": "charts-panel charts-summary",
+        "h": 429.7890625,
+        "y": 134.796875
+      },
+      {
+        "class": "charts-panel charts-energy",
+        "h": 429.7890625,
+        "y": 134.796875
+      },
+      {
+        "class": "charts-panel charts-activity-panel",
+        "h": 257.890625,
+        "y": 588.5859375
+      },
+      {
+        "class": "charts-panel charts-comparison",
+        "h": 221.1953125,
+        "y": 588.5859375
+      }
+    ],
+    "stable": true,
+    "maxDelta": 0,
+    "stableWithinTenthPixel": true
+  },
+  {
+    "period": "Mes",
+    "before": [
+      {
+        "class": "charts-header charts-panel",
+        "h": 86.796875,
+        "y": 24
+      },
+      {
+        "class": "charts-panel charts-summary",
+        "h": 429.7890625,
+        "y": 134.796875
+      },
+      {
+        "class": "charts-panel charts-energy",
+        "h": 429.7890625,
+        "y": 134.796875
+      },
+      {
+        "class": "charts-panel charts-activity-panel",
+        "h": 257.890625,
+        "y": 588.5877685546875
+      },
+      {
+        "class": "charts-panel charts-comparison",
+        "h": 221.1953125,
+        "y": 588.5877685546875
+      }
+    ],
+    "after": [
+      {
+        "class": "charts-header charts-panel",
+        "h": 86.796875,
+        "y": 24
+      },
+      {
+        "class": "charts-panel charts-summary",
+        "h": 429.7890625,
+        "y": 134.796875
+      },
+      {
+        "class": "charts-panel charts-energy",
+        "h": 429.7890625,
+        "y": 134.796875
+      },
+      {
+        "class": "charts-panel charts-activity-panel",
+        "h": 257.890625,
+        "y": 588.5859375
+      },
+      {
+        "class": "charts-panel charts-comparison",
+        "h": 221.1953125,
+        "y": 588.5859375
+      }
+    ],
+    "stable": false,
+    "maxDelta": 0.0018310546875,
+    "stableWithinTenthPixel": true
+  },
+  {
+    "period": "Año",
+    "before": [
+      {
+        "class": "charts-header charts-panel",
+        "h": 86.796875,
+        "y": 24
+      },
+      {
+        "class": "charts-panel charts-summary",
+        "h": 429.7890625,
+        "y": 134.796875
+      },
+      {
+        "class": "charts-panel charts-energy",
+        "h": 429.7890625,
+        "y": 134.796875
+      },
+      {
+        "class": "charts-panel charts-activity-panel",
+        "h": 293.890625,
+        "y": 588.5928955078125
+      },
+      {
+        "class": "charts-panel charts-comparison",
+        "h": 221.1953125,
+        "y": 588.5928955078125
+      }
+    ],
+    "after": [
+      {
+        "class": "charts-header charts-panel",
+        "h": 86.796875,
+        "y": 24
+      },
+      {
+        "class": "charts-panel charts-summary",
+        "h": 429.7890625,
+        "y": 134.796875
+      },
+      {
+        "class": "charts-panel charts-energy",
+        "h": 429.7890625,
+        "y": 134.796875
+      },
+      {
+        "class": "charts-panel charts-activity-panel",
+        "h": 293.890625,
+        "y": 588.5859375
+      },
+      {
+        "class": "charts-panel charts-comparison",
+        "h": 221.1953125,
+        "y": 588.5859375
+      }
+    ],
+    "stable": false,
+    "maxDelta": 0.0069580078125,
+    "stableWithinTenthPixel": true
+  }
+]
