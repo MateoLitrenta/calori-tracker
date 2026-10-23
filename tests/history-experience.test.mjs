@@ -235,3 +235,72 @@ test('the touch-friendly date control changes only the daily selection, rejects 
   await view.scale('Día');
   assert.equal(document.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(past), true);
 });
+
+test('mobile column-flow keyboard follows visual rows without selecting or writing', async t => {
+  const view = await mount(t);
+  await view.scale('Semana');
+  const grid = document.querySelector('.history-period-grid');
+  // JSDOM has no media-query layout; emulate the computed three-row geometry.
+  grid.style.gridAutoFlow = 'column';
+  grid.style.setProperty('--history-grid-rows', '3');
+  const buttons = view.groups();
+  await act(() => buttons[0].focus());
+  const press = async key => act(() => document.activeElement.dispatchEvent(
+    new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })));
+  await press('ArrowDown'); assert.equal(document.activeElement, buttons[1]);
+  await press('ArrowRight'); assert.equal(document.activeElement, buttons[4]);
+  await press('ArrowLeft'); assert.equal(document.activeElement, buttons[1]);
+  await press('ArrowUp'); assert.equal(document.activeElement, buttons[0]);
+  await press('End'); assert.equal(document.activeElement, buttons.at(-1));
+  assert.equal(buttons.at(-1).getAttribute('aria-pressed'), 'true');
+  assert.equal(buttons[0].getAttribute('aria-pressed'), 'false');
+  assert.equal(view.saves.length, 0);
+});
+
+test('context disclosure retains all official metrics, scale selection and an open meal draft', async t => {
+  const view = await mount(t);
+  await view.scale('Mes');
+  await act(() => view.groups()[0].click());
+  const selected = view.groups()[0].getAttribute('aria-label');
+  const values = [...view.detail().querySelectorAll('dd')].map(node => node.textContent);
+  await act(() => view.button('+ Comida').click());
+  const draft = document.getElementById('add-meal-description');
+  const toggle = document.querySelector('.history-detail-toggle');
+  const extra = document.getElementById(toggle.getAttribute('aria-controls'));
+  assert.equal(toggle.getAttribute('aria-expanded'), 'false');
+  assert.equal(extra.dataset.expanded, 'false');
+  for (const expanded of ['true', 'false', 'true']) {
+    await act(() => toggle.click());
+    assert.equal(toggle.getAttribute('aria-expanded'), expanded);
+    assert.equal(extra.dataset.expanded, expanded);
+    assert.deepEqual([...view.detail().querySelectorAll('dd')].map(node => node.textContent), values);
+    assert.equal(document.getElementById('add-meal-description'), draft);
+    assert.equal(view.groups()[0].getAttribute('aria-label'), selected);
+  }
+  await view.scale('Año');
+  assert.equal(toggle.getAttribute('aria-expanded'), 'true');
+  assert.equal(view.detail().querySelectorAll('dd').length, 4);
+  await view.scale('Día');
+  assert.equal(view.detail().querySelectorAll('dd').length, 3);
+  assert.equal(view.saves.length, 0);
+});
+
+test('resize reveals the selected week horizontally once, without moving the page or resetting manual scroll', async t => {
+  const view = await mount(t);
+  await view.scale('Semana');
+  const grid = document.querySelector('.history-period-grid');
+  const selected = grid.querySelector('[aria-pressed="true"]');
+  Object.defineProperties(grid, { scrollWidth: { value: 1440 }, clientWidth: { value: 293 } });
+  Object.defineProperty(selected, 'offsetWidth', { value: 72 });
+  grid.getBoundingClientRect = () => ({ left: 40 });
+  selected.getBoundingClientRect = () => ({ left: 600 });
+  grid.scrollLeft = 100;
+  const scrollTop = document.documentElement.scrollTop;
+  await act(() => window.dispatchEvent(new window.Event('resize')));
+  assert.equal(grid.scrollLeft, 549.5);
+  assert.equal(document.documentElement.scrollTop, scrollTop);
+  grid.scrollLeft = 25;
+  await act(() => view.groups()[0].click());
+  assert.equal(grid.scrollLeft, 25, 'Selection must not recenter after the user scrolls');
+  assert.equal(view.saves.length, 0);
+});
