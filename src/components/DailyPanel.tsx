@@ -65,7 +65,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const classifiedBalance = isGroup ? summary.averageBalance : balance;
   const balanceLabel = getBalanceLabel(classifiedBalance);
 
-  let panelTitle = "Resumen del Día";
+  let panelTitle = "Resumen del día";
   let panelSubtitle = dateStr;
   if (selectedGroup) {
     if (selectedGroup.type === 'week') {
@@ -438,7 +438,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   return (
     <div className="daily-panel flex flex-col gap-6 w-full">
       <div className="daily-heading flex justify-between items-end border-b border-slate-200 dark:border-gray-800 pb-2">
-        <h3 className="text-2xl font-bold text-slate-900 dark:text-white capitalize">{panelTitle}</h3>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{panelTitle}</h3>
         <span className="text-slate-500 dark:text-gray-400 capitalize">{panelSubtitle}</span>
       </div>
 
