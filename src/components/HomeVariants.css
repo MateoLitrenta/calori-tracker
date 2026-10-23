@@ -547,3 +547,29 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 @media (min-width: 1440px) {
   .app-shell .home-variants .history-period-grid--week { --history-grid-columns: 18; }
 }
+/* Progressive history: the same selected interval and complete visualization
+   survive disclosure changes. CSS alone chooses the mobile presentation. */
+.home-variants :is(.history-preview, .history-full-toggle) { display: none; }
+.home-variants .history-visualization { min-width: 0; width: 100%; }
+@media (max-width: 767px) {
+  .home-variants .energy-card { padding: 24px 20px 20px; gap: 20px; }
+  .home-variants .activity-history { gap: var(--space-compact); }
+  .home-variants .activity-history-header { gap: var(--space-small); }
+  .home-variants .activity-history-header > div:first-child { width: 100%; }
+  .home-variants .history-scope { display: none; }
+  .home-variants .history-preview { display: grid; gap: var(--space-small); }
+  .home-variants .history-preview p { font-size: 12px; color: var(--home-muted); }
+  .home-variants .history-preview-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .home-variants .history-preview-grid > span { min-height: 12px; border-radius: var(--radius-micro); }
+  .home-variants .history-preview-grid[data-period="week"] { grid-template-columns: repeat(14, minmax(0, 1fr)); }
+  .home-variants .history-preview-grid[data-period="month"] { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .home-variants .history-preview-grid[data-period="month"] > span { min-height: 24px; }
+  .home-variants .history-preview-grid[data-period="year"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-variants .history-preview-grid[data-period="year"] > span { display: flex; align-items: center; justify-content: center; position: relative; min-height: 44px; border: 1px solid var(--home-line); background: var(--home-control); color: var(--home-text); font-size: 14px; font-weight: 500; }
+  .home-variants .history-preview-year-swatch { position: absolute; left: 8px; right: 8px; bottom: 4px; height: 3px; border-radius: var(--radius-micro); }
+  .home-variants .history-preview-grid > span[data-selected="true"] { outline: 2px solid var(--heatmap-selected); outline-offset: 1px; }
+  .home-variants .history-full-toggle { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 12px; border: 1px solid var(--home-line); border-radius: var(--radius-control); color: var(--home-orange); background: var(--home-control); font-size: 13px; }
+  .home-variants .history-full-toggle:hover { background: var(--home-hover); }
+  .home-variants .activity-history[data-history-expanded="false"] :is(.history-visualization, .history-navigation) { display: none; }
+  .home-variants .activity-history[data-history-expanded="true"] .history-preview { display: none; }
+}
