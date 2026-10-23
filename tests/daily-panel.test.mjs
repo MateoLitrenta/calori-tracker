@@ -892,3 +892,19 @@ test('visible and expanded journal rows open the same edit dialog and save once 
     assert.equal(view.list().dataset.expanded, index >= 4 ? 'true' : 'false');
   }
 });
+
+test('missing meals qualify the visible balance without changing its number, expenditure or records', () => {
+  const empty = render(base);
+  assert.match(empty, /Balance provisional/);
+  assert.match(empty, /Sin comidas registradas/);
+  assert.match(empty, /-1\.618 kcal/);
+  assert.doesNotMatch(empty, /Déficit Alto/);
+  const activityOnly = render({ ...base, steps: 7000 });
+  assert.match(activityOnly, /Balance provisional/);
+  assert.match(activityOnly, /-1\.898 kcal/);
+  const recorded = render({ ...base, meals: [{ id: 'meal', name: 'Comida', calories: 400, type: 'Almuerzo', time: '12:00' }] });
+  assert.match(recorded, /Balance energético/);
+  assert.match(recorded, /-1\.218 kcal/);
+  assert.doesNotMatch(recorded, /Balance provisional/);
+  assert.equal(base.meals.length, 0);
+});

@@ -74,7 +74,7 @@ async function mount(t, initial = { [today]: makeRecord(today), [past]: makeReco
   return { saves, button, scale: async name => act(() => button(name).click()),
     selectDay: async date => act(() => document.querySelector('button[aria-label^="Seleccionar ' + date + '"]').click()),
     groups: () => [...document.querySelectorAll('.history-period')],
-    heading: () => document.querySelector('.daily-heading').textContent,
+    heading: () => document.querySelector('.daily-heading time').dateTime,
     detail: () => document.querySelector('.history-detail'),
   };
 }
@@ -302,5 +302,51 @@ test('resize reveals the selected week horizontally once, without moving the pag
   grid.scrollLeft = 25;
   await act(() => view.groups()[0].click());
   assert.equal(grid.scrollLeft, 25, 'Selection must not recenter after the user scrolls');
+  assert.equal(view.saves.length, 0);
+});
+
+test('full-history and detail disclosures preserve interval, daily widgets, draft and keyboard focus independently', async t => {
+  const view = await mount(t);
+  await view.selectDay(past);
+  await view.scale('Semana');
+  await act(() => view.button('+ Comida').click());
+  const draft = document.getElementById('add-meal-description');
+  await act(() => {
+    Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(draft, 'Borrador de prueba');
+    draft.dispatchEvent(new window.Event('input', { bubbles: true }));
+  });
+  const full = document.querySelector('.history-full-toggle');
+  const visualization = document.getElementById(full.getAttribute('aria-controls'));
+  const daily = document.querySelector('.daily-panel');
+  const history = document.querySelector('.activity-history');
+  assert.equal(full.getAttribute('aria-expanded'), 'false');
+  for (const [scale, count] of [['Semana', 53], ['Mes', 12], ['Año', 2], ['Día', 0]]) {
+    await view.scale(scale);
+    const details = document.querySelector('.history-detail-toggle');
+    const figures = document.getElementById(details.getAttribute('aria-controls'));
+    const values = [...view.detail().querySelectorAll('dd')].map(node => node.textContent);
+    await act(() => full.click());
+    assert.equal(history.dataset.historyExpanded, 'true');
+    assert.equal(full.getAttribute('aria-expanded'), 'true');
+    assert.equal(visualization.querySelectorAll('.history-period').length, count);
+    const grid = visualization.querySelector('.history-period-grid') || visualization.querySelector('.heatmap-grid');
+    assert.match(document.getElementById(grid.getAttribute('aria-describedby')).textContent, /Flechas.*Inicio.*Fin.*Enter/);
+    await act(() => details.click());
+    assert.equal(figures.hidden, false);
+    assert.equal(full.getAttribute('aria-expanded'), 'true', 'Numeric detail must not control the complete visualization');
+    assert.deepEqual([...view.detail().querySelectorAll('dd')].map(node => node.textContent), values);
+    await act(() => details.click());
+    assert.equal(figures.hidden, true);
+    const selected = grid.querySelector('[aria-pressed="true"]');
+    await act(() => { full.focus(); full.click(); });
+    assert.equal(document.activeElement, full);
+    assert.equal(history.dataset.historyExpanded, 'false');
+    assert.equal(grid.querySelector('[aria-pressed="true"]'), selected);
+    assert.equal(document.getElementById(full.getAttribute('aria-controls')), visualization);
+    assert.equal(document.querySelector('.daily-panel'), daily);
+    assert.equal(document.getElementById('add-meal-description'), draft);
+    assert.equal(draft.value, 'Borrador de prueba');
+  }
+  assert.equal(view.heading(), past);
   assert.equal(view.saves.length, 0);
 });

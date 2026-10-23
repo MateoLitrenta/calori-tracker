@@ -357,7 +357,8 @@ html:not(.dark) .home-variants .activity-history { --heatmap-selected: #2563eb; 
 html:not(.dark) .home-variants .daily-logs,
 html:not(.dark) .home-variants .activity-history { background: #ffffff; border-color: #e2e8f0; }
 html:not(.dark) .home-variants .activity-history .period-switch { background: #f8f7f4; border-color: #e2e8f0; }
-html:not(.dark) .home-variants .activity-history .period-switch button[aria-pressed="true"] { color: #9a4d1f; }
+html:not(.dark) .home-variants .activity-history .period-switch button[aria-pressed="true"],
+html:not(.dark) .home-variants .history-full-toggle { color: #9a4d1f; }
 html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 @media (max-width: 639px) {
   .home-variants .activity-history { padding: 16px; gap: 12px; }
@@ -427,11 +428,10 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 .home-variants .history-detail-heading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; }
 .home-variants .history-detail h3 { color: var(--home-text); font-size: 14px; font-weight: 500; text-transform: capitalize; }
 .home-variants .history-detail-heading p { color: var(--home-muted); font-size: 12px; line-height: 1.5; }
-.home-variants .history-detail-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: var(--space-inset); }
-.home-variants .history-detail-body[data-period="day"] { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+.home-variants .history-detail-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-inset); align-items: center; }
 .home-variants .history-detail-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-compact) var(--space-inset); }
 .home-variants .history-detail-body[data-period="day"] .history-detail-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.home-variants .history-detail-extra { min-width: 0; }
+.home-variants .history-detail-extra { min-width: 0; grid-column: 1 / -1; }
 .home-variants .history-method { margin-top: var(--space-small); color: var(--home-muted); font-size: 12px; line-height: 1.5; }
 .home-variants :is(.history-mobile-hint, .history-period-label-compact) { display: none; }
 .home-variants .history-detail-toggle { display: inline-flex; justify-content: center; align-items: center; min-height: 44px; padding: var(--space-small) var(--space-compact); border: 1px solid var(--home-line); border-radius: var(--radius-control); color: var(--home-text); font-size: 12px; text-align: center; background: var(--home-control); }
@@ -464,10 +464,8 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
   .home-variants .history-year-balance { font-size: 20px; }
   .home-variants .history-mobile-hint { display: block; color: var(--home-muted); font-size: 12px; }
   .home-variants .history-detail-body, .home-variants .history-detail-body[data-period="day"] { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-compact); align-items: center; }
-  .home-variants .history-detail-toggle { display: block; min-height: 44px; max-width: 140px; padding: var(--space-small); border: 1px solid var(--home-line); border-radius: var(--radius-control); color: var(--home-text); font-size: 12px; text-align: center; background: var(--home-control); }
-  .home-variants .history-detail-toggle:hover { background: var(--home-hover); }
+  .home-variants .history-detail-toggle { max-width: 140px; }
   .home-variants .history-detail-extra { grid-column: 1 / -1; }
-  .home-variants .history-detail-extra[data-expanded="false"] { display: none; }
   .home-variants .history-detail-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-compact); }
   .home-variants :is(.history-detail-metrics, .history-detail-primary) dd { font-size: 17px; }
   .home-variants .activity-legend-scale { gap: 5px; white-space: normal; }
@@ -550,7 +548,7 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 /* Progressive history: the same selected interval and complete visualization
    survive disclosure changes. CSS alone chooses the mobile presentation. */
 .home-variants :is(.history-preview, .history-full-toggle) { display: none; }
-.home-variants .history-visualization { min-width: 0; width: 100%; }
+.home-variants .history-visualization { display: flex; flex-direction: column; gap: var(--space-small); min-width: 0; width: 100%; }
 @media (max-width: 767px) {
   .home-variants .energy-card { padding: 24px 20px 20px; gap: 20px; }
   .home-variants .activity-history { gap: var(--space-compact); }
