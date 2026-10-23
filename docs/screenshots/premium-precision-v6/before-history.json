@@ -1,0 +1,20 @@
+[
+  {
+    "card": 1133.8828125,
+    "detail": 191.1875,
+    "grid": 564,
+    "period": "week"
+  },
+  {
+    "card": 1169.9453125,
+    "detail": 191.1875,
+    "grid": 571.5625,
+    "period": "month"
+  },
+  {
+    "card": 870.3828125,
+    "detail": 191.1875,
+    "grid": 272,
+    "period": "year"
+  }
+]

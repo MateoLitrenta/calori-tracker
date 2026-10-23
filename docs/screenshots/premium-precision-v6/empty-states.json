@@ -1,0 +1,110 @@
+[
+  {
+    "view": "home",
+    "width": 1440,
+    "heights": [
+      164,
+      164,
+      164,
+      164
+    ],
+    "overflow": false,
+    "unknown": " Balance energético-1.618 kcalDéficit Alto Calorías consumidas0 kcal Gasto estimado1.618 kcalVer desgloseTMB: 1.618 kcalPasos: 0 kcalEjercicio: 0 kcal"
+  },
+  {
+    "view": "history",
+    "scale": "Semana",
+    "width": 1440,
+    "allUnknown": true,
+    "overflow": false
+  },
+  {
+    "view": "history",
+    "scale": "Mes",
+    "width": 1440,
+    "allUnknown": true,
+    "overflow": false
+  },
+  {
+    "view": "history",
+    "scale": "Año",
+    "width": 1440,
+    "allUnknown": true,
+    "overflow": false
+  },
+  {
+    "view": "data",
+    "scale": "Semana",
+    "width": 1440,
+    "empty": "No hay suficientes registros para este período.Registrá comidas y actividad para ver tu evolución.",
+    "overflow": false
+  },
+  {
+    "view": "data",
+    "scale": "Mes",
+    "width": 1440,
+    "empty": "No hay suficientes registros para este período.Registrá comidas y actividad para ver tu evolución.",
+    "overflow": false
+  },
+  {
+    "view": "data",
+    "scale": "Año",
+    "width": 1440,
+    "empty": "No hay suficientes registros para este período.Registrá comidas y actividad para ver tu evolución.",
+    "overflow": false
+  },
+  {
+    "view": "home",
+    "width": 375,
+    "heights": [
+      243,
+      122,
+      122,
+      122
+    ],
+    "overflow": false,
+    "unknown": " Balance energético-1.618 kcalDéficit Alto Calorías consumidas0 kcal Gasto estimado1.618 kcalVer desgloseTMB: 1.618 kcalPasos: 0 kcalEjercicio: 0 kcal"
+  },
+  {
+    "view": "history",
+    "scale": "Semana",
+    "width": 375,
+    "allUnknown": true,
+    "overflow": false
+  },
+  {
+    "view": "history",
+    "scale": "Mes",
+    "width": 375,
+    "allUnknown": true,
+    "overflow": false
+  },
+  {
+    "view": "history",
+    "scale": "Año",
+    "width": 375,
+    "allUnknown": true,
+    "overflow": false
+  },
+  {
+    "view": "data",
+    "scale": "Semana",
+    "width": 375,
+    "empty": "No hay suficientes registros para este período.Registrá comidas y actividad para ver tu evolución.",
+    "overflow": false
+  },
+  {
+    "view": "data",
+    "scale": "Mes",
+    "width": 375,
+    "empty": "No hay suficientes registros para este período.Registrá comidas y actividad para ver tu evolución.",
+    "overflow": false
+  },
+  {
+    "view": "data",
+    "scale": "Año",
+    "width": 375,
+    "empty": "No hay suficientes registros para este período.Registrá comidas y actividad para ver tu evolución.",
+    "overflow": false
+  }
+]

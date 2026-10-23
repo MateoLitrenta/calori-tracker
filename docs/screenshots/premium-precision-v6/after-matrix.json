@@ -1,0 +1,1148 @@
+[
+  {
+    "view": "home",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 1440,
+        "x": 363
+      }
+    ],
+    "main": {
+      "client": 1080,
+      "overflow": "auto",
+      "scroll": 1213
+    },
+    "pageOverflow": false,
+    "panels": [],
+    "summary": [
+      {
+        "bottom": 110.5,
+        "h": 164,
+        "top": -53.5,
+        "w": 786.6640625
+      },
+      {
+        "bottom": 110.5,
+        "h": 164,
+        "top": -53.5,
+        "w": 201.7734375
+      },
+      {
+        "bottom": 110.5,
+        "h": 164,
+        "top": -53.5,
+        "w": 201.7734375
+      },
+      {
+        "bottom": 110.5,
+        "h": 164,
+        "top": -53.5,
+        "w": 201.78125
+      }
+    ]
+  },
+  {
+    "view": "data",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 1440,
+        "x": 363
+      }
+    ],
+    "main": {
+      "client": 1080,
+      "overflow": "auto",
+      "scroll": 1080
+    },
+    "pageOverflow": false,
+    "panels": [
+      {
+        "class": "charts-header charts-panel",
+        "h": 86.796875,
+        "padding": "16px 20px"
+      },
+      {
+        "class": "charts-panel charts-summary",
+        "h": 454.7890625,
+        "padding": "20px"
+      },
+      {
+        "class": "charts-panel charts-energy",
+        "h": 454.7890625,
+        "padding": "20px"
+      },
+      {
+        "class": "charts-panel charts-activity-panel",
+        "h": 257.890625,
+        "padding": "20px"
+      },
+      {
+        "class": "charts-panel charts-comparison",
+        "h": 221.1953125,
+        "padding": "20px"
+      }
+    ],
+    "summary": []
+  },
+  {
+    "view": "profile",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 1440,
+        "x": 363
+      }
+    ],
+    "main": {
+      "client": 1080,
+      "overflow": "auto",
+      "scroll": 1080
+    },
+    "pageOverflow": false,
+    "panels": [
+      {
+        "class": "profile-panel profile-personal-panel",
+        "h": 182,
+        "padding": "20px"
+      },
+      {
+        "class": "profile-panel profile-account-panel",
+        "h": 260.984375,
+        "padding": "20px"
+      },
+      {
+        "class": "profile-information",
+        "h": 260.390625,
+        "padding": "20px"
+      }
+    ],
+    "summary": []
+  },
+  {
+    "view": "coach",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "chat": {
+      "client": 826,
+      "overflow": "auto",
+      "scroll": 2637
+    },
+    "frame": [
+      {
+        "gap": "0px",
+        "width": 1440,
+        "x": 363
+      }
+    ],
+    "main": {
+      "client": 1080,
+      "overflow": "hidden",
+      "scroll": 1080
+    },
+    "pageOverflow": false,
+    "panels": [],
+    "summary": []
+  },
+  {
+    "view": "home",
+    "viewport": [
+      1440,
+      900
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 1126,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 900,
+      "overflow": "auto",
+      "scroll": 1094
+    },
+    "pageOverflow": false,
+    "panels": [],
+    "summary": [
+      {
+        "bottom": 244,
+        "h": 164,
+        "top": 80,
+        "w": 612.21875
+      },
+      {
+        "bottom": 244,
+        "h": 164,
+        "top": 80,
+        "w": 155.2578125
+      },
+      {
+        "bottom": 244,
+        "h": 164,
+        "top": 80,
+        "w": 155.2578125
+      },
+      {
+        "bottom": 244,
+        "h": 164,
+        "top": 80,
+        "w": 155.265625
+      }
+    ]
+  },
+  {
+    "view": "data",
+    "viewport": [
+      1440,
+      900
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 1126,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 900,
+      "overflow": "auto",
+      "scroll": 900
+    },
+    "pageOverflow": false,
+    "panels": [
+      {
+        "class": "charts-header charts-panel",
+        "h": 86.796875,
+        "padding": "16px 20px"
+      },
+      {
+        "class": "charts-panel charts-summary",
+        "h": 429.7890625,
+        "padding": "20px"
+      },
+      {
+        "class": "charts-panel charts-energy",
+        "h": 429.7890625,
+        "padding": "20px"
+      },
+      {
+        "class": "charts-panel charts-activity-panel",
+        "h": 257.890625,
+        "padding": "20px"
+      },
+      {
+        "class": "charts-panel charts-comparison",
+        "h": 221.1953125,
+        "padding": "20px"
+      }
+    ],
+    "summary": []
+  },
+  {
+    "view": "profile",
+    "viewport": [
+      1440,
+      900
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 1126,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 900,
+      "overflow": "auto",
+      "scroll": 900
+    },
+    "pageOverflow": false,
+    "panels": [
+      {
+        "class": "profile-panel profile-personal-panel",
+        "h": 182,
+        "padding": "20px"
+      },
+      {
+        "class": "profile-panel profile-account-panel",
+        "h": 260.984375,
+        "padding": "20px"
+      },
+      {
+        "class": "profile-information",
+        "h": 260.390625,
+        "padding": "20px"
+      }
+    ],
+    "summary": []
+  },
+  {
+    "view": "coach",
+    "viewport": [
+      1440,
+      900
+    ],
+    "chat": {
+      "client": 646,
+      "overflow": "auto",
+      "scroll": 2637
+    },
+    "frame": [
+      {
+        "gap": "0px",
+        "width": 1126,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 900,
+      "overflow": "hidden",
+      "scroll": 900
+    },
+    "pageOverflow": false,
+    "panels": [],
+    "summary": []
+  },
+  {
+    "view": "home",
+    "viewport": [
+      1366,
+      768
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 1052,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 768,
+      "scroll": 1084
+    },
+    "pageOverflow": false,
+    "smallTargets": 0,
+    "summary": [
+      {
+        "h": 164,
+        "w": 571
+      },
+      {
+        "h": 164,
+        "w": 144
+      },
+      {
+        "h": 164,
+        "w": 144
+      },
+      {
+        "h": 164,
+        "w": 144
+      }
+    ]
+  },
+  {
+    "view": "data",
+    "viewport": [
+      1366,
+      768
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 1052,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 768,
+      "scroll": 841
+    },
+    "pageOverflow": false,
+    "smallTargets": 0,
+    "summary": []
+  },
+  {
+    "view": "profile",
+    "viewport": [
+      1366,
+      768
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 1052,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 768,
+      "scroll": 768
+    },
+    "pageOverflow": false,
+    "smallTargets": 0,
+    "summary": []
+  },
+  {
+    "view": "coach",
+    "viewport": [
+      1366,
+      768
+    ],
+    "chat": {
+      "client": 514,
+      "scroll": 2637
+    },
+    "frame": [
+      {
+        "gap": "0px",
+        "width": 1052,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 768,
+      "scroll": 768
+    },
+    "pageOverflow": false,
+    "smallTargets": 0,
+    "summary": []
+  },
+  {
+    "view": "home",
+    "viewport": [
+      1280,
+      720
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 966,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 720,
+      "scroll": 1073
+    },
+    "pageOverflow": false,
+    "smallTargets": 0,
+    "summary": [
+      {
+        "h": 164,
+        "w": 523
+      },
+      {
+        "h": 164,
+        "w": 132
+      },
+      {
+        "h": 164,
+        "w": 132
+      },
+      {
+        "h": 164,
+        "w": 132
+      }
+    ]
+  },
+  {
+    "view": "data",
+    "viewport": [
+      1280,
+      720
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 966,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 720,
+      "scroll": 900
+    },
+    "pageOverflow": false,
+    "smallTargets": 0,
+    "summary": []
+  },
+  {
+    "view": "profile",
+    "viewport": [
+      1280,
+      720
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 966,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 720,
+      "scroll": 742
+    },
+    "pageOverflow": false,
+    "smallTargets": 0,
+    "summary": []
+  },
+  {
+    "view": "coach",
+    "viewport": [
+      1280,
+      720
+    ],
+    "chat": {
+      "client": 466,
+      "scroll": 2637
+    },
+    "frame": [
+      {
+        "gap": "0px",
+        "width": 966,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 720,
+      "scroll": 720
+    },
+    "pageOverflow": false,
+    "smallTargets": 0,
+    "summary": []
+  },
+  {
+    "view": "home",
+    "viewport": [
+      1024,
+      768
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 710,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 768,
+      "scroll": 2052
+    },
+    "pageOverflow": false,
+    "smallTargets": 0,
+    "summary": [
+      {
+        "h": 341,
+        "w": 649
+      },
+      {
+        "h": 132,
+        "w": 206
+      },
+      {
+        "h": 132,
+        "w": 206
+      },
+      {
+        "h": 132,
+        "w": 206
+      }
+    ]
+  },
+  {
+    "view": "data",
+    "viewport": [
+      1024,
+      768
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 710,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 768,
+      "scroll": 1528
+    },
+    "pageOverflow": false,
+    "smallTargets": 0,
+    "summary": []
+  },
+  {
+    "view": "profile",
+    "viewport": [
+      1024,
+      768
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "18px",
+        "width": 710,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 768,
+      "scroll": 1041
+    },
+    "pageOverflow": false,
+    "smallTargets": 0,
+    "summary": []
+  },
+  {
+    "view": "coach",
+    "viewport": [
+      1024,
+      768
+    ],
+    "chat": {
+      "client": 514,
+      "scroll": 2897
+    },
+    "frame": [
+      {
+        "gap": "0px",
+        "width": 710,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 768,
+      "scroll": 768
+    },
+    "pageOverflow": false,
+    "smallTargets": 0,
+    "summary": []
+  },
+  {
+    "view": "home",
+    "viewport": [
+      768,
+      1024
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 454,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 1024,
+      "scroll": 2168
+    },
+    "pageOverflow": false,
+    "summary": [
+      {
+        "h": 327,
+        "w": 408
+      },
+      {
+        "h": 132,
+        "w": 125
+      },
+      {
+        "h": 132,
+        "w": 125
+      },
+      {
+        "h": 132,
+        "w": 125
+      }
+    ]
+  },
+  {
+    "view": "data",
+    "viewport": [
+      768,
+      1024
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 454,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 1024,
+      "scroll": 1708
+    },
+    "pageOverflow": false,
+    "summary": []
+  },
+  {
+    "view": "profile",
+    "viewport": [
+      768,
+      1024
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "18px",
+        "width": 454,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 1024,
+      "scroll": 1072
+    },
+    "pageOverflow": false,
+    "summary": []
+  },
+  {
+    "view": "coach",
+    "viewport": [
+      768,
+      1024
+    ],
+    "chat": {
+      "client": 718,
+      "composer": {
+        "bottom": 999,
+        "height": 128,
+        "left": 281,
+        "right": 733,
+        "top": 871,
+        "width": 452,
+        "x": 281,
+        "y": 871
+      },
+      "heading": {
+        "bottom": 153,
+        "height": 128,
+        "left": 281,
+        "right": 733,
+        "top": 25,
+        "width": 452,
+        "x": 281,
+        "y": 25
+      },
+      "scroll": 3664
+    },
+    "frame": [
+      {
+        "gap": "0px",
+        "width": 454,
+        "x": 280
+      }
+    ],
+    "main": {
+      "client": 1024,
+      "scroll": 1024
+    },
+    "pageOverflow": false,
+    "summary": []
+  },
+  {
+    "view": "home",
+    "viewport": [
+      430,
+      932
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 398,
+        "x": 16
+      }
+    ],
+    "main": {
+      "client": 932,
+      "scroll": 2164
+    },
+    "pageOverflow": false,
+    "summary": [
+      {
+        "h": 243,
+        "w": 382
+      },
+      {
+        "h": 122,
+        "w": 122
+      },
+      {
+        "h": 122,
+        "w": 122
+      },
+      {
+        "h": 122,
+        "w": 122
+      }
+    ]
+  },
+  {
+    "view": "data",
+    "viewport": [
+      430,
+      932
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "14px",
+        "width": 398,
+        "x": 16
+      }
+    ],
+    "main": {
+      "client": 932,
+      "scroll": 1500
+    },
+    "pageOverflow": false,
+    "summary": []
+  },
+  {
+    "view": "profile",
+    "viewport": [
+      430,
+      932
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "18px",
+        "width": 398,
+        "x": 16
+      }
+    ],
+    "main": {
+      "client": 932,
+      "scroll": 1268
+    },
+    "pageOverflow": false,
+    "summary": []
+  },
+  {
+    "view": "coach",
+    "viewport": [
+      430,
+      932
+    ],
+    "chat": {
+      "client": 743,
+      "composer": {
+        "bottom": 868,
+        "height": 65,
+        "left": 0,
+        "right": 430,
+        "top": 803,
+        "width": 430,
+        "x": 0,
+        "y": 803
+      },
+      "heading": {
+        "bottom": 60,
+        "height": 60,
+        "left": 0,
+        "right": 430,
+        "top": 0,
+        "width": 430,
+        "x": 0,
+        "y": 0
+      },
+      "scroll": 2756
+    },
+    "frame": [
+      {
+        "gap": "0px",
+        "width": 430,
+        "x": 0
+      }
+    ],
+    "main": {
+      "client": 932,
+      "scroll": 932
+    },
+    "pageOverflow": false,
+    "summary": []
+  },
+  {
+    "view": "home",
+    "viewport": [
+      375,
+      812
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 343,
+        "x": 16
+      }
+    ],
+    "main": {
+      "client": 812,
+      "scroll": 2182
+    },
+    "pageOverflow": false,
+    "summary": [
+      {
+        "h": 243,
+        "w": 327
+      },
+      {
+        "h": 122,
+        "w": 104
+      },
+      {
+        "h": 122,
+        "w": 104
+      },
+      {
+        "h": 122,
+        "w": 104
+      }
+    ]
+  },
+  {
+    "view": "data",
+    "viewport": [
+      375,
+      812
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "14px",
+        "width": 343,
+        "x": 16
+      }
+    ],
+    "main": {
+      "client": 812,
+      "scroll": 1500
+    },
+    "pageOverflow": false,
+    "summary": []
+  },
+  {
+    "view": "profile",
+    "viewport": [
+      375,
+      812
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "18px",
+        "width": 343,
+        "x": 16
+      }
+    ],
+    "main": {
+      "client": 812,
+      "scroll": 1268
+    },
+    "pageOverflow": false,
+    "summary": []
+  },
+  {
+    "view": "coach",
+    "viewport": [
+      375,
+      812
+    ],
+    "chat": {
+      "client": 623,
+      "composer": {
+        "bottom": 748,
+        "height": 65,
+        "left": 0,
+        "right": 375,
+        "top": 683,
+        "width": 375,
+        "x": 0,
+        "y": 683
+      },
+      "heading": {
+        "bottom": 60,
+        "height": 60,
+        "left": 0,
+        "right": 375,
+        "top": 0,
+        "width": 375,
+        "x": 0,
+        "y": 0
+      },
+      "scroll": 3025
+    },
+    "frame": [
+      {
+        "gap": "0px",
+        "width": 375,
+        "x": 0
+      }
+    ],
+    "main": {
+      "client": 812,
+      "scroll": 812
+    },
+    "pageOverflow": false,
+    "summary": []
+  },
+  {
+    "view": "home",
+    "viewport": [
+      320,
+      740
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "24px",
+        "width": 288,
+        "x": 16
+      }
+    ],
+    "main": {
+      "client": 740,
+      "scroll": 2297
+    },
+    "pageOverflow": false,
+    "summary": [
+      {
+        "h": 243,
+        "w": 272
+      },
+      {
+        "h": 185,
+        "w": 87
+      },
+      {
+        "h": 185,
+        "w": 87
+      },
+      {
+        "h": 185,
+        "w": 87
+      }
+    ]
+  },
+  {
+    "view": "data",
+    "viewport": [
+      320,
+      740
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "14px",
+        "width": 288,
+        "x": 16
+      }
+    ],
+    "main": {
+      "client": 740,
+      "scroll": 1518
+    },
+    "pageOverflow": false,
+    "summary": []
+  },
+  {
+    "view": "profile",
+    "viewport": [
+      320,
+      740
+    ],
+    "chat": null,
+    "frame": [
+      {
+        "gap": "18px",
+        "width": 288,
+        "x": 16
+      }
+    ],
+    "main": {
+      "client": 740,
+      "scroll": 1268
+    },
+    "pageOverflow": false,
+    "summary": []
+  },
+  {
+    "view": "coach",
+    "viewport": [
+      320,
+      740
+    ],
+    "chat": {
+      "client": 533,
+      "composer": {
+        "bottom": 676,
+        "height": 83,
+        "left": 0,
+        "right": 320,
+        "top": 593,
+        "width": 320,
+        "x": 0,
+        "y": 593
+      },
+      "heading": {
+        "bottom": 60,
+        "height": 60,
+        "left": 0,
+        "right": 320,
+        "top": 0,
+        "width": 320,
+        "x": 0,
+        "y": 0
+      },
+      "scroll": 3172
+    },
+    "frame": [
+      {
+        "gap": "0px",
+        "width": 320,
+        "x": 0
+      }
+    ],
+    "main": {
+      "client": 740,
+      "scroll": 740
+    },
+    "pageOverflow": false,
+    "summary": []
+  }
+]

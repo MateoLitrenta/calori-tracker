@@ -1,14 +1,31 @@
-/* Desktop layout only. Existing cards, calculations and mobile sheets retain
-   their own styles. A short viewport can always scroll the normal app main. */
+/* App-only visual tokens. Public entry/auth surfaces retain their own defaults. */
+.app-shell {
+  --space-micro: 4px;
+  --space-small: 8px;
+  --space-compact: 12px;
+  --space-inset: 16px;
+  --space-panel: 20px;
+  --space-section: 24px;
+  --space-wide: 32px;
+  --content-max: 1440px;
+  --radius-panel: 20px;
+  --radius-widget: 14px;
+  --radius-control: 12px;
+  --desktop-gap: var(--space-section);
+  --desktop-padding: var(--space-panel);
+  --desktop-inset: var(--space-inset);
+  --desktop-heading: 17px;
+  --desktop-metric: 28px;
+}
+
+/* One safe outer frame; only the conversation transcript scrolls in Coach. */
 @media (min-width: 768px) {
   .app-shell { height: 100dvh; }
   .app-shell .app-stage, .app-shell .app-main, .app-shell .app-content { min-width: 0; min-height: 0; }
-  .app-shell .app-main { padding: 24px; }
-
-  /* Only the conversation scrolls: both ends stay in the flex layout. */
+  .app-shell .app-main { padding: var(--space-section); }
   .app-shell-coach .app-main { overflow: hidden; }
   .app-shell-coach .app-content { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
-  .app-shell-coach .assistant-view { --chat-message-gap: 20px; max-width: 1150px; min-height: 0; }
+  .app-shell-coach .assistant-view { --chat-message-gap: var(--space-panel); max-width: var(--content-max); min-height: 0; border-radius: var(--radius-panel); }
   .app-shell-coach .assistant-view .chat-heading,
   .app-shell-coach .assistant-view .chat-composer,
   .app-shell-coach .assistant-view .chat-history-picker { flex: 0 0 auto; }
@@ -17,20 +34,15 @@
   .app-shell-coach .assistant-view .chat-message { align-items: flex-start; }
   .app-shell-coach .assistant-view .chat-message-user { max-width: min(80%, 680px); }
   .app-shell-coach .assistant-view .chat-message-bot { max-width: min(92%, 840px); }
-  .app-shell-coach .assistant-view .chat-message-structured { width: min(92%, 840px); }
-  .app-shell-coach .assistant-view .chat-coach-stack { max-width: 760px; gap: 12px; }
+  .app-shell-coach .assistant-view .chat-message-structured { width: min(96%, 1080px); max-width: min(96%, 1080px); }
+  .app-shell-coach .assistant-view .chat-coach-stack { max-width: 1036px; gap: var(--space-compact); }
   .app-shell-coach .assistant-view .chat-bubble { max-width: 640px; font-size: 15px; line-height: 1.65; }
   .app-shell-coach .assistant-view .chat-bubble .prose { font-size: inherit; line-height: inherit; }
-  .app-shell-coach .assistant-view .chat-coach-stack > .chat-bubble { width: 100%; max-width: none; }
-  .app-shell-coach .view-skeleton-chat { max-width: 1150px; }
+  .app-shell-coach .assistant-view .chat-coach-stack > .chat-bubble { width: 100%; max-width: 640px; }
+  .app-shell-coach .view-skeleton-chat { max-width: var(--content-max); }
 }
-
-/* The sidebar leaves enough working width for parallel panels from xl onward.
-   Tablet, browser zoom and narrow windows retain the established single column. */
 @media (min-width: 1280px) {
-  /* One desktop rhythm; surfaces and radii come from the existing view tokens. */
-  .app-shell { --desktop-gap: 24px; --desktop-padding: 24px; --desktop-inset: 16px; --desktop-heading: 17px; --desktop-metric: 28px; }
-  .app-shell-coach .assistant-view { --chat-message-gap: 24px; }
+  .app-shell-coach .assistant-view { --chat-message-gap: var(--space-section); }
   .app-shell-coach .assistant-view .chat-coach-stack .coach-goal-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .app-shell-coach .assistant-view .chat-coach-stack .coach-goal-list > :not(.coach-goal-card) { grid-column: 1 / -1; }
 }

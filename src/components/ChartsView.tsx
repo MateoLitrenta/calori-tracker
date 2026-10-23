@@ -45,7 +45,7 @@ export default function ChartsView() {
           <span className="charts-heading-icon"><ChartBar size={24} weight="fill" aria-hidden="true" /></span>
           <div>
             <h2><span className="charts-desktop-only">Tu evolución</span><span className="charts-mobile-only">Datos</span></h2>
-            <p><span className="charts-desktop-only">Entendé cómo cambian tu consumo, gasto y actividad.</span><span className="charts-mobile-only">Consumo, gasto y actividad.</span></p>
+            <p className="charts-description"><span className="charts-desktop-only">Entendé cómo cambian tu consumo, gasto y actividad.</span><span className="charts-mobile-only">Consumo, gasto y actividad.</span></p>
             <p className="charts-range">{range}</p>
           </div>
         </div>
