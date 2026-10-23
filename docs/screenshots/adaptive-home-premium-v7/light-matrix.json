@@ -1,0 +1,194 @@
+[
+  {
+    "size": [
+      430,
+      932
+    ],
+    "scale": "Día",
+    "compact": {
+      "background": "rgb(255, 255, 255)",
+      "overflow": false,
+      "text": "rgb(31, 41, 55)"
+    },
+    "full": {
+      "overflow": false,
+      "touch": true
+    }
+  },
+  {
+    "size": [
+      430,
+      932
+    ],
+    "scale": "Semana",
+    "compact": {
+      "background": "rgb(255, 255, 255)",
+      "overflow": false,
+      "text": "rgb(31, 41, 55)"
+    },
+    "full": {
+      "overflow": false,
+      "touch": true
+    }
+  },
+  {
+    "size": [
+      430,
+      932
+    ],
+    "scale": "Mes",
+    "compact": {
+      "background": "rgb(255, 255, 255)",
+      "overflow": false,
+      "text": "rgb(31, 41, 55)"
+    },
+    "full": {
+      "overflow": false,
+      "touch": true
+    }
+  },
+  {
+    "size": [
+      430,
+      932
+    ],
+    "scale": "Año",
+    "compact": {
+      "background": "rgb(255, 255, 255)",
+      "overflow": false,
+      "text": "rgb(31, 41, 55)"
+    },
+    "full": {
+      "overflow": false,
+      "touch": true
+    }
+  },
+  {
+    "size": [
+      375,
+      812
+    ],
+    "scale": "Día",
+    "compact": {
+      "background": "rgb(255, 255, 255)",
+      "overflow": false,
+      "text": "rgb(31, 41, 55)"
+    },
+    "full": {
+      "overflow": false,
+      "touch": true
+    }
+  },
+  {
+    "size": [
+      375,
+      812
+    ],
+    "scale": "Semana",
+    "compact": {
+      "background": "rgb(255, 255, 255)",
+      "overflow": false,
+      "text": "rgb(31, 41, 55)"
+    },
+    "full": {
+      "overflow": false,
+      "touch": true
+    }
+  },
+  {
+    "size": [
+      375,
+      812
+    ],
+    "scale": "Mes",
+    "compact": {
+      "background": "rgb(255, 255, 255)",
+      "overflow": false,
+      "text": "rgb(31, 41, 55)"
+    },
+    "full": {
+      "overflow": false,
+      "touch": true
+    }
+  },
+  {
+    "size": [
+      375,
+      812
+    ],
+    "scale": "Año",
+    "compact": {
+      "background": "rgb(255, 255, 255)",
+      "overflow": false,
+      "text": "rgb(31, 41, 55)"
+    },
+    "full": {
+      "overflow": false,
+      "touch": true
+    }
+  },
+  {
+    "size": [
+      320,
+      740
+    ],
+    "scale": "Día",
+    "compact": {
+      "background": "rgb(255, 255, 255)",
+      "overflow": false,
+      "text": "rgb(31, 41, 55)"
+    },
+    "full": {
+      "overflow": false,
+      "touch": true
+    }
+  },
+  {
+    "size": [
+      320,
+      740
+    ],
+    "scale": "Semana",
+    "compact": {
+      "background": "rgb(255, 255, 255)",
+      "overflow": false,
+      "text": "rgb(31, 41, 55)"
+    },
+    "full": {
+      "overflow": false,
+      "touch": true
+    }
+  },
+  {
+    "size": [
+      320,
+      740
+    ],
+    "scale": "Mes",
+    "compact": {
+      "background": "rgb(255, 255, 255)",
+      "overflow": false,
+      "text": "rgb(31, 41, 55)"
+    },
+    "full": {
+      "overflow": false,
+      "touch": true
+    }
+  },
+  {
+    "size": [
+      320,
+      740
+    ],
+    "scale": "Año",
+    "compact": {
+      "background": "rgb(255, 255, 255)",
+      "overflow": false,
+      "text": "rgb(31, 41, 55)"
+    },
+    "full": {
+      "overflow": false,
+      "touch": true
+    }
+  }
+]

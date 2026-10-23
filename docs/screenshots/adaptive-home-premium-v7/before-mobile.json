@@ -1,0 +1,38 @@
+[
+  {
+    "scale": "Día",
+    "height": 666,
+    "main": {
+      "client": 812,
+      "scroll": 1824
+    },
+    "overflow": false
+  },
+  {
+    "scale": "Semana",
+    "height": 701,
+    "main": {
+      "client": 812,
+      "scroll": 1858
+    },
+    "overflow": false
+  },
+  {
+    "scale": "Mes",
+    "height": 811,
+    "main": {
+      "client": 812,
+      "scroll": 1968
+    },
+    "overflow": false
+  },
+  {
+    "scale": "Año",
+    "height": 630,
+    "main": {
+      "client": 812,
+      "scroll": 1788
+    },
+    "overflow": false
+  }
+]

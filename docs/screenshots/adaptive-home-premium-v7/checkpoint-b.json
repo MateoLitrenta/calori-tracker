@@ -1,0 +1,58 @@
+[
+  {
+    "scale": "Día",
+    "compact": {
+      "count": 0,
+      "h": 384,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "h": 510,
+      "overflow": false,
+      "visual": "block"
+    }
+  },
+  {
+    "scale": "Semana",
+    "compact": {
+      "count": 53,
+      "h": 424,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "h": 579,
+      "overflow": false,
+      "visual": "block"
+    }
+  },
+  {
+    "scale": "Mes",
+    "compact": {
+      "count": 12,
+      "h": 416,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "h": 701,
+      "overflow": false,
+      "visual": "block"
+    }
+  },
+  {
+    "scale": "Año",
+    "compact": {
+      "count": 2,
+      "h": 408,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "h": 520,
+      "overflow": false,
+      "visual": "block"
+    }
+  }
+]

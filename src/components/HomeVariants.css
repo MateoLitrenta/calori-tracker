@@ -357,7 +357,8 @@ html:not(.dark) .home-variants .activity-history { --heatmap-selected: #2563eb; 
 html:not(.dark) .home-variants .daily-logs,
 html:not(.dark) .home-variants .activity-history { background: #ffffff; border-color: #e2e8f0; }
 html:not(.dark) .home-variants .activity-history .period-switch { background: #f8f7f4; border-color: #e2e8f0; }
-html:not(.dark) .home-variants .activity-history .period-switch button[aria-pressed="true"] { color: #9a4d1f; }
+html:not(.dark) .home-variants .activity-history .period-switch button[aria-pressed="true"],
+html:not(.dark) .home-variants .history-full-toggle { color: #9a4d1f; }
 html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 @media (max-width: 639px) {
   .home-variants .activity-history { padding: 16px; gap: 12px; }
@@ -427,13 +428,16 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 .home-variants .history-detail-heading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; }
 .home-variants .history-detail h3 { color: var(--home-text); font-size: 14px; font-weight: 500; text-transform: capitalize; }
 .home-variants .history-detail-heading p { color: var(--home-muted); font-size: 12px; line-height: 1.5; }
-.home-variants .history-detail-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: var(--space-inset); }
-.home-variants .history-detail-body[data-period="day"] { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+.home-variants .history-detail-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-inset); align-items: center; }
 .home-variants .history-detail-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-compact) var(--space-inset); }
 .home-variants .history-detail-body[data-period="day"] .history-detail-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.home-variants .history-detail-extra { min-width: 0; }
+.home-variants .history-detail-extra { min-width: 0; grid-column: 1 / -1; }
 .home-variants .history-method { margin-top: var(--space-small); color: var(--home-muted); font-size: 12px; line-height: 1.5; }
-.home-variants :is(.history-detail-toggle, .history-mobile-hint, .history-period-label-compact) { display: none; }
+.home-variants :is(.history-mobile-hint, .history-period-label-compact) { display: none; }
+.home-variants .history-detail-toggle { display: inline-flex; justify-content: center; align-items: center; min-height: 44px; padding: var(--space-small) var(--space-compact); border: 1px solid var(--home-line); border-radius: var(--radius-control); color: var(--home-text); font-size: 12px; text-align: center; background: var(--home-control); }
+.home-variants .history-detail-toggle:hover { background: var(--home-hover); }
+.home-variants .history-detail-extra[hidden] { display: none; }
+.home-variants .history-detail-extra .activity-history-footer { margin-top: var(--space-compact); }
 .home-variants :is(.history-detail-metrics, .history-detail-primary) dt { color: var(--home-muted); font-size: 12px; line-height: 1.4; }
 .home-variants :is(.history-detail-metrics, .history-detail-primary) dd { margin-top: 4px; font-size: 18px; font-weight: 500; line-height: 1.4; overflow-wrap: anywhere; }
 .home-variants :is(.history-detail-metrics, .history-detail-primary) small { font-size: 11px; font-weight: 400; color: var(--home-muted); }
@@ -460,10 +464,8 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
   .home-variants .history-year-balance { font-size: 20px; }
   .home-variants .history-mobile-hint { display: block; color: var(--home-muted); font-size: 12px; }
   .home-variants .history-detail-body, .home-variants .history-detail-body[data-period="day"] { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-compact); align-items: center; }
-  .home-variants .history-detail-toggle { display: block; min-height: 44px; max-width: 140px; padding: var(--space-small); border: 1px solid var(--home-line); border-radius: var(--radius-control); color: var(--home-text); font-size: 12px; text-align: center; background: var(--home-control); }
-  .home-variants .history-detail-toggle:hover { background: var(--home-hover); }
+  .home-variants .history-detail-toggle { max-width: 140px; }
   .home-variants .history-detail-extra { grid-column: 1 / -1; }
-  .home-variants .history-detail-extra[data-expanded="false"] { display: none; }
   .home-variants .history-detail-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-compact); }
   .home-variants :is(.history-detail-metrics, .history-detail-primary) dd { font-size: 17px; }
   .home-variants .activity-legend-scale { gap: 5px; white-space: normal; }
@@ -476,11 +478,11 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 /* Desktop has three real rows: summary, journal and annual activity. Normal
    content grows with the page; only the calendar can scroll horizontally. */
 @media (min-width: 1280px) {
-  .app-shell .home-variants { --home-radius-cell: var(--radius-micro); --home-panel-padding: var(--desktop-padding); --home-section-gap: var(--desktop-gap); --home-inset: var(--space-compact); max-width: var(--content-max); padding: 0; gap: var(--home-section-gap); border-radius: var(--home-radius-panel); }
+  .app-shell .home-variants { --home-radius-cell: var(--radius-micro); --home-panel-padding: var(--space-inset); --home-section-gap: var(--space-inset); --home-inset: var(--space-compact); max-width: var(--content-max); padding: 0; gap: var(--home-section-gap); border-radius: var(--home-radius-panel); }
   .app-shell .home-variants .daily-panel { gap: var(--home-section-gap); }
   .app-shell .home-variants .daily-summary { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--home-section-gap); align-items: stretch; }
   .app-shell .home-variants .energy-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, .9fr); padding: var(--home-panel-padding); gap: var(--home-inset); align-items: center; border-radius: var(--home-radius-panel); }
-  .app-shell .home-variants .energy-number { font-size: clamp(40px, 3vw, 52px); margin-block: 8px; }
+  .app-shell .home-variants .energy-number { font-size: clamp(40px, 3vw, 52px); margin-block: 4px; }
   .app-shell .home-variants .energy-metrics { display: flex; flex-direction: column; align-items: stretch; gap: 4px; }
   .app-shell .home-variants .energy-metrics > div > div:nth-child(2) { font-size: 24px; line-height: 26px; }
   .app-shell .home-variants .energy-metrics details { margin-top: 0; }
@@ -504,7 +506,7 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
   .app-shell .home-variants .activity-history h2 { font-size: var(--desktop-heading); font-weight: 500; line-height: 1.4; }
   .app-shell .home-variants .daily-logs-empty { padding: 0; text-align: left; }
   .app-shell .home-variants .daily-records { gap: 8px; }
-  .app-shell .home-variants .daily-record-open { gap: 4px; }
+  .app-shell .home-variants .daily-record-open { padding: 8px 12px; gap: 4px; }
   .app-shell .home-variants .daily-records:empty { display: none; }
   .app-shell .home-variants .daily-records--columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
   .app-shell .home-variants .daily-records[data-expanded="false"] > li:nth-child(n + 5) { display: none; }
@@ -517,10 +519,55 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
   .app-shell .home-variants .activity-history { width: 100%; padding: var(--home-panel-padding); gap: var(--home-inset); }
   .app-shell .home-variants .activity-history .heatmap-cell { border-radius: var(--home-radius-cell); }
 
+  .app-shell .home-variants .activity-history-header { display: grid; grid-template-columns: minmax(180px, 1fr) auto auto; gap: var(--space-inset); }
+  .app-shell .home-variants .history-detail { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto; gap: var(--space-compact) var(--space-inset); align-items: center; padding-top: var(--space-compact); }
+  .app-shell .home-variants .history-detail-heading { display: block; }
+  .app-shell .home-variants .history-detail-body { display: contents; }
+  .app-shell .home-variants .history-detail-toggle { justify-self: end; }
+  .app-shell .home-variants .history-detail-extra { grid-column: 1 / -1; }
+  .app-shell .home-variants .history-period-grid--week { --history-grid-columns: 15; gap: 6px; }
+  .app-shell .home-variants .history-period-grid--week .history-period { padding-inline: 4px; }
+  .app-shell .home-variants .history-period-grid--month { --history-grid-columns: 6; }
+  .app-shell .home-variants .history-period-grid--year .history-period { min-height: 120px; }
+
   /* One geometry drives dates, weekday rows and month offsets. cqw comes from
      this full-width frame; the minimum leaves usable cells in narrow windows. */
   .app-shell .home-variants .heatmap-frame { container-type: inline-size; }
   .app-shell .home-variants .heatmap-frame[data-period="day"] .heatmap-layout { --history-cell: clamp(12px, calc((100cqw - 40px - (var(--history-columns) - 1) * var(--history-gap)) / var(--history-columns)), 22px); }
   .app-shell .home-variants .heatmap-weekdays span { font-size: 10px; }
   .app-shell .home-variants .heatmap-months span { font-size: 11px; }
+}
+
+/* Short desktop viewports trade structural gaps, never text or touch targets. */
+@media (min-width: 1280px) and (max-height: 800px) {
+  .app-shell .home-variants { --home-section-gap: var(--space-compact); }
+}
+@media (min-width: 1440px) {
+  .app-shell .home-variants .history-period-grid--week { --history-grid-columns: 18; }
+}
+/* Progressive history: the same selected interval and complete visualization
+   survive disclosure changes. CSS alone chooses the mobile presentation. */
+.home-variants :is(.history-preview, .history-full-toggle) { display: none; }
+.home-variants .history-visualization { display: flex; flex-direction: column; gap: var(--space-small); min-width: 0; width: 100%; }
+@media (max-width: 767px) {
+  .home-variants .energy-card { padding: 24px 20px 20px; gap: 20px; }
+  .home-variants .activity-history { gap: var(--space-compact); }
+  .home-variants .activity-history-header { gap: var(--space-small); }
+  .home-variants .activity-history-header > div:first-child { width: 100%; }
+  .home-variants .history-scope { display: none; }
+  .home-variants .history-preview { display: grid; gap: var(--space-small); }
+  .home-variants .history-preview p { font-size: 12px; color: var(--home-muted); }
+  .home-variants .history-preview-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .home-variants .history-preview-grid > span { min-height: 12px; border-radius: var(--radius-micro); }
+  .home-variants .history-preview-grid[data-period="week"] { grid-template-columns: repeat(14, minmax(0, 1fr)); }
+  .home-variants .history-preview-grid[data-period="month"] { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .home-variants .history-preview-grid[data-period="month"] > span { min-height: 24px; }
+  .home-variants .history-preview-grid[data-period="year"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-variants .history-preview-grid[data-period="year"] > span { display: flex; align-items: center; justify-content: center; position: relative; min-height: 44px; border: 1px solid var(--home-line); background: var(--home-control); color: var(--home-text); font-size: 14px; font-weight: 500; }
+  .home-variants .history-preview-year-swatch { position: absolute; left: 8px; right: 8px; bottom: 4px; height: 3px; border-radius: var(--radius-micro); }
+  .home-variants .history-preview-grid > span[data-selected="true"] { outline: 2px solid var(--heatmap-selected); outline-offset: 1px; }
+  .home-variants .history-full-toggle { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 12px; border: 1px solid var(--home-line); border-radius: var(--radius-control); color: var(--home-orange); background: var(--home-control); font-size: 13px; }
+  .home-variants .history-full-toggle:hover { background: var(--home-hover); }
+  .home-variants .activity-history[data-history-expanded="false"] :is(.history-visualization, .history-navigation) { display: none; }
+  .home-variants .activity-history[data-history-expanded="true"] .history-preview { display: none; }
 }

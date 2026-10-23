@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useId } from 'react';
 import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, X, CaretRight, Clock, Sparkle } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
+import { es } from 'date-fns/locale/es';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap, UserProfile } from '../types';
 import { hasEnergyData, formatDateStr, getCaloriesIngested, generateUUID, aggregateEnergy, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure, getBalanceLabel, getBalancePillColor } from '../utils/helpers';
 import { estimateMeal, estimateWorkout } from '../services/aiService';
@@ -64,9 +65,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const balance = emptyHistory ? null : isGroup ? summary.balance : Math.round(ingested - expenditure);
   const classifiedBalance = isGroup ? summary.averageBalance : balance;
   const balanceLabel = getBalanceLabel(classifiedBalance);
+  // Presentation only: the existing number stays unchanged when meals are absent.
+  const provisionalBalance = !isGroup && !emptyHistory && currentRecord.meals.length === 0;
 
-  let panelTitle = "Resumen del Día";
-  let panelSubtitle = dateStr;
+  let panelTitle = "Resumen del día";
+  let panelSubtitle = format(new Date(dateStr + 'T12:00:00'), 'd MMM yyyy', { locale: es });
   if (selectedGroup) {
     if (selectedGroup.type === 'week') {
       panelTitle = `Resumen de la Semana`;
@@ -438,8 +441,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   return (
     <div className="daily-panel flex flex-col gap-6 w-full">
       <div className="daily-heading flex justify-between items-end border-b border-slate-200 dark:border-gray-800 pb-2">
-        <h3 className="text-2xl font-bold text-slate-900 dark:text-white capitalize">{panelTitle}</h3>
-        <span className="text-slate-500 dark:text-gray-400 capitalize">{panelSubtitle}</span>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{panelTitle}</h3>
+        <span className="text-slate-500 dark:text-gray-400">{isGroup ? panelSubtitle : <time dateTime={dateStr}>{panelSubtitle}</time>}</span>
       </div>
 
       {/* Summary Cards */}
@@ -448,7 +451,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
         <div className="energy-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl p-4 md:p-6 flex flex-col items-center gap-4">
           <div className="energy-headline flex flex-col items-center text-center">
             <div className="flex items-center gap-2 text-slate-500 dark:text-gray-400 text-sm font-semibold mb-1">
-              <Barbell size={20} className="text-purple-400" /> {isGroup ? 'Balance acumulado' : 'Balance energético'}
+              <Barbell size={20} className="text-purple-400" /> {isGroup ? 'Balance acumulado' : provisionalBalance ? 'Balance provisional' : 'Balance energético'}
             </div>
             <div className="energy-number text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2 tabular-nums">
               {balance === null ? 'Sin datos' : `${balance > 0 ? '+' : ''}${balance.toLocaleString('es-AR')} kcal`}
@@ -458,8 +461,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 Promedio diario: {classifiedBalance > 0 ? '+' : ''}{classifiedBalance.toLocaleString('es-AR')} kcal/día
               </div>
             )}
-            <div className={`energy-status text-xs px-3 py-1 rounded-full font-medium ${getBalancePillColor(classifiedBalance)}`}>
-              {balanceLabel}
+            <div className={`energy-status text-xs px-3 py-1 rounded-full font-medium ${getBalancePillColor(provisionalBalance ? null : classifiedBalance)}`}>
+              {provisionalBalance ? 'Sin comidas registradas' : balanceLabel}
             </div>
           </div>
 

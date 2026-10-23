@@ -1,0 +1,407 @@
+[
+  {
+    "size": [
+      430,
+      932
+    ],
+    "scale": "Día",
+    "compact": {
+      "button": {
+        "bottom": 762.8984375,
+        "height": 44,
+        "left": 41,
+        "right": 389,
+        "top": 718.8984375,
+        "width": 348,
+        "x": 41,
+        "y": 718.8984375
+      },
+      "history": 393,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "figures": [
+        "-1.258 kcal",
+        "1.140 kcal",
+        "2.398 kcal"
+      ],
+      "history": 701,
+      "overflow": false,
+      "visual": "flex"
+    },
+    "selectionRetained": true
+  },
+  {
+    "size": [
+      430,
+      932
+    ],
+    "scale": "Semana",
+    "compact": {
+      "button": {
+        "bottom": 762.8984375,
+        "height": 44,
+        "left": 41,
+        "right": 389,
+        "top": 718.8984375,
+        "width": 348,
+        "x": 41,
+        "y": 718.8984375
+      },
+      "history": 415,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "figures": [
+        "-138 kcal/día",
+        "-276 kcal",
+        "3.600 kcal",
+        "3.876 kcal"
+      ],
+      "history": 832,
+      "overflow": false,
+      "visual": "flex"
+    },
+    "selectionRetained": true
+  },
+  {
+    "size": [
+      430,
+      932
+    ],
+    "scale": "Mes",
+    "compact": {
+      "button": {
+        "bottom": 776.8984375,
+        "height": 44,
+        "left": 41,
+        "right": 389,
+        "top": 732.8984375,
+        "width": 348,
+        "x": 41,
+        "y": 732.8984375
+      },
+      "history": 407,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "figures": [
+        "-198 kcal/día",
+        "-5.940 kcal",
+        "54.000 kcal",
+        "59.940 kcal"
+      ],
+      "history": 924,
+      "overflow": false,
+      "visual": "flex"
+    },
+    "selectionRetained": true
+  },
+  {
+    "size": [
+      430,
+      932
+    ],
+    "scale": "Año",
+    "compact": {
+      "button": {
+        "bottom": 754.8984375,
+        "height": 44,
+        "left": 41,
+        "right": 389,
+        "top": 710.8984375,
+        "width": 348,
+        "x": 41,
+        "y": 710.8984375
+      },
+      "history": 399,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "figures": [
+        "-195 kcal/día",
+        "-13.422 kcal",
+        "124.200 kcal",
+        "137.622 kcal"
+      ],
+      "history": 733,
+      "overflow": false,
+      "visual": "flex"
+    },
+    "selectionRetained": true
+  },
+  {
+    "size": [
+      375,
+      812
+    ],
+    "scale": "Día",
+    "compact": {
+      "button": {
+        "bottom": 674.8984375,
+        "height": 44,
+        "left": 41,
+        "right": 334,
+        "top": 630.8984375,
+        "width": 293,
+        "x": 41,
+        "y": 630.8984375
+      },
+      "history": 393,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "figures": [
+        "-1.258 kcal",
+        "1.140 kcal",
+        "2.398 kcal"
+      ],
+      "history": 719,
+      "overflow": false,
+      "visual": "flex"
+    },
+    "selectionRetained": true
+  },
+  {
+    "size": [
+      375,
+      812
+    ],
+    "scale": "Semana",
+    "compact": {
+      "button": {
+        "bottom": 674.8984375,
+        "height": 44,
+        "left": 41,
+        "right": 334,
+        "top": 630.8984375,
+        "width": 293,
+        "x": 41,
+        "y": 630.8984375
+      },
+      "history": 415,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "figures": [
+        "-138 kcal/día",
+        "-276 kcal",
+        "3.600 kcal",
+        "3.876 kcal"
+      ],
+      "history": 832,
+      "overflow": false,
+      "visual": "flex"
+    },
+    "selectionRetained": true
+  },
+  {
+    "size": [
+      375,
+      812
+    ],
+    "scale": "Mes",
+    "compact": {
+      "button": {
+        "bottom": 674.8984375,
+        "height": 44,
+        "left": 41,
+        "right": 334,
+        "top": 630.8984375,
+        "width": 293,
+        "x": 41,
+        "y": 630.8984375
+      },
+      "history": 407,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "figures": [
+        "-198 kcal/día",
+        "-5.940 kcal",
+        "54.000 kcal",
+        "59.940 kcal"
+      ],
+      "history": 946,
+      "overflow": false,
+      "visual": "flex"
+    },
+    "selectionRetained": true
+  },
+  {
+    "size": [
+      375,
+      812
+    ],
+    "scale": "Año",
+    "compact": {
+      "button": {
+        "bottom": 674.8984375,
+        "height": 44,
+        "left": 41,
+        "right": 334,
+        "top": 630.8984375,
+        "width": 293,
+        "x": 41,
+        "y": 630.8984375
+      },
+      "history": 377,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "figures": [
+        "-195 kcal/día",
+        "-13.422 kcal",
+        "124.200 kcal",
+        "137.622 kcal"
+      ],
+      "history": 744,
+      "overflow": false,
+      "visual": "flex"
+    },
+    "selectionRetained": true
+  },
+  {
+    "size": [
+      320,
+      740
+    ],
+    "scale": "Día",
+    "compact": {
+      "button": {
+        "bottom": 603.09375,
+        "height": 44,
+        "left": 41,
+        "right": 279,
+        "top": 559.09375,
+        "width": 238,
+        "x": 41,
+        "y": 559.09375
+      },
+      "history": 415,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "figures": [
+        "-1.258 kcal",
+        "1.140 kcal",
+        "2.398 kcal"
+      ],
+      "history": 741,
+      "overflow": false,
+      "visual": "flex"
+    },
+    "selectionRetained": true
+  },
+  {
+    "size": [
+      320,
+      740
+    ],
+    "scale": "Semana",
+    "compact": {
+      "button": {
+        "bottom": 602.984375,
+        "height": 44,
+        "left": 41,
+        "right": 279,
+        "top": 558.984375,
+        "width": 238,
+        "x": 41,
+        "y": 558.984375
+      },
+      "history": 422,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "figures": [
+        "-138 kcal/día",
+        "-276 kcal",
+        "3.600 kcal",
+        "3.876 kcal"
+      ],
+      "history": 878,
+      "overflow": false,
+      "visual": "flex"
+    },
+    "selectionRetained": true
+  },
+  {
+    "size": [
+      320,
+      740
+    ],
+    "scale": "Mes",
+    "compact": {
+      "button": {
+        "bottom": 602.984375,
+        "height": 44,
+        "left": 41,
+        "right": 279,
+        "top": 558.984375,
+        "width": 238,
+        "x": 41,
+        "y": 558.984375
+      },
+      "history": 414,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "figures": [
+        "-198 kcal/día",
+        "-5.940 kcal",
+        "54.000 kcal",
+        "59.940 kcal"
+      ],
+      "history": 1055,
+      "overflow": false,
+      "visual": "flex"
+    },
+    "selectionRetained": true
+  },
+  {
+    "size": [
+      320,
+      740
+    ],
+    "scale": "Año",
+    "compact": {
+      "button": {
+        "bottom": 602.984375,
+        "height": 44,
+        "left": 41,
+        "right": 279,
+        "top": 558.984375,
+        "width": 238,
+        "x": 41,
+        "y": 558.984375
+      },
+      "history": 406,
+      "overflow": false,
+      "visual": "none"
+    },
+    "full": {
+      "figures": [
+        "-195 kcal/día",
+        "-13.422 kcal",
+        "124.200 kcal",
+        "137.622 kcal"
+      ],
+      "history": 812,
+      "overflow": false,
+      "visual": "flex"
+    },
+    "selectionRetained": true
+  }
+]
