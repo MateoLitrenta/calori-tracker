@@ -1,0 +1,80 @@
+{
+  "sourceCommit": "f0c9d27ced0269c33128d23d4ac1cec4548f097a",
+  "sourceTree": "541da6161b1995f30d4dd292368b9160283480c5",
+  "testFiles": 31,
+  "tests": 345,
+  "pass": 345,
+  "fail": 0,
+  "skipped": 0,
+  "batches": [
+    {
+      "batch": 0,
+      "files": [
+        "tests/ai-security.test.mjs",
+        "tests/chart-stats.test.mjs",
+        "tests/coach-goal-proposal.test.mjs",
+        "tests/coach-goals.test.mjs",
+        "tests/coach-response-policy.test.mjs",
+        "tests/coach.test.mjs",
+        "tests/energy.test.mjs",
+        "tests/heatmap-activity.test.mjs",
+        "tests/history-periods.test.mjs",
+        "tests/precision-layout.test.mjs",
+        "tests/ui-polish.test.mjs"
+      ],
+      "tests": 135,
+      "pass": 135,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "batch": 1,
+      "files": [
+        "tests/ai-transport.test.mjs",
+        "tests/charts-view.test.mjs",
+        "tests/coach-goals-client.test.mjs",
+        "tests/coach-immediate-time.test.mjs",
+        "tests/coach-serverless-runtime.test.mjs",
+        "tests/daily-panel.test.mjs",
+        "tests/estimate.test.mjs",
+        "tests/heatmap-balance.test.mjs",
+        "tests/meal-stats.test.mjs",
+        "tests/public-entry.test.mjs"
+      ],
+      "tests": 127,
+      "pass": 127,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "batch": 2,
+      "files": [
+        "tests/auto-resize-textarea.test.mjs",
+        "tests/chat-view.test.mjs",
+        "tests/coach-goals-postgres.test.mjs",
+        "tests/coach-presentation.test.mjs",
+        "tests/coach-store-sync.test.mjs",
+        "tests/desktop-experience.test.mjs",
+        "tests/habit-insights.test.mjs",
+        "tests/history-experience.test.mjs",
+        "tests/persistence.test.mjs",
+        "tests/reset-data.test.mjs"
+      ],
+      "tests": 83,
+      "pass": 83,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  ],
+  "geometry": {
+    "normal1440Cases": 20,
+    "allNormal1440WithoutScroll": true,
+    "mobileCases": 12,
+    "allMobileWithoutHorizontalOverflow": true,
+    "selectionRetained": true
+  },
+  "environment": "An interrupted whole run and a loopback EACCES failure were not counted as passing. Network permission was restored; all final batches exited 0. No timeout or validation was weakened."
+}

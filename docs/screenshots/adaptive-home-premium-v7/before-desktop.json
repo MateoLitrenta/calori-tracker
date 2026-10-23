@@ -1,0 +1,290 @@
+[
+  {
+    "scale": "Día",
+    "blocks": [
+      {
+        "class": "daily-heading flex justify-between items-end border-b border-slate-200 dark:border-gray-800 pb-2",
+        "gap": "12px",
+        "h": 32,
+        "pad": "0px"
+      },
+      {
+        "class": "daily-summary flex flex-col gap-4",
+        "gap": "24px",
+        "h": 164,
+        "pad": "0px"
+      },
+      {
+        "class": "daily-journal contents",
+        "gap": "12px 24px",
+        "h": 244,
+        "pad": "20px"
+      },
+      {
+        "class": "activity-history",
+        "gap": "12px",
+        "h": 501.703125,
+        "pad": "20px"
+      },
+      {
+        "class": "activity-history-header",
+        "gap": "16px",
+        "h": 54,
+        "pad": "0px"
+      },
+      {
+        "class": "history-navigation",
+        "gap": "8px 16px",
+        "h": 44,
+        "pad": "0px"
+      },
+      {
+        "class": "heatmap-frame",
+        "gap": "normal",
+        "h": 158.4140625,
+        "pad": "0px"
+      },
+      {
+        "class": "history-detail",
+        "gap": "12px",
+        "h": 95.9921875,
+        "pad": "16px 0px 0px"
+      },
+      {
+        "class": "activity-history-footer",
+        "gap": "12px 16px",
+        "h": 30.796875,
+        "pad": "0px"
+      },
+      {
+        "class": "history-help",
+        "gap": "normal",
+        "h": 16.5,
+        "pad": "0px"
+      }
+    ],
+    "height": 900,
+    "main": {
+      "client": 900,
+      "scroll": 1038
+    },
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "scale": "Semana",
+    "blocks": [
+      {
+        "class": "daily-heading flex justify-between items-end border-b border-slate-200 dark:border-gray-800 pb-2",
+        "gap": "12px",
+        "h": 32,
+        "pad": "0px"
+      },
+      {
+        "class": "daily-summary flex flex-col gap-4",
+        "gap": "24px",
+        "h": 164,
+        "pad": "0px"
+      },
+      {
+        "class": "daily-journal contents",
+        "gap": "12px 24px",
+        "h": 244,
+        "pad": "20px"
+      },
+      {
+        "class": "activity-history",
+        "gap": "12px",
+        "h": 621.2890625,
+        "pad": "20px"
+      },
+      {
+        "class": "activity-history-header",
+        "gap": "16px",
+        "h": 54,
+        "pad": "0px"
+      },
+      {
+        "class": "history-navigation",
+        "gap": "8px 16px",
+        "h": 44,
+        "pad": "0px"
+      },
+      {
+        "class": "heatmap-frame",
+        "gap": "normal",
+        "h": 252,
+        "pad": "0px"
+      },
+      {
+        "class": "history-detail",
+        "gap": "12px",
+        "h": 121.9921875,
+        "pad": "16px 0px 0px"
+      },
+      {
+        "class": "activity-history-footer",
+        "gap": "12px 16px",
+        "h": 30.796875,
+        "pad": "0px"
+      },
+      {
+        "class": "history-help",
+        "gap": "normal",
+        "h": 16.5,
+        "pad": "0px"
+      }
+    ],
+    "height": 900,
+    "main": {
+      "client": 900,
+      "scroll": 1157
+    },
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "scale": "Mes",
+    "blocks": [
+      {
+        "class": "daily-heading flex justify-between items-end border-b border-slate-200 dark:border-gray-800 pb-2",
+        "gap": "12px",
+        "h": 32,
+        "pad": "0px"
+      },
+      {
+        "class": "daily-summary flex flex-col gap-4",
+        "gap": "24px",
+        "h": 164,
+        "pad": "0px"
+      },
+      {
+        "class": "daily-journal contents",
+        "gap": "12px 24px",
+        "h": 244,
+        "pad": "20px"
+      },
+      {
+        "class": "activity-history",
+        "gap": "12px",
+        "h": 600.6796875,
+        "pad": "20px"
+      },
+      {
+        "class": "activity-history-header",
+        "gap": "16px",
+        "h": 54,
+        "pad": "0px"
+      },
+      {
+        "class": "history-navigation",
+        "gap": "8px 16px",
+        "h": 44,
+        "pad": "0px"
+      },
+      {
+        "class": "heatmap-frame",
+        "gap": "normal",
+        "h": 231.390625,
+        "pad": "0px"
+      },
+      {
+        "class": "history-detail",
+        "gap": "12px",
+        "h": 121.9921875,
+        "pad": "16px 0px 0px"
+      },
+      {
+        "class": "activity-history-footer",
+        "gap": "12px 16px",
+        "h": 30.796875,
+        "pad": "0px"
+      },
+      {
+        "class": "history-help",
+        "gap": "normal",
+        "h": 16.5,
+        "pad": "0px"
+      }
+    ],
+    "height": 900,
+    "main": {
+      "client": 900,
+      "scroll": 1137
+    },
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "scale": "Año",
+    "blocks": [
+      {
+        "class": "daily-heading flex justify-between items-end border-b border-slate-200 dark:border-gray-800 pb-2",
+        "gap": "12px",
+        "h": 32,
+        "pad": "0px"
+      },
+      {
+        "class": "daily-summary flex flex-col gap-4",
+        "gap": "24px",
+        "h": 164,
+        "pad": "0px"
+      },
+      {
+        "class": "daily-journal contents",
+        "gap": "12px 24px",
+        "h": 244,
+        "pad": "20px"
+      },
+      {
+        "class": "activity-history",
+        "gap": "12px",
+        "h": 513.2890625,
+        "pad": "20px"
+      },
+      {
+        "class": "activity-history-header",
+        "gap": "16px",
+        "h": 54,
+        "pad": "0px"
+      },
+      {
+        "class": "history-navigation",
+        "gap": "8px 16px",
+        "h": 44,
+        "pad": "0px"
+      },
+      {
+        "class": "heatmap-frame",
+        "gap": "normal",
+        "h": 144,
+        "pad": "0px"
+      },
+      {
+        "class": "history-detail",
+        "gap": "12px",
+        "h": 121.9921875,
+        "pad": "16px 0px 0px"
+      },
+      {
+        "class": "activity-history-footer",
+        "gap": "12px 16px",
+        "h": 30.796875,
+        "pad": "0px"
+      },
+      {
+        "class": "history-help",
+        "gap": "normal",
+        "h": 16.5,
+        "pad": "0px"
+      }
+    ],
+    "height": 900,
+    "main": {
+      "client": 900,
+      "scroll": 1049
+    },
+    "overflow": false,
+    "width": 1440
+  }
+]

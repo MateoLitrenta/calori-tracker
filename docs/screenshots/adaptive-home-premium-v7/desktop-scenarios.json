@@ -1,0 +1,818 @@
+[
+  {
+    "scenario": "empty",
+    "scale": "Día",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 330,
+    "homeHeight": 675.9453125,
+    "journalHeight": 110,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 0
+  },
+  {
+    "scenario": "empty",
+    "scale": "Semana",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 315,
+    "homeHeight": 660.4921875,
+    "journalHeight": 110,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 0
+  },
+  {
+    "scenario": "empty",
+    "scale": "Mes",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 339,
+    "homeHeight": 684.8828125,
+    "journalHeight": 110,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 0
+  },
+  {
+    "scenario": "empty",
+    "scale": "Año",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 298,
+    "homeHeight": 643.8828125,
+    "journalHeight": 110,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 0
+  },
+  {
+    "scenario": "one",
+    "scale": "Día",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 330,
+    "homeHeight": 717.4453125,
+    "journalHeight": 151,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 1
+  },
+  {
+    "scenario": "one",
+    "scale": "Semana",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 315,
+    "homeHeight": 701.9921875,
+    "journalHeight": 151,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 1
+  },
+  {
+    "scenario": "one",
+    "scale": "Mes",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 339,
+    "homeHeight": 726.3828125,
+    "journalHeight": 151,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 1
+  },
+  {
+    "scenario": "one",
+    "scale": "Año",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 298,
+    "homeHeight": 685.3828125,
+    "journalHeight": 151,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 1
+  },
+  {
+    "scenario": "three",
+    "scale": "Día",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 330,
+    "homeHeight": 786.4453125,
+    "journalHeight": 220,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 3
+  },
+  {
+    "scenario": "three",
+    "scale": "Semana",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 315,
+    "homeHeight": 770.9921875,
+    "journalHeight": 220,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 3
+  },
+  {
+    "scenario": "three",
+    "scale": "Mes",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 339,
+    "homeHeight": 795.3828125,
+    "journalHeight": 220,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 3
+  },
+  {
+    "scenario": "three",
+    "scale": "Año",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 298,
+    "homeHeight": 754.3828125,
+    "journalHeight": 220,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 3
+  },
+  {
+    "scenario": "four",
+    "scale": "Día",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 330,
+    "homeHeight": 786.4453125,
+    "journalHeight": 220,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 4
+  },
+  {
+    "scenario": "four",
+    "scale": "Semana",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 315,
+    "homeHeight": 770.9921875,
+    "journalHeight": 220,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 4
+  },
+  {
+    "scenario": "four",
+    "scale": "Mes",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 339,
+    "homeHeight": 795.3828125,
+    "journalHeight": 220,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 4
+  },
+  {
+    "scenario": "four",
+    "scale": "Año",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 298,
+    "homeHeight": 754.3828125,
+    "journalHeight": 220,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 4
+  },
+  {
+    "scenario": "eight",
+    "scale": "Día",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 330,
+    "homeHeight": 842.4453125,
+    "journalHeight": 276,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 4
+  },
+  {
+    "scenario": "eight",
+    "scale": "Semana",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 315,
+    "homeHeight": 826.9921875,
+    "journalHeight": 276,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 4
+  },
+  {
+    "scenario": "eight",
+    "scale": "Mes",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 339,
+    "homeHeight": 851.3828125,
+    "journalHeight": 276,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 4
+  },
+  {
+    "scenario": "eight",
+    "scale": "Año",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 298,
+    "homeHeight": 810.3828125,
+    "journalHeight": 276,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 4
+  },
+  {
+    "scenario": "large",
+    "scale": "Día",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 330,
+    "homeHeight": 920.8203125,
+    "journalHeight": 354,
+    "main": {
+      "client": 900,
+      "scroll": 945
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 4
+  },
+  {
+    "scenario": "large",
+    "scale": "Semana",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 315,
+    "homeHeight": 905.3671875,
+    "journalHeight": 354,
+    "main": {
+      "client": 900,
+      "scroll": 929
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 4
+  },
+  {
+    "scenario": "large",
+    "scale": "Mes",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 339,
+    "homeHeight": 929.7578125,
+    "journalHeight": 354,
+    "main": {
+      "client": 900,
+      "scroll": 954
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 4
+  },
+  {
+    "scenario": "large",
+    "scale": "Año",
+    "width": 1440,
+    "height": 900,
+    "band": [
+      {
+        "h": 156,
+        "w": 617
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      },
+      {
+        "h": 156,
+        "w": 156
+      }
+    ],
+    "historyHeight": 298,
+    "homeHeight": 888.7578125,
+    "journalHeight": 354,
+    "main": {
+      "client": 900,
+      "scroll": 913
+    },
+    "overflow": false,
+    "recordOverflow": "visible",
+    "visibleRecords": 4
+  }
+]

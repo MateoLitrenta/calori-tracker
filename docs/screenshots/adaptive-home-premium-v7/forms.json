@@ -1,0 +1,92 @@
+[
+  {
+    "size": [
+      320,
+      740
+    ],
+    "dialog": {
+      "bottom": 740,
+      "height": 666,
+      "left": 0,
+      "right": 320,
+      "top": 74,
+      "width": 320,
+      "x": 0,
+      "y": 74
+    },
+    "draft": 504,
+    "overflow": false,
+    "save": {
+      "bottom": 728,
+      "height": 48,
+      "left": 17,
+      "right": 303,
+      "top": 680,
+      "width": 286,
+      "x": 17,
+      "y": 680
+    },
+    "scale": "year",
+    "selected": "Seleccionar 2025 · Déficit Leve · -195 kcal/día · 69 de 365 días transcurridos con datos"
+  },
+  {
+    "size": [
+      375,
+      812
+    ],
+    "dialog": {
+      "bottom": 812,
+      "height": 730.796875,
+      "left": 0,
+      "right": 375,
+      "top": 81.203125,
+      "width": 375,
+      "x": 0,
+      "y": 81.203125
+    },
+    "draft": 504,
+    "overflow": false,
+    "save": {
+      "bottom": 800,
+      "height": 48,
+      "left": 17,
+      "right": 358,
+      "top": 752,
+      "width": 341,
+      "x": 17,
+      "y": 752
+    },
+    "scale": "year",
+    "selected": "Seleccionar 2025 · Déficit Leve · -195 kcal/día · 69 de 365 días transcurridos con datos"
+  },
+  {
+    "size": [
+      430,
+      932
+    ],
+    "dialog": {
+      "bottom": 932,
+      "height": 838.796875,
+      "left": 0,
+      "right": 430,
+      "top": 93.203125,
+      "width": 430,
+      "x": 0,
+      "y": 93.203125
+    },
+    "draft": 504,
+    "overflow": false,
+    "save": {
+      "bottom": 920,
+      "height": 48,
+      "left": 17,
+      "right": 413,
+      "top": 872,
+      "width": 396,
+      "x": 17,
+      "y": 872
+    },
+    "scale": "year",
+    "selected": "Seleccionar 2025 · Déficit Leve · -195 kcal/día · 69 de 365 días transcurridos con datos"
+  }
+]

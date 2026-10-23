@@ -1,0 +1,230 @@
+[
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "scale": "Día",
+    "band": [
+      156,
+      156,
+      156,
+      156
+    ],
+    "main": {
+      "client": 1080,
+      "scroll": 1080
+    },
+    "overflow": false,
+    "targets": []
+  },
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "scale": "Semana",
+    "band": [
+      156,
+      156,
+      156,
+      156
+    ],
+    "main": {
+      "client": 1080,
+      "scroll": 1080
+    },
+    "overflow": false,
+    "targets": []
+  },
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "scale": "Mes",
+    "band": [
+      156,
+      156,
+      156,
+      156
+    ],
+    "main": {
+      "client": 1080,
+      "scroll": 1080
+    },
+    "overflow": false,
+    "targets": []
+  },
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "scale": "Año",
+    "band": [
+      156,
+      156,
+      156,
+      156
+    ],
+    "main": {
+      "client": 1080,
+      "scroll": 1080
+    },
+    "overflow": false,
+    "targets": []
+  },
+  {
+    "size": [
+      1366,
+      768
+    ],
+    "scale": "Día",
+    "band": [
+      156,
+      156,
+      156,
+      156
+    ],
+    "main": {
+      "client": 768,
+      "scroll": 789
+    },
+    "overflow": false,
+    "targets": []
+  },
+  {
+    "size": [
+      1366,
+      768
+    ],
+    "scale": "Semana",
+    "band": [
+      156,
+      156,
+      156,
+      156
+    ],
+    "main": {
+      "client": 768,
+      "scroll": 833
+    },
+    "overflow": false,
+    "targets": []
+  },
+  {
+    "size": [
+      1366,
+      768
+    ],
+    "scale": "Mes",
+    "band": [
+      156,
+      156,
+      156,
+      156
+    ],
+    "main": {
+      "client": 768,
+      "scroll": 807
+    },
+    "overflow": false,
+    "targets": []
+  },
+  {
+    "size": [
+      1366,
+      768
+    ],
+    "scale": "Año",
+    "band": [
+      156,
+      156,
+      156,
+      156
+    ],
+    "main": {
+      "client": 768,
+      "scroll": 768
+    },
+    "overflow": false,
+    "targets": []
+  },
+  {
+    "size": [
+      1280,
+      720
+    ],
+    "scale": "Día",
+    "band": [
+      156,
+      156,
+      156,
+      156
+    ],
+    "main": {
+      "client": 720,
+      "scroll": 777
+    },
+    "overflow": false,
+    "targets": []
+  },
+  {
+    "size": [
+      1280,
+      720
+    ],
+    "scale": "Semana",
+    "band": [
+      156,
+      156,
+      156,
+      156
+    ],
+    "main": {
+      "client": 720,
+      "scroll": 833
+    },
+    "overflow": false,
+    "targets": []
+  },
+  {
+    "size": [
+      1280,
+      720
+    ],
+    "scale": "Mes",
+    "band": [
+      156,
+      156,
+      156,
+      156
+    ],
+    "main": {
+      "client": 720,
+      "scroll": 807
+    },
+    "overflow": false,
+    "targets": []
+  },
+  {
+    "size": [
+      1280,
+      720
+    ],
+    "scale": "Año",
+    "band": [
+      156,
+      156,
+      156,
+      156
+    ],
+    "main": {
+      "client": 720,
+      "scroll": 766
+    },
+    "overflow": false,
+    "targets": []
+  }
+]

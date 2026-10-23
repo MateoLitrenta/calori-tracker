@@ -1,0 +1,47 @@
+[
+  {
+    "screen": "Datos",
+    "chat": null,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "roots": [
+      {
+        "class": "premium-view charts-view charts-insights w-full max-w-4xl mx-auto",
+        "w": 1126
+      }
+    ]
+  },
+  {
+    "screen": "Perfil",
+    "chat": null,
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "roots": [
+      {
+        "class": "premium-view dark profile-view profile-v2 flex flex-col w-full max-w-4xl mx-auto animate-in fade-in duration-300",
+        "w": 1126
+      }
+    ]
+  },
+  {
+    "screen": "Coach",
+    "chat": "auto",
+    "main": {
+      "client": 900,
+      "scroll": 900
+    },
+    "overflow": false,
+    "roots": [
+      {
+        "class": "premium-view dark assistant-view flex flex-col flex-1 min-h-0 w-full max-w-3xl mx-auto bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-300",
+        "w": 1126
+      }
+    ]
+  }
+]
