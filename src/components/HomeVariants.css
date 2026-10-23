@@ -465,20 +465,20 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 /* Desktop has three real rows: summary, journal and annual activity. Normal
    content grows with the page; only the calendar can scroll horizontally. */
 @media (min-width: 1280px) {
-  .app-shell .home-variants { --home-radius-panel: 20px; --home-radius-widget: 14px; --home-radius-control: 12px; --home-radius-cell: 3px; --home-panel-padding: 20px; --home-section-gap: 20px; --home-inset: 12px; max-width: 1440px; padding: 0; gap: var(--home-section-gap); border-radius: var(--home-radius-panel); }
+  .app-shell .home-variants { --home-radius-cell: var(--radius-micro); --home-panel-padding: var(--desktop-padding); --home-section-gap: var(--desktop-gap); --home-inset: var(--space-compact); max-width: var(--content-max); padding: 0; gap: var(--home-section-gap); border-radius: var(--home-radius-panel); }
   .app-shell .home-variants .daily-panel { gap: var(--home-section-gap); }
-  .app-shell .home-variants .daily-summary { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--home-section-gap); align-items: start; }
+  .app-shell .home-variants .daily-summary { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--home-section-gap); align-items: stretch; }
   .app-shell .home-variants .energy-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, .9fr); padding: var(--home-panel-padding); gap: var(--home-inset); align-items: center; border-radius: var(--home-radius-panel); }
   .app-shell .home-variants .energy-number { font-size: clamp(40px, 3vw, 52px); margin-block: 8px; }
   .app-shell .home-variants .energy-metrics { display: flex; flex-direction: column; align-items: stretch; gap: 4px; }
   .app-shell .home-variants .energy-metrics > div > div:nth-child(2) { font-size: 24px; line-height: 26px; }
   .app-shell .home-variants .energy-metrics details { margin-top: 0; }
-  .app-shell .home-variants .daily-habits { gap: 10px; }
-  .app-shell .home-variants .habit-card { height: auto; padding: 16px 12px 12px; gap: 8px; justify-content: flex-start; }
+  .app-shell .home-variants .daily-habits { gap: var(--space-compact); align-items: stretch; }
+  .app-shell .home-variants .habit-card { height: auto; padding: var(--home-panel-padding); gap: var(--space-small); justify-content: space-between; border-radius: var(--home-radius-panel); }
   .app-shell .home-variants .habit-header { gap: 6px; }
   .app-shell .home-variants .habit-label { font-size: 12px; }
   .app-shell .home-variants .habit-metric { font-size: 26px; line-height: 1.25; font-variant-numeric: tabular-nums; }
-  .app-shell .home-variants .habit-controls { width: auto; grid-template-columns: 44px 56px; }
+  .app-shell .home-variants .habit-controls { width: 100%; max-width: 104px; grid-template-columns: repeat(2, minmax(44px, 1fr)); gap: 0; }
   .app-shell .home-variants :is(.habit-controls button, .habit-edit) { background: transparent; }
   .app-shell .home-variants .habit-edit { width: auto; min-width: 80px; padding-inline: 12px; }
 

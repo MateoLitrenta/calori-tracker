@@ -29,7 +29,7 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
   scrollbar-color: var(--scroll-thumb-hover) transparent;
 }
 @media (min-width: 768px) {
-  .app-shell:not(.app-shell-coach) .app-main { scrollbar-gutter: stable; }
+  .app-shell .app-main { scrollbar-gutter: stable; }
 }
 
 @keyframes calori-enter {
