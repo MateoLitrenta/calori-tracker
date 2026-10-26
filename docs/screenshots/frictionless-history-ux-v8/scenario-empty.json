@@ -1,0 +1,98 @@
+[
+  {
+    "scenario": "empty",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "scale": "Día",
+    "summary": "25 Octubre 2026\n\nSin datos energéticos · En curso, hasta 25 oct\n\nBalance del día\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  },
+  {
+    "scenario": "empty",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "scale": "Semana",
+    "summary": "25 Oct 2026 – 31 Oct 2026\n\n0 de 2 días transcurridos con datos · En curso, hasta 26 oct\n\nBalance promedio\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  },
+  {
+    "scenario": "empty",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "scale": "Mes",
+    "summary": "Octubre 2026\n\n0 de 26 días transcurridos con datos · En curso, hasta 26 oct\n\nBalance promedio\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  },
+  {
+    "scenario": "empty",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "scale": "Año",
+    "summary": "2026\n\n0 de 299 días transcurridos con datos · En curso, hasta 26 oct\n\nBalance promedio\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  },
+  {
+    "scenario": "empty",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "scale": "Día",
+    "summary": "25 Octubre 2026\n\nSin datos energéticos\n\nBalance del día\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  },
+  {
+    "scenario": "empty",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "scale": "Semana",
+    "summary": "25 Oct 2026 – 31 Oct 2026\n\n0 de 2 días transcurridos con datos · En curso, hasta 26 oct\n\nBalance promedio\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  },
+  {
+    "scenario": "empty",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "scale": "Mes",
+    "summary": "Octubre 2026\n\n0 de 26 días transcurridos con datos · En curso, hasta 26 oct\n\nBalance promedio\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  },
+  {
+    "scenario": "empty",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "scale": "Año",
+    "summary": "2026\n\n0 de 299 días transcurridos con datos · En curso, hasta 26 oct\n\nBalance promedio\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  },
+  {
+    "scenario": "empty",
+    "width": 320,
+    "height": 740,
+    "overflow": 0,
+    "scale": "Día",
+    "summary": "25 Octubre 2026\n\nSin datos energéticos\n\nBalance del día\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  },
+  {
+    "scenario": "empty",
+    "width": 320,
+    "height": 740,
+    "overflow": 0,
+    "scale": "Semana",
+    "summary": "25 Oct 2026 – 31 Oct 2026\n\n0 de 2 días transcurridos con datos · En curso, hasta 26 oct\n\nBalance promedio\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  },
+  {
+    "scenario": "empty",
+    "width": 320,
+    "height": 740,
+    "overflow": 0,
+    "scale": "Mes",
+    "summary": "Octubre 2026\n\n0 de 26 días transcurridos con datos · En curso, hasta 26 oct\n\nBalance promedio\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  },
+  {
+    "scenario": "empty",
+    "width": 320,
+    "height": 740,
+    "overflow": 0,
+    "scale": "Año",
+    "summary": "2026\n\n0 de 299 días transcurridos con datos · En curso, hasta 26 oct\n\nBalance promedio\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  }
+]

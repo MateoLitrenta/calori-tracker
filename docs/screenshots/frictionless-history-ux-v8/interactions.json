@@ -1,0 +1,39 @@
+{
+  "kind": "Manual real browser interactions on local components with synthetic data",
+  "visiblePeriodSelection": {
+    "before": 2,
+    "after": 1
+  },
+  "primaryFigures": {
+    "before": 3,
+    "after": 1
+  },
+  "annualCalendar": {
+    "before": 1,
+    "after": 1
+  },
+  "scaleSwitch": "Add one action if another scale is active; offscreen periods also need browsing",
+  "keyboard": {
+    "weekEnter": "4 oct 2026 – 10 oct 2026; average -224 kcal/day",
+    "weekSpace": "27 sep 2026 – 3 oct 2026; average -181 kcal/day",
+    "daySpace": "11 febrero 2026; balance -438 kcal",
+    "nativeDateArrow": "12 febrero 2026, shared state synchronized"
+  },
+  "annualReturn": {
+    "selectedDate": "2026-02-10",
+    "compactSelectedBounds": {
+      "left": 156.5,
+      "right": 208.5
+    },
+    "stripBounds": {
+      "left": 41,
+      "right": 324
+    },
+    "annualTouchCell": 44,
+    "compactStripHiddenWhileAnnual": true
+  },
+  "limitations": [
+    "No physical mobile keyboard, Safari, screen reader or native text zoom",
+    "Native date fill automation changed DOM only; actual ArrowUp and annual-date activation verified state"
+  ]
+}
