@@ -1,0 +1,874 @@
+[
+  {
+    "theme": "light",
+    "width": 1920,
+    "height": 1080,
+    "historyHeight": 427.8984375,
+    "mainHeight": 1080,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 1080,
+    "targets": null
+  },
+  {
+    "theme": "light",
+    "width": 1920,
+    "height": 1080,
+    "historyHeight": 370.9921875,
+    "mainHeight": 1080,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 1080,
+    "targets": {
+      "height": 44,
+      "width": 72.4375
+    }
+  },
+  {
+    "theme": "light",
+    "width": 1920,
+    "height": 1080,
+    "historyHeight": 378.5859375,
+    "mainHeight": 1080,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 1080,
+    "targets": {
+      "height": 71.796875,
+      "width": 227.6640625
+    }
+  },
+  {
+    "theme": "light",
+    "width": 1920,
+    "height": 1080,
+    "historyHeight": 354.3828125,
+    "mainHeight": 1080,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 1080,
+    "targets": {
+      "height": 127.390625,
+      "width": 699
+    }
+  },
+  {
+    "theme": "light",
+    "width": 1440,
+    "height": 900,
+    "historyHeight": 386.4453125,
+    "mainHeight": 900,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 900,
+    "targets": null
+  },
+  {
+    "theme": "light",
+    "width": 1440,
+    "height": 900,
+    "historyHeight": 370.9921875,
+    "mainHeight": 900,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 900,
+    "targets": {
+      "height": 44,
+      "width": 55
+    }
+  },
+  {
+    "theme": "light",
+    "width": 1440,
+    "height": 900,
+    "historyHeight": 395.3828125,
+    "mainHeight": 900,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 900,
+    "targets": {
+      "height": 71.796875,
+      "width": 175.328125
+    }
+  },
+  {
+    "theme": "light",
+    "width": 1440,
+    "height": 900,
+    "historyHeight": 354.3828125,
+    "mainHeight": 900,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 900,
+    "targets": {
+      "height": 127.390625,
+      "width": 542
+    }
+  },
+  {
+    "theme": "light",
+    "width": 1366,
+    "height": 768,
+    "historyHeight": 376.65625,
+    "mainHeight": 768,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 845,
+    "targets": null
+  },
+  {
+    "theme": "light",
+    "width": 1366,
+    "height": 768,
+    "historyHeight": 420.9921875,
+    "mainHeight": 768,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 889,
+    "targets": {
+      "height": 44,
+      "width": 62.265625
+    }
+  },
+  {
+    "theme": "light",
+    "width": 1366,
+    "height": 768,
+    "historyHeight": 395.3828125,
+    "mainHeight": 768,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 863,
+    "targets": {
+      "height": 71.796875,
+      "width": 163
+    }
+  },
+  {
+    "theme": "light",
+    "width": 1366,
+    "height": 768,
+    "historyHeight": 365.390625,
+    "mainHeight": 768,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 833,
+    "targets": {
+      "height": 127.390625,
+      "width": 505
+    }
+  },
+  {
+    "theme": "light",
+    "width": 1280,
+    "height": 720,
+    "historyHeight": 365.28125,
+    "mainHeight": 720,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 833,
+    "targets": null
+  },
+  {
+    "theme": "light",
+    "width": 1280,
+    "height": 720,
+    "historyHeight": 420.9921875,
+    "mainHeight": 720,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 889,
+    "targets": {
+      "height": 44,
+      "width": 56.53125
+    }
+  },
+  {
+    "theme": "light",
+    "width": 1280,
+    "height": 720,
+    "historyHeight": 406.390625,
+    "mainHeight": 720,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 874,
+    "targets": {
+      "height": 71.796875,
+      "width": 148.6640625
+    }
+  },
+  {
+    "theme": "light",
+    "width": 1280,
+    "height": 720,
+    "historyHeight": 365.390625,
+    "mainHeight": 720,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 833,
+    "targets": {
+      "height": 127.390625,
+      "width": 462
+    }
+  },
+  {
+    "theme": "light",
+    "width": 768,
+    "height": 1024,
+    "historyHeight": 590.1796875,
+    "mainHeight": 1024,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 1723,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "light",
+    "width": 768,
+    "height": 1024,
+    "historyHeight": 536.578125,
+    "mainHeight": 1024,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 1669,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "light",
+    "width": 768,
+    "height": 1024,
+    "historyHeight": 703.375,
+    "mainHeight": 1024,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 1836,
+    "targets": {
+      "height": 71.796875,
+      "width": 113.96875
+    }
+  },
+  {
+    "theme": "light",
+    "width": 768,
+    "height": 1024,
+    "historyHeight": 504.1875,
+    "mainHeight": 1024,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 1637,
+    "targets": {
+      "height": 112,
+      "width": 174.9609375
+    }
+  },
+  {
+    "theme": "light",
+    "width": 430,
+    "height": 932,
+    "historyHeight": 574.1796875,
+    "mainHeight": 932,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 1728,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "light",
+    "width": 430,
+    "height": 932,
+    "historyHeight": 520.578125,
+    "mainHeight": 932,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 1674,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "light",
+    "width": 430,
+    "height": 932,
+    "historyHeight": 687.375,
+    "mainHeight": 932,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 1841,
+    "targets": {
+      "height": 71.796875,
+      "width": 107.328125
+    }
+  },
+  {
+    "theme": "light",
+    "width": 430,
+    "height": 932,
+    "historyHeight": 488.1875,
+    "mainHeight": 932,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 1642,
+    "targets": {
+      "height": 112,
+      "width": 165
+    }
+  },
+  {
+    "theme": "light",
+    "width": 375,
+    "height": 812,
+    "historyHeight": 626.1796875,
+    "mainHeight": 812,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 1780,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "light",
+    "width": 375,
+    "height": 812,
+    "historyHeight": 520.578125,
+    "mainHeight": 812,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 1674,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "light",
+    "width": 375,
+    "height": 812,
+    "historyHeight": 705.375,
+    "mainHeight": 812,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 1859,
+    "targets": {
+      "height": 71.796875,
+      "width": 89
+    }
+  },
+  {
+    "theme": "light",
+    "width": 375,
+    "height": 812,
+    "historyHeight": 524.78125,
+    "mainHeight": 812,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 1678,
+    "targets": {
+      "height": 130.59375,
+      "width": 137.5
+    }
+  },
+  {
+    "theme": "light",
+    "width": 320,
+    "height": 740,
+    "historyHeight": 644.1796875,
+    "mainHeight": 740,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 1910,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "light",
+    "width": 320,
+    "height": 740,
+    "historyHeight": 520.578125,
+    "mainHeight": 740,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 1786,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "light",
+    "width": 320,
+    "height": 740,
+    "historyHeight": 788.5625,
+    "mainHeight": 740,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 2054,
+    "targets": {
+      "height": 92.59375,
+      "width": 70.6640625
+    }
+  },
+  {
+    "theme": "light",
+    "width": 320,
+    "height": 740,
+    "historyHeight": 524.78125,
+    "mainHeight": 740,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 1790,
+    "targets": {
+      "height": 130.59375,
+      "width": 110
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 1920,
+    "height": 1080,
+    "historyHeight": 427.8984375,
+    "mainHeight": 1080,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 1080,
+    "targets": null
+  },
+  {
+    "theme": "dark",
+    "width": 1920,
+    "height": 1080,
+    "historyHeight": 370.9921875,
+    "mainHeight": 1080,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 1080,
+    "targets": {
+      "height": 44,
+      "width": 72.4375
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 1920,
+    "height": 1080,
+    "historyHeight": 378.5859375,
+    "mainHeight": 1080,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 1080,
+    "targets": {
+      "height": 71.796875,
+      "width": 227.6640625
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 1920,
+    "height": 1080,
+    "historyHeight": 354.3828125,
+    "mainHeight": 1080,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 1080,
+    "targets": {
+      "height": 127.390625,
+      "width": 699
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 1440,
+    "height": 900,
+    "historyHeight": 386.4453125,
+    "mainHeight": 900,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 900,
+    "targets": null
+  },
+  {
+    "theme": "dark",
+    "width": 1440,
+    "height": 900,
+    "historyHeight": 370.9921875,
+    "mainHeight": 900,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 900,
+    "targets": {
+      "height": 44,
+      "width": 55
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 1440,
+    "height": 900,
+    "historyHeight": 395.3828125,
+    "mainHeight": 900,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 900,
+    "targets": {
+      "height": 71.796875,
+      "width": 175.328125
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 1440,
+    "height": 900,
+    "historyHeight": 354.3828125,
+    "mainHeight": 900,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 900,
+    "targets": {
+      "height": 127.390625,
+      "width": 542
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 1366,
+    "height": 768,
+    "historyHeight": 376.65625,
+    "mainHeight": 768,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 845,
+    "targets": null
+  },
+  {
+    "theme": "dark",
+    "width": 1366,
+    "height": 768,
+    "historyHeight": 420.9921875,
+    "mainHeight": 768,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 889,
+    "targets": {
+      "height": 44,
+      "width": 62.265625
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 1366,
+    "height": 768,
+    "historyHeight": 395.3828125,
+    "mainHeight": 768,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 863,
+    "targets": {
+      "height": 71.796875,
+      "width": 163
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 1366,
+    "height": 768,
+    "historyHeight": 365.390625,
+    "mainHeight": 768,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 833,
+    "targets": {
+      "height": 127.390625,
+      "width": 505
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 1280,
+    "height": 720,
+    "historyHeight": 365.28125,
+    "mainHeight": 720,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 833,
+    "targets": null
+  },
+  {
+    "theme": "dark",
+    "width": 1280,
+    "height": 720,
+    "historyHeight": 420.9921875,
+    "mainHeight": 720,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 889,
+    "targets": {
+      "height": 44,
+      "width": 56.53125
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 1280,
+    "height": 720,
+    "historyHeight": 406.390625,
+    "mainHeight": 720,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 874,
+    "targets": {
+      "height": 71.796875,
+      "width": 148.6640625
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 1280,
+    "height": 720,
+    "historyHeight": 365.390625,
+    "mainHeight": 720,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 833,
+    "targets": {
+      "height": 127.390625,
+      "width": 462
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 768,
+    "height": 1024,
+    "historyHeight": 590.1796875,
+    "mainHeight": 1024,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 1723,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 768,
+    "height": 1024,
+    "historyHeight": 536.578125,
+    "mainHeight": 1024,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 1669,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 768,
+    "height": 1024,
+    "historyHeight": 703.375,
+    "mainHeight": 1024,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 1836,
+    "targets": {
+      "height": 71.796875,
+      "width": 113.96875
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 768,
+    "height": 1024,
+    "historyHeight": 504.1875,
+    "mainHeight": 1024,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 1637,
+    "targets": {
+      "height": 112,
+      "width": 174.9609375
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 430,
+    "height": 932,
+    "historyHeight": 574.1796875,
+    "mainHeight": 932,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 1728,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 430,
+    "height": 932,
+    "historyHeight": 520.578125,
+    "mainHeight": 932,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 1674,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 430,
+    "height": 932,
+    "historyHeight": 687.375,
+    "mainHeight": 932,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 1841,
+    "targets": {
+      "height": 71.796875,
+      "width": 107.328125
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 430,
+    "height": 932,
+    "historyHeight": 488.1875,
+    "mainHeight": 932,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 1642,
+    "targets": {
+      "height": 112,
+      "width": 165
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 375,
+    "height": 812,
+    "historyHeight": 626.1796875,
+    "mainHeight": 812,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 1780,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 375,
+    "height": 812,
+    "historyHeight": 520.578125,
+    "mainHeight": 812,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 1674,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 375,
+    "height": 812,
+    "historyHeight": 705.375,
+    "mainHeight": 812,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 1859,
+    "targets": {
+      "height": 71.796875,
+      "width": 89
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 375,
+    "height": 812,
+    "historyHeight": 524.78125,
+    "mainHeight": 812,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 1678,
+    "targets": {
+      "height": 130.59375,
+      "width": 137.5
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 320,
+    "height": 740,
+    "historyHeight": 644.1796875,
+    "mainHeight": 740,
+    "overflow": 0,
+    "scale": "Día",
+    "scrollHeight": 1910,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 320,
+    "height": 740,
+    "historyHeight": 520.578125,
+    "mainHeight": 740,
+    "overflow": 0,
+    "scale": "Semana",
+    "scrollHeight": 1786,
+    "targets": {
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 320,
+    "height": 740,
+    "historyHeight": 788.5625,
+    "mainHeight": 740,
+    "overflow": 0,
+    "scale": "Mes",
+    "scrollHeight": 2054,
+    "targets": {
+      "height": 92.59375,
+      "width": 70.6640625
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 320,
+    "height": 740,
+    "historyHeight": 524.78125,
+    "mainHeight": 740,
+    "overflow": 0,
+    "scale": "Año",
+    "scrollHeight": 1790,
+    "targets": {
+      "height": 130.59375,
+      "width": 110
+    }
+  }
+]
