@@ -404,7 +404,7 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 .home-variants .heatmap-grid :is(.heatmap-cell, .heatmap-date) { width: var(--history-cell); height: var(--history-cell); flex: none; }
 .home-variants .heatmap-cell { border-radius: 3px; transition: opacity var(--motion-control) var(--motion-ease-control); }
 .home-variants .heatmap-cell:hover { opacity: .8; }
-.home-variants .history-period-grid { display: grid; grid-template-columns: repeat(var(--history-grid-columns), minmax(0, 1fr)); width: 100%; gap: 8px; }
+.home-variants .history-period-grid { min-width: 0; display: grid; grid-template-columns: repeat(var(--history-grid-columns), minmax(0, 1fr)); width: 100%; gap: 8px; }
 .home-variants .history-period-grid--week { --history-grid-columns: 11; }
 .home-variants .history-period-grid--month { --history-grid-columns: 4; }
 .home-variants .history-period-grid--year { --history-grid-columns: 2; }
@@ -417,6 +417,7 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 .home-variants .history-period-grid--week .history-period { padding: 10px 8px 14px; text-align: center; }
 .home-variants .history-period-grid--week .history-period-heading { justify-content: center; }
 .home-variants .history-period-grid--week .history-period-name { font-size: 12px; white-space: nowrap; }
+.home-variants .history-period-grid--week .history-period-coverage { display: none; }
 .home-variants .history-period-grid--month .history-period { min-height: 68px; }
 .home-variants .history-period-grid--year .history-period { min-height: 144px; padding: var(--space-inset); }
 .home-variants .history-period-grid--year .history-period-name { font-size: 18px; }
@@ -428,13 +429,16 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 .home-variants .history-detail-heading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; }
 .home-variants .history-detail h3 { color: var(--home-text); font-size: 14px; font-weight: 500; text-transform: capitalize; }
 .home-variants .history-detail-heading p { color: var(--home-muted); font-size: 12px; line-height: 1.5; }
-.home-variants .history-detail-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-inset); align-items: center; }
+.home-variants .history-detail-body { min-width: 0; }
+.home-variants .history-detail-primary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-compact) var(--space-inset); }
+.home-variants .history-detail-primary > div { min-width: 0; }
 .home-variants .history-detail-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-compact) var(--space-inset); }
 .home-variants .history-detail-body[data-period="day"] .history-detail-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .home-variants .history-detail-extra { min-width: 0; grid-column: 1 / -1; }
 .home-variants .history-method { margin-top: var(--space-small); color: var(--home-muted); font-size: 12px; line-height: 1.5; }
-.home-variants :is(.history-mobile-hint, .history-period-label-compact) { display: none; }
-.home-variants .history-detail-toggle { display: inline-flex; justify-content: center; align-items: center; min-height: 44px; padding: var(--space-small) var(--space-compact); border: 1px solid var(--home-line); border-radius: var(--radius-control); color: var(--home-text); font-size: 12px; text-align: center; background: var(--home-control); }
+.home-variants :is(.history-mobile-hint, .history-period-label-compact, .history-week-range, .history-day-navigation, .history-ribbon-navigation, .history-full-toggle) { display: none; }
+.home-variants .history-detail-toggle { display: inline-flex; justify-content: center; align-items: center; min-height: 44px; padding: var(--space-small); border-radius: var(--radius-control); color: var(--home-muted); font-size: 12px; text-align: center; background: transparent; }
+.home-variants .history-explore { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-small) var(--space-compact); min-width: 0; }
 .home-variants .history-detail-toggle:hover { background: var(--home-hover); }
 .home-variants .history-detail-extra[hidden] { display: none; }
 .home-variants .history-detail-extra .activity-history-footer { margin-top: var(--space-compact); }
@@ -452,19 +456,26 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
   .home-variants .history-period-grid--week { --history-grid-columns: 8; }
 }
 @media (max-width: 767px) {
-  .home-variants .history-period-grid--week { --history-grid-rows: 3; grid-template-columns: none; grid-template-rows: repeat(var(--history-grid-rows), minmax(44px, auto)); grid-auto-flow: column; grid-auto-columns: 72px; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; padding: 2px 2px 6px; scroll-padding-inline: 2px; }
+  .home-variants .history-period-grid--week { --history-grid-rows: 1; grid-template-columns: none; grid-template-rows: auto; grid-auto-flow: column; grid-auto-columns: 144px; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding: 2px 2px 6px; scroll-padding-inline: 2px; }
+  .home-variants .history-period-grid--week::-webkit-scrollbar { display: none; }
+  .home-variants .history-period-grid--week .history-period { min-height: 84px; padding: 10px 12px 14px; text-align: left; }
+  .home-variants .history-period-grid--week .history-period-heading { justify-content: flex-start; }
+  .home-variants .history-period-grid--week .history-period-name { white-space: normal; }
+  .home-variants .history-week-range { display: block; font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
+  .home-variants .history-week-range small { display: block; color: var(--home-muted); font-size: 11px; }
+  .home-variants .history-period-grid--week .history-period-coverage { display: block; }
+  .home-variants .history-period-grid--week .history-period-label-full { display: none; }
   .home-variants .history-period-grid--month { --history-grid-columns: 3; }
   .home-variants .history-period-grid--year { --history-grid-columns: 2; }
   .home-variants .history-period { padding-inline: var(--space-small); }
   .home-variants .history-period-grid--month .history-period-heading { gap: 4px; }
-  .home-variants .history-period-grid--month .history-period-label-full,
+  .home-variants .history-period-grid--month .history-period-label-full { display: none; }
+  .home-variants .history-period-grid--month .history-period-label-compact { display: inline; }
   .home-variants .history-period-coverage-text { display: none; }
-  .home-variants .history-period-label-compact { display: inline; }
-  .home-variants .history-period-grid--year .history-period { min-height: 120px; padding: var(--space-compact); }
+  .home-variants .history-period-grid--year .history-period { min-height: 112px; padding: var(--space-compact); }
   .home-variants .history-year-balance { font-size: 20px; }
-  .home-variants .history-mobile-hint { display: block; color: var(--home-muted); font-size: 12px; }
-  .home-variants .history-detail-body, .home-variants .history-detail-body[data-period="day"] { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-compact); align-items: center; }
-  .home-variants .history-detail-toggle { max-width: 140px; }
+  .home-variants .history-detail-primary { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-compact); }
+  .home-variants .history-detail-primary > div:first-child { grid-column: 1 / -1; }
   .home-variants .history-detail-extra { grid-column: 1 / -1; }
   .home-variants .history-detail-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-compact); }
   .home-variants :is(.history-detail-metrics, .history-detail-primary) dd { font-size: 17px; }
@@ -473,7 +484,7 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
   .home-variants .history-help { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .home-variants :is(.heatmap-cell, .history-period) { transition: none; }
+  .home-variants :is(.heatmap-cell, .history-period, .history-day) { transition: none; animation: none; scroll-behavior: auto; }
 }
 /* Desktop has three real rows: summary, journal and annual activity. Normal
    content grows with the page; only the calendar can scroll horizontally. */
@@ -520,9 +531,10 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
   .app-shell .home-variants .activity-history .heatmap-cell { border-radius: var(--home-radius-cell); }
 
   .app-shell .home-variants .activity-history-header { display: grid; grid-template-columns: minmax(180px, 1fr) auto auto; gap: var(--space-inset); }
-  .app-shell .home-variants .history-detail { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto; gap: var(--space-compact) var(--space-inset); align-items: center; padding-top: var(--space-compact); }
+  .app-shell .home-variants .activity-history-header .period-selector { grid-column: 3; }
+  .app-shell .home-variants .history-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--space-compact) var(--space-inset); align-items: center; padding-top: var(--space-compact); }
   .app-shell .home-variants .history-detail-heading { display: block; }
-  .app-shell .home-variants .history-detail-body { display: contents; }
+  .app-shell .home-variants .history-detail-body { min-width: 0; }
   .app-shell .home-variants .history-detail-toggle { justify-self: end; }
   .app-shell .home-variants .history-detail-extra { grid-column: 1 / -1; }
   .app-shell .home-variants .history-period-grid--week { --history-grid-columns: 15; gap: 6px; }
@@ -545,29 +557,40 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 @media (min-width: 1440px) {
   .app-shell .home-variants .history-period-grid--week { --history-grid-columns: 18; }
 }
-/* Progressive history: the same selected interval and complete visualization
-   survive disclosure changes. CSS alone chooses the mobile presentation. */
-.home-variants :is(.history-preview, .history-full-toggle) { display: none; }
+/* Direct selection uses the same interval controls at every width. Only the
+   optional annual day calendar is disclosed on narrow screens. */
 .home-variants .history-visualization { display: flex; flex-direction: column; gap: var(--space-small); min-width: 0; width: 100%; }
+.home-variants .history-annual-calendar { min-width: 0; width: 100%; }
+.home-variants :is(.history-week-range, .history-ribbon-navigation) { min-width: 0; }
+.home-variants .history-strip-actions { display: flex; align-items: center; justify-content: space-between; gap: var(--space-small); min-width: 0; }
+.home-variants .history-strip-actions button { display: inline-flex; align-items: center; justify-content: center; flex: none; min-width: 44px; min-height: 44px; padding: var(--space-small); border: 1px solid var(--home-line); border-radius: var(--radius-control); background: var(--home-control); color: var(--home-text); }
+.home-variants .history-strip-actions button:hover:not(:disabled) { background: var(--home-hover); }
+.home-variants .history-strip-actions button:disabled { opacity: .4; cursor: default; }
+.home-variants .history-strip-actions p { min-width: 0; color: var(--home-muted); font-size: 12px; line-height: 1.5; text-align: center; }
 @media (max-width: 767px) {
   .home-variants .energy-card { padding: 24px 20px 20px; gap: 20px; }
   .home-variants .activity-history { gap: var(--space-compact); }
   .home-variants .activity-history-header { gap: var(--space-small); }
   .home-variants .activity-history-header > div:first-child { width: 100%; }
+  .home-variants .activity-history .period-switch { width: 100%; }
   .home-variants .history-scope { display: none; }
-  .home-variants .history-preview { display: grid; gap: var(--space-small); }
-  .home-variants .history-preview p { font-size: 12px; color: var(--home-muted); }
-  .home-variants .history-preview-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
-  .home-variants .history-preview-grid > span { min-height: 12px; border-radius: var(--radius-micro); }
-  .home-variants .history-preview-grid[data-period="week"] { grid-template-columns: repeat(14, minmax(0, 1fr)); }
-  .home-variants .history-preview-grid[data-period="month"] { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  .home-variants .history-preview-grid[data-period="month"] > span { min-height: 24px; }
-  .home-variants .history-preview-grid[data-period="year"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .home-variants .history-preview-grid[data-period="year"] > span { display: flex; align-items: center; justify-content: center; position: relative; min-height: 44px; border: 1px solid var(--home-line); background: var(--home-control); color: var(--home-text); font-size: 14px; font-weight: 500; }
-  .home-variants .history-preview-year-swatch { position: absolute; left: 8px; right: 8px; bottom: 4px; height: 3px; border-radius: var(--radius-micro); }
-  .home-variants .history-preview-grid > span[data-selected="true"] { outline: 2px solid var(--heatmap-selected); outline-offset: 1px; }
-  .home-variants .history-full-toggle { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 12px; border: 1px solid var(--home-line); border-radius: var(--radius-control); color: var(--home-orange); background: var(--home-control); font-size: 13px; }
+  .home-variants .history-navigation { width: 100%; }
+  .home-variants .history-navigation label { justify-content: space-between; width: 100%; }
+  .home-variants .history-navigation input { flex: 1; max-width: 192px; }
+  .home-variants .history-day-navigation { display: flex; flex-direction: column; gap: var(--space-small); min-width: 0; width: 100%; }
+  .home-variants .history-day-strip { display: flex; gap: var(--space-small); min-width: 0; width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; scroll-padding-inline: 2px; padding: 2px 2px 6px; }
+  .home-variants .history-day-strip::-webkit-scrollbar { display: none; }
+  .home-variants .history-day { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; flex: 0 0 52px; min-width: 48px; min-height: 76px; padding: var(--space-small) 4px 12px; border: 1px solid var(--home-line); border-radius: var(--radius-control); background: var(--home-control); color: var(--home-text); font-size: 12px; line-height: 1.4; }
+  .home-variants .history-day strong { font-size: 18px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .home-variants .history-day small { color: var(--home-muted); font-size: 10px; }
+  .home-variants .history-day:hover { background: var(--home-hover); }
+  .home-variants .history-day[aria-pressed="true"] { border-color: var(--heatmap-selected); box-shadow: inset 0 0 0 1px var(--heatmap-selected); }
+  .home-variants .history-day-swatch { position: absolute; left: 8px; right: 8px; bottom: 4px; height: 3px; border-radius: var(--radius-micro); }
+  .home-variants .history-ribbon-navigation { display: flex; align-items: center; justify-content: space-between; gap: var(--space-small); }
+  .home-variants .history-ribbon-navigation > p { min-width: 0; color: var(--home-muted); font-size: 12px; line-height: 1.5; }
+  .home-variants .history-annual-calendar .heatmap-layout { --history-cell: 44px; }
+  .home-variants .history-full-toggle { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; max-width: 100%; padding: var(--space-small); border-radius: var(--radius-control); color: var(--home-orange); background: transparent; font-size: 12px; }
   .home-variants .history-full-toggle:hover { background: var(--home-hover); }
-  .home-variants .activity-history[data-history-expanded="false"] :is(.history-visualization, .history-navigation) { display: none; }
-  .home-variants .activity-history[data-history-expanded="true"] .history-preview { display: none; }
+  .home-variants .history-explore { justify-content: space-between; }
+  .home-variants .activity-history[data-history-expanded="false"] .history-annual-calendar { display: none; }
 }

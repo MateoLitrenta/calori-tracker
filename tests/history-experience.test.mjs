@@ -7,6 +7,7 @@ import React, { act } from 'react';
 import ts from 'typescript';
 import { JSDOM } from 'jsdom';
 import { formatDateStr, aggregateEnergy } from '../src/utils/helpers.ts';
+import { buildHistoryPeriods } from '../src/utils/historyPeriods.ts';
 
 const sourceRoot = fileURLToPath(new URL('../src/', import.meta.url));
 const url = code => 'data:text/javascript;base64,' + Buffer.from(code).toString('base64');
@@ -72,7 +73,7 @@ async function mount(t, initial = { [today]: makeRecord(today), [past]: makeReco
     for (const [name, value] of Object.entries(saved)) globalThis[name] = value; });
   const button = text => [...document.querySelectorAll('button')].find(node => node.textContent.trim() === text);
   return { saves, button, scale: async name => act(() => button(name).click()),
-    selectDay: async date => act(() => document.querySelector('button[aria-label^="Seleccionar ' + date + '"]').click()),
+    selectDay: async date => act(() => document.querySelector('.history-day[aria-label^="Seleccionar ' + date + '"]').click()),
     groups: () => [...document.querySelectorAll('.history-period')],
     heading: () => document.querySelector('.daily-heading time').dateTime,
     detail: () => document.querySelector('.history-detail'),
@@ -124,7 +125,7 @@ test('each scale remembers its selected interval and exposes exact dates, averag
   assert.match(view.detail().textContent, /Balance promedio/);
   assert.match(view.detail().textContent, /En curso/);
   assert.equal(view.detail().querySelector('dd').textContent, summary.averageBalance.toLocaleString('es-AR') + ' kcal/día');
-  assert.match(view.detail().textContent, /Balance acumulado/);
+  assert.match(document.querySelector('.history-detail-extra').textContent, /Balance acumulado/);
   assert.match(view.detail().textContent, /Consumidas/);
   assert.match(view.detail().textContent, /Gasto estimado/);
   assert.ok(!document.querySelector('.activity-border-legend').textContent.includes('Gimnasio'));
@@ -223,9 +224,12 @@ test('the touch-friendly date control changes only the daily selection, rejects 
       input.dispatchEvent(new window.Event('input', { bubbles: true }));
     });
   }
+  await view.scale('Día');
   await choose(past);
   assert.match(view.heading(), new RegExp(past));
+  await view.scale('Mes');
   assert.equal(view.groups().find(node => node.getAttribute('aria-pressed') === 'true').getAttribute('aria-label'), selectedMonth);
+  await view.scale('Día');
   await choose('');
   assert.match(view.heading(), new RegExp(past));
   const future = new Date(); future.setDate(future.getDate() + 1);
@@ -236,21 +240,21 @@ test('the touch-friendly date control changes only the daily selection, rejects 
   assert.equal(document.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(past), true);
 });
 
-test('mobile column-flow keyboard follows visual rows without selecting or writing', async t => {
+test('weekly ribbon keyboard follows its single visual row without selecting or writing', async t => {
   const view = await mount(t);
   await view.scale('Semana');
   const grid = document.querySelector('.history-period-grid');
-  // JSDOM has no media-query layout; emulate the computed three-row geometry.
+  // JSDOM does not apply media queries. Match the compact one-row ribbon.
   grid.style.gridAutoFlow = 'column';
-  grid.style.setProperty('--history-grid-rows', '3');
+  grid.style.setProperty('--history-grid-rows', '1');
   const buttons = view.groups();
   await act(() => buttons[0].focus());
   const press = async key => act(() => document.activeElement.dispatchEvent(
     new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })));
-  await press('ArrowDown'); assert.equal(document.activeElement, buttons[1]);
-  await press('ArrowRight'); assert.equal(document.activeElement, buttons[4]);
+  await press('ArrowRight'); assert.equal(document.activeElement, buttons[1]);
+  await press('ArrowRight'); assert.equal(document.activeElement, buttons[2]);
   await press('ArrowLeft'); assert.equal(document.activeElement, buttons[1]);
-  await press('ArrowUp'); assert.equal(document.activeElement, buttons[0]);
+  await press('Home'); assert.equal(document.activeElement, buttons[0]);
   await press('End'); assert.equal(document.activeElement, buttons.at(-1));
   assert.equal(buttons.at(-1).getAttribute('aria-pressed'), 'true');
   assert.equal(buttons[0].getAttribute('aria-pressed'), 'false');
@@ -279,36 +283,41 @@ test('context disclosure retains all official metrics, scale selection and an op
   }
   await view.scale('Año');
   assert.equal(toggle.getAttribute('aria-expanded'), 'true');
-  assert.equal(view.detail().querySelectorAll('dd').length, 4);
+  assert.equal(view.detail().querySelectorAll('dd').length, 3, 'Primary figures stay directly available');
+  assert.equal(document.querySelector('.history-detail-extra').querySelectorAll('dd').length, 1, 'Supplemental accumulated balance remains available');
   await view.scale('Día');
   assert.equal(view.detail().querySelectorAll('dd').length, 3);
   assert.equal(view.saves.length, 0);
 });
 
-test('resize reveals the selected week horizontally once, without moving the page or resetting manual scroll', async t => {
+test('manual ribbon scroll survives selection, resize and scale changes without moving the page', async t => {
   const view = await mount(t);
   await view.scale('Semana');
   const grid = document.querySelector('.history-period-grid');
-  const selected = grid.querySelector('[aria-pressed="true"]');
   Object.defineProperties(grid, { scrollWidth: { value: 1440 }, clientWidth: { value: 293 } });
-  Object.defineProperty(selected, 'offsetWidth', { value: 72 });
-  grid.getBoundingClientRect = () => ({ left: 40 });
-  selected.getBoundingClientRect = () => ({ left: 600 });
-  grid.scrollLeft = 100;
   const scrollTop = document.documentElement.scrollTop;
-  await act(() => window.dispatchEvent(new window.Event('resize')));
-  assert.equal(grid.scrollLeft, 549.5);
-  assert.equal(document.documentElement.scrollTop, scrollTop);
   grid.scrollLeft = 25;
+  await act(() => grid.dispatchEvent(new window.Event('scroll', { bubbles: true })));
   await act(() => view.groups()[0].click());
   assert.equal(grid.scrollLeft, 25, 'Selection must not recenter after the user scrolls');
+  await act(() => window.dispatchEvent(new window.Event('resize')));
+  assert.equal(grid.scrollLeft, 25, 'A resize must not replace a remembered manual position');
+  assert.equal(document.documentElement.scrollTop, scrollTop);
+  await view.scale('Mes');
+  const months = document.querySelector('.history-period-grid');
+  months.scrollLeft = 50;
+  await act(() => months.dispatchEvent(new window.Event('scroll', { bubbles: true })));
+  await view.scale('Semana');
+  assert.equal(document.querySelector('.history-period-grid').scrollLeft, 25);
+  assert.equal(view.groups()[0].getAttribute('aria-pressed'), 'true');
+  await view.scale('Mes');
+  assert.equal(document.querySelector('.history-period-grid').scrollLeft, 50);
   assert.equal(view.saves.length, 0);
 });
 
-test('full-history and detail disclosures preserve interval, daily widgets, draft and keyboard focus independently', async t => {
+test('annual-calendar and explanation disclosures retain selections, official figures, draft and focus independently', async t => {
   const view = await mount(t);
   await view.selectDay(past);
-  await view.scale('Semana');
   await act(() => view.button('+ Comida').click());
   const draft = document.getElementById('add-meal-description');
   await act(() => {
@@ -316,37 +325,177 @@ test('full-history and detail disclosures preserve interval, daily widgets, draf
     draft.dispatchEvent(new window.Event('input', { bubbles: true }));
   });
   const full = document.querySelector('.history-full-toggle');
-  const visualization = document.getElementById(full.getAttribute('aria-controls'));
+  const annual = document.getElementById(full.getAttribute('aria-controls'));
   const daily = document.querySelector('.daily-panel');
   const history = document.querySelector('.activity-history');
   assert.equal(full.getAttribute('aria-expanded'), 'false');
-  for (const [scale, count] of [['Semana', 53], ['Mes', 12], ['Año', 2], ['Día', 0]]) {
+  assert.match(full.textContent, /Explorar calendario anual/);
+  assert.ok(annual.classList.contains('history-annual-calendar'));
+  const details = document.querySelector('.history-detail-toggle');
+  const explanation = document.getElementById(details.getAttribute('aria-controls'));
+  const primaryValues = () => [...view.detail().querySelectorAll('.history-detail-primary dd')].map(node => node.textContent);
+  const values = primaryValues();
+  assert.equal(values.length, 3, 'All essential figures are available without an expansion');
+  await act(() => { full.focus(); full.click(); });
+  assert.equal(history.dataset.historyExpanded, 'true');
+  assert.equal(full.getAttribute('aria-expanded'), 'true');
+  assert.equal(document.activeElement, full);
+  assert.match(full.textContent, /Volver a la cinta de días/);
+  assert.equal(annual.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(past), true);
+  const grid = annual.querySelector('.heatmap-grid');
+  assert.match(document.getElementById(grid.getAttribute('aria-describedby')).textContent, /Flechas.*Inicio.*Fin.*Enter/);
+  await act(() => details.click());
+  assert.equal(explanation.hidden, false);
+  assert.equal(full.getAttribute('aria-expanded'), 'true');
+  assert.deepEqual(primaryValues(), values);
+  for (const [scale, count] of [['Semana', 53], ['Mes', 12], ['Año', 2]]) {
     await view.scale(scale);
-    const details = document.querySelector('.history-detail-toggle');
-    const figures = document.getElementById(details.getAttribute('aria-controls'));
-    const values = [...view.detail().querySelectorAll('dd')].map(node => node.textContent);
-    await act(() => full.click());
-    assert.equal(history.dataset.historyExpanded, 'true');
-    assert.equal(full.getAttribute('aria-expanded'), 'true');
-    assert.equal(visualization.querySelectorAll('.history-period').length, count);
-    const grid = visualization.querySelector('.history-period-grid') || visualization.querySelector('.heatmap-grid');
-    assert.match(document.getElementById(grid.getAttribute('aria-describedby')).textContent, /Flechas.*Inicio.*Fin.*Enter/);
-    await act(() => details.click());
-    assert.equal(figures.hidden, false);
-    assert.equal(full.getAttribute('aria-expanded'), 'true', 'Numeric detail must not control the complete visualization');
-    assert.deepEqual([...view.detail().querySelectorAll('dd')].map(node => node.textContent), values);
-    await act(() => details.click());
-    assert.equal(figures.hidden, true);
-    const selected = grid.querySelector('[aria-pressed="true"]');
-    await act(() => { full.focus(); full.click(); });
-    assert.equal(document.activeElement, full);
-    assert.equal(history.dataset.historyExpanded, 'false');
-    assert.equal(grid.querySelector('[aria-pressed="true"]'), selected);
-    assert.equal(document.getElementById(full.getAttribute('aria-controls')), visualization);
-    assert.equal(document.querySelector('.daily-panel'), daily);
+    assert.equal(document.querySelector('.history-full-toggle'), null, 'Grouped selection has no expansion gate');
+    assert.equal(view.groups().length, count);
+    assert.equal(document.querySelectorAll('.history-period-grid').length, 1, 'A single control set owns grouped selection');
+    await act(() => view.groups()[0].click());
+    assert.equal(view.groups()[0].getAttribute('aria-pressed'), 'true');
+    assert.equal(details.getAttribute('aria-expanded'), 'true');
     assert.equal(document.getElementById('add-meal-description'), draft);
     assert.equal(draft.value, 'Borrador de prueba');
   }
+  await view.scale('Día');
+  const restoredFull = document.querySelector('.history-full-toggle');
+  assert.equal(restoredFull.getAttribute('aria-expanded'), 'true', 'Exploration state survives scale changes');
+  await act(() => { restoredFull.focus(); restoredFull.click(); });
+  assert.equal(document.activeElement, restoredFull);
+  assert.equal(history.dataset.historyExpanded, 'false');
+  assert.equal(document.querySelector('.daily-panel'), daily);
+  assert.equal(document.getElementById('add-meal-description'), draft);
+  assert.equal(draft.value, 'Borrador de prueba');
+  assert.equal(view.heading(), past);
+  assert.equal(view.saves.length, 0);
+});
+
+test('compact controls select each period directly and expose official balance, intake and expenditure immediately', async t => {
+  const records = { [today]: makeRecord(today), [past]: { ...makeRecord(past), meals: [{ ...makeRecord(past).meals[0], calories: 2450 }] } };
+  const snapshot = structuredClone(records);
+  const view = await mount(t, records);
+  assert.equal(document.querySelector('.history-preview-grid'), null, 'Decorative fake controls are removed');
+  const calendar = buildHistoryPeriods(new Date());
+  const text = value => value.toLocaleString('es-AR');
+  for (const [scale, kind] of [['Semana', 'week'], ['Mes', 'month'], ['Año', 'year']]) {
+    await view.scale(scale);
+    assert.equal(document.querySelector('.history-full-toggle'), null);
+    const index = calendar[kind].findIndex(interval => interval.dates.includes(past));
+    const interval = calendar[kind][index];
+    const control = view.groups()[index];
+    assert.equal(control.tagName, 'BUTTON');
+    assert.equal(control.type, 'button');
+    await act(() => control.click()); // One activation: no disclosure and no second click.
+    const summary = aggregateEnergy(records, interval.dates, profile, today);
+    const figures = [...view.detail().querySelectorAll('.history-detail-primary dd')];
+    assert.equal(figures.length, 3);
+    assert.ok(figures[0].textContent.includes(text(summary.averageBalance)));
+    assert.ok(figures[1].textContent.includes(text(summary.consumed)));
+    assert.ok(figures[2].textContent.includes(text(summary.expenditure)));
+    assert.ok(figures.every(node => !node.closest('[hidden]')), 'Essential values are never hidden in an explanation');
+    assert.ok(view.detail().textContent.includes(interval.label));
+    assert.equal(control.getAttribute('aria-pressed'), 'true');
+    assert.equal(view.heading(), today, 'A grouped selection never changes the daily writer');
+    assert.equal(document.querySelector('.history-detail-toggle').getAttribute('aria-expanded'), 'false');
+  }
+  await view.scale('Día');
+  const compactDay = document.querySelector('.history-day[aria-label^="Seleccionar ' + past + '"]');
+  assert.ok(compactDay);
+  assert.equal(compactDay.tagName, 'BUTTON');
+  await act(() => compactDay.click());
+  assert.equal(view.heading(), past);
+  assert.equal(compactDay.getAttribute('aria-pressed'), 'true');
+  assert.equal(document.querySelector('.history-full-toggle').getAttribute('aria-expanded'), 'false');
+  assert.equal(document.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(past), true);
+  assert.equal(view.saves.length, 0);
+  assert.deepEqual(records, snapshot);
+});
+
+test('compact day ribbon and annual calendar use the same date and keyboard selection contract', async t => {
+  const view = await mount(t);
+  const strip = document.querySelector('.history-day-strip');
+  const buttons = [...strip.querySelectorAll('.history-day')];
+  assert.ok(buttons.length >= 365, 'Every existing calendar date remains available from the ribbon');
+  assert.equal(buttons.filter(button => button.tabIndex === 0).length, 1);
+  assert.equal(document.querySelectorAll('.heatmap-date[tabindex="0"]').length, 1);
+  const current = strip.querySelector('[aria-pressed="true"]');
+  current.focus();
+  await act(() => current.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true })));
+  assert.equal(document.activeElement, buttons.at(-2));
+  assert.equal(current.getAttribute('aria-pressed'), 'true', 'Arrow movement alone does not select');
+  await act(() => document.activeElement.click());
+  const selected = strip.querySelector('[aria-pressed="true"]');
+  const selectedLabel = selected.getAttribute('aria-label').slice('Seleccionar '.length, 'Seleccionar '.length + 10);
+  assert.equal(view.heading(), selectedLabel);
+  await act(() => document.querySelector('.history-full-toggle').click());
+  const fullSelected = document.querySelector('.heatmap-date[aria-pressed="true"]');
+  assert.ok(fullSelected.getAttribute('aria-label').includes(selectedLabel));
+  const annualPast = document.querySelector('.heatmap-date[aria-label^="Seleccionar ' + past + '"]');
+  await act(() => annualPast.click());
+  assert.equal(view.heading(), past);
+  assert.ok(strip.querySelector('[aria-pressed="true"]').getAttribute('aria-label').includes(past));
+  assert.ok(document.querySelector('.history-navigation input').value === past);
+  await act(() => document.querySelector('.history-full-toggle').click());
+  assert.ok(strip.querySelector('[aria-pressed="true"]').getAttribute('aria-label').includes(past));
+  assert.equal(view.saves.length, 0);
+});
+
+test('partial and provisional history explain missing data without changing official arithmetic', async t => {
+  const activity = { ...makeRecord(today), meals: [], steps: 7000 };
+  const records = { [today]: activity, [past]: makeRecord(past) };
+  const snapshot = structuredClone(records);
+  const view = await mount(t, records);
+  const official = aggregateEnergy(records, [today], profile, today);
+  const primary = document.querySelector('.history-detail-primary');
+  assert.match(primary.textContent, /Balance provisional/);
+  assert.match(view.detail().textContent, /Sin comidas registradas/);
+  assert.match(primary.textContent, /0 kcal registradas/);
+  assert.ok(primary.querySelector('dd').textContent.includes(official.averageBalance.toLocaleString('es-AR')));
+  assert.ok([...primary.querySelectorAll('dd')].at(-1).textContent.includes(official.expenditure.toLocaleString('es-AR')));
+  await view.scale('Semana');
+  const weeks = buildHistoryPeriods(new Date()).week;
+  const pastWeek = weeks.findIndex(interval => interval.dates.includes(past));
+  await act(() => view.groups()[pastWeek].click());
+  assert.match(view.detail().textContent, /1 de 7 días transcurridos con datos/);
+  assert.match(view.detail().textContent, /Cobertura parcial/);
+  await act(() => view.groups()[0].click());
+  assert.match(view.detail().textContent, /0 de 7/);
+  assert.ok([...document.querySelectorAll('.history-detail-primary dd')].every(node => node.textContent === 'Sin datos'));
+  assert.doesNotMatch(view.detail().textContent, /0 kcal registradas/);
+  assert.equal(view.saves.length, 0);
+  assert.deepEqual(records, snapshot);
+});
+
+test('direct history interaction retains an exercise draft through days, groups and calendar disclosure without writes', async t => {
+  const view = await mount(t);
+  await act(() => view.button('+ Ejercicio').click());
+  const values = { 'add-workout-activity': 'Correr', 'add-workout-duration': '35', 'add-workout-calories': '280',
+    'add-workout-notes': 'Borrador de ejercicio que debe seguir disponible' };
+  for (const [id, value] of Object.entries(values)) {
+    const input = document.getElementById(id);
+    const prototype = input.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+    await act(() => {
+      Object.getOwnPropertyDescriptor(prototype, 'value').set.call(input, value);
+      input.dispatchEvent(new window.Event('input', { bubbles: true }));
+    });
+  }
+  const form = document.getElementById('add-workout-activity').closest('form');
+  await view.selectDay(past);
+  for (const scale of ['Semana', 'Mes', 'Año']) {
+    await view.scale(scale);
+    await act(() => view.groups()[0].click());
+    for (const [id, value] of Object.entries(values)) {
+      assert.equal(document.getElementById(id).value, value);
+      assert.equal(document.getElementById(id).closest('form'), form);
+    }
+  }
+  await view.scale('Día');
+  await act(() => document.querySelector('.history-full-toggle').click());
+  await act(() => document.querySelector('.history-detail-toggle').click());
+  await act(() => document.querySelector('.history-full-toggle').click());
+  for (const [id, value] of Object.entries(values)) assert.equal(document.getElementById(id).value, value);
   assert.equal(view.heading(), past);
   assert.equal(view.saves.length, 0);
 });
