@@ -198,8 +198,8 @@ html:not(.dark) .home-variants.entry-sheet-root .entry-ai-action { color: #a34e1
 .home-variants :is(.daily-habits button, .daily-quick-actions button, .habit-adjustments button):active:not(:disabled) { transform: scale(.97); }
 .home-variants .daily-panel form[class~="animate-in"], .home-variants .habit-adjustments,
 .home-variants .energy-metrics details[open] > div { animation: calori-enter var(--motion-control) var(--motion-ease-enter); }
-.home-variants .heatmap-cell { transition: transform var(--motion-fast) var(--motion-ease-control), background-color var(--motion-fast) var(--motion-ease-control); }
-.home-variants .heatmap-cell[aria-pressed="true"] { animation: calori-cell var(--motion-fast) var(--motion-ease-control); }
+.home-variants .heatmap-cell { transition: transform var(--motion-fast) var(--motion-ease-control), background-color var(--motion-fast) var(--motion-ease-control), opacity var(--motion-control) var(--motion-ease-control); }
+.home-variants .heatmap-date[aria-pressed="true"] > .heatmap-cell { animation: calori-cell var(--motion-fast) var(--motion-ease-control); }
 .home-variants .daily-panel > .fixed.inset-0 { animation: calori-fade var(--motion-control) var(--motion-ease-enter); }
 .home-variants .daily-panel > .fixed.inset-0 > div { animation: calori-dialog var(--motion-control) var(--motion-ease-enter); }
 html:not(.dark) .home-variants {
@@ -357,8 +357,7 @@ html:not(.dark) .home-variants .activity-history { --heatmap-selected: #2563eb; 
 html:not(.dark) .home-variants .daily-logs,
 html:not(.dark) .home-variants .activity-history { background: #ffffff; border-color: #e2e8f0; }
 html:not(.dark) .home-variants .activity-history .period-switch { background: #f8f7f4; border-color: #e2e8f0; }
-html:not(.dark) .home-variants .activity-history .period-switch button[aria-pressed="true"],
-html:not(.dark) .home-variants .history-full-toggle { color: #9a4d1f; }
+html:not(.dark) .home-variants .activity-history .period-switch button[aria-pressed="true"] { color: #9a4d1f; }
 html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 @media (max-width: 639px) {
   .home-variants .activity-history { padding: 16px; gap: 12px; }
@@ -390,7 +389,7 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 .home-variants .history-navigation p { color: var(--home-muted); font-size: 12px; }
 .home-variants .history-navigation label { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--home-muted); }
 .home-variants .history-navigation input { min-width: 0; min-height: 44px; max-width: 100%; padding: 8px 10px; font-size: 13px; border: 1px solid var(--home-line); border-radius: var(--home-radius-control); color: var(--home-text); background: var(--home-control); }
-.home-variants .heatmap-frame { --history-cell: 16px; --history-gap: 4px; display: flex; align-items: center; width: 100%; min-width: 0; min-block-size: 0; container-type: inline-size; }
+.home-variants .heatmap-frame { --history-cell: 16px; --history-swatch: 100%; --history-gap: 4px; display: flex; align-items: center; width: 100%; min-width: 0; min-block-size: 0; container-type: inline-size; }
 .home-variants .heatmap-layout { display: flex; align-items: flex-start; width: 100%; min-width: 0; --history-cell: clamp(16px, calc((100cqw - 40px - (var(--history-columns) - 1) * var(--history-gap)) / var(--history-columns)), 22px); }
 .home-variants .heatmap-weekdays { flex: none; width: 36px; display: flex; flex-direction: column; gap: var(--history-gap); padding: 22px 6px 2px 0; }
 .home-variants .heatmap-weekdays span { height: var(--history-cell); line-height: var(--history-cell); font-size: 10px; text-align: right; color: var(--home-muted); }
@@ -401,9 +400,11 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 .home-variants .heatmap-months span { position: absolute; font-size: 11px; text-transform: capitalize; color: var(--home-muted); }
 .home-variants .heatmap-grid { display: flex; gap: var(--history-gap); padding: 2px; }
 .home-variants .heatmap-column { display: flex; flex-direction: column; gap: var(--history-gap); }
-.home-variants .heatmap-grid :is(.heatmap-cell, .heatmap-date) { width: var(--history-cell); height: var(--history-cell); flex: none; }
-.home-variants .heatmap-cell { border-radius: 3px; transition: opacity var(--motion-control) var(--motion-ease-control); }
-.home-variants .heatmap-cell:hover { opacity: .8; }
+.home-variants .heatmap-grid .heatmap-date { display: grid; place-items: center; width: var(--history-cell); height: var(--history-cell); flex: none; padding: 0; border: 0; border-radius: var(--radius-micro); background: transparent; }
+.home-variants .heatmap-date > .heatmap-cell { display: block; width: var(--history-swatch); height: var(--history-swatch); pointer-events: none; }
+.home-variants .activity-history .heatmap-date:focus-visible { outline-offset: 0; }
+.home-variants .heatmap-cell { border-radius: var(--radius-micro); }
+.home-variants .heatmap-date:hover > .heatmap-cell { opacity: .8; }
 .home-variants .history-period-grid { min-width: 0; display: grid; grid-template-columns: repeat(var(--history-grid-columns), minmax(0, 1fr)); width: 100%; gap: 8px; }
 .home-variants .history-period-grid--week { --history-grid-columns: 11; }
 .home-variants .history-period-grid--month { --history-grid-columns: 4; }
@@ -436,7 +437,7 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 .home-variants .history-detail-body[data-period="day"] .history-detail-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .home-variants .history-detail-extra { min-width: 0; grid-column: 1 / -1; }
 .home-variants .history-method { margin-top: var(--space-small); color: var(--home-muted); font-size: 12px; line-height: 1.5; }
-.home-variants :is(.history-mobile-hint, .history-period-label-compact, .history-week-range, .history-day-navigation, .history-ribbon-navigation, .history-full-toggle) { display: none; }
+.home-variants :is(.history-mobile-hint, .history-period-label-compact, .history-week-range, .history-ribbon-navigation, .history-calendar-navigation) { display: none; }
 .home-variants .history-detail-toggle { display: inline-flex; justify-content: center; align-items: center; min-height: 44px; padding: var(--space-small); border-radius: var(--radius-control); color: var(--home-muted); font-size: 12px; text-align: center; background: transparent; }
 .home-variants .history-explore { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-small) var(--space-compact); min-width: 0; }
 .home-variants .history-detail-toggle:hover { background: var(--home-hover); }
@@ -482,7 +483,8 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
   .home-variants .history-help { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .home-variants :is(.heatmap-cell, .history-period, .history-day) { transition: none; animation: none; scroll-behavior: auto; }
+  .home-variants :is(.heatmap-date, .heatmap-cell, .heatmap-scroll, .history-period) { transition: none; animation: none; scroll-behavior: auto; }
+  .home-variants .heatmap-date[aria-pressed="true"] > .heatmap-cell { animation: none; }
 }
 /* Desktop has three real rows: summary, journal and annual activity. Normal
    content grows with the page; only the calendar can scroll horizontally. */
@@ -555,8 +557,8 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 @media (min-width: 1440px) {
   .app-shell .home-variants .history-period-grid--week { --history-grid-columns: 18; }
 }
-/* Direct selection uses the same interval controls at every width. Only the
-   optional annual day calendar is disclosed on narrow screens. */
+/* One annual day calendar stays directly selectable at every width. The
+   compact hitbox and its colored swatch have independent, nonoverlapping sizes. */
 .home-variants .history-visualization { display: flex; flex-direction: column; gap: var(--space-small); min-width: 0; width: 100%; }
 .home-variants .history-annual-calendar { min-width: 0; width: 100%; }
 .home-variants :is(.history-week-range, .history-ribbon-navigation) { min-width: 0; }
@@ -577,21 +579,10 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
   .home-variants .history-navigation { width: 100%; }
   .home-variants .history-navigation label { justify-content: space-between; width: 100%; }
   .home-variants .history-navigation input { flex: 1; max-width: 192px; }
-  .home-variants .history-day-navigation { display: flex; flex-direction: column; gap: var(--space-small); min-width: 0; width: 100%; }
-  .home-variants .history-day-strip { display: flex; gap: var(--space-small); min-width: 0; width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; scroll-padding-inline: 2px; padding: 2px 2px 6px; }
-  .home-variants .history-day-strip::-webkit-scrollbar { display: none; }
-  .home-variants .history-day { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; flex: 0 0 52px; min-width: 48px; min-height: 76px; padding: var(--space-small) 4px 12px; border: 1px solid var(--home-line); border-radius: var(--radius-control); background: var(--home-control); color: var(--home-text); font-size: 12px; line-height: 1.4; }
-  .home-variants .history-day strong { font-size: 18px; font-weight: 500; font-variant-numeric: tabular-nums; }
-  .home-variants .history-day small { color: var(--home-muted); font-size: 10px; }
-  .home-variants .history-day:hover { background: var(--home-hover); }
-  .home-variants .history-day[aria-pressed="true"] { border-color: var(--heatmap-selected); box-shadow: inset 0 0 0 1px var(--heatmap-selected); }
-  .home-variants .history-day-swatch { position: absolute; left: 8px; right: 8px; bottom: 4px; height: 3px; border-radius: var(--radius-micro); }
   .home-variants .history-ribbon-navigation { display: flex; align-items: center; justify-content: space-between; gap: var(--space-small); }
   .home-variants .history-ribbon-navigation > p { min-width: 0; color: var(--home-muted); font-size: 12px; line-height: 1.5; }
-  .home-variants .history-annual-calendar .heatmap-layout { --history-cell: 44px; }
-  .home-variants .history-full-toggle { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; max-width: 100%; padding: var(--space-small); border-radius: var(--radius-control); color: var(--home-orange); background: transparent; font-size: 12px; }
-  .home-variants .history-full-toggle:hover { background: var(--home-hover); }
+  .home-variants .history-annual-calendar .heatmap-layout { --history-cell: 24px; --history-swatch: 16px; }
+  .home-variants .history-calendar-navigation { display: flex; align-items: center; justify-content: space-between; gap: var(--space-small); min-width: 0; }
+  .home-variants .history-calendar-navigation > p { min-width: 0; color: var(--home-muted); font-size: 12px; line-height: 1.5; }
   .home-variants .history-explore { justify-content: space-between; }
-  .home-variants .activity-history[data-history-expanded="false"] .history-annual-calendar { display: none; }
-  .home-variants .activity-history[data-history-expanded="true"] .history-day-navigation { display: none; }
 }

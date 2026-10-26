@@ -1,0 +1,80 @@
+{
+  "base": "881c86ded46d4273189d22c9ecdb2f146b8774b0",
+  "testFiles": 31,
+  "tests": 353,
+  "batches": [
+    {
+      "index": 0,
+      "files": [
+        "tests/ai-security.test.mjs",
+        "tests/chart-stats.test.mjs",
+        "tests/coach-goal-proposal.test.mjs",
+        "tests/coach-goals.test.mjs",
+        "tests/coach-response-policy.test.mjs",
+        "tests/coach.test.mjs",
+        "tests/energy.test.mjs",
+        "tests/heatmap-activity.test.mjs",
+        "tests/history-periods.test.mjs",
+        "tests/precision-layout.test.mjs",
+        "tests/ui-polish.test.mjs"
+      ],
+      "code": 0,
+      "tests": 136,
+      "pass": 136,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "index": 1,
+      "files": [
+        "tests/ai-transport.test.mjs",
+        "tests/charts-view.test.mjs",
+        "tests/coach-goals-client.test.mjs",
+        "tests/coach-immediate-time.test.mjs",
+        "tests/coach-serverless-runtime.test.mjs",
+        "tests/daily-panel.test.mjs",
+        "tests/estimate.test.mjs",
+        "tests/heatmap-balance.test.mjs",
+        "tests/meal-stats.test.mjs",
+        "tests/public-entry.test.mjs"
+      ],
+      "code": 0,
+      "tests": 127,
+      "pass": 127,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "index": 2,
+      "files": [
+        "tests/auto-resize-textarea.test.mjs",
+        "tests/chat-view.test.mjs",
+        "tests/coach-goals-postgres.test.mjs",
+        "tests/coach-presentation.test.mjs",
+        "tests/coach-store-sync.test.mjs",
+        "tests/desktop-experience.test.mjs",
+        "tests/habit-insights.test.mjs",
+        "tests/history-experience.test.mjs",
+        "tests/persistence.test.mjs",
+        "tests/reset-data.test.mjs"
+      ],
+      "code": 0,
+      "tests": 90,
+      "pass": 90,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  ],
+  "static": {
+    "lint": 0,
+    "build": 0,
+    "aiTypeScript": 0,
+    "coachTypeScript": 0
+  },
+  "visualCases": 72,
+  "globalHorizontalOverflow": 0,
+  "limitation": "Local browser uses synthetic data and mocked services; physical touch, native text zoom and screen readers remain manual."
+}

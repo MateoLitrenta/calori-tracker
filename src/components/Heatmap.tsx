@@ -30,13 +30,10 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
   const detailId = useId();
   const dateInputId = useId();
   const helpId = useId();
-  const visualizationId = useId();
-  const dayStripRef = useRef<HTMLDivElement>(null);
   const scrollPositions = useRef<Record<string, number>>({});
-  const [historyExpanded, setHistoryExpanded] = useState(false);
   const requestedDayReveal = useRef(false);
-  const selectDay = (date: string, compact = false) => {
-    requestedDayReveal.current = !compact;
+  const selectDay = (date: string, reveal = false) => {
+    requestedDayReveal.current = reveal;
     onSelectDate(date);
   };
   const todayStr = formatDateStr(new Date());
@@ -53,7 +50,6 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
   const coverage = selected
     ? detail.days + ' de ' + selected.elapsed + ' días transcurridos con datos'
     : detail.days ? 'Con datos energéticos' : 'Sin datos energéticos';
-  const days = calendar.columns.flat().filter((date): date is string => date !== null);
   const provisional = detail.days > 0 && (selected ? selected.dates : [selectedDateStr])
     .some(date => date <= todayStr && getNetBalance(records[date], profile) !== null && !records[date]?.meals.length);
   const status = provisional ? 'Sin comidas registradas en ' + (selected ? 'algunos días con actividad' : 'este día') : '';
@@ -63,7 +59,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     if (element.clientWidth && element.scrollWidth > element.clientWidth) scrollPositions.current[scrollKey(surface)] = element.scrollLeft;
   };
   const moveRibbon = (direction: number) => {
-    const element = period === 'day' ? dayStripRef.current : groupScrollRef.current;
+    const element = period === 'day' ? scrollContainerRef.current : groupScrollRef.current;
     if (element) element.scrollLeft += direction * Math.max(48, element.clientWidth * .8);
   };
   const heatmapUnit = period === 'day' ? 'kcal' : 'kcal/día';
@@ -71,7 +67,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
   // Restore each exploration surface; selecting never recenters a manually scrolled ribbon.
   useLayoutEffect(() => {
     const surfaces: [string, HTMLDivElement | null][] = period === 'day'
-      ? [['day-strip', dayStripRef.current], ['day-calendar', scrollContainerRef.current]]
+      ? [['day-calendar', scrollContainerRef.current]]
       : [[period, groupScrollRef.current]];
     const restore = () => {
       for (const [surface, scroll] of surfaces) {
@@ -88,20 +84,20 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     restore();
     window.addEventListener('resize', restore);
     return () => window.removeEventListener('resize', restore);
-  }, [period, historyExpanded]);
+  }, [period]);
 
-  // A deliberate date jump reveals that date once. Ribbon clicks keep manual scroll.
+  // Explicit date jumps reveal the selection once; cell taps keep manual exploration.
   useLayoutEffect(() => {
-    const strip = dayStripRef.current;
-    if (!requestedDayReveal.current || period !== 'day' || !strip?.clientWidth) return;
-    const button = strip.querySelector<HTMLElement>('[data-date="' + selectedDateStr + '"]');
+    const scroll = scrollContainerRef.current;
+    if (!requestedDayReveal.current || period !== 'day' || !scroll?.clientWidth) return;
+    const button = scroll.querySelector<HTMLElement>('[data-date="' + selectedDateStr + '"]');
     if (button) {
       const bounds = button.getBoundingClientRect();
-      const viewport = strip.getBoundingClientRect();
-      if (bounds.left < viewport.left || bounds.right > viewport.right) strip.scrollLeft += bounds.left - viewport.left - (strip.clientWidth - button.offsetWidth) / 2;
+      const viewport = scroll.getBoundingClientRect();
+      if (bounds.left < viewport.left || bounds.right > viewport.right) scroll.scrollLeft += bounds.left - viewport.left - (scroll.clientWidth - button.offsetWidth) / 2;
       requestedDayReveal.current = false;
     }
-  }, [selectedDateStr, historyExpanded, period]);
+  }, [selectedDateStr, period]);
 
   const navigate = (event: KeyboardEvent<HTMLDivElement>, daily = false) => {
     const buttons = [...event.currentTarget.querySelectorAll<HTMLButtonElement>('button')];
@@ -115,15 +111,18 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       ? { ArrowLeft: -7, ArrowRight: 7, ArrowUp: -1, ArrowDown: 1 }
       : columnFlow ? { ArrowLeft: -rows, ArrowRight: rows, ArrowUp: -1, ArrowDown: 1 }
       : { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -columns, ArrowDown: columns };
+    const candidate = index + steps[event.key];
+    const crossesRow = daily && ((event.key === 'ArrowUp' && index % 7 === 0)
+      || (event.key === 'ArrowDown' && index % 7 === 6) || candidate < 0 || candidate >= buttons.length);
     const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1
-      : event.key in steps ? Math.max(0, Math.min(buttons.length - 1, index + steps[event.key])) : null;
+      : event.key in steps ? Math.max(0, Math.min(buttons.length - 1, crossesRow ? index : candidate)) : null;
     if (next === null) return;
     event.preventDefault();
     buttons[next].focus();
   };
 
-  const renderDay = (dateStr: string | null, index: number, compact = false) => {
-    if (!dateStr) return <span key={'empty-' + index} className="heatmap-date invisible" />;
+  const renderDay = (dateStr: string | null, index: number) => {
+    if (!dateStr) return <span key={'empty-' + index} className="heatmap-date invisible" aria-hidden="true" />;
     const record = records[dateStr];
     const balance = getNetBalance(record, profile);
     const isSelected = selectedDateStr === dateStr;
@@ -132,18 +131,17 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     const activityText = (activities.gym ? ' · Gimnasio' : '') + (activities.football ? ' · Fútbol' : '');
     const stateText = getBalanceLabel(balance) + activityText + (isSelected ? ' · Seleccionado' : '');
     const description = dateStr + ': ' + stateText + (balance !== null ? ' · ' + balance + ' kcal' : '');
-    return <button key={dateStr} type="button" onClick={() => selectDay(dateStr, compact)}
-      className={compact ? 'history-day' : 'heatmap-date heatmap-cell ' + getHeatmapColor(balance)}
+    return <button key={dateStr} type="button" onClick={() => selectDay(dateStr)}
+      className="heatmap-date"
       data-date={dateStr} data-border={border} title={description}
       aria-label={'Seleccionar ' + dateStr + ' · ' + stateText + (balance !== null ? ' · ' + balance + ' kcal' : '')}
       aria-pressed={isSelected} tabIndex={isSelected ? 0 : -1}>
-      {compact && <><span>{format(parseISO(dateStr), 'EEE', { locale: es })}</span><strong>{format(parseISO(dateStr), 'd')}</strong>
-        <small>{format(parseISO(dateStr), 'MMM yy', { locale: es })}</small><i className={'history-day-swatch ' + getHeatmapColor(balance)} aria-hidden="true" /></>}
+      <span className={'heatmap-cell ' + getHeatmapColor(balance)} data-border={border} aria-hidden="true" />
     </button>;
   };
 
   return (
-    <section className="activity-history" aria-label="Historial de Actividad" data-history-expanded={historyExpanded} onClick={event => event.stopPropagation()}>
+    <section className="activity-history" aria-label="Historial de Actividad" onClick={event => event.stopPropagation()}>
       <div className="activity-history-header">
         <div>
           <h2>Historial de actividad</h2>
@@ -155,7 +153,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
               min={calendar.columns[0][0]!} max={todayStr}
               onChange={event => {
                 const value = event.target.value;
-                if (value && value >= calendar.columns[0][0]! && value <= todayStr) selectDay(value);
+                if (value && value >= calendar.columns[0][0]! && value <= todayStr) selectDay(value, true);
               }} />
           </label>
         </div>}
@@ -182,16 +180,10 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       </div>
 
       <div className="history-visualization">
-        {period === 'day' && <div className="history-day-navigation">
-          <div className="history-ribbon-navigation"><p>Elegí un día · deslizá para explorar</p><div className="history-strip-actions">
-            <button type="button" aria-label="Ver días anteriores" onClick={() => moveRibbon(-1)}>←</button>
-            <button type="button" aria-label="Ver días siguientes" onClick={() => moveRibbon(1)}>→</button>
-          </div></div>
-          <div ref={dayStripRef} className="history-day-strip" role="group" aria-label="Selector diario" aria-describedby={helpId}
-            onScroll={event => rememberScroll('day-strip', event.currentTarget)} onKeyDown={event => navigate(event)}>
-            {days.map((day, index) => renderDay(day, index, true))}
-          </div>
-        </div>}
+        {period === 'day' && <div className="history-calendar-navigation"><p>Deslizá para explorar el año</p><div className="history-strip-actions">
+          <button type="button" aria-label="Ver días anteriores" onClick={() => moveRibbon(-1)}>←</button>
+          <button type="button" aria-label="Ver días siguientes" onClick={() => moveRibbon(1)}>→</button>
+        </div></div>}
         {period === 'week' && <div className="history-ribbon-navigation history-week-navigation"><p>53 semanas · deslizá para explorar</p><div className="history-strip-actions">
           <button type="button" aria-label="Ver semanas anteriores" onClick={() => moveRibbon(-1)}>←</button>
           <button type="button" aria-label="Ver semanas siguientes" onClick={() => moveRibbon(1)}>→</button>
@@ -199,7 +191,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
 
         <div className="heatmap-frame" data-period={period}
           style={{ '--history-columns': calendar.columns.length } as CSSProperties}>
-          {period === 'day' ? <div id={visualizationId} className="history-annual-calendar"><div className="heatmap-layout">
+          {period === 'day' ? <div className="history-annual-calendar"><div className="heatmap-layout">
             <div className="heatmap-weekdays" aria-hidden="true">
               {['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map((day, i) => <span key={day}>{i % 2 !== 0 ? day : ''}</span>)}
             </div>
@@ -249,8 +241,6 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       </div>
 
       <div className="history-explore">
-        {period === 'day' && <button type="button" className="history-full-toggle" aria-expanded={historyExpanded} aria-controls={visualizationId}
-          onClick={() => setHistoryExpanded(value => !value)}>{historyExpanded ? 'Volver a la cinta de días' : 'Explorar calendario anual'}</button>}
         <button type="button" className="history-detail-toggle" aria-expanded={detailExpanded} aria-controls={detailId}
           onClick={() => setDetailExpanded(value => !value)}>{detailExpanded ? 'Ocultar explicación' : 'Cómo leer estos datos'}</button>
       </div>

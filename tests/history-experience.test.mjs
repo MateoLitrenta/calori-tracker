@@ -75,7 +75,7 @@ async function mount(t, initial = { [today]: makeRecord(today), [past]: makeReco
   const button = text => [...document.querySelectorAll('button')].find(node => node.textContent.trim() === text);
   return { saves, button, scale: async name => act(() => button(name).click()),
     resize: async mobile => act(() => { compact = mobile; window.dispatchEvent(new window.Event('resize')); }),
-    selectDay: async date => act(() => document.querySelector('.history-day[aria-label^="Seleccionar ' + date + '"]').click()),
+    selectDay: async date => act(() => document.querySelector('.heatmap-date[aria-label^="Seleccionar ' + date + '"]').click()),
     groups: () => [...document.querySelectorAll('.history-period')],
     heading: () => document.querySelector('.daily-heading time').dateTime,
     detail: () => document.querySelector('.history-detail'),
@@ -317,7 +317,7 @@ test('manual ribbon scroll survives selection, resize and scale changes without 
   assert.equal(view.saves.length, 0);
 });
 
-test('annual-calendar and explanation disclosures retain selections, official figures, draft and focus independently', async t => {
+test('the single annual calendar and supporting explanation preserve selection, figures, draft and focus', async t => {
   const view = await mount(t);
   await view.selectDay(past);
   await act(() => view.button('+ Comida').click());
@@ -326,35 +326,26 @@ test('annual-calendar and explanation disclosures retain selections, official fi
     Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(draft, 'Borrador de prueba');
     draft.dispatchEvent(new window.Event('input', { bubbles: true }));
   });
-  const full = document.querySelector('.history-full-toggle');
-  const annual = document.getElementById(full.getAttribute('aria-controls'));
   const daily = document.querySelector('.daily-panel');
-  const history = document.querySelector('.activity-history');
-  assert.equal(full.getAttribute('aria-expanded'), 'false');
-  assert.match(full.textContent, /Explorar calendario anual/);
-  assert.ok(annual.classList.contains('history-annual-calendar'));
+  assert.equal(document.querySelectorAll('.history-annual-calendar').length, 1);
+  assert.equal(document.querySelector('.history-full-toggle'), null, 'The full year is already the primary interactive calendar');
+  assert.equal(document.querySelector('.history-day-strip'), null, 'No duplicate date selector needs synchronization');
+  assert.equal(document.querySelector('.history-day'), null);
   const details = document.querySelector('.history-detail-toggle');
   const explanation = document.getElementById(details.getAttribute('aria-controls'));
-  const primaryValues = () => [...view.detail().querySelectorAll('.history-detail-primary dd')].map(node => node.textContent);
-  const values = primaryValues();
-  assert.equal(values.length, 3, 'All essential figures are available without an expansion');
-  await act(() => { full.focus(); full.click(); });
-  assert.equal(history.dataset.historyExpanded, 'true');
-  assert.equal(full.getAttribute('aria-expanded'), 'true');
-  assert.equal(document.activeElement, full);
-  assert.match(full.textContent, /Volver a la cinta de días/);
-  assert.equal(annual.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(past), true);
-  const grid = annual.querySelector('.heatmap-grid');
+  const values = [...view.detail().querySelectorAll('.history-detail-primary dd')].map(node => node.textContent);
+  assert.equal(values.length, 3);
+  const grid = document.querySelector('.heatmap-grid');
   assert.match(document.getElementById(grid.getAttribute('aria-describedby')).textContent, /Flechas.*Inicio.*Fin.*Enter/);
-  await act(() => details.click());
+  await act(() => { details.focus(); details.click(); });
+  assert.equal(document.activeElement, details);
   assert.equal(explanation.hidden, false);
-  assert.equal(full.getAttribute('aria-expanded'), 'true');
-  assert.deepEqual(primaryValues(), values);
+  assert.deepEqual([...view.detail().querySelectorAll('.history-detail-primary dd')].map(node => node.textContent), values);
   for (const [scale, count] of [['Semana', 53], ['Mes', 12], ['Año', 2]]) {
     await view.scale(scale);
-    assert.equal(document.querySelector('.history-full-toggle'), null, 'Grouped selection has no expansion gate');
+    assert.equal(document.querySelector('.history-full-toggle'), null);
     assert.equal(view.groups().length, count);
-    assert.equal(document.querySelectorAll('.history-period-grid').length, 1, 'A single control set owns grouped selection');
+    assert.equal(document.querySelectorAll('.history-period-grid').length, 1);
     await act(() => view.groups()[0].click());
     assert.equal(view.groups()[0].getAttribute('aria-pressed'), 'true');
     assert.equal(details.getAttribute('aria-expanded'), 'true');
@@ -362,11 +353,12 @@ test('annual-calendar and explanation disclosures retain selections, official fi
     assert.equal(draft.value, 'Borrador de prueba');
   }
   await view.scale('Día');
-  const restoredFull = document.querySelector('.history-full-toggle');
-  assert.equal(restoredFull.getAttribute('aria-expanded'), 'true', 'Exploration state survives scale changes');
-  await act(() => { restoredFull.focus(); restoredFull.click(); });
-  assert.equal(document.activeElement, restoredFull);
-  assert.equal(history.dataset.historyExpanded, 'false');
+  assert.equal(document.querySelectorAll('.history-annual-calendar').length, 1);
+  assert.equal(document.querySelectorAll('button.heatmap-date[aria-pressed="true"]').length, 1);
+  assert.ok(document.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(past));
+  await act(() => { details.focus(); details.click(); });
+  assert.equal(document.activeElement, details);
+  assert.equal(explanation.hidden, true);
   assert.equal(document.querySelector('.daily-panel'), daily);
   assert.equal(document.getElementById('add-meal-description'), draft);
   assert.equal(draft.value, 'Borrador de prueba');
@@ -403,44 +395,55 @@ test('compact controls select each period directly and expose official balance, 
     assert.equal(document.querySelector('.history-detail-toggle').getAttribute('aria-expanded'), 'false');
   }
   await view.scale('Día');
-  const compactDay = document.querySelector('.history-day[aria-label^="Seleccionar ' + past + '"]');
+  const compactDay = document.querySelector('.heatmap-date[aria-label^="Seleccionar ' + past + '"]');
   assert.ok(compactDay);
   assert.equal(compactDay.tagName, 'BUTTON');
   await act(() => compactDay.click());
   assert.equal(view.heading(), past);
   assert.equal(compactDay.getAttribute('aria-pressed'), 'true');
-  assert.equal(document.querySelector('.history-full-toggle').getAttribute('aria-expanded'), 'false');
+  const daySummary = aggregateEnergy(records, [past], profile, today);
+  const dayFigures = [...view.detail().querySelectorAll('.history-detail-primary dd')];
+  assert.ok(dayFigures[0].textContent.includes(text(daySummary.averageBalance)));
+  assert.ok(dayFigures[1].textContent.includes(text(daySummary.consumed)));
+  assert.ok(dayFigures[2].textContent.includes(text(daySummary.expenditure)));
+  assert.equal(document.querySelector('.history-full-toggle'), null);
   assert.equal(document.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(past), true);
   assert.equal(view.saves.length, 0);
   assert.deepEqual(records, snapshot);
 });
 
-test('compact day ribbon and annual calendar use the same date and keyboard selection contract', async t => {
+test('one annual heatmap preserves seven rows, exact dates, semantic inner squares and calendar keyboard geometry', async t => {
   const view = await mount(t);
-  const strip = document.querySelector('.history-day-strip');
-  const buttons = [...strip.querySelectorAll('.history-day')];
-  assert.ok(buttons.length >= 365, 'Every existing calendar date remains available from the ribbon');
+  const calendar = buildHistoryPeriods(new Date());
+  const columns = [...document.querySelectorAll('.heatmap-column')];
+  const buttons = [...document.querySelectorAll('button.heatmap-date')];
+  const actualDates = calendar.columns.flat().filter(Boolean);
+  assert.equal(columns.length, calendar.columns.length);
+  assert.ok(columns.every(column => column.children.length === 7));
+  assert.deepEqual(buttons.map(button => button.dataset.date), actualDates);
+  assert.equal(new Set(buttons.map(button => button.dataset.date)).size, buttons.length);
+  assert.ok(buttons.every(button => button.dataset.date <= today), 'Future dates are placeholders, never enabled date buttons');
+  assert.equal(document.querySelectorAll('.heatmap-column > span.invisible').length, calendar.columns.flat().filter(date => date === null).length);
+  assert.ok([...document.querySelectorAll('.heatmap-column > span.invisible')].every(node => !node.hasAttribute('data-date') && node.tabIndex === -1 && node.getAttribute('aria-hidden') === 'true'));
+  assert.ok(buttons.every(button => button.tagName === 'BUTTON' && button.type === 'button'));
+  assert.ok(buttons.every(button => button.children.length === 1 && button.firstElementChild.matches('span.heatmap-cell')));
+  assert.ok(buttons.every(button => button.firstElementChild.getAttribute('aria-hidden') === 'true'));
   assert.equal(buttons.filter(button => button.tabIndex === 0).length, 1);
-  assert.equal(document.querySelectorAll('.heatmap-date[tabindex="0"]').length, 1);
-  const current = strip.querySelector('[aria-pressed="true"]');
-  current.focus();
-  await act(() => current.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true })));
-  assert.equal(document.activeElement, buttons.at(-2));
-  assert.equal(current.getAttribute('aria-pressed'), 'true', 'Arrow movement alone does not select');
+  const selected = document.querySelector('.heatmap-date[aria-pressed="true"]');
+  const index = buttons.indexOf(selected);
+  selected.focus();
+  const press = async key => act(() => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })));
+  await press('ArrowLeft');
+  assert.equal(document.activeElement, buttons[index - 7], 'Left moves one calendar week');
+  await press('ArrowUp');
+  assert.equal(document.activeElement, buttons[index - 8], 'Up moves one weekday row');
+  assert.equal(selected.getAttribute('aria-pressed'), 'true', 'Roving alone does not change the consulted day');
+  const newDate = document.activeElement.dataset.date;
   await act(() => document.activeElement.click());
-  const selected = strip.querySelector('[aria-pressed="true"]');
-  const selectedLabel = selected.getAttribute('aria-label').slice('Seleccionar '.length, 'Seleccionar '.length + 10);
-  assert.equal(view.heading(), selectedLabel);
-  await act(() => document.querySelector('.history-full-toggle').click());
-  const fullSelected = document.querySelector('.heatmap-date[aria-pressed="true"]');
-  assert.ok(fullSelected.getAttribute('aria-label').includes(selectedLabel));
-  const annualPast = document.querySelector('.heatmap-date[aria-label^="Seleccionar ' + past + '"]');
-  await act(() => annualPast.click());
-  assert.equal(view.heading(), past);
-  assert.ok(strip.querySelector('[aria-pressed="true"]').getAttribute('aria-label').includes(past));
-  assert.ok(document.querySelector('.history-navigation input').value === past);
-  await act(() => document.querySelector('.history-full-toggle').click());
-  assert.ok(strip.querySelector('[aria-pressed="true"]').getAttribute('aria-label').includes(past));
+  assert.equal(view.heading(), newDate);
+  assert.equal(document.querySelector('.history-navigation input').value, newDate);
+  assert.equal(document.querySelectorAll('.heatmap-date[aria-pressed="true"]').length, 1);
+  assert.ok(document.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(newDate));
   assert.equal(view.saves.length, 0);
 });
 
@@ -470,7 +473,7 @@ test('partial and provisional history explain missing data without changing offi
   assert.deepEqual(records, snapshot);
 });
 
-test('direct history interaction retains an exercise draft through days, groups and calendar disclosure without writes', async t => {
+test('direct history interaction retains an exercise draft through dates, groups and explanation without writes', async t => {
   const view = await mount(t);
   await act(() => view.button('+ Ejercicio').click());
   const values = { 'add-workout-activity': 'Correr', 'add-workout-duration': '35', 'add-workout-calories': '280',
@@ -494,85 +497,108 @@ test('direct history interaction retains an exercise draft through days, groups 
     }
   }
   await view.scale('Día');
-  await act(() => document.querySelector('.history-full-toggle').click());
   await act(() => document.querySelector('.history-detail-toggle').click());
-  await act(() => document.querySelector('.history-full-toggle').click());
+  await view.selectDay(today);
+  await view.selectDay(past);
+  await act(() => document.querySelector('.history-detail-toggle').click());
   for (const [id, value] of Object.entries(values)) assert.equal(document.getElementById(id).value, value);
   assert.equal(view.heading(), past);
   assert.equal(view.saves.length, 0);
 });
 
-// JSDOM does not perform responsive layout. These bounded geometry fixtures
-// reproduce hidden->visible surfaces and horizontal offsets; browser coverage
-// independently verifies actual CSS, native date input and keyboard activation.
-test('desktop-to-mobile resize reveals the day selection and never stores hidden-surface scroll as the mobile position', async t => {
+// JSDOM does not perform responsive layout. Bounded geometry fixtures cover the
+// single calendar scrollport; the browser review measures actual CSS and touch targets.
+test('calendar resize reveals the selected date and keeps compact and wide manual positions separate', async t => {
   const view = await mount(t);
-  const strip = document.querySelector('.history-day-strip');
-  const selected = strip.querySelector('[aria-pressed="true"]');
-  let width = 0; // The compact ribbon is hidden on desktop.
-  Object.defineProperties(strip, { clientWidth: { get: () => width }, scrollWidth: { value: 4000 } });
-  Object.defineProperty(selected, 'offsetWidth', { value: 44 });
-  strip.getBoundingClientRect = () => ({ left: 10, right: 310 });
-  selected.getBoundingClientRect = () => ({ left: 910 - strip.scrollLeft, right: 954 - strip.scrollLeft });
+  const scroll = document.querySelector('.heatmap-scroll');
+  const selected = scroll.querySelector('[aria-pressed="true"]');
+  let compact = false;
+  Object.defineProperties(scroll, { clientWidth: { get: () => compact ? 300 : 1400 }, scrollWidth: { get: () => compact ? 4000 : 1400 } });
+  Object.defineProperty(selected, 'offsetWidth', { value: 24 });
+  scroll.getBoundingClientRect = () => ({ left: 10, right: compact ? 310 : 1410 });
+  selected.getBoundingClientRect = () => ({ left: 910 - scroll.scrollLeft, right: 934 - scroll.scrollLeft });
   const pageScroll = document.documentElement.scrollTop;
-  await act(() => strip.dispatchEvent(new window.Event('scroll', { bubbles: true })));
-  width = 300;
+  await act(() => scroll.dispatchEvent(new window.Event('scroll', { bubbles: true })));
+  compact = true;
   await view.resize(true);
-  assert.equal(strip.scrollLeft, 772, 'The first mobile entry must reveal the selected day');
-  assert.equal(document.documentElement.scrollTop, pageScroll, 'Only the horizontal ribbon moves');
-  strip.scrollLeft = 200;
-  await act(() => strip.dispatchEvent(new window.Event('scroll', { bubbles: true })));
+  assert.equal(scroll.scrollLeft, 762, 'First compact entry reveals the selected date in the same calendar');
+  assert.equal(document.documentElement.scrollTop, pageScroll);
+  scroll.scrollLeft = 200;
+  await act(() => scroll.dispatchEvent(new window.Event('scroll', { bubbles: true })));
   await view.selectDay(past);
-  assert.equal(strip.scrollLeft, 200, 'Direct ribbon selection keeps the manual position');
-  width = 0;
+  assert.equal(scroll.scrollLeft, 200, 'Direct date selection preserves manual horizontal exploration');
+  compact = false;
   await view.resize(false);
-  strip.scrollLeft = 0;
-  await act(() => strip.dispatchEvent(new window.Event('scroll', { bubbles: true })));
-  width = 300;
+  scroll.scrollLeft = 0;
+  await act(() => scroll.dispatchEvent(new window.Event('scroll', { bubbles: true })));
+  compact = true;
   await view.resize(true);
-  assert.equal(strip.scrollLeft, 200, 'A hidden desktop ribbon cannot overwrite remembered mobile scroll');
+  assert.equal(scroll.scrollLeft, 200, 'The non-overflowing wide calendar cannot overwrite the compact position');
   assert.equal(view.heading(), past);
   assert.equal(view.saves.length, 0);
 });
 
-test('annual-calendar and date-input jumps reveal the chosen day once while compact clicks preserve manual scroll', async t => {
+test('exact-date jumps reveal the selected square once while direct calendar clicks preserve manual scroll', async t => {
   const view = await mount(t);
-  const history = document.querySelector('.activity-history');
-  const strip = document.querySelector('.history-day-strip');
-  const pastDay = strip.querySelector('[data-date="' + past + '"]');
-  const todayDay = strip.querySelector('[data-date="' + today + '"]');
-  Object.defineProperties(strip, {
-    clientWidth: { get: () => history.dataset.historyExpanded === 'true' ? 0 : 300 },
-    scrollWidth: { value: 4000 },
-  });
-  strip.getBoundingClientRect = () => ({ left: 10, right: 310 });
+  const scroll = document.querySelector('.heatmap-scroll');
+  const pastDay = scroll.querySelector('[data-date="' + past + '"]');
+  const todayDay = scroll.querySelector('[data-date="' + today + '"]');
+  Object.defineProperties(scroll, { clientWidth: { value: 300 }, scrollWidth: { value: 4000 } });
+  scroll.getBoundingClientRect = () => ({ left: 10, right: 310 });
   for (const [button, offset] of [[pastDay, 600], [todayDay, 1800]]) {
-    Object.defineProperty(button, 'offsetWidth', { value: 44 });
-    button.getBoundingClientRect = () => ({ left: 10 + offset - strip.scrollLeft, right: 54 + offset - strip.scrollLeft });
+    Object.defineProperty(button, 'offsetWidth', { value: 24 });
+    button.getBoundingClientRect = () => ({ left: 10 + offset - scroll.scrollLeft, right: 34 + offset - scroll.scrollLeft });
   }
   await view.resize(true);
-  strip.scrollLeft = 1000;
-  await act(() => strip.dispatchEvent(new window.Event('scroll', { bubbles: true })));
-  const pageScroll = document.documentElement.scrollTop;
-  await act(() => document.querySelector('.history-full-toggle').click());
-  await act(() => document.querySelector('.heatmap-date[data-date="' + past + '"]').click());
-  assert.equal(strip.scrollLeft, 1000, 'A date jump waits while the compact ribbon is hidden');
-  await act(() => document.querySelector('.history-full-toggle').click());
-  assert.equal(strip.scrollLeft, 472, 'Returning reveals the distant date selected in the annual calendar');
-  assert.ok(pastDay.getBoundingClientRect().left >= 10 && pastDay.getBoundingClientRect().right <= 310);
-  strip.scrollLeft = 250;
-  await act(() => strip.dispatchEvent(new window.Event('scroll', { bubbles: true })));
-  const adjacentDate = pastDay.previousElementSibling.dataset.date;
-  await view.selectDay(adjacentDate);
-  assert.equal(view.heading(), adjacentDate);
-  assert.equal(strip.scrollLeft, 250, 'Compact selection does not trigger an external date jump');
+  scroll.scrollLeft = 1000;
+  await act(() => scroll.dispatchEvent(new window.Event('scroll', { bubbles: true })));
   const input = document.querySelector('.history-navigation input');
-  await act(() => {
-    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, today);
+  const choose = async value => act(() => {
+    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, value);
     input.dispatchEvent(new window.Event('input', { bubbles: true }));
   });
-  assert.equal(strip.scrollLeft, 1672, 'An explicit date input jump reveals the chosen date');
+  const pageScroll = document.documentElement.scrollTop;
+  await choose(past);
+  assert.equal(scroll.scrollLeft, 462, 'The accessible date input reveals a distant square within the existing calendar');
+  assert.ok(pastDay.getBoundingClientRect().left >= 10 && pastDay.getBoundingClientRect().right <= 310);
+  scroll.scrollLeft = 250;
+  await act(() => scroll.dispatchEvent(new window.Event('scroll', { bubbles: true })));
+  await view.selectDay(today);
   assert.equal(view.heading(), today);
+  assert.equal(scroll.scrollLeft, 250, 'Calendar activation never recenters a manual position');
+  await choose(past);
+  assert.equal(scroll.scrollLeft, 462);
+  scroll.scrollLeft = 350;
+  await act(() => scroll.dispatchEvent(new window.Event('scroll', { bubbles: true })));
+  await act(() => document.querySelector('.history-detail-toggle').click());
+  assert.equal(scroll.scrollLeft, 350, 'A completed reveal is not replayed by unrelated UI state');
   assert.equal(document.documentElement.scrollTop, pageScroll);
+  assert.equal(view.saves.length, 0);
+});
+
+test('calendar arrow navigation respects weekday boundaries and never focuses a missing future cell', async t => {
+  const view = await mount(t);
+  const calendar = buildHistoryPeriods(new Date());
+  const buttons = [...document.querySelectorAll('button.heatmap-date')];
+  const press = async key => act(() => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })));
+  await act(() => buttons[0].focus());
+  await press('ArrowUp');
+  assert.equal(document.activeElement, buttons[0], 'Sunday cannot wrap up to the previous week');
+  await press('ArrowLeft');
+  assert.equal(document.activeElement, buttons[0], 'The first week cannot navigate before the calendar horizon');
+  await act(() => buttons[6].focus());
+  await press('ArrowDown');
+  assert.equal(document.activeElement, buttons[6], 'Saturday cannot wrap down to the next week');
+  const lastColumn = calendar.columns.at(-1);
+  const firstFutureRow = lastColumn.findIndex(date => date === null);
+  if (firstFutureRow >= 0) {
+    const priorDate = calendar.columns.at(-2)[firstFutureRow];
+    const prior = buttons.find(button => button.dataset.date === priorDate);
+    await act(() => prior.focus());
+    await press('ArrowRight');
+    assert.equal(document.activeElement, prior, 'A missing future weekday must not clamp to a different weekday');
+  }
+  assert.equal(view.heading(), today, 'Roving never activates another date');
+  assert.equal(document.querySelectorAll('.heatmap-date[aria-pressed="true"]').length, 1);
   assert.equal(view.saves.length, 0);
 });

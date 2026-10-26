@@ -1,0 +1,52 @@
+{
+  "pointer": {
+    "outer": {
+      "bottom": 439.0859375,
+      "height": 24,
+      "left": 298,
+      "right": 322,
+      "top": 415.0859375,
+      "width": 24,
+      "x": 298,
+      "y": 415.0859375
+    },
+    "inner": {
+      "bottom": 435.0859375,
+      "height": 16,
+      "left": 302,
+      "right": 318,
+      "top": 419.0859375,
+      "width": 16,
+      "x": 302,
+      "y": 419.0859375
+    },
+    "point": [
+      299,
+      427.0859375
+    ],
+    "selected": "2026-10-25"
+  },
+  "keyboard": [
+    {
+      "focus": "2026-10-26",
+      "selected": "2026-10-26",
+      "step": "Down against future cell"
+    },
+    {
+      "focus": "2026-10-25",
+      "step": "Up on Sunday"
+    },
+    "25 Octubre 2026\n\nCon datos energéticos\n\nBalance del día\n-138 kcal\nConsumidas\n1.800 kcal\nGasto estimado\n1.938 kcal",
+    "26 Octubre 2025\n\nSin datos energéticos\n\nBalance del día\nSin datos\nConsumidas\nSin datos\nGasto estimado\nSin datos"
+  ],
+  "nativeDate": {
+    "input": "2026-10-25",
+    "selected": "2026-10-25",
+    "summary": "25 Octubre 2026\n\nCon datos energéticos\n\nBalance del día\n-138 kcal\nConsumidas\n1.800 kcal\nGasto estimado\n1.938 kcal"
+  },
+  "focus": {
+    "date": "2026-10-19",
+    "outline": "rgb(245, 160, 100) solid 2px",
+    "selected": "2026-10-26"
+  }
+}

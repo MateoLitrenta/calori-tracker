@@ -5,7 +5,7 @@ import React,{act} from 'react';
 import { createRoot } from 'react-dom/client';
 import { JSDOM } from 'jsdom';
 import ts from 'typescript';
-import { formatDateStr,getNetBalance } from '../src/utils/helpers.ts';
+import { formatDateStr,getNetBalance,getHeatmapColor } from '../src/utils/helpers.ts';
 
 const css=await readFile(new URL('../src/components/HomeVariants.css',import.meta.url),'utf8');
 const rawSource=await readFile(new URL('../src/components/Heatmap.tsx',import.meta.url),'utf8');
@@ -36,6 +36,15 @@ test('weekday labels remain outside the scrollport; date selection keeps title, 
   scroll.scrollLeft=123;
   const day=document.querySelector(`.heatmap-date[aria-label^="Seleccionar ${today}"]`);
   assert.ok(day.title.includes(String(getNetBalance(record,profile))));
+  const square=day.querySelector('span.heatmap-cell');
+  assert.ok(square,'The visual square is separate from the semantic hit target');
+  assert.equal(square.getAttribute('aria-hidden'),'true');
+  assert.ok(square.classList.contains(getHeatmapColor(getNetBalance(record,profile))));
+  assert.equal(square.dataset.border,'selected');
+  assert.equal(day.querySelectorAll('span.heatmap-cell').length,1);
+  assert.equal(document.querySelectorAll('button.heatmap-date[data-date="'+today+'"]').length,1);
+  assert.equal(document.querySelector('.history-day-strip'),null);
+  assert.equal(document.querySelector('.history-full-toggle'),null);
   await act(()=>day.click());assert.equal(selects,1);assert.equal(selection.dates[0],today);assert.equal(scroll.scrollLeft,123);
   const initialColumns=document.querySelectorAll('.heatmap-column').length;assert.ok(initialColumns>=52);
   assert.equal(document.querySelector('.heatmap-frame').style.getPropertyValue('--history-columns'),String(initialColumns));
