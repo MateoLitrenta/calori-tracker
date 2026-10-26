@@ -67,7 +67,7 @@ test('dashboard row follows its tallest content and analysis/settings share spac
 });
 
 test('compact history always exposes direct touch selectors and all primary figures', t => {
-  for (const width of [320, 375, 430]) {
+  for (const width of [320, 375, 430, 768, 1023]) {
     const { style, document } = view(t, width);
     const grid = style('.history-period-grid--week');
     assert.notEqual(style('.history-visualization').display, 'none');
@@ -89,6 +89,7 @@ test('compact history always exposes direct touch selectors and all primary figu
     assert.notEqual(style('.history-navigation').display, 'none', 'Choosing a date never requires expansion');
     assert.notEqual(style('.history-detail-primary').display, 'none');
     assert.equal(document.querySelectorAll('.history-detail-primary > div').length, 3);
+    assert.equal(style('.history-detail-primary').gridTemplateColumns, 'repeat(2, minmax(0, 1fr))');
     assert.equal(style('.history-detail-extra').display, 'none');
     document.querySelector('.history-detail-extra').hidden = false;
     assert.notEqual(style('.history-detail-extra').display, 'none', 'Only supporting explanation is disclosed');
@@ -96,7 +97,7 @@ test('compact history always exposes direct touch selectors and all primary figu
 });
 
 test('only the annual day calendar is optional on mobile; desktop keeps the complete calendar and no extra ribbon', t => {
-  for (const width of [320, 375, 430]) {
+  for (const width of [320, 375, 430, 768, 1023]) {
     const { style, document } = view(t, width);
     assert.equal(style('.history-annual-calendar').display, 'none');
     assert.notEqual(style('.history-full-toggle').display, 'none');
@@ -106,7 +107,9 @@ test('only the annual day calendar is optional on mobile; desktop keeps the comp
     document.querySelector('.activity-history').dataset.historyExpanded = 'true';
     assert.notEqual(style('.history-annual-calendar').display, 'none');
     assert.notEqual(style('.history-visualization').display, 'none');
-    assert.notEqual(style('.history-day-navigation').display, 'none', 'The direct selector remains available when exploring the annual calendar');
+    assert.equal(style('.history-day-navigation').display, 'none', 'The annual calendar replaces the day ribbon without showing duplicate selectors');
+    document.querySelector('.activity-history').dataset.historyExpanded = 'false';
+    assert.notEqual(style('.history-day-navigation').display, 'none', 'Returning to compact mode restores the direct selector');
     assert.equal(style('.heatmap-layout').getPropertyValue('--history-cell'), '44px');
   }
   const desktop = view(t, 1440, 900);

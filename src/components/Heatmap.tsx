@@ -58,7 +58,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
     .some(date => date <= todayStr && getNetBalance(records[date], profile) !== null && !records[date]?.meals.length);
   const status = provisional ? 'Sin comidas registradas en ' + (selected ? 'algunos días con actividad' : 'este día') : '';
   const partial = selected && detail.days > 0 && detail.days < selected.elapsed;
-  const scrollKey = (surface: string) => surface + (window.matchMedia('(max-width: 767px)').matches ? '-compact' : '-wide');
+  const scrollKey = (surface: string) => surface + (window.matchMedia('(max-width: 1023px)').matches ? '-compact' : '-wide');
   const rememberScroll = (surface: string, element: HTMLDivElement) => {
     if (element.clientWidth && element.scrollWidth > element.clientWidth) scrollPositions.current[scrollKey(surface)] = element.scrollLeft;
   };
@@ -74,16 +74,16 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
       ? [['day-strip', dayStripRef.current], ['day-calendar', scrollContainerRef.current]]
       : [[period, groupScrollRef.current]];
     const restore = () => {
-    for (const [surface, scroll] of surfaces) {
-      const key = scrollKey(surface);
-      if (!scroll || !scroll.clientWidth) continue;
-      if (scrollPositions.current[key] !== undefined) scroll.scrollLeft = scrollPositions.current[key];
-      else {
-        const button = scroll.querySelector<HTMLElement>('[aria-pressed="true"]');
-        if (button && scroll.scrollWidth > scroll.clientWidth) scroll.scrollLeft += button.getBoundingClientRect().left
-          - scroll.getBoundingClientRect().left - (scroll.clientWidth - button.offsetWidth) / 2;
+      for (const [surface, scroll] of surfaces) {
+        const key = scrollKey(surface);
+        if (!scroll || !scroll.clientWidth) continue;
+        if (scrollPositions.current[key] !== undefined) scroll.scrollLeft = scrollPositions.current[key];
+        else {
+          const button = scroll.querySelector<HTMLElement>('[aria-pressed="true"]');
+          if (button && scroll.scrollWidth > scroll.clientWidth) scroll.scrollLeft += button.getBoundingClientRect().left
+            - scroll.getBoundingClientRect().left - (scroll.clientWidth - button.offsetWidth) / 2;
+        }
       }
-    }
     };
     restore();
     window.addEventListener('resize', restore);
@@ -178,7 +178,6 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
             <div><dt>Consumidas</dt><dd>{detail.days ? number(detail.consumed) : 'Sin datos'}{detail.days > 0 && <small> kcal{provisional && !detail.consumed ? ' registradas' : ''}</small>}</dd></div>
             <div><dt>Gasto estimado</dt><dd>{detail.days ? number(detail.expenditure) : 'Sin datos'}{detail.days > 0 && <small> kcal</small>}</dd></div>
           </dl>
-
         </div>
       </div>
 
@@ -255,26 +254,26 @@ const Heatmap: React.FC<HeatmapProps> = ({ records, selectedDateStr, onSelectDat
         <button type="button" className="history-detail-toggle" aria-expanded={detailExpanded} aria-controls={detailId}
           onClick={() => setDetailExpanded(value => !value)}>{detailExpanded ? 'Ocultar explicación' : 'Cómo leer estos datos'}</button>
       </div>
-          <div id={detailId} className="history-detail-extra" data-expanded={detailExpanded} hidden={!detailExpanded}>
-            {period !== 'day' && <dl className="history-detail-metrics"><div><dt>Balance acumulado</dt><dd>{signed(detail.balance)}{detail.balance !== null && <small> kcal</small>}</dd></div></dl>}
-            <p className="history-method">El balance usa las calorías registradas y el gasto estimado. Los promedios incluyen solo días con datos energéticos; no se completan días ausentes. Un día con pasos o ejercicio puede tener comidas sin registrar: su balance es provisional.</p>
-            <div className="activity-history-footer">
-              <div className="activity-legend">
-                <div className="activity-legend-empty"><span className="history-legend-swatch bg-slate-200 dark:bg-[#2d333b]" aria-hidden="true" /><span>Sin datos</span></div>
-                <div className="activity-legend-scale"><span>Déficit</span><div className="history-legend-colors">
-                  {[
-                    ['deficit-high', '< -500'], ['deficit-medium', '-500 a < -250'], ['deficit-low', '-250 a < 0'],
-                    ['neutral', '0'], ['surplus-low', '> 0 a +250'], ['surplus-medium', '> +250 a +500'], ['surplus-high', '> +500'],
-                  ].map(([category, label]) => <span key={category} className={'history-legend-swatch bg-heatmap-' + category} title={label + ' ' + heatmapUnit} aria-label={label + ' ' + heatmapUnit} />)}
-                </div><span>Superávit <span className="history-legend-unit">({heatmapUnit})</span></span></div>
-              </div>
-              <div className="activity-border-legend">
-                <span className="history-key"><span className="heatmap-border-key" data-border="selected" aria-hidden="true" />Seleccionado</span>
-                {period === 'day' && <><span className="history-key"><span className="heatmap-border-key" data-border="gym" aria-hidden="true" />Gimnasio</span>
-                  <span className="history-key"><span className="heatmap-border-key" data-border="football" aria-hidden="true" />Fútbol</span></>}
-              </div>
-            </div>
+      <div id={detailId} className="history-detail-extra" data-expanded={detailExpanded} hidden={!detailExpanded}>
+        {period !== 'day' && <dl className="history-detail-metrics"><div><dt>Balance acumulado</dt><dd>{signed(detail.balance)}{detail.balance !== null && <small> kcal</small>}</dd></div></dl>}
+        <p className="history-method">El balance usa las calorías registradas y el gasto estimado. Los promedios incluyen solo días con datos energéticos; no se completan días ausentes. Un día con pasos o ejercicio puede tener comidas sin registrar: su balance es provisional.</p>
+        <div className="activity-history-footer">
+          <div className="activity-legend">
+            <div className="activity-legend-empty"><span className="history-legend-swatch bg-slate-200 dark:bg-[#2d333b]" aria-hidden="true" /><span>Sin datos</span></div>
+            <div className="activity-legend-scale"><span>Déficit</span><div className="history-legend-colors">
+              {[
+                ['deficit-high', '< -500'], ['deficit-medium', '-500 a < -250'], ['deficit-low', '-250 a < 0'],
+                ['neutral', '0'], ['surplus-low', '> 0 a +250'], ['surplus-medium', '> +250 a +500'], ['surplus-high', '> +500'],
+              ].map(([category, label]) => <span key={category} className={'history-legend-swatch bg-heatmap-' + category} title={label + ' ' + heatmapUnit} aria-label={label + ' ' + heatmapUnit} />)}
+            </div><span>Superávit <span className="history-legend-unit">({heatmapUnit})</span></span></div>
           </div>
+          <div className="activity-border-legend">
+            <span className="history-key"><span className="heatmap-border-key" data-border="selected" aria-hidden="true" />Seleccionado</span>
+            {period === 'day' && <><span className="history-key"><span className="heatmap-border-key" data-border="gym" aria-hidden="true" />Gimnasio</span>
+              <span className="history-key"><span className="heatmap-border-key" data-border="football" aria-hidden="true" />Fútbol</span></>}
+          </div>
+        </div>
+      </div>
       <p id={helpId} className={'history-help' + (detailExpanded ? '' : ' sr-only')}>Flechas para recorrer · Inicio / Fin · Enter o Espacio para seleccionar{period === 'day' ? '. También podés elegir una fecha en Día del resumen.' : ''}</p>
     </section>
   );

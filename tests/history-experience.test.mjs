@@ -58,7 +58,8 @@ async function mount(t, initial = { [today]: makeRecord(today), [past]: makeReco
   globalThis.window = dom.window; globalThis.document = dom.window.document;
   globalThis.HTMLElement = dom.window.HTMLElement; globalThis.getComputedStyle = dom.window.getComputedStyle;
   globalThis.IS_REACT_ACT_ENVIRONMENT = true;
-  window.matchMedia = () => ({ matches: false, addEventListener() {}, removeEventListener() {} });
+  let compact = false;
+  window.matchMedia = () => ({ get matches() { return compact; }, addEventListener() {}, removeEventListener() {} });
   const { createRoot } = await import('react-dom/client');
   const root = createRoot(document.getElementById('root'));
   const saves = [];
@@ -73,6 +74,7 @@ async function mount(t, initial = { [today]: makeRecord(today), [past]: makeReco
     for (const [name, value] of Object.entries(saved)) globalThis[name] = value; });
   const button = text => [...document.querySelectorAll('button')].find(node => node.textContent.trim() === text);
   return { saves, button, scale: async name => act(() => button(name).click()),
+    resize: async mobile => act(() => { compact = mobile; window.dispatchEvent(new window.Event('resize')); }),
     selectDay: async date => act(() => document.querySelector('.history-day[aria-label^="Seleccionar ' + date + '"]').click()),
     groups: () => [...document.querySelectorAll('.history-period')],
     heading: () => document.querySelector('.daily-heading time').dateTime,
@@ -497,5 +499,80 @@ test('direct history interaction retains an exercise draft through days, groups 
   await act(() => document.querySelector('.history-full-toggle').click());
   for (const [id, value] of Object.entries(values)) assert.equal(document.getElementById(id).value, value);
   assert.equal(view.heading(), past);
+  assert.equal(view.saves.length, 0);
+});
+
+// JSDOM does not perform responsive layout. These bounded geometry fixtures
+// reproduce hidden->visible surfaces and horizontal offsets; browser coverage
+// independently verifies actual CSS, native date input and keyboard activation.
+test('desktop-to-mobile resize reveals the day selection and never stores hidden-surface scroll as the mobile position', async t => {
+  const view = await mount(t);
+  const strip = document.querySelector('.history-day-strip');
+  const selected = strip.querySelector('[aria-pressed="true"]');
+  let width = 0; // The compact ribbon is hidden on desktop.
+  Object.defineProperties(strip, { clientWidth: { get: () => width }, scrollWidth: { value: 4000 } });
+  Object.defineProperty(selected, 'offsetWidth', { value: 44 });
+  strip.getBoundingClientRect = () => ({ left: 10, right: 310 });
+  selected.getBoundingClientRect = () => ({ left: 910 - strip.scrollLeft, right: 954 - strip.scrollLeft });
+  const pageScroll = document.documentElement.scrollTop;
+  await act(() => strip.dispatchEvent(new window.Event('scroll', { bubbles: true })));
+  width = 300;
+  await view.resize(true);
+  assert.equal(strip.scrollLeft, 772, 'The first mobile entry must reveal the selected day');
+  assert.equal(document.documentElement.scrollTop, pageScroll, 'Only the horizontal ribbon moves');
+  strip.scrollLeft = 200;
+  await act(() => strip.dispatchEvent(new window.Event('scroll', { bubbles: true })));
+  await view.selectDay(past);
+  assert.equal(strip.scrollLeft, 200, 'Direct ribbon selection keeps the manual position');
+  width = 0;
+  await view.resize(false);
+  strip.scrollLeft = 0;
+  await act(() => strip.dispatchEvent(new window.Event('scroll', { bubbles: true })));
+  width = 300;
+  await view.resize(true);
+  assert.equal(strip.scrollLeft, 200, 'A hidden desktop ribbon cannot overwrite remembered mobile scroll');
+  assert.equal(view.heading(), past);
+  assert.equal(view.saves.length, 0);
+});
+
+test('annual-calendar and date-input jumps reveal the chosen day once while compact clicks preserve manual scroll', async t => {
+  const view = await mount(t);
+  const history = document.querySelector('.activity-history');
+  const strip = document.querySelector('.history-day-strip');
+  const pastDay = strip.querySelector('[data-date="' + past + '"]');
+  const todayDay = strip.querySelector('[data-date="' + today + '"]');
+  Object.defineProperties(strip, {
+    clientWidth: { get: () => history.dataset.historyExpanded === 'true' ? 0 : 300 },
+    scrollWidth: { value: 4000 },
+  });
+  strip.getBoundingClientRect = () => ({ left: 10, right: 310 });
+  for (const [button, offset] of [[pastDay, 600], [todayDay, 1800]]) {
+    Object.defineProperty(button, 'offsetWidth', { value: 44 });
+    button.getBoundingClientRect = () => ({ left: 10 + offset - strip.scrollLeft, right: 54 + offset - strip.scrollLeft });
+  }
+  await view.resize(true);
+  strip.scrollLeft = 1000;
+  await act(() => strip.dispatchEvent(new window.Event('scroll', { bubbles: true })));
+  const pageScroll = document.documentElement.scrollTop;
+  await act(() => document.querySelector('.history-full-toggle').click());
+  await act(() => document.querySelector('.heatmap-date[data-date="' + past + '"]').click());
+  assert.equal(strip.scrollLeft, 1000, 'A date jump waits while the compact ribbon is hidden');
+  await act(() => document.querySelector('.history-full-toggle').click());
+  assert.equal(strip.scrollLeft, 472, 'Returning reveals the distant date selected in the annual calendar');
+  assert.ok(pastDay.getBoundingClientRect().left >= 10 && pastDay.getBoundingClientRect().right <= 310);
+  strip.scrollLeft = 250;
+  await act(() => strip.dispatchEvent(new window.Event('scroll', { bubbles: true })));
+  const adjacentDate = pastDay.previousElementSibling.dataset.date;
+  await view.selectDay(adjacentDate);
+  assert.equal(view.heading(), adjacentDate);
+  assert.equal(strip.scrollLeft, 250, 'Compact selection does not trigger an external date jump');
+  const input = document.querySelector('.history-navigation input');
+  await act(() => {
+    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, today);
+    input.dispatchEvent(new window.Event('input', { bubbles: true }));
+  });
+  assert.equal(strip.scrollLeft, 1672, 'An explicit date input jump reveals the chosen date');
+  assert.equal(view.heading(), today);
+  assert.equal(document.documentElement.scrollTop, pageScroll);
   assert.equal(view.saves.length, 0);
 });
