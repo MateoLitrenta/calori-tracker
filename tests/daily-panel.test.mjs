@@ -24,6 +24,11 @@ const textareaCode = ts.transpileModule(textareaSource, { compilerOptions: { mod
   jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText
   .replace(/from ["']([^"']+)["']/g, (_, specifier) => `from ${JSON.stringify(import.meta.resolve(specifier))}`);
 const textareaUrl = `data:text/javascript;base64,${Buffer.from(textareaCode).toString('base64')}`;
+const estimateResultSource = await readFile(new URL('../src/components/EntryEstimateResult.tsx', import.meta.url), 'utf8');
+const estimateResultCode = ts.transpileModule(estimateResultSource, { compilerOptions: { module: ts.ModuleKind.ESNext,
+  jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText
+  .replace(/from ["']([^"']+)["']/g, (_, specifier) => `from ${JSON.stringify(import.meta.resolve(specifier))}`);
+const estimateResultUrl = `data:text/javascript;base64,${Buffer.from(estimateResultCode).toString('base64')}`;
 globalThis.__entryServices = { estimateMeal: async () => ({}), estimateWorkout: async () => ({}), toast: { error() {} } };
 const imports = {
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,
@@ -34,6 +39,7 @@ const imports = {
   './MealPhoto': stub('export function MealPhotoPicker() { return null; } export const MealThumbnail = () => null;'),
   './EntryFormShell': shellUrl,
   './AutoResizeTextarea': textareaUrl,
+  './EntryEstimateResult': estimateResultUrl,
 };
 const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext,
   jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText
@@ -407,9 +413,10 @@ test('meal photo selection, replacement, removal and AI proposal stay in the exi
   await Promise.resolve();
   assert.equal(calls[0].name, 'Ensalada');
   assert.equal(field(view, 'Kcal').props.value, 400);
-  assert.match(renderToStaticMarkup(view()), /Estimado por IA/);
+  assert.match(renderToStaticMarkup(view()), /<h5[^>]*>Estimación con IA<\/h5>/);
   fill(view, 'Kcal', '450');
-  assert.doesNotMatch(renderToStaticMarkup(view()), /Estimado por IA/);
+  assert.match(renderToStaticMarkup(view()), /<h5[^>]*>Valor ajustado<\/h5>/);
+  assert.doesNotMatch(renderToStaticMarkup(view()), /<h5[^>]*>Estimación con IA<\/h5>/);
   assert.equal(field(view, 'Kcal').props.value, 450);
   assert.ok(shell(view));
 });
@@ -567,9 +574,10 @@ test('workout estimation fills the proposal without saving or removing secondary
   await Promise.resolve();
   assert.equal(calls[0].duration, 30);
   assert.equal(field(view, 'Kcal').props.value, 280);
-  assert.match(renderToStaticMarkup(view()), /Estimado por IA/);
+  assert.match(renderToStaticMarkup(view()), /<h5[^>]*>Estimación con IA<\/h5>/);
   fill(view, 'Kcal', '300');
-  assert.doesNotMatch(renderToStaticMarkup(view()), /Estimado por IA/);
+  assert.match(renderToStaticMarkup(view()), /<h5[^>]*>Valor ajustado<\/h5>/);
+  assert.doesNotMatch(renderToStaticMarkup(view()), /<h5[^>]*>Estimación con IA<\/h5>/);
   assert.ok(field(view, 'Distancia (km) opc.'));
   assert.ok(field(view, 'Ritmo (ej: 5:30) opc.'));
 });
@@ -710,7 +718,7 @@ test('gym notes retain contextual routine copy without changing running field de
   fill(view, 'Ej. running, fútbol, gimnasio', 'Gimnasio');
   const label = node(view(), e => e.type === 'label' && e.props.htmlFor === 'add-workout-notes');
   assert.match(renderToStaticMarkup(label), /Detalle de la rutina/);
-  assert.match(node(view(), e => e.type === 'textarea').props.placeholder, /Press banca/);
+  assert.match(node(view(), e => e.props.id === 'add-workout-notes').props.placeholder, /Press banca/);
   assert.equal(nodes(view(), e => e.props.id === 'add-workout-distance').length, 0);
   fill(view, 'Ej. running, fútbol, gimnasio', 'Correr');
   assert.ok(node(view(), e => e.props.id === 'add-workout-distance'));
