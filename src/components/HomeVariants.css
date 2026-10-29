@@ -34,7 +34,7 @@
 .home-variants .daily-heading { border: 0; padding-bottom: 0; gap: 12px; }
 .home-variants .daily-heading h3 { font-size: 19px; font-weight: 600; letter-spacing: -.025em; }
 .home-variants .daily-heading > span { font-size: 11px; text-align: right; }
-.home-variants .energy-card { padding: clamp(20px, 4vw, 36px); padding-top: 36px; gap: 32px; border: 0; border-radius: var(--radius-panel); box-shadow: none; }
+.home-variants .energy-card { padding: clamp(20px, 4vw, 36px); padding-top: 36px; gap: 32px; border: 1px solid var(--home-line); border-radius: var(--radius-panel); box-shadow: none; }
 .home-variants .energy-headline { width: 100%; }
 .home-variants .energy-headline > div:first-child { font-size: 12px; letter-spacing: .01em; font-weight: 400; }
 .home-variants .energy-headline > div:first-child svg { display: none; }

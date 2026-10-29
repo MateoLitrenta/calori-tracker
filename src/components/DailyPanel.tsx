@@ -738,9 +738,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Entrenamiento</h4>
                   <div className="entry-field entry-activity">
                     <label className="entry-field-label" htmlFor="add-workout-activity">Actividad</label>
-                    <input id="add-workout-activity"
+                    <AutoResizeTextarea id="add-workout-activity"
                       required
-                      type="text"
                       inputMode="text"
                       placeholder="Ej. running, fútbol, gimnasio"
                       value={workActivity} onChange={e => setWorkActivity(e.target.value)}
@@ -1154,9 +1153,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             <div className="entry-form-content entry-fields-grid entry-workout-fields entry-edit-fields">
               <div className="entry-field entry-activity">
                 <label className="entry-field-label" htmlFor="edit-workout-activity">Actividad</label>
-                <input id="edit-workout-activity"
+                <AutoResizeTextarea id="edit-workout-activity"
                   required
-                  type="text"
                   placeholder="Ej. running, fútbol, gimnasio"
                   value={workActivity} onChange={e => setWorkActivity(e.target.value)}
                   className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
