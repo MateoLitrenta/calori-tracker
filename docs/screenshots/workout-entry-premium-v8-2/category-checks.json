@@ -1,0 +1,32 @@
+[
+  {
+    "hasDistance": false,
+    "notes": "Detalle de la rutina · Opcional",
+    "selected": "Gimnasio",
+    "value": "Descripción libre conservada\nSegundo párrafo"
+  },
+  {
+    "hasDistance": false,
+    "notes": "Notas · Opcional",
+    "selected": "Fútbol",
+    "value": "Descripción libre conservada\nSegundo párrafo"
+  },
+  {
+    "hasDistance": true,
+    "notes": "Notas · Opcional",
+    "selected": "Correr",
+    "value": "Descripción libre conservada\nSegundo párrafo"
+  },
+  {
+    "hasDistance": true,
+    "notes": "Notas · Opcional",
+    "selected": "Natación",
+    "value": "Descripción libre conservada\nSegundo párrafo"
+  },
+  {
+    "hasDistance": true,
+    "notes": "Notas · Opcional",
+    "selected": "Caminata",
+    "value": "Descripción libre conservada\nSegundo párrafo"
+  }
+]

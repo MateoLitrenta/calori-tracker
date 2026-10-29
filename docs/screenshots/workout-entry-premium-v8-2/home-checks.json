@@ -1,0 +1,73 @@
+[
+  {
+    "cards": [
+      {
+        "border": "1px solid rgb(209, 213, 219)",
+        "borderRadius": "20px",
+        "height": 156,
+        "top": 72
+      },
+      {
+        "border": "1px solid rgb(226, 232, 240)",
+        "borderRadius": "20px",
+        "height": 156,
+        "top": 72
+      },
+      {
+        "border": "1px solid rgb(226, 232, 240)",
+        "borderRadius": "20px",
+        "height": 156,
+        "top": 72
+      },
+      {
+        "border": "1px solid rgb(226, 232, 240)",
+        "borderRadius": "20px",
+        "height": 156,
+        "top": 72
+      }
+    ],
+    "overflow": false,
+    "scenario": "normal",
+    "theme": "",
+    "width": 1440
+  },
+  {
+    "cards": [
+      {
+        "border": "1px solid rgba(255, 255, 255, 0.05)",
+        "borderRadius": "20px",
+        "height": 156,
+        "top": 72
+      },
+      {
+        "border": "1px solid rgba(255, 255, 255, 0.03)",
+        "borderRadius": "20px",
+        "height": 156,
+        "top": 72
+      },
+      {
+        "border": "1px solid rgba(255, 255, 255, 0.03)",
+        "borderRadius": "20px",
+        "height": 156,
+        "top": 72
+      },
+      {
+        "border": "1px solid rgba(255, 255, 255, 0.03)",
+        "borderRadius": "20px",
+        "height": 156,
+        "top": 72
+      }
+    ],
+    "overflow": false,
+    "scenario": "large",
+    "theme": "dark",
+    "width": 1440
+  },
+  {
+    "energyBorder": "1px solid rgb(209, 213, 219)",
+    "overflow": false,
+    "scenario": "large",
+    "theme": "",
+    "width": 320
+  }
+]

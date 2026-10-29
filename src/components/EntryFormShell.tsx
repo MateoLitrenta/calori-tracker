@@ -69,7 +69,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
 
     const focusScope = () => dialog.querySelector<HTMLElement>('.fixed.inset-0') ?? dialog;
     const focusable = () => Array.from(focusScope().querySelectorAll<HTMLElement>(
-      'button:not(:disabled), input:not(:disabled):not([type="hidden"]):not([type="file"]), select:not(:disabled), textarea:not(:disabled), [tabindex="0"]'
+      'button:not(:disabled), input:not(:disabled):not([type="hidden"]):not([type="file"]), select:not(:disabled), textarea:not(:disabled), summary, [tabindex="0"]'
     )).filter(element => element.getClientRects().length > 0);
     const keyboard = (event: KeyboardEvent) => {
       if (event.key === 'Escape') { event.preventDefault(); closeRef.current?.click(); }

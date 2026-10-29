@@ -1,0 +1,27 @@
+{
+  "viewport": {
+    "width": 375,
+    "height": 420
+  },
+  "paste": {
+    "fieldHeight": 638,
+    "fieldTop": -291.8046875,
+    "scroll": 445,
+    "fieldScroll": 0
+  },
+  "home": {
+    "selection": 0,
+    "fieldTop": 130.1953125,
+    "scroll": 23
+  },
+  "end": {
+    "selection": 739,
+    "fieldTop": -282.8046875,
+    "scroll": 436,
+    "contentTop": 125,
+    "contentBottom": 347,
+    "footerBottom": 420,
+    "fieldScroll": 0
+  },
+  "physicalKeyboard": false
+}
