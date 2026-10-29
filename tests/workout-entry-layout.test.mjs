@@ -103,6 +103,24 @@ test('the energy border is fixed at its existing rule and inline explanations in
   }
 });
 
+test('tablet creation gives activity the full row without changing desktop or edit grids', t => {
+  for (const width of [767, 768, 900, 1023, 1024]) {
+    const dom = new JSDOM(`<style>${stylesAt(width, 1024, true)}</style><div class="home-variants"><div class="entry-workout-fields"></div><div class="entry-workout-fields entry-edit-fields"></div></div>`);
+    t.after(() => dom.window.close());
+    const style = selector => dom.window.getComputedStyle(dom.window.document.querySelector(selector));
+    const tablet = width >= 768 && width <= 1023;
+    assert.equal(style('.entry-workout-fields').gridTemplateColumns,
+      tablet ? 'repeat(2, minmax(0, 1fr))' : 'minmax(0, 1fr) 96px 96px', `${width}px`);
+    const areas = style('.entry-workout-fields').gridTemplateAreas;
+    if (tablet) {
+      assert.ok(areas.includes('"activity activity"'), `${width}px: activity uses both columns`);
+      assert.ok(areas.includes('"duration calories"'), `${width}px: numeric controls share the next row`);
+      assert.ok(areas.includes('"ai ai"') && areas.includes('"secondary secondary"'), `${width}px: supplementary content stays full width`);
+    } else assert.ok(areas.includes('"activity duration calories"'), `${width}px: existing non-tablet geometry`);
+    assert.equal(style('.entry-edit-fields').gridTemplateColumns, 'minmax(0, 1fr) 96px', `${width}px: edit grid is preserved`);
+  }
+});
+
 test('the native methodology summary participates in the edit dialog keyboard focus loop', async t => {
   const shellSource = (await readFile(new URL('../src/components/EntryFormShell.tsx', import.meta.url), 'utf8'))
     .replace("import { X } from '@phosphor-icons/react';", 'const X = () => null;');

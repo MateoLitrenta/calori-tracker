@@ -16,7 +16,7 @@ import EntryEstimateResult from './EntryEstimateResult';
 const workoutCategories = ['Gimnasio', 'Fútbol', 'Correr', 'Natación', 'Caminata'] as const;
 type WorkoutCategory = typeof workoutCategories[number];
 const exactWorkoutCategory = (activity: string) => workoutCategories.find(category => category.toLowerCase() === activity.trim().toLowerCase()) ?? null;
-type EntryEstimate = { calories: number; assumptions: string[]; context: string; inputVersion: number; calorieVersion: number };
+type EntryEstimate = { calories: number; assumptions: string[]; context: string; inputVersion: number; calorieVersion: number; contextKey: string };
 
 // Only disclosure state belongs here. A date/profile change remounts this small
 // presentation component without touching entry forms or pending habit saves.
@@ -168,6 +168,13 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const workCalorieVersion = useRef(0);
   const mealInputVersion = useRef(0);
   const mealCalorieVersion = useRef(0);
+  const [estimateVersions, setEstimateVersions] = useState({ workInput: 0, workCalories: 0, mealInput: 0, mealCalories: 0 });
+  const estimateContextKey = profile.id + ':' + dateStr;
+  const reviseEstimate = (kind: keyof typeof estimateVersions) => {
+    const reference = { workInput: workInputVersion, workCalories: workCalorieVersion, mealInput: mealInputVersion, mealCalories: mealCalorieVersion }[kind];
+    const next = ++reference.current;
+    setEstimateVersions(previous => ({ ...previous, [kind]: next }));
+  };
   const [estimating, setEstimating] = useState(false);
   const [savingMeal, setSavingMeal] = useState(false);
   const [photoProcessing, setPhotoProcessing] = useState(false);
@@ -193,12 +200,12 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   };
 
   useEffect(() => {
-    clearEstimates();
+    estimateSessionRef.current += 1;
     return () => { estimateSessionRef.current += 1; };
   }, [dateStr, profile.id]);
 
   const selectWorkCategory = (category: WorkoutCategory) => {
-    workInputVersion.current += 1;
+    reviseEstimate('workInput');
     setWorkCategory(category);
     // Quick labels can replace other quick labels; a free description is always preserved.
     if (!workActivity.trim() || exactWorkoutCategory(workActivity)) setWorkActivity(category);
@@ -359,7 +366,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       }) } : undefined;
       const result = await estimateMeal({ name: mealName, details: mealDetails, type: mealType, attachment });
       if (session !== estimateSessionRef.current) return;
-      setMealEstimate({ calories: result.calories, assumptions: result.assumptions, context, inputVersion, calorieVersion });
+      setMealEstimate({ calories: result.calories, assumptions: result.assumptions, context, inputVersion, calorieVersion, contextKey: estimateContextKey });
       if (inputVersion === mealInputVersion.current && calorieVersion === mealCalorieVersion.current) {
         setMealCals(result.calories);
         if (!mealName.trim()) setMealName(result.description);
@@ -385,7 +392,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       const result = await estimateWorkout({ activity: workActivity, duration: Number(workDuration), details,
         profile: { sex: profile.sex, age: profile.age, weight: profile.weight, height: profile.height } });
       if (session !== estimateSessionRef.current) return;
-      setWorkEstimate({ calories: result.calories, assumptions: result.assumptions, context, inputVersion, calorieVersion });
+      setWorkEstimate({ calories: result.calories, assumptions: result.assumptions, context, inputVersion, calorieVersion, contextKey: estimateContextKey });
       if (inputVersion === workInputVersion.current && calorieVersion === workCalorieVersion.current) setWorkCals(result.calories);
     } catch (error) {
       if (session === estimateSessionRef.current) toast.error(error instanceof AIRequestError ? error.message : 'No pude estimar el gasto. Revisá actividad y duración.');
@@ -473,16 +480,16 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [detailModalItem, setDetailModalItem] = useState<(MealEntry & { _type: 'meal' }) | (WorkoutEntry & { _type: 'workout' }) | null>(null);
   const mealPhotoControls = <MealPhotoPicker blob={mealPhoto}
     path={mealPhotoRemoved ? null : currentRecord.meals.find(m => m.id === editingMealId)?.photo_path}
-    onChange={blob => { mealInputVersion.current += 1; setMealPhoto(blob); setMealPhotoRemoved(false); }}
-    onRemove={() => { mealInputVersion.current += 1; setMealPhoto(null); setMealPhotoRemoved(true); }} onBusyChange={setPhotoProcessing} />;
+    onChange={blob => { reviseEstimate('mealInput'); setMealPhoto(blob); setMealPhotoRemoved(false); }}
+    onRemove={() => { reviseEstimate('mealInput'); setMealPhoto(null); setMealPhotoRemoved(true); }} onBusyChange={setPhotoProcessing} />;
   const mealEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
     <button type="button" disabled={estimating} onClick={() => void handleEstimateMeal()}
       className="entry-ai-action min-h-11 self-start px-4 rounded-[var(--radius-control)] border border-[#f5a064]/50 text-[#b85b22] dark:text-[#f5a064] disabled:opacity-50">
       <Sparkle className="entry-ai-icon" size={18} aria-hidden="true" />
       {estimating ? 'Estimando…' : 'Estimar con IA'}
     </button>
-    {mealEstimate && <EntryEstimateResult estimate={mealEstimate} adjusted={mealEstimate.calorieVersion !== mealCalorieVersion.current}
-      outdated={mealEstimate.inputVersion !== mealInputVersion.current} />}
+    {mealEstimate?.contextKey === estimateContextKey && <EntryEstimateResult estimate={mealEstimate} adjusted={mealEstimate.calorieVersion !== estimateVersions.mealCalories}
+      outdated={mealEstimate.inputVersion !== estimateVersions.mealInput} />}
   </div>;
   const workEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
     <button type="button" disabled={estimating} onClick={() => void handleEstimateWorkout()}
@@ -490,8 +497,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       <Sparkle className="entry-ai-icon" size={18} aria-hidden="true" />
       {estimating ? 'Estimando gasto energético…' : 'Estimar con IA'}
     </button>
-    {workEstimate && <EntryEstimateResult estimate={workEstimate} adjusted={workEstimate.calorieVersion !== workCalorieVersion.current}
-      outdated={workEstimate.inputVersion !== workInputVersion.current} />}
+    {workEstimate?.contextKey === estimateContextKey && <EntryEstimateResult estimate={workEstimate} adjusted={workEstimate.calorieVersion !== estimateVersions.workCalories}
+      outdated={workEstimate.inputVersion !== estimateVersions.workInput} />}
   </div>;
 
   const workCategoryControls = <div className="entry-activity-chips flex flex-wrap gap-2" role="group" aria-label="Tipo de entrenamiento">
@@ -716,14 +723,14 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                       required
                       inputMode="text"
                       placeholder="Ej. pollo con arroz y verduras"
-                      value={mealName} onChange={e => { mealInputVersion.current += 1; setMealName(e.target.value); }}
+                      value={mealName} onChange={e => { reviseEstimate('mealInput'); setMealName(e.target.value); }}
                       className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                     />
                   </div>
                   <div className="entry-field entry-type">
                     <label className="entry-field-label" htmlFor="add-meal-type">Tipo de comida</label>
                     <select id="add-meal-type"
-                      value={mealType} onChange={e => { mealInputVersion.current += 1; setMealType(e.target.value as MealType); }}
+                      value={mealType} onChange={e => { reviseEstimate('mealInput'); setMealType(e.target.value as MealType); }}
                       className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                     >
                       <option value="Desayuno">Desayuno</option>
@@ -739,7 +746,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                       <input id="add-meal-calories"
                         required
                         type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
-                        value={mealCals} onChange={e => { mealCalorieVersion.current += 1; setMealCals(Number(e.target.value)); }}
+                        value={mealCals} onChange={e => { reviseEstimate('mealCalories'); setMealCals(Number(e.target.value)); }}
                         className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                       />
                     </div>
@@ -777,7 +784,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                       <AutoResizeTextarea id="add-meal-notes"
                         placeholder="Agregá detalles si querés."
                         value={mealDetails}
-                        onChange={e => { mealInputVersion.current += 1; setMealDetails(e.target.value); }}
+                        onChange={e => { reviseEstimate('mealInput'); setMealDetails(e.target.value); }}
                         className="flex-1 min-w-[200px] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                       />
                     </div>
@@ -806,7 +813,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                       required
                       inputMode="text"
                       placeholder="Ej. running, fútbol, gimnasio"
-                      value={workActivity} onChange={e => { workInputVersion.current += 1; setWorkActivity(e.target.value); }}
+                      value={workActivity} onChange={e => { reviseEstimate('workInput'); setWorkActivity(e.target.value); }}
                       className="flex-1 min-w-[150px] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                     />
                   </div>
@@ -817,7 +824,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                       <input id="add-workout-duration"
                         required
                         type="number" inputMode="numeric" pattern="[0-9]*" min="1" placeholder="Minutos"
-                        value={workDuration} onChange={e => { workInputVersion.current += 1; setWorkDuration(Number(e.target.value)); }}
+                        value={workDuration} onChange={e => { reviseEstimate('workInput'); setWorkDuration(Number(e.target.value)); }}
                         className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                       />
                       <span className="entry-unit" aria-hidden="true">min</span></div>
@@ -828,7 +835,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                       <input id="add-workout-calories"
                         required
                         type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
-                        value={workCals} onChange={e => { workCalorieVersion.current += 1; setWorkCals(e.target.value === '' ? '' : Number(e.target.value)); }}
+                        value={workCals} onChange={e => { reviseEstimate('workCalories'); setWorkCals(e.target.value === '' ? '' : Number(e.target.value)); }}
                         className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                       />
                     </div>
@@ -878,7 +885,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                       <AutoResizeTextarea id="add-workout-notes"
                         placeholder={selectedWorkCategory === 'Gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Agregá detalles si querés."}
                         value={workDetails}
-                        onChange={e => { workInputVersion.current += 1; setWorkDetails(e.target.value); }}
+                        onChange={e => { reviseEstimate('workInput'); setWorkDetails(e.target.value); }}
                         className="flex-1 w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-[200px]"
                       />
                     </div>
@@ -1123,14 +1130,14 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   required
                   inputMode="text"
                   placeholder="Ej. pollo con arroz y verduras"
-                  value={mealName} onChange={e => { mealInputVersion.current += 1; setMealName(e.target.value); }}
+                  value={mealName} onChange={e => { reviseEstimate('mealInput'); setMealName(e.target.value); }}
                   className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                 />
               </div>
               <div className="entry-field entry-type">
                 <label className="entry-field-label" htmlFor="edit-meal-type">Tipo de comida</label>
                 <select id="edit-meal-type"
-                  value={mealType} onChange={e => { mealInputVersion.current += 1; setMealType(e.target.value as MealType); }}
+                  value={mealType} onChange={e => { reviseEstimate('mealInput'); setMealType(e.target.value as MealType); }}
                   className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                 >
                   <option value="Desayuno">Desayuno</option>
@@ -1146,7 +1153,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <input id="edit-meal-calories"
                     required
                     type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
-                    value={mealCals} onChange={e => { mealCalorieVersion.current += 1; setMealCals(Number(e.target.value)); }}
+                    value={mealCals} onChange={e => { reviseEstimate('mealCalories'); setMealCals(Number(e.target.value)); }}
                     className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -1182,7 +1189,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <label className="entry-field-label" htmlFor="edit-meal-notes">Notas <span>· Opcional</span></label>
                   <AutoResizeTextarea id="edit-meal-notes"
                     placeholder="Agregá detalles si querés."
-                    value={mealDetails} onChange={e => { mealInputVersion.current += 1; setMealDetails(e.target.value); }}
+                    value={mealDetails} onChange={e => { reviseEstimate('mealInput'); setMealDetails(e.target.value); }}
                     className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -1208,7 +1215,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                 <AutoResizeTextarea id="edit-workout-activity"
                   required
                   placeholder="Ej. running, fútbol, gimnasio"
-                  value={workActivity} onChange={e => { workInputVersion.current += 1; setWorkActivity(e.target.value); }}
+                  value={workActivity} onChange={e => { reviseEstimate('workInput'); setWorkActivity(e.target.value); }}
                   className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                 />
               </div>
@@ -1219,7 +1226,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <input id="edit-workout-duration"
                     required
                     type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Minutos"
-                    value={workDuration} onChange={e => { workInputVersion.current += 1; setWorkDuration(Number(e.target.value)); }}
+                    value={workDuration} onChange={e => { reviseEstimate('workInput'); setWorkDuration(Number(e.target.value)); }}
                     className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                   />
                   <span className="entry-unit" aria-hidden="true">min</span></div>
@@ -1230,7 +1237,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <input id="edit-workout-calories"
                     required
                     type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
-                    value={workCals} onChange={e => { workCalorieVersion.current += 1; setWorkCals(e.target.value === '' ? '' : Number(e.target.value)); }}
+                    value={workCals} onChange={e => { reviseEstimate('workCalories'); setWorkCals(e.target.value === '' ? '' : Number(e.target.value)); }}
                     className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                   />
                 </div>
@@ -1278,7 +1285,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <label className="entry-field-label" htmlFor="edit-workout-notes">{selectedWorkCategory === 'Gimnasio' ? 'Detalle de la rutina' : 'Notas'} <span>· Opcional</span></label>
                   <AutoResizeTextarea id="edit-workout-notes"
                     placeholder={selectedWorkCategory === 'Gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Agregá detalles si querés."}
-                    value={workDetails} onChange={e => { workInputVersion.current += 1; setWorkDetails(e.target.value); }}
+                    value={workDetails} onChange={e => { reviseEstimate('workInput'); setWorkDetails(e.target.value); }}
                     className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                   />
                 </div>
