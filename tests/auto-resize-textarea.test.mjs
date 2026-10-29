@@ -161,6 +161,16 @@ test('mobile form scrolls to the caret after paste, selection and keyboard resiz
   const field = document.querySelector('textarea');
   const content = document.querySelector('.entry-form-content');
   content.getBoundingClientRect = () => ({ top: 100, bottom: viewport.height - 80 });
+  const assertCaretVisible = () => {
+    const position = field.selectionDirection === 'backward' ? field.selectionStart : field.selectionEnd;
+    const prefix = field.value.slice(0, position).split('\n');
+    const row = prefix.slice(0, -1).reduce((total, line) => total + Math.max(1, Math.ceil(line.length / 30)), 0)
+      + Math.max(0, Math.ceil(prefix.at(-1).length / 30) - 1);
+    const top = field.getBoundingClientRect().top + 8 + row * 20;
+    const visible = content.getBoundingClientRect();
+    assert.ok(top >= visible.top, `Caret top ${top} must stay below scrollport top ${visible.top}`);
+    assert.ok(top + 20 <= visible.bottom, `Caret bottom ${top + 20} must stay above scrollport bottom ${visible.bottom}`);
+  };
   field.focus();
   viewport.height = 360;
   await act(() => viewport.dispatchEvent(new window.Event('resize')));
@@ -176,6 +186,7 @@ test('mobile form scrolls to the caret after paste, selection and keyboard resiz
   assert.equal(field.style.height, '638px'); assert.equal(field.style.overflowY, 'hidden');
   assert.ok(content.scrollTop > 0); assert.equal(field.scrollTop, 0);
   assert.equal(document.activeElement, field); assert.equal(field.selectionEnd, text.length);
+  assertCaretVisible();
   const atEnd = content.scrollTop;
   // Opening/resizing the keyboard with the cursor at the beginning must not jump to line 31.
   field.setSelectionRange(0, 0);
@@ -183,14 +194,17 @@ test('mobile form scrolls to the caret after paste, selection and keyboard resiz
   await act(() => viewport.dispatchEvent(new window.Event('resize')));
   assert.ok(content.scrollTop < atEnd);
   assert.equal(field.selectionStart, 0); assert.equal(document.activeElement, field);
+  assertCaretVisible();
   assert.equal(dialog.style.getPropertyValue('--entry-keyboard-offset'), `${window.innerHeight - 330}px`);
   field.setSelectionRange(text.length, text.length);
   await act(() => field.dispatchEvent(new window.Event('select', { bubbles: true })));
   await env.flushFrames(); assert.ok(content.scrollTop > atEnd);
+  assertCaretVisible();
   field.setSelectionRange(0, text.length, 'backward');
   await act(() => document.dispatchEvent(new window.Event('selectionchange')));
   await env.flushFrames(); assert.ok(content.scrollTop < atEnd);
   assert.equal(field.selectionDirection, 'backward');
+  assertCaretVisible();
   assert.equal(document.body.style.overflow, 'hidden');
   await env.resize(15);
   assert.equal(field.value, text); assert.equal(document.activeElement, field);

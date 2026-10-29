@@ -1,0 +1,48 @@
+{
+  "sourceCommit": "5a9bf1ecd2bfe0763513fdc7380977495ebfbde7",
+  "files": 33,
+  "disjointCompleteManifest": true,
+  "batches": [
+    {
+      "index": 0,
+      "files": 11,
+      "exit": 0,
+      "tests": 136,
+      "pass": 136,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "index": 1,
+      "files": 11,
+      "exit": 0,
+      "tests": 131,
+      "pass": 131,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "index": 2,
+      "files": 11,
+      "exit": 0,
+      "tests": 104,
+      "pass": 104,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    }
+  ],
+  "totals": {
+    "tests": 371,
+    "pass": 371,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  }
+}
