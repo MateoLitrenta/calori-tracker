@@ -916,3 +916,24 @@ test('missing meals qualify the visible balance without changing its number, exp
   assert.doesNotMatch(recorded, /Balance provisional/);
   assert.equal(base.meals.length, 0);
 });
+
+test('workout deletion reports success only after persistence confirms it', async t => {
+  const successes = [], errors = [];
+  const toast = globalThis.__entryServices.toast;
+  const oldSuccess = toast.success, oldError = toast.error;
+  toast.success = message => successes.push(message); toast.error = message => errors.push(message);
+  t.after(() => { toast.success = oldSuccess; toast.error = oldError; });
+  for (const outcome of [false, true, 'reject']) {
+    let resolve;
+    const gate = new Promise(done => { resolve = done; });
+    const view = mount({ profile, record: { ...base, workouts: [{ id: 'delete-test', activity: 'Correr', duration: 30, calories: 300 }] }, dateStr, records: {},
+      onUpdateRecord: async () => { await gate; if (outcome === 'reject') throw Error('offline'); return outcome; } });
+    node(view(), e => e.props.className === 'daily-record-open').props.onClick();
+    node(view(), e => e.type === 'button' && e.props.children?.some?.(part => typeof part === 'string' && part.includes('Eliminar'))).props.onClick({ stopPropagation() {} });
+    const count = successes.length;
+    assert.equal(count, outcome === false ? 0 : outcome === true ? 0 : 1);
+    resolve(); await new Promise(setImmediate);
+    assert.equal(successes.length, count + (outcome === true ? 1 : 0));
+  }
+  assert.equal(errors.length, 1);
+});

@@ -1,4 +1,4 @@
-import { createContext, createElement, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, createElement, useContext, useState, useEffect, useRef, type ReactNode } from 'react';
 import type { UserProfile, DailyRecord } from '../types';
 import * as db from '../lib/db';
 import { supabase } from '../lib/supabase';
@@ -13,11 +13,13 @@ const useAppStoreState = () => {
   const [avatarRevision, setAvatarRevision] = useState(0);
   const userId = user?.id;
   const userEmail = user?.email;
+  const pendingRecordWrites = useRef(new Set<string>());
 
   // Auth & Initial Data Load
   useEffect(() => {
     let isMounted = true;
     let sessionUserId: string | null = null;
+    let authEventObserved = false;
     const applyUser = (nextUser: User | null) => {
       if (!isMounted) return;
       if (nextUser && nextUser.id !== sessionUserId) {
@@ -34,10 +36,11 @@ const useAppStoreState = () => {
     
     // Check active session on mount
     supabase.auth.getSession().then(({ data: { session } }) => {
-      applyUser(session?.user ?? null);
-    });
+      if (!authEventObserved) applyUser(session?.user ?? null);
+    }).catch(() => { if (!authEventObserved) applyUser(null); });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      authEventObserved = true;
       applyUser(session?.user ?? null);
     });
 
@@ -99,6 +102,12 @@ const useAppStoreState = () => {
 
   const updateRecord = async (dateStr: string, record: DailyRecord) => {
     if (!activeProfile || !user || activeProfile.user_id !== user.id) return false;
+    const writeKey = user.id + ':' + dateStr;
+    if (pendingRecordWrites.current.has(writeKey)) {
+      toast.error('Hay un guardado en curso para este día. Esperá a que termine e intentá de nuevo.');
+      return false;
+    }
+    pendingRecordWrites.current.add(writeKey);
     const oldRecord = activeProfile.records[dateStr] || { meals: [], workouts: [] };
 
     // Optimistic update, scoped to the profile that initiated the save.
@@ -157,7 +166,7 @@ const useAppStoreState = () => {
         return { ...prev, records };
       });
       return false;
-    }
+    } finally { pendingRecordWrites.current.delete(writeKey); }
   };
 
   const resetData = async () => {

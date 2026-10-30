@@ -1,0 +1,122 @@
+[
+  {
+    "height": 1080,
+    "overflow": false,
+    "screen": "Inicio",
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "overflow": false,
+    "screen": "Datos",
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "overflow": false,
+    "screen": "Coach",
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "overflow": false,
+    "screen": "Perfil",
+    "width": 1920
+  },
+  {
+    "height": 900,
+    "overflow": false,
+    "screen": "Inicio",
+    "width": 1440
+  },
+  {
+    "height": 900,
+    "overflow": false,
+    "screen": "Datos",
+    "width": 1440
+  },
+  {
+    "height": 900,
+    "overflow": false,
+    "screen": "Coach",
+    "width": 1440
+  },
+  {
+    "height": 900,
+    "overflow": false,
+    "screen": "Perfil",
+    "width": 1440
+  },
+  {
+    "height": 768,
+    "overflow": false,
+    "screen": "Inicio",
+    "width": 1366
+  },
+  {
+    "height": 768,
+    "overflow": false,
+    "screen": "Datos",
+    "width": 1366
+  },
+  {
+    "height": 768,
+    "overflow": false,
+    "screen": "Coach",
+    "width": 1366
+  },
+  {
+    "height": 768,
+    "overflow": false,
+    "screen": "Perfil",
+    "width": 1366
+  },
+  {
+    "height": 812,
+    "overflow": false,
+    "screen": "Inicio",
+    "width": 375
+  },
+  {
+    "height": 812,
+    "overflow": false,
+    "screen": "Datos",
+    "width": 375
+  },
+  {
+    "height": 812,
+    "overflow": false,
+    "screen": "Coach",
+    "width": 375
+  },
+  {
+    "height": 812,
+    "overflow": false,
+    "screen": "Perfil",
+    "width": 375
+  },
+  {
+    "height": 740,
+    "overflow": false,
+    "screen": "Inicio",
+    "width": 320
+  },
+  {
+    "height": 740,
+    "overflow": false,
+    "screen": "Datos",
+    "width": 320
+  },
+  {
+    "height": 740,
+    "overflow": false,
+    "screen": "Coach",
+    "width": 320
+  },
+  {
+    "height": 740,
+    "overflow": false,
+    "screen": "Perfil",
+    "width": 320
+  }
+]
