@@ -12,13 +12,14 @@ globalThis.__resetHarness = {
       state[slot] = typeof value === 'function' ? value(state[slot]) : value;
     }]; },
     useEffect() {},
+    useRef(value) { const slot = index++; state[slot] ??= { current: value }; return state[slot]; },
   },
   db: { deleteUserRecords: () => remove() },
 };
 let source = await readFile(new URL('../src/hooks/useAppStore.ts', import.meta.url), 'utf8');
-source = source.replace("import { createContext, createElement, useContext, useState, useEffect, type ReactNode } from 'react';",
+source = source.replace("import { createContext, createElement, useContext, useState, useEffect, useRef, type ReactNode } from 'react';",
   `import { createContext, createElement, useContext } from ${JSON.stringify(import.meta.resolve('react'))};
-   const {useState, useEffect} = globalThis.__resetHarness.react;`)
+   const {useState, useEffect, useRef} = globalThis.__resetHarness.react;`)
   .replace("import * as db from '../lib/db';", 'const db = globalThis.__resetHarness.db;')
   .replace("import { supabase } from '../lib/supabase';", 'const supabase = {};')
   .replace("import toast from 'react-hot-toast';", 'const toast = {};')

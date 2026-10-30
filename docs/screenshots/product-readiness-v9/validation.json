@@ -1,0 +1,42 @@
+{
+  "files": 34,
+  "results": [
+    {
+      "batch": 0,
+      "files": 12,
+      "tests": 151,
+      "pass": 151,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "batch": 1,
+      "files": 11,
+      "tests": 108,
+      "pass": 108,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "batch": 2,
+      "files": 11,
+      "tests": 119,
+      "pass": 119,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  ],
+  "total": 378,
+  "static": {
+    "coach": 0,
+    "ai": 0,
+    "lint": 0,
+    "build": 0
+  },
+  "lintWarnings": 11,
+  "productionTested": false,
+  "realProviderTested": false
+}

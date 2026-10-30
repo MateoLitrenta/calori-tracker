@@ -12,7 +12,7 @@ const record={dateStr:'2026-10-30',date:new Date('2026-10-30T12:00:00'),meals:[]
 async function mount(t,session=async()=>({data:{session:{user:{id:'A'}}}})){
 const dom=new JSDOM('<div id="root"></div>',{pretendToBeVisual:true});const saved={};for(const n of ['window','document','IS_REACT_ACT_ENVIRONMENT'])saved[n]=globalThis[n];globalThis.window=dom.window;globalThis.document=dom.window.document;globalThis.IS_REACT_ACT_ENVIRONMENT=true;
 const state={errors:[],session,db:{fetchUserData:async id=>({id,user_id:id,name:id,records:{}}),ensureDailyLog:async()=> 'log',fetchDailyLog:async()=>record,syncAddMeal:async()=>{},syncAddWorkout:async()=>{} }};globalThis.__v9=state;
-function Probe(){state.store=useAppStore();return React.createElement('p',null,state.store.loading?'loading':state.store.activeProfile?.name??'signed out');}
+function Probe(){const store=useAppStore();React.useLayoutEffect(()=>{state.store=store;});return React.createElement('p',null,store.loading?'loading':store.activeProfile?.name??'signed out');}
 const{createRoot}=await import('react-dom/client');const root=createRoot(document.getElementById('root'));await act(async()=>root.render(React.createElement(AppStoreProvider,null,React.createElement(Probe))));
 t.after(async()=>{await act(()=>root.unmount());dom.window.close();for(const[n,v]of Object.entries(saved))globalThis[n]=v;});return state;}
 test('a delayed initial session never replaces a newer account event',async t=>{const initial=deferred();const s=await mount(t,()=>initial.promise);await act(()=>s.emit('SIGNED_IN',{user:{id:'B'}}));await act(()=>initial.resolve({data:{session:{user:{id:'A'}}}}));assert.equal(s.store.user.id,'B');assert.equal(s.store.activeProfile.user_id,'B');});
