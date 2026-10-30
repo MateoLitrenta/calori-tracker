@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import React,{act} from 'react';import{JSDOM}from'jsdom';import ts from'typescript';
 const url=s=>'data:text/javascript;base64,'+Buffer.from(s).toString('base64');
 const source=(await readFile(new URL('../src/hooks/useAppStore.ts',import.meta.url),'utf8'));
-const imports={react:import.meta.resolve('react'),'../utils/helpers':new URL('../src/utils/helpers.ts',import.meta.url).href,'../lib/supabase':url('export const supabase={auth:{getSession:()=>globalThis.__v9.session(),onAuthStateChange:cb=>{globalThis.__v9.emit=cb;return{data:{subscription:{unsubscribe(){}}}}}}};'),'../lib/db':url(['fetchUserData','ensureDailyLog','fetchDailyLog','syncAddMeal','syncDeleteMeal','syncUpdateMeal','syncAddWorkout','syncDeleteWorkout','syncUpdateWorkout'].map(n=>`export const ${n}=(...a)=>globalThis.__v9.db.${n}(...a);`).join('\n')),'react-hot-toast':url('export default {error:m=>globalThis.__v9.errors.push(m),success(){}};')};
+const imports={react:import.meta.resolve('react'),'../utils/helpers':new URL('../src/utils/helpers.ts',import.meta.url).href,'../lib/supabase':url('export const supabase={auth:{getSession:()=>globalThis.__v9.session(),onAuthStateChange:cb=>{globalThis.__v9.emit=cb;return{data:{subscription:{unsubscribe(){}}}}}}};'),'../lib/db':url(['fetchUserData','syncProfile','ensureDailyLog','fetchDailyLog','syncAddMeal','syncDeleteMeal','syncUpdateMeal','syncAddWorkout','syncDeleteWorkout','syncUpdateWorkout'].map(n=>`export const ${n}=(...a)=>globalThis.__v9.db.${n}(...a);`).join('\n')),'react-hot-toast':url('export default {error:m=>globalThis.__v9.errors.push(m),success(){}};')};
 const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2023}}).outputText.replace(/from ["']([^"']+)["']/g,(_,s)=>'from '+JSON.stringify(imports[s]||import.meta.resolve(s)));
 const{AppStoreProvider,useAppStore}=await import(url(code));
 const deferred=()=>{let resolve;const promise=new Promise(r=>resolve=r);return{promise,resolve};};
@@ -21,3 +21,35 @@ test('simultaneous writes for the same day fail safely before reaching persisten
 test('initial session read failure settles loading without publishing an account',async t=>{const s=await mount(t,async()=>{throw new Error('offline');});assert.equal(s.store.loading,false);assert.equal(s.store.user,null);});
 test('write lock releases after failure and allows an explicit retry',async t=>{const s=await mount(t);let fail=true;s.db.ensureDailyLog=async()=>fail?null:'log';const original=console.error;console.error=()=>{};try{await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),false));fail=false;await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),true));}finally{console.error=original;}});
 test('independent days are not blocked by a pending write',async t=>{const s=await mount(t);const gate=deferred();let calls=0;s.db.ensureDailyLog=async()=>{calls++;await gate.promise;return'log';};let a,b;await act(()=>{a=s.store.updateRecord(record.dateStr,record);b=s.store.updateRecord('2026-10-29',{...record,dateStr:'2026-10-29'});});assert.equal(calls,2);await act(()=>gate.resolve());await act(async()=>assert.deepEqual(await Promise.all([a,b]),[true,true]));});
+
+test('profile failure retains shared profile; foreign-profile input is rejected before writing',async t=>{
+  const s=await mount(t),before=s.store.activeProfile;let calls=0;
+  s.db.syncProfile=async()=>{calls++;throw Error('No confirmed row');};
+  await act(async()=>{await assert.rejects(s.store.updateProfile({...before,name:'Draft'}),/No confirmed row/);});
+  assert.equal(s.store.activeProfile,before);
+  await assert.rejects(s.store.updateProfile({...before,id:'B',user_id:'B'}),/perfil activo/);
+  assert.equal(calls,1);
+});
+test('failed final read never confirms a save and releases the lock for an explicit retry',async t=>{
+  const s=await mount(t);s.db.fetchDailyLog=async()=>null;
+  const original=console.error;console.error=()=>{};
+  try{
+    await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),false));
+    assert.equal(s.store.activeProfile.records[record.dateStr],undefined);
+    s.db.fetchDailyLog=async()=>record;
+    await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),true));
+  }finally{console.error=original;}
+});
+test('a partial legacy save is reconciled without claiming the meal was saved or discarding the caller draft',async t=>{
+  const s=await mount(t),draft={...record,steps:900,meals:[{id:'m',name:'Draft meal',calories:400,type:'Cena'}]};
+  let committed;
+  s.db.ensureDailyLog=async()=>{committed={...record,steps:900};return'log';};
+  s.db.syncAddMeal=async()=>{throw Error('Meal failed after day commit');};
+  s.db.fetchDailyLog=async()=>committed;
+  const original=console.error;console.error=()=>{};
+  try{await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,draft),false));}
+  finally{console.error=original;}
+  assert.equal(s.store.activeProfile.records[record.dateStr].steps,900);
+  assert.deepEqual(s.store.activeProfile.records[record.dateStr].meals,[]);
+  assert.equal(draft.meals[0].name,'Draft meal');assert.equal(s.errors.length,1);
+});
