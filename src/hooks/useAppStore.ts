@@ -80,6 +80,8 @@ const useAppStoreState = () => {
   }, [user]);
 
   const updateProfile = async (updated: UserProfile) => {
+    if (!user || !activeProfile || activeProfile.user_id !== user.id ||
+        updated.id !== activeProfile.id || updated.user_id !== user.id) throw new Error('No hay un perfil activo');
     await db.syncProfile(updated);
     setActiveProfile(prev => prev && prev.id === updated.id
       ? { ...prev, ...updated, activity: normalizeActivityLevel(updated.activity), records: prev.records }
@@ -145,6 +147,7 @@ const useAppStoreState = () => {
 
       // Refresh log directly from DB
       const refreshedLog = await db.fetchDailyLog(user.id, dateStr);
+      if (!refreshedLog) throw new Error('No pudimos verificar el registro guardado');
       if (refreshedLog) {
         setActiveProfile(prev => {
           if (!prev || prev.id !== activeProfile.id || prev.user_id !== user.id) return prev;
