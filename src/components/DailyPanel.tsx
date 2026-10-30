@@ -104,9 +104,13 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     } catch (error) { console.error('Meal photo cleanup failed:', error); toast.error('No se pudo borrar la foto de Storage.'); }
   };
 
-  const handleDeleteWorkout = (id: string) => {
-    onUpdateRecord(dateStr, { ...currentRecord, workouts: currentRecord.workouts.filter(w => w.id !== id) });
-    toast.success('Entrenamiento eliminado', { style: { background: '#161b22', color: '#fff' }, icon: '🗑️' });
+  const handleDeleteWorkout = async (id: string) => {
+    try {
+      if (!await onUpdateRecord(dateStr, { ...currentRecord, workouts: currentRecord.workouts.filter(w => w.id !== id) })) return;
+      toast.success('Entrenamiento eliminado', { style: { background: '#161b22', color: '#fff' }, icon: '🗑️' });
+    } catch {
+      toast.error('No se pudo eliminar el ejercicio. Intentá nuevamente.');
+    }
   };
 
   const handleAddWater = (amount: number) => {
