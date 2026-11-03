@@ -1,0 +1,14 @@
+\set ON_ERROR_STOP on
+-- NEW EMPTY STAGING ONLY, after target/cost approval. Never run on Production.
+-- Stop on failure; discard/recreate the synthetic target rather than rerun partly.
+set calori.staging_bootstrap='empty-synthetic-only';
+\ir 000_initial_schema.sql
+\ir ../../migrations/202609100001_profile_activity_level.sql
+\ir ../../migrations/202609110001_delete_daily_records.sql
+\ir ../../migrations/202609250001_profile_avatar.sql
+\ir ../../migrations/202609290001_meal_photos.sql
+\ir ../../migrations/202609290002_profile_onboarding.sql
+\ir ../../migrations/202610090001_ai_usage_quotas.sql
+\ir ../../migrations/202610130001_coach_goals.sql
+-- Validate the complete legacy shape before allowing the separate upgrade.
+\ir ../security-rls-v9-1/000_preflight.sql
