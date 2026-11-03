@@ -1,0 +1,543 @@
+{
+  "date": "2026-11-03",
+  "gate": "BLOCKED",
+  "reason": "Unexplained native PostgREST exit 3 reproduced with server-port=0; complete runs are not replaced by isolated successes.",
+  "inputs": {
+    "base": "8cbade05cc9339fd405421d88c5c5445f7931ace",
+    "pr70": "3bc5d62cd3ab4cf921b9e4a795d8295a58ff0e24",
+    "pr71BeforeHarness": "847ec4fe74f3277c607b4fb89310db60dbd01c8a"
+  },
+  "environment": {
+    "postgres": "17.5",
+    "postgrest": "16.5",
+    "platform": "Windows",
+    "identities": "synthetic only",
+    "postgresHTTP": "real loopback disposable",
+    "authService": "simulated store session; real HMAC JWT verification",
+    "storageHTTP": false
+  },
+  "targeted": [
+    {
+      "name": "isolated",
+      "files": [
+        "probes/hardened-fixed.test.mjs"
+      ],
+      "code": 0,
+      "tests": 3,
+      "pass": 3,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "name": "security",
+      "files": [
+        "tests/security-hardening.test.mjs"
+      ],
+      "code": 1,
+      "tests": 20,
+      "pass": 17,
+      "fail": 3,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "name": "integrity",
+      "files": [
+        "tests/data-integrity-client.test.mjs",
+        "tests/data-integrity-postgres.test.mjs"
+      ],
+      "code": 0,
+      "tests": 21,
+      "pass": 21,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    }
+  ],
+  "combinedRuns": [
+    {
+      "run": "r1",
+      "files": 37,
+      "results": [
+        {
+          "batch": 0,
+          "files": 13,
+          "code": 1,
+          "tests": 163,
+          "pass": 159,
+          "fail": 4,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "batch": 1,
+          "files": 12,
+          "code": 0,
+          "tests": 149,
+          "pass": 149,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "batch": 2,
+          "files": 12,
+          "code": 0,
+          "tests": 112,
+          "pass": 112,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        }
+      ],
+      "totals": {
+        "tests": 424,
+        "pass": 420,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "manifest": {
+        "all": [
+          "tests/ai-security.test.mjs",
+          "tests/ai-transport.test.mjs",
+          "tests/auto-resize-textarea.test.mjs",
+          "tests/chart-stats.test.mjs",
+          "tests/charts-view.test.mjs",
+          "tests/chat-view.test.mjs",
+          "tests/coach-goal-proposal.test.mjs",
+          "tests/coach-goals-client.test.mjs",
+          "tests/coach-goals-postgres.test.mjs",
+          "tests/coach-goals.test.mjs",
+          "tests/coach-immediate-time.test.mjs",
+          "tests/coach-presentation.test.mjs",
+          "tests/coach-response-policy.test.mjs",
+          "tests/coach-serverless-runtime.test.mjs",
+          "tests/coach-store-sync.test.mjs",
+          "tests/coach.test.mjs",
+          "tests/daily-panel.test.mjs",
+          "tests/data-integrity-client.test.mjs",
+          "tests/data-integrity-postgres.test.mjs",
+          "tests/desktop-experience.test.mjs",
+          "tests/energy.test.mjs",
+          "tests/estimate.test.mjs",
+          "tests/habit-insights.test.mjs",
+          "tests/heatmap-activity.test.mjs",
+          "tests/heatmap-balance.test.mjs",
+          "tests/history-experience.test.mjs",
+          "tests/history-periods.test.mjs",
+          "tests/meal-stats.test.mjs",
+          "tests/persistence.test.mjs",
+          "tests/precision-layout.test.mjs",
+          "tests/product-readiness.test.mjs",
+          "tests/public-entry.test.mjs",
+          "tests/reset-data.test.mjs",
+          "tests/security-hardening.test.mjs",
+          "tests/ui-polish.test.mjs",
+          "tests/workout-entry-layout.test.mjs",
+          "tests/workout-entry-premium.test.mjs"
+        ],
+        "batches": [
+          [
+            "tests/ai-security.test.mjs",
+            "tests/chart-stats.test.mjs",
+            "tests/coach-goal-proposal.test.mjs",
+            "tests/coach-goals.test.mjs",
+            "tests/coach-response-policy.test.mjs",
+            "tests/coach.test.mjs",
+            "tests/data-integrity-postgres.test.mjs",
+            "tests/estimate.test.mjs",
+            "tests/heatmap-balance.test.mjs",
+            "tests/meal-stats.test.mjs",
+            "tests/product-readiness.test.mjs",
+            "tests/security-hardening.test.mjs",
+            "tests/workout-entry-premium.test.mjs"
+          ],
+          [
+            "tests/ai-transport.test.mjs",
+            "tests/charts-view.test.mjs",
+            "tests/coach-goals-client.test.mjs",
+            "tests/coach-immediate-time.test.mjs",
+            "tests/coach-serverless-runtime.test.mjs",
+            "tests/daily-panel.test.mjs",
+            "tests/desktop-experience.test.mjs",
+            "tests/habit-insights.test.mjs",
+            "tests/history-experience.test.mjs",
+            "tests/persistence.test.mjs",
+            "tests/public-entry.test.mjs",
+            "tests/ui-polish.test.mjs"
+          ],
+          [
+            "tests/auto-resize-textarea.test.mjs",
+            "tests/chat-view.test.mjs",
+            "tests/coach-goals-postgres.test.mjs",
+            "tests/coach-presentation.test.mjs",
+            "tests/coach-store-sync.test.mjs",
+            "tests/data-integrity-client.test.mjs",
+            "tests/energy.test.mjs",
+            "tests/heatmap-activity.test.mjs",
+            "tests/history-periods.test.mjs",
+            "tests/precision-layout.test.mjs",
+            "tests/reset-data.test.mjs",
+            "tests/workout-entry-layout.test.mjs"
+          ]
+        ]
+      }
+    },
+    {
+      "run": "r2",
+      "files": 37,
+      "results": [
+        {
+          "batch": 0,
+          "files": 13,
+          "code": 1,
+          "tests": 163,
+          "pass": 159,
+          "fail": 4,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "batch": 1,
+          "files": 12,
+          "code": 0,
+          "tests": 149,
+          "pass": 149,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        {
+          "batch": 2,
+          "files": 12,
+          "code": 0,
+          "tests": 112,
+          "pass": 112,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        }
+      ],
+      "totals": {
+        "tests": 424,
+        "pass": 420,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "manifest": {
+        "all": [
+          "tests/ai-security.test.mjs",
+          "tests/ai-transport.test.mjs",
+          "tests/auto-resize-textarea.test.mjs",
+          "tests/chart-stats.test.mjs",
+          "tests/charts-view.test.mjs",
+          "tests/chat-view.test.mjs",
+          "tests/coach-goal-proposal.test.mjs",
+          "tests/coach-goals-client.test.mjs",
+          "tests/coach-goals-postgres.test.mjs",
+          "tests/coach-goals.test.mjs",
+          "tests/coach-immediate-time.test.mjs",
+          "tests/coach-presentation.test.mjs",
+          "tests/coach-response-policy.test.mjs",
+          "tests/coach-serverless-runtime.test.mjs",
+          "tests/coach-store-sync.test.mjs",
+          "tests/coach.test.mjs",
+          "tests/daily-panel.test.mjs",
+          "tests/data-integrity-client.test.mjs",
+          "tests/data-integrity-postgres.test.mjs",
+          "tests/desktop-experience.test.mjs",
+          "tests/energy.test.mjs",
+          "tests/estimate.test.mjs",
+          "tests/habit-insights.test.mjs",
+          "tests/heatmap-activity.test.mjs",
+          "tests/heatmap-balance.test.mjs",
+          "tests/history-experience.test.mjs",
+          "tests/history-periods.test.mjs",
+          "tests/meal-stats.test.mjs",
+          "tests/persistence.test.mjs",
+          "tests/precision-layout.test.mjs",
+          "tests/product-readiness.test.mjs",
+          "tests/public-entry.test.mjs",
+          "tests/reset-data.test.mjs",
+          "tests/security-hardening.test.mjs",
+          "tests/ui-polish.test.mjs",
+          "tests/workout-entry-layout.test.mjs",
+          "tests/workout-entry-premium.test.mjs"
+        ],
+        "batches": [
+          [
+            "tests/ai-security.test.mjs",
+            "tests/chart-stats.test.mjs",
+            "tests/coach-goal-proposal.test.mjs",
+            "tests/coach-goals.test.mjs",
+            "tests/coach-response-policy.test.mjs",
+            "tests/coach.test.mjs",
+            "tests/data-integrity-postgres.test.mjs",
+            "tests/estimate.test.mjs",
+            "tests/heatmap-balance.test.mjs",
+            "tests/meal-stats.test.mjs",
+            "tests/product-readiness.test.mjs",
+            "tests/security-hardening.test.mjs",
+            "tests/workout-entry-premium.test.mjs"
+          ],
+          [
+            "tests/ai-transport.test.mjs",
+            "tests/charts-view.test.mjs",
+            "tests/coach-goals-client.test.mjs",
+            "tests/coach-immediate-time.test.mjs",
+            "tests/coach-serverless-runtime.test.mjs",
+            "tests/daily-panel.test.mjs",
+            "tests/desktop-experience.test.mjs",
+            "tests/habit-insights.test.mjs",
+            "tests/history-experience.test.mjs",
+            "tests/persistence.test.mjs",
+            "tests/public-entry.test.mjs",
+            "tests/ui-polish.test.mjs"
+          ],
+          [
+            "tests/auto-resize-textarea.test.mjs",
+            "tests/chat-view.test.mjs",
+            "tests/coach-goals-postgres.test.mjs",
+            "tests/coach-presentation.test.mjs",
+            "tests/coach-store-sync.test.mjs",
+            "tests/data-integrity-client.test.mjs",
+            "tests/energy.test.mjs",
+            "tests/heatmap-activity.test.mjs",
+            "tests/history-periods.test.mjs",
+            "tests/precision-layout.test.mjs",
+            "tests/reset-data.test.mjs",
+            "tests/workout-entry-layout.test.mjs"
+          ]
+        ]
+      }
+    }
+  ],
+  "checks": {
+    "frontendTypes": 0,
+    "aiTypes": 0,
+    "coachTypes": 0,
+    "lint": 0,
+    "build": 0,
+    "pr71DiffWorking": 0,
+    "combinedDiffWorking": 0,
+    "combinedDiffCached": 0
+  },
+  "lintWarnings": 11,
+  "startupFailures": [
+    {
+      "run": "r1",
+      "database": "http_hardened",
+      "stage": "exited-before-ready",
+      "pgReady": true,
+      "requestedPort": 50309,
+      "portStrategy": "explicit-test-port",
+      "pid": 30552,
+      "port": null,
+      "exit": 1,
+      "signal": null,
+      "spawnError": null,
+      "stopRequested": false,
+      "envKeys": [],
+      "pgReadyAfter": true,
+      "pgConnections": "6/100",
+      "postgres": {
+        "running": true,
+        "exit": null,
+        "fatalLog": []
+      },
+      "lastStatus": null,
+      "intentionalBindConflict": true
+    },
+    {
+      "run": "r1",
+      "database": "http_attack",
+      "stage": "exited-before-ready",
+      "pgReady": true,
+      "requestedPort": 0,
+      "portStrategy": "process-binds-zero",
+      "pid": 17600,
+      "port": null,
+      "exit": 3,
+      "signal": null,
+      "spawnError": null,
+      "stopRequested": false,
+      "envKeys": [],
+      "pgReadyAfter": true,
+      "pgConnections": "6/100",
+      "postgres": {
+        "running": true,
+        "exit": null,
+        "fatalLog": []
+      },
+      "lastStatus": null,
+      "intentionalBindConflict": false
+    },
+    {
+      "run": "r1",
+      "database": "http_hardened",
+      "stage": "exited-before-ready",
+      "pgReady": true,
+      "requestedPort": 0,
+      "portStrategy": "process-binds-zero",
+      "pid": 30148,
+      "port": null,
+      "exit": 3,
+      "signal": null,
+      "spawnError": null,
+      "stopRequested": false,
+      "envKeys": [],
+      "pgReadyAfter": true,
+      "pgConnections": "6/100",
+      "postgres": {
+        "running": true,
+        "exit": null,
+        "fatalLog": []
+      },
+      "lastStatus": null,
+      "intentionalBindConflict": false
+    },
+    {
+      "run": "r2",
+      "database": "http_hardened",
+      "stage": "exited-before-ready",
+      "pgReady": true,
+      "requestedPort": 53700,
+      "portStrategy": "explicit-test-port",
+      "pid": 25468,
+      "port": null,
+      "exit": 1,
+      "signal": null,
+      "spawnError": null,
+      "stopRequested": false,
+      "envKeys": [],
+      "pgReadyAfter": true,
+      "pgConnections": "6/100",
+      "postgres": {
+        "running": true,
+        "exit": null,
+        "fatalLog": []
+      },
+      "lastStatus": null,
+      "intentionalBindConflict": true
+    },
+    {
+      "run": "r2",
+      "database": "http_attack",
+      "stage": "exited-before-ready",
+      "pgReady": true,
+      "requestedPort": 0,
+      "portStrategy": "process-binds-zero",
+      "pid": 27024,
+      "port": null,
+      "exit": 3,
+      "signal": null,
+      "spawnError": null,
+      "stopRequested": false,
+      "envKeys": [],
+      "pgReadyAfter": true,
+      "pgConnections": "9/100",
+      "postgres": {
+        "running": true,
+        "exit": null,
+        "fatalLog": []
+      },
+      "lastStatus": null,
+      "intentionalBindConflict": false
+    },
+    {
+      "run": "r2",
+      "database": "http_hardened",
+      "stage": "exited-before-ready",
+      "pgReady": true,
+      "requestedPort": 0,
+      "portStrategy": "process-binds-zero",
+      "pid": 28060,
+      "port": null,
+      "exit": 3,
+      "signal": null,
+      "spawnError": null,
+      "stopRequested": false,
+      "envKeys": [],
+      "pgReadyAfter": true,
+      "pgConnections": "10/100",
+      "postgres": {
+        "running": true,
+        "exit": null,
+        "fatalLog": []
+      },
+      "lastStatus": null,
+      "intentionalBindConflict": false
+    }
+  ],
+  "controlledPortConflict": [
+    {
+      "intentionalPortConflict": true,
+      "database": "http_hardened",
+      "port": 59130,
+      "pgReady": true,
+      "connections": "6",
+      "ready": false,
+      "status": null,
+      "spawnError": null,
+      "events": [
+        {
+          "stage": "exit",
+          "code": 3,
+          "signal": null,
+          "ms": 135
+        }
+      ],
+      "stdout": "",
+      "stderr": "03/Nov/2026:10:18:48 -0300: Starting PostgREST 16.5...\r\n",
+      "envKeys": []
+    }
+  ],
+  "environmentComparison": {
+    "inheritedKeys": 74,
+    "explicitKeys": 74,
+    "onlyInherited": [],
+    "onlyExplicit": [],
+    "changedKeys": []
+  },
+  "earlierAttempts": [
+    {
+      "log": "harness-fixed-security.log",
+      "tests": 20,
+      "pass": 16,
+      "fail": 4,
+      "detail": "Automatic ports did not eliminate exit 3."
+    },
+    {
+      "log": "harness-fixed-security-diagnostics.log",
+      "tests": 20,
+      "pass": 17,
+      "fail": 3,
+      "detail": "Only newly added strict exit===3 assertion failed when forced conflict exited 1; corrected to require actual nonzero status without remapping."
+    },
+    {
+      "log": "harness-isolated-integrity-final.log",
+      "detail": "Isolated HTTP passed; separate integrity initdb failed in sandbox TEMP due WAL rename permission. Final targeted run uses workspace-local disposable root."
+    }
+  ],
+  "pr70Unchanged": true,
+  "productChanged": false,
+  "sqlChanged": false,
+  "remoteSQLExecuted": false,
+  "productionModified": false,
+  "persistentEnvironmentChanged": false,
+  "newPRCreated": false
+}

@@ -2,6 +2,8 @@
 
 ## Estado y conclusión
 
+**Actualización del gate de integración (2026-11-03): BLOCKED.** La validación inicial de este PR que se detalla abajo es histórica. El harness ahora evita la reserva/liberación de puertos y conserva diagnósticos sanitizados, pero la terminación nativa intermitente con salida 3 también se reprodujo con puerto automático. Ver [informe de integración y bloqueo vigente](integration-gate-v9-1.md) y [resultados de las repeticiones completas](integration-gate-v9-1-validation.json). No considerar aprobada la integración por el resultado inicial 396/396 ni por una prueba aislada.
+
 Rama independiente `codex/security-rls-hardening-v9-1`, creada desde main `8cbade05cc9339fd405421d88c5c5445f7931ace` (merge del PR #69). Se conservaron `security-fixtures.mjs` y los fixtures de la sesión interrumpida. Main fue actualizado/verificado al retomar; el PR #70 sigue en borrador en `3bc5d62cd3ab4cf921b9e4a795d8295a58ff0e24`, sin modificaciones de esta tarea.
 
 **Hay dos vulnerabilidades de aislamiento reproducidas localmente con el modelo del catálogo real proporcionado:** identidad mixta en perfiles con lectura/escritura por ambas cuentas, y asociaciones de comidas/ejercicios a días de otro propietario. La primera también se reproduce por HTTP con PostgREST real y dos JWT sintéticos firmados. No se ha ejecutado un ataque ni una consulta SQL sobre Supabase remoto; no se afirma un incidente sobre datos de usuarios reales.

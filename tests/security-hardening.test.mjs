@@ -1,14 +1,14 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {readFileSync,writeFileSync,mkdtempSync,existsSync,rmSync} from 'node:fs';
-import {resolve,join,sep} from 'node:path';
-import {spawn,execFileSync} from 'node:child_process';
-import {createHmac,createHash,randomUUID} from 'node:crypto';
+import {readFileSync,existsSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {execFileSync} from 'node:child_process';
 import {createServer} from 'node:net';
-import {createClient} from '@supabase/supabase-js';
+import {createHash,randomUUID} from 'node:crypto';
 import ts from 'typescript';
 import React,{act} from 'react';
 import {JSDOM} from 'jsdom';
+import {startPostgrest} from './helpers/local-postgrest.mjs';
 import {disposablePostgres,postgresUnavailable,delay} from './helpers/security-postgres.mjs';
 const root=new URL('../',import.meta.url),read=p=>readFileSync(new URL(p,root),'utf8');
 const a='00000000-0000-0000-0000-000000000001',b='00000000-0000-0000-0000-000000000002';
@@ -159,12 +159,38 @@ test('security hardening: synthetic remote shape, safe upgrade and PR70 compatib
   for(const [path,file]of [['src/lib/db.ts','pr70-db.ts.json'],['src/hooks/useAppStore.ts','pr70-useAppStore.ts.json']])
    assert.equal(createHash('sha256').update(JSON.parse(read('tests/fixtures/security-rls/'+file)).replaceAll('\r\n','\n')).digest('hex'),manifest[path]);
   sql(upgrade,'http_hardened');
+  await http.test('a forced bind conflict reports its real failure; OS-assigned startup succeeds without retrying it',async()=>{
+   const blocker=createServer();await new Promise((done,reject)=>{blocker.once('error',reject);blocker.listen(0,'127.0.0.1',done);});
+   const port=blocker.address().port;
+   try{
+    await assert.rejects(startPostgrest(http,pg,'http_hardened',postgrest,{port}),error=>{
+     assert.equal(error.diagnostic.stage,'exited-before-ready');assert.equal(error.diagnostic.pgReady,true);
+     assert.equal(error.diagnostic.requestedPort,port);
+     assert.equal(error.diagnostic.pgReadyAfter,true);assert.equal(error.diagnostic.spawnError,null);
+     // A bind failure exits 1 normally; this Windows runtime also reproduced 3.
+     // Preserve the actual status rather than treating every failure as code 3.
+     assert.ok(Number.isInteger(error.diagnostic.exit)&&error.diagnostic.exit!==0);
+     assert.equal(error.diagnostic.signal,null);
+     assert.ok(!error.message.includes('postgresql://'));assert.ok(!error.message.includes('synthetic-test-only-secret-with-at-least-32-bytes'));
+     return true;
+    });
+    const server=await startPostgrest(http,pg,'http_hardened',postgrest);
+    assert.notEqual(Number(new URL(server.url).port),port);await server.stop();
+   }finally{await new Promise(done=>blocker.close(done));}
+  });
+  await http.test('parallel services bind distinct OS ports and stop independently',async()=>{
+   const servers=await Promise.all(['http_attack','http_legacy','http_hardened'].map(name=>startPostgrest(http,pg,name,postgrest)));
+   assert.equal(new Set(servers.map(server=>server.url)).size,3);
+   await servers[0].stop();
+   for(const server of servers.slice(1)){const response=await fetch(server.url+'/');assert.equal(response.status,200);await response.body?.cancel();}
+   await Promise.all(servers.slice(1).map(server=>server.stop()));
+  });
   await http.test('legacy HTTP reproduces mixed-profile access; unsupported TRUNCATE HTTP does not imply an exposed SQL command',async()=>{
    const server=await startPostgrest(http,pg,'http_attack',postgrest),ca=server.client(a),cb=server.client(b);
    assert.ifError((await ca.from('profiles').insert({id:a,user_id:b,name:'Synthetic mixed'})).error);
    assert.equal((await cb.from('profiles').select('id').eq('id',a).single()).data.id,a);
    const response=await fetch(server.url+'/profiles',{method:'TRUNCATE',headers:{Authorization:'Bearer '+server.token(a)}});
-   assert.equal(response.status,405);await server.stop();
+   assert.equal(response.status,405);await response.body?.cancel();await server.stop();
   });
   for(const database of ['http_legacy','http_hardened'])await http.test(database+': profile/day/children CRUD and nested read confirmations',async()=>{
    const server=await startPostgrest(http,pg,database,postgrest),client=server.client(a);
@@ -199,28 +225,13 @@ test('security hardening: synthetic remote shape, safe upgrade and PR70 compatib
    await assert.rejects(db.syncDeleteMeal(m.id));await assert.rejects(db.syncUpdateWorkout(w));
    const missing={...p,id:b,user_id:b};await assert.rejects(db.syncProfile(missing));
    const outsider=server.client(b);assert.deepEqual((await outsider.from('daily_logs').select('id')).data,[]);
-   const forged=await fetch(server.url+'/profiles',{headers:{Authorization:'Bearer '+server.token(a).slice(0,-3)+'xyz'}});assert.equal(forged.status,401);
+   const forged=await fetch(server.url+'/profiles',{headers:{Authorization:'Bearer '+server.token(a).slice(0,-3)+'xyz'}});assert.equal(forged.status,401);await forged.body?.cancel();
    await db.deleteUserRecords();assert.equal(await db.fetchDailyLog(a,date),null);
    if(database==='http_hardened')await verifyStoreWithRealPersistence(dbURL);
    await server.stop();
   });
  });
 });
-
-async function startPostgrest(t,pg,database,executable){
- const socket=createServer();await new Promise(done=>socket.listen(0,'127.0.0.1',done));const port=socket.address().port;await new Promise(done=>socket.close(done));
- const parent=resolve('../security-tools'),dir=mkdtempSync(join(parent,'pgrst-test-')),config=join(dir,'postgrest.conf');
- const secret='synthetic-test-only-secret-with-at-least-32-bytes';
- writeFileSync(config,`db-uri="postgresql://pgrst_login@127.0.0.1:${pg.port}/${database}"\ndb-schemas="public"\ndb-anon-role="anon"\nserver-host="127.0.0.1"\nserver-port=${port}\njwt-secret="${secret}"\n`);
- const child=spawn(executable,[config],{windowsHide:true,stdio:['ignore','ignore','pipe']});let log='';child.stderr.on('data',c=>{log+=c;});
- let stopped=false;const stop=async()=>{if(stopped)return;stopped=true;child.kill();await new Promise(done=>child.exitCode!==null?done():child.once('exit',done));const path=resolve(dir);if(!path.startsWith(parent+sep)||!path.slice(parent.length+1).startsWith('pgrst-test-'))throw Error('Unsafe config cleanup');rmSync(path,{recursive:true,force:true});};t.after(stop);
- const url='http://127.0.0.1:'+port;
- let ready=false;for(let i=0;i<600&&!ready;i++){try{ready=(await fetch(url+'/')).status===200;}catch{}if(child.exitCode!==null)break;if(!ready)await delay(50);}
- assert.ok(ready,'Local PostgREST ready: '+log.replaceAll(secret,'[synthetic secret]'));
- const token=id=>{const head=Buffer.from(JSON.stringify({alg:'HS256',typ:'JWT'})).toString('base64url'),body=Buffer.from(JSON.stringify({sub:id,role:'authenticated',exp:Math.floor(Date.now()/1000)+3600})).toString('base64url'),input=head+'.'+body;return input+'.'+createHmac('sha256',secret).update(input).digest('base64url');};
- const client=id=>createClient(url,'synthetic-publishable-key',{accessToken:async()=>token(id),auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},global:{fetch:(input,init)=>fetch(String(input).replace('/rest/v1/','/'),init)}});
- return{url,token,client,stop};
-}
 
 async function verifyStoreWithRealPersistence(dbURL){
  const url=s=>'data:text/javascript;base64,'+Buffer.from(s).toString('base64');

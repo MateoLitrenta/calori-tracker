@@ -34,5 +34,7 @@ export async function disposablePostgres(t){
     child.stdin.write(query);return state;
   }
   async function until(condition,message){for(let i=0;i<150;i++){if(condition())return;await delay(20);}assert.fail(message);}
-  return{sql,session,until,port,executable:exe};
+  const diagnostics=()=>({running:server.exitCode===null,exit:server.exitCode,
+    fatalLog:log.split(/\r?\n/).filter(line=>/FATAL|PANIC|could not fork|out of memory/i.test(line)).slice(-5)});
+  return{sql,session,until,port,executable:exe,diagnostics};
 }
