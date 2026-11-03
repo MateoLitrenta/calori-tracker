@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
-import {writeFileSync,mkdtempSync,rmSync} from 'node:fs';
+import {writeFileSync,mkdtempSync,rmSync,mkdirSync} from 'node:fs';
 import {resolve,join,sep} from 'node:path';
 import {createHmac} from 'node:crypto';
 import {createClient} from '@supabase/supabase-js';
@@ -9,7 +9,8 @@ import {createClient} from '@supabase/supabase-js';
 // borrowed port and race another listener or a client for the same number.
 export async function startPostgrest(t,pg,database,executable,{port=0}={}){
  assert.ok(Number.isInteger(port)&&port>=0&&port<=65535,'Invalid test port');
- const parent=resolve('../security-tools'),dir=mkdtempSync(join(parent,'pgrst-test-'));
+ const parent=resolve('../security-tools');mkdirSync(parent,{recursive:true});
+ const dir=mkdtempSync(join(parent,'pgrst-test-'));
  const config=join(dir,'postgrest.conf'),secret='synthetic-test-only-secret-with-at-least-32-bytes';
  const redact=value=>String(value).replaceAll(secret,'[synthetic secret]')
   .replace(/postgres(?:ql)?:\/\/[^\s"']+/gi,'[local connection]')
