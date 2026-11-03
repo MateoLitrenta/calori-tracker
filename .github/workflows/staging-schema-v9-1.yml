@@ -1,0 +1,44 @@
+name: Calori staging schema rehearsal
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/staging-schema-v9-1.yml'
+      - 'supabase/**'
+      - 'scripts/staging/**'
+      - 'tests/**'
+      - 'package*.json'
+permissions:
+  contents: read
+jobs:
+  local-schema:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '24.4.1'
+      - run: bash scripts/integration/install-linux-v9-1.sh "$RUNNER_TEMP/tools"
+      - run: npm ci
+      - name: Rehearse on disposable PostgreSQL and run complete regressions
+        env:
+          COACH_TEST_POSTGRES_BIN: ${{ runner.temp }}/tools/pg17.5/bin
+          SECURITY_TEST_POSTGREST_BIN: ${{ runner.temp }}/tools/postgrest/postgrest
+          COACH_TEST_POSTGRES_TMP: ${{ runner.temp }}/staging-pg
+        run: |
+          mkdir -p "$COACH_TEST_POSTGRES_TMP"
+          node scripts/staging/run-local-ci.mjs
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: staging-schema-rehearsal
+          path: |
+            staging-results
+            ${{ runner.temp }}/tools/provenance.sha256
+            ${{ runner.temp }}/tools/postgres-build.log
+          retention-days: 7
+          if-no-files-found: error

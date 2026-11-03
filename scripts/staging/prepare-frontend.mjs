@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {existsSync,writeFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {resolve,join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {stagingTarget} from './target.mjs';
+const target=stagingTarget(process.env),destination=resolve(process.argv[2]??'');
+assert.ok(process.argv[2]&&!existsSync(destination),'Use a new temporary worktree path');
+const repo=fileURLToPath(new URL('../../',import.meta.url));
+execFileSync('git',['-c','safe.directory='+repo.replaceAll('\\','/'),'worktree','add','--detach',destination,'HEAD'],{cwd:repo,stdio:'pipe'});
+writeFileSync(join(destination,'src/lib/supabaseConfig.ts'),`// Temporary staging checkout only. Never commit this generated configuration.\nexport const supabaseUrl = ${JSON.stringify(target.url)};\nexport const supabasePublishableKey = ${JSON.stringify(target.key)};\n`);
+console.log('Staging-only detached checkout prepared. Install dependencies and run Vite there; the source checkout is unchanged.');
