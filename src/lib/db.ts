@@ -8,6 +8,13 @@ export async function deleteUserRecords(): Promise<void> {
 import type { UserProfile, DailyRecord, MealEntry, WorkoutEntry } from '../types';
 import { generateUUID, normalizeActivityLevel } from '../utils/helpers';
 
+// PostgREST can return no error for an UPDATE/DELETE hidden by RLS or a
+// concurrently removed row. Require one returned identity before confirming.
+function confirmWrite(data: { id: string } | null, error: unknown): void {
+  if (error) throw error;
+  if (!data?.id) throw new Error('No pudimos confirmar el guardado. Revisá la conexión e intentá de nuevo.');
+}
+
 export const fetchUserData = async (userId: string, userEmail?: string): Promise<UserProfile | null> => {
   try {
     let { data: profile, error: pErr } = await supabase
@@ -33,12 +40,21 @@ export const fetchUserData = async (userId: string, userEmail?: string): Promise
           goal: 'Mantenimiento',
           activity_level: 'Sedentario',
           onboarding_completed: false
-        }, { onConflict: 'id' })
+        }, { onConflict: 'id', ignoreDuplicates: true })
         .select()
-        .single();
+        .maybeSingle();
         
       if (insertErr) throw insertErr;
       profile = newProfile;
+      // Another tab may have initialized this profile after our first read.
+      // DO NOTHING preserves its settings; read the winning row instead.
+      if (!profile) {
+        const { data, error } = await supabase.from('profiles').select('*')
+          .or(`id.eq.${userId},user_id.eq.${userId}`).single();
+        if (error) throw error;
+        profile = data;
+      }
+      if (!profile) throw new Error('No pudimos confirmar el perfil');
     }
 
     const { data: logs, error: lErr } = await supabase
@@ -118,7 +134,7 @@ export const fetchDailyLog = async (userId: string, dateStr: string): Promise<Da
 };
 
 export const syncProfile = async (p: UserProfile) => {
-  const { error } = await supabase.from('profiles').update({
+  const { data, error } = await supabase.from('profiles').update({
     name: p.name, 
     age: p.age, 
     gender: p.sex, 
@@ -126,12 +142,8 @@ export const syncProfile = async (p: UserProfile) => {
     weight_kg: p.weight, 
     goal: p.goal,
     activity_level: normalizeActivityLevel(p.activity)
-  }).or(`id.eq.${p.id},user_id.eq.${p.id}`);
-  
-  if (error) {
-    console.error('Error syncing profile:', error);
-    throw error;
-  }
+  }).or(`id.eq.${p.id},user_id.eq.${p.id}`).select('id').single();
+  confirmWrite(data, error);
 };
 
 export const syncAvatarPath = async (userId: string, avatarPath: string | null) => {
@@ -166,7 +178,7 @@ export const ensureDailyLog = async (userId: string, record: DailyRecord) => {
 
     if (!log) {
       const newId = generateUUID();
-      const { error: insertErr } = await supabase.from('daily_logs').insert({
+      const { data, error: insertErr } = await supabase.from('daily_logs').insert({
         id: newId,
         user_id: userId,
         profile_id: userId, 
@@ -174,20 +186,14 @@ export const ensureDailyLog = async (userId: string, record: DailyRecord) => {
         steps: record.steps, 
         water_ml: record.water,
         weight: record.weight
-      });
-      if (insertErr) {
-        console.error('Error inserting daily log:', insertErr);
-        throw insertErr;
-      }
+      }).select('id').single();
+      confirmWrite(data, insertErr);
       return newId;
     } else {
-      const { error: updateErr } = await supabase.from('daily_logs').update({
+      const { data, error: updateErr } = await supabase.from('daily_logs').update({
         steps: record.steps, water_ml: record.water, weight: record.weight
-      }).eq('id', log.id);
-      if (updateErr) {
-        console.error('Error updating daily log:', updateErr);
-        throw updateErr;
-      }
+      }).eq('id', log.id).select('id').single();
+      confirmWrite(data, updateErr);
       return log.id;
     }
   } catch (e) {
@@ -197,7 +203,7 @@ export const ensureDailyLog = async (userId: string, record: DailyRecord) => {
 };
 
 export const syncAddMeal = async (userId: string, logId: string, meal: MealEntry, dateStr: string) => {
-  const { error } = await supabase.from('meals').insert({
+  const { data, error } = await supabase.from('meals').insert({
     id: meal.id, 
     user_id: userId,
     daily_log_id: logId, 
@@ -208,23 +214,17 @@ export const syncAddMeal = async (userId: string, logId: string, meal: MealEntry
     time_str: meal.time || null,
     meal_details: meal.details || null,
     photo_path: meal.photo_path ?? null
-  });
-  if (error) {
-    console.error('Error adding meal:', error);
-    throw error;
-  }
+  }).select('id').single();
+  confirmWrite(data, error);
 };
 
 export const syncDeleteMeal = async (mealId: string) => {
-  const { error } = await supabase.from('meals').delete().eq('id', mealId);
-  if (error) {
-    console.error('Error deleting meal:', error);
-    throw error;
-  }
+  const { data, error } = await supabase.from('meals').delete().eq('id', mealId).select('id').single();
+  confirmWrite(data, error);
 };
 
 export const syncAddWorkout = async (userId: string, logId: string, w: WorkoutEntry, dateStr: string) => {
-  const { error } = await supabase.from('workouts').insert({
+  const { data, error } = await supabase.from('workouts').insert({
     id: w.id, 
     user_id: userId,
     daily_log_id: logId, 
@@ -236,38 +236,29 @@ export const syncAddWorkout = async (userId: string, logId: string, w: WorkoutEn
     time_str: w.time || null,
     distance_km: w.distance || null,
     pace_str: w.pace || null
-  });
-  if (error) {
-    console.error('Error adding workout:', error);
-    throw error;
-  }
+  }).select('id').single();
+  confirmWrite(data, error);
 };
 
 export const syncDeleteWorkout = async (wId: string) => {
-  const { error } = await supabase.from('workouts').delete().eq('id', wId);
-  if (error) {
-    console.error('Error deleting workout:', error);
-    throw error;
-  }
+  const { data, error } = await supabase.from('workouts').delete().eq('id', wId).select('id').single();
+  confirmWrite(data, error);
 };
 
 export const syncUpdateMeal = async (meal: MealEntry) => {
-  const { error } = await supabase.from('meals').update({
+  const { data, error } = await supabase.from('meals').update({
     description: meal.name, 
     meal_type: meal.type, 
     calories: meal.calories,
     time_str: meal.time || null,
     meal_details: meal.details || null,
     photo_path: meal.photo_path ?? null
-  }).eq('id', meal.id);
-  if (error) {
-    console.error('Error updating meal:', error);
-    throw error;
-  }
+  }).eq('id', meal.id).select('id').single();
+  confirmWrite(data, error);
 };
 
 export const syncUpdateWorkout = async (w: WorkoutEntry) => {
-  const { error } = await supabase.from('workouts').update({
+  const { data, error } = await supabase.from('workouts').update({
     activity_name: w.activity, 
     duration_min: w.duration, 
     calories_burned: w.calories,
@@ -275,9 +266,6 @@ export const syncUpdateWorkout = async (w: WorkoutEntry) => {
     time_str: w.time || null,
     distance_km: w.distance || null,
     pace_str: w.pace || null
-  }).eq('id', w.id);
-  if (error) {
-    console.error('Error updating workout:', error);
-    throw error;
-  }
+  }).eq('id', w.id).select('id').single();
+  confirmWrite(data, error);
 };

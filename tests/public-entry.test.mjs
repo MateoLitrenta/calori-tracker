@@ -543,6 +543,31 @@ test('profile v2 keeps edit fields, validation, cancel and save within the perso
   assert.equal(nodes(view.render(), element => element.type === 'form').length, 0);
 });
 
+test('profile save failure retains entered fields and only confirms after a successful explicit retry', async () => {
+  const successes=[],errors=[],oldSuccess=globalThis.__entryHarness.toast.success,oldError=globalThis.__entryHarness.toast.error;
+  globalThis.__entryHarness.toast.success=m=>successes.push(m);
+  globalThis.__entryHarness.toast.error=m=>errors.push(m);
+  let fail=true,calls=0;
+  globalThis.__entryHarness.profileStore={user:{id:'user-a'},activeProfile:profile,updateProfile:async value=>{
+    calls++;assert.equal(value.name,'Draft retained');assert.equal(value.age,35);
+    if(fail)throw Error('No confirmed row');
+  }};
+  try{
+    const view=mount(ProfileView,{});
+    node(view.render(),e=>e.type==='button'&&markup(e).includes('Editar perfil')).props.onClick();
+    const fields=()=>nodes(node(view.render(),e=>e.type==='form'),e=>['input','select'].includes(e.type));
+    fields()[0].props.onChange({target:{value:'Draft retained'}});
+    fields()[2].props.onChange({target:{value:'35'}});
+    await submit(view.render());
+    assert.equal(fields()[0].props.value,'Draft retained');assert.equal(fields()[2].props.value,35);
+    assert.equal(successes.length,0);assert.equal(errors.length,1);assert.equal(calls,1);
+    fail=false;await submit(view.render());
+    assert.equal(successes.length,1);assert.equal(calls,2);
+    assert.equal(nodes(view.render(),e=>e.type==='form').length,0);
+    assert.equal(globalThis.__entryHarness.profileStore.activeProfile,profile);
+  }finally{globalThis.__entryHarness.toast.success=oldSuccess;globalThis.__entryHarness.toast.error=oldError;}
+});
+
 test('profile v2 password form preserves validation, loading and cancel behavior', async () => {
   const errors = [];
   const calls = [];

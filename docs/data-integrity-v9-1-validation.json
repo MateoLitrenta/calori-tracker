@@ -1,0 +1,99 @@
+{
+  "base": "8cbade05cc9339fd405421d88c5c5445f7931ace",
+  "date": "2026-10-30",
+  "branch": "codex/data-integrity-v9-1",
+  "totalFiles": 36,
+  "totalTests": 404,
+  "batches": [
+    {
+      "batch": 0,
+      "files": [
+        "tests/ai-security.test.mjs",
+        "tests/chart-stats.test.mjs",
+        "tests/coach-goal-proposal.test.mjs",
+        "tests/coach-goals.test.mjs",
+        "tests/coach-response-policy.test.mjs",
+        "tests/coach.test.mjs",
+        "tests/data-integrity-postgres.test.mjs",
+        "tests/estimate.test.mjs",
+        "tests/heatmap-balance.test.mjs",
+        "tests/meal-stats.test.mjs",
+        "tests/product-readiness.test.mjs",
+        "tests/ui-polish.test.mjs"
+      ],
+      "tests": 131,
+      "pass": 131,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "batch": 1,
+      "files": [
+        "tests/ai-transport.test.mjs",
+        "tests/charts-view.test.mjs",
+        "tests/coach-goals-client.test.mjs",
+        "tests/coach-immediate-time.test.mjs",
+        "tests/coach-serverless-runtime.test.mjs",
+        "tests/daily-panel.test.mjs",
+        "tests/desktop-experience.test.mjs",
+        "tests/habit-insights.test.mjs",
+        "tests/history-experience.test.mjs",
+        "tests/persistence.test.mjs",
+        "tests/public-entry.test.mjs",
+        "tests/workout-entry-layout.test.mjs"
+      ],
+      "tests": 151,
+      "pass": 151,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    {
+      "batch": 2,
+      "files": [
+        "tests/auto-resize-textarea.test.mjs",
+        "tests/chat-view.test.mjs",
+        "tests/coach-goals-postgres.test.mjs",
+        "tests/coach-presentation.test.mjs",
+        "tests/coach-store-sync.test.mjs",
+        "tests/data-integrity-client.test.mjs",
+        "tests/energy.test.mjs",
+        "tests/heatmap-activity.test.mjs",
+        "tests/history-periods.test.mjs",
+        "tests/precision-layout.test.mjs",
+        "tests/reset-data.test.mjs",
+        "tests/workout-entry-premium.test.mjs"
+      ],
+      "tests": 122,
+      "pass": 122,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  ],
+  "checks": {
+    "diff": 0,
+    "aiTypes": 0,
+    "lint": 0,
+    "build": 0,
+    "coachTypes": 0
+  },
+  "lintWarnings": 11,
+  "environment": "Native PostgreSQL 17.5 on Windows, disposable loopback cluster; synthetic Auth/Storage bootstrap. Client/service boundaries simulated.",
+  "remoteSQLExecuted": false,
+  "transactionalRPCActivated": false,
+  "sha256NormalizedLF": {
+    "src/hooks/useAppStore.ts": "4ef65e564ecb83828f3da78ff2d32a0a598459f5b2885cd8cb62f96dd99e3e10",
+    "src/lib/db.ts": "30780f9c0cc0195f2854d8a1384aea729ec4ba1287c32a4f0bfb9ca8999c4d1d",
+    "supabase/proposals/data-integrity-v9-1/001_clean_baseline.sql": "948bea31c07851edbc2c38510f21c496e399a4be64a1f394245afc31f8d346c7",
+    "supabase/proposals/data-integrity-v9-1/002_atomic_records.sql": "6e26727070eb1a93b41c21ea256b9b112644a02fd30856581190c1b43b12a24f",
+    "supabase/tests/data_integrity_inventory.sql": "da746133f29b151cb02dc9726f93f7dab14d45b8828fa7de3a5b8225db9710b1",
+    "tests/data-integrity-client.test.mjs": "3d17f8dbff1cd25a886edd8b0922516c5074230351e4128cfaf5e1ae2c82f686",
+    "tests/data-integrity-postgres.test.mjs": "b3c0655bf7fb8ff8ecb7f01d971761acb3603c30739927d5099e88ea682b4c3f",
+    "tests/helpers/disposable-postgres.mjs": "5c994693340d5443f8f18f854707e3af2ad2faba773b2b590a1686ed052d9c23",
+    "tests/persistence.test.mjs": "11a9348cca53f7dbf9f4a2925cee37329b51f8699af916945b60a6205a24f5e0",
+    "tests/product-readiness.test.mjs": "4e26f94aeefd3fdb6c44ba4942c1f3859548b9027dae2965c7d2413c3586d75a",
+    "tests/public-entry.test.mjs": "e35efe7f3e46acbbbe0ca1e9cf16b57714ef7ce2a8fd3ad16eb001afff438bfb"
+  }
+}

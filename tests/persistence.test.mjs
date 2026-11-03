@@ -62,6 +62,13 @@ test('legacy/invalid values load safely; failed saves reject', async () => {
   finally { error = undefined; console.error = originalError; }
 });
 
+test('profile changes reject zero affected rows instead of reporting success', async () => {
+  row = { id: 'test-user', activity_level: 'Activo' };
+  confirmedRow = null;
+  try { await assert.rejects(syncProfile({ id: 'test-user', activity: 'Moderado' }), /confirmar/); }
+  finally { confirmedRow = undefined; }
+});
+
 const personalDetails = { name: '  Ana  ', age: 32, sex: 'Femenino', height: 167.5, weight: 63.2 };
 
 test('onboarding persists personal details, preserves existing settings, and survives a fresh fetch', async () => {
