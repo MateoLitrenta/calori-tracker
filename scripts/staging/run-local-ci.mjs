@@ -29,5 +29,5 @@ const result={commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).
  postgrest:execFileSync(process.env.SECURITY_TEST_POSTGREST_BIN,['--version'],{encoding:'utf8'}).trim(),files,migrations,focused,complete,checks,cleanup,
  actualGoTrue:false,actualStorageHTTP:false,actualLocalPostgREST:true,actualLocalPostgreSQL:true,remoteSQLExecuted:false,productionModified:false,
  lintWarnings:(readFileSync(join(output,'lint.log'),'utf8').match(/(?:^::warning(?: |::)|: warning )/gm)||[]).length};
-const passed=checks.every(c=>c.code===0&&c.signal===null&&c.spawnError===null)&&focused.tests===10&&focused.pass===10&&complete.tests===434&&complete.pass===434&&focused.skipped+focused.cancelled+complete.skipped+complete.cancelled===0&&cleanup.length===0;
+const passed=checks.every(c=>c.code===0&&c.signal===null&&c.spawnError===null)&&focused.tests===14&&focused.pass===14&&complete.tests===438&&complete.pass===438&&focused.skipped+focused.cancelled+complete.skipped+complete.cancelled===0&&cleanup.length===0;
 result.result=passed?'PASSED':'BLOCKED';writeFileSync(join(output,'result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));process.exitCode=passed?0:1;

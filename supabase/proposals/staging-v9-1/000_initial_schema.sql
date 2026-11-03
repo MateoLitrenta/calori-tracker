@@ -32,30 +32,33 @@ begin
 end;
 $$;
 
--- Types/defaults not established by the supplied catalog are a proposed contract,
--- not a claim that this is an exact remote schema dump. See staging-security-v9-1.md.
+-- Incorporates the user-verified Calori catalog (PR72 fidelity correction).
+-- Remaining uncertified metadata is listed in staging-security-v9-1.md.
 create table public.profiles (
- id uuid primary key references auth.users(id),
- user_id uuid not null references auth.users(id),
- name text not null, age integer, gender text, height_cm numeric, weight_kg numeric,
- goal text, created_at timestamptz default now()
+ id uuid primary key references auth.users(id) on delete cascade,
+ user_id uuid not null references auth.users(id) on delete cascade,
+ name text, age integer, gender text, height_cm numeric, weight_kg numeric,
+ goal text, created_at timestamptz not null default timezone('utc'::text, now())
 );
 create table public.daily_logs (
- id uuid primary key, user_id uuid not null references auth.users(id),
- profile_id uuid references public.profiles(id), date date not null,
- steps numeric default 0, water_ml numeric default 0, weight numeric,
+ id uuid primary key default gen_random_uuid(), user_id uuid not null references auth.users(id) on delete cascade,
+ profile_id uuid references public.profiles(id) on delete cascade, date date not null,
+ steps integer default 0, water_ml integer default 0, weight numeric,
+ created_at timestamptz not null default timezone('utc'::text, now()),
  unique(user_id,date)
 );
 create table public.meals (
- id uuid primary key, user_id uuid not null references auth.users(id),
- daily_log_id uuid not null references public.daily_logs(id), date date,
- description text not null, meal_type text, calories numeric, time_str text, meal_details text
+ id uuid primary key, user_id uuid not null references auth.users(id) on delete cascade,
+ daily_log_id uuid not null references public.daily_logs(id) on delete cascade, date date,
+ description text, meal_type text, calories integer default 0, time_str text, meal_details text,
+ created_at timestamptz not null default timezone('utc'::text, now())
 );
 create table public.workouts (
- id uuid primary key, user_id uuid not null references auth.users(id),
- daily_log_id uuid not null references public.daily_logs(id), date date,
- activity_name text not null, duration_min numeric, calories_burned numeric,
- workout_details text, time_str text, distance_km numeric, pace_str text
+ id uuid primary key, user_id uuid not null references auth.users(id) on delete cascade,
+ daily_log_id uuid not null references public.daily_logs(id) on delete cascade, date date,
+ activity_name text not null, duration_min integer default 0, calories_burned integer default 0,
+ workout_details text, time_str text, distance_km numeric, pace_str text,
+ created_at timestamptz not null default timezone('utc'::text, now())
 );
 alter table public.profiles enable row level security;
 alter table public.daily_logs enable row level security;

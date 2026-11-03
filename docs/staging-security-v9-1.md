@@ -26,9 +26,22 @@ Las siete migraciones actuales dependen de cuatro tablas no creadas en la cadena
 
 `000_initial_schema.sql` aporta profiles/daily_logs/meals/workouts, PKs, UUID/FKs simples a Auth/perfiles/días, UNIQUE(user_id,date), columnas de negocio, RLS legacy y grants descritos. Las migraciones posteriores añaden sus propias columnas/constraints/buckets/funciones; no se duplican ni reimplementan. `010_bootstrap.psql` incluye literalmente las siete en orden y ejecuta el preflight real al final. Un test exige igualdad con la lista completa del directorio: agregar una migración obliga a revisar la secuencia.
 
-Coincide con el catálogo documentado en #71 en: cuatro ENABLE RLS sin FORCE; profiles autorizado por id OR user_id; identificadores independientes; profile_id y fechas de hijos nullable; FKs simples; grants amplios anon/authenticated y buckets privados tras migrar. **No es un dump remoto exacto**: tipos/defaults de negocio, nombres de índices/políticas y acciones de FKs no completamente entregados se proponen desde el fixture documentado y consumidores actuales. Se elige NO ACTION para las FKs, sin presumir que todas las remotas sean iguales; el upgrade preserva las acciones que encuentra. El `001_clean_baseline.sql` anterior usa igualdades/FKs/NULLs diferentes y no sustituye esta reconstrucción.
+Coincide con el catálogo documentado en #71 en: cuatro ENABLE RLS sin FORCE; profiles autorizado por id OR user_id; identificadores independientes; profile_id y fechas de hijos nullable; FKs simples; grants amplios anon/authenticated y buckets privados tras migrar. La corrección final de fidelidad incorpora los metadatos adicionales verificados y aportados por el usuario para #72; no se hicieron consultas remotas nuevas.
 
-Queda cotejar metadatos completos de tipos/defaults, FKs/acciones, ACL/default privileges/roles heredados y definiciones/versiones de cuotas/objetivos/servicios. El preflight exitoso aportado prueba sus chequeos, no todos esos detalles. No se inventan triggers, extensiones o funciones iniciales ausentes del inventario. Si aparece otra dependencia, detener y revisar la propuesta; no ampliar permisos ni rellenar datos silenciosamente.
+### Corrección de fidelidad del baseline
+
+- profiles.name y meals.description admiten NULL.
+- Las cuatro tablas tienen created_at TIMESTAMPTZ NOT NULL con el literal remoto `timezone('utc'::text, now())`; no se sustituye por now() ni se cambia su expresión.
+- daily_logs.id usa gen_random_uuid(); steps y water_ml son INTEGER nullable DEFAULT 0.
+- meals.calories, workouts.duration_min y workouts.calories_burned son INTEGER nullable DEFAULT 0.
+- Las ocho FKs de las cuatro tablas usan ON DELETE CASCADE, incluidas ambas referencias de profiles a auth.users. UNIQUE(user_id,date) se conserva.
+- No se adelantan las restricciones de seguridad de 020: políticas legacy OR/ALL, grants y ausencia de igualdad entre identidades se mantienen para el ensayo.
+
+El [inventario verificable](../tests/fixtures/staging-verified-catalog.json) distingue los metadatos aportados de los defaults todavía no certificados. Los tests comparan 25 columnas (tipo/nullability y diez defaults explícitos), las ocho FKs y la unicidad por usuario/día contra ese inventario, antes y después de las siete migraciones. El upgrade se ejecuta sin modificar su SQL: conserva CASCADE, nombres, ON UPDATE y deferrabilidad de las FKs al sustituir tres vínculos simples por compuestos. Los borrados sintéticos de día propio, perfil y fila Auth eliminan sólo los descendientes de A y conservan los de B; cada sondeo usa rollback.
+
+**No es un dump remoto completo**: columnas de negocio no incluidas en el inventario, sus defaults, nombres exactos de índices/políticas/constraints y versiones administradas aún requieren cotejo. El `001_clean_baseline.sql` anterior usa igualdades/FKs/NULLs diferentes y no sustituye esta reconstrucción.
+
+Queda cotejar los metadatos no especificados arriba, ACL/default privileges/roles heredados y definiciones/versiones de cuotas/objetivos/servicios. ON DELETE CASCADE de las ocho FKs ya no se considera desconocido: procede del catálogo verificado aportado por el usuario. El preflight exitoso aportado prueba sus chequeos, no todos esos detalles. Si aparece otra dependencia, detener y revisar la propuesta; no ampliar permisos ni rellenar datos silenciosamente.
 
 ## Evidencia local y lo que NO certifica
 
@@ -36,7 +49,9 @@ La prueba `tests/staging-schema.test.mjs` crea PostgreSQL real descartable y usa
 
 **No se ejecutó GoTrue ni el servicio HTTP de Storage en esas pruebas.** Insertar metadatos de objetos en el shim no equivale a cargar un archivo; un JWT local no prueba el ciclo de Supabase Auth. Tampoco se certifica restaurar Auth/Storage administrados a partir del dump de un shim. La foto JPEG 16×16 del repositorio es generada, sin fotografía personal ni EXIF de un usuario.
 
-La ejecución focalizada inicial aprobó 10/10 en PostgreSQL/PostgREST locales Windows. El workflow `staging-schema-v9-1.yml` ejecuta además los 38 archivos (434 casos esperados), TypeScript frontend/endpoints, lint, build y diff check en Linux con Node 24.4.1, PostgreSQL 17.5 y PostgREST 16.5 oficiales verificados por hash. **Resultado final: 434/434 pruebas completas y 10/10 focalizadas, cero fallos/omisiones/cancelaciones.** TypeScript frontend y ambos endpoints, lint, build y diff check aprobados; 11 advertencias previas de lint. [CI final](https://github.com/MateoLitrenta/calori-tracker/actions/runs/41693454436), código probado `6433052`; los commits posteriores sólo documentan resultados. [Manifiesto y hashes](staging-security-v9-1-validation.json). Una corrida preliminar también aprobó 434/434; se conservan los resultados por separado. El problema nativo Windows previo no se declara resuelto por esta ejecución.
+La corrección de fidelidad pasó inicialmente 14/14 focalizadas en PostgreSQL/PostgREST locales Windows. Se conserva toda la suite anterior y se añaden cuatro casos; el workflow ejecuta los mismos 38 archivos, ahora con 438 casos esperados, TypeScript frontend/endpoints, lint, build y diff check en Linux con Node 24.4.1, PostgreSQL 17.5 y PostgREST 16.5 oficiales verificados por hash. La repetición Linux de esta corrección se documentará en `staging-schema-fidelity-v9-1-validation.json`. Los [resultados anteriores](staging-security-v9-1-validation.json), 434/434 y 10/10 sobre `6433052`, corresponden al baseline previo y se conservan como evidencia histórica. El problema nativo Windows previo no se declara resuelto por una ejecución local exitosa.
+
+Las pruebas de CASCADE sobre auth.users usan SQL administrativo contra el shim local, no la API real de Supabase Auth. No certifican triggers/efectos adicionales del servicio, borrado de bytes de Storage ni restauración administrada. Tras 040 el cliente sigue sin escritura propia, pero un borrado administrativo de Auth conserva su CASCADE: esa recuperación no congela Auth ni anula acciones referenciales. El ensayo real y la ventana de mantenimiento deben contemplar también esos escritores.
 
 ## Elegir y autorizar el entorno
 
