@@ -1,37 +1,37 @@
 {
   "date": "2026-11-03",
-  "scope": "PR72 final staging baseline fidelity only",
-  "workflow": "https://github.com/MateoLitrenta/calori-tracker/actions/runs/41697481767",
+  "scope": "PR72 exactly three remaining definitions: meals.id/workouts.id UUID defaults; workouts.activity_name nullable without default",
+  "workflow": "https://github.com/MateoLitrenta/calori-tracker/actions/runs/41700221256",
   "artifact": {
-    "id": 13262407298,
+    "id": 13261234671,
     "name": "staging-schema-rehearsal",
-    "size_in_bytes": 68770,
-    "url": "https://api.github.com/repos/MateoLitrenta/calori-tracker/actions/artifacts/13262407298",
-    "archive_download_url": "https://api.github.com/repos/MateoLitrenta/calori-tracker/actions/artifacts/13262407298/zip",
+    "size_in_bytes": 68739,
+    "url": "https://api.github.com/repos/MateoLitrenta/calori-tracker/actions/artifacts/13261234671",
+    "archive_download_url": "https://api.github.com/repos/MateoLitrenta/calori-tracker/actions/artifacts/13261234671/zip",
     "expired": false,
-    "created_at": "2026-11-03T18:54:14Z",
-    "expires_at": "2026-11-10T18:54:13Z",
-    "updated_at": "2026-11-03T18:54:14Z",
-    "digest": "sha256:f3a7d291d050b0bca63d6ede328dfa49b2d3913b16833cf8433567eca5789f75",
+    "created_at": "2026-11-03T19:10:18Z",
+    "expires_at": "2026-11-10T19:10:17Z",
+    "updated_at": "2026-11-03T19:10:18Z",
+    "digest": "sha256:f4097b70e0ab07dc0c583cb7274f67e77527de767885ae43c4f49d0a12127d61",
     "workflow_run": {
-      "id": 41697481767,
+      "id": 41700221256,
       "repository_id": 1346778602,
       "head_repository_id": 1346778602,
       "head_branch": "codex/staging-security-v9-1",
-      "head_sha": "be8dddcce9a47f5926d485c04b70c211be13adce"
+      "head_sha": "a6cf2231706707676d0d4426c011af8172702b68"
     }
   },
-  "previousBaselineCommit": "37f02e108613a4e2c724bd4cdee2148fdcc4e357",
+  "previousBaselineCommit": "7b0f32babb24737cd9da77dc1b12a15b7e1171a1",
   "baseline": {
     "file": "supabase/proposals/staging-v9-1/000_initial_schema.sql",
-    "sha256": "001443aa85c418760aa31962c212ad9d12aec36d77943987af5642cc25dc09f0"
+    "sha256": "f71604cab66ce310f76045043273ea74ef28b7bc8be77b0130b60c03f0e56c2a"
   },
   "inventory": {
     "file": "tests/fixtures/staging-verified-catalog.json",
-    "sha256": "40597095dffff815d8d85a177af4452785b0d5b4a79fedf64605af5a91ae25d7",
+    "sha256": "58ad498cb1aa5c619e441afd08b8ad42b473fb14e5eff0a93ac287f0aabcb1ba",
     "source": "User-verified Supabase Calori catalog, PR72 final schema fidelity request; no remote query in this task",
-    "columnComparisons": 25,
-    "explicitDefaultComparisons": 10,
+    "columnComparisons": 26,
+    "explicitDefaultComparisons": 13,
     "foreignKeyComparisons": 8,
     "uniqueKeys": [
       [
@@ -43,7 +43,7 @@
       ]
     ]
   },
-  "commit": "be8dddcce9a47f5926d485c04b70c211be13adce",
+  "commit": "a6cf2231706707676d0d4426c011af8172702b68",
   "node": "v24.4.1",
   "postgres": "postgres (PostgreSQL) 17.5",
   "postgrest": "PostgREST 16.5",
@@ -223,12 +223,61 @@
   "migrationsActivated": false,
   "merged": false,
   "historicalValidation": "staging-security-v9-1-validation.json",
-  "windowsFocusedPreliminary": {
-    "tests": 14,
-    "pass": 14,
-    "fail": 0,
-    "skipped": 0,
-    "cancelled": 0,
-    "scope": "Preliminary local run; final recovery probe and all quality checks covered by Linux CI"
+  "threeCorrectionsVerified": [
+    [
+      "public.meals.id",
+      "uuid",
+      false,
+      "gen_random_uuid()"
+    ],
+    [
+      "public.workouts.id",
+      "uuid",
+      false,
+      "gen_random_uuid()"
+    ],
+    [
+      "public.workouts.activity_name",
+      "text",
+      true,
+      null
+    ]
+  ],
+  "behavioralRegression": "Omit meals/workouts IDs on INSERT; PostgreSQL generates non-null UUIDs. Explicit activity_name=NULL accepted. Existing bootstrap/preflight/upgrade/postflight/recovery and CASCADE regressions retained.",
+  "codeIntegrationReady": true,
+  "realSupabaseCertification": false,
+  "previousValidation": {
+    "documentCommit": "7b0f32babb24737cd9da77dc1b12a15b7e1171a1",
+    "manifest": "https://github.com/MateoLitrenta/calori-tracker/blob/7b0f32babb24737cd9da77dc1b12a15b7e1171a1/docs/staging-schema-fidelity-v9-1-validation.json",
+    "testedCommit": "be8dddcce9a47f5926d485c04b70c211be13adce",
+    "workflow": "https://github.com/MateoLitrenta/calori-tracker/actions/runs/41697481767",
+    "baseline": {
+      "file": "supabase/proposals/staging-v9-1/000_initial_schema.sql",
+      "sha256": "001443aa85c418760aa31962c212ad9d12aec36d77943987af5642cc25dc09f0"
+    },
+    "focused": {
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0
+    },
+    "complete": {
+      "tests": 438,
+      "pass": 438,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0
+    },
+    "windowsFocusedPreliminary": {
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "scope": "Preliminary local run; final recovery probe and all quality checks covered by Linux CI"
+    }
   }
 }
