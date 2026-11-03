@@ -1,0 +1,105 @@
+{
+  "date": "2026-11-03",
+  "base": "8cbade05cc9339fd405421d88c5c5445f7931ace",
+  "branch": "codex/security-rls-hardening-v9-1",
+  "pr70": "3bc5d62cd3ab4cf921b9e4a795d8295a58ff0e24",
+  "totalFiles": 35,
+  "totalTests": 396,
+  "batches": [
+    {
+      "batch": 0,
+      "files": [
+        "tests/ai-security.test.mjs",
+        "tests/chart-stats.test.mjs",
+        "tests/coach-goal-proposal.test.mjs",
+        "tests/coach-goals.test.mjs",
+        "tests/coach-response-policy.test.mjs",
+        "tests/coach.test.mjs",
+        "tests/energy.test.mjs",
+        "tests/heatmap-activity.test.mjs",
+        "tests/history-periods.test.mjs",
+        "tests/precision-layout.test.mjs",
+        "tests/reset-data.test.mjs",
+        "tests/workout-entry-layout.test.mjs"
+      ],
+      "tests": 141,
+      "pass": 141,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "batch": 1,
+      "files": [
+        "tests/ai-transport.test.mjs",
+        "tests/charts-view.test.mjs",
+        "tests/coach-goals-client.test.mjs",
+        "tests/coach-immediate-time.test.mjs",
+        "tests/coach-serverless-runtime.test.mjs",
+        "tests/daily-panel.test.mjs",
+        "tests/estimate.test.mjs",
+        "tests/heatmap-balance.test.mjs",
+        "tests/meal-stats.test.mjs",
+        "tests/product-readiness.test.mjs",
+        "tests/security-hardening.test.mjs",
+        "tests/workout-entry-premium.test.mjs"
+      ],
+      "tests": 138,
+      "pass": 138,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "batch": 2,
+      "files": [
+        "tests/auto-resize-textarea.test.mjs",
+        "tests/chat-view.test.mjs",
+        "tests/coach-goals-postgres.test.mjs",
+        "tests/coach-presentation.test.mjs",
+        "tests/coach-store-sync.test.mjs",
+        "tests/desktop-experience.test.mjs",
+        "tests/habit-insights.test.mjs",
+        "tests/history-experience.test.mjs",
+        "tests/persistence.test.mjs",
+        "tests/public-entry.test.mjs",
+        "tests/ui-polish.test.mjs"
+      ],
+      "tests": 117,
+      "pass": 117,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    }
+  ],
+  "checks": {
+    "lint": 0,
+    "build": 0,
+    "coachTypes": 0,
+    "aiTypes": 0,
+    "diff": 0
+  },
+  "lintWarnings": 11,
+  "postgres": "17.5 local disposable cluster",
+  "postgrest": "16.5 official Windows binary",
+  "httpSignedSyntheticJWTs": true,
+  "remoteSQLExecuted": false,
+  "remoteAuthValidated": false,
+  "storageHTTPValidated": false,
+  "atomicRPCActivated": false,
+  "productionSourceChanged": false,
+  "sha256NormalizedLF": {
+    "docs/security-hardening-v9-1.md": "0bba0017e91fcfbc0121bff5085ac1db34f58b1f0541a7ba770cba66c99ddd89",
+    "supabase/proposals/security-rls-v9-1/000_preflight.sql": "c86bd1ce7808ace90f63f69fd45c06e0dcd069f741d9be10324ed476c4cdd435",
+    "supabase/proposals/security-rls-v9-1/010_checks.sql": "d22771bb36bfc6daacb3ed11ef66d28278b6bb73638194ddc34ccd22cde0962a",
+    "supabase/proposals/security-rls-v9-1/020_upgrade.sql": "b950e45b059e168fad9c4ddab9de53a32efd9da4cc0afa75e29dee8a410f4ab2",
+    "supabase/proposals/security-rls-v9-1/030_postflight.sql": "6052139ca3c7a06c385592cca7bff8ac56b77a97bd731b885ae5b1ecae31fcc7",
+    "supabase/proposals/security-rls-v9-1/040_readonly_recovery.sql": "ac4f2c2a0344ff5411da9d9833b389b68d95315e025fce51978373def0d2edf5",
+    "tests/fixtures/security-rls/pr70-db.ts.json": "cd8b6bad0f601983be3fe7e3901096bbcf034e1f8a5d674d9e066b8b78c30f92",
+    "tests/fixtures/security-rls/pr70-source.json": "4666b9065b5c9ecbff1c382b6a57e01110dd1185bdcd17b806e521c2de470a2a",
+    "tests/fixtures/security-rls/pr70-useAppStore.ts.json": "24dd65e579c831f19c4ad499dbd7eb3c8c74ee05a6fd0f389c0ffe6f70ed5d60",
+    "tests/fixtures/security-rls/remote-shape.sql": "5caec72727730d0f7956df0b77a78a901dbdf6bc3df4e3a1095ed987a7fc42b7",
+    "tests/helpers/security-postgres.mjs": "78780243eca7ff67855cdc7a10af43559daecc6cc04d39432c3dfbd7a07274a2",
+    "tests/security-hardening.test.mjs": "3097797c75675d12033631b03ca275703629ab9784e84b7c40390d7acc7c012d"
+  }
+}
