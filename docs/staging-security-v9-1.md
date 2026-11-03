@@ -2,7 +2,7 @@
 
 ## Estado y límites
 
-Rama desde `main` **b95c75c**, después de los merges #70 y #71. Se propone un **proyecto Supabase independiente y vacío**, `calori-security-staging-v9-1`, para ensayar el esquema completo y el endurecimiento sin enlazar despliegues a Production. No se creó proyecto/rama, no se ejecutó SQL remoto ni se consultaron/exportaron datos personales. No cambian la app, sus credenciales, migraciones activas o Production.
+Rama desde `main` **b95c75c**, después de los merges #70 y #71. Se propone un **proyecto Supabase independiente y vacío**, `calori-security-staging-v9-1`, para ensayar el esquema completo y el endurecimiento sin enlazar despliegues a Production. No se creó proyecto ni rama de Supabase, no se ejecutó SQL remoto ni se consultaron/exportaron datos personales. No cambian la app, sus credenciales, migraciones activas o Production.
 
 El usuario confirmó para `calori`: cero perfiles mixtos, días con perfil incorrecto y comidas/ejercicios asociados a días ajenos; ejecución completa de `010_checks.sql` en READ ONLY/REPEATABLE READ con row_security=off y rollback, sin errores; cero ramas y cero filas de historial de migraciones. Son **resultados aportados por el usuario**, no consultas repetidas en esta tarea. No equivalen a aplicar `020_upgrade.sql`, ni a demostrar que las siete migraciones estén ausentes: pueden haberse aplicado manualmente.
 
@@ -36,15 +36,19 @@ La prueba `tests/staging-schema.test.mjs` crea PostgreSQL real descartable y usa
 
 **No se ejecutó GoTrue ni el servicio HTTP de Storage en esas pruebas.** Insertar metadatos de objetos en el shim no equivale a cargar un archivo; un JWT local no prueba el ciclo de Supabase Auth. Tampoco se certifica restaurar Auth/Storage administrados a partir del dump de un shim. La foto JPEG 16×16 del repositorio es generada, sin fotografía personal ni EXIF de un usuario.
 
-La ejecución focalizada inicial aprobó 10/10 en PostgreSQL/PostgREST locales Windows. El workflow `staging-schema-v9-1.yml` ejecuta además los 38 archivos (434 casos esperados), TypeScript frontend/endpoints, lint, build y diff check en Linux con Node 24.4.1, PostgreSQL 17.5 y PostgREST 16.5 oficiales verificados por hash. **Resultados finales y códigos en `staging-security-v9-1-validation.json`**, cuando finalice CI. El problema nativo Windows previo no se declara resuelto por esta ejecución.
+La ejecución focalizada inicial aprobó 10/10 en PostgreSQL/PostgREST locales Windows. El workflow `staging-schema-v9-1.yml` ejecuta además los 38 archivos (434 casos esperados), TypeScript frontend/endpoints, lint, build y diff check en Linux con Node 24.4.1, PostgreSQL 17.5 y PostgREST 16.5 oficiales verificados por hash. **Resultado final: 434/434 pruebas completas y 10/10 focalizadas, cero fallos/omisiones/cancelaciones.** TypeScript frontend y ambos endpoints, lint, build y diff check aprobados; 11 advertencias previas de lint. [CI final](https://github.com/MateoLitrenta/calori-tracker/actions/runs/41693454436), código probado `6433052`; los commits posteriores sólo documentan resultados. [Manifiesto y hashes](staging-security-v9-1-validation.json). Una corrida preliminar también aprobó 434/434; se conservan los resultados por separado. El problema nativo Windows previo no se declara resuelto por esta ejecución.
 
 ## Elegir y autorizar el entorno
 
 **Recomendado: proyecto independiente.** Nombre `calori-security-staging-v9-1`; misma región y versión PostgreSQL compatible con Calori, confirmadas en Dashboard; propietario y fecha de cierre asignados. No copiar Production, backups o usuarios reales. Auth/PostgREST/Storage deben inicializarse normalmente en Supabase antes del SQL. Sin integración GitHub→DB ni vínculo Vercel Production: evita que el historial remoto vacío dispare replay/merge de cambios por error.
 
+Elegir PostgreSQL 17 con el patch administrado vigente y registrar las versiones reales; no degradar el proveedor a 17.5 para imitar CI. En Data API exponer public y mantener ai_private fuera de schemas expuestos. Para el checkout local usar Site URL `http://localhost:5194` y allowlist `http://localhost:5194/**`; para UI alojada, sólo el hostname/paths de staging aprobado, sin comodines que admitan Production. Iniciar Vite con `--port 5194 --strictPort`. Los destinos de confirmación/reset se configuran en el proyecto nuevo, nunca en Calori Production. [Redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls).
+
 **Alternativa: rama persistente**, `security-staging-v9-1`, con ref/credenciales propios y sólo datos sintéticos. No crear ni hacer merge/rebase/reset de una rama ahora. Con historial remoto vacío no asumir que un branch vaya a reconstruir correctamente el esquema: el modo de creación, custom roles y fuente de migraciones/dump deben verificarse antes de elegirlo. Si la rama ya trae tablas, el bootstrap debe rechazarla; no vaciarla ni forzar su ejecución. No utilizar merge de Supabase para desplegar este ensayo a Production.
 
 Costos de referencia consultados el 2026-11-03: Micro **US$0,01344/h**, aproximadamente US$0,323 por 24 h o US$10/mes de cómputo continuo; más disco, Storage, egress, Auth u otros consumos según plan. Los créditos de cómputo pertenecen a la organización y pueden estar consumidos por Production; no prometer un segundo proyecto gratuito. Preview Branching también parte de esa tarifa Micro y **no está cubierto por Spend Cap**. La oferta real y el costo de una rama persistente deben confirmarse en Dashboard antes de aprobar. Fijar un ensayo de 24 h, responsable, revisión de consumo y cierre manual; una alarma no es un tope duro. No activar PITR, IPv4, dominios o upgrades pagos sin otra aprobación. [Compute](https://supabase.com/docs/guides/platform/manage-your-usage/compute), [Branching usage](https://supabase.com/docs/guides/platform/manage-your-usage/branching).
+
+La estimación de 24 h es sólo cómputo, no el costo total de la organización: no incluye un eventual cambio de plan. Si hubiera cupo Free disponible, evaluar esa alternativa y sus límites/pausas antes de elegir Micro; no asumir elegibilidad ni realizar un upgrade para crear el ensayo.
 
 ## Procedimiento de ensayo, después de autorización
 
@@ -58,6 +62,8 @@ Costos de referencia consultados el 2026-11-03: Micro **US$0,01344/h**, aproxima
 8. Ejecutar la revisión de frontend y de uploads descrita abajo. Guardar un acta con pasos/resultados y metadatos de versión, sin credenciales ni datos personales. No marcar servicios remotos verificados sólo porque el script exista.
 9. Ensayar recuperación en el staging: detener clientes/escrituras de prueba, ejecutar `040_readonly_recovery.sql`, reconocer `CALORI_STAGING_RECOVERY=applied` y ejecutar el modo `readonly`. Comprueba lectura propia y rechazo de escritura propia de comida. **040 sólo restringe las cuatro tablas base:** objetivos, cuotas, Auth y Storage siguen con sus permisos separados. No llamarlo mantenimiento global. Para una ventana real se debe controlar también esos escritores mediante un mecanismo aprobado. Mantener las restricciones correctas; reparar hacia adelante o reconstruir el staging, sin reinstalar políticas vulnerables ni conceder ALL para seguir probando.
 
+Para certificar signup, elegir el alta mediante la UI + SMTP sandbox **en lugar del alta administrativa** de A/B; no intentar registrar otra vez emails que ya existen. El SMTP sandbox debe aceptar destinatarios reservados example.test sin entrega externa; el SMTP incorporado del proveedor no se presume apto para eso. Mantener altas públicas deshabilitadas tras crear las cuentas de ensayo. La app actual no incluye un flujo de recuperación de contraseña: si se ensaya el mecanismo del proveedor, registrarlo como prueba separada de Auth, sin afirmar una UI inexistente ni agregarla en este PR. En conexiones por pooler, verificar también el usuario/ref del proyecto; el hostname compartido por sí solo no identifica el destino.
+
 ## Variables y guards de los scripts (no configuradas en esta tarea)
 
 - CALORI_STAGING_PROJECT_REF: ref nuevo, nunca el de Production.
@@ -69,6 +75,8 @@ Costos de referencia consultados el 2026-11-03: Micro **US$0,01344/h**, aproxima
 - CALORI_STAGING_POSTFLIGHT=passed o CALORI_STAGING_RECOVERY=applied, únicamente tras el paso real correspondiente.
 
 Para un stack Supabase local real se admite exclusivamente `http://127.0.0.1:54321`, ref `local`, ACK synthetic-only:local y CALORI_STAGING_ALLOW_LOCAL=1. Ese stack debe inicializarse con un runtime/CLI oficial fijado y su configuración revisada, sin vincular Production; los shims del test no lo reemplazan. Ninguno de estos reconocimientos constituye autorización por sí mismo. Los guards evitan errores habituales de destino, no sustituyen la revisión humana de entorno/credenciales.
+
+El recibo fija las fechas al día UTC de su primera creación y al anterior; revisar esas fechas al comparar con el calendario local del frontend, especialmente cerca de medianoche. No se usa el seed para calcular promedios o progreso de objetivos alternativos: esas interpretaciones corresponden al código actual de Calori.
 
 ## Frontend con servicios reales
 
