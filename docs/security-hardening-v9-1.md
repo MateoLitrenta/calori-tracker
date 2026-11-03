@@ -2,7 +2,7 @@
 
 ## Estado y conclusión
 
-**Actualización del gate de integración (2026-11-03): BLOCKED.** La validación inicial de este PR que se detalla abajo es histórica. El harness ahora evita la reserva/liberación de puertos y conserva diagnósticos sanitizados, pero la terminación nativa intermitente con salida 3 también se reprodujo con puerto automático. Ver [informe de integración y bloqueo vigente](integration-gate-v9-1.md) y [resultados de las repeticiones completas](integration-gate-v9-1-validation.json). No considerar aprobada la integración por el resultado inicial 396/396 ni por una prueba aislada.
+**Gate cross-platform (2026-11-03): LINUX INTEGRATION GATE: PASSED. WINDOWS NATIVE HARNESS: UNRESOLVED.** Dos VM Linux independientes aprueban 424/424 cada una y 41/41 focalizadas, sin omisiones. El problema nativo Windows se conserva sin atribuir una causa exacta. Ver [informe vigente y matriz Windows/Linux](integration-gate-v9-1.md), [evidencia Linux](integration-gate-v9-1-linux-validation.json) y [registro Windows](integration-gate-v9-1-windows.md). Los resultados iniciales de este PR que siguen debajo son históricos; ninguna validación local autoriza SQL remoto.
 
 Rama independiente `codex/security-rls-hardening-v9-1`, creada desde main `8cbade05cc9339fd405421d88c5c5445f7931ace` (merge del PR #69). Se conservaron `security-fixtures.mjs` y los fixtures de la sesión interrumpida. Main fue actualizado/verificado al retomar; el PR #70 sigue en borrador en `3bc5d62cd3ab4cf921b9e4a795d8295a58ff0e24`, sin modificaciones de esta tarea.
 
