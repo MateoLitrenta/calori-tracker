@@ -82,16 +82,16 @@ test('staging: real PostgreSQL bootstrap sequence with explicit Auth/Storage SQL
   assert.equal(sql("select count(*) from pg_policy where polrelid in('profiles'::regclass,'daily_logs'::regclass,'meals'::regclass,'workouts'::regclass) and polpermissive and polroles=array[0::oid]",'catalog'),'4');
   assert.equal(sql("select count(*) from pg_policy where polname='security_owner_gate'",'catalog'),'0');
  });
- await t.test('nullable names/descriptions and integer values round-trip; omitted values generate UUID, zero and required timestamps',()=>{
+ await t.test('nullable names/descriptions/activity and integer values round-trip; omitted IDs generate UUIDs on days, meals and workouts',()=>{
   const out=sql(`begin;insert into auth.users values('${a}');
    insert into profiles(id,user_id,name) values('${a}','${a}',null);
    insert into daily_logs(user_id,profile_id,date) values('${a}','${a}',current_date);
-   insert into meals(id,user_id,daily_log_id) select '${a}','${a}',id from daily_logs;
-   insert into workouts(id,user_id,daily_log_id,activity_name) select '${a}','${a}',id,'Synthetic default' from daily_logs;
+   insert into meals(user_id,daily_log_id) select '${a}',id from daily_logs;
+   insert into workouts(user_id,daily_log_id,activity_name) select '${a}',id,null from daily_logs;
    select jsonb_build_array((select name is null and created_at is not null from profiles),
     (select id is not null and steps=0 and water_ml=0 and created_at is not null from daily_logs),
-    (select description is null and calories=0 and created_at is not null from meals),
-    (select duration_min=0 and calories_burned=0 and created_at is not null from workouts));
+    (select id is not null and description is null and calories=0 and created_at is not null from meals),
+    (select id is not null and activity_name is null and duration_min=0 and calories_burned=0 and created_at is not null from workouts));
    update daily_logs set steps=null,water_ml=null;update meals set calories=null;update workouts set duration_min=null,calories_burned=null;
    select jsonb_build_array((select steps is null and water_ml is null from daily_logs),(select calories is null from meals),
     (select duration_min is null and calories_burned is null from workouts));rollback;`,'catalog');

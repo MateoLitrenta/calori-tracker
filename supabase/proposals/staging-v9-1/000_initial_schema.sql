@@ -48,15 +48,15 @@ create table public.daily_logs (
  unique(user_id,date)
 );
 create table public.meals (
- id uuid primary key, user_id uuid not null references auth.users(id) on delete cascade,
+ id uuid primary key default gen_random_uuid(), user_id uuid not null references auth.users(id) on delete cascade,
  daily_log_id uuid not null references public.daily_logs(id) on delete cascade, date date,
  description text, meal_type text, calories integer default 0, time_str text, meal_details text,
  created_at timestamptz not null default timezone('utc'::text, now())
 );
 create table public.workouts (
- id uuid primary key, user_id uuid not null references auth.users(id) on delete cascade,
+ id uuid primary key default gen_random_uuid(), user_id uuid not null references auth.users(id) on delete cascade,
  daily_log_id uuid not null references public.daily_logs(id) on delete cascade, date date,
- activity_name text not null, duration_min integer default 0, calories_burned integer default 0,
+ activity_name text, duration_min integer default 0, calories_burned integer default 0,
  workout_details text, time_str text, distance_km numeric, pace_str text,
  created_at timestamptz not null default timezone('utc'::text, now())
 );
