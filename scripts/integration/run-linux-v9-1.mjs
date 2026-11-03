@@ -50,7 +50,7 @@ quality.push(await command('diff-index','git',['diff','--cached','--check']));
 const leftoverPostgrestConfigs=readdirSync(resolve('../security-tools')).filter(name=>name.startsWith('pgrst-test-'));
 const passed=focused.passed&&batches.every(b=>b.passed)&&totals.tests===424&&quality.every(q=>q.code===0&&q.signal===null&&q.spawnError===null)&&leftoverPostgrestConfigs.length===0;
 const result={gate:passed?'PASSED':'BLOCKED',...info,focused,batches,totals,quality,leftoverPostgrestConfigs,
- lintWarnings:(read(join(output,'lint.log')).match(/: warning /g)||[]).length,
+ lintWarnings:(read(join(output,'lint.log')).match(/(?:^::warning(?: |::)|: warning )/gm)||[]).length,
  remoteSQLExecuted:false,productionModified:false,realUserData:false,authService:'Simulated session; real synthetic HMAC JWT verification in PostgREST',storageHTTP:false};
 writeFileSync(join(output,'result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({gate:result.gate,totals,quality}));
 process.exitCode=passed?0:1;
