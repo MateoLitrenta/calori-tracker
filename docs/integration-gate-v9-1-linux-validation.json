@@ -1,0 +1,395 @@
+{
+  "date": "2026-11-03",
+  "linuxGate": "PASSED",
+  "windowsNativeHarness": "UNRESOLVED",
+  "workflowRun": 41650059705,
+  "workflowURL": "https://github.com/MateoLitrenta/calori-tracker/actions/runs/41650059705",
+  "manifest": {
+    "all": [
+      "tests/ai-security.test.mjs",
+      "tests/ai-transport.test.mjs",
+      "tests/auto-resize-textarea.test.mjs",
+      "tests/chart-stats.test.mjs",
+      "tests/charts-view.test.mjs",
+      "tests/chat-view.test.mjs",
+      "tests/coach-goal-proposal.test.mjs",
+      "tests/coach-goals-client.test.mjs",
+      "tests/coach-goals-postgres.test.mjs",
+      "tests/coach-goals.test.mjs",
+      "tests/coach-immediate-time.test.mjs",
+      "tests/coach-presentation.test.mjs",
+      "tests/coach-response-policy.test.mjs",
+      "tests/coach-serverless-runtime.test.mjs",
+      "tests/coach-store-sync.test.mjs",
+      "tests/coach.test.mjs",
+      "tests/daily-panel.test.mjs",
+      "tests/data-integrity-client.test.mjs",
+      "tests/data-integrity-postgres.test.mjs",
+      "tests/desktop-experience.test.mjs",
+      "tests/energy.test.mjs",
+      "tests/estimate.test.mjs",
+      "tests/habit-insights.test.mjs",
+      "tests/heatmap-activity.test.mjs",
+      "tests/heatmap-balance.test.mjs",
+      "tests/history-experience.test.mjs",
+      "tests/history-periods.test.mjs",
+      "tests/meal-stats.test.mjs",
+      "tests/persistence.test.mjs",
+      "tests/precision-layout.test.mjs",
+      "tests/product-readiness.test.mjs",
+      "tests/public-entry.test.mjs",
+      "tests/reset-data.test.mjs",
+      "tests/security-hardening.test.mjs",
+      "tests/ui-polish.test.mjs",
+      "tests/workout-entry-layout.test.mjs",
+      "tests/workout-entry-premium.test.mjs"
+    ],
+    "batches": [
+      [
+        "tests/ai-security.test.mjs",
+        "tests/chart-stats.test.mjs",
+        "tests/coach-goal-proposal.test.mjs",
+        "tests/coach-goals.test.mjs",
+        "tests/coach-response-policy.test.mjs",
+        "tests/coach.test.mjs",
+        "tests/data-integrity-postgres.test.mjs",
+        "tests/estimate.test.mjs",
+        "tests/heatmap-balance.test.mjs",
+        "tests/meal-stats.test.mjs",
+        "tests/product-readiness.test.mjs",
+        "tests/security-hardening.test.mjs",
+        "tests/workout-entry-premium.test.mjs"
+      ],
+      [
+        "tests/ai-transport.test.mjs",
+        "tests/charts-view.test.mjs",
+        "tests/coach-goals-client.test.mjs",
+        "tests/coach-immediate-time.test.mjs",
+        "tests/coach-serverless-runtime.test.mjs",
+        "tests/daily-panel.test.mjs",
+        "tests/desktop-experience.test.mjs",
+        "tests/habit-insights.test.mjs",
+        "tests/history-experience.test.mjs",
+        "tests/persistence.test.mjs",
+        "tests/public-entry.test.mjs",
+        "tests/ui-polish.test.mjs"
+      ],
+      [
+        "tests/auto-resize-textarea.test.mjs",
+        "tests/chat-view.test.mjs",
+        "tests/coach-goals-postgres.test.mjs",
+        "tests/coach-presentation.test.mjs",
+        "tests/coach-store-sync.test.mjs",
+        "tests/data-integrity-client.test.mjs",
+        "tests/energy.test.mjs",
+        "tests/heatmap-activity.test.mjs",
+        "tests/history-periods.test.mjs",
+        "tests/precision-layout.test.mjs",
+        "tests/reset-data.test.mjs",
+        "tests/workout-entry-layout.test.mjs"
+      ]
+    ]
+  },
+  "versions": {
+    "node": "24.4.1",
+    "postgres": "17.5",
+    "postgrest": "16.5"
+  },
+  "sources": {
+    "postgres": {
+      "url": "https://ftp.postgresql.org/pub/source/v17.5/postgresql-17.5.tar.bz2",
+      "sha256": "fcb7ab38e23b264d1902cb25e6adafb4525a6ebcbd015434aeef9eda80f528d8"
+    },
+    "postgrest": {
+      "url": "https://github.com/PostgREST/postgrest/releases/download/v16.5/postgrest-v16.5-linux-static-x86-64.tar.xz",
+      "sha256": "5099e7ada38f9f6846cd87c14c5f158b7c165f1e9959665ad412e61f4dceba95"
+    }
+  },
+  "runs": [
+    {
+      "repetition": 1,
+      "artifact": {
+        "id": 13238065157,
+        "digest": "sha256:acbd4681f90e01ade9a2ae3df6b9fa16653463af26a3d48559e3a33276dab581",
+        "expiresAt": "2026-11-10T14:08:05Z"
+      },
+      "imageOS": "ubuntu24",
+      "imageVersion": "20261026.354.1",
+      "inputs": {
+        "base": "8cbade05cc9339fd405421d88c5c5445f7931ace",
+        "pr70": "3bc5d62cd3ab4cf921b9e4a795d8295a58ff0e24",
+        "pr71": "159e686b98cce98c3002bbeba8de183b2e7654fe",
+        "combinedTree": "719ba059ee8c8ca02ac0edfca035e635449ad81e",
+        "actualSourceHashes": {
+          "src/lib/db.ts": "30780f9c0cc0195f2854d8a1384aea729ec4ba1287c32a4f0bfb9ca8999c4d1d",
+          "src/hooks/useAppStore.ts": "4ef65e564ecb83828f3da78ff2d32a0a598459f5b2885cd8cb62f96dd99e3e10"
+        },
+        "adapter": "Only the two test loaders use actual PR70 files; no persistence implementation is simulated."
+      },
+      "focused": {
+        "files": [
+          "tests/security-hardening.test.mjs",
+          "tests/data-integrity-client.test.mjs",
+          "tests/data-integrity-postgres.test.mjs"
+        ],
+        "tests": 41,
+        "pass": 41,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "code": 0
+      },
+      "batches": [
+        {
+          "name": "combined-0",
+          "tests": 163,
+          "pass": 163,
+          "fail": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "code": 0,
+          "leftoverPostgresDirectories": []
+        },
+        {
+          "name": "combined-1",
+          "tests": 149,
+          "pass": 149,
+          "fail": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "code": 0,
+          "leftoverPostgresDirectories": []
+        },
+        {
+          "name": "combined-2",
+          "tests": 112,
+          "pass": 112,
+          "fail": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "code": 0,
+          "leftoverPostgresDirectories": []
+        }
+      ],
+      "totals": {
+        "tests": 424,
+        "pass": 424,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "quality": [
+        {
+          "name": "frontend-types",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        },
+        {
+          "name": "ai-types",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        },
+        {
+          "name": "coach-types",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        },
+        {
+          "name": "lint",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        },
+        {
+          "name": "build",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        },
+        {
+          "name": "diff-working",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        },
+        {
+          "name": "diff-index",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        }
+      ],
+      "lintWarnings": 11,
+      "processes": {
+        "readyStarts": 14,
+        "unintendedStartupFailures": 0,
+        "spawnErrors": 0,
+        "allReadyWithPostgresAvailable": true,
+        "controlledBindFailureExit": 1,
+        "leftoverPostgrestConfigs": []
+      }
+    },
+    {
+      "repetition": 2,
+      "artifact": {
+        "id": 13236389348,
+        "digest": "sha256:52ba9b479243ceb125471a0896be95ece72ee198bc02bfe28e77274a42d24035",
+        "expiresAt": "2026-11-10T14:08:04Z"
+      },
+      "imageOS": "ubuntu24",
+      "imageVersion": "20261026.354.1",
+      "inputs": {
+        "base": "8cbade05cc9339fd405421d88c5c5445f7931ace",
+        "pr70": "3bc5d62cd3ab4cf921b9e4a795d8295a58ff0e24",
+        "pr71": "159e686b98cce98c3002bbeba8de183b2e7654fe",
+        "combinedTree": "719ba059ee8c8ca02ac0edfca035e635449ad81e",
+        "actualSourceHashes": {
+          "src/lib/db.ts": "30780f9c0cc0195f2854d8a1384aea729ec4ba1287c32a4f0bfb9ca8999c4d1d",
+          "src/hooks/useAppStore.ts": "4ef65e564ecb83828f3da78ff2d32a0a598459f5b2885cd8cb62f96dd99e3e10"
+        },
+        "adapter": "Only the two test loaders use actual PR70 files; no persistence implementation is simulated."
+      },
+      "focused": {
+        "files": [
+          "tests/security-hardening.test.mjs",
+          "tests/data-integrity-client.test.mjs",
+          "tests/data-integrity-postgres.test.mjs"
+        ],
+        "tests": 41,
+        "pass": 41,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "code": 0
+      },
+      "batches": [
+        {
+          "name": "combined-0",
+          "tests": 163,
+          "pass": 163,
+          "fail": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "code": 0,
+          "leftoverPostgresDirectories": []
+        },
+        {
+          "name": "combined-1",
+          "tests": 149,
+          "pass": 149,
+          "fail": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "code": 0,
+          "leftoverPostgresDirectories": []
+        },
+        {
+          "name": "combined-2",
+          "tests": 112,
+          "pass": 112,
+          "fail": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "code": 0,
+          "leftoverPostgresDirectories": []
+        }
+      ],
+      "totals": {
+        "tests": 424,
+        "pass": 424,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "quality": [
+        {
+          "name": "frontend-types",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        },
+        {
+          "name": "ai-types",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        },
+        {
+          "name": "coach-types",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        },
+        {
+          "name": "lint",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        },
+        {
+          "name": "build",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        },
+        {
+          "name": "diff-working",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        },
+        {
+          "name": "diff-index",
+          "code": 0,
+          "signal": null,
+          "spawnError": null
+        }
+      ],
+      "lintWarnings": 11,
+      "processes": {
+        "readyStarts": 14,
+        "unintendedStartupFailures": 0,
+        "spawnErrors": 0,
+        "allReadyWithPostgresAvailable": true,
+        "controlledBindFailureExit": 1,
+        "leftoverPostgrestConfigs": []
+      }
+    }
+  ],
+  "preliminaryWorkflowRun": 41649102746,
+  "preliminaryResults": "Two independent VMs: focused 41/41 and combined 424/424 each; only warning-report format was corrected afterwards.",
+  "windows": {
+    "manifest": "integration-gate-v9-1-validation.json",
+    "combinedRuns": [
+      {
+        "tests": 424,
+        "pass": 420,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      {
+        "tests": 424,
+        "pass": 420,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    ],
+    "cause": "Native exit 3 remains unexplained. No claim of a particular DLL or universal Windows failure."
+  },
+  "authService": "Store session simulated; real synthetic HMAC JWT verification and owner-scoped PostgreSQL/PostgREST",
+  "storageHTTP": false,
+  "pr70Modified": false,
+  "productChanged": false,
+  "remoteSQLExecuted": false,
+  "productionModified": false,
+  "migrationsActivated": false
+}
