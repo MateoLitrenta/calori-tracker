@@ -46,6 +46,9 @@ test('staging: real PostgreSQL bootstrap sequence with explicit Auth/Storage SQL
   assert.throws(()=>sql(baseline,'stage'),/acknowledgement required/);
   assert.throws(()=>sql(ack+baseline.replace('commit;','select 1/0;commit;'),'injected'),/division by zero/);
   assert.equal(sql("select to_regclass('public.profiles') is null and to_regclass('auth.users') is not null",'injected'),'t');
+  sql("insert into storage.buckets(id,name)values('avatars','avatars')",'injected');
+  assert.throws(()=>sql(ack+baseline,'injected'),/buckets already exist/);
+  assert.equal(sql("select to_regclass('public.profiles') is null and exists(select 1 from storage.buckets where id='avatars')",'injected'),'t');
  });
  await t.test('initial schema plus all seven real migrations install the full application contract',()=>{
   sql(expand(proposal+'010_bootstrap.psql'),'stage');

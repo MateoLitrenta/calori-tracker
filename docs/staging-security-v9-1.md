@@ -8,6 +8,8 @@ El usuario confirmó para `calori`: cero perfiles mixtos, días con perfil incor
 
 La propuesta está en `supabase/proposals/staging-v9-1`, **fuera de `supabase/migrations`**. El bootstrap rechaza objetos Calori preexistentes, exige reconocimiento explícito y prerrequisitos administrados por Supabase; nunca crea `auth`/`storage`, sus funciones o usuarios. Reproduce intencionalmente el esquema legacy para ensayar legacy→hardened, incluidos OR y grants excesivos conocidos. **No es un baseline seguro para exponer a usuarios externos ni una migración para Production.**
 
+Se rechaza cualquier tabla previa en public, el esquema ai_private preexistente o buckets avatars/meal-photos ya creados. Las migraciones de fotografías tienen ON CONFLICT DO UPDATE: este guard evita que un bootstrap de ensayo reconfigure silenciosamente buckets existentes. No se borran ni normalizan esos objetos para continuar.
+
 ## Inventario y reconstrucción
 
 Las siete migraciones actuales dependen de cuatro tablas no creadas en la cadena. Ninguna instala Supabase Auth, Storage, sus roles o configuración externa.
@@ -73,6 +75,8 @@ Para un stack Supabase local real se admite exclusivamente `http://127.0.0.1:543
 El módulo actual `src/lib/supabaseConfig.ts` fija URL/clave pública de Production; **VITE_SUPABASE_URL no lo reemplaza**. Con variables de staging ya revisadas ejecutar `node scripts/staging/prepare-frontend.mjs <directorio-nuevo-de-ensayo>`. Crea un worktree detached y genera sólo allí la configuración pública de staging, sin tocar el checkout fuente, main, Vercel o Production. Ejecutar `npm ci` y Vite en ese directorio, en puerto local distinto. No hacer commit/push de la configuración generada; quitar el worktree de ensayo únicamente después de cerrar el servidor y revisar qué contiene.
 
 Antes de iniciar sesión, comprobar en Network que todas las llamadas de datos/Auth/Storage van al ref de staging y ninguna al ref denegado. No capturar Authorization, cookies, passwords ni URLs firmadas en capturas o HAR compartidos. No reutilizar un Preview que apunta a Production. Una alternativa es un proyecto Vercel de staging separado y aprobado, nunca cambiar las variables/configuración de Production.
+
+Vite por sí solo no ejecuta `/api/coach/goals` ni `/api/ai/chat` (no hay proxy de API en su configuración). Para el ensayo completo, aprobar un runtime local compatible con esos handlers o un proyecto Vercel separado `calori-security-staging-ui`, desplegado desde el checkout temporal. La configuración pública generada es compartida por frontend y verificador Auth del backend; confirmar ambos destinos. Objetivos necesitan `AI_COACH_GOALS_ENABLED=true` sólo en ese backend. Las llamadas Gemini requieren además `SUPABASE_AI_SECRET_KEY` de staging, cupos y `GEMINI_API_KEY` de prueba según el plan de IA existente; no se necesitan esas claves para las pruebas directas de Auth/Storage/SQL del kit. No copiar variables o enlaces de proyecto de Production. Sin runtime API, marcar objetivos/Coach del frontend pendientes aunque los registros directos de Inicio/Datos funcionen.
 
 Con A y B, en perfiles de navegador separados:
 

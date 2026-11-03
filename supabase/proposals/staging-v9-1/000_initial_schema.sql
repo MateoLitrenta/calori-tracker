@@ -10,10 +10,8 @@ begin
  if current_setting('calori.staging_bootstrap',true) is distinct from 'empty-synthetic-only' then
   raise exception 'Explicit empty synthetic staging acknowledgement required';
  end if;
- if exists(select 1 from pg_class c join pg_namespace n on n.oid=c.relnamespace
-  where (n.nspname='public' and c.relname in('profiles','daily_logs','meals','workouts','coach_goals'))
-   or (n.nspname='ai_private' and c.relname='daily_usage')) then
-  raise exception 'Calori objects already exist: refusing bootstrap; no drop or reconciliation';
+ if exists(select 1 from pg_tables where schemaname='public') or to_regnamespace('ai_private') is not null then
+  raise exception 'Application objects already exist: refusing bootstrap; no drop or reconciliation';
  end if;
  if to_regclass('auth.users') is null or to_regprocedure('auth.uid()') is null
   or to_regclass('storage.buckets') is null or to_regclass('storage.objects') is null then
@@ -27,6 +25,9 @@ begin
  end if;
  if not exists(select 1 from pg_class where oid='storage.objects'::regclass and relrowsecurity) then
   raise exception 'Managed Storage RLS prerequisite missing';
+ end if;
+ if exists(select 1 from storage.buckets where id in('avatars','meal-photos')) then
+  raise exception 'Calori Storage buckets already exist: refusing to overwrite configuration';
  end if;
 end;
 $$;
