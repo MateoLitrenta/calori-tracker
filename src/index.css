@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  --feedback-offset: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   --radius-panel: 24px;
   --radius-widget: 18px;
   --radius-control: 14px;
@@ -29,6 +30,7 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
   scrollbar-color: var(--scroll-thumb-hover) transparent;
 }
 @media (min-width: 768px) {
+  :root { --feedback-offset: 24px; }
   .app-shell .app-main { scrollbar-gutter: stable; }
 }
 

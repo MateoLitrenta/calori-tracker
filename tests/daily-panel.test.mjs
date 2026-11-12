@@ -13,8 +13,11 @@ import { AIRequestError } from '../src/services/aiTransport.ts';
 
 const source = await readFile(new URL('../src/components/DailyPanel.tsx', import.meta.url), 'utf8');
 const stub = code => `data:text/javascript,${encodeURIComponent(code)}`;
+// Decorative icons are exercised by the browser matrix; keep event-handler tests focused.
+const withoutIcons = source => source.replace(/import\s+\{([^}]+)\}\s+from ['"]@phosphor-icons\/react['"];?/g,
+  (_, names) => names.split(',').map(name => `const ${name.trim()} = () => null;`).join('\n'));
 const shellSource = await readFile(new URL('../src/components/EntryFormShell.tsx', import.meta.url), 'utf8');
-const shellCode = ts.transpileModule(shellSource, { compilerOptions: { module: ts.ModuleKind.ESNext,
+const shellCode = ts.transpileModule(withoutIcons(shellSource), { compilerOptions: { module: ts.ModuleKind.ESNext,
   jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText
   .replace(/from ["']([^"']+)["']/g, (_, specifier) => `from ${JSON.stringify(specifier === 'react-dom'
     ? stub('export const createPortal = children => children;') : import.meta.resolve(specifier))}`);
@@ -25,17 +28,19 @@ const textareaCode = ts.transpileModule(textareaSource, { compilerOptions: { mod
   .replace(/from ["']([^"']+)["']/g, (_, specifier) => `from ${JSON.stringify(import.meta.resolve(specifier))}`);
 const textareaUrl = `data:text/javascript;base64,${Buffer.from(textareaCode).toString('base64')}`;
 const estimateResultSource = await readFile(new URL('../src/components/EntryEstimateResult.tsx', import.meta.url), 'utf8');
-const estimateResultCode = ts.transpileModule(estimateResultSource, { compilerOptions: { module: ts.ModuleKind.ESNext,
+const estimateResultCode = ts.transpileModule(withoutIcons(estimateResultSource), { compilerOptions: { module: ts.ModuleKind.ESNext,
   jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText
   .replace(/from ["']([^"']+)["']/g, (_, specifier) => `from ${JSON.stringify(import.meta.resolve(specifier))}`);
 const estimateResultUrl = `data:text/javascript;base64,${Buffer.from(estimateResultCode).toString('base64')}`;
 globalThis.__entryServices = { estimateMeal: async () => ({}), estimateWorkout: async () => ({}), toast: { error() {} } };
 const imports = {
+  '@phosphor-icons/react': stub('export const ForkKnife=()=>null, Flame=()=>null, Barbell=()=>null, Drop=()=>null, Trash=()=>null, Check=()=>null, PencilSimple=()=>null, Scales=()=>null, Sneaker=()=>null, X=()=>null, CaretRight=()=>null, Clock=()=>null, Sparkle=()=>null;'),
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,
   '../services/aiService': stub('export const estimateMeal = (...args) => globalThis.__entryServices.estimateMeal(...args); export const estimateWorkout = (...args) => globalThis.__entryServices.estimateWorkout(...args);'),
   '../services/aiTransport': new URL('../src/services/aiTransport.ts', import.meta.url).href,
   '../lib/supabase': stub('export const supabase = { storage: { from: () => globalThis.__entryServices.storage } };'),
   '../lib/entrySubmission': new URL('../src/lib/entrySubmission.ts', import.meta.url).href,
+  '../lib/habitDraft': new URL('../src/lib/habitDraft.ts', import.meta.url).href,
   'react-hot-toast': stub('export default globalThis.__entryServices.toast;'),
   './MealPhoto': stub('export function MealPhotoPicker() { return null; } export const MealThumbnail = () => null;'),
   './EntryFormShell': shellUrl,
@@ -77,6 +82,14 @@ test('DailyPanel displays equilibrium and surplus states', () => {
     const text = render({ ...base, meals: [{ id: 'm', name: 'Comida', type: 'Almuerzo', calories }] });
     assert.ok(text.includes(label));
   }
+});
+
+test('incomplete-day context precedes the provisional balance without changing its value', () => {
+  const html = renderToStaticMarkup(React.createElement(DailyPanel, { profile, record: base, dateStr, records: {}, onUpdateRecord() {} }));
+  assert.match(html, /data-provisional="true"/);
+  assert.ok(html.indexOf('Este día está incompleto') < html.indexOf('-1.618 kcal'));
+  assert.match(html, /Sin comidas registradas/);
+  assert.ok(render(base).includes('-1.618 kcal'));
 });
 
 test('daily summary has a collapsed breakdown and no profile explanations', () => {
@@ -237,6 +250,25 @@ test('rapid water and step taps update locally and save combined final values on
   assert.equal(saves[0].record.steps, 3000);
 });
 
+test('habit taps during an outstanding save wait instead of dispatching a stale second write', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  let finish;
+  const saves = [];
+  const view = mount({ profile, record: base, dateStr, records: { [dateStr]: base }, onUpdateRecord: (date, record, options) => {
+    saves.push({ date, record, options });
+    return new Promise(resolve => { finish = resolve; });
+  } });
+  node(view(), e => e.props['aria-label'] === 'Sumar 500 pasos').props.onClick();
+  t.mock.timers.tick(400);
+  assert.equal(saves.length, 1);
+  node(view(), e => e.props['aria-label'] === 'Sumar 500 pasos').props.onClick();
+  node(view(), e => e.props['aria-label'] === 'Sumar 250 ml de agua').props.onClick();
+  t.mock.timers.tick(400);
+  assert.equal(saves.length, 1, 'one writer must cover steps and water while the response is pending');
+  finish(false);
+  await Promise.resolve();
+});
+
 test('quick actions toggle existing forms and values retain inline editing', () => {
   const view = mount({ profile, record: base, dateStr, records: {}, onUpdateRecord: async () => true });
   for (const [label, content] of [['+ Comida', 'Agregar Comida'], ['+ Ejercicio', 'Agregar Entrenamiento']]) {
@@ -253,6 +285,19 @@ test('quick actions toggle existing forms and values retain inline editing', () 
   assert.equal(nodes(view(), e => e.type === 'input' && e.props.autoFocus).length, 2);
   node(view(), e => e.props.title === 'Registrar peso').props.onClick();
   assert.match(renderToStaticMarkup(view()), /Registrar Peso/);
+});
+
+test('registration actions and both entry forms expose the selected date, including historical days', () => {
+  const selected = '2026-01-09';
+  const view = mount({ profile, dateStr: selected, record: { ...base, dateStr: selected }, records: {}, onUpdateRecord: async () => false });
+  for (const action of ['+ Comida', '+ Ejercicio']) {
+    const button = node(view(), e => e.type === 'button' && e.props.children?.trim?.() === action);
+    const label = node(view(), e => e.props.id === button.props['aria-describedby']);
+    assert.equal(label.type, 'time'); assert.equal(label.props.dateTime, selected);
+    button.props.onClick();
+    const context = node(view(), e => e.props.className === 'entry-date-context');
+    assert.equal(node(context, e => e.type === 'time').props.dateTime, selected);
+  }
 });
 
 function mobileEnvironment(t, mobile = true) {
@@ -336,15 +381,20 @@ test('steps cards keep one visible label and complete localized large values',()
   }
 });
 
-test('upper cards retain manual totals and the former double increments without another panel',t=>{
+test('upper cards retain manual totals and the former double increments without another panel',async t=>{
   const timers=new Map();let next=0;
   t.mock.method(globalThis,'setTimeout',callback=>{timers.set(++next,callback);return next;});
   t.mock.method(globalThis,'clearTimeout',id=>timers.delete(id));
-  const saves=[];const view=entryView(async(date,record)=>{saves.push({date,record});return true;});
-  const flush=()=>{for(const [id,callback] of [...timers])if(timers.delete(id))callback();};
+  const saves=[];
+  const props={profile:{...profile,recordGeneration:'g1'},record:{...base,version:'1',generation:'g1'},dateStr,records:{},
+    onUpdateRecord:async(date,record,options)=>{saves.push({date,record});const generation='g'+(saves.length+1);
+      props.record={...record,version:String(saves.length+1),generation};props.profile={...props.profile,recordGeneration:generation};
+      options?.onConfirmed(props.record,generation);return true;}};
+  const view=mount(props);
+  const flush=async()=>{for(const [id,callback] of [...timers])if(timers.delete(id))callback();await Promise.resolve();await Promise.resolve();view();};
   for(const label of ['Sumar 500 pasos','Sumar 500 pasos','Sumar 250 ml de agua','Sumar 250 ml de agua'])
     node(view(),e=>e.props['aria-label']===label).props.onClick();
-  flush();
+  await flush();
   assert.equal(saves.length,1);
   assert.equal(saves.at(-1).record.steps,1000);assert.equal(saves.at(-1).record.water,500);
   for(const [title,value,field] of [['Editar pasos','25000','steps'],['Editar cantidad','3000','water']]) {
@@ -352,9 +402,31 @@ test('upper cards retain manual totals and the former double increments without 
     const input=node(view(),e=>e.type==='input'&&e.props.autoFocus);
     input.props.onChange({target:{value}});
     node(view(),e=>e.type==='input'&&e.props.autoFocus).props.onBlur();
-    flush();
+    await flush();
     assert.equal(saves.at(-1).record[field],Number(value));
   }
+});
+
+test('steps conflicts use a named Calori dialog and keep the draft until explicit review', t => {
+  mobileEnvironment(t); t.mock.timers.enable({ apis: ['setTimeout'] });
+  const saves=[];
+  const props={profile:{...profile,recordGeneration:'g1'},record:{...base,version:'1',generation:'g1'},dateStr,records:{},
+    onUpdateRecord:async(date,record)=>{saves.push({date,record});return false;}};
+  const view=mount(props);
+  node(view(),e=>e.props['aria-label']==='Sumar 500 pasos').props.onClick();
+  props.record={...props.record,version:'2',generation:'g2',steps:9000,water:1000,meals:[{id:'new',name:'Newer meal',calories:300,type:'Cena'}]};
+  props.profile={...props.profile,recordGeneration:'g2'};view();t.mock.timers.tick(400);
+  assert.equal(saves.length,0);
+  node(view(),e=>e.type==='button'&&e.props.children==='Revisar borrador').props.onClick();
+  assert.equal(shell(view).props.title,'Revisar cambios del día');
+  assert.ok(node(sheet(view),e=>e.props.role==='dialog'));
+  const text=renderToStaticMarkup(view()).replace(/<[^>]+>/g,'');assert.match(text,/Guardado: 9\.000/);assert.match(text,/Tu borrador: 500/);
+  node(view(),e=>e.type==='button'&&e.props.children==='Conservar borrador').props.onClick();
+  assert.match(renderToStaticMarkup(view()),/>500<\/button>/);assert.equal(saves.length,0);
+  node(view(),e=>e.type==='button'&&e.props.children==='Revisar borrador').props.onClick();
+  node(view(),e=>e.type==='button'&&e.props.children==='Aplicar valores revisados').props.onClick();
+  t.mock.timers.tick(400);assert.equal(saves.length,1);assert.equal(saves[0].record.steps,500);
+  assert.equal(saves[0].record.water,1000);assert.equal(saves[0].record.meals[0].id,'new');assert.equal(saves[0].record.version,'2');
 });
 
 for (const [action, nameField, name, collection] of [

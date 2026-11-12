@@ -232,6 +232,8 @@ html:not(.dark) .charts-insights { --charts-surface: #ffffff; --charts-soft: #f1
 .charts-insights .charts-summary-balance h4 { font-size: 13px; color: var(--charts-muted); }
 .charts-insights .charts-balance-value { font-size: 42px; line-height: 1.15; letter-spacing: -.035em; font-variant-numeric: tabular-nums; margin-top: 8px; }
 .charts-insights .charts-unit { display: block; color: var(--charts-muted); font-size: 12px; line-height: 1.5; margin-top: 4px; }
+.charts-insights .charts-average-base { font-size: 12px; font-weight: 400; letter-spacing: normal; }
+.charts-insights .charts-plot-unit { display: block; }
 .charts-insights .charts-balance-label { font-size: 13px; margin-top: 8px; }
 .charts-insights .charts-summary-balance > .charts-secondary { margin-top: 8px; }
 .charts-insights .charts-summary-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
@@ -267,7 +269,7 @@ html:not(.dark) .charts-insights .charts-surplus { color: #c4413a; }
 .charts-insights .charts-legend > span:last-child { flex-basis: 100%; justify-content: center; font-size: 11px; }
 .charts-insights .charts-detail { margin-top: 20px; padding: 16px; border-radius: var(--radius-widget); background: var(--charts-soft); }
 .charts-insights .charts-detail h4 { font-size: 13px; font-weight: 500; text-transform: capitalize; }
-.charts-insights .charts-detail-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.charts-insights .charts-detail-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; margin-bottom: 8px; }
 .charts-insights .charts-detail-clear { display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-height: 44px; padding: 8px; color: var(--charts-muted); border-radius: var(--radius-control); font-size: 12px; }
 .charts-insights .charts-detail-clear:hover:not(:disabled) { color: var(--charts-text); background: var(--charts-surface); }
 .charts-insights .charts-detail-clear:disabled { opacity: .45; cursor: default; }
@@ -330,7 +332,7 @@ html:not(.dark) .charts-insights .charts-surplus { color: #c4413a; }
   .charts-insights .charts-heading-icon svg { width: 20px; height: 20px; }
   .charts-insights .charts-heading h2 { font-size: 20px; }
   .charts-insights .charts-heading .charts-range { margin-top: 4px; font-size: 12px; }
-  .charts-insights .charts-period button { min-height: 40px; }
+  .charts-insights .charts-period button { min-height: 44px; }
   .charts-insights .charts-energy > h3 { font-size: 16px; }
   .charts-insights .charts-plot-scroll { margin-top: 12px; padding: 6px 3px; }
   .charts-insights .charts-bar-pair { max-width: 36px; }
@@ -461,6 +463,51 @@ html:not(.dark) .charts-insights .charts-surplus { color: #c4413a; }
   .assistant-view .chat-recording-label { flex: 1 1 auto; min-width: 0; font-size: 12px; }
   .assistant-view .chat-recording-bar button { padding: 0 8px; font-size: 12px; }
   .assistant-view .chat-composer-recording .chat-composer-form { display: none; }
+}
+/* A proposal is distinct from a receipt-backed confirmation, in both themes. */
+.assistant-view { --chat-proposal-accent: #f5a064; --chat-proposal-soft: #191c1f; --chat-confirmed: #70d394; --chat-confirmed-bg: #70d3940d; }
+.assistant-view .chat-confirmation { width: 100%; max-width: 640px; align-self: flex-start; padding: 16px; line-height: 1.5; }
+.assistant-view .chat-proposal-heading { padding-bottom: 16px; border-bottom: 1px solid var(--chat-line); }
+.assistant-view .chat-proposal-state { margin: 0; color: var(--chat-proposal-accent); font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.assistant-view .chat-proposal-heading h3 { margin: 6px 0 0; font-size: 17px; font-weight: 600; letter-spacing: -.02em; line-height: 1.4; }
+.assistant-view .chat-proposal-date { margin: 4px 0 0; color: var(--chat-muted); font-size: 12px; }
+.assistant-view .chat-proposal-replay-notice { margin: 12px 0 0; color: var(--chat-muted); font-size: 12px; line-height: 1.6; }
+.assistant-view .chat-proposal-item { min-width: 0; padding-block: 16px; overflow-wrap: anywhere; }
+.assistant-view .chat-proposal-item + .chat-proposal-item { border-top: 1px solid var(--chat-line); }
+.assistant-view .chat-proposal-kind { margin: 0; color: var(--chat-muted); font-size: 11px; font-weight: 500; }
+.assistant-view .chat-proposal-name { margin: 4px 0 0; font-size: 15px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
+.assistant-view .chat-proposal-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 12px; margin: 12px 0 0; }
+.assistant-view .chat-proposal-metrics > div { min-width: 0; }
+.assistant-view .chat-proposal-metrics dt { color: var(--chat-muted); font-size: 11px; }
+.assistant-view .chat-proposal-metrics dd { margin: 4px 0 0; font-size: 18px; font-weight: 500; line-height: 1.35; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.assistant-view .chat-proposal-metrics dd span { color: var(--chat-muted); font-size: 11px; font-weight: 400; }
+.assistant-view .chat-proposal-estimate { display: inline-block; margin: 12px 0 0; padding: 4px 8px; border: 1px solid var(--chat-line); border-radius: var(--radius-control); color: var(--chat-muted); background: var(--chat-proposal-soft); font-size: 11px; line-height: 1.5; }
+.assistant-view .chat-proposal-notes { margin: 12px 0 0; color: var(--chat-muted); font-size: 12px; line-height: 1.6; }
+.assistant-view .chat-proposal-extra { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 12px 0 0; font-size: 12px; }
+.assistant-view .chat-proposal-extra > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.assistant-view .chat-proposal-extra dt { color: var(--chat-muted); }
+.assistant-view .chat-proposal-extra dd { margin: 0; font-variant-numeric: tabular-nums; }
+.assistant-view .chat-already-recorded { margin-bottom: 12px; padding: 8px 12px; border: 1px solid var(--chat-line); border-radius: var(--radius-control); background: var(--chat-proposal-soft); }
+.assistant-view .chat-already-recorded > p { margin: 0; color: var(--chat-confirmed); font-size: 12px; font-weight: 500; }
+.assistant-view .chat-already-recorded label { display: flex; min-height: 44px; align-items: center; gap: 8px; color: var(--chat-muted); font-size: 12px; line-height: 1.5; cursor: pointer; }
+.assistant-view .chat-already-recorded input[type="checkbox"] { flex: 0 0 18px; width: 18px; min-width: 18px; max-width: 18px; height: 18px; min-height: 18px; max-height: 18px; margin: 0; border-radius: 4px; accent-color: var(--chat-proposal-accent); }
+.assistant-view .chat-proposal-item[data-record-state="already-saved"] .chat-proposal-name { color: var(--chat-muted); }
+.assistant-view .chat-proposal-footnote { margin: 0; color: var(--chat-muted); font-size: 12px; line-height: 1.6; }
+.assistant-view .chat-proposal-actions { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 8px; padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--chat-line); }
+.assistant-view .chat-proposal-actions button { min-height: 44px; padding: 10px; font-size: 13px; line-height: 1.4; }
+.assistant-view .chat-proposal-actions .chat-proposal-confirm { color: #241a13; font-weight: 600; }
+.assistant-view .chat-confirmation :is(input, select, textarea):focus-visible { outline: 2px solid var(--chat-proposal-accent); outline-offset: 2px; }
+.assistant-view .chat-bubble.chat-saved { border: 1px solid var(--chat-line); border-left: 3px solid var(--chat-confirmed); background: var(--chat-confirmed-bg); }
+.assistant-view .chat-saved .chat-save-status { display: flex; align-items: center; gap: 6px; margin: 0 0 6px; color: var(--chat-confirmed); font-size: 12px; font-weight: 500; line-height: 1.5; }
+.assistant-view .chat-save-status svg { flex: 0 0 16px; }
+html:not(.dark) .assistant-view { --chat-proposal-accent: #9a4d1f; --chat-proposal-soft: #f8f7f4; --chat-confirmed: #168047; --chat-confirmed-bg: #ffffff; }
+html:not(.dark) .assistant-view .chat-proposal-estimate,
+html:not(.dark) .assistant-view .chat-already-recorded label { color: #475569; }
+html:not(.dark) .assistant-view .chat-bubble.chat-saved { background: var(--chat-confirmed-bg); }
+html:not(.dark) .assistant-view .chat-saved .chat-save-status { color: var(--chat-confirmed); }
+@media (max-width: 375px) {
+  .assistant-view .chat-proposal-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .assistant-view .chat-proposal-confirm { grid-column: 1 / -1; }
 }
 .profile-view.profile-v2 {
   --profile-surface: #1e2124; --profile-control: #191c1f; --profile-hover: #292d30;

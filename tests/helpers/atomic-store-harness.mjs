@@ -5,9 +5,10 @@ import ts from 'typescript';
 const url=s=>'data:text/javascript;base64,'+Buffer.from(s).toString('base64');
 const methods=['fetchUserData','syncProfile','syncAvatarPath','completeOnboarding','fetchRecordSnapshot','commitRecordIntent','createRecordIntent','createResetIntent'];
 const imports={react:import.meta.resolve('react'),'../utils/helpers':new URL('../../src/utils/helpers.ts',import.meta.url).href,
+ '../lib/habitDraft':new URL('../../src/lib/habitDraft.ts',import.meta.url).href,
  '../lib/supabase':url('export const supabase={auth:{getSession:()=>globalThis.__atomicStore.session(),onAuthStateChange:cb=>{globalThis.__atomicStore.emit=cb;return{data:{subscription:{unsubscribe(){}}}}}}};'),
  '../lib/db':url(methods.map(n=>`export const ${n}=(...a)=>globalThis.__atomicStore.db.${n}(...a);`).join('\n')),
- 'react-hot-toast':url('export default {error:m=>globalThis.__atomicStore.errors.push(m),success(){}};')};
+ 'react-hot-toast':url('export default {error:(m,o)=>{globalThis.__atomicStore.errors.push(m);globalThis.__atomicStore.notifications.push({message:m,id:o?.id});},success(){}};')};
 const source=await readFile(new URL('../../src/hooks/useAppStore.ts',import.meta.url),'utf8');
 const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2023}}).outputText
  .replace(/from ["']([^"']+)["']/g,(_,s)=>'from '+JSON.stringify(imports[s]||import.meta.resolve(s)));
@@ -22,7 +23,7 @@ export async function mount(t,session=async()=>({data:{session:{user:{id:'A'}}}}
  const dom=new JSDOM('<div id="root"></div>',{pretendToBeVisual:true});const saved={};
  for(const n of ['window','document','IS_REACT_ACT_ENVIRONMENT'])saved[n]=globalThis[n];
  globalThis.window=dom.window;globalThis.document=dom.window.document;globalThis.IS_REACT_ACT_ENVIRONMENT=true;
- const state={errors:[],session,calls:[],receipts:new Map(),mutationCount:0,server:{protocol:'atomic',generation,records:{}}};
+ const state={errors:[],notifications:[],session,calls:[],receipts:new Map(),mutationCount:0,server:{protocol:'atomic',generation,records:{}}};
  let sequence=0;
  state.db={
   fetchUserData:async id=>({id,user_id:id,name:id,activity:'Activo',recordProtocol:'atomic',recordGeneration:state.server.generation,records:structuredClone(state.server.records)}),

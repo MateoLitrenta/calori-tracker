@@ -147,7 +147,7 @@ test('workout-only data show expenditure without invented consumption or balance
 test('empty periods expose an honest accessible empty state without fake calorie values', () => {
   const { tree, html: markup } = render({ '2026-09-30': record('2026-09-30', { water: 500, weight: 80 }) });
   assert.deepEqual(kpis(tree).slice(0, 3).map(item => item.value), ['Sin datos', 'Sin datos', 'Sin datos']);
-  assert.match(markup, /No hay suficientes registros para este período\./);
+  assert.match(markup, /Todavía no hay comidas ni actividad registradas en este período\./);
   assert.match(markup, /Registrá comidas y actividad para ver tu evolución\./);
   assert.equal(nodes(tree, element => element.props.role === 'status').length, 1);
   assert.equal(nodes(tree, element => element.props.role === 'listitem').length, 0);
@@ -216,7 +216,7 @@ test('chart selection updates the same compact metric strip without a reserved e
     assert.equal(strip.props['data-selected'], false);
     assert.equal(nodes(initial.tree, element => element.props.className === 'charts-detail-slot').length, 0);
     assert.equal(nodes(strip, element => element.type === 'dd').length, 3);
-    const clear = nodes(strip, element => element.props['aria-label'] === 'Limpiar selección del gráfico')[0];
+    const clear = nodes(strip, element => element.props['aria-label'] === 'Quitar selección del gráfico')[0];
     assert.equal(clear.props.disabled, true);
     const bucket = nodes(initial.tree, element => element.type === 'button' && element.props.className === 'charts-bucket')[0];
     bucket.props.onFocus();
@@ -230,7 +230,7 @@ test('chart selection updates the same compact metric strip without a reserved e
     const activity = tree => nodes(tree, element => element.props['aria-labelledby'] === 'charts-activity-heading')[0];
     assert.equal(html(activity(selected.tree)), html(activity(initial.tree)));
     assert.deepEqual(kpis(selected.tree), kpis(initial.tree));
-    const selectedClear = nodes(selectedStrip, element => element.props['aria-label'] === 'Limpiar selección del gráfico')[0];
+    const selectedClear = nodes(selectedStrip, element => element.props['aria-label'] === 'Quitar selección del gráfico')[0];
     assert.equal(selectedClear.props.disabled, false);
     selectedClear.props.onClick();
     assert.equal(globalThis.__chartsHarness.selectedBucket, null);
@@ -269,6 +269,45 @@ test('one summary surface places balance first, two secondary averages and cover
   const coverage = nodes(summary, element => element.props.className === 'charts-coverage')[0];
   assert.match(html(coverage), /3 días con datos · 2 días con comidas/);
   assert.doesNotMatch(html(summary), /charts-kpi[ "-]|charts-registered/);
+});
+
+test('each displayed average names its own denominator beside its unit without changing values', () => {
+  const text = element => html(element).replace(/<[^>]+>/g, '');
+  for (const period of ['Semana', 'Mes', 'Año']) {
+    const { tree } = render(weeklyRecords, period);
+    const hero = nodes(tree, element => element.props.className === 'charts-summary-balance')[0];
+    const metrics = nodes(tree, element => element.props.className === 'charts-summary-metrics')[0];
+    const [consumed, expenditure] = nodes(metrics, element => element.type === 'dd');
+    assert.match(text(hero), /kcal\/día · 2 días con comidas/);
+    assert.match(text(consumed), /2\.250kcal\/día · 2 días con comidas/);
+    assert.match(text(expenditure), /2\.000kcal\/día · 3 días con datos energéticos/);
+    assert.doesNotMatch(text(consumed), /3 días con datos/);
+    assert.deepEqual(kpis(tree).map(item => item.value), ['+290', '2.250', '2.000']);
+  }
+  const empty = render({ '2026-09-30': record('2026-09-30', { water: 500 }) });
+  assert.equal(nodes(empty.tree, element => element.props.className === 'charts-average-base').length, 0);
+});
+
+test('selected daily values and aggregated daily averages expose different units and selection-only copy', () => {
+  for (const [period, selected, unit] of [
+    ['Semana', '2026-09-28', 'kcal'],
+    ['Mes', '2026-09-29', 'kcal/día'],
+    ['Año', '2026-09-01', 'kcal/día'],
+  ]) {
+    const view = render(weeklyRecords, period, selected);
+    const detail = nodes(view.tree, element => element.props.id === 'charts-bucket-detail')[0];
+    for (const value of nodes(detail, element => element.type === 'dd')) assert.ok(value.props.children.endsWith(unit));
+    const clear = nodes(detail, element => element.type === 'button')[0];
+    assert.equal(clear.props['aria-label'], 'Quitar selección del gráfico');
+    assert.equal(clear.props.title, 'Quitar selección');
+    assert.match(html(clear), /Quitar selección/);
+    assert.doesNotMatch(view.html, /Limpiar/);
+    const plot = nodes(view.tree, element => element.props.role === 'list')[0];
+    const guidance = nodes(view.tree, element => element.props.id === plot.props['aria-describedby'])[0];
+    assert.match(html(guidance), /Elegí una barra para ver el detalle/);
+    clear.props.onClick();
+    assert.equal(globalThis.__chartsHarness.selectedBucket, null);
+  }
 });
 
 test('activity metrics and previous comparison stay visible only for real recorded periods', () => {

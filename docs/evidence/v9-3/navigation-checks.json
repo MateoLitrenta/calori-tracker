@@ -1,0 +1,83 @@
+{
+  "source": {
+    "baselineCommit": "f9ba47438c7f1408e305ac167aa0407f3dd07b70",
+    "afterAppCommit": "d622c124b4c1545b600b36ef8b364543776354f2",
+    "fixedFixtureDate": "2026-11-12",
+    "browser": "Local Chrome controlled with Playwright 1.56.1",
+    "data": "Synthetic fixture only",
+    "services": "Auth, record RPC, Storage and Gemini mocked; actual React UI/store and calculation utilities",
+    "notCertifiedByTheseChecks": [
+      "Supabase Auth",
+      "Supabase Storage",
+      "PostgreSQL/PostgREST persistence",
+      "physical mobile keyboard or device behavior"
+    ]
+  },
+  "note": "Desktop Sidebar keeps its legacy active styling without aria-current. These checks certify destinations, visual active state and visible keyboard focus; they do not claim an aria-current contract on desktop.",
+  "cases": [
+    {
+      "width": 320,
+      "theme": "light",
+      "targets": [
+        {
+          "name": "Datos",
+          "active": true,
+          "outline": "solid",
+          "outlineWidth": "2px",
+          "visible": true,
+          "ariaCurrent": "page"
+        },
+        {
+          "name": "Coach",
+          "active": true,
+          "outline": "solid",
+          "outlineWidth": "2px",
+          "visible": true,
+          "ariaCurrent": "page"
+        },
+        {
+          "name": "Inicio",
+          "active": true,
+          "outline": "solid",
+          "outlineWidth": "2px",
+          "visible": true,
+          "ariaCurrent": "page"
+        }
+      ],
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "targets": [
+        {
+          "name": "Datos",
+          "active": true,
+          "outline": "auto",
+          "outlineWidth": "1px",
+          "visible": true,
+          "ariaCurrent": null
+        },
+        {
+          "name": "Coach",
+          "active": true,
+          "outline": "auto",
+          "outlineWidth": "1px",
+          "visible": true,
+          "ariaCurrent": null
+        },
+        {
+          "name": "Inicio",
+          "active": true,
+          "outline": "auto",
+          "outlineWidth": "1px",
+          "visible": true,
+          "ariaCurrent": null
+        }
+      ],
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    }
+  ]
+}

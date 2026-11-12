@@ -1,0 +1,1922 @@
+{
+  "source": {
+    "baselineCommit": "f9ba47438c7f1408e305ac167aa0407f3dd07b70",
+    "afterAppCommit": "d622c124b4c1545b600b36ef8b364543776354f2",
+    "fixedFixtureDate": "2026-11-12",
+    "browser": "Local Chrome controlled with Playwright 1.56.1",
+    "data": "Synthetic fixture only",
+    "services": "Auth, record RPC, Storage and Gemini mocked; actual React UI/store and calculation utilities",
+    "notCertifiedByTheseChecks": [
+      "Supabase Auth",
+      "Supabase Storage",
+      "PostgreSQL/PostgREST persistence",
+      "physical mobile keyboard or device behavior"
+    ]
+  },
+  "widths": [
+    320,
+    375,
+    393,
+    430,
+    768,
+    1440
+  ],
+  "themes": [
+    "dark",
+    "light"
+  ],
+  "before": {
+    "stage": "before",
+    "cases": [
+      {
+        "width": 320,
+        "height": 852,
+        "theme": "dark",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 320,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 320,
+        "height": 852,
+        "theme": "dark",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 320,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 320,
+        "height": 852,
+        "theme": "dark",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 320,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 375,
+        "height": 852,
+        "theme": "dark",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 375,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 375,
+        "height": 852,
+        "theme": "dark",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 375,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 375,
+        "height": 852,
+        "theme": "dark",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 375,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 393,
+        "height": 852,
+        "theme": "dark",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 393,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 393,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 393,
+        "height": 852,
+        "theme": "dark",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 393,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 393,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 393,
+        "height": 852,
+        "theme": "dark",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 393,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 393,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 430,
+        "height": 852,
+        "theme": "dark",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 430,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 430,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 430,
+        "height": 852,
+        "theme": "dark",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 430,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 430,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 430,
+        "height": 852,
+        "theme": "dark",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 430,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 430,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "theme": "dark",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 512,
+          "height": 1024,
+          "bottom": 1024
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "auto",
+          "outlineWidth": "1px"
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "theme": "dark",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 512,
+          "height": 1024,
+          "bottom": 1024
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "theme": "dark",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 512,
+          "height": 1024,
+          "bottom": 1024
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BODY",
+          "outline": "none",
+          "outlineWidth": "3px"
+        }
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "dark",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900,
+          "bottom": 900
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "auto",
+          "outlineWidth": "1px"
+        }
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "dark",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900,
+          "bottom": 900
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "dark",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900,
+          "bottom": 900
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BODY",
+          "outline": "none",
+          "outlineWidth": "3px"
+        }
+      },
+      {
+        "width": 320,
+        "height": 852,
+        "theme": "light",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 320,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 320,
+        "height": 852,
+        "theme": "light",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 320,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 320,
+        "height": 852,
+        "theme": "light",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 320,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 375,
+        "height": 852,
+        "theme": "light",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 375,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 375,
+        "height": 852,
+        "theme": "light",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 375,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 375,
+        "height": 852,
+        "theme": "light",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 375,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 393,
+        "height": 852,
+        "theme": "light",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 393,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 393,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 393,
+        "height": 852,
+        "theme": "light",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 393,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 393,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 393,
+        "height": 852,
+        "theme": "light",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 393,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 393,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 430,
+        "height": 852,
+        "theme": "light",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 430,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 430,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 430,
+        "height": 852,
+        "theme": "light",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 430,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 430,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 430,
+        "height": 852,
+        "theme": "light",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 430,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 430,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "theme": "light",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 512,
+          "height": 1024,
+          "bottom": 1024
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "auto",
+          "outlineWidth": "1px"
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "theme": "light",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 512,
+          "height": 1024,
+          "bottom": 1024
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "theme": "light",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 512,
+          "height": 1024,
+          "bottom": 1024
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BODY",
+          "outline": "none",
+          "outlineWidth": "3px"
+        }
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900,
+          "bottom": 900
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "auto",
+          "outlineWidth": "1px"
+        }
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900,
+          "bottom": 900
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900,
+          "bottom": 900
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BODY",
+          "outline": "none",
+          "outlineWidth": "3px"
+        }
+      }
+    ],
+    "externalRequestsAttempted": 0
+  },
+  "after": {
+    "stage": "after",
+    "cases": [
+      {
+        "width": 320,
+        "height": 852,
+        "theme": "dark",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 320,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 320,
+        "height": 852,
+        "theme": "dark",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 320,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 320,
+        "height": 852,
+        "theme": "dark",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 320,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 375,
+        "height": 852,
+        "theme": "dark",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 375,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 375,
+        "height": 852,
+        "theme": "dark",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 375,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 375,
+        "height": 852,
+        "theme": "dark",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 375,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 393,
+        "height": 852,
+        "theme": "dark",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 393,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 393,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 393,
+        "height": 852,
+        "theme": "dark",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 393,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 393,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 393,
+        "height": 852,
+        "theme": "dark",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 393,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 393,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 430,
+        "height": 852,
+        "theme": "dark",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 430,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 430,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 430,
+        "height": 852,
+        "theme": "dark",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 430,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 430,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 430,
+        "height": 852,
+        "theme": "dark",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 430,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 430,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "theme": "dark",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 512,
+          "height": 1024,
+          "bottom": 1024
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "auto",
+          "outlineWidth": "1px"
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "theme": "dark",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 512,
+          "height": 1024,
+          "bottom": 1024
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "theme": "dark",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 512,
+          "height": 1024,
+          "bottom": 1024
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BODY",
+          "outline": "none",
+          "outlineWidth": "3px"
+        }
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "dark",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900,
+          "bottom": 900
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "auto",
+          "outlineWidth": "1px"
+        }
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "dark",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900,
+          "bottom": 900
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "dark",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900,
+          "bottom": 900
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BODY",
+          "outline": "none",
+          "outlineWidth": "3px"
+        }
+      },
+      {
+        "width": 320,
+        "height": 852,
+        "theme": "light",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 320,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 320,
+        "height": 852,
+        "theme": "light",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 320,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 320,
+        "height": 852,
+        "theme": "light",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 320,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 375,
+        "height": 852,
+        "theme": "light",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 375,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 375,
+        "height": 852,
+        "theme": "light",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 375,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 375,
+        "height": 852,
+        "theme": "light",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 375,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 393,
+        "height": 852,
+        "theme": "light",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 393,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 393,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 393,
+        "height": 852,
+        "theme": "light",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 393,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 393,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 393,
+        "height": 852,
+        "theme": "light",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 393,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 393,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 430,
+        "height": 852,
+        "theme": "light",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 430,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 430,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "SUMMARY",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 430,
+        "height": 852,
+        "theme": "light",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 430,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 430,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 430,
+        "height": 852,
+        "theme": "light",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 430,
+          "height": 852,
+          "bottom": 852
+        },
+        "bottomNavigationBounds": {
+          "x": 0,
+          "y": 787,
+          "width": 430,
+          "height": 65,
+          "bottom": 852
+        },
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "theme": "light",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 512,
+          "height": 1024,
+          "bottom": 1024
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "auto",
+          "outlineWidth": "1px"
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "theme": "light",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 512,
+          "height": 1024,
+          "bottom": 1024
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "theme": "light",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 512,
+          "height": 1024,
+          "bottom": 1024
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BODY",
+          "outline": "none",
+          "outlineWidth": "3px"
+        }
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "view": "home",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900,
+          "bottom": 900
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "auto",
+          "outlineWidth": "1px"
+        }
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "view": "charts",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900,
+          "bottom": 900
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BUTTON",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        }
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "view": "chat",
+        "noPageHorizontalOverflow": true,
+        "jsErrors": 0,
+        "mainBounds": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900,
+          "bottom": 900
+        },
+        "bottomNavigationBounds": null,
+        "keyboardFocus": {
+          "tag": "BODY",
+          "outline": "none",
+          "outlineWidth": "3px"
+        }
+      }
+    ],
+    "externalRequestsAttempted": 0
+  },
+  "representatives": [
+    {
+      "file": "before-home-light-393.png",
+      "sha256": "7b891175b1d75c1edc3971d88f48ad631285dd858da2787a6515599518134903",
+      "synthetic": true
+    },
+    {
+      "file": "before-data-light-393.png",
+      "sha256": "ea60454be302d60cb0e70c9f1a7102ff52f553bda054351d77760b910f015a91",
+      "synthetic": true
+    },
+    {
+      "file": "before-coach-light-393.png",
+      "sha256": "b99dfafcef2444c78ca2c79cb92a773ceb7b95b400a45dc93a64b122aaa49dbe",
+      "synthetic": true
+    },
+    {
+      "file": "before-home-dark-1440.png",
+      "sha256": "bfa26350787293515708d75a8ac0851e215761b4231bb8b0d6c9b0613bcbc394",
+      "synthetic": true
+    },
+    {
+      "file": "before-data-dark-1440.png",
+      "sha256": "5aa3618b4b57325a2784a4e036a3cdcacfd1638cfbbad0400060ab15a7751cce",
+      "synthetic": true
+    },
+    {
+      "file": "before-coach-dark-1440.png",
+      "sha256": "8c690638c008dbaf74eb49bc0c0f57c9b4b1e90558f02f1c3c6b3eb88b2af6e7",
+      "synthetic": true
+    },
+    {
+      "file": "after-home-light-393.png",
+      "sha256": "5883a1ea1798918369abebc9e47eaf58081d6b90174407270751904c13eb2d50",
+      "synthetic": true
+    },
+    {
+      "file": "after-data-light-393.png",
+      "sha256": "04485055f98df5c8151c06d66a85cb100156f5555c0645ac04411779b58dfa14",
+      "synthetic": true
+    },
+    {
+      "file": "after-coach-light-393.png",
+      "sha256": "41165eb367880545c6fb9b8b975ed1e78513580c940525e1efb7a33474d3eb71",
+      "synthetic": true
+    },
+    {
+      "file": "after-home-dark-1440.png",
+      "sha256": "3c9b192b22c1e8ce818d7f11d3ecf1cc65491128224a6de71a07d733c45ff51c",
+      "synthetic": true
+    },
+    {
+      "file": "after-data-dark-1440.png",
+      "sha256": "2c4b3050141fc1560af4e7f17b5e0387ab1347061249b9f4798e9a9fc759b169",
+      "synthetic": true
+    },
+    {
+      "file": "after-coach-dark-1440.png",
+      "sha256": "60b8ad0aaf6451e1848ebc3bdd76e3c087040b41226628d7603f74eea11d4be1",
+      "synthetic": true
+    },
+    {
+      "file": "dialog-dark-393.png",
+      "sha256": "6522e54c232ce09f2b16363d6b4d72b12a63cffab4af9cb320b786b170423231",
+      "synthetic": true
+    },
+    {
+      "file": "dialog-short-dark-320x568.png",
+      "sha256": "a38a5d25be7da668200cbcc118bba58880f60a7f3c9cb77019a6fcb40dc010e0",
+      "synthetic": true
+    },
+    {
+      "file": "dialog-light-393.png",
+      "sha256": "8e5a01db285aac913e7c2329867ed3d0a3a758b66eb015f4f98127f48cfc15d9",
+      "synthetic": true
+    },
+    {
+      "file": "dialog-short-light-320x568.png",
+      "sha256": "5a028956422598ec951b1be2118450c62865eb31fd836c01eff4471cd3a045d9",
+      "synthetic": true
+    }
+  ]
+}

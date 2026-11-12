@@ -1,7 +1,7 @@
 import './PremiumViews.css';
 import { useState, useRef, useEffect, useCallback, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
-import { ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, Target, X } from '@phosphor-icons/react';
+import { CheckCircle, ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, Target, X } from '@phosphor-icons/react';
 import UserAvatar from './UserAvatar';
 import CoachInsightCard from './CoachInsightCard';
 import CoachGoalConfirmation from './CoachGoalConfirmation';
@@ -17,6 +17,8 @@ import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
 import { changedEntryDayMessage, reviewEntryBase, snapshotEntryRecord } from '../lib/entrySubmission';
+import type { RecordWriter } from '../lib/recordFeedback';
+import { findRecordedCoachAction, parseRecordedCoachActions, type RecordedCoachAction } from '../lib/coachActionReview';
 import { generateAIResponse, transcribeAudio, validActions, isValidDateStr, type MediaAttachment, type DataAction, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
@@ -26,8 +28,28 @@ interface Message extends ChatMessage {
   localTime?: string;
   coachCard?: CoachCardSnapshot;
   goalProgress?: 'all' | 'workout_sessions' | 'step_days';
+  recordedActions?: RecordedCoachAction[];
 }
 interface ActionCommitDraft { dateStr: string; base: DailyRecord; entryIds: string[]; types: DataAction['type'][] }
+
+function ProposedEntrySummary({ action }: { action: DataAction }) {
+  const p = action.payload;
+  return <>
+    <p className="chat-proposal-kind">{action.type === 'add_meal' ? String(p.type) : 'Ejercicio'}</p>
+    <h4 className="chat-proposal-name">{String(action.type === 'add_meal' ? p.name : p.activity)}</h4>
+    <dl className="chat-proposal-metrics">
+      <div><dt>Energía</dt><dd>{(p.calories as number).toLocaleString('es-AR', { maximumFractionDigits: 20 })} <span>kcal</span></dd></div>
+      <div><dt>Hora</dt><dd><time dateTime={String(p.time)}>{String(p.time)}</time> <span>hs</span></dd></div>
+      {action.type === 'add_workout' && <div><dt>Duración</dt><dd>{(p.duration as number).toLocaleString('es-AR', { maximumFractionDigits: 20 })} <span>min</span></dd></div>}
+    </dl>
+    {action.estimated && <p className="chat-proposal-estimate">Propuesta con estimaciones</p>}
+    {typeof p.details === 'string' && p.details.trim() && <p className="chat-proposal-notes whitespace-pre-wrap">{p.details}</p>}
+    {(p.distance !== undefined || (typeof p.pace === 'string' && p.pace)) && <dl className="chat-proposal-extra">
+      {p.distance !== undefined && <div><dt>Distancia</dt><dd>{(p.distance as number).toLocaleString('es-AR', { maximumFractionDigits: 20 })} km</dd></div>}
+      {typeof p.pace === 'string' && p.pace && <div><dt>Ritmo</dt><dd>{p.pace} min/km</dd></div>}
+    </dl>}
+  </>;
+}
 
 function readHistory(key: string): Message[] {
   try {
@@ -36,9 +58,11 @@ function readHistory(key: string): Message[] {
       message !== null && typeof message === 'object' &&
       typeof message.id === 'string' && typeof message.text === 'string' &&
       (message.role === 'user' || message.role === 'bot')).map(message => {
-        const { coachCard, goalProgress, ...textMessage } = message;
+        const { coachCard, goalProgress, recordedActions, ...textMessage } = message;
         const card = message.role === 'bot' ? parseCoachCard(coachCard) : undefined;
+        const recorded = message.role === 'bot' ? parseRecordedCoachActions(recordedActions) : undefined;
         return { ...textMessage, ...(card ? { coachCard: card } : {}),
+          ...(recorded ? { recordedActions: recorded } : {}),
           ...(message.role === 'bot' && typeof goalProgress === 'string' && ['all', 'workout_sessions', 'step_days'].includes(goalProgress) ? { goalProgress } : {}) };
       }) : [];
   } catch {
@@ -154,7 +178,7 @@ export default function ChatView({ scrollContainer }: { scrollContainer: RefObje
 function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr, today, onSelectDate, scrollContainer, goals }: {
   userId: string; activeProfile: UserProfile | null;
   avatarRevision: number;
-  updateRecord: (dateStr: string, record: DailyRecord) => Promise<boolean>;
+  updateRecord: RecordWriter;
   dateStr: string; today: string; onSelectDate: (date: string) => void;
   scrollContainer: RefObject<HTMLElement | null>;
   goals: CoachGoalsResource;
@@ -202,10 +226,15 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const cardScrollDecision = useRef<{ id: string; nearEnd: boolean } | null>(null);
   const mounted = useRef(true);
   const busy = useRef(false);
-  const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[] } | null>(null);
+  const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[]; registerAgain: number[] } | null>(null);
   const pendingCommitRef = useRef<ActionCommitDraft | null>(null);
   const [pendingGoal, setPendingGoal] = useState<CoachGoalProposal | null>(null);
   const [isEditingProposal, setIsEditingProposal] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const confirmedActions = messages.flatMap(message => message.role === 'bot' ? message.recordedActions ?? [] : []);
+  const recordedAction = (action: DataAction) => findRecordedCoachAction(action, activeProfile?.records ?? {}, confirmedActions);
+  const repeatedActions = pending?.actions.map(recordedAction) ?? [];
+  const actionsToSave = pending?.actions.filter((_, index) => !repeatedActions[index] || pending.registerAgain.includes(index)) ?? [];
 
   const clearPendingImage = () => {
     imageSelection.current += 1;
@@ -366,8 +395,9 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       i === index ? { ...action, payload: { ...action.payload, [field]: value } } : action) }));
   };
 
-  const appendReply = (text: string) => {
-    if (mounted.current) setMessages(prev => [...prev, { id: generateUUID(), role: 'bot', text }]);
+  const appendReply = (text: string, recordedActions: RecordedCoachAction[] = []) => {
+    if (mounted.current) setMessages(prev => [...prev, { id: generateUUID(), role: 'bot', text,
+      ...(recordedActions.length ? { recordedActions } : {}) }]);
   };
 
   const describeAction = (a: DataAction) => {
@@ -393,7 +423,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     entryIds: actions.map(() => generateUUID()), types: actions.map(action => action.type),
   });
 
-  const applyActions = async (actions: DataAction[], actionDate: string, draft?: ActionCommitDraft) => {
+  const applyActions = async (actions: DataAction[], actionDate: string, draft?: ActionCommitDraft, included?: boolean[]) => {
     const currentToday = formatDateStr(new Date());
     if (!mounted.current || !activeProfile || isPastConversation || dateStr !== currentToday ||
       !isValidDateStr(actionDate) || actionDate > currentToday) {
@@ -415,7 +445,9 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     if (!base) throw new Error('La propuesta sigue pendiente. Revisá los datos del día antes de reintentar.');
     intent.base = base;
     const record = snapshotEntryRecord(base, activeProfile.recordGeneration);
+    const recorded: RecordedCoachAction[] = [];
     for (const [index, a] of actions.entries()) {
+      if (included && !included[index]) continue;
       const p = a.payload;
       switch (a.type) {
         case 'add_meal': {
@@ -435,15 +467,19 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
         case 'add_water': record.water += p.water as number; break;
         case 'set_weight': record.weight = p.weight as number; break;
       }
+      if (a.type === 'add_meal' || a.type === 'add_workout') recorded.push({ type: a.type, dateStr: actionDate, entryId: intent.entryIds[index] });
     }
-    if (!await updateRecord(actionDate, record)) {
-      throw new Error('No se pudo completar el guardado. Revisá los registros de esa fecha antes de reintentar.');
+    let failureMessage: string | undefined;
+    if (!await updateRecord(actionDate, record, { feedback: 'contextual', onFailure: failure => { failureMessage = failure.message; } })) {
+      throw new Error(failureMessage || 'No se pudo completar el guardado. Revisá los registros de esa fecha antes de reintentar.');
     }
-    appendReply(`Registrado ${actionDate === currentToday ? 'hoy' : `el ${describeDate(actionDate)}`}: ${actions.map(describeAction).join('; ')}.`);
+    appendReply(`Registrado ${actionDate === currentToday ? 'hoy' : `el ${describeDate(actionDate)}`}: ${actions.filter((_, index) => !included || included[index]).map(describeAction).join('; ')}.`, recorded);
   };
 
   const confirmActions = async () => {
     if (!pending || busy.current) return;
+    const included = pending.actions.map((action, index) => !recordedAction(action) || pending.registerAgain.includes(index));
+    if (!included.some(Boolean)) return;
     if (validActions(pending.actions, formatDateStr(new Date())).length !== pending.actions.length ||
       pending.actions.some(action => action.payload.dateStr !== pending.dateStr)) {
       toast.error('Revisá nombre/actividad, tipo, calorías, hora y duración. Los valores numéricos deben ser positivos.');
@@ -452,17 +488,18 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     }
     busy.current = true;
     setIsTyping(true);
+    setIsConfirming(true);
     const proposal = pending;
     const draft = pendingCommitRef.current ??= newActionDraft(proposal.actions, proposal.dateStr);
     try {
-      await applyActions(proposal.actions, proposal.dateStr, draft);
+      await applyActions(proposal.actions, proposal.dateStr, draft, included);
       pendingCommitRef.current = null;
       if (mounted.current) setPending(null);
     } catch (error) {
       appendReply(error instanceof Error ? error.message : 'No se pudo guardar.');
     } finally {
       busy.current = false;
-      if (mounted.current) setIsTyping(false);
+      if (mounted.current) { setIsTyping(false); setIsConfirming(false); }
     }
   };
 
@@ -638,7 +675,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         if (proposals.every(action => action.payload.dateStr === proposalDate)) {
           setIsEditingProposal(false);
           pendingCommitRef.current = newActionDraft(proposals, proposalDate);
-          setPending({ dateStr: proposalDate, actions: proposals });
+          setPending({ dateStr: proposalDate, actions: proposals, registerAgain: [] });
         } else {
           appendReply('Indicame una fecha por vez para confirmar esos registros.');
         }
@@ -845,10 +882,29 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         {pendingGoal && <CoachGoalConfirmation proposal={pendingGoal} busy={isTyping}
           onConfirm={() => { void confirmGoal(); }} onDismiss={() => setPendingGoal(null)} />}
         {pending && (
-          <div className="chat-confirmation order-last rounded-xl border border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/20 p-4 text-sm">
-            <p className="font-semibold mb-2">Confirmar registros del {describeDate(pending.dateStr)}</p>
+          <div className="chat-confirmation order-last border text-sm" role="region" aria-label="Propuesta de registros para revisar" aria-busy={isConfirming}>
+            <div className="chat-proposal-heading">
+              <p className="chat-proposal-state" role="status">{isConfirming ? 'Confirmando el guardado…' : 'Propuesta pendiente'}</p>
+              <h3>{pending.actions.length === 1 ? 'Revisá tu registro' : 'Revisá tus registros'}</h3>
+              <p className="chat-proposal-date">{describeDate(pending.dateStr)}</p>
+            </div>
+            {repeatedActions.some(Boolean) && <p className="chat-proposal-replay-notice" aria-live="polite">
+              {actionsToSave.length === 1 ? 'Se guardará 1 registro nuevo.' : actionsToSave.length
+                ? `Se guardarán ${actionsToSave.length} registros nuevos.` : 'No hay registros nuevos para guardar.'} Los ya registrados no se agregarán otra vez salvo que lo elijas.
+            </p>}
             {pending.actions.map((action, index) => (
-              <div key={index} className="mb-3">
+              <div key={index} className="chat-proposal-item" data-record-state={repeatedActions[index] && !pending.registerAgain.includes(index) ? 'already-saved' : 'new'}>
+                {repeatedActions[index] && <div className="chat-already-recorded">
+                  <p>Ya registrado en esta conversación</p>
+                  <label>
+                    <input type="checkbox" checked={pending.registerAgain.includes(index)} disabled={isTyping}
+                      onChange={event => { const checked = event.target.checked; setPending(previous => previous && ({ ...previous,
+                        registerAgain: checked ? [...previous.registerAgain.filter(value => value !== index), index]
+                          : previous.registerAgain.filter(value => value !== index) })); }}
+                      className="accent-orange-500" />
+                    {action.type === 'add_meal' ? 'Registrar otra comida igual' : 'Registrar otro ejercicio igual'}
+                  </label>
+                </div>}
                 {isEditingProposal ? (
                   <div className="chat-proposal-edit grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {(action.type === 'add_meal'
@@ -887,21 +943,16 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                     </label>
                   </div>
                 ) : (
-                  <>
-                    <p className="font-medium">{describeDate(action.payload.dateStr as string)}</p>
-                    <p>{describeAction(action)}{action.estimated ? ' (estimado)' : ''}</p>
-                    {typeof action.payload.details === 'string' && <p className="whitespace-pre-wrap">{action.payload.details}</p>}
-                    {action.payload.distance !== undefined && <p>Distancia: {String(action.payload.distance)} km</p>}
-                    {typeof action.payload.pace === 'string' && action.payload.pace && <p>Ritmo: {action.payload.pace} min/km</p>}
-                  </>
+                  <ProposedEntrySummary action={action} />
                 )}
               </div>
             ))}
-            <div className="flex flex-wrap gap-3 mt-3">
+            <p className="chat-proposal-footnote">{isConfirming ? 'Esperando la confirmación del guardado.' : 'Confirmá para guardar los registros seleccionados.'}</p>
+            <div className="chat-proposal-actions">
+              <button type="button" disabled={isTyping || !actionsToSave.length} onClick={confirmActions}
+                className="chat-proposal-confirm rounded-xl bg-[#f5a064] px-3 py-2 disabled:opacity-50">Confirmar</button>
               <button type="button" disabled={isTyping} onClick={() => setIsEditingProposal(true)}
                 className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Editar</button>
-              <button type="button" disabled={isTyping} onClick={confirmActions}
-                className="rounded-xl bg-[#f5a064] text-white px-3 py-2 disabled:opacity-50">Confirmar</button>
               <button type="button" disabled={isTyping} onClick={() => { setPending(null); pendingCommitRef.current = null; appendReply('Registro cancelado.'); }}
                 className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Cancelar</button>
             </div>
@@ -945,13 +996,14 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 </div>
               </div>
             ) : (
-            <div className={`chat-bubble ${msg.role === 'bot' && msg.text.startsWith('Registrado ') ? 'chat-saved' : ''} px-4 py-3 rounded-3xl text-sm shadow-none ${
+            <div className={`chat-bubble ${msg.role === 'bot' && msg.recordedActions?.length ? 'chat-saved' : ''} px-4 py-3 rounded-3xl text-sm shadow-none ${
               msg.role === 'user' 
                 ? 'chat-user text-white rounded-tr-sm whitespace-pre-wrap' 
                 : 'bg-slate-100 text-slate-900 dark:bg-[#191c1f] dark:text-gray-100 rounded-tl-sm border border-slate-200 dark:border-[#ffffff0d]'
             }`}>
               {msg.role === 'bot' ? (
                 <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-snug prose-p:mb-2 prose-ul:my-1 prose-li:my-0 last:prose-p:mb-0">
+                  {msg.recordedActions?.length ? <p className="chat-save-status"><CheckCircle size={16} aria-hidden="true" />Guardado confirmado</p> : null}
                   <ReactMarkdown>{msg.text}</ReactMarkdown>
                 </div>
               ) : (
@@ -961,7 +1013,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             )}
           </div>
         ))}
-        {isTyping && (
+        {isTyping && !pending && (
           <div className="chat-typing flex gap-3 max-w-[75%] mr-auto" role="status" aria-label="Coach está respondiendo">
             <img src="/brand/calori-logo-symbol.png" alt="" className="chat-message-avatar brand-symbol brand-symbol-message" />
             <div className="px-4 py-4 rounded-3xl bg-slate-100 dark:bg-[#191c1f] rounded-tl-sm border border-slate-200 dark:border-[#ffffff0d] flex items-center gap-1">
