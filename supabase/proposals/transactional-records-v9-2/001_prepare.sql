@@ -94,8 +94,20 @@ grant select on calori_records_private.protocol_config to calori_record_writer;
 grant select,insert,update on calori_records_private.owner_state to calori_record_writer;
 grant select,insert on calori_records_private.record_operations to calori_record_writer;
 grant select,insert,update,delete on public.daily_logs,public.meals,public.workouts to calori_record_writer;
-grant usage on schema auth,storage to calori_record_writer;
+-- Hosted postgres cannot regrant auth schema USAGE. The writer inherits it
+-- (and auth.uid EXECUTE) from authenticated; verify effective access below.
+grant usage on schema storage to calori_record_writer;
 grant select on storage.objects to calori_record_writer;
+do $$ begin
+ if not pg_has_role(current_user,'calori_record_writer','SET')
+  or not pg_has_role('calori_record_writer','authenticated','USAGE')
+  or not has_schema_privilege('calori_record_writer','auth','USAGE')
+  or not has_function_privilege('calori_record_writer','auth.uid()','EXECUTE')
+  or not has_schema_privilege('calori_record_writer','storage','USAGE')
+  or not has_table_privilege('calori_record_writer','storage.objects','SELECT') then
+  raise exception 'Managed operator/writer privileges are incompatible; transaction cancelled';
+ end if;
+end $$;
 
 create function calori_records_private.lock_owner() returns uuid
 language plpgsql set search_path='' as $$

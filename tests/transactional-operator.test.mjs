@@ -1,0 +1,66 @@
+import assert from 'node:assert/strict';
+import {test} from 'node:test';
+import {readFileSync,readdirSync} from 'node:fs';
+import {resolve,dirname} from 'node:path';
+import {disposablePostgres,postgresUnavailable} from './helpers/security-postgres.mjs';
+
+const read=p=>readFileSync(resolve(p),'utf8');
+const expand=p=>read(p).replace(/^\\set[^\n]*$/gm,'').replace(/^\\ir\s+(\S+)\s*$/gm,(_,child)=>expand(resolve(dirname(p),child)));
+const proposal='supabase/proposals/transactional-records-v9-2/';
+const owner='00000000-0000-0000-0000-000000000001';
+
+// A real disposable PostgreSQL permission test. Auth/Storage here are SQL shims;
+// the separate official Supabase stack gate certifies their HTTP services.
+test('candidate runs as hosted-like postgres without superuser or auth grant option',
+ {skip:postgresUnavailable,timeout:120000},async t=>{
+ const {sql}=await disposablePostgres(t);
+ sql('create role anon;create role authenticated;create role service_role bypassrls;');
+ sql(read('tests/fixtures/staging-platform-contract.sql'));
+ sql("set calori.staging_bootstrap='empty-synthetic-only';"+read('supabase/proposals/staging-v9-1/000_initial_schema.sql'));
+ for(const name of readdirSync('supabase/migrations').filter(n=>n.endsWith('.sql')).sort())sql(read('supabase/migrations/'+name));
+ sql(expand('supabase/proposals/security-rls-v9-1/020_upgrade.sql'));
+ sql(`create role postgres login createdb createrole bypassrls nosuperuser;
+  create role supabase_admin nologin superuser;
+  create role supabase_auth_admin nologin;
+  create role supabase_storage_admin nologin;
+  grant authenticated to postgres with admin true,inherit true,set true;
+  alter database postgres owner to postgres;
+  alter schema auth owner to supabase_admin;
+  grant usage,create on schema auth to supabase_auth_admin;
+  alter table auth.users owner to supabase_auth_admin;
+  alter function auth.uid() owner to supabase_auth_admin;
+  grant usage on schema auth to postgres;
+  grant references on auth.users to postgres;
+  alter schema storage owner to supabase_admin;
+  grant usage,create on schema storage to supabase_storage_admin;
+  alter table storage.objects owner to supabase_storage_admin;
+  grant usage on schema storage to postgres with grant option;
+  grant select on storage.objects to postgres with grant option;
+  alter table public.profiles owner to postgres;
+  alter table public.daily_logs owner to postgres;
+  alter table public.meals owner to postgres;
+  alter table public.workouts owner to postgres;
+  alter function public.delete_my_daily_records() owner to postgres;
+  insert into auth.users values('${owner}');
+  set role authenticated;set "request.jwt.claim.sub"='${owner}';
+  insert into public.profiles(id,user_id,name)values('${owner}','${owner}','Synthetic');`);
+ assert.equal(sql("select has_schema_privilege('postgres','auth','USAGE WITH GRANT OPTION')"),'f');
+ assert.equal(sql("select rolsuper from pg_roles where rolname='postgres'"),'f');
+ const operator=query=>'set session authorization postgres;'+query;
+ const catalog=JSON.parse(sql(operator(expand(proposal+'000_operator_readonly.sql'))));
+ for(const key of ['create_role','database_create','public_create_grant_option','authenticated_admin','authenticated_usage','auth_usage','authenticated_auth_usage','authenticated_uid_execute','auth_users_references','storage_usage_grant_option','storage_objects_select_grant_option','candidate_name_unused'])assert.equal(catalog[key],true,key);
+ assert.equal(catalog.superuser,false);
+ assert.equal(catalog.auth_usage_grant_option,false);
+ sql(operator(expand(proposal+'001_prepare.sql')));
+ assert.equal(sql("select pg_has_role('postgres','calori_record_writer','SET')"),'t');
+ assert.equal(sql("select pg_get_userbyid(proowner) from pg_proc where oid='public.calori_record_snapshot_v1()'::regprocedure"),'calori_record_writer');
+ assert.equal(sql("select has_schema_privilege('calori_record_writer','auth','USAGE')"),'t');
+ assert.equal(sql("select has_schema_privilege('calori_record_writer','public','CREATE') or has_schema_privilege('calori_record_writer','calori_records_private','CREATE')"),'f');
+ sql(operator(expand(proposal+'002_activate.sql')));
+ const session=`set session authorization authenticated;set "request.jwt.claim.sub"='${owner}';`;
+ const snapshot=JSON.parse(sql(session+'select public.calori_record_snapshot_v1()'));
+ assert.equal(snapshot.protocol,'atomic');
+ sql(operator(expand(proposal+'003_readonly_recovery.sql')));
+ assert.equal(JSON.parse(sql(session+'select public.calori_record_snapshot_v1()')).protocol,'read_only');
+ assert.equal(sql("select has_table_privilege('authenticated','public.daily_logs','INSERT,UPDATE,DELETE') or has_any_column_privilege('authenticated','public.daily_logs','INSERT,UPDATE')"),'f');
+});

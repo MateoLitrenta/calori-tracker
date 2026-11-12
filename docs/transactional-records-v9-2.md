@@ -2,7 +2,7 @@
 
 ## Status and deployment boundary
 
-The three SQL files under `supabase/proposals/transactional-records-v9-2/` are
+The SQL files under `supabase/proposals/transactional-records-v9-2/` are
 review candidates, outside the executable migration chain. None has been applied
 remotely. The older V9.1 `002_atomic_records.sql` is neither applied nor modified.
 This change does not alter energy formulas, authentication, AI quotas or goals.
@@ -125,38 +125,69 @@ generation and insert/read its own receipts; it cannot change protocol mode or
 delete receipts. Public/anon/client access to the private schema is revoked.
 The public RPCs are executable only by authenticated clients, not PUBLIC/anon.
 
-Before remote use, explicitly verify the real migration operator can CREATE ROLE,
-grant `authenticated` to the trusted role, acquire trusted membership, create the
-private objects and transfer function ownership. CREATE on the two schemas is
-temporarily granted for ownership transfer and then revoked. Local superuser
-tests do not certify those managed-Supabase administrative capabilities.
+Run `000_operator_readonly.sql` with the intended operator before remote use.
+The catalog-only check is separate from all modifying scripts. The observed
+Calori operator is `postgres`, PostgreSQL 17.6, CREATEROLE but not superuser. It
+owns the four application tables and can grant the required Storage access,
+create private objects and administer membership in `authenticated`. It cannot
+regrant `auth` schema USAGE. Preparation therefore inherits that access and
+`auth.uid()` EXECUTE from `authenticated`, and asserts the effective privileges.
+An explicit self-membership grant enables SET to the newly created writer role;
+CREATE on the two schemas is temporary for function ownership transfer and is
+revoked before commit. See `validation/transactional-records-v9-2-operator.json`
+for the read-only evidence. No DDL was attempted remotely.
 
 ## Controlled rollout and safe recovery
 
-1. Verify a recoverable backup, the current V9.1 postflight, the exact eight
+1. Obtain separate approval for code integration and the coordinated deployment.
+   Verify a current recoverable database/Auth/roles backup and all Storage bytes,
+   their SHA-256 inventory, the current V9.1 postflight, the exact eight
    validated CASCADE FK relationships, supported roles and the current catalog.
    Run the rehearsed candidate only after independent deployment authorization.
-2. Apply `001_prepare.sql`. It reuses V9.1 postflight assertions and validates FK
+2. Recheck `000_operator_readonly.sql` using the same secured operator/target.
+   Apply `001_prepare.sql`. It reuses V9.1 postflight assertions and validates FK
    topology. It adds literal default version 1, private state/ledger/sequence and
    RPCs in `prepared` mode. Existing legacy writers still work; authenticated users
    do not need private sequence privileges. Prepared RPC writes reject new work.
+   Users on the old frontend can still save during this phase.
 3. Deploy and verify the new frontend in read-only record mode. Resolve the
    transition deliberately before activation; do not promise uninterrupted writes
-   from already open tabs or old app versions.
+   from already open tabs or old app versions. Users of the new frontend can
+   sign in and read records, but record saving/reset is temporarily unavailable;
+   their drafts remain available. Profile/goal/Auth policies are unchanged.
 4. Apply `002_activate.sql` during a controlled window. It acquires the exclusive
    global advisory lock **before** the three table locks, invalidates all prepared
    generations and day revisions, revokes table **and column** direct record CUD,
    closes the legacy reset function, sets `atomic` and reloads PostgREST. It leaves
-   profiles and V9.1 RLS unchanged. Old tabs fail closed; they must reload/update.
+   profiles and V9.1 RLS unchanged. Ask authorized users to finish legacy saves
+   and reload old tabs before this low-activity window. Table locks finish each
+   SQL transaction, not a legacy form's multiple HTTP requests: an old in-flight
+   multi-request save can be interrupted and require review. After commit old
+   tabs fail closed and must reload/update. No JWT/key/session migration is
+   needed: valid sessions remain valid, but clients need a fresh snapshot.
 5. Verify fresh snapshots, confirmed saves, child edits/deletes, cross-user
    isolation, retries/conflicts and reset from two independent sessions. Check
    PostgREST schema reload and record preservation. Do not blindly rerun activation
-   after an uncertain connection result.
+   after an uncertain connection result. Check profile, Auth refresh, private
+   photographs, goals and Coach with authorized sessions; monitor Supabase and
+   Vercel errors before announcing that saves are available again. The first
+   submission from a stale prepared screen may refresh and request review; it
+   must not be presented as saved.
 6. If necessary, explicitly apply `003_readonly_recovery.sql`. The same global
    gate waits for in-flight RPCs and switches to `read_only`, retaining isolation,
    closed legacy grants, data and receipts. Historical replay still works; new
-   writes stop. Never restore legacy grants as an availability workaround. Any
-   later resume or protocol change requires a separately reviewed procedure.
+   writes stop. Never restore legacy grants as an availability workaround.
+   After activation, rolling the frontend back to a legacy build does not restore
+   saving. Keep an atomic-compatible frontend, or stay in read-only mode while
+   correcting the fault; no rollback may reopen the old grants.
+7. After diagnosing and verifying the correction, obtain approval to run
+   `004_resume.sql`, not `002_activate.sql` again. It requires `read_only`, takes
+   the same exclusive protocol gate, checks V9.1, writer ownership/search paths
+   and closed legacy grants, and invalidates only account generations. Day
+   versions, receipts, records and photographs are retained. Fresh reads and new
+   confirmed saves must succeed before reopening. Exact historical retries still
+   return their original receipts; they are not evidence that new writes work.
+   A failed assertion or lock timeout rolls back and leaves writes paused.
 
 Use `psql` against the independently verified target with local secure credential
 entry and verified TLS, never a password in shell arguments or committed env files:
@@ -167,6 +198,8 @@ psql -X --set=ON_ERROR_STOP=1 --file=supabase/proposals/transactional-records-v9
 psql -X --set=ON_ERROR_STOP=1 --file=supabase/proposals/transactional-records-v9-2/002_activate.sql
 # Only if an approved recovery is needed:
 psql -X --set=ON_ERROR_STOP=1 --file=supabase/proposals/transactional-records-v9-2/003_readonly_recovery.sql
+# Only after the cause is corrected, verified, and resumption is approved:
+psql -X --set=ON_ERROR_STOP=1 --file=supabase/proposals/transactional-records-v9-2/004_resume.sql
 ```
 
 Cancel activation on a failed prerequisite, unverified backup, unexpected schema,
@@ -189,14 +222,49 @@ writes are paused. No automatic Storage garbage collector is introduced.
 
 ## Evidence and remaining checks
 
-Native PostgreSQL 17.5: **11/11**, zero failures/skips, exercising prepare rollback,
+Native PostgreSQL 17.5: **13/13**, zero failures/skips, exercising prepare rollback,
 legacy compatibility, activation locking/invalidation, nullable values, isolation,
-atomic rollback, concurrent CAS/retries, bigint text revisions, reset and recovery.
+atomic rollback, concurrent CAS/retries, bigint text revisions, reset, recovery
+and safe resumption. A separate **1/1** permission rehearsal applies preparation,
+activation and recovery as a non-superuser with the observed operator privileges.
 Local PostgREST 16.5 plus PostgreSQL: **26/26**, zero failures/skips, including dropped
 responses, reset races, foreign-child forgery and RLS-visible photo metadata.
 
-These use two synthetic identities, Auth/Storage SQL contract shims and locally
-signed test JWTs. They do **not** certify Supabase GoTrue, token renewal, Storage
-HTTP/bytes, remote operator permissions or Production deployment. The root
-validation report records the complete application suite, TypeScript, lint,
-build, diff check and any subsequent fixes before publication.
+Those native suites use synthetic identities, Auth/Storage SQL contract shims
+and locally signed JWTs; their results alone do not certify GoTrue or Storage.
+The original commit `38b88eb` passed 518/518 in Linux; the PR checks record the
+complete suite for the final gate commit, including the new SQL regressions.
+
+The separate official local Supabase stack gate passed **18/18** journeys with
+zero omitted checks. It used real Auth signup/login/token renewal, two users and
+independent same-user sessions, real PostgREST and Storage HTTP, and private photo
+bytes with SHA-256 and strict cross-user denial checks. It applied V9.1 plus
+`001_prepare.sql` as the official non-superuser `postgres`, exercised the old
+writer, and mounted the actual React store and `db.ts` against real services in
+both prepared and atomic modes. JSDOM and toast capture adapt presentation only;
+Auth and persistence are not mocked. It also verified activation, nested reads,
+edits/deletes, rollback, exact receipt replay after deliberately discarding an HTTP
+response body, concurrent saves/reset, and `003` followed by `004`. Discarding a
+body is a controlled lost-response scenario, not a certified physical TCP outage.
+
+See `validation/transactional-records-v9-2-real-stack.json` for exact official
+versions/digests, candidate hashes, results and cleanup. The first local attempt
+stopped on an assertion whose exact cause was not captured; its cause remains
+unconfirmed and that run is not counted as passed. The fresh successful rehearsal
+waits a bounded time for authenticated OpenAPI readiness after schema changes;
+it never reruns DDL automatically or accepts a network failure as an access denial.
+
+Reproduce only in a new, unlinked disposable local stack, never a hosted target.
+`scripts/transactional-records/real-stack-gate.mjs` enforces the dedicated project
+name and loopback API, uses only anon-key clients plus real Auth sessions for all
+user probes, and captures local CLI keys in memory without printing them. It
+requires `CALORI_LOCAL_STACK_DIR`, and optionally `CALORI_SUPABASE_CLI`,
+`CALORI_DOCKER_BIN` and `DOCKER_HOST`. The candidate SQL is applied locally through
+`psql`; the test cannot be reused against Production. Its safe manifest includes
+the exact initialization/start/cleanup commands and local-only settings.
+
+The operator catalog evidence and official local service rehearsal close the
+technical compatibility gate. They do not claim that V9.2 is deployed or that
+modifying DDL has been tested on hosted Production. Code review/merge approval,
+current recoverable backups, the low-activity window, independently authorized
+SQL/frontend deployment and immediate real Production checks remain mandatory.
