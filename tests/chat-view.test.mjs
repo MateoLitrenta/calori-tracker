@@ -625,3 +625,37 @@ test('Coach uses one contextual persistence failure and keeps the unconfirmed pr
   assert.equal(html.split(failure).length - 1, 1);
   assert.doesNotMatch(html, /Registrado hoy/);
 });
+
+test('proposal presentation separates estimates, pending acknowledgement and receipt-backed success', async t => {
+  const original = globalThis.__chatViewHarness.profile;
+  t.after(() => { globalThis.__chatViewHarness.profile = original; });
+  const date = new Date().toLocaleDateString('en-CA');
+  globalThis.__chatViewHarness.profile = { ...profile, recordGeneration: 'generation-one', records: {} };
+  let finish;
+  globalThis.__chatViewHarness.updateRecord = () => new Promise(resolve => { finish = resolve; });
+  globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Revisá la propuesta.', actions: [
+    { type: 'add_meal', estimated: true, payload: { dateStr: date, name: 'Almuerzo propuesto', type: 'Almuerzo', calories: 900, time: '13:00' } },
+  ] });
+  const view = conversation([{ id: 'unverified-model-text', role: 'bot', text: 'Registrado hoy: afirmación sin confirmación del backend.' }]);
+  const get = predicate => nodes(view.render(), predicate)[0];
+  assert.equal(nodes(view.render(), e => hasClass(e, 'chat-saved')).length, 0, 'Model wording is not proof of a save');
+  get(e => e.type === 'textarea').props.onChange({ target: { value: 'Registrá el almuerzo.' } });
+  await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+  const proposal = get(e => hasClass(e, 'chat-confirmation'));
+  assert.equal(proposal.props.role, 'region'); assert.equal(proposal.props['aria-busy'], false);
+  const html = renderToStaticMarkup(proposal);
+  assert.match(html, /Propuesta pendiente/); assert.match(html, /Propuesta con estimaciones/);
+  assert.match(html, /<time dateTime="13:00">13:00<\/time>/);
+  assert.ok(!html.includes('13:00 (estimado)'));
+  const buttons = nodes(proposal, e => e.type === 'button');
+  assert.deepEqual(buttons.map(button => button.props.children), ['Confirmar', 'Editar', 'Cancelar']);
+  const confirmation = get(e => e.type === 'button' && e.props.children === 'Confirmar').props.onClick();
+  assert.equal(get(e => hasClass(e, 'chat-confirmation')).props['aria-busy'], true);
+  assert.match(renderToStaticMarkup(get(e => hasClass(e, 'chat-proposal-state'))), /Confirmando el guardado/);
+  assert.equal(nodes(view.render(), e => e.props['aria-label'] === 'Coach está respondiendo').length, 0);
+  assert.equal(nodes(view.render(), e => hasClass(e, 'chat-save-status')).length, 0);
+  finish(true); await confirmation;
+  assert.equal(nodes(view.render(), e => hasClass(e, 'chat-confirmation')).length, 0);
+  assert.equal(nodes(view.render(), e => hasClass(e, 'chat-saved')).length, 1);
+  assert.match(renderToStaticMarkup(get(e => hasClass(e, 'chat-save-status'))), /Guardado confirmado/);
+});

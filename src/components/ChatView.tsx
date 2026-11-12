@@ -1,7 +1,7 @@
 import './PremiumViews.css';
 import { useState, useRef, useEffect, useCallback, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
-import { ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, Target, X } from '@phosphor-icons/react';
+import { CheckCircle, ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, Target, X } from '@phosphor-icons/react';
 import UserAvatar from './UserAvatar';
 import CoachInsightCard from './CoachInsightCard';
 import CoachGoalConfirmation from './CoachGoalConfirmation';
@@ -31,6 +31,25 @@ interface Message extends ChatMessage {
   recordedActions?: RecordedCoachAction[];
 }
 interface ActionCommitDraft { dateStr: string; base: DailyRecord; entryIds: string[]; types: DataAction['type'][] }
+
+function ProposedEntrySummary({ action }: { action: DataAction }) {
+  const p = action.payload;
+  return <>
+    <p className="chat-proposal-kind">{action.type === 'add_meal' ? String(p.type) : 'Ejercicio'}</p>
+    <h4 className="chat-proposal-name">{String(action.type === 'add_meal' ? p.name : p.activity)}</h4>
+    <dl className="chat-proposal-metrics">
+      <div><dt>Energía</dt><dd>{(p.calories as number).toLocaleString('es-AR')} <span>kcal</span></dd></div>
+      <div><dt>Hora</dt><dd><time dateTime={String(p.time)}>{String(p.time)}</time> <span>hs</span></dd></div>
+      {action.type === 'add_workout' && <div><dt>Duración</dt><dd>{(p.duration as number).toLocaleString('es-AR')} <span>min</span></dd></div>}
+    </dl>
+    {action.estimated && <p className="chat-proposal-estimate">Propuesta con estimaciones</p>}
+    {typeof p.details === 'string' && p.details.trim() && <p className="chat-proposal-notes whitespace-pre-wrap">{p.details}</p>}
+    {(p.distance !== undefined || (typeof p.pace === 'string' && p.pace)) && <dl className="chat-proposal-extra">
+      {p.distance !== undefined && <div><dt>Distancia</dt><dd>{(p.distance as number).toLocaleString('es-AR')} km</dd></div>}
+      {typeof p.pace === 'string' && p.pace && <div><dt>Ritmo</dt><dd>{p.pace} min/km</dd></div>}
+    </dl>}
+  </>;
+}
 
 function readHistory(key: string): Message[] {
   try {
@@ -211,6 +230,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const pendingCommitRef = useRef<ActionCommitDraft | null>(null);
   const [pendingGoal, setPendingGoal] = useState<CoachGoalProposal | null>(null);
   const [isEditingProposal, setIsEditingProposal] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
   const confirmedActions = messages.flatMap(message => message.role === 'bot' ? message.recordedActions ?? [] : []);
   const recordedAction = (action: DataAction) => findRecordedCoachAction(action, activeProfile?.records ?? {}, confirmedActions);
   const repeatedActions = pending?.actions.map(recordedAction) ?? [];
@@ -468,6 +488,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     }
     busy.current = true;
     setIsTyping(true);
+    setIsConfirming(true);
     const proposal = pending;
     const draft = pendingCommitRef.current ??= newActionDraft(proposal.actions, proposal.dateStr);
     try {
@@ -478,7 +499,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       appendReply(error instanceof Error ? error.message : 'No se pudo guardar.');
     } finally {
       busy.current = false;
-      if (mounted.current) setIsTyping(false);
+      if (mounted.current) { setIsTyping(false); setIsConfirming(false); }
     }
   };
 
@@ -861,22 +882,26 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         {pendingGoal && <CoachGoalConfirmation proposal={pendingGoal} busy={isTyping}
           onConfirm={() => { void confirmGoal(); }} onDismiss={() => setPendingGoal(null)} />}
         {pending && (
-          <div className="chat-confirmation order-last rounded-xl border border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/20 p-4 text-sm">
-            <p className="font-semibold mb-2">Confirmar registros del {describeDate(pending.dateStr)}</p>
-            {repeatedActions.some(Boolean) && <p className="mb-3" aria-live="polite">
+          <div className="chat-confirmation order-last border text-sm" role="region" aria-label="Propuesta de registros para revisar" aria-busy={isConfirming}>
+            <div className="chat-proposal-heading">
+              <p className="chat-proposal-state" role="status">{isConfirming ? 'Confirmando el guardado…' : 'Propuesta pendiente'}</p>
+              <h3>{pending.actions.length === 1 ? 'Revisá tu registro' : 'Revisá tus registros'}</h3>
+              <p className="chat-proposal-date">{describeDate(pending.dateStr)}</p>
+            </div>
+            {repeatedActions.some(Boolean) && <p className="chat-proposal-replay-notice" aria-live="polite">
               {actionsToSave.length === 1 ? 'Se guardará 1 registro nuevo.' : actionsToSave.length
                 ? `Se guardarán ${actionsToSave.length} registros nuevos.` : 'No hay registros nuevos para guardar.'} Los ya registrados no se agregarán otra vez salvo que lo elijas.
             </p>}
             {pending.actions.map((action, index) => (
-              <div key={index} className="mb-3">
-                {repeatedActions[index] && <div className="chat-already-recorded mb-2 rounded-lg border border-current/20 p-3">
-                  <p className="font-semibold">Ya registrado en esta conversación</p>
-                  <label className="mt-2 flex items-start gap-2">
+              <div key={index} className="chat-proposal-item" data-record-state={repeatedActions[index] && !pending.registerAgain.includes(index) ? 'already-saved' : 'new'}>
+                {repeatedActions[index] && <div className="chat-already-recorded">
+                  <p>Ya registrado en esta conversación</p>
+                  <label>
                     <input type="checkbox" checked={pending.registerAgain.includes(index)} disabled={isTyping}
                       onChange={event => { const checked = event.target.checked; setPending(previous => previous && ({ ...previous,
                         registerAgain: checked ? [...previous.registerAgain.filter(value => value !== index), index]
                           : previous.registerAgain.filter(value => value !== index) })); }}
-                      className="mt-1 h-4 w-4 accent-orange-500" />
+                      className="accent-orange-500" />
                     {action.type === 'add_meal' ? 'Registrar otra comida igual' : 'Registrar otro ejercicio igual'}
                   </label>
                 </div>}
@@ -918,21 +943,16 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                     </label>
                   </div>
                 ) : (
-                  <>
-                    <p className="font-medium">{describeDate(action.payload.dateStr as string)}</p>
-                    <p>{describeAction(action)}{action.estimated ? ' (estimado)' : ''}</p>
-                    {typeof action.payload.details === 'string' && <p className="whitespace-pre-wrap">{action.payload.details}</p>}
-                    {action.payload.distance !== undefined && <p>Distancia: {String(action.payload.distance)} km</p>}
-                    {typeof action.payload.pace === 'string' && action.payload.pace && <p>Ritmo: {action.payload.pace} min/km</p>}
-                  </>
+                  <ProposedEntrySummary action={action} />
                 )}
               </div>
             ))}
-            <div className="flex flex-wrap gap-3 mt-3">
+            <p className="chat-proposal-footnote">{isConfirming ? 'Esperando la confirmación del guardado.' : 'Confirmá para guardar los registros seleccionados.'}</p>
+            <div className="chat-proposal-actions">
+              <button type="button" disabled={isTyping || !actionsToSave.length} onClick={confirmActions}
+                className="chat-proposal-confirm rounded-xl bg-[#f5a064] px-3 py-2 disabled:opacity-50">Confirmar</button>
               <button type="button" disabled={isTyping} onClick={() => setIsEditingProposal(true)}
                 className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Editar</button>
-              <button type="button" disabled={isTyping || !actionsToSave.length} onClick={confirmActions}
-                className="rounded-xl bg-[#f5a064] text-white px-3 py-2 disabled:opacity-50">Confirmar</button>
               <button type="button" disabled={isTyping} onClick={() => { setPending(null); pendingCommitRef.current = null; appendReply('Registro cancelado.'); }}
                 className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Cancelar</button>
             </div>
@@ -976,13 +996,14 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 </div>
               </div>
             ) : (
-            <div className={`chat-bubble ${msg.role === 'bot' && msg.text.startsWith('Registrado ') ? 'chat-saved' : ''} px-4 py-3 rounded-3xl text-sm shadow-none ${
+            <div className={`chat-bubble ${msg.role === 'bot' && msg.recordedActions?.length ? 'chat-saved' : ''} px-4 py-3 rounded-3xl text-sm shadow-none ${
               msg.role === 'user' 
                 ? 'chat-user text-white rounded-tr-sm whitespace-pre-wrap' 
                 : 'bg-slate-100 text-slate-900 dark:bg-[#191c1f] dark:text-gray-100 rounded-tl-sm border border-slate-200 dark:border-[#ffffff0d]'
             }`}>
               {msg.role === 'bot' ? (
                 <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-snug prose-p:mb-2 prose-ul:my-1 prose-li:my-0 last:prose-p:mb-0">
+                  {msg.recordedActions?.length ? <p className="chat-save-status"><CheckCircle size={16} aria-hidden="true" />Guardado confirmado</p> : null}
                   <ReactMarkdown>{msg.text}</ReactMarkdown>
                 </div>
               ) : (
@@ -992,7 +1013,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             )}
           </div>
         ))}
-        {isTyping && (
+        {isTyping && !pending && (
           <div className="chat-typing flex gap-3 max-w-[75%] mr-auto" role="status" aria-label="Coach está respondiendo">
             <img src="/brand/calori-logo-symbol.png" alt="" className="chat-message-avatar brand-symbol brand-symbol-message" />
             <div className="px-4 py-4 rounded-3xl bg-slate-100 dark:bg-[#191c1f] rounded-tl-sm border border-slate-200 dark:border-[#ffffff0d] flex items-center gap-1">

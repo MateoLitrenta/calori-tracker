@@ -84,6 +84,14 @@ test('DailyPanel displays equilibrium and surplus states', () => {
   }
 });
 
+test('incomplete-day context precedes the provisional balance without changing its value', () => {
+  const html = renderToStaticMarkup(React.createElement(DailyPanel, { profile, record: base, dateStr, records: {}, onUpdateRecord() {} }));
+  assert.match(html, /data-provisional="true"/);
+  assert.ok(html.indexOf('Este día está incompleto') < html.indexOf('-1.618 kcal'));
+  assert.match(html, /Sin comidas registradas/);
+  assert.ok(render(base).includes('-1.618 kcal'));
+});
+
 test('daily summary has a collapsed breakdown and no profile explanations', () => {
   const html = renderToStaticMarkup(React.createElement(DailyPanel, {
     profile, record: base, dateStr, records: {}, onUpdateRecord() {},
@@ -277,6 +285,19 @@ test('quick actions toggle existing forms and values retain inline editing', () 
   assert.equal(nodes(view(), e => e.type === 'input' && e.props.autoFocus).length, 2);
   node(view(), e => e.props.title === 'Registrar peso').props.onClick();
   assert.match(renderToStaticMarkup(view()), /Registrar Peso/);
+});
+
+test('registration actions and both entry forms expose the selected date, including historical days', () => {
+  const selected = '2026-01-09';
+  const view = mount({ profile, dateStr: selected, record: { ...base, dateStr: selected }, records: {}, onUpdateRecord: async () => false });
+  for (const action of ['+ Comida', '+ Ejercicio']) {
+    const button = node(view(), e => e.type === 'button' && e.props.children?.trim?.() === action);
+    const label = node(view(), e => e.props.id === button.props['aria-describedby']);
+    assert.equal(label.type, 'time'); assert.equal(label.props.dateTime, selected);
+    button.props.onClick();
+    const context = node(view(), e => e.props.className === 'entry-date-context');
+    assert.equal(node(context, e => e.type === 'time').props.dateTime, selected);
+  }
 });
 
 function mobileEnvironment(t, mobile = true) {

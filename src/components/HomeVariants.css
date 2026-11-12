@@ -17,7 +17,7 @@
   color-scheme: dark;
 }
 .home-variants button:focus-visible, .home-variants summary:focus-visible { outline: 2px solid var(--home-orange); outline-offset: 4px; }
-.home-variants, .home-variants :is(.energy-card, .daily-habits > div, .daily-logs) { transition: background-color var(--motion-control) var(--motion-ease-control), border-color var(--motion-control) var(--motion-ease-control), color var(--motion-control) var(--motion-ease-control); }
+.home-variants, .home-variants :is(.energy-card, .daily-habits > .habit-card, .daily-logs) { transition: background-color var(--motion-control) var(--motion-ease-control), border-color var(--motion-control) var(--motion-ease-control), color var(--motion-control) var(--motion-ease-control); }
 .home-variants :is([class~="bg-white"], [class~="bg-slate-50"], [class~="bg-slate-100"]) { background-color: var(--home-card); }
 .home-variants :is([class~="border-slate-200"], [class~="border-slate-300"], [class~="divide-slate-200"] > *) { border-color: var(--home-line); }
 .home-variants :is([class~="text-slate-900"], [class~="text-slate-700"]) { color: var(--home-text); }
@@ -53,9 +53,9 @@
 .home-variants .energy-metrics > div > div:first-child svg { display: none; }
 .home-variants .energy-metrics > div > div:nth-child(2) { text-align: center; font-size: clamp(20px, 4vw, 26px); font-weight: 500; letter-spacing: -.02em; }
 .home-variants .daily-habits { gap: 12px; }
-.home-variants .daily-habits > div { min-width: 0; padding: 12px 8px 4px; gap: 4px; border: 1px solid #ffffff08; border-radius: var(--home-radius-widget); background: var(--home-card); box-shadow: none; }
-.home-variants .daily-habits > div > div:first-child { flex-direction: row; gap: 4px; }
-.home-variants .daily-habits > div > div:nth-child(2) { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 4px; min-height: 44px; }
+.home-variants .daily-habits > .habit-card { min-width: 0; padding: 12px 8px 4px; gap: 4px; border: 1px solid #ffffff08; border-radius: var(--home-radius-widget); background: var(--home-card); box-shadow: none; }
+.home-variants .daily-habits > .habit-card > div:first-child { flex-direction: row; gap: 4px; }
+.home-variants .daily-habits > .habit-card > div:nth-child(2) { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 4px; min-height: 44px; }
 .home-variants .daily-habits input { min-width: 0; max-width: 100%; min-height: 44px; border-radius: var(--home-radius-control); }
 .home-variants .daily-habits .habit-value { min-height: 44px; min-width: 44px; border-radius: var(--home-radius-control); }
 .home-variants .habit-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; gap: 4px; }
@@ -75,9 +75,9 @@
 .home-variants .daily-quick-actions button:hover:not(:disabled) { border-color: var(--home-orange); background: var(--home-hover); }
 .home-variants .daily-quick-actions button:first-child:is(:hover, :active):not(:disabled) { background: #e99050; color: #3b2418; }
 .home-variants .daily-habits svg { color: var(--home-orange); width: 18px; height: 18px; }
-.home-variants .daily-habits > div:nth-child(1) svg { color: #67d8f5; }
-.home-variants .daily-habits > div:nth-child(2) svg { color: #70d394; }
-.home-variants .daily-habits > div:nth-child(3) svg { color: #ee8ab4; }
+.home-variants .daily-habits > .habit-card:nth-child(1) svg { color: #67d8f5; }
+.home-variants .daily-habits > .habit-card:nth-child(2) svg { color: #70d394; }
+.home-variants .daily-habits > .habit-card:nth-child(3) svg { color: #ee8ab4; }
 .home-variants .daily-logs { margin-top: 0; padding: 16px; border: 1px solid var(--home-line); border-radius: var(--home-radius-panel); background: var(--home-card); box-shadow: none; }
 .home-variants .daily-logs h4 { font-size: 16px; font-weight: 600; letter-spacing: -.02em; }
 .home-variants .daily-logs li { background: var(--home-control); border: 0; border-radius: var(--home-radius-widget); padding: 0; gap: 0; }
@@ -233,14 +233,14 @@ html:not(.dark) .home-variants .energy-status.bg-slate-200 { background: #e5e7eb
 html:not(.dark) .home-variants :is([class~="bg-[#161b22]"], [class~="bg-[#1e2124]"], [class~="bg-[#0f141c]"], [class~="bg-[#0d1117]"]) { background-color: #ffffff; color: #1f2937; }
 html:not(.dark) .home-variants :is(input, select, textarea) { background-color: #f8f7f4; color: #1f2937; border-color: #94a3b8; }
 html:not(.dark) .home-variants :is(input, select, textarea)::placeholder { color: #64748b; opacity: 1; }
-html:not(.dark) .home-variants :is(.energy-card, .daily-habits > div, .daily-logs li, .daily-logs) { border-color: #d1d5db; }
-html:not(.dark) .home-variants :is(.energy-card, .daily-habits > div) { box-shadow: 0 1px 2px #1f29370d; }
-html:not(.dark) .home-variants .daily-habits > div { border-color: #e2e8f0; box-shadow: none; }
+html:not(.dark) .home-variants :is(.energy-card, .daily-habits > .habit-card, .daily-logs li, .daily-logs) { border-color: #d1d5db; }
+html:not(.dark) .home-variants :is(.energy-card, .daily-habits > .habit-card) { box-shadow: 0 1px 2px #1f29370d; }
+html:not(.dark) .home-variants .daily-habits > .habit-card { border-color: #e2e8f0; box-shadow: none; }
 html:not(.dark) .home-variants .daily-quick-actions button:first-child { background: var(--home-orange); border-color: var(--home-orange); color: #3b2418; }
 html:not(.dark) .home-variants .daily-quick-actions button:first-child:is(:hover, :active):not(:disabled) { background: #e99050; }
-html:not(.dark) .home-variants .daily-habits > div:nth-child(1) svg { color: #0891b2; }
-html:not(.dark) .home-variants .daily-habits > div:nth-child(2) svg { color: #168047; }
-html:not(.dark) .home-variants .daily-habits > div:nth-child(3) svg { color: #be407c; }
+html:not(.dark) .home-variants .daily-habits > .habit-card:nth-child(1) svg { color: #0891b2; }
+html:not(.dark) .home-variants .daily-habits > .habit-card:nth-child(2) svg { color: #168047; }
+html:not(.dark) .home-variants .daily-habits > .habit-card:nth-child(3) svg { color: #be407c; }
 html:not(.dark) .home-variants .record-detail-modal { background: #ffffff; border-color: #cbd5e1; color: #1f2937; }
 html:not(.dark) .home-variants .record-detail-modal > :is(div:first-child, div:last-child) { background: #f8f7f4; border-color: #cbd5e1; }
 html:not(.dark) .home-variants .record-detail-modal .record-detail-main { color: #1f2937; }
@@ -259,10 +259,10 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
   .home-variants { padding: 8px; }
   .home-variants .daily-panel { gap: 20px; }
   .home-variants .daily-habits { gap: 8px; }
-  .home-variants .daily-habits > div { padding: 8px 4px 4px; gap: 4px; }
+  .home-variants .daily-habits > .habit-card { padding: 8px 4px 4px; gap: 4px; }
   .home-variants .daily-habits svg { width: 16px; height: 16px; }
   .home-variants .daily-habits .text-lg { font-size: 18px; line-height: 1.2; }
-  .home-variants .daily-habits > div:nth-child(2) > div:nth-child(2) > span { display: none; }
+  .home-variants .daily-habits > .habit-card:nth-child(2) > div:nth-child(2) > span { display: none; }
   .home-variants .daily-habits input { max-width: 100%; }
   .home-variants .daily-quick-actions button { padding: 8px 4px; font-size: 11px; }
 }
@@ -275,9 +275,9 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
   .home-variants .energy-metrics { gap: 6px 12px; }
   .home-variants .energy-metrics > div > div:nth-child(2) { font-size: 22px; }
   .home-variants .energy-metrics details { margin-top: 4px; }
-  .home-variants .daily-habits > div { padding-top: 6px; gap: 2px; }
+  .home-variants .daily-habits > .habit-card { padding-top: 6px; gap: 2px; }
   .home-variants .daily-habits .text-lg { font-size: 20px; }
-  .home-variants .daily-habits > div:nth-child(2) > div:nth-child(2) > span { display: inline; }
+  .home-variants .daily-habits > .habit-card:nth-child(2) > div:nth-child(2) > span { display: inline; }
   .home-variants .daily-habits .habit-value { font-size: inherit; }
   .home-variants .daily-habits input { font-size: 16px; }
   .home-variants .daily-logs--empty { padding: 12px 16px; }
@@ -296,7 +296,7 @@ html:not(.dark) .home-variants .record-detail-modal .text-slate-500 { color: #64
 
 @media (max-width: 374px) {
   .home-variants .daily-habits { gap: 6px; }
-  .home-variants .daily-habits > div > div:nth-child(2) { flex-direction: column; flex-wrap: nowrap; gap: 0; }
+  .home-variants .daily-habits > .habit-card > div:nth-child(2) { flex-direction: column; flex-wrap: nowrap; gap: 0; }
   .home-variants .daily-habits .text-lg { font-size: 18px; }
   .home-variants .habit-controls { grid-template-columns: minmax(0, 1fr); }
   .home-variants .daily-logs--empty { padding-block: 10px; }
@@ -606,3 +606,15 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
 .habit-feedback-action:focus-visible, .habit-review-apply:focus-visible { outline: 2px solid #f5a064; outline-offset: 3px; }
 .habit-review-apply { background: #f5a064; color: #241a13; }
 .habit-review-apply:hover { background: #e58b4f; }
+.entry-sheet-root .habit-review { min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
+.home-variants .energy-qualifier { margin: 5px 0 0; font-size: 13px; line-height: 1.4; color: var(--home-text); font-weight: 600; }
+.app-shell .home-variants .energy-card[data-provisional="true"] .energy-number { margin-block: 8px; font-size: clamp(28px, 3vw, 36px); letter-spacing: -.04em; color: var(--home-muted); }
+.home-variants .energy-status { max-width: 100%; }
+.home-variants .daily-logs-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.home-variants .daily-active-date { color: var(--home-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.home-variants .entry-date-context { grid-column: 1 / -1; margin: 0; color: var(--home-muted); font-size: 12px; line-height: 1.5; }
+.home-variants .habit-feedback { grid-column: 1 / -1; padding: 8px 12px; border-left: 2px solid var(--home-orange); border-radius: 0 var(--radius-control) var(--radius-control) 0; background: var(--home-control); }
+.home-variants .habit-feedback-action { color: var(--home-text); }
+@media (min-width: 1280px) {
+  .app-shell .home-variants .daily-logs-heading { justify-content: flex-start; gap: 4px 16px; }
+}

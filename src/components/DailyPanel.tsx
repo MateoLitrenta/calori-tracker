@@ -59,6 +59,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const { record, dateStr, onUpdateRecord, profile, selectedGroup, records, habitDrafts } = props;
   const [activeTab, setActiveTab] = useState<'comida' | 'entrenamiento' | null>(null);
   const tabContainerRef = useRef<HTMLDivElement>(null);
+  const dayContextId = useId();
 
   // Default empty record if none exists for this day
   const currentRecord: DailyRecord = record || {
@@ -486,11 +487,12 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       {/* Summary Cards */}
       <div className="daily-summary flex flex-col gap-4">
         {/* Hero Card de Calorías */}
-        <div className="energy-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl p-4 md:p-6 flex flex-col items-center gap-4">
+        <div data-provisional={provisionalBalance} className="energy-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl p-4 md:p-6 flex flex-col items-center gap-4">
           <div className="energy-headline flex flex-col items-center text-center">
             <div className="flex items-center gap-2 text-slate-500 dark:text-gray-400 text-sm font-semibold mb-1">
               <Barbell size={20} className="text-purple-400" /> {isGroup ? 'Balance acumulado' : provisionalBalance ? 'Balance provisional' : 'Balance energético'}
             </div>
+            {provisionalBalance && <p className="energy-qualifier">Este día está incompleto</p>}
             <div className="energy-number text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2 tabular-nums">
               {balance === null ? 'Sin datos' : `${balance > 0 ? '+' : ''}${balance.toLocaleString('es-AR')} kcal`}
             </div>
@@ -538,6 +540,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
         {/* Hábitos Compactos */}
         {!isGroup && (
+          <>
           <div className="daily-habits grid grid-cols-3 gap-2">
             <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
               <div className="habit-header flex flex-col items-center gap-1">
@@ -654,7 +657,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   setIsEditingWeight(true);
                 }} title="Registrar peso">Editar</button>
             </div>
-            {habit.status && <div className="habit-feedback col-span-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-gray-300"
+          </div>
+            {habit.status && <div className="habit-feedback flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-gray-300"
               role={habit.status === 'conflict' || habit.status === 'unconfirmed' ? 'alert' : 'status'} aria-atomic="true">
               <span>{habit.status === 'editing' ? 'Editando · Cambios pendientes' : habit.status === 'saving' ? 'Guardando… Podés seguir ajustando.' :
                 habit.status === 'saved' ? 'Guardado' : habit.status === 'conflict' ? 'Conflicto · Tu borrador se conserva.' : 'No confirmado · Tu borrador se conserva.'}</span>
@@ -664,7 +668,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 onClick={() => setHabitReview(snapshotEntryRecord(currentRecord, profile.recordGeneration))}>Revisar borrador</button>}
               {(habit.status === 'unconfirmed' || habit.status === 'conflict') && <p className="w-full">{habit.failure?.message}</p>}
             </div>}
-          </div>
+          </>
         )}
       </div>
 
@@ -698,6 +702,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
           <div className="daily-quick-actions flex gap-2 mt-2">
             <button 
               onClick={() => handleTabToggle('comida')}
+              aria-describedby={dayContextId}
               aria-pressed={activeTab === 'comida'}
               className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'comida' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-white dark:bg-[#161b22] border-slate-200 dark:border-gray-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-[#0f141c]'}`}
             >
@@ -705,6 +710,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
             </button>
             <button 
               onClick={() => handleTabToggle('entrenamiento')}
+              aria-describedby={dayContextId}
               aria-pressed={activeTab === 'entrenamiento'}
               className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'entrenamiento' ? 'bg-orange-600 border-orange-500 text-white' : 'bg-white dark:bg-[#161b22] border-slate-200 dark:border-gray-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-[#0f141c]'}`}
             >
@@ -719,6 +725,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               <form onSubmit={handleAddMeal} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
                 <div className="entry-form-content entry-fields-grid entry-meal-fields">
                   <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Comida</h4>
+              <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>
                   <div className="entry-field entry-description">
                     <label className="entry-field-label" htmlFor="add-meal-description">Descripción</label>
                     <AutoResizeTextarea id="add-meal-description"
@@ -809,6 +816,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               <form onSubmit={handleAddWorkout} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
                 <div className="entry-form-content entry-fields-grid entry-workout-fields">
                   <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Entrenamiento</h4>
+              <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>
                   <div className="entry-field entry-description entry-activity">
                     <label className="entry-field-label" htmlFor="add-workout-activity">Actividad</label>
                     <AutoResizeTextarea id="add-workout-activity"
@@ -908,6 +916,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         <div className={`daily-logs ${currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 ? 'daily-logs--empty' : ''} bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden`}>
           <div className="daily-logs-heading bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
             <h4 className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
+            <time id={dayContextId} dateTime={dateStr} className="daily-active-date">
+              {dateStr === formatDateStr(new Date()) ? 'Hoy · ' : ''}{panelSubtitle}
+            </time>
           </div>
           
           {currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 && (
@@ -1124,6 +1135,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         <EntryFormShell title="Editar comida" onClose={closeEntry} desktopModal>
           <form onSubmit={handleAddMeal} className="entry-form p-4 flex flex-col gap-4">
             <div className="entry-form-content entry-fields-grid entry-meal-fields entry-edit-fields">
+              <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>
               <div className="entry-field entry-description">
                 <label className="entry-field-label" htmlFor="edit-meal-description">Descripción</label>
                 <AutoResizeTextarea id="edit-meal-description"
@@ -1210,6 +1222,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         <EntryFormShell title="Editar ejercicio" onClose={closeEntry} desktopModal>
           <form onSubmit={handleAddWorkout} className="entry-form p-4 flex flex-col gap-4">
             <div className="entry-form-content entry-fields-grid entry-workout-fields entry-edit-fields">
+              <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>
               <div className="entry-field entry-description entry-activity">
                 <label className="entry-field-label" htmlFor="edit-workout-activity">Actividad</label>
                 <AutoResizeTextarea id="edit-workout-activity"
