@@ -71,9 +71,9 @@ export async function startPostgrest(t,pg,database,executable,{port=0}={}){
   emit();throw Object.assign(new Error('Local PostgREST failed: '+JSON.stringify(diagnostic)+'\n'+redact(output)),{diagnostic:{...diagnostic}});
  }
  diagnostic.stage='ready';emit();
- const token=id=>{
+ const token=(id,claims={})=>{
   const head=Buffer.from(JSON.stringify({alg:'HS256',typ:'JWT'})).toString('base64url');
-  const body=Buffer.from(JSON.stringify({sub:id,role:'authenticated',exp:Math.floor(Date.now()/1000)+3600})).toString('base64url');
+  const body=Buffer.from(JSON.stringify({sub:id,role:'authenticated',exp:Math.floor(Date.now()/1000)+3600,...claims})).toString('base64url');
   const input=head+'.'+body;return input+'.'+createHmac('sha256',secret).update(input).digest('base64url');
  };
  const url='http://127.0.0.1:'+diagnostic.port;

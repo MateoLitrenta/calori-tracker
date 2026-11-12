@@ -1,55 +1,104 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {readFile} from 'node:fs/promises';
-import React,{act} from 'react';import{JSDOM}from'jsdom';import ts from'typescript';
-const url=s=>'data:text/javascript;base64,'+Buffer.from(s).toString('base64');
-const source=(await readFile(new URL('../src/hooks/useAppStore.ts',import.meta.url),'utf8'));
-const imports={react:import.meta.resolve('react'),'../utils/helpers':new URL('../src/utils/helpers.ts',import.meta.url).href,'../lib/supabase':url('export const supabase={auth:{getSession:()=>globalThis.__v9.session(),onAuthStateChange:cb=>{globalThis.__v9.emit=cb;return{data:{subscription:{unsubscribe(){}}}}}}};'),'../lib/db':url(['fetchUserData','syncProfile','ensureDailyLog','fetchDailyLog','syncAddMeal','syncDeleteMeal','syncUpdateMeal','syncAddWorkout','syncDeleteWorkout','syncUpdateWorkout'].map(n=>`export const ${n}=(...a)=>globalThis.__v9.db.${n}(...a);`).join('\n')),'react-hot-toast':url('export default {error:m=>globalThis.__v9.errors.push(m),success(){}};')};
-const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2023}}).outputText.replace(/from ["']([^"']+)["']/g,(_,s)=>'from '+JSON.stringify(imports[s]||import.meta.resolve(s)));
-const{AppStoreProvider,useAppStore}=await import(url(code));
-const deferred=()=>{let resolve;const promise=new Promise(r=>resolve=r);return{promise,resolve};};
-const record={dateStr:'2026-10-30',date:new Date('2026-10-30T12:00:00'),meals:[],workouts:[],water:0,steps:0};
-async function mount(t,session=async()=>({data:{session:{user:{id:'A'}}}})){
-const dom=new JSDOM('<div id="root"></div>',{pretendToBeVisual:true});const saved={};for(const n of ['window','document','IS_REACT_ACT_ENVIRONMENT'])saved[n]=globalThis[n];globalThis.window=dom.window;globalThis.document=dom.window.document;globalThis.IS_REACT_ACT_ENVIRONMENT=true;
-const state={errors:[],session,db:{fetchUserData:async id=>({id,user_id:id,name:id,records:{}}),ensureDailyLog:async()=> 'log',fetchDailyLog:async()=>record,syncAddMeal:async()=>{},syncAddWorkout:async()=>{} }};globalThis.__v9=state;
-function Probe(){const store=useAppStore();React.useLayoutEffect(()=>{state.store=store;});return React.createElement('p',null,store.loading?'loading':store.activeProfile?.name??'signed out');}
-const{createRoot}=await import('react-dom/client');const root=createRoot(document.getElementById('root'));await act(async()=>root.render(React.createElement(AppStoreProvider,null,React.createElement(Probe))));
-t.after(async()=>{await act(()=>root.unmount());dom.window.close();for(const[n,v]of Object.entries(saved))globalThis[n]=v;});return state;}
-test('a delayed initial session never replaces a newer account event',async t=>{const initial=deferred();const s=await mount(t,()=>initial.promise);await act(()=>s.emit('SIGNED_IN',{user:{id:'B'}}));await act(()=>initial.resolve({data:{session:{user:{id:'A'}}}}));assert.equal(s.store.user.id,'B');assert.equal(s.store.activeProfile.user_id,'B');});
-test('a delayed initial session never restores a signed-out account',async t=>{const initial=deferred();const s=await mount(t,()=>initial.promise);await act(()=>s.emit('SIGNED_OUT',null));await act(()=>initial.resolve({data:{session:{user:{id:'A'}}}}));assert.equal(s.store.user,null);assert.equal(s.store.activeProfile,null);});
-test('simultaneous writes for the same day fail safely before reaching persistence',async t=>{const s=await mount(t);const gate=deferred();let calls=0;s.db.ensureDailyLog=async()=>{calls++;await gate.promise;return'log';};let first;await act(()=>{first=s.store.updateRecord(record.dateStr,record);});let second;await act(()=>{second=s.store.updateRecord(record.dateStr,{...record,steps:500});});const countBeforeRelease=calls;await act(()=>gate.resolve());let results;await act(async()=>{results=await Promise.all([first,second]);});assert.equal(countBeforeRelease,1);assert.deepEqual(results,[true,false]);assert.equal(s.errors.length,1);});
-test('initial session read failure settles loading without publishing an account',async t=>{const s=await mount(t,async()=>{throw new Error('offline');});assert.equal(s.store.loading,false);assert.equal(s.store.user,null);});
-test('write lock releases after failure and allows an explicit retry',async t=>{const s=await mount(t);let fail=true;s.db.ensureDailyLog=async()=>fail?null:'log';const original=console.error;console.error=()=>{};try{await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),false));fail=false;await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),true));}finally{console.error=original;}});
-test('independent days are not blocked by a pending write',async t=>{const s=await mount(t);const gate=deferred();let calls=0;s.db.ensureDailyLog=async()=>{calls++;await gate.promise;return'log';};let a,b;await act(()=>{a=s.store.updateRecord(record.dateStr,record);b=s.store.updateRecord('2026-10-29',{...record,dateStr:'2026-10-29'});});assert.equal(calls,2);await act(()=>gate.resolve());await act(async()=>assert.deepEqual(await Promise.all([a,b]),[true,true]));});
+import {mount,act,record,generation,nextGeneration,deferred,failure} from './helpers/atomic-store-harness.mjs';
 
-test('profile failure retains shared profile; foreign-profile input is rejected before writing',async t=>{
-  const s=await mount(t),before=s.store.activeProfile;let calls=0;
-  s.db.syncProfile=async()=>{calls++;throw Error('No confirmed row');};
-  await act(async()=>{await assert.rejects(s.store.updateProfile({...before,name:'Draft'}),/No confirmed row/);});
-  assert.equal(s.store.activeProfile,before);
-  await assert.rejects(s.store.updateProfile({...before,id:'B',user_id:'B'}),/perfil activo/);
-  assert.equal(calls,1);
+test('a delayed initial session never replaces a newer account event',async t=>{
+ const initial=deferred(),s=await mount(t,()=>initial.promise);await act(()=>s.emit('SIGNED_IN',{user:{id:'B'}}));
+ await act(()=>initial.resolve({data:{session:{user:{id:'A'}}}}));assert.equal(s.store.user.id,'B');assert.equal(s.store.activeProfile.user_id,'B');
 });
-test('failed final read never confirms a save and releases the lock for an explicit retry',async t=>{
-  const s=await mount(t);s.db.fetchDailyLog=async()=>null;
-  const original=console.error;console.error=()=>{};
-  try{
-    await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),false));
-    assert.equal(s.store.activeProfile.records[record.dateStr],undefined);
-    s.db.fetchDailyLog=async()=>record;
-    await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),true));
-  }finally{console.error=original;}
+test('a delayed initial session never restores a signed-out account',async t=>{
+ const initial=deferred(),s=await mount(t,()=>initial.promise);await act(()=>s.emit('SIGNED_OUT',null));
+ await act(()=>initial.resolve({data:{session:{user:{id:'A'}}}}));assert.equal(s.store.user,null);assert.equal(s.store.activeProfile,null);
 });
-test('a partial legacy save is reconciled without claiming the meal was saved or discarding the caller draft',async t=>{
-  const s=await mount(t),draft={...record,steps:900,meals:[{id:'m',name:'Draft meal',calories:400,type:'Cena'}]};
-  let committed;
-  s.db.ensureDailyLog=async()=>{committed={...record,steps:900};return'log';};
-  s.db.syncAddMeal=async()=>{throw Error('Meal failed after day commit');};
-  s.db.fetchDailyLog=async()=>committed;
-  const original=console.error;console.error=()=>{};
-  try{await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,draft),false));}
-  finally{console.error=original;}
-  assert.equal(s.store.activeProfile.records[record.dateStr].steps,900);
-  assert.deepEqual(s.store.activeProfile.records[record.dateStr].meals,[]);
-  assert.equal(draft.meals[0].name,'Draft meal');assert.equal(s.errors.length,1);
+test('initial session read failure settles loading without publishing an account',async t=>{
+ const s=await mount(t,async()=>{throw Error('offline');});assert.equal(s.store.loading,false);assert.equal(s.store.user,null);
+});
+test('an in-flight account write blocks another day and never publishes an optimistic success',async t=>{
+ const s=await mount(t),gate=deferred(),commit=s.db.commitRecordIntent;let count=0;
+ s.db.commitRecordIntent=async(...args)=>{count++;await gate.promise;return commit(...args);};let first;
+ await act(()=>{first=s.store.updateRecord(record.dateStr,{...record,steps:700});});
+ assert.equal(s.store.activeProfile.records[record.dateStr],undefined);
+ await act(async()=>assert.equal(await s.store.updateRecord('2026-11-12',{...record,dateStr:'2026-11-12'}),false));
+ assert.equal(count,1);await act(()=>gate.resolve());await act(async()=>assert.equal(await first,true));
+ assert.equal(s.store.activeProfile.records[record.dateStr].steps,700);
+});
+test('an ambiguous response retains the exact intention for explicit retry and preserves the caller draft',async t=>{
+ const s=await mount(t),commit=s.db.commitRecordIntent,draft={...record,steps:900};let firstId;
+ s.db.commitRecordIntent=async(_owner,intent)=>{firstId=intent.operationId;throw failure('ambiguous');};
+ await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,draft),false));
+ assert.equal(s.store.activeProfile.records[record.dateStr],undefined);assert.equal(draft.steps,900);
+ s.db.commitRecordIntent=async(owner,intent)=>{assert.equal(intent.operationId,firstId);return commit(owner,intent);};
+ await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,draft),true));assert.equal(s.mutationCount,1);
+});
+test('an ambiguous intention is retained across a later failed authentication attempt',async t=>{
+ const s=await mount(t),commit=s.db.commitRecordIntent;let original;
+ s.db.commitRecordIntent=async(_owner,intent)=>{original=intent.operationId;throw failure('ambiguous');};
+ await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),false));
+ s.db.commitRecordIntent=async(_owner,intent)=>{assert.equal(intent.operationId,original);throw failure('session');};
+ await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),false));
+ s.db.commitRecordIntent=async(owner,intent)=>{assert.equal(intent.operationId,original);return commit(owner,intent);};
+ await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),true));assert.equal(s.mutationCount,1);
+});
+test('a changed draft first resolves the previous ambiguous intention, never claims the new content was saved',async t=>{
+ const s=await mount(t),commit=s.db.commitRecordIntent;let id;
+ s.db.commitRecordIntent=async(_owner,intent)=>{id=intent.operationId;throw failure('ambiguous');};
+ await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,{...record,steps:100}),false));
+ s.db.commitRecordIntent=async(owner,intent)=>{assert.equal(intent.operationId,id);return commit(owner,intent);};
+ await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,{...record,steps:999}),false));
+ assert.equal(s.store.activeProfile.records[record.dateStr].steps,100);assert.equal(s.mutationCount,1);
+});
+test('conflict re-reads server state without changing or silently rebasing the submitted draft',async t=>{
+ const s=await mount(t),draft={...record,steps:100};
+ s.server={protocol:'atomic',generation:nextGeneration,records:{[record.dateStr]:{...record,steps:800,version:'4',generation:nextGeneration}}};
+ await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,draft),false));
+ assert.equal(s.store.activeProfile.records[record.dateStr].steps,800);assert.equal(draft.steps,100);assert.equal(draft.generation,generation);
+ await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,draft),false));assert.equal(s.mutationCount,0);
+ await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,{...draft,version:'4',generation:nextGeneration}),true));
+});
+test('an acknowledged commit with failed refresh is retried with its original receipt, not duplicated',async t=>{
+ const s=await mount(t),read=s.db.fetchRecordSnapshot;s.db.fetchRecordSnapshot=async()=>{throw Error('read failed');};
+ await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),false));assert.equal(s.mutationCount,1);
+ s.db.fetchRecordSnapshot=read;await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),true));
+ assert.equal(s.mutationCount,1);assert.equal(s.calls[0].intent.operationId,s.calls[1].intent.operationId);
+});
+test('logout/account change during a save cannot publish or confirm into the next account',async t=>{
+ const s=await mount(t),gate=deferred(),commit=s.db.commitRecordIntent;
+ s.db.commitRecordIntent=async(...args)=>{await gate.promise;return commit(...args);};let pending;
+ await act(()=>{pending=s.store.updateRecord(record.dateStr,record);});await act(()=>s.emit('SIGNED_IN',{user:{id:'B'}}));
+ await act(()=>gate.resolve());await act(async()=>assert.equal(await pending,false));assert.equal(s.store.activeProfile.user_id,'B');assert.deepEqual(s.store.activeProfile.records,{});
+});
+test('signing back into the same account does not accept a result from the previous session epoch',async t=>{
+ const s=await mount(t),gate=deferred(),commit=s.db.commitRecordIntent;
+ s.db.commitRecordIntent=async(...args)=>{await gate.promise;return commit(...args);};let pending;
+ await act(()=>{pending=s.store.updateRecord(record.dateStr,record);});await act(()=>s.emit('SIGNED_OUT',null));await act(()=>s.emit('SIGNED_IN',{user:{id:'A'}}));
+ await act(()=>gate.resolve());await act(async()=>assert.equal(await pending,false));assert.deepEqual(s.store.activeProfile.records,{});
+});
+test('profile failure retains shared profile and rejects a foreign profile before writing',async t=>{
+ const s=await mount(t),before=s.store.activeProfile;let calls=0;s.db.syncProfile=async()=>{calls++;throw Error('No confirmed row');};
+ await act(async()=>assert.rejects(s.store.updateProfile({...before,name:'Draft'}),/No confirmed row/));assert.equal(s.store.activeProfile,before);
+ await assert.rejects(s.store.updateProfile({...before,id:'B',user_id:'B'}),/perfil activo/);assert.equal(calls,1);
+});
+test('a delayed profile save cannot replace newer record tokens with its older form snapshot',async t=>{
+ const s=await mount(t),gate=deferred(),before=s.store.activeProfile;s.db.syncProfile=async()=>gate.promise;let pending;
+ await act(()=>{pending=s.store.updateProfile({...before,name:'Updated profile'});});
+ await act(async()=>assert.equal(await s.store.updateRecord(record.dateStr,record),true));
+ const current=s.store.activeProfile;await act(()=>gate.resolve());await act(()=>pending);
+ assert.equal(s.store.activeProfile.name,'Updated profile');assert.equal(s.store.activeProfile.recordGeneration,current.recordGeneration);
+ assert.equal(s.store.activeProfile.records,current.records);assert.equal(s.store.activeProfile.recordProtocol,'atomic');
+});
+test('date mismatch is rejected before any persistence request',async t=>{
+ const s=await mount(t);await act(async()=>assert.equal(await s.store.updateRecord('2026-11-12',record),false));assert.equal(s.calls.length,0);
+});
+test('a delayed callback captured by account A cannot start a save as the newly active account B',async t=>{
+ const s=await mount(t),oldSave=s.store.updateRecord;await act(async()=>s.emit('SIGNED_IN',{user:{id:'B'}}));
+ await act(async()=>assert.equal(await oldSave(record.dateStr,record),false));assert.equal(s.calls.length,0);assert.equal(s.store.activeProfile.user_id,'B');
+});
+test('an old profile fetch resolving in the same batch as an account event is never published',async t=>{
+ const s=await mount(t),old=deferred(),next=deferred();
+ s.db.fetchUserData=id=>id==='A'?old.promise:next.promise;
+ await act(async()=>{s.emit('SIGNED_OUT',null);});
+ await act(async()=>{s.emit('SIGNED_IN',{user:{id:'A'}});});
+ await act(async()=>{s.emit('SIGNED_IN',{user:{id:'B'}});old.resolve({id:'A',user_id:'A',name:'Private A',records:{}});});
+ assert.notEqual(s.store.activeProfile?.user_id,'A');
+ await act(async()=>next.resolve({id:'B',user_id:'B',name:'B',records:{}}));assert.equal(s.store.activeProfile.user_id,'B');
 });

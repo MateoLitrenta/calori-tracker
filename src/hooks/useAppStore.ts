@@ -14,6 +14,10 @@ const useAppStoreState = () => {
   const userId = user?.id;
   const userEmail = user?.email;
   const pendingRecordWrites = useRef(new Set<string>());
+  const pendingIntents = useRef(new Map<string, db.RecordIntent>());
+  const identity = useRef({ userId: null as string | null, epoch: 0 });
+  const profileRef = useRef(activeProfile);
+  useEffect(() => { profileRef.current = activeProfile; }, [activeProfile]);
 
   // Auth & Initial Data Load
   useEffect(() => {
@@ -22,6 +26,10 @@ const useAppStoreState = () => {
     let authEventObserved = false;
     const applyUser = (nextUser: User | null) => {
       if (!isMounted) return;
+      if (identity.current.userId !== (nextUser?.id ?? null)) {
+        identity.current = { userId: nextUser?.id ?? null, epoch: identity.current.epoch + 1 };
+        pendingIntents.current.clear();
+      }
       if (nextUser && nextUser.id !== sessionUserId) {
         setLoading(true);
         setActiveProfile(null);
@@ -55,12 +63,14 @@ const useAppStoreState = () => {
     let isMounted = true;
     const loadProfile = async () => {
       if (!userId) return;
+      const epoch = identity.current.epoch;
       setLoading(true);
       const data = await db.fetchUserData(userId, userEmail);
-      if (isMounted && data) {
+      if (!isMounted || identity.current.userId !== userId || identity.current.epoch !== epoch) return;
+      if (data && data.user_id === userId) {
         setActiveProfile(data);
       }
-      if (isMounted) setLoading(false);
+      setLoading(false);
     };
 
     loadProfile();
@@ -84,7 +94,8 @@ const useAppStoreState = () => {
         updated.id !== activeProfile.id || updated.user_id !== user.id) throw new Error('No hay un perfil activo');
     await db.syncProfile(updated);
     setActiveProfile(prev => prev && prev.id === updated.id
-      ? { ...prev, ...updated, activity: normalizeActivityLevel(updated.activity), records: prev.records }
+      ? { ...prev, ...updated, activity: normalizeActivityLevel(updated.activity), records: prev.records,
+        recordGeneration: prev.recordGeneration, recordProtocol: prev.recordProtocol }
       : prev);
   };
 
@@ -102,83 +113,102 @@ const useAppStoreState = () => {
       : prev);
   };
 
-  const updateRecord = async (dateStr: string, record: DailyRecord) => {
-    if (!activeProfile || !user || activeProfile.user_id !== user.id) return false;
-    const writeKey = user.id + ':' + dateStr;
-    if (pendingRecordWrites.current.has(writeKey)) {
-      toast.error('Hay un guardado en curso para este día. Esperá a que termine e intentá de nuevo.');
+  const sameSession = (owner: string, epoch: number) =>
+    identity.current.userId === owner && identity.current.epoch === epoch;
+
+  const publishSnapshot = (owner: string, epoch: number, snapshot: db.RecordSnapshot) => {
+    if (!sameSession(owner, epoch) || profileRef.current?.user_id !== owner) return false;
+    const fields = { records: snapshot.records, recordGeneration: snapshot.generation ?? undefined,
+      recordProtocol: snapshot.protocol };
+    profileRef.current = { ...profileRef.current, ...fields };
+    setActiveProfile(prev => sameSession(owner, epoch) && prev?.user_id === owner ? { ...prev, ...fields } : prev);
+    return true;
+  };
+
+  const persistIntent = async (owner: string, epoch: number, key: string, intent: db.RecordIntent) => {
+    let acknowledged = false;
+    try {
+      const receipt = await db.commitRecordIntent(owner, intent);
+      acknowledged = true;
+      const snapshot = await db.fetchRecordSnapshot(owner);
+      if (!publishSnapshot(owner, epoch, snapshot)) return false;
+      pendingIntents.current.delete(key);
+      // A replay acknowledges the original commit, not a promise that no one
+      // changed/reset that day afterwards. Never resurrect its old snapshot.
+      if ((intent.kind === 'save' && snapshot.records[intent.date!]?.version !== String(receipt.version)) ||
+          (intent.kind === 'reset' && snapshot.generation !== receipt.generation)) {
+        toast.error('El guardado anterior se confirmó, pero los registros cambiaron después. Revisá los datos actualizados antes de continuar.');
+        return false;
+      }
+      return true;
+    } catch (error) {
+      if (!sameSession(owner, epoch)) return false;
+      const failure = error as { kind?: db.RecordFailureKind; message?: string };
+      const keepIntent = acknowledged || failure.kind === 'ambiguous' ||
+        (intent.mayHaveCommitted && (failure.kind === 'session' || failure.kind === 'inactive'));
+      if (keepIntent) intent.mayHaveCommitted = true;
+      else pendingIntents.current.delete(key);
+      if (failure.kind === 'conflict') {
+        try { publishSnapshot(owner, epoch, await db.fetchRecordSnapshot(owner)); } catch { /* Keep the draft and old CAS tokens; do not guess a new baseline. */ }
+      }
+      toast.error(failure.message || 'No pudimos confirmar el guardado. Tu borrador se conserva.');
       return false;
     }
-    pendingRecordWrites.current.add(writeKey);
-    const oldRecord = activeProfile.records[dateStr] || { meals: [], workouts: [] };
+  };
 
-    // Optimistic update, scoped to the profile that initiated the save.
-    setActiveProfile(prev => {
-      if (!prev || prev.id !== activeProfile.id || prev.user_id !== user.id) return prev;
-      return { ...prev, records: { ...prev.records, [dateStr]: record } };
-    });
-
-    // Supabase Sync
-    try {
-      const logId = await db.ensureDailyLog(user.id, record);
-      if (!logId) throw new Error('No se pudo guardar el registro diario');
-
-      const addedMeals = record.meals.filter(m => !oldRecord.meals?.some((o: any) => o.id === m.id));
-      const deletedMeals = oldRecord.meals?.filter((o: any) => !record.meals.some(m => m.id === o.id)) || [];
-      const modifiedMeals = record.meals.filter(m => {
-        const old = oldRecord.meals?.find((o: any) => o.id === m.id);
-        return old && JSON.stringify(old) !== JSON.stringify(m);
-      });
-      
-      for (const m of addedMeals) await db.syncAddMeal(user.id, logId, m, dateStr);
-      for (const m of deletedMeals) await db.syncDeleteMeal(m.id);
-      for (const m of modifiedMeals) await db.syncUpdateMeal(m);
-
-      const addedWorkouts = record.workouts.filter(w => !oldRecord.workouts?.some((o: any) => o.id === w.id));
-      const deletedWorkouts = oldRecord.workouts?.filter((o: any) => !record.workouts.some(w => w.id === o.id)) || [];
-      const modifiedWorkouts = record.workouts.filter(w => {
-        const old = oldRecord.workouts?.find((o: any) => o.id === w.id);
-        return old && JSON.stringify(old) !== JSON.stringify(w);
-      });
-
-      for (const w of addedWorkouts) await db.syncAddWorkout(user.id, logId, w, dateStr);
-      for (const w of deletedWorkouts) await db.syncDeleteWorkout(w.id);
-      for (const w of modifiedWorkouts) await db.syncUpdateWorkout(w);
-
-      // Refresh log directly from DB
-      const refreshedLog = await db.fetchDailyLog(user.id, dateStr);
-      if (!refreshedLog) throw new Error('No pudimos verificar el registro guardado');
-      if (refreshedLog) {
-        setActiveProfile(prev => {
-          if (!prev || prev.id !== activeProfile.id || prev.user_id !== user.id) return prev;
-          return { ...prev, records: { ...prev.records, [dateStr]: refreshedLog } };
-        });
-      }
-
-      return true;
-    } catch (e) {
-      console.error('Failed to sync record to Supabase', e);
-      toast.error('Error al guardar en la nube', { style: { background: '#161b22', color: '#fff' } });
-      const saved = await db.fetchDailyLog(user.id, dateStr);
-      setActiveProfile(prev => {
-        if (!prev || prev.id !== activeProfile.id || prev.user_id !== user.id) return prev;
-        const records = { ...prev.records };
-        if (saved) records[dateStr] = saved;
-        else if (activeProfile.records[dateStr]) records[dateStr] = activeProfile.records[dateStr];
-        else delete records[dateStr];
-        return { ...prev, records };
-      });
+  const updateRecord = async (dateStr: string, record: DailyRecord) => {
+    const profile = profileRef.current, owner = identity.current.userId, epoch = identity.current.epoch;
+    if (!owner || user?.id !== owner || profile?.user_id !== owner || record.dateStr !== dateStr) return false;
+    const key = owner + ':' + epoch;
+    // Generation also protects reset and other days. Only one local intention
+    // is in flight per account; other devices are checked by the server CAS.
+    if (pendingRecordWrites.current.has(key)) {
+      toast.error('Hay un guardado en curso. Esperá a que termine e intentá de nuevo.');
       return false;
-    } finally { pendingRecordWrites.current.delete(writeKey); }
+    }
+    pendingRecordWrites.current.add(key);
+    try {
+      if (profile.recordProtocol !== 'atomic') {
+        publishSnapshot(owner, epoch, await db.fetchRecordSnapshot(owner));
+        toast.error('El guardado seguro no estaba habilitado. Revisá los datos actualizados antes de reintentar; tu formulario se conserva.');
+        return false;
+      }
+      const candidate = db.createRecordIntent(record);
+      const pending = pendingIntents.current.get(key);
+      if (pending && (pending.kind !== 'save' || pending.fingerprint !== candidate.fingerprint)) {
+        if (await persistIntent(owner, epoch, key, pending))
+          toast.error('Se confirmó el intento anterior. Tu cambio nuevo todavía no se guardó; revisalo antes de volver a enviarlo.');
+        return false;
+      }
+      const intent = pending ?? candidate;
+      pendingIntents.current.set(key, intent);
+      return await persistIntent(owner, epoch, key, intent);
+    } catch (error) {
+      if (sameSession(owner, epoch)) toast.error((error as Error).message || 'No pudimos preparar el guardado. Tu borrador se conserva.');
+      return false;
+    } finally { pendingRecordWrites.current.delete(key); }
   };
 
   const resetData = async () => {
-    if (!activeProfile || !user) throw new Error('No hay una sesión activa');
-    await db.deleteUserRecords();
-    setActiveProfile(prev => {
-      if (!prev || prev.id !== activeProfile.id) return prev;
-      return { ...prev, records: {} };
-    });
+    const owner = identity.current.userId, epoch = identity.current.epoch, profile = profileRef.current;
+    if (!owner || user?.id !== owner || profile?.user_id !== owner) throw new Error('No hay una sesión activa');
+    const key = owner + ':' + epoch;
+    if (pendingRecordWrites.current.has(key)) throw new Error('Hay un guardado en curso. Esperá antes de reiniciar los registros.');
+    pendingRecordWrites.current.add(key);
+    try {
+      if (profile.recordProtocol !== 'atomic') {
+        publishSnapshot(owner, epoch, await db.fetchRecordSnapshot(owner));
+        throw new Error('El guardado seguro no estaba habilitado. Revisá los datos actualizados antes de confirmar el reinicio.');
+      }
+      const pending = pendingIntents.current.get(key);
+      if (pending && pending.kind !== 'reset') {
+        await persistIntent(owner, epoch, key, pending);
+        throw new Error('Revisá el guardado anterior antes de confirmar el reinicio.');
+      }
+      const intent = pending ?? db.createResetIntent(profile.recordGeneration);
+      pendingIntents.current.set(key, intent);
+      if (!await persistIntent(owner, epoch, key, intent)) throw new Error('No se confirmó el reinicio. Revisá los registros antes de reintentar.');
+    } finally { pendingRecordWrites.current.delete(key); }
   };
 
   const signOut = async () => {

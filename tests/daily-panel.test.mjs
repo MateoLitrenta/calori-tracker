@@ -35,6 +35,7 @@ const imports = {
   '../services/aiService': stub('export const estimateMeal = (...args) => globalThis.__entryServices.estimateMeal(...args); export const estimateWorkout = (...args) => globalThis.__entryServices.estimateWorkout(...args);'),
   '../services/aiTransport': new URL('../src/services/aiTransport.ts', import.meta.url).href,
   '../lib/supabase': stub('export const supabase = { storage: { from: () => globalThis.__entryServices.storage } };'),
+  '../lib/entrySubmission': new URL('../src/lib/entrySubmission.ts', import.meta.url).href,
   'react-hot-toast': stub('export default globalThis.__entryServices.toast;'),
   './MealPhoto': stub('export function MealPhotoPicker() { return null; } export const MealThumbnail = () => null;'),
   './EntryFormShell': shellUrl,

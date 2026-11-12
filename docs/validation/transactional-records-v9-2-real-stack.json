@@ -1,0 +1,308 @@
+{
+  "result": "PASSED",
+  "baseCommit": "38b88eb83db56b33005776f995a9dfc9528041b7",
+  "inputs": [
+    {
+      "file": "supabase/proposals/staging-v9-1/000_initial_schema.sql",
+      "sha256": "cb89236c383aa9ba67e6f38fd92f05564f1431491fa2e805c2ba87cb7d9bd291",
+      "normalizedLFsha256": "f71604cab66ce310f76045043273ea74ef28b7bc8be77b0130b60c03f0e56c2a"
+    },
+    {
+      "file": "supabase/migrations/202609100001_profile_activity_level.sql",
+      "sha256": "0bb64d1e95de674dc1d33afb912cad35358ae566dc5974032e0121ddee1e5b8b",
+      "normalizedLFsha256": "f7dba1ecf56b0bcc0f6686e831672d4f4b9723d7ebb2c444607033878f7edc55"
+    },
+    {
+      "file": "supabase/migrations/202609110001_delete_daily_records.sql",
+      "sha256": "be201dc4445bba103e0d298b99c08bae91bb83cd9ab9415349d4a5cc03e56661",
+      "normalizedLFsha256": "bfa88244ce21975dba69dd5d28369ae89a15b9fe6e58194d4ddd188db672828b"
+    },
+    {
+      "file": "supabase/migrations/202609250001_profile_avatar.sql",
+      "sha256": "3dde35259dcbbdd19667e76331d9dd607fca069e325a2e9160e1c2118738c172",
+      "normalizedLFsha256": "ef5f75770b0b7240b399ea7cc5c407c5935b4c5ab5695529d3a54461409b1e2f"
+    },
+    {
+      "file": "supabase/migrations/202609290001_meal_photos.sql",
+      "sha256": "38c3872e661bcb72f68bc40e422e5415388b16f39f4043d87e1456ad7a3e039f",
+      "normalizedLFsha256": "6e9447e4690f575725ba6709a4cb969b54954b4ae1c29046c64b5f4cc596f92a"
+    },
+    {
+      "file": "supabase/migrations/202609290002_profile_onboarding.sql",
+      "sha256": "4311a06e7ddb7e2e2c0cf5e0d2f8e88956fe9690825bc82892e6ac65b493d550",
+      "normalizedLFsha256": "5ce134eacd7520b6273211f2915f7df279a33b9598b8ab05504f2917388a64bd"
+    },
+    {
+      "file": "supabase/migrations/202610090001_ai_usage_quotas.sql",
+      "sha256": "1beed7b3ae1eb39d68eb6b61f296dbfb957c096c955a6195fa9fd7f2f8837761",
+      "normalizedLFsha256": "c55f7956f348e2229749739bd45e6b83cded6df28bc2b26b42b76fbe80715a66"
+    },
+    {
+      "file": "supabase/migrations/202610130001_coach_goals.sql",
+      "sha256": "df3ace8a6ebd9074c82deac093961b5407336da5a391a2d0dfd224533ebcd1ae",
+      "normalizedLFsha256": "e21362770e9845537cdb2a28f5dc5e936606888707a733953e040c08c82f3338"
+    },
+    {
+      "file": "supabase/proposals/security-rls-v9-1/020_upgrade.sql",
+      "sha256": "bb9e3240fb9f43a8559fff6309eb95527909dc90a9b7882e56970d2c73fff2df",
+      "normalizedLFsha256": "b950e45b059e168fad9c4ddab9de53a32efd9da4cc0afa75e29dee8a410f4ab2"
+    },
+    {
+      "file": "supabase/proposals/transactional-records-v9-2/001_prepare.sql",
+      "sha256": "26258d9f2af632afc4153e9365b3c2cfc55e1a99cd5e7aa63a66e3f17ce9e3f7",
+      "normalizedLFsha256": "26258d9f2af632afc4153e9365b3c2cfc55e1a99cd5e7aa63a66e3f17ce9e3f7"
+    },
+    {
+      "file": "supabase/proposals/transactional-records-v9-2/002_activate.sql",
+      "sha256": "801ac4e6e9671c654a9e6a7b2a1319966af8abd9c23de55b793c767567547d39",
+      "normalizedLFsha256": "801ac4e6e9671c654a9e6a7b2a1319966af8abd9c23de55b793c767567547d39"
+    },
+    {
+      "file": "supabase/proposals/transactional-records-v9-2/003_readonly_recovery.sql",
+      "sha256": "084f6073f4fbf1d4b14b4e69370ae1ec56d53f51ef438f285cbc71ba4a9fb312",
+      "normalizedLFsha256": "084f6073f4fbf1d4b14b4e69370ae1ec56d53f51ef438f285cbc71ba4a9fb312"
+    },
+    {
+      "file": "supabase/proposals/transactional-records-v9-2/004_resume.sql",
+      "sha256": "73f418c192153268b481ce7f87ac3c3085eddbac51089bad56eeb5a96b591907",
+      "normalizedLFsha256": "73f418c192153268b481ce7f87ac3c3085eddbac51089bad56eeb5a96b591907"
+    },
+    {
+      "file": "scripts/transactional-records/frontend-gate.mjs",
+      "sha256": "33c09e42c35f49af8f3b068fb94265ad6adbcfa7231c67bdf404c1280eef5e15",
+      "normalizedLFsha256": "33c09e42c35f49af8f3b068fb94265ad6adbcfa7231c67bdf404c1280eef5e15"
+    },
+    {
+      "file": "scripts/transactional-records/real-stack-gate.mjs",
+      "sha256": "740da9da7bb82a39023558ed4c763f621a376bcf5808ba2b3541f2feff3795f8",
+      "normalizedLFsha256": "740da9da7bb82a39023558ed4c763f621a376bcf5808ba2b3541f2feff3795f8"
+    },
+    {
+      "file": "src/lib/db.ts",
+      "sha256": "90d2271692ec0ec61673a98af51384626e744a8967c403b6a8f9ec0b290f3e95",
+      "normalizedLFsha256": "e18b69f7d4d0c29952357ea3f2270aa4f9c837b71db1b6fc76db90cdb4406ccf"
+    },
+    {
+      "file": "src/hooks/useAppStore.ts",
+      "sha256": "efc2b9b66920572a30755c326e9c2c7e12ebbb42a9b3d6601cd70d59c4497cbd",
+      "normalizedLFsha256": "bc477f9b10759846101a3bc8364f5e2300cd424f5dacb577093b3149d20cedc2"
+    }
+  ],
+  "checks": [
+    {
+      "name": "official PostgreSQL operator is not a superuser",
+      "result": "PASSED"
+    },
+    {
+      "name": "bootstrap seven migrations and V9.1 hardening on real managed Auth/Storage schemas",
+      "result": "PASSED"
+    },
+    {
+      "name": "two synthetic users sign up and renew real Auth sessions",
+      "result": "PASSED"
+    },
+    {
+      "name": "real Storage private bytes: own upload/read and foreign read/write rejection",
+      "result": "PASSED"
+    },
+    {
+      "name": "prepare executes as the nonsuperuser PostgreSQL operator",
+      "result": "PASSED"
+    },
+    {
+      "name": "prepared protocol allows the old writer and rejects new record mutations",
+      "result": "PASSED"
+    },
+    {
+      "name": "prepared frontend blocks writes with real Auth and database transport",
+      "result": "PASSED"
+    },
+    {
+      "name": "activation rejects prepared generations and disables old record writes",
+      "result": "PASSED"
+    },
+    {
+      "name": "new frontend confirms a complete day using real Auth and RPCs",
+      "result": "PASSED"
+    },
+    {
+      "name": "two users save complete isolated days with genuine Storage references",
+      "result": "PASSED"
+    },
+    {
+      "name": "complete replacement edits and removes nested children while retaining photo bytes",
+      "result": "PASSED"
+    },
+    {
+      "name": "database rollback after a workout-stage error preserves all day state and receipts",
+      "result": "PASSED"
+    },
+    {
+      "name": "lost-response identical retry replays the original receipt once",
+      "result": "PASSED"
+    },
+    {
+      "name": "real independent Auth sessions race with one winner and one version conflict",
+      "result": "PASSED"
+    },
+    {
+      "name": "foreign photos and child IDs cannot be associated with another account",
+      "result": "PASSED"
+    },
+    {
+      "name": "reset/save concurrency has one winner and reset receipts never resurrect days",
+      "result": "PASSED"
+    },
+    {
+      "name": "read-only recovery preserves receipts and blocks new writes",
+      "result": "PASSED"
+    },
+    {
+      "name": "resume requires fresh generations, preserves history and never reopens legacy grants",
+      "result": "PASSED"
+    }
+  ],
+  "passed": 18,
+  "failed": 0,
+  "skipped": 0,
+  "actualAuthHTTP": true,
+  "actualStorageHTTP": true,
+  "actualPostgREST": true,
+  "storageDenials": [
+    {
+      "status": 400,
+      "statusCode": 404
+    },
+    {
+      "status": 400,
+      "statusCode": 404
+    },
+    {
+      "status": 400,
+      "statusCode": 403
+    },
+    {
+      "status": 400,
+      "statusCode": 404
+    },
+    {
+      "status": 400,
+      "statusCode": 404
+    },
+    {
+      "status": 400,
+      "statusCode": 403
+    },
+    {
+      "status": 400,
+      "statusCode": 404
+    },
+    {
+      "status": 400,
+      "statusCode": 404
+    },
+    {
+      "status": 400,
+      "statusCode": 403
+    },
+    {
+      "status": 400,
+      "statusCode": 404
+    },
+    {
+      "status": 400,
+      "statusCode": 404
+    },
+    {
+      "status": 400,
+      "statusCode": 403
+    }
+  ],
+  "syntheticPhotoSHA256": "46ddde3566b226a51725da01de880938b1e9ad8737d22d25e954836aa133b4b1",
+  "operator": "postgres (NOSUPERUSER)",
+  "postgres": "17.11",
+  "cli": "3.1.0",
+  "images": [
+    "supabase_auth_v92-real-supabase-gate public.ecr.aws/supabase/gotrue:v2.197.0",
+    "supabase_db_v92-real-supabase-gate public.ecr.aws/supabase/postgres:17.11.0.018",
+    "supabase_inbucket_v92-real-supabase-gate public.ecr.aws/supabase/mailpit:v1.31.3",
+    "supabase_kong_v92-real-supabase-gate public.ecr.aws/supabase/kong:2.8.1",
+    "supabase_rest_v92-real-supabase-gate public.ecr.aws/supabase/postgrest:v16.5",
+    "supabase_storage_v92-real-supabase-gate public.ecr.aws/supabase/storage-api:v1.90.1"
+  ],
+  "target": "http://127.0.0.1:56421",
+  "productionModified": false,
+  "remoteSQLExecuted": false,
+  "cleanup": "Verified: dedicated containers and data volumes removed with supabase stop --project-id v92-real-supabase-gate --no-backup; unrelated taykay stack preserved",
+  "actualGoTrue": true,
+  "imageDigests": [
+    "public.ecr.aws/supabase/postgres@sha256:7c31363a3f7434ff14945f1b8a4880e6eca8b362e197e88b87c476c77aa3cf8c",
+    "public.ecr.aws/supabase/storage-api@sha256:b2a04ca607b6cfdeafc47f5fa8cc22fc386d40cc25e7f11bbfda65954f3ae949",
+    "public.ecr.aws/supabase/gotrue@sha256:1736a63078f5922b198c4cbe50f80ab9a2d3b54fe8b7b6cfb2e9dc5dbbc12c6b",
+    "public.ecr.aws/supabase/postgrest@sha256:1347d7552b88f17832912c06afbf7c43209af6eeeb60834b04aae12c9bd9d5cc"
+  ],
+  "caveats": [
+    "Auth and Storage certification applies to the official disposable local stack, not hosted Production.",
+    "Frontend gate uses the actual React store/db.ts and real HTTP; JSDOM/toast presentation is adapted. No visual browser certification is claimed.",
+    "Response loss is simulated by deliberately cancelling the real committed HTTP response body; no physical TCP outage is claimed.",
+    "The first incomplete gate stopped at a prepared-writer assertion without preserving its original diagnostic. A focused genuine-Auth reproduction passed, and the fresh instrumented full gate passed 18/18; the initial cause remains unconfirmed.",
+    "Post-DDL readiness polls authenticated OpenAPI for at most ten seconds. It does not replay DDL or writes and rejects HTTP auth/server errors."
+  ],
+  "setup": {
+    "auth_signup": true,
+    "project_id": "v92-real-supabase-gate",
+    "mail_port": 56424,
+    "api_port": 56421,
+    "db_port": 56422,
+    "auth_email_confirmations": false,
+    "db_major_version": 17,
+    "hostedLink": false,
+    "exclude": "realtime,studio,edge-runtime,logflare,vector,supavisor,postgres-meta",
+    "localOnly": true
+  },
+  "includedSQLHashes": [
+    {
+      "sha256": "b6b77e9f32a2506cc5e9e2238b1a2167262e7e8bcd71f6d1a39d21e9c65fec18",
+      "file": "supabase/proposals/staging-v9-1/010_bootstrap.psql",
+      "normalizedLFsha256": "7baf4131e798a1a77175aaa989bd6dacab512a8fd72445db169fcbe6fb946c2a"
+    },
+    {
+      "sha256": "9169bb812c24e3cb2b09639eefee6057ea66fe93f2e7dde6e2b476c6a72f5b18",
+      "file": "supabase/proposals/security-rls-v9-1/000_preflight.sql",
+      "normalizedLFsha256": "c86bd1ce7808ace90f63f69fd45c06e0dcd069f741d9be10324ed476c4cdd435"
+    },
+    {
+      "sha256": "2bc250fead83dfad3fd63c258e8ebabf48d265ca27a1d240ac41dcbb64277846",
+      "file": "supabase/proposals/security-rls-v9-1/010_checks.sql",
+      "normalizedLFsha256": "d22771bb36bfc6daacb3ed11ef66d28278b6bb73638194ddc34ccd22cde0962a"
+    },
+    {
+      "sha256": "a3f59fa25c3c254f2fc62c181190bdc27238a58c77bdb7d3f51fad0b634b7cd7",
+      "file": "supabase/proposals/security-rls-v9-1/030_postflight.sql",
+      "normalizedLFsha256": "6052139ca3c7a06c385592cca7bff8ac56b77a97bd731b885ae5b1ecae31fcc7"
+    },
+    {
+      "sha256": "8e5e84acccf4370e201f7b37845521d8479dab678a5cd6e6ba1c556bf76dbe8f",
+      "file": "supabase/proposals/security-rls-v9-1/040_readonly_recovery.sql",
+      "normalizedLFsha256": "ac4f2c2a0344ff5411da9d9833b389b68d95315e025fce51978373def0d2edf5"
+    }
+  ],
+  "observedAtUTC": "2026-11-12T01:27:58Z",
+  "hashFormat": "sha256: raw UTF-8 working-tree source read by the rehearsal; normalizedLFsha256: same source with CRLF converted to LF for Git/Linux comparison",
+  "commands": [
+    "supabase init --workdir <new-isolated-local-directory> --agent no --output-format text",
+    "Edit only the generated local config.toml: project_id=v92-real-supabase-gate, replace ports 54320..54329 with 56420..56429; db.major_version=17; db.seed.sql_paths=[]; realtime/studio/edge_runtime/analytics/storage.vector.enabled=false; auth.email.enable_confirmations=false (generated default). Never link this directory to a hosted project.",
+    "supabase start --workdir <isolated-local-directory> --agent no --output-format text --exclude realtime,studio,edge-runtime,logflare,vector,supavisor,postgres-meta",
+    "Set CALORI_LOCAL_STACK_DIR=<isolated-local-directory>; CALORI_SUPABASE_CLI and CALORI_DOCKER_BIN may specify official local binaries. Run node scripts/transactional-records/real-stack-gate.mjs from the PR worktree.",
+    "supabase stop --project-id v92-real-supabase-gate --no-backup --agent no --output-format text",
+    "docker ps -a --filter name=v92-real-supabase-gate --format {{.Names}}; docker volume ls --filter label=com.supabase.cli.project=v92-real-supabase-gate --format {{.Name}}: both returned zero owned objects; unrelated taykay stack remained running"
+  ],
+  "strictStorageDenials": {
+    "count": 12,
+    "observedHttpStatus": 400,
+    "networkOr5xxAccepted": false,
+    "name": "StorageApiError",
+    "notFoundCode": 404,
+    "forbiddenCode": 403
+  }
+}

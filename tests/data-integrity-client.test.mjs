@@ -5,7 +5,8 @@ import ts from 'typescript';
 
 // Actual db.ts executed with a PostgREST-shaped boundary, no remote credentials.
 let state;
-globalThis.__integrityDb={from(table){
+globalThis.__integrityDb={auth:{getSession:async()=>({data:{session:{user:{id:'u'},access_token:'synthetic'}}}),getUser:async()=>({data:{user:{id:'u'}}})},
+rpc(){return{setHeader(){return this;},abortSignal(){return Promise.resolve({data:null,error:{code:'PGRST202'},status:404});}};},from(table){
   let action='select',payload,filters=[],options;
   const chain={
     select(){return chain;},or(){return chain;},eq(k,v){filters.push([k,v]);return chain;},
