@@ -80,10 +80,17 @@ async function mount(t, options = {}) {
       refresh = (next, generation = user.recordGeneration) => { record = next; setCurrent(next); setUser(previous => ({ ...previous, recordGeneration: generation })); };
     }, [user.recordGeneration]);
     return React.createElement(DailyPanel, { profile: user, dateStr, record: current, records: { [dateStr]: current },
-      onUpdateRecord: async (date, next) => {
+      onUpdateRecord: async (date, next, writeOptions) => {
         saves.push({ date, record: structuredClone(next) });
         const success = options.save ? await options.save(date, next) : true;
-        if (success) { record = next; setCurrent(next); }
+        if (success) {
+          record = writeOptions?.onConfirmed ? { ...next, version: String(saves.length + 1), generation: 'fixture-confirmed-' + saves.length } : next;
+          setCurrent(record);
+          if (writeOptions?.onConfirmed) {
+            setUser(previous => ({ ...previous, recordGeneration: record.generation }));
+            writeOptions.onConfirmed(record, record.generation);
+          }
+        } else writeOptions?.onFailure?.({ kind: options.failureKind ?? 'ambiguous', message: 'El registro cambió. Revisá tu borrador.' });
         return success;
       } });
   }
@@ -249,34 +256,36 @@ test('Enter in weight retains a failed draft and requires review before saving i
 
 for (const kind of ['water', 'steps']) test(`${kind} conflict refresh retains the dirty value and retries only after explicit accepted review`, async t => {
   let attempts = 0; const initial = { ...emptyRecord(), version: '1', generation: 'generation-one' };
-  const view = await mount(t, { record: initial, profile: { recordGeneration: 'generation-one' }, save: () => ++attempts > 1 });
+  const view = await mount(t, { record: initial, profile: { recordGeneration: 'generation-one' },
+    failureKind: 'conflict', save: () => ++attempts > 1 });
   const waitForSave = () => act(async () => { await new Promise(resolve => setTimeout(resolve, 450)); });
   const addLabel = kind === 'water' ? 'Sumar 250 ml de agua' : 'Sumar 500 pasos';
   const editLabel = kind === 'water' ? 'Editar cantidad de agua' : 'Editar total de pasos';
   const desired = kind === 'water' ? 1750 : 7500;
   const editor = () => document.querySelector(`[aria-label="${editLabel}"]`);
+  let nativePrompts = 0; window.confirm = () => { nativePrompts++; return false; };
   await view.click(document.querySelector(`[aria-label="${addLabel}"]`)); await waitForSave();
   assert.equal(view.saves.length, 1);
   const fresh = { ...initial, water: 999, steps: 8000, version: '2', generation: 'generation-two' };
   await view.refresh(fresh, 'generation-two');
   assert.equal(editor().textContent.trim(), desired.toLocaleString('es-AR'));
-  let prompts = 0, reviewText = ''; window.confirm = text => { prompts++; reviewText = text; return false; };
-  await view.click(editor());
-  let input = document.querySelector('.daily-habits input'); assert.equal(input.value, String(desired));
-  await act(async () => { input.blur(); await new Promise(setImmediate); }); await waitForSave();
-  assert.equal(prompts, 1); assert.equal(view.saves.length, 1); assert.equal(editor().textContent.trim(), desired.toLocaleString('es-AR'));
-  assert.ok(reviewText.includes(fresh[kind === 'water' ? 'water' : 'steps'].toLocaleString('es-AR'))); assert.ok(reviewText.includes(desired.toLocaleString('es-AR'))); assert.match(reviewText, /propone el total/);
-  window.confirm = () => { prompts++; return true; };
-  await view.click(editor()); input = document.querySelector('.daily-habits input'); assert.equal(input.value, String(desired));
-  await act(async () => { input.blur(); await new Promise(setImmediate); }); await waitForSave();
-  assert.equal(prompts, 2); assert.equal(view.saves.length, 2);
+  await view.click(view.button('Revisar borrador'));
+  const dialog = document.querySelector('[role="dialog"]');
+  assert.ok(dialog); assert.match(dialog.textContent, /Revisar cambios del día/);
+  assert.ok(dialog.textContent.includes(fresh[kind].toLocaleString('es-AR')));
+  assert.ok(dialog.textContent.includes(desired.toLocaleString('es-AR')));
+  await view.click(view.button('Conservar borrador')); await waitForSave();
+  assert.equal(document.querySelector('[role="dialog"]'), null); assert.equal(view.saves.length, 1);
+  assert.equal(editor().textContent.trim(), desired.toLocaleString('es-AR'));
+  await view.click(view.button('Revisar borrador'));
+  await view.click(view.button('Aplicar valores revisados')); await waitForSave();
+  assert.equal(nativePrompts, 0); assert.equal(view.saves.length, 2);
   assert.equal(view.saves[1].record.version, '2'); assert.equal(view.saves[1].record.generation, 'generation-two');
-  assert.equal(view.record()[kind === 'water' ? 'water' : 'steps'], desired);
+  assert.equal(view.record()[kind], desired);
   assert.equal(view.record()[kind === 'water' ? 'steps' : 'water'], fresh[kind === 'water' ? 'steps' : 'water']);
   await view.refresh({ ...fresh, water: 2222, steps: 10000, version: '3', generation: 'generation-three' }, 'generation-three');
-  assert.equal(editor().textContent.trim(), (kind === 'water' ? 2222 : 10000).toLocaleString('es-AR'), 'only a confirmed save releases the dirty draft for canonical refreshes');
+  assert.equal(editor().textContent.trim(), (kind === 'water' ? 2222 : 10000).toLocaleString('es-AR'), 'only a canonical acknowledgement releases the dirty draft');
 });
-
 test('add workout uses the shared multiline textarea, preserves long activity/notes, saves once and reopens for editing', async t => {
   const view = await mount(t, { mobile: true });
   await view.open();

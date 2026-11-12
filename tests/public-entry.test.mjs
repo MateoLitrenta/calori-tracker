@@ -33,6 +33,7 @@ const imports = {
   './ViewSkeleton': stub('export default props => globalThis.__entryHarness.ViewSkeleton(props);'),
   './components/ViewSkeleton': stub('export default props => globalThis.__entryHarness.ViewSkeleton(props);'),
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,
+  '../lib/habitDraft': new URL('../src/lib/habitDraft.ts', import.meta.url).href,
   './hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
   './utils/entryRoute': new URL('../src/utils/entryRoute.ts', import.meta.url).href,
   ...Object.fromEntries(['Sidebar', 'BottomNav', 'AuthModal', 'ThemeToggle', 'LandingPage', 'Onboarding']
