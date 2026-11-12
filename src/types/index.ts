@@ -26,6 +26,9 @@ export interface WorkoutEntry {
 }
 
 export interface DailyRecord {
+  /** Opaque server concurrency tokens; never derived from timestamps or UI data. */
+  version?: string | null;
+  generation?: string;
   dateStr: string; // Format: YYYY-MM-DD
   date: Date;
   meals: MealEntry[];
@@ -38,6 +41,8 @@ export interface DailyRecord {
 export type DailyRecordsMap = Record<string, DailyRecord>;
 
 export interface UserProfile {
+  recordGeneration?: string;
+  recordProtocol?: 'unavailable' | 'prepared' | 'atomic' | 'read_only';
   id: string;
   user_id?: string;
   avatar_path?: string | null;

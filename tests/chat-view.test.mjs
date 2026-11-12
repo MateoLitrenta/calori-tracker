@@ -145,6 +145,56 @@ test('only new interaction messages animate, while confirmation still edits and 
   assert.match(renderToStaticMarkup(view.render()), /Registrado hoy/);
 });
 
+test('failed Coach confirmation retains the proposal and reuses the same meal/workout IDs and snapshot', async t => {
+  const original = globalThis.__chatViewHarness.profile;
+  t.after(() => { globalThis.__chatViewHarness.profile = original; });
+  const today = new Date().toLocaleDateString('en-CA');
+  const base = { dateStr: today, date: new Date(), meals: [], workouts: [], steps: 0, water: 0, version: '1', generation: 'generation-one' };
+  globalThis.__chatViewHarness.profile = { ...profile, recordGeneration: 'generation-one', records: { [today]: base } };
+  const actions = [
+    { type: 'add_meal', estimated: false, payload: { name: 'Comida\ncon detalles', type: 'Almuerzo', calories: 400, time: '12:00', details: 'Texto largo\n'.repeat(30), dateStr: today } },
+    { type: 'add_workout', estimated: false, payload: { activity: 'Caminata', duration: 30, calories: 150, time: '15:00', details: '', dateStr: today } },
+  ];
+  const saved = []; globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Revisá la propuesta.', actions });
+  globalThis.__chatViewHarness.updateRecord = async (date, record) => { saved.push({ date, record: structuredClone(record) }); return saved.length > 1; };
+  const view = conversation(), get = predicate => nodes(view.render(), predicate)[0];
+  get(element => element.type === 'textarea' && element.props['aria-label'] === 'Mensaje para Coach').props.onChange({ target: { value: 'Registrar comida y entrenamiento.' } });
+  get(element => element.type === 'form').props.onSubmit({ preventDefault() {} }); await new Promise(setImmediate);
+  await get(element => element.type === 'button' && element.props.children === 'Confirmar').props.onClick();
+  assert.equal(saved.length, 1); assert.ok(get(element => hasClass(element, 'chat-confirmation')));
+  assert.doesNotMatch(renderToStaticMarkup(view.render()), /Registrado hoy/);
+  await get(element => element.type === 'button' && element.props.children === 'Confirmar').props.onClick();
+  assert.equal(saved.length, 2); assert.deepEqual(saved[0], saved[1]);
+  assert.equal(saved[1].record.meals.length, 1); assert.equal(saved[1].record.workouts.length, 1);
+  assert.equal(saved[1].record.meals[0].details, actions[0].payload.details);
+  assert.equal(nodes(view.render(), element => hasClass(element, 'chat-confirmation')).length, 0);
+  assert.match(renderToStaticMarkup(view.render()), /Registrado hoy/);
+});
+
+test('Coach conflict review preserves another device entries and never duplicates its recovered stable ID', async t => {
+  const original = globalThis.__chatViewHarness.profile, previousWindow = globalThis.window;
+  t.after(() => { globalThis.__chatViewHarness.profile = original; globalThis.window = previousWindow; });
+  const today = new Date().toLocaleDateString('en-CA');
+  const base = { dateStr: today, date: new Date(), meals: [], workouts: [], steps: 0, water: 0, version: '1', generation: 'generation-one' };
+  globalThis.__chatViewHarness.profile = { ...profile, recordGeneration: 'generation-one', records: { [today]: base } };
+  const actions = [{ type: 'add_meal', estimated: false, payload: { name: 'Comida pendiente', type: 'Almuerzo', calories: 400, time: '12:00', dateStr: today } }];
+  const saved = []; globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Revisá la propuesta.', actions });
+  globalThis.__chatViewHarness.updateRecord = async (date, record) => { saved.push({ date, record: structuredClone(record) }); return saved.length > 1; };
+  const view = conversation(), get = predicate => nodes(view.render(), predicate)[0];
+  get(element => element.type === 'textarea' && element.props['aria-label'] === 'Mensaje para Coach').props.onChange({ target: { value: 'Registrar comida.' } });
+  get(element => element.type === 'form').props.onSubmit({ preventDefault() {} }); await new Promise(setImmediate);
+  await get(element => element.type === 'button' && element.props.children === 'Confirmar').props.onClick();
+  const recovered = saved[0].record.meals[0], remote = { id: 'remote-meal', name: 'Otra comida', type: 'Cena', calories: 200 };
+  globalThis.__chatViewHarness.profile.records = { [today]: { ...base, version: '2', meals: [remote, recovered] } };
+  let prompts = 0; globalThis.window = { confirm: () => { prompts++; return false; } };
+  await get(element => element.type === 'button' && element.props.children === 'Confirmar').props.onClick();
+  assert.equal(saved.length, 1); assert.ok(get(element => hasClass(element, 'chat-confirmation')));
+  globalThis.window.confirm = () => { prompts++; return true; };
+  await get(element => element.type === 'button' && element.props.children === 'Confirmar').props.onClick();
+  assert.equal(prompts, 2); assert.equal(saved.length, 2); assert.equal(saved[1].record.version, '2');
+  assert.deepEqual(saved[1].record.meals, [remote, recovered]);
+});
+
 test('Coach keeps header, accessible message area and composer in layout order', () => {
   const tree = render();
   const layout = React.Children.toArray(tree.props.children).filter(child => React.isValidElement(child));

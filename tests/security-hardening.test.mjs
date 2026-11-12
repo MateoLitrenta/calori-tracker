@@ -200,10 +200,18 @@ test('security hardening: synthetic remote shape, safe upgrade and PR70 compatib
    const dbURL='data:text/javascript;base64,'+Buffer.from(ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext}}).outputText+'\n// '+database).toString('base64');
    const db=await import(dbURL);
    if(database==='http_hardened'){
-    const oldSource=read('src/lib/db.ts').replace("import { supabase } from './supabase';",'const supabase=globalThis.__securityClient;')
+    // GoTrue is an explicit local boundary; SDK/PostgREST profile and nested reads remain real.
+    // accessToken-only SDK clients deliberately disable auth.getSession/getUser.
+    const jwt=server.token(a);
+    globalThis.__securityMainClient={auth:{
+     getSession:async()=>({data:{session:{access_token:jwt,user:{id:a}}},error:null}),
+     getUser:async token=>{assert.equal(token,jwt);return{data:{user:{id:a}},error:null};},
+    },from:(...args)=>client.from(...args),rpc:(...args)=>client.rpc(...args)};
+    const oldSource=read('src/lib/db.ts').replace("import { supabase } from './supabase';",'const supabase=globalThis.__securityMainClient;')
      .replace("'../utils/helpers'",JSON.stringify(new URL('../src/utils/helpers.ts',import.meta.url).href));
     const oldDB=await import('data:text/javascript;base64,'+Buffer.from(ts.transpileModule(oldSource,{compilerOptions:{module:ts.ModuleKind.ESNext}}).outputText).toString('base64'));
-    assert.ok(await oldDB.fetchUserData(a),'Main initializer remains compatible without loosening owner predicates');
+    try{assert.ok(await oldDB.fetchUserData(a),'Main initializer remains compatible without loosening owner predicates');}
+    finally{delete globalThis.__securityMainClient;}
     globalThis.__securityClient=server.client(b);
     const fresh=await import('data:text/javascript;base64,'+Buffer.from(ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext}}).outputText+'\n// fresh B').toString('base64'));
     assert.equal((await fresh.fetchUserData(b)).id,b,'PR70 DO NOTHING initializer also works with hardened grants');

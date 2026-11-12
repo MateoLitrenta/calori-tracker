@@ -17,7 +17,7 @@ const modules = new Map();
 const boundaries = {
   'lib/supabase.ts': 'export const supabase = { storage: { from: () => globalThis.__workoutEntryServices.storage } };',
   'services/aiService.ts': 'export const estimateMeal = (...args) => globalThis.__workoutEntryServices.meal(...args); export const estimateWorkout = (...args) => globalThis.__workoutEntryServices.workout(...args);',
-  'components/MealPhoto.tsx': 'export const MealPhotoPicker = () => null; export const MealThumbnail = () => null;',
+  'components/MealPhoto.tsx': 'export const MealPhotoPicker = props => { globalThis.__workoutEntryServices.photoProps = props; return null; }; export const MealThumbnail = () => null;',
 };
 async function compile(file) {
   if (modules.has(file)) return modules.get(file);
@@ -64,7 +64,7 @@ async function mount(t, options = {}) {
   // Scroll geometry is intentionally not simulated in this integration suite.
   const errors = [], toasts = [], successes = [], requests = [], saves = [];
   globalThis.__workoutEntryServices = {
-    storage: { upload: async () => ({ error: null }), remove: async () => ({ error: null }) },
+    storage: options.storage ?? { upload: async () => ({ error: null }), remove: async () => ({ error: null }) },
     toast: (...args) => toasts.push(args), error: message => errors.push(message), success: (...args) => successes.push(args),
     meal: async input => { requests.push({ kind: 'meal', input }); return options.estimateMeal ? options.estimateMeal(input) : { calories: 400, description: 'Comida', assumptions: [] }; },
     workout: async input => { requests.push({ kind: 'workout', input }); return options.estimateWorkout ? options.estimateWorkout(input) : { calories: 485, assumptions: [] }; },
@@ -72,9 +72,14 @@ async function mount(t, options = {}) {
   let record = structuredClone(options.record || emptyRecord());
   const { createRoot } = await import('react-dom/client');
   const root = createRoot(document.getElementById('root'));
+  let refresh;
   function App() {
     const [current, setCurrent] = React.useState(record);
-    return React.createElement(DailyPanel, { profile, dateStr, record: current, records: { [dateStr]: current },
+    const [user, setUser] = React.useState({ ...profile, ...options.profile });
+    React.useEffect(() => {
+      refresh = (next, generation = user.recordGeneration) => { record = next; setCurrent(next); setUser(previous => ({ ...previous, recordGeneration: generation })); };
+    }, [user.recordGeneration]);
+    return React.createElement(DailyPanel, { profile: user, dateStr, record: current, records: { [dateStr]: current },
       onUpdateRecord: async (date, next) => {
         saves.push({ date, record: structuredClone(next) });
         const success = options.save ? await options.save(date, next) : true;
@@ -100,7 +105,7 @@ async function mount(t, options = {}) {
         : new window.InputEvent('input', { bubbles: true, inputType })); });
     return field;
   };
-  const click = async node => { assert.ok(node, 'Missing button'); await act(() => node.click()); };
+  const click = async node => { assert.ok(node, 'Missing button'); await act(async () => { node.click(); await new Promise(setImmediate); }); };
   const submit = async () => act(async () => {
     document.querySelector('form.entry-form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
     await new Promise(setImmediate);
@@ -112,9 +117,165 @@ async function mount(t, options = {}) {
   };
   return { button, fill, click, submit, edit, dispose, requests, saves, errors, toasts, successes, record: () => record,
     open: () => click(button('+ Ejercicio')),
+    openMeal: () => click(button('+ Comida')),
+    choosePhoto: blob => act(() => globalThis.__workoutEntryServices.photoProps.onChange(blob)),
+    removePhoto: () => act(() => globalThis.__workoutEntryServices.photoProps.onRemove()),
+    editMeal: async () => { await click([...document.querySelectorAll('.daily-record-open')].find(node => node.textContent.includes(record.meals[0]?.name))); await click(document.querySelector('.record-detail-edit')); },
+    refresh: (next, generation) => act(() => refresh(next, generation)),
     estimate: () => click([...document.querySelectorAll('button')].find(node => node.textContent.includes('Estimar con IA'))),
     settle: callback => act(async () => { callback(); await new Promise(setImmediate); }) };
 }
+
+test('failed meal/workout saves keep long drafts and reuse their original entry IDs on explicit retry', async t => {
+  for (const kind of ['meal', 'workout']) {
+    let attempts = 0;
+    const view = await mount(t, { save: () => ++attempts > 1 });
+    const description = ('Texto largo sin perder el contenido\n' + 'sinEspacios'.repeat(40) + '\n').repeat(30);
+    if (kind === 'meal') {
+      await view.openMeal(); await view.fill('add-meal-description', description); await view.fill('add-meal-calories', '400'); await view.fill('add-meal-notes', description);
+    } else {
+      await view.open(); await view.fill('add-workout-activity', description); await view.fill('add-workout-duration', '30'); await view.fill('add-workout-calories', '200'); await view.fill('add-workout-notes', description);
+    }
+    await view.submit();
+    assert.equal(document.getElementById(kind === 'meal' ? 'add-meal-description' : 'add-workout-activity').value, description);
+    assert.equal(view.record()[kind === 'meal' ? 'meals' : 'workouts'].length, 0);
+    await view.submit();
+    const key = kind === 'meal' ? 'meals' : 'workouts';
+    assert.equal(view.saves.length, 2); assert.equal(view.saves[0].record[key][0].id, view.saves[1].record[key][0].id);
+    assert.equal(view.record()[key].length, 1); assert.equal(view.record()[key][0].details, description);
+    assert.equal(document.querySelector('form.entry-form'), null);
+    await view.dispose();
+  }
+});
+
+test('an ambiguous meal DB response retains the uploaded object and reuses its exact path/blob on retry', async t => {
+  const uploads = [], removals = []; let attempts = 0;
+  const view = await mount(t, { save: () => ++attempts > 1, storage: {
+    upload: async (...args) => { uploads.push(args); return { error: null }; },
+    remove: async paths => { removals.push(paths); return { error: null }; },
+  } });
+  const photo = new Blob(['synthetic JPEG bytes'], { type: 'image/jpeg' });
+  await view.openMeal(); await view.fill('add-meal-description', 'Comida con\nnotas largas'); await view.fill('add-meal-calories', '400'); await view.choosePhoto(photo);
+  await view.submit(); assert.equal(uploads.length, 1); assert.equal(removals.length, 0);
+  assert.equal(document.getElementById('add-meal-description').value, 'Comida con\nnotas largas');
+  await view.submit(); assert.equal(uploads.length, 1); assert.equal(uploads[0][1], photo);
+  assert.deepEqual(uploads[0][2], { contentType: 'image/jpeg' });
+  assert.equal(view.saves[0].record.meals[0].photo_path, view.saves[1].record.meals[0].photo_path);
+  assert.equal(view.saves[0].record.meals[0].id, view.saves[1].record.meals[0].id); assert.equal(removals.length, 0);
+});
+
+test('upload failure makes no DB write, and explicit retry confirms a previously uploaded object without overwriting it', async t => {
+  const uploads = [], removals = []; const photo = new Blob(['original synthetic photo']);
+  const view = await mount(t, { storage: {
+    upload: async (...args) => { uploads.push(args); return { error: new Error(uploads.length === 1 ? 'Lost response' : 'Already exists') }; },
+    download: async () => ({ data: photo, error: null }), remove: async paths => { removals.push(paths); return { error: null }; },
+  } });
+  await view.openMeal(); await view.fill('add-meal-description', 'Borrador conservado'); await view.fill('add-meal-calories', '400'); await view.choosePhoto(photo);
+  await view.submit(); assert.equal(view.saves.length, 0); assert.equal(document.getElementById('add-meal-description').value, 'Borrador conservado');
+  await view.submit(); assert.equal(view.saves.length, 1); assert.equal(uploads.length, 2); assert.equal(uploads[0][0], uploads[1][0]); assert.equal(removals.length, 0);
+});
+
+test('replacing a shared meal photo preserves its other reference and leaves Storage cleanup pending', async t => {
+  const shared = 'local-user/shared.jpg', removals = [];
+  const first = { id: 'first', name: 'Comida editada', type: 'Almuerzo', calories: 400, time: '12:00', photo_path: shared };
+  const second = { ...first, id: 'second', name: 'Otra comida' };
+  const view = await mount(t, { record: { ...emptyRecord(), meals: [first, second] }, storage: {
+    upload: async () => ({ error: null }), remove: async paths => { removals.push(paths); return { error: null }; },
+  } });
+  await view.editMeal(); await view.removePhoto(); await view.fill('edit-meal-notes', 'Notas editadas\nque se conservan'); await view.submit();
+  assert.equal(view.record().meals[0].id, first.id); assert.equal(view.record().meals[0].photo_path, null);
+  assert.equal(view.record().meals[1].photo_path, shared); assert.equal(removals.length, 0);
+  assert.ok(view.toasts.some(args => String(args[0]).includes('limpieza de la foto anterior queda pendiente')));
+});
+
+test('a refreshed conflict keeps the draft frozen until explicit review, then rebases only that entry', async t => {
+  let attempts = 0; const initial = { ...emptyRecord(), version: '1', generation: 'generation-one' };
+  const view = await mount(t, { record: initial, profile: { recordGeneration: 'generation-one' }, save: () => ++attempts > 1 });
+  await view.openMeal(); await view.fill('add-meal-description', 'Borrador\npendiente'); await view.fill('add-meal-calories', '400'); await view.submit();
+  const id = view.saves[0].record.meals[0].id;
+  const remote = { id: 'remote-meal', name: 'Registrado en otro dispositivo', type: 'Cena', calories: 300 };
+  await view.refresh({ ...initial, version: '2', meals: [remote] });
+  let prompts = 0; window.confirm = () => { prompts++; return false; };
+  await view.submit(); assert.equal(view.saves.length, 1); assert.equal(document.getElementById('add-meal-description').value, 'Borrador\npendiente');
+  window.confirm = () => { prompts++; return true; };
+  await view.submit(); assert.equal(prompts, 2); assert.equal(view.saves.length, 2);
+  assert.equal(view.saves[0].record.version, '1'); assert.equal(view.saves[1].record.version, '2');
+  assert.equal(view.record().meals.length, 2); assert.deepEqual(view.record().meals[0], remote); assert.equal(view.record().meals[1].id, id);
+});
+
+test('reviewing a recovered committed entry replaces its stable ID instead of appending a duplicate', async t => {
+  let attempts = 0; const initial = { ...emptyRecord(), version: '1', generation: 'generation-one' };
+  const view = await mount(t, { record: initial, profile: { recordGeneration: 'generation-one' }, save: () => ++attempts > 1 });
+  await view.open(); await view.fill('add-workout-activity', longActivity); await view.fill('add-workout-duration', '30'); await view.fill('add-workout-calories', '200'); await view.submit();
+  const recovered = view.saves[0].record.workouts[0];
+  await view.refresh({ ...initial, version: '2', workouts: [recovered] }); window.confirm = () => true;
+  await view.submit(); assert.equal(view.record().workouts.length, 1); assert.equal(view.record().workouts[0].id, recovered.id);
+});
+
+test('a deleted edit target stays a draft after conflict review instead of being recreated', async t => {
+  const meal = { id: 'deleted-meal', name: 'Antes de editar', type: 'Cena', calories: 400 };
+  const initial = { ...emptyRecord(), meals: [meal], version: '1', generation: 'generation-one' };
+  const view = await mount(t, { record: initial, profile: { recordGeneration: 'generation-one' } });
+  await view.editMeal(); await view.fill('edit-meal-description', 'Edición pendiente');
+  await view.refresh({ ...initial, version: '2', meals: [] }); window.confirm = () => true;
+  await view.submit(); assert.equal(view.saves.length, 0); assert.equal(document.getElementById('edit-meal-description').value, 'Edición pendiente');
+  assert.ok(view.errors.some(message => message.includes('ya no está')));
+});
+
+test('weight save keeps the modal and entered value until persistence returns true', async t => {
+  const pending = deferred(); let attempts = 0;
+  const view = await mount(t, { save: () => ++attempts === 1 ? pending.promise : true });
+  await view.click(document.querySelector('[title="Registrar peso"]'));
+  const input = document.querySelector('input[inputmode="decimal"]'); assert.ok(input);
+  await act(() => { Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, '73.5'); input.dispatchEvent(new window.InputEvent('input', { bubbles: true })); });
+  const save = () => [...document.querySelectorAll('button')].find(button => button.className.includes('bg-pink-600') && button.textContent.includes('Guardar'));
+  await view.click(save()); assert.equal(input.isConnected, true); assert.equal(input.value, '73.5');
+  await view.settle(() => pending.resolve(false)); assert.equal(input.isConnected, true); assert.equal(input.value, '73.5'); assert.equal(view.record().weight, 70);
+  await view.click(save()); assert.equal(document.querySelector('input[inputmode="decimal"]'), null); assert.equal(view.record().weight, 73.5);
+});
+
+test('Enter in weight retains a failed draft and requires review before saving it over refreshed data', async t => {
+  let attempts = 0; const initial = { ...emptyRecord(), version: '1', generation: 'generation-one' };
+  const view = await mount(t, { record: initial, profile: { recordGeneration: 'generation-one' }, save: () => ++attempts > 1 });
+  await view.click(document.querySelector('[title="Registrar peso"]'));
+  const input = document.querySelector('input[inputmode="decimal"]');
+  await act(() => { Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, '73.5'); input.dispatchEvent(new window.InputEvent('input', { bubbles: true })); });
+  const enter = () => act(async () => { input.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); await new Promise(setImmediate); });
+  await enter(); assert.equal(input.isConnected, true); assert.equal(input.value, '73.5');
+  await view.refresh({ ...initial, version: '2', weight: 71, water: 999 }); window.confirm = () => false;
+  await enter(); assert.equal(view.saves.length, 1); assert.equal(input.value, '73.5');
+  window.confirm = () => true; await enter(); assert.equal(view.saves.length, 2); assert.equal(view.record().weight, 73.5); assert.equal(view.record().water, 999); assert.equal(view.saves[1].record.version, '2'); assert.equal(input.isConnected, false);
+});
+
+for (const kind of ['water', 'steps']) test(`${kind} conflict refresh retains the dirty value and retries only after explicit accepted review`, async t => {
+  let attempts = 0; const initial = { ...emptyRecord(), version: '1', generation: 'generation-one' };
+  const view = await mount(t, { record: initial, profile: { recordGeneration: 'generation-one' }, save: () => ++attempts > 1 });
+  const waitForSave = () => act(async () => { await new Promise(resolve => setTimeout(resolve, 450)); });
+  const addLabel = kind === 'water' ? 'Sumar 250 ml de agua' : 'Sumar 500 pasos';
+  const editLabel = kind === 'water' ? 'Editar cantidad de agua' : 'Editar total de pasos';
+  const desired = kind === 'water' ? 1750 : 7500;
+  const editor = () => document.querySelector(`[aria-label="${editLabel}"]`);
+  await view.click(document.querySelector(`[aria-label="${addLabel}"]`)); await waitForSave();
+  assert.equal(view.saves.length, 1);
+  const fresh = { ...initial, water: 999, steps: 8000, version: '2', generation: 'generation-two' };
+  await view.refresh(fresh, 'generation-two');
+  assert.equal(editor().textContent.trim(), desired.toLocaleString('es-AR'));
+  let prompts = 0, reviewText = ''; window.confirm = text => { prompts++; reviewText = text; return false; };
+  await view.click(editor());
+  let input = document.querySelector('.daily-habits input'); assert.equal(input.value, String(desired));
+  await act(async () => { input.blur(); await new Promise(setImmediate); }); await waitForSave();
+  assert.equal(prompts, 1); assert.equal(view.saves.length, 1); assert.equal(editor().textContent.trim(), desired.toLocaleString('es-AR'));
+  assert.ok(reviewText.includes(fresh[kind === 'water' ? 'water' : 'steps'].toLocaleString('es-AR'))); assert.ok(reviewText.includes(desired.toLocaleString('es-AR'))); assert.match(reviewText, /propone el total/);
+  window.confirm = () => { prompts++; return true; };
+  await view.click(editor()); input = document.querySelector('.daily-habits input'); assert.equal(input.value, String(desired));
+  await act(async () => { input.blur(); await new Promise(setImmediate); }); await waitForSave();
+  assert.equal(prompts, 2); assert.equal(view.saves.length, 2);
+  assert.equal(view.saves[1].record.version, '2'); assert.equal(view.saves[1].record.generation, 'generation-two');
+  assert.equal(view.record()[kind === 'water' ? 'water' : 'steps'], desired);
+  assert.equal(view.record()[kind === 'water' ? 'steps' : 'water'], fresh[kind === 'water' ? 'steps' : 'water']);
+  await view.refresh({ ...fresh, water: 2222, steps: 10000, version: '3', generation: 'generation-three' }, 'generation-three');
+  assert.equal(editor().textContent.trim(), (kind === 'water' ? 2222 : 10000).toLocaleString('es-AR'), 'only a confirmed save releases the dirty draft for canonical refreshes');
+});
 
 test('add workout uses the shared multiline textarea, preserves long activity/notes, saves once and reopens for editing', async t => {
   const view = await mount(t, { mobile: true });

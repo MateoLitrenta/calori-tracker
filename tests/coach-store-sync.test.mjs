@@ -25,7 +25,8 @@ const boundaries = {
   } };`,
   'lib/db.ts': ['fetchUserData', 'ensureDailyLog', 'syncAddMeal', 'syncAddWorkout', 'fetchDailyLog',
     'syncDeleteMeal', 'syncDeleteWorkout', 'syncUpdateMeal', 'syncUpdateWorkout', 'syncProfile',
-    'syncAvatarPath', 'completeOnboarding', 'deleteUserRecords'].map(name =>
+    'syncAvatarPath', 'completeOnboarding', 'deleteUserRecords', 'createRecordIntent', 'createResetIntent',
+    'commitRecordIntent', 'fetchRecordSnapshot'].map(name =>
     `export const ${name} = (...args) => globalThis.__syncHarness.db.${name}(...args);`).join('\n'),
   'services/coachGoals.ts': `export class CoachGoalsError extends Error { constructor(message, code) { super(message); this.code=code; } }
     export const confirmCoachGoal = (...args) => globalThis.__syncHarness.confirmGoal(...args);
@@ -72,7 +73,8 @@ async function compile(file) {
 let instance = 0;
 const today = formatDateStr(new Date());
 const profile = { id: 'profile-test', user_id: 'user-test', name: 'Test', age: 30, sex: 'Masculino',
-  weight: 70, height: 170, goal: 'Mantenimiento', activity: 'Moderado', onboarding_completed: true, records: {} };
+  weight: 70, height: 170, goal: 'Mantenimiento', activity: 'Moderado', onboarding_completed: true,
+  recordProtocol: 'atomic', recordGeneration: '10000000-0000-4000-8000-000000000001', records: {} };
 const turn = () => new Promise(setImmediate);
 async function mountApp(t, actions, fail = false, setup) {
   const dom = new JSDOM('<div id="root"></div>', { url: 'https://calori.test/app', pretendToBeVisual: true });
@@ -86,7 +88,8 @@ async function mountApp(t, actions, fail = false, setup) {
   dom.window.scrollTo = () => {};
   dom.window.HTMLElement.prototype.scrollTo = () => {};
   const state = { reads: 0, logWrites: 0, mealWrites: 0, workoutWrites: 0, persisted: null,
-    historyRecords: {}, listeners: new Set(), aiCalls: 0, currentProfile: profile };
+    historyRecords: {}, listeners: new Set(), aiCalls: 0, currentProfile: profile, version: 0,
+    generation: profile.recordGeneration };
   state.goals = [];
   state.goalOwner = profile.user_id;
   state.goalReads = 0;
@@ -101,17 +104,29 @@ async function mountApp(t, actions, fail = false, setup) {
     ...(state.goalProposal ? { goalProposal: state.goalProposal } : {}) }; };
   state.db = {
     fetchUserData: async () => { state.reads++; return structuredClone({ ...state.currentProfile,
+      recordGeneration: state.persistedUser === state.currentProfile.user_id ? state.generation : profile.recordGeneration,
       records: state.persisted && state.persistedUser === state.currentProfile.user_id ? { [today]: state.persisted } : {} }); },
-    ensureDailyLog: async (_user, record) => {
+    createRecordIntent: record => ({kind: 'save', operationId: crypto.randomUUID(), date: record.dateStr,
+      generation: record.generation, expectedVersion: record.version ?? null,
+      record: structuredClone(record), fingerprint: JSON.stringify(record)}),
+    createResetIntent: generation => ({kind: 'reset', operationId: crypto.randomUUID(), generation, fingerprint: 'reset'}),
+    commitRecordIntent: async (owner, intent) => {
       state.logWrites++;
-      await writeGate;
-      if (fail) return null;
-      state.persistedUser = _user;
-      state.persisted = { ...structuredClone(record), meals: [], workouts: [] }; return 'log-test';
+      if (!state.skipWriteGate) await writeGate;
+      if (fail) throw Object.assign(new Error('No se pudo completar el guardado'), {kind: 'invalid'});
+      const previous = state.persistedUser === owner ? state.persisted : null;
+      const record = structuredClone(intent.record);
+      state.mealWrites += record.meals.filter(entry => !previous?.meals.some(saved => saved.id === entry.id)).length;
+      state.workoutWrites += record.workouts.filter(entry => !previous?.workouts.some(saved => saved.id === entry.id)).length;
+      state.persistedUser = owner;
+      state.generation = crypto.randomUUID();
+      state.persisted = {...record, version: String(++state.version), generation: state.generation};
+      return {operation_id: intent.operationId, day_id: '20000000-0000-4000-8000-000000000001',
+        version: state.persisted.version, generation: state.generation};
     },
-    syncAddMeal: async (_user, _log, meal) => { state.mealWrites++; state.persisted.meals.push(structuredClone(meal)); },
-    syncAddWorkout: async (_user, _log, workout) => { state.workoutWrites++; state.persisted.workouts.push(structuredClone(workout)); },
-    fetchDailyLog: async () => structuredClone(state.persisted),
+    fetchRecordSnapshot: async owner => ({protocol: 'atomic',
+      generation: state.persistedUser === owner ? state.generation : profile.recordGeneration,
+      records: state.persistedUser === owner ? {[state.persisted.dateStr]: structuredClone(state.persisted)} : {}}),
   };
   if(setup) setup(state);
   globalThis.__syncHarness = state;
@@ -490,12 +505,7 @@ test('late goal reads and pending goal edits cannot cross accounts; disabled fla
 test('goals follow shared Home workout add/edit/delete and step changes across new conversations and application reload', async t => {
   const state = await mountApp(t, [], false, current => {
     current.goals = [acceptedGoal(), acceptedGoal({ id: '00000000-0000-0000-0000-000000000066', type: 'step_days', target: 1, stepThreshold: 8000 })];
-    current.db.ensureDailyLog = async (owner, record) => {
-      current.logWrites++; current.persistedUser = owner;
-      current.persisted = { ...structuredClone(record), meals: current.persisted?.meals ?? [], workouts: current.persisted?.workouts ?? [] }; return 'log-test';
-    };
-    current.db.syncUpdateWorkout = async workout => { current.persisted.workouts = current.persisted.workouts.map(item => item.id === workout.id ? structuredClone(workout) : item); };
-    current.db.syncDeleteWorkout = async id => { current.persisted.workouts = current.persisted.workouts.filter(item => item.id !== id); };
+    current.skipWriteGate = true;
   });
   state.ai = async () => { state.aiCalls++; return { reply: 'Texto del modelo: 999 sesiones.', actions: [], presentation: 'none' }; };
   await click(state, 'Coach'); await click(state, 'Mis objetivos');

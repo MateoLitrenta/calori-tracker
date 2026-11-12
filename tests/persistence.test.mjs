@@ -10,6 +10,8 @@ let error;
 let confirmedRow;
 let updates = [];
 globalThis.__profileTestSupabase = {
+  auth:{getSession:async()=>({data:{session:{user:{id:'test-user'},access_token:'synthetic'}}}),getUser:async()=>({data:{user:{id:'test-user'}}})},
+  rpc(){return{setHeader(){return this;},abortSignal(){return Promise.resolve({data:null,error:{code:'PGRST202'},status:404});}};},
   from(table) {
     let updating = false;
     const chain = {

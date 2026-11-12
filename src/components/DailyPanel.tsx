@@ -8,6 +8,7 @@ import { hasEnergyData, formatDateStr, getCaloriesIngested, generateUUID, aggreg
 import { estimateMeal, estimateWorkout } from '../services/aiService';
 import { AIRequestError } from '../services/aiTransport';
 import { supabase } from '../lib/supabase';
+import { changedEntryDayMessage, ensureMealPhotoUploaded, reviewEntryBase, snapshotEntryRecord, type MealPhotoUploadIntent } from '../lib/entrySubmission';
 import { MealPhotoPicker, MealThumbnail } from './MealPhoto';
 import EntryFormShell from './EntryFormShell';
 import AutoResizeTextarea from './AutoResizeTextarea';
@@ -59,6 +60,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     workouts: [],
     steps: 0,
     water: 0,
+    version: null,
+    generation: profile.recordGeneration,
   };
 
   const isGroup = selectedGroup && selectedGroup.type !== 'day';
@@ -93,15 +96,9 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const handleDeleteMeal = async (id: string) => {
     const meal = currentRecord.meals.find(m => m.id === id);
     if (!await onUpdateRecord(dateStr, { ...currentRecord, meals: currentRecord.meals.filter(m => m.id !== id) })) return;
-    toast.success('Comida eliminada', { style: { background: '#161b22', color: '#fff' }, icon: '🗑️' });
-    if (meal?.photo_path) await removePhoto(meal.photo_path);
-  };
-
-  const removePhoto = async (path: string) => {
-    try {
-      const { error } = await supabase.storage.from('meal-photos').remove([path]);
-      if (error) throw error;
-    } catch (error) { console.error('Meal photo cleanup failed:', error); toast.error('No se pudo borrar la foto de Storage.'); }
+    // Storage deletion is not part of the record transaction. A path may also
+    // be referenced by another meal/device; retain it until safe cleanup exists.
+    toast.success(meal?.photo_path ? 'Comida eliminada. La limpieza de la foto queda pendiente.' : 'Comida eliminada', { style: { background: '#161b22', color: '#fff' }, icon: '🗑️' });
   };
 
   const handleDeleteWorkout = async (id: string) => {
@@ -127,9 +124,20 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     scheduleWaterSave(newWater);
   };
 
-  const handleSetWeight = (weight: number) => {
-    const newWeight = Math.max(0, weight);
-    onUpdateRecord(dateStr, { ...currentRecord, weight: newWeight });
+  const handleSetWeight = async (weight: number) => {
+    try {
+      const previous = weightDraftBaseRef.current ?? snapshotEntryRecord(currentRecord, profile.recordGeneration);
+      const base = reviewEntryBase(previous, currentRecord, profile.recordGeneration, () => window.confirm(changedEntryDayMessage));
+      if (!base) return false;
+      weightDraftBaseRef.current = base;
+      if (!await onUpdateRecord(dateStr, { ...base, weight: Math.max(0, weight) })) return false;
+      weightDraftBaseRef.current = null;
+      setIsEditingWeight(false);
+      return true;
+    } catch {
+      toast.error('No se pudo confirmar el peso. Tu valor se conserva para reintentar.');
+      return false;
+    }
   };
 
   const handleUpdateSteps = (steps: number) => {
@@ -154,6 +162,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   
   const [isEditingWeight, setIsEditingWeight] = useState(false);
   const [editWeightVal, setEditWeightVal] = useState('');
+  const weightDraftBaseRef = useRef<DailyRecord | null>(null);
   
   const [isEditingSteps, setIsEditingSteps] = useState(false);
   const [editStepsVal, setEditStepsVal] = useState('');
@@ -183,6 +192,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [savingMeal, setSavingMeal] = useState(false);
   const [photoProcessing, setPhotoProcessing] = useState(false);
   const savingMealRef = useRef(false);
+  const mealDraftRef = useRef<{ id: string; base: DailyRecord; upload: MealPhotoUploadIntent | null; fallbackTime?: string } | null>(null);
 
   const [editingWorkoutId, setEditingWorkoutId] = useState<string | null>(null);
   const [workActivity, setWorkActivity] = useState('');
@@ -196,6 +206,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [workTime, setWorkTime] = useState('');
   const [savingWorkout, setSavingWorkout] = useState(false);
   const savingWorkoutRef = useRef(false);
+  const workoutDraftRef = useRef<{ id: string; base: DailyRecord; fallbackTime?: string } | null>(null);
 
   const clearEstimates = () => {
     estimateSessionRef.current += 1;
@@ -216,6 +227,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   };
 
   const resetForms = () => {
+    mealDraftRef.current = null;
+    workoutDraftRef.current = null;
     clearEstimates();
     setEditingMealId(null);
     setMealName('');
@@ -238,22 +251,27 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   };
 
   const handleTabToggle = (tab: 'comida' | 'entrenamiento') => {
+    if (savingMealRef.current || savingWorkoutRef.current) return;
     if (activeTab === tab) {
       setActiveTab(null);
       resetForms();
     } else {
       setActiveTab(tab);
       resetForms();
+      if (tab === 'comida') mealDraftRef.current = { id: generateUUID(), base: snapshotEntryRecord(currentRecord, profile.recordGeneration), upload: null };
+      else workoutDraftRef.current = { id: generateUUID(), base: snapshotEntryRecord(currentRecord, profile.recordGeneration) };
     }
   };
 
   const closeEntry = () => {
+    if (savingMealRef.current || savingWorkoutRef.current) return;
     resetForms();
     setActiveTab(null);
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (savingMealRef.current || savingWorkoutRef.current) return;
       if ((activeTab === 'comida' || activeTab === 'entrenamiento') && window.matchMedia('(max-width: 767px)').matches) return;
       // Ignore clicks on elements that have been removed from the DOM (like the modal buttons)
       if (!document.contains(event.target as Node)) return;
@@ -279,33 +297,45 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const [localWater, setLocalWater] = useState(currentRecord.water);
   const waterValueRef = useRef(currentRecord.water);
   const waterDateRef = useRef(dateStr);
-  const latestRecordsRef = useRef(records);
-  useEffect(() => {
-    latestRecordsRef.current = records;
-  }, [records]);
+  const waterDraftRef = useRef<{ base: DailyRecord; revision: number } | null>(null);
   const waterSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scheduleWaterSave = (water: number) => {
     if (waterSaveTimerRef.current) clearTimeout(waterSaveTimerRef.current);
+    waterSaveTimerRef.current = null;
     const saveDate = dateStr;
-    const fallbackRecord = currentRecord;
-    waterSaveTimerRef.current = setTimeout(() => {
-      const latestRecord = latestRecordsRef.current?.[saveDate] || fallbackRecord;
-      const pendingSteps = stepsSaveTimerRef.current && saveDate === stepsDateRef.current ? stepsValueRef.current : undefined;
+    const draft = waterDraftRef.current?.base.dateStr === saveDate ? waterDraftRef.current
+      : { base: snapshotEntryRecord(currentRecord, profile.recordGeneration), revision: 0 };
+    waterDraftRef.current = draft; const revision = ++draft.revision;
+    const base = reviewEntryBase(draft.base, currentRecord, profile.recordGeneration, () => window.confirm(
+      `Agua registrada ahora: ${currentRecord.water == null ? 'sin registro' : currentRecord.water.toLocaleString('es-AR') + ' ml'}.\nTu borrador propone el total: ${water.toLocaleString('es-AR')} ml.\n${changedEntryDayMessage}`));
+    if (!base) return;
+    draft.base = base;
+    waterSaveTimerRef.current = setTimeout(async () => {
+      const stepsDraft = stepsDraftRef.current;
+      const pendingSteps = stepsSaveTimerRef.current && saveDate === stepsDateRef.current && stepsDraft &&
+        stepsDraft.base.generation === base.generation && stepsDraft.base.version === base.version ? stepsValueRef.current : undefined;
+      const stepsRevision = stepsDraft?.revision;
       if (stepsSaveTimerRef.current && pendingSteps !== undefined) {
         clearTimeout(stepsSaveTimerRef.current);
         stepsSaveTimerRef.current = null;
       }
-      onUpdateRecord(saveDate, { ...latestRecord, ...(pendingSteps !== undefined ? { steps: pendingSteps } : {}), water });
       waterSaveTimerRef.current = null;
+      try {
+        if (await onUpdateRecord(saveDate, { ...base, ...(pendingSteps !== undefined ? { steps: pendingSteps } : {}), water })) {
+          if (waterDraftRef.current === draft && draft.revision === revision) waterDraftRef.current = null;
+          if (pendingSteps !== undefined && stepsDraftRef.current === stepsDraft && stepsDraft?.revision === stepsRevision) stepsDraftRef.current = null;
+        }
+      } catch { toast.error('No se pudo confirmar el agua. Tu cantidad se conserva para reintentar.'); }
     }, 400);
   };
 
   useEffect(() => {
     if (waterDateRef.current !== dateStr) {
       waterDateRef.current = dateStr;
+      waterDraftRef.current = null;
       waterValueRef.current = currentRecord.water;
       setLocalWater(currentRecord.water);
-    } else if (!waterSaveTimerRef.current && waterValueRef.current !== currentRecord.water) {
+    } else if (!waterDraftRef.current && !waterSaveTimerRef.current && waterValueRef.current !== currentRecord.water) {
       waterValueRef.current = currentRecord.water;
       setLocalWater(currentRecord.water);
     }
@@ -318,30 +348,50 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   const stepsInputRef = useRef<HTMLInputElement>(null);
   const stepsValueRef = useRef(currentRecord.steps);
   const stepsDateRef = useRef(dateStr);
+  const stepsDraftRef = useRef<{ base: DailyRecord; revision: number } | null>(null);
   const stepsSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scheduleStepsSave = (steps: number) => {
     if (stepsSaveTimerRef.current) clearTimeout(stepsSaveTimerRef.current);
+    stepsSaveTimerRef.current = null;
     const saveDate = dateStr;
     stepsDateRef.current = saveDate;
-    const fallbackRecord = currentRecord;
-    stepsSaveTimerRef.current = setTimeout(() => {
-      const latestRecord = latestRecordsRef.current?.[saveDate] || fallbackRecord;
-      const pendingWater = waterSaveTimerRef.current && saveDate === waterDateRef.current ? waterValueRef.current : undefined;
+    const draft = stepsDraftRef.current?.base.dateStr === saveDate ? stepsDraftRef.current
+      : { base: snapshotEntryRecord(currentRecord, profile.recordGeneration), revision: 0 };
+    stepsDraftRef.current = draft; const revision = ++draft.revision;
+    const base = reviewEntryBase(draft.base, currentRecord, profile.recordGeneration, () => window.confirm(
+      `Pasos registrados ahora: ${currentRecord.steps == null ? 'sin registro' : currentRecord.steps.toLocaleString('es-AR')}.\nTu borrador propone el total: ${steps.toLocaleString('es-AR')}.\n${changedEntryDayMessage}`));
+    if (!base) return;
+    draft.base = base;
+    stepsSaveTimerRef.current = setTimeout(async () => {
+      const waterDraft = waterDraftRef.current;
+      const pendingWater = waterSaveTimerRef.current && saveDate === waterDateRef.current && waterDraft &&
+        waterDraft.base.generation === base.generation && waterDraft.base.version === base.version ? waterValueRef.current : undefined;
+      const waterRevision = waterDraft?.revision;
       if (waterSaveTimerRef.current && pendingWater !== undefined) {
         clearTimeout(waterSaveTimerRef.current);
         waterSaveTimerRef.current = null;
       }
-      onUpdateRecord(saveDate, { ...latestRecord, ...(pendingWater !== undefined ? { water: pendingWater } : {}), steps });
       stepsSaveTimerRef.current = null;
+      try {
+        if (await onUpdateRecord(saveDate, { ...base, ...(pendingWater !== undefined ? { water: pendingWater } : {}), steps })) {
+          if (stepsDraftRef.current === draft && draft.revision === revision) stepsDraftRef.current = null;
+          if (pendingWater !== undefined && waterDraftRef.current === waterDraft && waterDraft?.revision === waterRevision) waterDraftRef.current = null;
+        }
+      } catch { toast.error('No se pudieron confirmar los pasos. Tu total se conserva para reintentar.'); }
     }, 400);
   };
 
   useEffect(() => {
-    if (document.activeElement !== stepsInputRef.current && !stepsSaveTimerRef.current) {
+    if (stepsDateRef.current !== dateStr) {
+      stepsDateRef.current = dateStr;
+      stepsDraftRef.current = null;
+      stepsValueRef.current = currentRecord.steps;
+      setLocalSteps(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
+    } else if (!stepsDraftRef.current && document.activeElement !== stepsInputRef.current && !stepsSaveTimerRef.current) {
       stepsValueRef.current = currentRecord.steps;
       setLocalSteps(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
     }
-  }, [currentRecord.steps]);
+  }, [dateStr, currentRecord.steps]);
   useEffect(() => () => {
     if (stepsSaveTimerRef.current) clearTimeout(stepsSaveTimerRef.current);
   }, []);
@@ -407,29 +457,35 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     e.preventDefault();
     if (!mealName.trim() || !mealCals || savingMealRef.current || photoProcessing) return;
     savingMealRef.current = true; setSavingMeal(true);
-    const oldMeal = editingMealId ? currentRecord.meals.find(m => m.id === editingMealId) : undefined;
-    const mealId = editingMealId || generateUUID();
-    let uploadedPath: string | null = null;
     try {
+      const draft = mealDraftRef.current ??= { id: editingMealId || generateUUID(), base: snapshotEntryRecord(currentRecord, profile.recordGeneration), upload: null };
+      const base = reviewEntryBase(draft.base, currentRecord, profile.recordGeneration, () => window.confirm(changedEntryDayMessage));
+      if (!base) return;
+      draft.base = base;
+      const oldMeal = base.meals.find(m => m.id === draft.id);
+      if (editingMealId && !oldMeal) { toast.error('La comida ya no está en este día. Tu borrador se conserva; revisá los registros antes de crear otra.'); return; }
+      let uploadedPath: string | null = null;
       if (mealPhoto) {
-        uploadedPath = `${profile.user_id}/${dateStr}/${mealId}-${generateUUID()}.jpg`;
-        const { error } = await supabase.storage.from('meal-photos').upload(uploadedPath, mealPhoto, { contentType: 'image/jpeg' });
-        if (error) throw error;
+        if (!draft.upload || draft.upload.blob !== mealPhoto) draft.upload = { blob: mealPhoto,
+          path: `${profile.user_id}/${dateStr}/${draft.id}-${generateUUID()}.jpg`, attempted: false, uploaded: false };
+        uploadedPath = await ensureMealPhotoUploaded(supabase.storage.from('meal-photos'), draft.upload);
       }
-      const meal: MealEntry = { id: mealId, name: mealName, type: mealType, calories: Number(mealCals),
-        time: mealTime || format(new Date(), 'HH:mm'), details: mealDetails,
+      const meal: MealEntry = { id: draft.id, name: mealName, type: mealType, calories: Number(mealCals),
+        time: mealTime || (draft.fallbackTime ??= format(new Date(), 'HH:mm')), details: mealDetails,
         photo_path: uploadedPath || (mealPhotoRemoved ? null : oldMeal?.photo_path ?? null) };
-      const meals = oldMeal ? currentRecord.meals.map(m => m.id === mealId ? meal : m) : [...currentRecord.meals, meal];
-      if (!await onUpdateRecord(dateStr, { ...currentRecord, meals })) throw new Error('No se pudo guardar la comida.');
-      if (oldMeal?.photo_path && oldMeal.photo_path !== meal.photo_path) await removePhoto(oldMeal.photo_path);
+      const meals = oldMeal ? base.meals.map(m => m.id === draft.id ? meal : m) : [...base.meals, meal];
+      if (!await onUpdateRecord(dateStr, { ...base, meals })) throw new Error('No se pudo guardar la comida.');
+      if (oldMeal?.photo_path && oldMeal.photo_path !== meal.photo_path) toast('Comida guardada. La limpieza de la foto anterior queda pendiente.');
       resetForms(); setActiveTab(null);
     } catch {
-      if (uploadedPath) await removePhoto(uploadedPath);
-      toast.error('No se pudo guardar la comida con su foto. Intentá nuevamente.');
+      // An ambiguous DB response may already reference the uploaded object.
+      // Keep the same entry ID, payload, blob and path for explicit retry.
+      toast.error('No se pudo confirmar el guardado. Tu comida y su foto se conservan para reintentar.');
     } finally { savingMealRef.current = false; setSavingMeal(false); }
   };
 
   const startEditMeal = (m: MealEntry) => {
+    mealDraftRef.current = { id: m.id, base: snapshotEntryRecord(currentRecord, profile.recordGeneration), upload: null };
     clearEstimates();
     setActiveTab(null);
     setEditingMealId(m.id);
@@ -447,18 +503,16 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
     savingWorkoutRef.current = true;
     setSavingWorkout(true);
     try {
-      if (editingWorkoutId) {
-        const updatedWorkouts = currentRecord.workouts.map(w =>
-          w.id === editingWorkoutId ? { ...w, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), details: workDetails, distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined, time: workTime || format(new Date(), 'HH:mm') } : w
-        );
-        if (!await onUpdateRecord(dateStr, { ...currentRecord, workouts: updatedWorkouts })) return;
-      } else {
-        const newWorkout: WorkoutEntry = {
-          id: generateUUID(), activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: [], details: workDetails, time: workTime || format(new Date(), 'HH:mm'), distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined
-        };
-        if (!await onUpdateRecord(dateStr, { ...currentRecord, workouts: [...currentRecord.workouts, newWorkout] })) return;
-      }
-      closeEntry();
+      const draft = workoutDraftRef.current ??= { id: editingWorkoutId || generateUUID(), base: snapshotEntryRecord(currentRecord, profile.recordGeneration) };
+      const base = reviewEntryBase(draft.base, currentRecord, profile.recordGeneration, () => window.confirm(changedEntryDayMessage));
+      if (!base) return;
+      draft.base = base;
+      const previous = base.workouts.find(w => w.id === draft.id);
+      if (editingWorkoutId && !previous) { toast.error('El ejercicio ya no está en este día. Tu borrador se conserva; revisá los registros antes de crear otro.'); return; }
+      const workout: WorkoutEntry = { ...previous, id: draft.id, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: previous?.muscles ?? [], details: workDetails, distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined, time: workTime || (draft.fallbackTime ??= format(new Date(), 'HH:mm')) };
+      const workouts = previous ? base.workouts.map(w => w.id === draft.id ? workout : w) : [...base.workouts, workout];
+      if (!await onUpdateRecord(dateStr, { ...base, workouts })) return;
+      resetForms(); setActiveTab(null);
     } catch {
       toast.error('No se pudo guardar el ejercicio. Intentá nuevamente.');
     } finally {
@@ -468,6 +522,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   };
 
   const startEditWorkout = (w: WorkoutEntry) => {
+    workoutDraftRef.current = { id: w.id, base: snapshotEntryRecord(currentRecord, profile.recordGeneration) };
     clearEstimates();
     setWorkCategory(exactWorkoutCategory(w.activity));
     setActiveTab(null);
@@ -656,7 +711,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <button type="button"
                     className="habit-value cursor-pointer hover:text-green-400 transition-colors"
                     onClick={() => {
-                      setEditStepsVal(currentRecord.steps ? String(currentRecord.steps) : '');
+                      setEditStepsVal(stepsValueRef.current ? String(stepsValueRef.current) : '');
                       setIsEditingSteps(true);
                     }}
                     title="Editar pasos"
@@ -686,6 +741,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <button type="button" className="habit-edit"
                 onClick={() => {
                   setEditWeightVal(currentRecord.weight ? String(currentRecord.weight) : '');
+                  weightDraftBaseRef.current = snapshotEntryRecord(currentRecord, profile.recordGeneration);
                   setIsEditingWeight(true);
                 }} title="Registrar peso">Editar</button>
             </div>
@@ -1080,7 +1136,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
               <h3 className="font-bold text-lg text-slate-900 dark:text-white">Registrar Peso</h3>
               <button 
-                onClick={() => setIsEditingWeight(false)}
+                onClick={() => { setIsEditingWeight(false); weightDraftBaseRef.current = null; }}
                 className="text-slate-500 dark:text-gray-400 hover:text-white transition-colors p-1"
               >
                 <X size={20} />
@@ -1097,10 +1153,9 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                    const filtrado = valorLimpio.replace(/[^0-9.]/g, '');
                    setEditWeightVal(filtrado);
                  }}
-                 onKeyDown={(e) => {
+                 onKeyDown={async (e) => {
                    if (e.key === 'Enter') {
-                     handleSetWeight(parseFloat(editWeightVal) || 0);
-                     setIsEditingWeight(false);
+                     await handleSetWeight(parseFloat(editWeightVal) || 0);
                    }
                  }}
                  className="w-32 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-lg px-4 py-3 text-center text-xl focus:outline-none focus:border-pink-500"
@@ -1109,9 +1164,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
             </div>
             <div className="p-4 border-t border-slate-200 dark:border-gray-800 flex gap-3 bg-slate-100 dark:bg-[#0f141c]">
               <button 
-                onClick={() => {
-                  handleSetWeight(parseFloat(editWeightVal) || 0);
-                  setIsEditingWeight(false);
+                onClick={async () => {
+                  await handleSetWeight(parseFloat(editWeightVal) || 0);
                 }}
                 className="flex-1 bg-pink-600 hover:bg-pink-700 text-white py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
               >

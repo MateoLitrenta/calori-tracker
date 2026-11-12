@@ -16,6 +16,7 @@ import { buildCoachContext, coachSuggestions } from '../utils/coachContext';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
+import { changedEntryDayMessage, reviewEntryBase, snapshotEntryRecord } from '../lib/entrySubmission';
 import { generateAIResponse, transcribeAudio, validActions, isValidDateStr, type MediaAttachment, type DataAction, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
@@ -26,6 +27,7 @@ interface Message extends ChatMessage {
   coachCard?: CoachCardSnapshot;
   goalProgress?: 'all' | 'workout_sessions' | 'step_days';
 }
+interface ActionCommitDraft { dateStr: string; base: DailyRecord; entryIds: string[]; types: DataAction['type'][] }
 
 function readHistory(key: string): Message[] {
   try {
@@ -201,6 +203,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const mounted = useRef(true);
   const busy = useRef(false);
   const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[] } | null>(null);
+  const pendingCommitRef = useRef<ActionCommitDraft | null>(null);
   const [pendingGoal, setPendingGoal] = useState<CoachGoalProposal | null>(null);
   const [isEditingProposal, setIsEditingProposal] = useState(false);
 
@@ -381,7 +384,16 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const describeDate = (actionDate: string) =>
     new Date(`${actionDate}T12:00:00`).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
 
-  const applyActions = async (actions: DataAction[], actionDate: string) => {
+  const newActionDraft = (actions: DataAction[], actionDate: string): ActionCommitDraft => ({
+    dateStr: actionDate,
+    base: snapshotEntryRecord(activeProfile?.records[actionDate] || {
+      dateStr: actionDate, date: new Date(`${actionDate}T12:00:00`), meals: [], workouts: [], steps: 0, water: 0,
+      version: null, generation: activeProfile?.recordGeneration,
+    }, activeProfile?.recordGeneration),
+    entryIds: actions.map(() => generateUUID()), types: actions.map(action => action.type),
+  });
+
+  const applyActions = async (actions: DataAction[], actionDate: string, draft?: ActionCommitDraft) => {
     const currentToday = formatDateStr(new Date());
     if (!mounted.current || !activeProfile || isPastConversation || dateStr !== currentToday ||
       !isValidDateStr(actionDate) || actionDate > currentToday) {
@@ -391,22 +403,34 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       actions.some(action => action.payload.dateStr !== actionDate)) {
       throw new Error('Revisá los datos obligatorios antes de confirmar.');
     }
-    const base = activeProfile.records[actionDate] || {
+    const latest = activeProfile.records[actionDate] || {
       dateStr: actionDate, date: new Date(`${actionDate}T12:00:00`), meals: [], workouts: [], steps: 0, water: 0,
+      version: null, generation: activeProfile.recordGeneration,
     };
-    const record: DailyRecord = { ...base, meals: [...base.meals], workouts: [...base.workouts] };
-    for (const a of actions) {
+    const intent = draft ?? newActionDraft(actions, actionDate);
+    if (intent.dateStr !== actionDate || intent.types.length !== actions.length || actions.some((action, index) => action.type !== intent.types[index])) {
+      throw new Error('La propuesta cambió. Revisá los registros antes de confirmar de nuevo.');
+    }
+    const base = reviewEntryBase(intent.base, latest, activeProfile.recordGeneration, () => window.confirm(changedEntryDayMessage));
+    if (!base) throw new Error('La propuesta sigue pendiente. Revisá los datos del día antes de reintentar.');
+    intent.base = base;
+    const record = snapshotEntryRecord(base, activeProfile.recordGeneration);
+    for (const [index, a] of actions.entries()) {
       const p = a.payload;
       switch (a.type) {
-        case 'add_meal':
-          record.meals.push({ id: generateUUID(), name: p.name as string,
+        case 'add_meal': {
+          const meal = { id: intent.entryIds[index], name: p.name as string,
             type: p.type as MealType, calories: p.calories as number,
-            time: p.time as string, details: p.details as string | undefined }); break;
-        case 'add_workout':
-          record.workouts.push({ id: generateUUID(), activity: p.activity as string,
+            time: p.time as string, details: p.details as string | undefined };
+          record.meals = record.meals.some(entry => entry.id === meal.id) ? record.meals.map(entry => entry.id === meal.id ? meal : entry) : [...record.meals, meal]; break;
+        }
+        case 'add_workout': {
+          const workout = { id: intent.entryIds[index], activity: p.activity as string,
             duration: p.duration as number, calories: p.calories as number, muscles: [],
             time: p.time as string, details: p.details as string,
-            distance: p.distance as number | undefined, pace: p.pace as string | undefined }); break;
+            distance: p.distance as number | undefined, pace: p.pace as string | undefined };
+          record.workouts = record.workouts.some(entry => entry.id === workout.id) ? record.workouts.map(entry => entry.id === workout.id ? workout : entry) : [...record.workouts, workout]; break;
+        }
         case 'set_steps': record.steps = p.steps as number; break;
         case 'add_water': record.water += p.water as number; break;
         case 'set_weight': record.weight = p.weight as number; break;
@@ -429,9 +453,11 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     busy.current = true;
     setIsTyping(true);
     const proposal = pending;
-    setPending(null);
+    const draft = pendingCommitRef.current ??= newActionDraft(proposal.actions, proposal.dateStr);
     try {
-      await applyActions(proposal.actions, proposal.dateStr);
+      await applyActions(proposal.actions, proposal.dateStr, draft);
+      pendingCommitRef.current = null;
+      if (mounted.current) setPending(null);
     } catch (error) {
       appendReply(error instanceof Error ? error.message : 'No se pudo guardar.');
     } finally {
@@ -521,6 +547,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       clearPendingImage();
       setShowPhotoMenu(false);
       setPending(null);
+      pendingCommitRef.current = null;
       setIsEditingProposal(false);
     } catch {
       toast.error('No se pudo borrar la conversación local.');
@@ -610,6 +637,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         const proposalDate = proposals[0].payload.dateStr as string;
         if (proposals.every(action => action.payload.dateStr === proposalDate)) {
           setIsEditingProposal(false);
+          pendingCommitRef.current = newActionDraft(proposals, proposalDate);
           setPending({ dateStr: proposalDate, actions: proposals });
         } else {
           appendReply('Indicame una fecha por vez para confirmar esos registros.');
@@ -874,7 +902,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Editar</button>
               <button type="button" disabled={isTyping} onClick={confirmActions}
                 className="rounded-xl bg-[#f5a064] text-white px-3 py-2 disabled:opacity-50">Confirmar</button>
-              <button type="button" disabled={isTyping} onClick={() => { setPending(null); appendReply('Registro cancelado.'); }}
+              <button type="button" disabled={isTyping} onClick={() => { setPending(null); pendingCommitRef.current = null; appendReply('Registro cancelado.'); }}
                 className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Cancelar</button>
             </div>
           </div>
