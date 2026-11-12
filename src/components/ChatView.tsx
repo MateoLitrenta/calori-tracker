@@ -38,14 +38,14 @@ function ProposedEntrySummary({ action }: { action: DataAction }) {
     <p className="chat-proposal-kind">{action.type === 'add_meal' ? String(p.type) : 'Ejercicio'}</p>
     <h4 className="chat-proposal-name">{String(action.type === 'add_meal' ? p.name : p.activity)}</h4>
     <dl className="chat-proposal-metrics">
-      <div><dt>Energía</dt><dd>{(p.calories as number).toLocaleString('es-AR')} <span>kcal</span></dd></div>
+      <div><dt>Energía</dt><dd>{(p.calories as number).toLocaleString('es-AR', { maximumFractionDigits: 20 })} <span>kcal</span></dd></div>
       <div><dt>Hora</dt><dd><time dateTime={String(p.time)}>{String(p.time)}</time> <span>hs</span></dd></div>
-      {action.type === 'add_workout' && <div><dt>Duración</dt><dd>{(p.duration as number).toLocaleString('es-AR')} <span>min</span></dd></div>}
+      {action.type === 'add_workout' && <div><dt>Duración</dt><dd>{(p.duration as number).toLocaleString('es-AR', { maximumFractionDigits: 20 })} <span>min</span></dd></div>}
     </dl>
     {action.estimated && <p className="chat-proposal-estimate">Propuesta con estimaciones</p>}
     {typeof p.details === 'string' && p.details.trim() && <p className="chat-proposal-notes whitespace-pre-wrap">{p.details}</p>}
     {(p.distance !== undefined || (typeof p.pace === 'string' && p.pace)) && <dl className="chat-proposal-extra">
-      {p.distance !== undefined && <div><dt>Distancia</dt><dd>{(p.distance as number).toLocaleString('es-AR')} km</dd></div>}
+      {p.distance !== undefined && <div><dt>Distancia</dt><dd>{(p.distance as number).toLocaleString('es-AR', { maximumFractionDigits: 20 })} km</dd></div>}
       {typeof p.pace === 'string' && p.pace && <div><dt>Ritmo</dt><dd>{p.pace} min/km</dd></div>}
     </dl>}
   </>;

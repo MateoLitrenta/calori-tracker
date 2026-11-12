@@ -631,10 +631,11 @@ test('proposal presentation separates estimates, pending acknowledgement and rec
   t.after(() => { globalThis.__chatViewHarness.profile = original; });
   const date = new Date().toLocaleDateString('en-CA');
   globalThis.__chatViewHarness.profile = { ...profile, recordGeneration: 'generation-one', records: {} };
-  let finish;
-  globalThis.__chatViewHarness.updateRecord = () => new Promise(resolve => { finish = resolve; });
+  let finish, submitted;
+  globalThis.__chatViewHarness.updateRecord = (_date, record) => { submitted = record; return new Promise(resolve => { finish = resolve; }); };
   globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Revisá la propuesta.', actions: [
-    { type: 'add_meal', estimated: true, payload: { dateStr: date, name: 'Almuerzo propuesto', type: 'Almuerzo', calories: 900, time: '13:00' } },
+    { type: 'add_workout', estimated: true, payload: { dateStr: date, activity: 'Entrenamiento propuesto', duration: 30,
+      calories: 900, time: '13:00', details: '', distance: 2.12345 } },
   ] });
   const view = conversation([{ id: 'unverified-model-text', role: 'bot', text: 'Registrado hoy: afirmación sin confirmación del backend.' }]);
   const get = predicate => nodes(view.render(), predicate)[0];
@@ -646,6 +647,7 @@ test('proposal presentation separates estimates, pending acknowledgement and rec
   const html = renderToStaticMarkup(proposal);
   assert.match(html, /Propuesta pendiente/); assert.match(html, /Propuesta con estimaciones/);
   assert.match(html, /<time dateTime="13:00">13:00<\/time>/);
+  assert.match(html, /2,12345 km/);
   assert.ok(!html.includes('13:00 (estimado)'));
   const buttons = nodes(proposal, e => e.type === 'button');
   assert.deepEqual(buttons.map(button => button.props.children), ['Confirmar', 'Editar', 'Cancelar']);
@@ -655,6 +657,7 @@ test('proposal presentation separates estimates, pending acknowledgement and rec
   assert.equal(nodes(view.render(), e => e.props['aria-label'] === 'Coach está respondiendo').length, 0);
   assert.equal(nodes(view.render(), e => hasClass(e, 'chat-save-status')).length, 0);
   finish(true); await confirmation;
+  assert.equal(submitted.workouts[0].distance, 2.12345);
   assert.equal(nodes(view.render(), e => hasClass(e, 'chat-confirmation')).length, 0);
   assert.equal(nodes(view.render(), e => hasClass(e, 'chat-saved')).length, 1);
   assert.match(renderToStaticMarkup(get(e => hasClass(e, 'chat-save-status'))), /Guardado confirmado/);
