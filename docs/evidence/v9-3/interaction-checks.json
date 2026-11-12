@@ -1,0 +1,518 @@
+{
+  "source": {
+    "baselineCommit": "f9ba47438c7f1408e305ac167aa0407f3dd07b70",
+    "afterAppCommit": "d622c124b4c1545b600b36ef8b364543776354f2",
+    "fixedFixtureDate": "2026-11-12",
+    "browser": "Local Chrome controlled with Playwright 1.56.1",
+    "data": "Synthetic fixture only",
+    "services": "Auth, record RPC, Storage and Gemini mocked; actual React UI/store and calculation utilities",
+    "notCertifiedByTheseChecks": [
+      "Supabase Auth",
+      "Supabase Storage",
+      "PostgreSQL/PostgREST persistence",
+      "physical mobile keyboard or device behavior"
+    ]
+  },
+  "caseGroups": 16,
+  "namedChecks": 158,
+  "nativeConfirmDialogs": 0,
+  "externalRequestsAttempted": 0,
+  "cases": [
+    {
+      "width": 320,
+      "theme": "dark",
+      "passed": [
+        "rapid_mixed_changes_serialized",
+        "pending_not_prematurely_confirmed",
+        "edits_during_save_retained",
+        "unconfirmed_draft_retained",
+        "single_contextual_error",
+        "explicit_retry_confirmed",
+        "true_conflict_requires_review",
+        "saved_and_draft_values_distinguished",
+        "focus_trap_visible_focus",
+        "escape_and_keep_preserve_draft",
+        "review_uses_fresh_version",
+        "no_native_confirm"
+      ],
+      "focus": {
+        "inside": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "dialogBounds": {
+        "x": 0,
+        "y": 229,
+        "width": 320,
+        "height": 623
+      },
+      "canonicalFinal": {
+        "steps": 9500,
+        "water": 2250,
+        "meals": 2
+      },
+      "maxConcurrent": 1,
+      "jsErrors": 0
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "passed": [
+        "rapid_mixed_changes_serialized",
+        "pending_not_prematurely_confirmed",
+        "edits_during_save_retained",
+        "unconfirmed_draft_retained",
+        "single_contextual_error",
+        "explicit_retry_confirmed",
+        "true_conflict_requires_review",
+        "saved_and_draft_values_distinguished",
+        "focus_trap_visible_focus",
+        "escape_and_keep_preserve_draft",
+        "review_uses_fresh_version",
+        "no_native_confirm"
+      ],
+      "focus": {
+        "inside": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "dialogBounds": {
+        "x": 0,
+        "y": 229,
+        "width": 375,
+        "height": 623
+      },
+      "canonicalFinal": {
+        "steps": 9500,
+        "water": 2250,
+        "meals": 2
+      },
+      "maxConcurrent": 1,
+      "jsErrors": 0
+    },
+    {
+      "width": 393,
+      "theme": "dark",
+      "passed": [
+        "rapid_mixed_changes_serialized",
+        "pending_not_prematurely_confirmed",
+        "edits_during_save_retained",
+        "unconfirmed_draft_retained",
+        "single_contextual_error",
+        "explicit_retry_confirmed",
+        "true_conflict_requires_review",
+        "saved_and_draft_values_distinguished",
+        "focus_trap_visible_focus",
+        "escape_and_keep_preserve_draft",
+        "review_uses_fresh_version",
+        "no_native_confirm"
+      ],
+      "focus": {
+        "inside": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "dialogBounds": {
+        "x": 0,
+        "y": 229,
+        "width": 393,
+        "height": 623
+      },
+      "canonicalFinal": {
+        "steps": 9500,
+        "water": 2250,
+        "meals": 2
+      },
+      "maxConcurrent": 1,
+      "jsErrors": 0
+    },
+    {
+      "width": 430,
+      "theme": "dark",
+      "passed": [
+        "rapid_mixed_changes_serialized",
+        "pending_not_prematurely_confirmed",
+        "edits_during_save_retained",
+        "unconfirmed_draft_retained",
+        "single_contextual_error",
+        "explicit_retry_confirmed",
+        "true_conflict_requires_review",
+        "saved_and_draft_values_distinguished",
+        "focus_trap_visible_focus",
+        "escape_and_keep_preserve_draft",
+        "review_uses_fresh_version",
+        "no_native_confirm"
+      ],
+      "focus": {
+        "inside": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "dialogBounds": {
+        "x": 0,
+        "y": 229,
+        "width": 430,
+        "height": 623
+      },
+      "canonicalFinal": {
+        "steps": 9500,
+        "water": 2250,
+        "meals": 2
+      },
+      "maxConcurrent": 1,
+      "jsErrors": 0
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "passed": [
+        "rapid_mixed_changes_serialized",
+        "pending_not_prematurely_confirmed",
+        "edits_during_save_retained",
+        "unconfirmed_draft_retained",
+        "single_contextual_error",
+        "explicit_retry_confirmed",
+        "true_conflict_requires_review",
+        "saved_and_draft_values_distinguished",
+        "focus_trap_visible_focus",
+        "escape_and_keep_preserve_draft",
+        "review_uses_fresh_version",
+        "no_native_confirm"
+      ],
+      "focus": {
+        "inside": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "dialogBounds": {
+        "x": 192,
+        "y": 210.5,
+        "width": 384,
+        "height": 603
+      },
+      "canonicalFinal": {
+        "steps": 9500,
+        "water": 2250,
+        "meals": 2
+      },
+      "maxConcurrent": 1,
+      "jsErrors": 0
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "passed": [
+        "rapid_mixed_changes_serialized",
+        "pending_not_prematurely_confirmed",
+        "edits_during_save_retained",
+        "unconfirmed_draft_retained",
+        "single_contextual_error",
+        "explicit_retry_confirmed",
+        "true_conflict_requires_review",
+        "saved_and_draft_values_distinguished",
+        "focus_trap_visible_focus",
+        "escape_and_keep_preserve_draft",
+        "review_uses_fresh_version",
+        "no_native_confirm"
+      ],
+      "focus": {
+        "inside": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "dialogBounds": {
+        "x": 528,
+        "y": 148.5,
+        "width": 384,
+        "height": 603
+      },
+      "canonicalFinal": {
+        "steps": 9500,
+        "water": 2250,
+        "meals": 2
+      },
+      "maxConcurrent": 1,
+      "jsErrors": 0
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "passed": [
+        "rapid_mixed_changes_serialized",
+        "pending_not_prematurely_confirmed",
+        "edits_during_save_retained",
+        "unconfirmed_draft_retained",
+        "single_contextual_error",
+        "explicit_retry_confirmed",
+        "true_conflict_requires_review",
+        "saved_and_draft_values_distinguished",
+        "focus_trap_visible_focus",
+        "escape_and_keep_preserve_draft",
+        "review_uses_fresh_version",
+        "no_native_confirm"
+      ],
+      "focus": {
+        "inside": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "dialogBounds": {
+        "x": 0,
+        "y": 229,
+        "width": 320,
+        "height": 623
+      },
+      "canonicalFinal": {
+        "steps": 9500,
+        "water": 2250,
+        "meals": 2
+      },
+      "maxConcurrent": 1,
+      "jsErrors": 0
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "passed": [
+        "rapid_mixed_changes_serialized",
+        "pending_not_prematurely_confirmed",
+        "edits_during_save_retained",
+        "unconfirmed_draft_retained",
+        "single_contextual_error",
+        "explicit_retry_confirmed",
+        "true_conflict_requires_review",
+        "saved_and_draft_values_distinguished",
+        "focus_trap_visible_focus",
+        "escape_and_keep_preserve_draft",
+        "review_uses_fresh_version",
+        "no_native_confirm"
+      ],
+      "focus": {
+        "inside": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "dialogBounds": {
+        "x": 0,
+        "y": 229,
+        "width": 375,
+        "height": 623
+      },
+      "canonicalFinal": {
+        "steps": 9500,
+        "water": 2250,
+        "meals": 2
+      },
+      "maxConcurrent": 1,
+      "jsErrors": 0
+    },
+    {
+      "width": 393,
+      "theme": "light",
+      "passed": [
+        "rapid_mixed_changes_serialized",
+        "pending_not_prematurely_confirmed",
+        "edits_during_save_retained",
+        "unconfirmed_draft_retained",
+        "single_contextual_error",
+        "explicit_retry_confirmed",
+        "true_conflict_requires_review",
+        "saved_and_draft_values_distinguished",
+        "focus_trap_visible_focus",
+        "escape_and_keep_preserve_draft",
+        "review_uses_fresh_version",
+        "no_native_confirm"
+      ],
+      "focus": {
+        "inside": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "dialogBounds": {
+        "x": 0,
+        "y": 229,
+        "width": 393,
+        "height": 623
+      },
+      "canonicalFinal": {
+        "steps": 9500,
+        "water": 2250,
+        "meals": 2
+      },
+      "maxConcurrent": 1,
+      "jsErrors": 0
+    },
+    {
+      "width": 430,
+      "theme": "light",
+      "passed": [
+        "rapid_mixed_changes_serialized",
+        "pending_not_prematurely_confirmed",
+        "edits_during_save_retained",
+        "unconfirmed_draft_retained",
+        "single_contextual_error",
+        "explicit_retry_confirmed",
+        "true_conflict_requires_review",
+        "saved_and_draft_values_distinguished",
+        "focus_trap_visible_focus",
+        "escape_and_keep_preserve_draft",
+        "review_uses_fresh_version",
+        "no_native_confirm"
+      ],
+      "focus": {
+        "inside": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "dialogBounds": {
+        "x": 0,
+        "y": 229,
+        "width": 430,
+        "height": 623
+      },
+      "canonicalFinal": {
+        "steps": 9500,
+        "water": 2250,
+        "meals": 2
+      },
+      "maxConcurrent": 1,
+      "jsErrors": 0
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "passed": [
+        "rapid_mixed_changes_serialized",
+        "pending_not_prematurely_confirmed",
+        "edits_during_save_retained",
+        "unconfirmed_draft_retained",
+        "single_contextual_error",
+        "explicit_retry_confirmed",
+        "true_conflict_requires_review",
+        "saved_and_draft_values_distinguished",
+        "focus_trap_visible_focus",
+        "escape_and_keep_preserve_draft",
+        "review_uses_fresh_version",
+        "no_native_confirm"
+      ],
+      "focus": {
+        "inside": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "dialogBounds": {
+        "x": 192,
+        "y": 210.5,
+        "width": 384,
+        "height": 603
+      },
+      "canonicalFinal": {
+        "steps": 9500,
+        "water": 2250,
+        "meals": 2
+      },
+      "maxConcurrent": 1,
+      "jsErrors": 0
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "passed": [
+        "rapid_mixed_changes_serialized",
+        "pending_not_prematurely_confirmed",
+        "edits_during_save_retained",
+        "unconfirmed_draft_retained",
+        "single_contextual_error",
+        "explicit_retry_confirmed",
+        "true_conflict_requires_review",
+        "saved_and_draft_values_distinguished",
+        "focus_trap_visible_focus",
+        "escape_and_keep_preserve_draft",
+        "review_uses_fresh_version",
+        "no_native_confirm"
+      ],
+      "focus": {
+        "inside": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "dialogBounds": {
+        "x": 528,
+        "y": 148.5,
+        "width": 384,
+        "height": 603
+      },
+      "canonicalFinal": {
+        "steps": 9500,
+        "water": 2250,
+        "meals": 2
+      },
+      "maxConcurrent": 1,
+      "jsErrors": 0
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "theme": "dark",
+      "passed": [
+        "short_dialog_content_scrolls",
+        "all_actions_reachable",
+        "focus_scrolls_to_last_action",
+        "keep_preserves_draft"
+      ],
+      "scrolling": {
+        "clientHeight": 428,
+        "scrollHeight": 540,
+        "overflowY": "auto"
+      },
+      "reachable": {
+        "inside": true,
+        "height": 44
+      },
+      "jsErrors": 0
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "theme": "light",
+      "passed": [
+        "short_dialog_content_scrolls",
+        "all_actions_reachable",
+        "focus_scrolls_to_last_action",
+        "keep_preserves_draft"
+      ],
+      "scrolling": {
+        "clientHeight": 428,
+        "scrollHeight": 540,
+        "overflowY": "auto"
+      },
+      "reachable": {
+        "inside": true,
+        "height": 44
+      },
+      "jsErrors": 0
+    },
+    {
+      "width": 393,
+      "theme": "dark",
+      "view": "coach",
+      "passed": [
+        "replayed_confirmed_entry_skipped",
+        "new_meal_only_added_once",
+        "explicit_similar_entry_allowed"
+      ],
+      "jsErrors": 0
+    },
+    {
+      "width": 393,
+      "theme": "light",
+      "view": "coach",
+      "passed": [
+        "replayed_confirmed_entry_skipped",
+        "new_meal_only_added_once",
+        "explicit_similar_entry_allowed"
+      ],
+      "jsErrors": 0
+    }
+  ]
+}

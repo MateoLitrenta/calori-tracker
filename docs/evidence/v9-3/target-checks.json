@@ -1,0 +1,170 @@
+{
+  "source": {
+    "baselineCommit": "f9ba47438c7f1408e305ac167aa0407f3dd07b70",
+    "afterAppCommit": "d622c124b4c1545b600b36ef8b364543776354f2",
+    "fixedFixtureDate": "2026-11-12",
+    "browser": "Local Chrome controlled with Playwright 1.56.1",
+    "data": "Synthetic fixture only",
+    "services": "Auth, record RPC, Storage and Gemini mocked; actual React UI/store and calculation utilities",
+    "notCertifiedByTheseChecks": [
+      "Supabase Auth",
+      "Supabase Storage",
+      "PostgreSQL/PostgREST persistence",
+      "physical mobile keyboard or device behavior"
+    ]
+  },
+  "before": [
+    {
+      "width": 393,
+      "theme": "dark",
+      "view": "charts",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 393,
+      "theme": "dark",
+      "view": "chat",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "view": "charts",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "view": "chat",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 393,
+      "theme": "light",
+      "view": "charts",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 393,
+      "theme": "light",
+      "view": "chat",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "view": "charts",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "view": "chat",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    }
+  ],
+  "after": [
+    {
+      "width": 393,
+      "theme": "dark",
+      "view": "charts",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 393,
+      "theme": "dark",
+      "view": "chat",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "view": "charts",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "view": "chat",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 393,
+      "theme": "light",
+      "view": "charts",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 393,
+      "theme": "light",
+      "view": "chat",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "view": "charts",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "view": "chat",
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 393,
+      "theme": "light",
+      "view": "home-historical",
+      "selectedDate": "2026-11-07",
+      "actionDateContext": true,
+      "formDateContext": true,
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "view": "home-historical",
+      "selectedDate": "2026-11-07",
+      "actionDateContext": true,
+      "formDateContext": true,
+      "noPageHorizontalOverflow": true,
+      "jsErrors": 0,
+      "externalRequestsAttempted": 0
+    }
+  ]
+}

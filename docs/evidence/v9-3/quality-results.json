@@ -1,0 +1,77 @@
+{
+  "result": "PASSED",
+  "sourceCommit": "079165a11d6efd9d21e15039f34c28a4a2343ee7",
+  "applicationSourceTreeSha1": "3d7de891740a0ee45ce7e2199c587601fb2fead9",
+  "sourceSnapshotSha256": "1b74c6287ed9a77b40e2cca70d14fd5b5373c268d04f082b349a1e1f823139b7",
+  "sourceFileCount": 478,
+  "testFileCount": 47,
+  "runtime": {
+    "platform": "linux",
+    "node": "24.4.1",
+    "postgresql": "17.6",
+    "postgrest": "16.5",
+    "oxlint": "1.80.0",
+    "processUid": 100,
+    "externalNetwork": "disabled"
+  },
+  "tests": {
+    "tests": 554,
+    "pass": 554,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "fullSuiteDurationMs": 483018,
+  "quality": {
+    "frontendTypes": "PASSED",
+    "aiTypes": "PASSED",
+    "coachTypes": "PASSED",
+    "lint": "PASSED",
+    "lintWarnings": 12,
+    "lintErrors": 0,
+    "build": "PASSED",
+    "fullPRCodeDiffCheck": "PASSED",
+    "workingDiffCheck": "PASSED",
+    "indexDiffCheck": "PASSED"
+  },
+  "commands": [
+    "node --test --test-reporter=spec --test-concurrency=1 tests/*.test.mjs",
+    "node node_modules/typescript/bin/tsc -b --force",
+    "node node_modules/typescript/bin/tsc -p api/ai/tsconfig.json --noEmit",
+    "node node_modules/typescript/bin/tsc -p api/coach/tsconfig.json --noEmit",
+    "npm run lint",
+    "npm run build",
+    "git diff --check f9ba47438c7f1408e305ac167aa0407f3dd07b70 079165a11d6efd9d21e15039f34c28a4a2343ee7",
+    "git diff --check",
+    "git diff --cached --check"
+  ],
+  "serviceCoverage": {
+    "realDisposablePostgreSQL": true,
+    "realLocalPostgRESTHTTP": true,
+    "identityFixture": "Synthetic roles and signed JWTs",
+    "authAndStorageSQLStandins": true,
+    "realGoTrueCertified": false,
+    "realStorageHTTPCertified": false,
+    "uiUnitRuntime": "React/JSDOM with synthetic adapters",
+    "browserMatrix": "Recorded separately using synthetic visual fixtures"
+  },
+  "safety": {
+    "productionModified": false,
+    "remoteSQLExecuted": false,
+    "realUserDataUsed": false,
+    "supabaseSourcesUnchangedFromMain": true,
+    "postgresLeftovers": 0,
+    "postgrestConfigLeftovers": 0,
+    "rawLogsPublished": false,
+    "privatePathsPublished": false,
+    "secretsPublished": false
+  },
+  "harnessNotes": [
+    "El primer gate Linux quedó bloqueado con 523/526: un mapper de imports del test público y dos expectativas heredadas de window.confirm. Se corrigieron únicamente esos dos archivos de tests; el árbol src de la aplicación permaneció idéntico.",
+    "La imagen Nix incluía un wrapper ldd de musl aunque Node usa glibc. Sólo en el contenedor de pruebas se conservó el wrapper y se seleccionó el ldd GNU real ya instalado. La carga automática de Oxlint/Rolldown se verificó antes de repetir la suite; no se modificaron binarios, extensiones, dependencias ni código de aplicación.",
+    "El intento Windows quedó bloqueado por WSAEACCES 10013 en conexiones loopback. No se contó como aprobado; la certificación completa corresponde a esta ejecución Linux sin tests omitidos.",
+    "El snapshot excluye sólo documentación y evidencia visual no versionadas que seguían en redacción; incluye todos los archivos de aplicación y tests del commit indicado."
+  ],
+  "recordedUTC": "2026-11-12T19:29:48.0866289Z"
+}
