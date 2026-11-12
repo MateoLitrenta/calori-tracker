@@ -598,3 +598,11 @@ html:not(.dark) .home-variants .period-switch-indicator { background: #ffffff; }
   .home-variants .history-calendar-navigation > p { min-width: 0; color: var(--home-muted); font-size: 12px; line-height: 1.5; }
   .home-variants .history-explore { justify-content: space-between; }
 }
+.habit-feedback { min-width: 0; padding: 8px 2px 0; }
+.habit-feedback p { margin: 0; overflow-wrap: anywhere; }
+.habit-feedback-action, .habit-review-apply { min-height: 44px; padding: 8px 12px; border: 1px solid var(--home-line, #e2e8f0); border-radius: var(--radius-control); font-weight: 600; }
+.habit-feedback-action { color: inherit; background: transparent; }
+.habit-feedback-action:hover { background: var(--home-hover, #94a3b814); }
+.habit-feedback-action:focus-visible, .habit-review-apply:focus-visible { outline: 2px solid #f5a064; outline-offset: 3px; }
+.habit-review-apply { background: #f5a064; color: #241a13; }
+.habit-review-apply:hover { background: #e58b4f; }

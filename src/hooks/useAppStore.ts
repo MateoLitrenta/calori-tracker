@@ -5,6 +5,8 @@ import { supabase } from '../lib/supabase';
 import { normalizeActivityLevel } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import type { User } from '@supabase/supabase-js';
+import type { RecordWriteFailure, RecordWriteOptions } from '../lib/recordFeedback';
+import { HabitDraftController } from '../lib/habitDraft';
 
 const useAppStoreState = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -17,6 +19,8 @@ const useAppStoreState = () => {
   const pendingIntents = useRef(new Map<string, db.RecordIntent>());
   const identity = useRef({ userId: null as string | null, epoch: 0 });
   const profileRef = useRef(activeProfile);
+  const [habitDrafts] = useState(() => new HabitDraftController(day => ({ dateStr: day,
+    date: new Date(day + 'T12:00:00'), meals: [], workouts: [], steps: 0, water: 0, version: null }), async () => false));
   useEffect(() => { profileRef.current = activeProfile; }, [activeProfile]);
 
   // Auth & Initial Data Load
@@ -29,6 +33,7 @@ const useAppStoreState = () => {
       if (identity.current.userId !== (nextUser?.id ?? null)) {
         identity.current = { userId: nextUser?.id ?? null, epoch: identity.current.epoch + 1 };
         pendingIntents.current.clear();
+        habitDrafts.resetOwner();
       }
       if (nextUser && nextUser.id !== sessionUserId) {
         setLoading(true);
@@ -56,7 +61,7 @@ const useAppStoreState = () => {
       isMounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [habitDrafts]);
 
   // Fetch profile when user changes
   useEffect(() => {
@@ -125,7 +130,12 @@ const useAppStoreState = () => {
     return true;
   };
 
-  const persistIntent = async (owner: string, epoch: number, key: string, intent: db.RecordIntent) => {
+  const reportRecordFailure = (key: string, failure: RecordWriteFailure, options?: RecordWriteOptions) => {
+    options?.onFailure?.(failure);
+    if (options?.feedback !== 'contextual') toast.error(failure.message, { id: 'record-write-' + key });
+  };
+
+  const persistIntent = async (owner: string, epoch: number, key: string, intent: db.RecordIntent, options?: RecordWriteOptions) => {
     let acknowledged = false;
     try {
       const receipt = await db.commitRecordIntent(owner, intent);
@@ -135,11 +145,12 @@ const useAppStoreState = () => {
       pendingIntents.current.delete(key);
       // A replay acknowledges the original commit, not a promise that no one
       // changed/reset that day afterwards. Never resurrect its old snapshot.
-      if ((intent.kind === 'save' && snapshot.records[intent.date!]?.version !== String(receipt.version)) ||
+      if ((intent.kind === 'save' && (snapshot.records[intent.date!]?.version !== String(receipt.version) || snapshot.generation !== receipt.generation)) ||
           (intent.kind === 'reset' && snapshot.generation !== receipt.generation)) {
-        toast.error('El guardado anterior se confirmó, pero los registros cambiaron después. Revisá los datos actualizados antes de continuar.');
+        reportRecordFailure(key, { kind: 'conflict', message: 'El guardado anterior se confirmó, pero los registros cambiaron después. Revisá los datos actualizados antes de continuar.' }, options);
         return false;
       }
+      if (intent.kind === 'save' && snapshot.generation) options?.onConfirmed?.(snapshot.records[intent.date!], snapshot.generation);
       return true;
     } catch (error) {
       if (!sameSession(owner, epoch)) return false;
@@ -151,40 +162,42 @@ const useAppStoreState = () => {
       if (failure.kind === 'conflict') {
         try { publishSnapshot(owner, epoch, await db.fetchRecordSnapshot(owner)); } catch { /* Keep the draft and old CAS tokens; do not guess a new baseline. */ }
       }
-      toast.error(failure.message || 'No pudimos confirmar el guardado. Tu borrador se conserva.');
+      reportRecordFailure(key, { kind: keepIntent ? 'ambiguous' : failure.kind ?? 'invalid',
+        message: failure.message || 'No pudimos confirmar el guardado. Tu borrador se conserva.' }, options);
       return false;
     }
   };
 
-  const updateRecord = async (dateStr: string, record: DailyRecord) => {
+  const updateRecord = async (dateStr: string, record: DailyRecord, options?: RecordWriteOptions) => {
     const profile = profileRef.current, owner = identity.current.userId, epoch = identity.current.epoch;
     if (!owner || user?.id !== owner || profile?.user_id !== owner || record.dateStr !== dateStr) return false;
     const key = owner + ':' + epoch;
     // Generation also protects reset and other days. Only one local intention
     // is in flight per account; other devices are checked by the server CAS.
     if (pendingRecordWrites.current.has(key)) {
-      toast.error('Hay un guardado en curso. Esperá a que termine e intentá de nuevo.');
+      reportRecordFailure(key, { kind: 'busy', message: 'Hay un guardado en curso. Tu borrador se conserva; esperá a que termine para reintentar.' }, options);
       return false;
     }
     pendingRecordWrites.current.add(key);
     try {
       if (profile.recordProtocol !== 'atomic') {
         publishSnapshot(owner, epoch, await db.fetchRecordSnapshot(owner));
-        toast.error('El guardado seguro no estaba habilitado. Revisá los datos actualizados antes de reintentar; tu formulario se conserva.');
+        reportRecordFailure(key, { kind: 'inactive', message: 'El guardado seguro no estaba habilitado. Revisá los datos actualizados antes de reintentar; tu formulario se conserva.' }, options);
         return false;
       }
       const candidate = db.createRecordIntent(record);
       const pending = pendingIntents.current.get(key);
       if (pending && (pending.kind !== 'save' || pending.fingerprint !== candidate.fingerprint)) {
-        if (await persistIntent(owner, epoch, key, pending))
-          toast.error('Se confirmó el intento anterior. Tu cambio nuevo todavía no se guardó; revisalo antes de volver a enviarlo.');
+        if (await persistIntent(owner, epoch, key, pending, { ...options, onConfirmed: undefined }))
+          reportRecordFailure(key, { kind: 'conflict', message: 'Se confirmó el intento anterior. Tu cambio nuevo todavía no se guardó; revisalo antes de volver a enviarlo.' }, options);
         return false;
       }
       const intent = pending ?? candidate;
       pendingIntents.current.set(key, intent);
-      return await persistIntent(owner, epoch, key, intent);
+      return await persistIntent(owner, epoch, key, intent, options);
     } catch (error) {
-      if (sameSession(owner, epoch)) toast.error((error as Error).message || 'No pudimos preparar el guardado. Tu borrador se conserva.');
+      if (sameSession(owner, epoch)) reportRecordFailure(key, { kind: 'invalid',
+        message: (error as Error).message || 'No pudimos preparar el guardado. Tu borrador se conserva.' }, options);
       return false;
     } finally { pendingRecordWrites.current.delete(key); }
   };
@@ -202,12 +215,12 @@ const useAppStoreState = () => {
       }
       const pending = pendingIntents.current.get(key);
       if (pending && pending.kind !== 'reset') {
-        await persistIntent(owner, epoch, key, pending);
+        await persistIntent(owner, epoch, key, pending, { feedback: 'contextual' });
         throw new Error('Revisá el guardado anterior antes de confirmar el reinicio.');
       }
       const intent = pending ?? db.createResetIntent(profile.recordGeneration);
       pendingIntents.current.set(key, intent);
-      if (!await persistIntent(owner, epoch, key, intent)) throw new Error('No se confirmó el reinicio. Revisá los registros antes de reintentar.');
+      if (!await persistIntent(owner, epoch, key, intent, { feedback: 'contextual' })) throw new Error('No se confirmó el reinicio. Revisá los registros antes de reintentar.');
     } finally { pendingRecordWrites.current.delete(key); }
   };
 
@@ -216,6 +229,21 @@ const useAppStoreState = () => {
     if (error) throw error;
     toast.success('Sesión cerrada', { style: { background: '#161b22', color: '#fff' } });
   };
+
+  // UI subscriptions can unmount while the account's draft and writer stay alive.
+  // Bind callbacks after render; only Auth identity changes clear the owner epoch.
+  useEffect(() => {
+    habitDrafts.configure(day => {
+      const profile = profileRef.current;
+      return { ...(profile?.records[day] ?? { dateStr: day, date: new Date(day + 'T12:00:00'), meals: [], workouts: [], steps: 0, water: 0, version: null }),
+        generation: profile?.recordGeneration };
+    }, updateRecord);
+  });
+  useEffect(() => {
+    if (userId && activeProfile?.user_id === userId) habitDrafts.connect();
+    else habitDrafts.dispose();
+  }, [habitDrafts, userId, activeProfile?.user_id]);
+  useEffect(() => () => habitDrafts.dispose(), [habitDrafts]);
 
   return {
     user,
@@ -226,6 +254,7 @@ const useAppStoreState = () => {
     updateAvatarPath,
     completeOnboarding,
     updateRecord,
+    habitDrafts,
     resetData,
     signOut
   };

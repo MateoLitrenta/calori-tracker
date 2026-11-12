@@ -204,6 +204,65 @@ test('confirmed Coach meals and workouts share the same saved record across navi
   assert.equal(state.reads, state.initialReads);
 });
 
+test('a replayed confirmed lunch is excluded from the next dinner confirmation across Coach/Home navigation', async t => {
+  const lunch = { ...meal, payload: { ...meal.payload, name: 'Sorrentinos', calories: 900, time: '13:00' } };
+  const dinner = { ...meal, payload: { ...meal.payload, name: 'Milanesa', type: 'Cena', calories: 1000, time: '21:00' } };
+  const state = await mountApp(t, [lunch], false, current => { current.skipWriteGate = true; });
+  await sendActions(state); await click(state, 'Confirmar');
+  const firstId = state.persisted.meals[0].id;
+  await click(state, 'Inicio');
+  assert.equal(state.document.querySelectorAll('.daily-logs li').length, 1);
+  await click(state, 'Coach');
+  state.ai = async () => ({ reply: 'Revisá esta propuesta.', actions: [lunch, dinner], presentation: 'none' });
+  await inputValue(state, 'textarea[aria-label="Mensaje para Coach"]', 'Registrá también la cena.');
+  await act(async () => { state.document.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })); await turn(); });
+  assert.match(state.document.querySelector('.chat-already-recorded').textContent, /Ya registrado/);
+  assert.equal(state.document.querySelector('.chat-already-recorded input').checked, false);
+  await click(state, 'Confirmar');
+  assert.equal(state.persisted.meals.length, 2);
+  assert.equal(state.persisted.meals[0].id, firstId);
+  assert.equal(state.persisted.meals.reduce((sum, entry) => sum + entry.calories, 0), 1900);
+  assert.equal(state.mealWrites, 2); assert.equal(state.logWrites, 2);
+  await click(state, 'Inicio');
+  assert.equal(state.document.querySelectorAll('.daily-logs li').length, 2);
+  assert.equal(state.historyRecords[today].meals.length, 2);
+  await click(state, 'Datos');
+  assert.match(state.document.querySelector('.charts-insights').textContent, /Consumidas1\.900/);
+});
+
+test('steps and water drafts survive Home unmount and finish queued increments after the in-flight acknowledgement', async t => {
+  const state = await mountApp(t, []);
+  t.after(() => state.release());
+  const press = async label => act(async () => {
+    const button = state.document.querySelector(`button[aria-label="${label}"]`);
+    assert.ok(button, `Missing control: ${label}`);
+    button.click(); await turn();
+  });
+  const waitForDebounce = async () => act(async () => {
+    await new Promise(resolve => setTimeout(resolve, 450)); await turn();
+  });
+  const displayedValue = label => Number(state.document.querySelector(`button[aria-label="${label}"]`).textContent.replace(/\D/g, ''));
+  await press('Sumar 500 pasos'); await waitForDebounce();
+  assert.equal(state.logWrites, 1); assert.equal(state.persisted, null);
+  await press('Sumar 500 pasos'); await press('Sumar 250 ml de agua');
+  assert.equal(displayedValue('Editar total de pasos'), 1000);
+  assert.equal(displayedValue('Editar cantidad de agua'), 250);
+  await click(state, 'Datos'); await click(state, 'Coach'); await click(state, 'Inicio');
+  assert.equal(displayedValue('Editar total de pasos'), 1000, 'The pending second increment is retained across navigation');
+  assert.equal(displayedValue('Editar cantidad de agua'), 250);
+  assert.equal(state.logWrites, 1, 'A second write cannot overtake the first acknowledgement');
+  await click(state, 'Datos');
+  await act(async () => { state.release(); await turn(); });
+  await waitForDebounce();
+  assert.equal(state.logWrites, 2);
+  assert.equal(state.persisted.steps, 1000); assert.equal(state.persisted.water, 250);
+  await click(state, 'Inicio');
+  assert.equal(displayedValue('Editar total de pasos'), 1000);
+  assert.equal(displayedValue('Editar cantidad de agua'), 250);
+  assert.match(state.document.querySelector('.habit-feedback').textContent, /Guardado/);
+  assert.equal(state.mealWrites, 0); assert.equal(state.workoutWrites, 0); assert.equal(state.aiCalls, 0);
+});
+
 for (const [type, field, value] of [['add_water', 'water', 500], ['set_steps', 'steps', 7000], ['set_weight', 'weight', 71]]) {
   test(`Coach ${type} preserves its current registration flow and publishes the saved ${field} without reloading`, async t => {
     const state = await mountApp(t, [{ type, estimated: false, payload: { dateStr: today, [field]: value } }]);

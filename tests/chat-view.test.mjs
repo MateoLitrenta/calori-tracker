@@ -501,3 +501,127 @@ test('session, quota and provider errors preserve saved history/cards and cannot
     assert.equal(calls, 2);
   }
 });
+
+test('a later Coach batch reviews an already confirmed lunch instead of saving it again with a dinner', async t => {
+  const original = globalThis.__chatViewHarness.profile;
+  t.after(() => { globalThis.__chatViewHarness.profile = original; });
+  const date = new Date().toLocaleDateString('en-CA');
+  const current = { ...profile, recordGeneration: 'generation-one', records: {} };
+  globalThis.__chatViewHarness.profile = current;
+  const lunch = { type: 'add_meal', estimated: true, payload: { dateStr: date,
+    name: 'Sorrentinos, limonada y torta', type: 'Almuerzo', calories: 900, time: '13:00' } };
+  const dinner = { type: 'add_meal', estimated: true, payload: { dateStr: date,
+    name: 'Milanesa con papas y cerveza', type: 'Cena', calories: 1000, time: '21:00' } };
+  const writes = [];
+  globalThis.__chatViewHarness.updateRecord = async (_, record) => {
+    writes.push(structuredClone(record));
+    current.records = { [date]: { ...record, version: String(writes.length) } };
+    return true;
+  };
+  const view = conversation(), get = predicate => nodes(view.render(), predicate)[0];
+  const send = async actions => {
+    globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Revisá la propuesta.', actions });
+    get(e => e.type === 'textarea').props.onChange({ target: { value: 'Registrá la comida.' } });
+    await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+  };
+  await send([lunch]);
+  await get(e => e.type === 'button' && e.props.children === 'Confirmar').props.onClick();
+  assert.equal(writes[0].meals.length, 1);
+  await send([lunch, dinner]);
+  const review = renderToStaticMarkup(get(e => hasClass(e, 'chat-confirmation')));
+  await get(e => e.type === 'button' && e.props.children === 'Confirmar').props.onClick();
+  assert.equal(writes.length, 2);
+  assert.equal(writes[1].meals.length, 2);
+  assert.equal(new Set(writes[1].meals.map(meal => meal.id)).size, 2);
+  assert.equal(writes[1].meals.reduce((total, meal) => total + meal.calories, 0), 1900);
+  assert.match(review, /Ya registrado/);
+  const success = nodes(view.render(), e => hasClass(e, 'chat-saved')).at(-1);
+  assert.match(renderToStaticMarkup(success), /Milanesa con papas y cerveza/);
+  assert.doesNotMatch(renderToStaticMarkup(success), /Sorrentinos/);
+});
+
+test('a confirmed identical meal remains available as a separate explicit intention after conversation reload', async t => {
+  const original = globalThis.__chatViewHarness.profile;
+  t.after(() => { globalThis.__chatViewHarness.profile = original; });
+  const date = new Date().toLocaleDateString('en-CA');
+  const current = { ...profile, recordGeneration: 'generation-one', records: {} };
+  globalThis.__chatViewHarness.profile = current;
+  const action = { type: 'add_meal', estimated: true, payload: { dateStr: date,
+    name: 'Comida idéntica', type: 'Almuerzo', calories: 900, time: '13:00' } };
+  const writes = [];
+  globalThis.__chatViewHarness.updateRecord = async (_, record) => {
+    writes.push(structuredClone(record)); current.records = { [date]: { ...record, version: String(writes.length) } }; return true;
+  };
+  globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Revisá la propuesta.', actions: [action] });
+  let view = conversation();
+  const get = predicate => nodes(view.render(), predicate)[0];
+  const send = async () => {
+    get(e => e.type === 'textarea').props.onChange({ target: { value: 'Registrá esta comida.' } });
+    await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+  };
+  await send(); await get(e => e.type === 'button' && e.props.children === 'Confirmar').props.onClick();
+  view.render();
+  view.flushPersistence();
+  const stored = JSON.parse(localStorage.getItem(`calori:assistant:messages:user-a:${date}`));
+  assert.equal(stored.at(-1).recordedActions[0].entryId, writes[0].meals[0].id);
+  view = conversation(stored);
+  await send();
+  assert.equal(get(e => e.type === 'button' && e.props.children === 'Confirmar').props.disabled, true);
+  assert.equal(writes.length, 1);
+  const checkbox = get(e => e.type === 'input' && e.props.type === 'checkbox');
+  assert.equal(checkbox.props.checked, false);
+  checkbox.props.onChange({ target: { checked: true } });
+  assert.equal(get(e => e.type === 'button' && e.props.children === 'Confirmar').props.disabled, false);
+  await get(e => e.type === 'button' && e.props.children === 'Confirmar').props.onClick();
+  assert.equal(writes[1].meals.length, 2);
+  assert.notEqual(writes[1].meals[0].id, writes[1].meals[1].id);
+  assert.equal(writes[1].meals.reduce((total, meal) => total + meal.calories, 0), 1800);
+});
+
+test('similar meals without an exact confirmed match are saved normally', async t => {
+  const original = globalThis.__chatViewHarness.profile;
+  t.after(() => { globalThis.__chatViewHarness.profile = original; });
+  const date = new Date().toLocaleDateString('en-CA');
+  const current = { ...profile, recordGeneration: 'generation-one', records: {} };
+  globalThis.__chatViewHarness.profile = current;
+  const lunch = { type: 'add_meal', estimated: true, payload: { dateStr: date,
+    name: 'Sorrentinos', type: 'Almuerzo', calories: 900, time: '13:00' } };
+  const writes = [];
+  globalThis.__chatViewHarness.updateRecord = async (_, record) => {
+    writes.push(structuredClone(record)); current.records = { [date]: { ...record, version: String(writes.length) } }; return true;
+  };
+  const view = conversation(), get = predicate => nodes(view.render(), predicate)[0];
+  for (const calories of [900, 950]) {
+    globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Revisá la propuesta.', actions: [{ ...lunch, payload: { ...lunch.payload, calories } }] });
+    get(e => e.type === 'textarea').props.onChange({ target: { value: 'Registrá esta comida.' } });
+    await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+    assert.equal(nodes(view.render(), e => hasClass(e, 'chat-already-recorded')).length, 0);
+    await get(e => e.type === 'button' && e.props.children === 'Confirmar').props.onClick();
+  }
+  assert.equal(writes[1].meals.length, 2);
+  assert.equal(writes[1].meals.reduce((total, meal) => total + meal.calories, 0), 1850);
+});
+
+test('Coach uses one contextual persistence failure and keeps the unconfirmed proposal', async t => {
+  const original = globalThis.__chatViewHarness.profile;
+  t.after(() => { globalThis.__chatViewHarness.profile = original; });
+  const date = new Date().toLocaleDateString('en-CA');
+  globalThis.__chatViewHarness.profile = { ...profile, recordGeneration: 'generation-one', records: {} };
+  const failure = 'Tu sesión expiró. Volvé a iniciar sesión; el borrador se conserva.';
+  let options;
+  globalThis.__chatViewHarness.updateRecord = async (_date, _record, feedback) => {
+    options = feedback; feedback.onFailure({ kind: 'session', message: failure }); return false;
+  };
+  globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Revisá la propuesta.', actions: [
+    { type: 'add_meal', estimated: false, payload: { dateStr: date, name: 'Manzana', type: 'Snack', calories: 80, time: '12:30' } },
+  ] });
+  const view = conversation(), get = predicate => nodes(view.render(), predicate)[0];
+  get(e => e.type === 'textarea').props.onChange({ target: { value: 'Registrá esta comida.' } });
+  await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+  await get(e => e.type === 'button' && e.props.children === 'Confirmar').props.onClick();
+  assert.equal(options.feedback, 'contextual');
+  assert.ok(get(e => hasClass(e, 'chat-confirmation')));
+  const html = renderToStaticMarkup(view.render());
+  assert.equal(html.split(failure).length - 1, 1);
+  assert.doesNotMatch(html, /Registrado hoy/);
+});

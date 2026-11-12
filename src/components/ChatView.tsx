@@ -17,6 +17,8 @@ import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
 import { changedEntryDayMessage, reviewEntryBase, snapshotEntryRecord } from '../lib/entrySubmission';
+import type { RecordWriter } from '../lib/recordFeedback';
+import { findRecordedCoachAction, parseRecordedCoachActions, type RecordedCoachAction } from '../lib/coachActionReview';
 import { generateAIResponse, transcribeAudio, validActions, isValidDateStr, type MediaAttachment, type DataAction, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
@@ -26,6 +28,7 @@ interface Message extends ChatMessage {
   localTime?: string;
   coachCard?: CoachCardSnapshot;
   goalProgress?: 'all' | 'workout_sessions' | 'step_days';
+  recordedActions?: RecordedCoachAction[];
 }
 interface ActionCommitDraft { dateStr: string; base: DailyRecord; entryIds: string[]; types: DataAction['type'][] }
 
@@ -36,9 +39,11 @@ function readHistory(key: string): Message[] {
       message !== null && typeof message === 'object' &&
       typeof message.id === 'string' && typeof message.text === 'string' &&
       (message.role === 'user' || message.role === 'bot')).map(message => {
-        const { coachCard, goalProgress, ...textMessage } = message;
+        const { coachCard, goalProgress, recordedActions, ...textMessage } = message;
         const card = message.role === 'bot' ? parseCoachCard(coachCard) : undefined;
+        const recorded = message.role === 'bot' ? parseRecordedCoachActions(recordedActions) : undefined;
         return { ...textMessage, ...(card ? { coachCard: card } : {}),
+          ...(recorded ? { recordedActions: recorded } : {}),
           ...(message.role === 'bot' && typeof goalProgress === 'string' && ['all', 'workout_sessions', 'step_days'].includes(goalProgress) ? { goalProgress } : {}) };
       }) : [];
   } catch {
@@ -154,7 +159,7 @@ export default function ChatView({ scrollContainer }: { scrollContainer: RefObje
 function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr, today, onSelectDate, scrollContainer, goals }: {
   userId: string; activeProfile: UserProfile | null;
   avatarRevision: number;
-  updateRecord: (dateStr: string, record: DailyRecord) => Promise<boolean>;
+  updateRecord: RecordWriter;
   dateStr: string; today: string; onSelectDate: (date: string) => void;
   scrollContainer: RefObject<HTMLElement | null>;
   goals: CoachGoalsResource;
@@ -202,10 +207,14 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const cardScrollDecision = useRef<{ id: string; nearEnd: boolean } | null>(null);
   const mounted = useRef(true);
   const busy = useRef(false);
-  const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[] } | null>(null);
+  const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[]; registerAgain: number[] } | null>(null);
   const pendingCommitRef = useRef<ActionCommitDraft | null>(null);
   const [pendingGoal, setPendingGoal] = useState<CoachGoalProposal | null>(null);
   const [isEditingProposal, setIsEditingProposal] = useState(false);
+  const confirmedActions = messages.flatMap(message => message.role === 'bot' ? message.recordedActions ?? [] : []);
+  const recordedAction = (action: DataAction) => findRecordedCoachAction(action, activeProfile?.records ?? {}, confirmedActions);
+  const repeatedActions = pending?.actions.map(recordedAction) ?? [];
+  const actionsToSave = pending?.actions.filter((_, index) => !repeatedActions[index] || pending.registerAgain.includes(index)) ?? [];
 
   const clearPendingImage = () => {
     imageSelection.current += 1;
@@ -366,8 +375,9 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       i === index ? { ...action, payload: { ...action.payload, [field]: value } } : action) }));
   };
 
-  const appendReply = (text: string) => {
-    if (mounted.current) setMessages(prev => [...prev, { id: generateUUID(), role: 'bot', text }]);
+  const appendReply = (text: string, recordedActions: RecordedCoachAction[] = []) => {
+    if (mounted.current) setMessages(prev => [...prev, { id: generateUUID(), role: 'bot', text,
+      ...(recordedActions.length ? { recordedActions } : {}) }]);
   };
 
   const describeAction = (a: DataAction) => {
@@ -393,7 +403,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     entryIds: actions.map(() => generateUUID()), types: actions.map(action => action.type),
   });
 
-  const applyActions = async (actions: DataAction[], actionDate: string, draft?: ActionCommitDraft) => {
+  const applyActions = async (actions: DataAction[], actionDate: string, draft?: ActionCommitDraft, included?: boolean[]) => {
     const currentToday = formatDateStr(new Date());
     if (!mounted.current || !activeProfile || isPastConversation || dateStr !== currentToday ||
       !isValidDateStr(actionDate) || actionDate > currentToday) {
@@ -415,7 +425,9 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     if (!base) throw new Error('La propuesta sigue pendiente. Revisá los datos del día antes de reintentar.');
     intent.base = base;
     const record = snapshotEntryRecord(base, activeProfile.recordGeneration);
+    const recorded: RecordedCoachAction[] = [];
     for (const [index, a] of actions.entries()) {
+      if (included && !included[index]) continue;
       const p = a.payload;
       switch (a.type) {
         case 'add_meal': {
@@ -435,15 +447,19 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
         case 'add_water': record.water += p.water as number; break;
         case 'set_weight': record.weight = p.weight as number; break;
       }
+      if (a.type === 'add_meal' || a.type === 'add_workout') recorded.push({ type: a.type, dateStr: actionDate, entryId: intent.entryIds[index] });
     }
-    if (!await updateRecord(actionDate, record)) {
-      throw new Error('No se pudo completar el guardado. Revisá los registros de esa fecha antes de reintentar.');
+    let failureMessage: string | undefined;
+    if (!await updateRecord(actionDate, record, { feedback: 'contextual', onFailure: failure => { failureMessage = failure.message; } })) {
+      throw new Error(failureMessage || 'No se pudo completar el guardado. Revisá los registros de esa fecha antes de reintentar.');
     }
-    appendReply(`Registrado ${actionDate === currentToday ? 'hoy' : `el ${describeDate(actionDate)}`}: ${actions.map(describeAction).join('; ')}.`);
+    appendReply(`Registrado ${actionDate === currentToday ? 'hoy' : `el ${describeDate(actionDate)}`}: ${actions.filter((_, index) => !included || included[index]).map(describeAction).join('; ')}.`, recorded);
   };
 
   const confirmActions = async () => {
     if (!pending || busy.current) return;
+    const included = pending.actions.map((action, index) => !recordedAction(action) || pending.registerAgain.includes(index));
+    if (!included.some(Boolean)) return;
     if (validActions(pending.actions, formatDateStr(new Date())).length !== pending.actions.length ||
       pending.actions.some(action => action.payload.dateStr !== pending.dateStr)) {
       toast.error('Revisá nombre/actividad, tipo, calorías, hora y duración. Los valores numéricos deben ser positivos.');
@@ -455,7 +471,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     const proposal = pending;
     const draft = pendingCommitRef.current ??= newActionDraft(proposal.actions, proposal.dateStr);
     try {
-      await applyActions(proposal.actions, proposal.dateStr, draft);
+      await applyActions(proposal.actions, proposal.dateStr, draft, included);
       pendingCommitRef.current = null;
       if (mounted.current) setPending(null);
     } catch (error) {
@@ -638,7 +654,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         if (proposals.every(action => action.payload.dateStr === proposalDate)) {
           setIsEditingProposal(false);
           pendingCommitRef.current = newActionDraft(proposals, proposalDate);
-          setPending({ dateStr: proposalDate, actions: proposals });
+          setPending({ dateStr: proposalDate, actions: proposals, registerAgain: [] });
         } else {
           appendReply('Indicame una fecha por vez para confirmar esos registros.');
         }
@@ -847,8 +863,23 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         {pending && (
           <div className="chat-confirmation order-last rounded-xl border border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/20 p-4 text-sm">
             <p className="font-semibold mb-2">Confirmar registros del {describeDate(pending.dateStr)}</p>
+            {repeatedActions.some(Boolean) && <p className="mb-3" aria-live="polite">
+              {actionsToSave.length === 1 ? 'Se guardará 1 registro nuevo.' : actionsToSave.length
+                ? `Se guardarán ${actionsToSave.length} registros nuevos.` : 'No hay registros nuevos para guardar.'} Los ya registrados no se agregarán otra vez salvo que lo elijas.
+            </p>}
             {pending.actions.map((action, index) => (
               <div key={index} className="mb-3">
+                {repeatedActions[index] && <div className="chat-already-recorded mb-2 rounded-lg border border-current/20 p-3">
+                  <p className="font-semibold">Ya registrado en esta conversación</p>
+                  <label className="mt-2 flex items-start gap-2">
+                    <input type="checkbox" checked={pending.registerAgain.includes(index)} disabled={isTyping}
+                      onChange={event => { const checked = event.target.checked; setPending(previous => previous && ({ ...previous,
+                        registerAgain: checked ? [...previous.registerAgain.filter(value => value !== index), index]
+                          : previous.registerAgain.filter(value => value !== index) })); }}
+                      className="mt-1 h-4 w-4 accent-orange-500" />
+                    {action.type === 'add_meal' ? 'Registrar otra comida igual' : 'Registrar otro ejercicio igual'}
+                  </label>
+                </div>}
                 {isEditingProposal ? (
                   <div className="chat-proposal-edit grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {(action.type === 'add_meal'
@@ -900,7 +931,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             <div className="flex flex-wrap gap-3 mt-3">
               <button type="button" disabled={isTyping} onClick={() => setIsEditingProposal(true)}
                 className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Editar</button>
-              <button type="button" disabled={isTyping} onClick={confirmActions}
+              <button type="button" disabled={isTyping || !actionsToSave.length} onClick={confirmActions}
                 className="rounded-xl bg-[#f5a064] text-white px-3 py-2 disabled:opacity-50">Confirmar</button>
               <button type="button" disabled={isTyping} onClick={() => { setPending(null); pendingCommitRef.current = null; appendReply('Registro cancelado.'); }}
                 className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Cancelar</button>

@@ -30,7 +30,7 @@ function RestoreTabScroll({ children, onReady }: {
 }
 
 function App() {
-  const { user, loading, activeProfile, updateRecord, completeOnboarding, signOut } = useAppStore();
+  const { user, loading, activeProfile, updateRecord, habitDrafts, completeOnboarding, signOut } = useAppStore();
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [entryError, setEntryError] = useState('');
@@ -150,7 +150,7 @@ function App() {
   }
 
   if (!user) {
-    return <><Toaster position="bottom-right" />
+    return <><Toaster position="bottom-right" containerStyle={{ bottom: 'var(--feedback-offset)' }} toastOptions={{ style: { maxWidth: 'min(24rem, calc(100vw - 2rem))' } }} />
       {route === '/login' || route === '/register'
         ? <AuthModal key={route} presentation="page" initialMode={route === '/login' ? 'login' : 'register'}
           onClose={() => navigate('/')} onModeChange={mode => navigate(mode === 'login' ? '/login' : '/register')} />
@@ -173,12 +173,12 @@ function App() {
   }
 
   if (route === '/onboarding') {
-    return <><Toaster position="bottom-right" /><Onboarding key={user.id} profile={activeProfile} onComplete={completeOnboarding} onSignOut={signOut} /></>;
+    return <><Toaster position="bottom-right" containerStyle={{ bottom: 'var(--feedback-offset)' }} toastOptions={{ style: { maxWidth: 'min(24rem, calc(100vw - 2rem))' } }} /><Onboarding key={user.id} profile={activeProfile} onComplete={completeOnboarding} onSignOut={signOut} /></>;
   }
 
   return (
     <div ref={appShellRef} className={`app-shell ${isCoachLayout ? 'app-shell-coach' : ''} h-screen flex flex-col md:flex-row overflow-hidden bg-slate-50 dark:bg-[#151719] text-slate-900 dark:text-white`}>
-      <Toaster position="bottom-right" />
+      <Toaster position="bottom-right" containerStyle={{ bottom: 'var(--feedback-offset)' }} toastOptions={{ style: { maxWidth: 'min(24rem, calc(100vw - 2rem))' } }} />
       
       {/* Desktop Sidebar */}
       <Sidebar 
@@ -202,7 +202,7 @@ function App() {
           <div className="app-content p-4 md:p-0">
             <Suspense fallback={<ViewSkeleton view={activeTab} />}>
             <RestoreTabScroll key={`${userId}:${activeTab}`} onReady={restoreTabScroll}>
-            {activeTab === 'home' && <HomeView activeProfile={activeProfile} updateRecord={updateRecord} />}
+            {activeTab === 'home' && <HomeView activeProfile={activeProfile} updateRecord={updateRecord} habitDrafts={habitDrafts} />}
             {activeTab === 'chat' && <ChatView scrollContainer={mainRef} />}
             {activeTab === 'charts' && <ChartsView />}
             {activeTab === 'profile' && <ProfileView />}

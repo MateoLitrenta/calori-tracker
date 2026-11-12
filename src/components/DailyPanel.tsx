@@ -13,6 +13,8 @@ import { MealPhotoPicker, MealThumbnail } from './MealPhoto';
 import EntryFormShell from './EntryFormShell';
 import AutoResizeTextarea from './AutoResizeTextarea';
 import EntryEstimateResult from './EntryEstimateResult';
+import { HabitDraftController } from '../lib/habitDraft';
+import type { RecordWriter } from '../lib/recordFeedback';
 
 const workoutCategories = ['Gimnasio', 'Fútbol', 'Correr', 'Natación', 'Caminata'] as const;
 type WorkoutCategory = typeof workoutCategories[number];
@@ -42,13 +44,19 @@ function DailyRecords({ count, children }: { count: number; children: React.Reac
 interface DailyPanelProps {
   record: DailyRecord | undefined;
   dateStr: string;
-  onUpdateRecord: (dateStr: string, updatedRecord: DailyRecord) => Promise<boolean>;
+  onUpdateRecord: RecordWriter;
   profile: UserProfile;
   selectedGroup?: { type: 'day'|'week'|'month'|'year', label: string, dates: string[] } | null;
   records?: DailyRecordsMap;
+  habitDrafts?: HabitDraftController | null;
 }
 
-const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord, profile, selectedGroup, records }) => {
+const habitRecord = (props: DailyPanelProps, day: string) => snapshotEntryRecord(
+  (day === props.dateStr ? props.record : props.records?.[day]) ?? { dateStr: day, date: new Date(day + 'T12:00:00'),
+    meals: [], workouts: [], steps: 0, water: 0, version: null }, props.profile.recordGeneration);
+
+const DailyPanel: React.FC<DailyPanelProps> = (props) => {
+  const { record, dateStr, onUpdateRecord, profile, selectedGroup, records, habitDrafts } = props;
   const [activeTab, setActiveTab] = useState<'comida' | 'entrenamiento' | null>(null);
   const tabContainerRef = useRef<HTMLDivElement>(null);
 
@@ -111,17 +119,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   };
 
   const handleAddWater = (amount: number) => {
-    const newWater = Math.max(0, waterValueRef.current + amount);
-    waterValueRef.current = newWater;
-    setLocalWater(newWater);
-    scheduleWaterSave(newWater);
+    habitController.add(dateStr, 'water', amount);
   };
 
   const handleSetWater = (amount: number) => {
-    const newWater = Math.max(0, amount);
-    waterValueRef.current = newWater;
-    setLocalWater(newWater);
-    scheduleWaterSave(newWater);
+    habitController.set(dateStr, 'water', Math.max(0, amount));
   };
 
   const handleSetWeight = async (weight: number) => {
@@ -141,17 +143,11 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
   };
 
   const handleUpdateSteps = (steps: number) => {
-    const nextSteps = Math.max(0, steps);
-    setLocalSteps(nextSteps ? String(nextSteps) : '');
-    stepsValueRef.current = nextSteps;
-    scheduleStepsSave(nextSteps);
+    habitController.set(dateStr, 'steps', Math.max(0, steps));
   };
 
   const handleAddSteps = (amount: number) => {
-    const newSteps = Math.max(0, stepsValueRef.current + amount);
-    stepsValueRef.current = newSteps;
-    setLocalSteps(newSteps ? String(newSteps) : '');
-    scheduleStepsSave(newSteps);
+    habitController.add(dateStr, 'steps', amount);
   };
 
   // --- Forms State ---
@@ -294,108 +290,20 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
       document.removeEventListener('click', handleClickOutside as EventListener);
     };
   }, [activeTab]);
-  const [localWater, setLocalWater] = useState(currentRecord.water);
-  const waterValueRef = useRef(currentRecord.water);
-  const waterDateRef = useRef(dateStr);
-  const waterDraftRef = useRef<{ base: DailyRecord; revision: number } | null>(null);
-  const waterSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const scheduleWaterSave = (water: number) => {
-    if (waterSaveTimerRef.current) clearTimeout(waterSaveTimerRef.current);
-    waterSaveTimerRef.current = null;
-    const saveDate = dateStr;
-    const draft = waterDraftRef.current?.base.dateStr === saveDate ? waterDraftRef.current
-      : { base: snapshotEntryRecord(currentRecord, profile.recordGeneration), revision: 0 };
-    waterDraftRef.current = draft; const revision = ++draft.revision;
-    const base = reviewEntryBase(draft.base, currentRecord, profile.recordGeneration, () => window.confirm(
-      `Agua registrada ahora: ${currentRecord.water == null ? 'sin registro' : currentRecord.water.toLocaleString('es-AR') + ' ml'}.\nTu borrador propone el total: ${water.toLocaleString('es-AR')} ml.\n${changedEntryDayMessage}`));
-    if (!base) return;
-    draft.base = base;
-    waterSaveTimerRef.current = setTimeout(async () => {
-      const stepsDraft = stepsDraftRef.current;
-      const pendingSteps = stepsSaveTimerRef.current && saveDate === stepsDateRef.current && stepsDraft &&
-        stepsDraft.base.generation === base.generation && stepsDraft.base.version === base.version ? stepsValueRef.current : undefined;
-      const stepsRevision = stepsDraft?.revision;
-      if (stepsSaveTimerRef.current && pendingSteps !== undefined) {
-        clearTimeout(stepsSaveTimerRef.current);
-        stepsSaveTimerRef.current = null;
-      }
-      waterSaveTimerRef.current = null;
-      try {
-        if (await onUpdateRecord(saveDate, { ...base, ...(pendingSteps !== undefined ? { steps: pendingSteps } : {}), water })) {
-          if (waterDraftRef.current === draft && draft.revision === revision) waterDraftRef.current = null;
-          if (pendingSteps !== undefined && stepsDraftRef.current === stepsDraft && stepsDraft?.revision === stepsRevision) stepsDraftRef.current = null;
-        }
-      } catch { toast.error('No se pudo confirmar el agua. Tu cantidad se conserva para reintentar.'); }
-    }, 400);
-  };
-
+  const [, setHabitRevision] = useState(0);
+  const [habitReview, setHabitReview] = useState<DailyRecord | null>(null);
+  const [localHabitDrafts] = useState(() => new HabitDraftController(day => habitRecord(props, day), props.onUpdateRecord));
+  const habitController = habitDrafts ?? localHabitDrafts;
+  const habit = habitController.view(dateStr, currentRecord);
+  const localWater = habit.water;
+  const localSteps = habit.steps ? String(habit.steps) : '';
+  useEffect(() => { localHabitDrafts.configure(day => habitRecord(props, day), props.onUpdateRecord); }, [localHabitDrafts, props]);
+  useEffect(() => { localHabitDrafts.resetOwner(); localHabitDrafts.connect(); }, [localHabitDrafts, profile.id]);
   useEffect(() => {
-    if (waterDateRef.current !== dateStr) {
-      waterDateRef.current = dateStr;
-      waterDraftRef.current = null;
-      waterValueRef.current = currentRecord.water;
-      setLocalWater(currentRecord.water);
-    } else if (!waterDraftRef.current && !waterSaveTimerRef.current && waterValueRef.current !== currentRecord.water) {
-      waterValueRef.current = currentRecord.water;
-      setLocalWater(currentRecord.water);
-    }
-  }, [dateStr, currentRecord.water]);
-  useEffect(() => () => {
-    if (waterSaveTimerRef.current) clearTimeout(waterSaveTimerRef.current);
-  }, []);
-
-  const [localSteps, setLocalSteps] = useState(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
-  const stepsInputRef = useRef<HTMLInputElement>(null);
-  const stepsValueRef = useRef(currentRecord.steps);
-  const stepsDateRef = useRef(dateStr);
-  const stepsDraftRef = useRef<{ base: DailyRecord; revision: number } | null>(null);
-  const stepsSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const scheduleStepsSave = (steps: number) => {
-    if (stepsSaveTimerRef.current) clearTimeout(stepsSaveTimerRef.current);
-    stepsSaveTimerRef.current = null;
-    const saveDate = dateStr;
-    stepsDateRef.current = saveDate;
-    const draft = stepsDraftRef.current?.base.dateStr === saveDate ? stepsDraftRef.current
-      : { base: snapshotEntryRecord(currentRecord, profile.recordGeneration), revision: 0 };
-    stepsDraftRef.current = draft; const revision = ++draft.revision;
-    const base = reviewEntryBase(draft.base, currentRecord, profile.recordGeneration, () => window.confirm(
-      `Pasos registrados ahora: ${currentRecord.steps == null ? 'sin registro' : currentRecord.steps.toLocaleString('es-AR')}.\nTu borrador propone el total: ${steps.toLocaleString('es-AR')}.\n${changedEntryDayMessage}`));
-    if (!base) return;
-    draft.base = base;
-    stepsSaveTimerRef.current = setTimeout(async () => {
-      const waterDraft = waterDraftRef.current;
-      const pendingWater = waterSaveTimerRef.current && saveDate === waterDateRef.current && waterDraft &&
-        waterDraft.base.generation === base.generation && waterDraft.base.version === base.version ? waterValueRef.current : undefined;
-      const waterRevision = waterDraft?.revision;
-      if (waterSaveTimerRef.current && pendingWater !== undefined) {
-        clearTimeout(waterSaveTimerRef.current);
-        waterSaveTimerRef.current = null;
-      }
-      stepsSaveTimerRef.current = null;
-      try {
-        if (await onUpdateRecord(saveDate, { ...base, ...(pendingWater !== undefined ? { water: pendingWater } : {}), steps })) {
-          if (stepsDraftRef.current === draft && draft.revision === revision) stepsDraftRef.current = null;
-          if (pendingWater !== undefined && waterDraftRef.current === waterDraft && waterDraft?.revision === waterRevision) waterDraftRef.current = null;
-        }
-      } catch { toast.error('No se pudieron confirmar los pasos. Tu total se conserva para reintentar.'); }
-    }, 400);
-  };
-
-  useEffect(() => {
-    if (stepsDateRef.current !== dateStr) {
-      stepsDateRef.current = dateStr;
-      stepsDraftRef.current = null;
-      stepsValueRef.current = currentRecord.steps;
-      setLocalSteps(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
-    } else if (!stepsDraftRef.current && document.activeElement !== stepsInputRef.current && !stepsSaveTimerRef.current) {
-      stepsValueRef.current = currentRecord.steps;
-      setLocalSteps(currentRecord.steps === 0 ? '' : String(currentRecord.steps));
-    }
-  }, [dateStr, currentRecord.steps]);
-  useEffect(() => () => {
-    if (stepsSaveTimerRef.current) clearTimeout(stepsSaveTimerRef.current);
-  }, []);
-
+    habitController.connect();
+    const unsubscribe = habitController.subscribe(() => setHabitRevision(value => value + 1));
+    return () => { unsubscribe(); if (!habitDrafts) habitController.dispose(); };
+  }, [habitController, habitDrafts]);
   useEffect(() => {
     if (activeTab === 'comida' && !editingMealId) {
       setMealTime(format(new Date(), 'HH:mm'));
@@ -662,6 +570,7 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <button type="button"
                     className="habit-value cursor-pointer hover:text-cyan-400 transition-colors"
                     onClick={() => {
+                      habitController.begin(dateStr);
                       setEditWaterVal(localWater ? String(localWater) : '');
                       setIsEditingWater(true);
                     }}
@@ -687,7 +596,6 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
               <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
                 {isEditingSteps ? (
                   <input
-                    ref={stepsInputRef}
                     type="number"
                     inputMode="numeric"
                     pattern="[0-9]*"
@@ -711,7 +619,8 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   <button type="button"
                     className="habit-value cursor-pointer hover:text-green-400 transition-colors"
                     onClick={() => {
-                      setEditStepsVal(stepsValueRef.current ? String(stepsValueRef.current) : '');
+                      habitController.begin(dateStr);
+                      setEditStepsVal(localSteps);
                       setIsEditingSteps(true);
                     }}
                     title="Editar pasos"
@@ -745,9 +654,42 @@ const DailyPanel: React.FC<DailyPanelProps> = ({ record, dateStr, onUpdateRecord
                   setIsEditingWeight(true);
                 }} title="Registrar peso">Editar</button>
             </div>
+            {habit.status && <div className="habit-feedback col-span-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-gray-300"
+              role={habit.status === 'conflict' || habit.status === 'unconfirmed' ? 'alert' : 'status'} aria-atomic="true">
+              <span>{habit.status === 'editing' ? 'Editando · Cambios pendientes' : habit.status === 'saving' ? 'Guardando… Podés seguir ajustando.' :
+                habit.status === 'saved' ? 'Guardado' : habit.status === 'conflict' ? 'Conflicto · Tu borrador se conserva.' : 'No confirmado · Tu borrador se conserva.'}</span>
+              {habit.status === 'unconfirmed' && <button type="button" className="habit-feedback-action"
+                onClick={() => habitController.retry(dateStr)}>Comprobar y reintentar</button>}
+              {habit.status === 'conflict' && <button type="button" className="habit-feedback-action"
+                onClick={() => setHabitReview(snapshotEntryRecord(currentRecord, profile.recordGeneration))}>Revisar borrador</button>}
+              {(habit.status === 'unconfirmed' || habit.status === 'conflict') && <p className="w-full">{habit.failure?.message}</p>}
+            </div>}
           </div>
         )}
       </div>
+
+      {habitReview && habitReview.dateStr === dateStr && <EntryFormShell title="Revisar cambios del día" desktopModal onClose={() => setHabitReview(null)}>
+        <div className="habit-review p-5 text-slate-900 dark:text-white">
+          <p className="text-sm text-slate-600 dark:text-gray-300">{habit.failure?.message}</p>
+          <p className="mt-2 text-sm font-medium">{panelSubtitle} · Pasos y agua</p>
+          <dl className="habit-review-values mt-4 grid gap-3">
+            {(['steps', 'water'] as const).map(field => <div key={field} className="rounded-xl border border-slate-200 dark:border-gray-700 p-3">
+              <dt className="text-sm font-semibold">{field === 'steps' ? 'Pasos' : 'Agua'}</dt>
+              <dd className="mt-1 text-sm text-slate-500 dark:text-gray-400">Guardado: {habitReview[field].toLocaleString('es-AR')}{field === 'water' ? ' ml' : ''}</dd>
+              <dd className="mt-1 text-sm">Tu borrador: {habit[field].toLocaleString('es-AR')}{field === 'water' ? ' ml' : ''}</dd>
+            </div>)}
+          </dl>
+          <p className="mt-4 text-xs text-slate-500 dark:text-gray-400">Sólo se aplicarán los valores que editaste. Los demás registros del día se conservarán.</p>
+          <div className="habit-review-actions mt-5 grid gap-2">
+            <button type="button" className="habit-review-apply" onClick={() => {
+              if (habitController.review(dateStr, habitReview)) setHabitReview(null);
+              else setHabitReview(snapshotEntryRecord(currentRecord, profile.recordGeneration));
+            }}>Aplicar valores revisados</button>
+            <button type="button" className="habit-feedback-action" onClick={() => setHabitReview(null)}>Conservar borrador</button>
+            <button type="button" className="habit-feedback-action" onClick={() => { habitController.discard(dateStr); setHabitReview(null); }}>Descartar cambios</button>
+          </div>
+        </div>
+      </EntryFormShell>}
 
       {!isGroup && (
         <div className="daily-journal contents" data-record-count={currentRecord.meals.length + currentRecord.workouts.length}>
