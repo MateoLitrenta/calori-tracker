@@ -461,6 +461,9 @@
 .ah-month strong {
   font-size: 12px;
   font-weight: 500;
+  color: var(--home-muted);
+}
+.ah-month[data-activity="true"] strong {
   color: var(--home-orange);
 }
 .ah-month-caption {

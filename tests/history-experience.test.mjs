@@ -370,6 +370,35 @@ test('previous calendar year remains available without a miniature annual day he
   assert.equal(view.saves.length, 0);
 });
 
+for (const currentHasActivity of [true, false]) {
+  test('year month status distinguishes past, current and future without redundant empty labels' +
+    (currentHasActivity ? ' with current activity' : ' with an empty current month'), async t => {
+    const view = await mount(t, currentHasActivity ? fixtures() : {});
+    await view.scale('Año');
+    const month = key => document.querySelector('.ah-month[data-month="' + key + '"]');
+    const october = month('2026-10'), november = month('2026-11'), december = month('2026-12');
+    assert.equal(october.querySelector('strong').textContent, 'Sin registros');
+    assert.equal(!!october.querySelector('.ah-month-caption'), false, 'A past empty month needs no second empty-state label');
+    assert.equal(october.dataset.activity, 'false');
+    assert.equal(november.querySelector('strong').textContent, currentHasActivity ? '6 días' : 'Sin registros');
+    assert.equal(november.querySelector('.ah-month-caption').textContent.trim(),
+      currentHasActivity ? 'con registros · En curso' : 'En curso');
+    assert.equal(november.dataset.activity, String(currentHasActivity));
+    assert.equal(december.querySelector('strong').textContent, 'Próximamente');
+    assert.equal(!!december.querySelector('.ah-month-caption'), false, 'A future month does not repeat an empty-state caption');
+    assert.equal(december.dataset.activity, 'false');
+    assert.equal(december.disabled, true);
+    assert.doesNotMatch(document.querySelector('.ah-year').textContent, /Este mes/);
+    await view.click(view.button('Año anterior'));
+    for (const pastMonth of document.querySelectorAll('.ah-month')) {
+      assert.equal(pastMonth.querySelector('strong').textContent, 'Sin registros');
+      assert.equal(!!pastMonth.querySelector('.ah-month-caption'), false);
+    }
+    assert.equal(view.heading(), today);
+    assert.equal(view.saves.length, 0);
+  });
+}
+
 test('week shows seven exact Sunday-aligned dates and navigates one real week at a time', async t => {
   const view = await mount(t);
   await view.scale('Semana');

@@ -362,11 +362,15 @@ export default function Heatmap({
               {Array.from({ length: 12 }, (_, index) => {
                 const key = year + '-' + String(index + 1).padStart(2, '0'),
                   dates = yearDates.filter((date) => date.startsWith(key) && date <= today),
-                  count = dates.filter((date) => hasActivity(records[date])).length;
+                  count = dates.filter((date) => hasActivity(records[date])).length,
+                  current = key === today.slice(0, 7),
+                  future = key > today.slice(0, 7),
+                  caption = count ? 'con registros' + (current ? ' · En curso' : '') : current ? 'En curso' : null;
                 return (
                   <button
                     className="ah-month history-month"
                     data-month={key}
+                    data-activity={count > 0}
                     key={key}
                     type="button"
                     disabled={key > today.slice(0, 7)}
@@ -389,10 +393,8 @@ export default function Heatmap({
                     }}
                   >
                     <span>{format(new Date(year, index, 1), 'MMMM', { locale: es })}</span>
-                    <strong>{count ? countLabel(count, 'día', 'días') : 'Sin registros'}</strong>
-                    <span className="ah-month-caption">
-                      {count ? 'con registros' : key > today.slice(0, 7) ? 'Próximamente' : 'Este mes'}
-                    </span>
+                    <strong>{future ? 'Próximamente' : count ? countLabel(count, 'día', 'días') : 'Sin registros'}</strong>
+                    {caption && <span className="ah-month-caption">{caption}</span>}
                   </button>
                 );
               })}
