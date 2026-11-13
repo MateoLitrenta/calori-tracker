@@ -1,0 +1,346 @@
+{
+  "scope": "Annual month labels and neutral empty/future states only",
+  "baseCommit": "c735be2c462931ab93bd3bec68388859c21c988f",
+  "implementationCommit": "217067e78692229898a1992cd65399e153711509",
+  "sourceFiles": [
+    "src/components/Heatmap.tsx",
+    "src/components/ActivityHistory.css"
+  ],
+  "sourceDigest": "4d2e7553988318e71bcf7d6f832964981fa9587825f11cd2858c0c0d89291902",
+  "browserVersion": "157.0.8103.51",
+  "fixtureDate": "2026-11-12",
+  "synthetic": true,
+  "services": "Actual React UI; Auth/RPC/Storage/Gemini simulated, external requests blocked",
+  "results": [
+    {
+      "width": 393,
+      "height": 852,
+      "theme": "light",
+      "checks": [
+        "past_empty_only_no_records",
+        "past_empty_is_neutral",
+        "current_with_records_is_in_progress",
+        "future_only_upcoming_neutral_and_disabled",
+        "past_activity_count_unchanged",
+        "twelve_months_and_touch_targets_preserved",
+        "no_page_horizontal_overflow",
+        "no_errors_no_writes",
+        "current_empty_in_progress_and_neutral",
+        "empty_fixture_has_no_errors_or_writes"
+      ],
+      "pastEmpty": {
+        "text": "Enero Sin registros",
+        "metric": "Sin registros",
+        "caption": null,
+        "color": "rgb(100, 116, 139)",
+        "neutral": "rgb(100, 116, 139)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 98.328125,
+        "height": 84
+      },
+      "currentWithRecords": {
+        "text": "Noviembre 11 días con registros · En curso",
+        "metric": "11 días",
+        "caption": "con registros · En curso",
+        "color": "rgb(245, 160, 100)",
+        "neutral": "rgb(100, 116, 139)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 98.328125,
+        "height": 101.5
+      },
+      "future": {
+        "text": "Diciembre Próximamente",
+        "metric": "Próximamente",
+        "caption": null,
+        "color": "rgb(100, 116, 139)",
+        "neutral": "rgb(100, 116, 139)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": true,
+        "width": 98.34375,
+        "height": 101.5
+      },
+      "pastWithRecords": {
+        "text": "Octubre 26 días con registros",
+        "metric": "26 días",
+        "caption": "con registros",
+        "color": "rgb(245, 160, 100)",
+        "neutral": "rgb(100, 116, 139)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 98.328125,
+        "height": 101.5
+      },
+      "currentEmpty": {
+        "text": "Noviembre Sin registros En curso",
+        "metric": "Sin registros",
+        "caption": "En curso",
+        "color": "rgb(100, 116, 139)",
+        "neutral": "rgb(100, 116, 139)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 98.328125,
+        "height": 86.5
+      },
+      "screenshot": "year-light-393.png",
+      "sha256": "b5be23f35c52c19c6b36098733a4f62a44bb848c0d223ac97e86472696935562",
+      "windowErrors": 0,
+      "pageErrors": 0
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "checks": [
+        "past_empty_only_no_records",
+        "past_empty_is_neutral",
+        "current_with_records_is_in_progress",
+        "future_only_upcoming_neutral_and_disabled",
+        "past_activity_count_unchanged",
+        "twelve_months_and_touch_targets_preserved",
+        "no_page_horizontal_overflow",
+        "no_errors_no_writes",
+        "current_empty_in_progress_and_neutral",
+        "empty_fixture_has_no_errors_or_writes"
+      ],
+      "pastEmpty": {
+        "text": "Enero Sin registros",
+        "metric": "Sin registros",
+        "caption": null,
+        "color": "rgb(100, 116, 139)",
+        "neutral": "rgb(100, 116, 139)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 181.734375,
+        "height": 84
+      },
+      "currentWithRecords": {
+        "text": "Noviembre 11 días con registros · En curso",
+        "metric": "11 días",
+        "caption": "con registros · En curso",
+        "color": "rgb(245, 160, 100)",
+        "neutral": "rgb(100, 116, 139)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 181.734375,
+        "height": 86.5
+      },
+      "future": {
+        "text": "Diciembre Próximamente",
+        "metric": "Próximamente",
+        "caption": null,
+        "color": "rgb(100, 116, 139)",
+        "neutral": "rgb(100, 116, 139)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": true,
+        "width": 181.734375,
+        "height": 86.5
+      },
+      "pastWithRecords": {
+        "text": "Octubre 26 días con registros",
+        "metric": "26 días",
+        "caption": "con registros",
+        "color": "rgb(245, 160, 100)",
+        "neutral": "rgb(100, 116, 139)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 181.734375,
+        "height": 86.5
+      },
+      "currentEmpty": {
+        "text": "Noviembre Sin registros En curso",
+        "metric": "Sin registros",
+        "caption": "En curso",
+        "color": "rgb(100, 116, 139)",
+        "neutral": "rgb(100, 116, 139)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 181.734375,
+        "height": 86.5
+      },
+      "screenshot": "year-light-1440.png",
+      "sha256": "56940a60cb25dfb51f99df2b81d7add3e4cbe1ab3a8782fd8b0180c9a551dc98",
+      "windowErrors": 0,
+      "pageErrors": 0
+    },
+    {
+      "width": 393,
+      "height": 852,
+      "theme": "dark",
+      "checks": [
+        "past_empty_only_no_records",
+        "past_empty_is_neutral",
+        "current_with_records_is_in_progress",
+        "future_only_upcoming_neutral_and_disabled",
+        "past_activity_count_unchanged",
+        "twelve_months_and_touch_targets_preserved",
+        "no_page_horizontal_overflow",
+        "no_errors_no_writes",
+        "current_empty_in_progress_and_neutral",
+        "empty_fixture_has_no_errors_or_writes"
+      ],
+      "pastEmpty": {
+        "text": "Enero Sin registros",
+        "metric": "Sin registros",
+        "caption": null,
+        "color": "rgb(169, 171, 174)",
+        "neutral": "rgb(169, 171, 174)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 98.328125,
+        "height": 84
+      },
+      "currentWithRecords": {
+        "text": "Noviembre 11 días con registros · En curso",
+        "metric": "11 días",
+        "caption": "con registros · En curso",
+        "color": "rgb(245, 160, 100)",
+        "neutral": "rgb(169, 171, 174)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 98.328125,
+        "height": 101.5
+      },
+      "future": {
+        "text": "Diciembre Próximamente",
+        "metric": "Próximamente",
+        "caption": null,
+        "color": "rgb(169, 171, 174)",
+        "neutral": "rgb(169, 171, 174)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": true,
+        "width": 98.34375,
+        "height": 101.5
+      },
+      "pastWithRecords": {
+        "text": "Octubre 26 días con registros",
+        "metric": "26 días",
+        "caption": "con registros",
+        "color": "rgb(245, 160, 100)",
+        "neutral": "rgb(169, 171, 174)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 98.328125,
+        "height": 101.5
+      },
+      "currentEmpty": {
+        "text": "Noviembre Sin registros En curso",
+        "metric": "Sin registros",
+        "caption": "En curso",
+        "color": "rgb(169, 171, 174)",
+        "neutral": "rgb(169, 171, 174)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 98.328125,
+        "height": 86.5
+      },
+      "screenshot": "year-dark-393.png",
+      "sha256": "1b8b896d28e6f567a994eca25b03bf15c352f2b94d843f4bc263868513d4c25f",
+      "windowErrors": 0,
+      "pageErrors": 0
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "checks": [
+        "past_empty_only_no_records",
+        "past_empty_is_neutral",
+        "current_with_records_is_in_progress",
+        "future_only_upcoming_neutral_and_disabled",
+        "past_activity_count_unchanged",
+        "twelve_months_and_touch_targets_preserved",
+        "no_page_horizontal_overflow",
+        "no_errors_no_writes",
+        "current_empty_in_progress_and_neutral",
+        "empty_fixture_has_no_errors_or_writes"
+      ],
+      "pastEmpty": {
+        "text": "Enero Sin registros",
+        "metric": "Sin registros",
+        "caption": null,
+        "color": "rgb(169, 171, 174)",
+        "neutral": "rgb(169, 171, 174)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 181.734375,
+        "height": 84
+      },
+      "currentWithRecords": {
+        "text": "Noviembre 11 días con registros · En curso",
+        "metric": "11 días",
+        "caption": "con registros · En curso",
+        "color": "rgb(245, 160, 100)",
+        "neutral": "rgb(169, 171, 174)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 181.734375,
+        "height": 86.5
+      },
+      "future": {
+        "text": "Diciembre Próximamente",
+        "metric": "Próximamente",
+        "caption": null,
+        "color": "rgb(169, 171, 174)",
+        "neutral": "rgb(169, 171, 174)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": true,
+        "width": 181.734375,
+        "height": 86.5
+      },
+      "pastWithRecords": {
+        "text": "Octubre 26 días con registros",
+        "metric": "26 días",
+        "caption": "con registros",
+        "color": "rgb(245, 160, 100)",
+        "neutral": "rgb(169, 171, 174)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 181.734375,
+        "height": 86.5
+      },
+      "currentEmpty": {
+        "text": "Noviembre Sin registros En curso",
+        "metric": "Sin registros",
+        "caption": "En curso",
+        "color": "rgb(169, 171, 174)",
+        "neutral": "rgb(169, 171, 174)",
+        "accent": "rgb(245, 160, 100)",
+        "disabled": false,
+        "width": 181.734375,
+        "height": 86.5
+      },
+      "screenshot": "year-dark-1440.png",
+      "sha256": "7975e3c8bec237799e3f1a775d1c9d57ca3ebcf7348836608fe40be8cf812f86",
+      "windowErrors": 0,
+      "pageErrors": 0
+    }
+  ],
+  "externalRequestsAttempted": 0,
+  "captureMethod": "Scoped component PNG temporarily unfolds app scroll containers, preserves exact component width and hides fixed navigation. All measurements and interactions use the original layout.",
+  "notRepeated": [
+    "346-interaction full matrix",
+    "complete regression suite",
+    "video recording"
+  ],
+  "implementationSourceTree": "4e4d0146de7d0680745397682cdf09613f2ce820",
+  "normalizedSourceDigest": "4d2e7553988318e71bcf7d6f832964981fa9587825f11cd2858c0c0d89291902",
+  "validationScope": "Only four annual-view combinations and complete/empty fixtures; broad 346-interaction matrix, original full suite and video were not repeated.",
+  "automatedValidation": {
+    "relatedTests": { "tests": 39, "pass": 39, "fail": 0, "skipped": 0, "cancelled": 0 },
+    "newRegressionCases": 2,
+    "regressionsFailedBeforeFix": true,
+    "commands": [
+      "node --test tests/history-experience.test.mjs tests/precision-layout.test.mjs tests/ui-polish.test.mjs",
+      "npm run lint",
+      "npm run build",
+      "git diff --check"
+    ],
+    "typescript": "PASSED via tsc -b in build",
+    "lint": { "result": "PASSED", "warnings": 12, "errors": 0 },
+    "build": "PASSED",
+    "diffCheck": "PASSED",
+    "fullHistoricalSuiteRepeated": false
+  }
+}

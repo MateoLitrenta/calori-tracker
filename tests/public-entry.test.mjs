@@ -114,6 +114,14 @@ function node(tree, predicate) {
   assert.ok(found, 'Expected UI element was rendered');
   return found;
 }
+// Find the scroll cache by its tab contract, not the order of App's hooks.
+// Adding presentation state must not make this fixture read a different ref.
+function tabScrollMemory(view) {
+  const memory = view.slots.find(slot => slot?.current &&
+    ['home', 'charts', 'profile'].every(tab => typeof slot.current[tab] === 'number'));
+  assert.ok(memory, 'The independent tab scroll cache is available');
+  return memory.current;
+}
 const submit = tree => node(tree, element => element.type === 'form').props.onSubmit({ preventDefault() {} });
 const markup = tree => renderToStaticMarkup(tree);
 const details = { name: 'Ana', age: 32, sex: 'Femenino', height: 167.5, weight: 63.2 };
@@ -771,7 +779,7 @@ test('App preserves independent tab scroll before view paint, excludes Coach and
       node(view.render(), element => !!element.props.onTabChange).props.onTabChange(tab);
       assert.equal(main.scrollTop, visitedScroll);
     }
-    assert.deepEqual(view.slots[7].current, { home: 851, charts: 601, profile: 211 });
+    assert.deepEqual(tabScrollMemory(view), { home: 851, charts: 601, profile: 211 });
     let observed;
     globalThis.MutationObserver = class {
       constructor(callback) { this.callback = callback; observed = this; }
@@ -820,12 +828,12 @@ test('App starts each new session on Home and preserves tabs for the same user',
     navigation().props.onTabChange('profile');
     view.render();
     assert.equal(view.slots[0], 'profile');
-    assert.equal(view.slots[7].current.home, 500);
+    assert.equal(tabScrollMemory(view).home, 500);
     store.user = { id: 'user-a', refreshed: true };
     store.activeProfile = { ...store.activeProfile, avatar_path: 'new-avatar.jpg', name: 'Updated' };
     view.render();
     assert.equal(view.slots[0], 'profile');
-    assert.equal(view.slots[7].current.home, 500);
+    assert.equal(tabScrollMemory(view).home, 500);
     store.user = null;
     store.activeProfile = null;
     view.render();
@@ -834,13 +842,13 @@ test('App starts each new session on Home and preserves tabs for the same user',
     store.activeProfile = { ...profile, onboarding_completed: true };
     view.render();
     assert.equal(view.slots[0], 'home');
-    assert.deepEqual(view.slots[7].current, { home: 0, charts: 0, profile: 0 });
+    assert.deepEqual(tabScrollMemory(view), { home: 0, charts: 0, profile: 0 });
     navigation().props.onTabChange('charts');
     store.user = { id: 'user-b' };
     store.activeProfile = { ...profile, user_id: 'user-b', onboarding_completed: false };
     view.render();
     assert.equal(view.slots[0], 'home');
-    assert.deepEqual(view.slots[7].current, { home: 0, charts: 0, profile: 0 });
+    assert.deepEqual(tabScrollMemory(view), { home: 0, charts: 0, profile: 0 });
     assert.equal(globalThis.window.location.pathname, '/onboarding');
     store.activeProfile = { ...store.activeProfile, onboarding_completed: true };
     view.render();

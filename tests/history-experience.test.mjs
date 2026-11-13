@@ -6,9 +6,11 @@ import { test } from 'node:test';
 import React, { act } from 'react';
 import ts from 'typescript';
 import { JSDOM } from 'jsdom';
-import { formatDateStr, aggregateEnergy } from '../src/utils/helpers.ts';
+import { aggregateEnergy } from '../src/utils/helpers.ts';
 import { buildHistoryPeriods } from '../src/utils/historyPeriods.ts';
 
+// These tests exercise real React components and presentation helpers. Auth,
+// Storage and the record writer are synthetic boundaries, not certified services.
 const sourceRoot = fileURLToPath(new URL('../src/', import.meta.url));
 const url = code => 'data:text/javascript;base64,' + Buffer.from(code).toString('base64');
 const cache = new Map();
@@ -23,7 +25,7 @@ async function compile(file) {
   if (boundaries[relative]) return url(boundaries[relative]);
   const source = (await readFile(file, 'utf8')).replace(/import ['"][^'"]+\.css['"];?/g, '')
     .replace(/import\s+\{([^}]+)\}\s+from ['"]@phosphor-icons\/react['"];?/g, (_, names) =>
-      names.split(',').map(name => 'const ' + name.trim() + ' = () => null;').join('\n'));
+      names.split(',').filter(name => name.trim()).map(name => 'const ' + name.trim() + ' = () => null;').join('\n'));
   let code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext,
     jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText;
   const specifiers = new Set([...code.matchAll(/from\s+['"]([^'"]+)['"]/g)].map(match => match[1]));
@@ -42,563 +44,638 @@ async function compile(file) {
   const result = url(code); cache.set(file, result); return result;
 }
 const { default: HomeView } = await import(await compile(path.join(sourceRoot, 'components/HomeView.tsx')));
-const today = formatDateStr(new Date());
-const previous = new Date(); previous.setDate(previous.getDate() - 10);
-const past = formatDateStr(previous);
-const profile = { id: 'test', name: 'Test', age: 30, sex: 'Masculino', weight: 70,
-  height: 170, goal: 'Mantenimiento', activity: 'Moderado', records: {} };
-const makeRecord = dateStr => ({ dateStr, date: new Date(dateStr + 'T12:00:00'),
-  meals: [{ id: dateStr, name: 'Comida ' + dateStr, type: 'Almuerzo', calories: 1618, time: '12:00' }],
-  workouts: [], water: 1750, steps: 0, weight: 70 });
+const today = '2026-11-12';
+const yesterday = '2026-11-11';
+const mealDay = '2026-11-10';
+const workoutDay = '2026-11-09';
+const partialDay = '2026-11-08';
+const waterDay = '2026-11-07';
+const emptyDay = '2026-11-06';
+const generation = '22222222-2222-4222-8222-222222222222';
+const profile = { id: 'test', user_id: 'test', name: 'Test', age: 30, sex: 'Masculino', weight: 70,
+  height: 170, goal: 'Mantenimiento', activity: 'Moderado', records: {}, recordProtocol: 'atomic', recordGeneration: generation };
+const record = (dateStr, patch = {}) => ({ dateStr, date: new Date(dateStr + 'T12:00:00'),
+  meals: [], workouts: [], water: 0, steps: 0, version: '1', generation, ...patch });
+const meal = (name = 'Almuerzo con verduras') => ({ id: '11111111-1111-4111-8111-111111111111',
+  name, type: 'Almuerzo', calories: 650, time: '12:30', details: 'Verduras y arroz' });
+const workout = { id: '33333333-3333-4333-8333-333333333333', activity: 'Correr',
+  duration: 35, calories: 280, muscles: [], time: '18:15' };
+const fixtures = () => ({
+  [today]: record(today, { meals: [meal('Comida de hoy')], water: 1500, steps: 4000 }),
+  [yesterday]: record(yesterday, { meals: [meal('Comida de ayer')], workouts: [workout], water: 2000, steps: 8500 }),
+  [mealDay]: record(mealDay, { meals: [meal()] }),
+  [workoutDay]: record(workoutDay, { workouts: [workout] }),
+  [partialDay]: record(partialDay, { steps: 7000 }),
+  [waterDay]: record(waterDay, { water: 2500, weight: 71.2 }),
+});
 
-async function mount(t, initial = { [today]: makeRecord(today), [past]: makeRecord(past) }) {
-  const dom = new JSDOM('<div id="root"></div>', { pretendToBeVisual: true });
+async function mount(t, initial = fixtures(), { width: initialWidth = 1440, controlled = false } = {}) {
+  const NativeDate = globalThis.Date;
+  class FixedDate extends NativeDate {
+    constructor(...args) { super(...(args.length ? args : ['2026-11-12T12:00:00'])); }
+    static now() { return new NativeDate('2026-11-12T12:00:00').getTime(); }
+  }
+  const dom = new JSDOM('<main class="app-main"><div id="root"></div></main>', { pretendToBeVisual: true });
   const saved = {};
-  for (const name of ['window', 'document', 'HTMLElement', 'getComputedStyle', 'IS_REACT_ACT_ENVIRONMENT']) saved[name] = globalThis[name];
+  for (const name of ['window', 'document', 'HTMLElement', 'getComputedStyle', 'IS_REACT_ACT_ENVIRONMENT', 'Date', 'ResizeObserver']) saved[name] = globalThis[name];
   globalThis.window = dom.window; globalThis.document = dom.window.document;
   globalThis.HTMLElement = dom.window.HTMLElement; globalThis.getComputedStyle = dom.window.getComputedStyle;
-  globalThis.IS_REACT_ACT_ENVIRONMENT = true;
-  let compact = false;
-  window.matchMedia = () => ({ get matches() { return compact; }, addEventListener() {}, removeEventListener() {} });
+  globalThis.IS_REACT_ACT_ENVIRONMENT = true; globalThis.Date = FixedDate;
+  const resizeObservers = [];
+  globalThis.ResizeObserver = class {
+    constructor(callback) { this.callback = callback; this.targets = new Set(); this.disconnected = false; resizeObservers.push(this); }
+    observe(target) { this.targets.add(target); }
+    disconnect() { this.disconnected = true; this.targets.clear(); }
+  };
+  let width = initialWidth;
+  const queries = [];
+  window.matchMedia = query => {
+    const media = { media: query, listeners: new Set(), get matches() {
+      const min = /min-width:\s*(\d+)px/.exec(query), max = /max-width:\s*(\d+)px/.exec(query);
+      return (!min || width >= Number(min[1])) && (!max || width <= Number(max[1]));
+    }, addEventListener(_type, callback) { this.listeners.add(callback); }, removeEventListener(_type, callback) { this.listeners.delete(callback); } };
+    queries.push(media); return media;
+  };
+  Object.defineProperty(window, 'innerWidth', { get: () => width });
+  const scrolls = [];
+  window.HTMLElement.prototype.scrollIntoView = function(options) { scrolls.push({ node: this, options }); };
+  window.scrollTo = () => {};
   const { createRoot } = await import('react-dom/client');
   const root = createRoot(document.getElementById('root'));
-  const saves = [];
+  const saves = [], contextChanges = [];
   function App() {
     const [records, setRecords] = React.useState(initial);
-    return React.createElement(HomeView, { activeProfile: { ...profile, records },
-      updateRecord: async (date, record) => { saves.push({ date, record: structuredClone(record) });
-        setRecords(current => ({ ...current, [date]: record })); return true; } });
+    const [showHome, setShowHome] = React.useState(true);
+    const [viewState, setViewState] = React.useState(undefined);
+    const home = React.createElement(HomeView, { activeProfile: { ...profile, records },
+      ...(controlled ? { viewState, onViewStateChange: next => {
+        contextChanges.push({ state: structuredClone(next), detailMinBlockSize: document.querySelector('.ah-detail')?.style.minBlockSize });
+        setViewState(next);
+      } } : {}),
+      updateRecord: async (date, value, options) => {
+        saves.push({ date, record: structuredClone(value) });
+        const canonical = { ...value, version: String(Number(value.version ?? 0) + 1), generation };
+        setRecords(current => ({ ...current, [date]: canonical }));
+        options?.onConfirmed?.(canonical, generation);
+        return true;
+      } });
+    if (!controlled) return home;
+    return React.createElement(React.Fragment, null,
+      React.createElement('button', { onClick: () => setShowHome(false) }, 'Otra sección de prueba'),
+      React.createElement('button', { onClick: () => setShowHome(true) }, 'Regresar a Inicio de prueba'),
+      showHome ? home : React.createElement('p', { 'data-other-view': true }, 'Otra vista sintética'));
   }
   await act(() => root.render(React.createElement(App)));
-  t.after(async () => { await act(() => root.unmount()); dom.window.close();
+  let mounted = true;
+  const unmount = async () => { if (mounted) { mounted = false; await act(() => root.unmount()); } };
+  t.after(async () => { await unmount(); dom.window.close();
     for (const [name, value] of Object.entries(saved)) globalThis[name] = value; });
-  const button = text => [...document.querySelectorAll('button')].find(node => node.textContent.trim() === text);
-  return { saves, button, scale: async name => act(() => button(name).click()),
-    resize: async mobile => act(() => { compact = mobile; window.dispatchEvent(new window.Event('resize')); }),
-    selectDay: async date => act(() => document.querySelector('.heatmap-date[aria-label^="Seleccionar ' + date + '"]').click()),
-    groups: () => [...document.querySelectorAll('.history-period')],
+  const button = text => [...document.querySelectorAll('button')].find(node => node.textContent.trim() === text || node.getAttribute('aria-label') === text);
+  const day = date => document.querySelector('.history-day[data-date="' + date + '"]');
+  const click = async node => { assert.ok(node, 'The requested control must exist'); await act(() => node.click()); };
+  return { saves, button, day, scrolls, contextChanges, resizeObservers, unmount, click,
+    scale: async name => click(button(name)),
+    resize: async nextWidth => act(() => { width = nextWidth;
+      for (const query of queries) query.listeners.forEach(listener => listener({ matches: query.matches, media: query.media }));
+      window.dispatchEvent(new window.Event('resize'));
+      for (const observer of resizeObservers) if (!observer.disconnected) observer.callback([], observer); }),
+    selectDay: async date => click(day(date)),
+    open: async () => click(button('Abrir registros del día')),
     heading: () => document.querySelector('.daily-heading time').dateTime,
-    detail: () => document.querySelector('.history-detail'),
+    detail: () => document.querySelector('.ah-detail'),
   };
 }
+const press = async (node, key) => act(() => node.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })));
+async function fill(id, value) {
+  const input = document.getElementById(id);
+  assert.ok(input, id + ' must remain mounted');
+  const prototype = input.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+  await act(() => { Object.getOwnPropertyDescriptor(prototype, 'value').set.call(input, value);
+    input.dispatchEvent(new window.Event('input', { bubbles: true })); });
+}
+async function submit() {
+  await act(async () => { document.querySelector('.entry-form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+    await new Promise(setImmediate); });
+}
 
-test('Home preserves the consulted day, all daily widgets, records and nodes during repeated scale/interval changes', async t => {
+test('history defaults to a numbered month with three periods, today and an immediately visible contextual detail', async t => {
   const view = await mount(t);
-  await view.selectDay(past);
-  const daily = document.querySelector('.daily-panel');
-  const habits = document.querySelector('.daily-habits');
-  const journal = document.querySelector('.daily-records');
-  const dailyText = daily.textContent;
-  for (let pass = 0; pass < 2; pass++) {
-    for (const [scale, count] of [['Semana', 53], ['Mes', 12], ['Año', 2], ['Día', 0]]) {
-      await view.scale(scale);
-      assert.equal(document.querySelector('.daily-panel'), daily);
-      assert.equal(document.querySelector('.daily-habits'), habits);
-      assert.equal(document.querySelector('.daily-records'), journal);
-      assert.equal(daily.textContent, dailyText);
-      assert.equal(view.groups().length, count);
-      assert.equal(document.querySelector('[aria-label="Período del historial"] [aria-pressed="true"]').textContent, scale);
-      if (count) {
-        await act(() => view.groups()[0].click());
-        assert.equal(view.groups()[0].getAttribute('aria-pressed'), 'true');
-        assert.equal(daily.textContent, dailyText);
-      } else assert.equal(document.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(past), true);
-    }
-  }
+  const history = document.querySelector('.activity-history-v2');
+  assert.match(history.querySelector('h2').textContent, /Tu actividad/);
+  const selector = history.querySelector('[aria-label="Período del historial"]');
+  assert.deepEqual([...selector.querySelectorAll('button')].map(button => button.textContent.trim()), ['Semana', 'Mes', 'Año']);
+  assert.equal(selector.querySelector('[aria-pressed="true"]').textContent.trim(), 'Mes');
+  assert.equal(history.querySelector('.history-annual-calendar'), null);
+  const days = [...history.querySelectorAll('.history-day[data-date]')];
+  assert.ok(days.length >= 28 && days.length <= 42, 'The main calendar is a month, not 365 miniature selectors');
+  assert.equal(new Set(days.map(day => day.dataset.date)).size, days.length);
+  assert.ok(days.every(day => day.textContent.includes(String(Number(day.dataset.date.slice(-2))))));
+  assert.equal(view.day(today).getAttribute('aria-current'), 'date');
+  assert.equal(view.day(today).getAttribute('aria-pressed'), 'true');
+  assert.equal(view.detail().getAttribute('role'), 'region');
+  assert.equal(view.detail().getAttribute('aria-label'), 'Detalle del día');
+  assert.ok(view.button('Hoy'));
+  assert.ok(view.button('Abrir registros del día'));
   assert.equal(view.saves.length, 0);
-  assert.match(view.heading(), new RegExp(past));
 });
 
-test('each scale remembers its selected interval and exposes exact dates, averages, totals and real coverage', async t => {
-  const records = { [today]: makeRecord(today), [past]: makeRecord(past) };
-  const view = await mount(t, records);
-  await view.scale('Semana');
-  await act(() => view.groups()[0].click());
-  const label = view.groups()[0].getAttribute('aria-label');
-  assert.match(view.detail().textContent, /Sin datos/);
-  assert.match(view.detail().textContent, /0 de 7/);
-  await view.scale('Mes'); await act(() => view.groups()[1].click());
-  const monthLabel = view.groups()[1].getAttribute('aria-label');
+test('selecting yesterday updates only its contextual detail, without changing the daily writer or scrolling the page', async t => {
+  const view = await mount(t);
+  const daily = document.querySelector('.daily-panel'), habits = document.querySelector('.daily-habits');
+  document.documentElement.scrollTop = 128;
+  const beforeScrolls = view.scrolls.length;
+  await view.selectDay(yesterday);
+  assert.equal(view.day(yesterday).getAttribute('aria-pressed'), 'true');
+  assert.equal(view.day(today).getAttribute('aria-current'), 'date');
+  assert.equal(view.heading(), today);
+  assert.match(view.detail().textContent, /Comida de ayer/);
+  assert.equal(document.querySelector('.daily-panel'), daily);
+  assert.equal(document.querySelector('.daily-habits'), habits);
+  assert.equal(document.documentElement.scrollTop, 128);
+  assert.equal(view.scrolls.length, beforeScrolls, 'Previewing a date must not scroll another section');
+  assert.equal(view.saves.length, 0);
+});
+
+test('a shorter preview reserves its measured detail before publishing selection, and releases it for another width or period', async t => {
+  const view = await mount(t, fixtures(), { controlled: true, width: 768 });
+  const detail = view.detail();
+  const observer = view.resizeObservers.find(candidate => candidate.targets.has(detail));
+  assert.ok(observer, 'The detail observes line-wrapping width changes');
+  const frames = new Map();
+  let nextFrame = 0;
+  window.requestAnimationFrame = callback => { const id = ++nextFrame; frames.set(id, callback); return id; };
+  window.cancelAnimationFrame = id => frames.delete(id);
+  const flushFrame = async () => act(() => {
+    const callbacks = [...frames.values()]; frames.clear();
+    for (const callback of callbacks) callback(Date.now());
+  });
+  let detailWidth = 400, detailHeight = 312;
+  detail.getBoundingClientRect = () => ({ width: detailWidth, height: detailHeight, top: 0, bottom: detailHeight, left: 0, right: detailWidth });
+  await view.resize(768); // Deliver its first real geometry before a selection.
+  await flushFrame();
+  assert.equal(detail.style.minBlockSize, '', 'There is no arbitrary fixed height before interaction');
+  await view.selectDay(emptyDay);
+  assert.equal(view.contextChanges.at(-1).detailMinBlockSize, '312px',
+    'Reserve is applied in the activation event, before React can shrink the page and clamp scroll');
+  assert.equal(detail.style.minBlockSize, '312px');
+  assert.equal(view.heading(), today);
+  detailHeight = 190;
+  await view.selectDay(mealDay);
+  assert.equal(detail.style.minBlockSize, '312px', 'A shorter measured follow-up must not shrink the reserved area');
+  detailWidth = 360;
+  await view.resize(393);
+  assert.equal(detail.style.minBlockSize, '312px', 'ResizeObserver delivery itself must not write layout');
+  assert.equal(frames.size, 1);
+  detailWidth = 350;
+  await view.resize(375);
+  assert.equal(frames.size, 1, 'Multiple observer deliveries are coalesced into one frame');
+  await flushFrame();
+  assert.equal(detail.style.minBlockSize, '', 'The next frame releases a reserve from another wrapping width');
+  detailHeight = 284;
+  await view.selectDay(workoutDay);
+  assert.equal(detail.style.minBlockSize, '284px', 'The next reserve comes from the new measurement');
+  detailWidth = 340;
+  await view.resize(375);
+  assert.equal(frames.size, 1);
+  detailHeight = 350;
+  await view.selectDay(partialDay);
+  assert.equal(detail.style.minBlockSize, '350px');
+  await flushFrame();
+  assert.equal(detail.style.minBlockSize, '350px', 'An older resize frame must not remove a newer click reservation');
   await view.scale('Año');
-  const thisYear = view.groups().at(-1);
-  await act(() => thisYear.click());
-  const dates = Object.keys(records);
-  const summary = aggregateEnergy(records, dates, profile, today);
-  assert.match(view.detail().textContent, /Balance promedio/);
-  assert.match(view.detail().textContent, /En curso/);
-  assert.equal(view.detail().querySelector('dd').textContent, summary.averageBalance.toLocaleString('es-AR') + ' kcal/día');
-  assert.match(document.querySelector('.history-detail-extra').textContent, /Balance acumulado/);
-  assert.match(view.detail().textContent, /Consumidas/);
-  assert.match(view.detail().textContent, /Gasto estimado/);
-  assert.ok(!document.querySelector('.activity-border-legend').textContent.includes('Gimnasio'));
-  await view.scale('Semana');
-  assert.equal(view.groups().find(node => node.getAttribute('aria-pressed') === 'true').getAttribute('aria-label'), label);
+  assert.equal(view.contextChanges.at(-1).detailMinBlockSize, '');
+  assert.equal(detail.style.minBlockSize, '', 'A different period can find its own natural height');
+  assert.equal(view.saves.length, 0);
   await view.scale('Mes');
-  assert.equal(view.groups().find(node => node.getAttribute('aria-pressed') === 'true').getAttribute('aria-label'), monthLabel);
+  await view.selectDay(mealDay);
+  detailWidth = 330;
+  await view.resize(320);
+  assert.equal(frames.size, 1);
+  const cancelledCallbacks = [...frames.values()];
+  const beforeUnmount = detail.style.minBlockSize;
+  await view.unmount();
+  assert.equal(observer.disconnected, true);
+  assert.equal(frames.size, 0, 'Unmount cancels the outstanding frame');
+  for (const callback of cancelledCallbacks) callback(Date.now());
+  assert.equal(detail.style.minBlockSize, beforeUnmount, 'A late disposed callback cannot touch the detached detail');
 });
 
-test('keyboard roves dates and grouped periods without changing selection until activation', async t => {
+test('Hoy immediately returns the explored date and calendar context, without submitting anything', async t => {
   const view = await mount(t);
-  const press = async (button, key) => act(() => button.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true })));
-  const selectedDay = document.querySelector('.heatmap-date[aria-pressed="true"]');
-  assert.equal(document.querySelectorAll('.heatmap-date[tabindex="0"]').length, 1);
-  selectedDay.focus();
-  await press(selectedDay, 'ArrowUp');
-  assert.notEqual(document.activeElement, selectedDay);
-  assert.equal(selectedDay.getAttribute('aria-pressed'), 'true');
-  await press(document.activeElement, 'Home');
-  assert.equal(document.activeElement, document.querySelector('.heatmap-date'));
-  await press(document.activeElement, 'End');
-  assert.equal(document.activeElement, selectedDay);
-  for (const scale of ['Semana', 'Mes', 'Año']) {
-    await view.scale(scale);
-    const buttons = view.groups();
-    assert.equal(buttons.filter(node => node.tabIndex === 0).length, 1);
-    buttons.at(-1).focus();
-    await press(document.activeElement, 'Home'); assert.equal(document.activeElement, buttons[0]);
-    await press(document.activeElement, 'ArrowRight'); assert.equal(document.activeElement, buttons[1]);
-    await press(document.activeElement, 'ArrowLeft'); assert.equal(document.activeElement, buttons[0]);
-    await act(() => document.activeElement.click());
-    assert.equal(buttons[0].getAttribute('aria-pressed'), 'true');
-    assert.equal(buttons[0].tabIndex, 0);
-    await press(buttons[0], 'End'); assert.equal(document.activeElement, buttons.at(-1));
-  }
+  await view.selectDay(mealDay);
+  await view.click(view.button('Mes anterior'));
+  assert.ok(document.querySelector('.history-day[data-date^="2026-10-"]'));
+  await view.click(view.button('Hoy'));
+  assert.ok(view.day(today));
+  assert.equal(view.day(today).getAttribute('aria-pressed'), 'true');
+  assert.match(view.detail().textContent, /Comida de hoy/);
+  assert.equal(view.heading(), today);
   assert.equal(view.saves.length, 0);
 });
 
-test('history navigation preserves an open meal draft; submitting while exploring a year saves once to the consulted day', async t => {
+test('previous and next month change a readable calendar, preserve daily widgets and never save records', async t => {
   const view = await mount(t);
-  await view.selectDay(past);
-  await act(() => view.button('+ Comida').click());
-  async function fill(id, value) {
-    const input = document.getElementById(id);
-    const prototype = input.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
-    await act(() => { Object.getOwnPropertyDescriptor(prototype, 'value').set.call(input, value);
-      input.dispatchEvent(new window.Event('input', { bubbles: true })); });
+  const daily = document.querySelector('.daily-panel');
+  await view.click(view.button('Mes anterior'));
+  assert.ok(document.querySelector('.history-day[data-date="2026-10-01"]'));
+  assert.equal(document.querySelector('.daily-panel'), daily);
+  assert.equal(view.heading(), today);
+  await view.click(view.button('Mes siguiente'));
+  assert.ok(view.day(today));
+  assert.equal(view.saves.length, 0);
+});
+
+test('a genuinely empty day communicates no records without inventing energy or activity', async t => {
+  const view = await mount(t);
+  await view.selectDay(emptyDay);
+  assert.match(view.detail().textContent, /Sin registros|Todavía no|No registraste/);
+  assert.doesNotMatch(view.detail().textContent, /Almuerzo con verduras|Correr/);
+  assert.doesNotMatch(view.detail().textContent, /0 kcal/);
+  assert.equal(view.heading(), today);
+  assert.equal(view.saves.length, 0);
+});
+
+test('a meal day explains what and when was registered using the existing record content', async t => {
+  const records = fixtures(), frozen = structuredClone(records);
+  const view = await mount(t, records);
+  await view.selectDay(mealDay);
+  assert.match(view.detail().textContent, /Almuerzo con verduras/);
+  assert.match(view.detail().textContent, /12:30/);
+  assert.match(view.detail().textContent, /650/);
+  assert.match(view.day(mealDay).getAttribute('aria-label'), /comida/i);
+  assert.deepEqual(records, frozen);
+  assert.equal(view.saves.length, 0);
+});
+
+test('a workout day exposes its activity and duration independently of food indicators', async t => {
+  const view = await mount(t);
+  await view.selectDay(workoutDay);
+  assert.match(view.detail().textContent, /Correr/);
+  assert.match(view.detail().textContent, /35/);
+  assert.match(view.detail().textContent, /18:15/);
+  assert.match(view.day(workoutDay).getAttribute('aria-label'), /entrenamiento|ejercicio/i);
+  assert.equal(view.saves.length, 0);
+});
+
+test('steps without meals are shown as incomplete data rather than a complete nutritional day', async t => {
+  const view = await mount(t);
+  await view.selectDay(partialDay);
+  assert.match(view.detail().textContent, /7[.\s]?000/);
+  assert.match(view.detail().textContent, /pasos/i);
+  assert.match(view.detail().textContent, /incomplet|sin comidas|no registraste comidas/i);
+  assert.match(view.day(partialDay).getAttribute('aria-label'), /incomplet|sin comidas/i);
+  assert.equal(view.saves.length, 0);
+});
+
+test('water and weight remain discoverable when the day has no energy data', async t => {
+  const view = await mount(t);
+  await view.selectDay(waterDay);
+  assert.match(view.detail().textContent, /2[.\s]?500/);
+  assert.match(view.detail().textContent, /ml|agua/i);
+  assert.match(view.detail().textContent, /71[,.]2/);
+  assert.match(view.detail().textContent, /kg|peso/i);
+  assert.doesNotMatch(view.detail().textContent, /Sin registros/);
+  assert.equal(aggregateEnergy(fixtures(), [waterDay], profile, today).averageBalance, null);
+  assert.equal(view.saves.length, 0);
+});
+
+test('the year exposes twelve real months and one activation drills into the chosen month and day', async t => {
+  const view = await mount(t);
+  await view.scale('Año');
+  const months = [...document.querySelectorAll('.ah-month[data-month]')];
+  assert.equal(months.length, 12);
+  assert.equal(new Set(months.map(month => month.dataset.month)).size, 12);
+  const november = document.querySelector('.ah-month[data-month="2026-11"]');
+  assert.ok(november);
+  assert.match(november.getAttribute('aria-label'), /noviembre.*2026/i);
+  assert.match(november.textContent, /6 días/,
+    'Activity coverage includes the water/weight day; energy averages retain their separate existing denominator');
+  await view.click(november);
+  assert.equal(document.querySelector('[aria-label="Período del historial"] [aria-pressed="true"]').textContent.trim(), 'Mes');
+  await view.selectDay(mealDay);
+  assert.match(view.detail().textContent, /Almuerzo con verduras/);
+  assert.equal(view.heading(), today);
+  assert.equal(view.saves.length, 0);
+});
+
+test('previous calendar year remains available without a miniature annual day heatmap', async t => {
+  const view = await mount(t);
+  await view.scale('Año');
+  await view.click(view.button('Año anterior'));
+  assert.equal(document.querySelectorAll('.ah-month[data-month^="2025-"]').length, 12);
+  assert.equal(document.querySelector('.history-annual-calendar'), null);
+  await view.click(view.button('Año siguiente'));
+  assert.equal(document.querySelectorAll('.ah-month[data-month^="2026-"]').length, 12);
+  assert.equal(view.heading(), today);
+  assert.equal(view.saves.length, 0);
+});
+
+for (const currentHasActivity of [true, false]) {
+  test('year month status distinguishes past, current and future without redundant empty labels' +
+    (currentHasActivity ? ' with current activity' : ' with an empty current month'), async t => {
+    const view = await mount(t, currentHasActivity ? fixtures() : {});
+    await view.scale('Año');
+    const month = key => document.querySelector('.ah-month[data-month="' + key + '"]');
+    const october = month('2026-10'), november = month('2026-11'), december = month('2026-12');
+    assert.equal(october.querySelector('strong').textContent, 'Sin registros');
+    assert.equal(!!october.querySelector('.ah-month-caption'), false, 'A past empty month needs no second empty-state label');
+    assert.equal(october.dataset.activity, 'false');
+    assert.equal(november.querySelector('strong').textContent, currentHasActivity ? '6 días' : 'Sin registros');
+    assert.equal(november.querySelector('.ah-month-caption').textContent.trim(),
+      currentHasActivity ? 'con registros · En curso' : 'En curso');
+    assert.equal(november.dataset.activity, String(currentHasActivity));
+    assert.equal(december.querySelector('strong').textContent, 'Próximamente');
+    assert.equal(!!december.querySelector('.ah-month-caption'), false, 'A future month does not repeat an empty-state caption');
+    assert.equal(december.dataset.activity, 'false');
+    assert.equal(december.disabled, true);
+    assert.doesNotMatch(document.querySelector('.ah-year').textContent, /Este mes/);
+    await view.click(view.button('Año anterior'));
+    for (const pastMonth of document.querySelectorAll('.ah-month')) {
+      assert.equal(pastMonth.querySelector('strong').textContent, 'Sin registros');
+      assert.equal(!!pastMonth.querySelector('.ah-month-caption'), false);
+    }
+    assert.equal(view.heading(), today);
+    assert.equal(view.saves.length, 0);
+  });
+}
+
+test('week shows seven exact Sunday-aligned dates and navigates one real week at a time', async t => {
+  const view = await mount(t);
+  await view.scale('Semana');
+  const dates = () => [...document.querySelectorAll('.history-day[data-date]')].map(day => day.dataset.date);
+  assert.deepEqual(dates(), ['2026-11-08', '2026-11-09', '2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13', '2026-11-14']);
+  await view.click(view.button('Semana anterior'));
+  assert.deepEqual(dates(), ['2026-11-01', '2026-11-02', '2026-11-03', '2026-11-04', '2026-11-05', '2026-11-06', '2026-11-07']);
+  await view.click(view.button('Semana siguiente'));
+  assert.ok(view.day(today));
+  assert.equal(view.heading(), today);
+  assert.equal(view.saves.length, 0);
+});
+
+test('future dates cannot be selected and future-only records do not manufacture past activity', async t => {
+  const future = '2026-11-13';
+  const view = await mount(t, { [future]: record(future, { meals: [meal('Future sentinel')] }) });
+  const futureButton = view.day(future);
+  assert.ok(futureButton);
+  assert.equal(futureButton.disabled, true);
+  await view.click(futureButton);
+  assert.equal(view.day(today).getAttribute('aria-pressed'), 'true');
+  assert.doesNotMatch(view.detail().textContent, /Future sentinel/);
+  assert.match(view.detail().textContent, /Sin registros|Todavía no|No registraste/);
+  await view.scale('Año');
+  const december = document.querySelector('.ah-month[data-month="2026-12"]');
+  assert.equal(december.disabled, true);
+  assert.equal(view.saves.length, 0);
+});
+
+test('period changes retain the selected day context and never replace the daily panel or records', async t => {
+  const view = await mount(t);
+  const daily = document.querySelector('.daily-panel'), journal = document.querySelector('.daily-records');
+  await view.selectDay(yesterday);
+  for (const scale of ['Semana', 'Año', 'Mes', 'Semana', 'Mes']) {
+    await view.scale(scale);
+    assert.equal(document.querySelector('.daily-panel'), daily);
+    assert.equal(document.querySelector('.daily-records'), journal);
+    assert.equal(view.heading(), today);
+    assert.match(view.detail().textContent, /Comida de ayer/);
   }
-  await fill('add-meal-description', 'Borrador conservado durante exploración');
+  assert.equal(view.day(yesterday).getAttribute('aria-pressed'), 'true');
+  assert.equal(view.saves.length, 0);
+});
+
+test('keyboard arrows preview the correct calendar date without opening or retargeting the daily writer', async t => {
+  const view = await mount(t);
+  const selected = view.day(today);
+  assert.equal(document.querySelectorAll('.history-day[tabindex="0"]').length, 1);
+  await act(() => selected.focus());
+  await press(selected, 'ArrowLeft');
+  assert.equal(document.activeElement.dataset.date, yesterday);
+  await press(document.activeElement, 'ArrowUp');
+  assert.equal(document.activeElement.dataset.date, '2026-11-04');
+  assert.equal(view.day('2026-11-04').getAttribute('aria-pressed'), 'true');
+  assert.equal(selected.getAttribute('aria-pressed'), 'false');
+  assert.equal(view.heading(), today);
+  await view.click(document.activeElement);
+  assert.equal(view.day('2026-11-04').getAttribute('aria-pressed'), 'true');
+  assert.equal(view.heading(), today);
+  assert.equal(view.saves.length, 0);
+});
+
+test('keyboard Home and End stay on valid dates and never focus a disabled future date', async t => {
+  const view = await mount(t);
+  await act(() => view.day(today).focus());
+  await press(document.activeElement, 'End');
+  assert.ok(document.activeElement.matches('.history-day[data-date]'));
+  assert.equal(document.activeElement.disabled, false);
+  await press(document.activeElement, 'Home');
+  assert.ok(document.activeElement.matches('.history-day[data-date]'));
+  assert.equal(document.activeElement.disabled, false);
+  await act(() => view.day(today).focus());
+  await press(document.activeElement, 'ArrowRight');
+  assert.equal(document.activeElement.disabled, false);
+  assert.ok(document.activeElement.dataset.date <= today);
+  assert.equal(view.day(today).getAttribute('aria-pressed'), 'true');
+  assert.equal(view.saves.length, 0);
+});
+
+test('PageUp and PageDown move between months with the same valid day and keep the writer untouched', async t => {
+  const view = await mount(t);
+  await act(() => view.day(today).focus());
+  await press(document.activeElement, 'PageUp');
+  assert.equal(document.activeElement.dataset.date, '2026-10-12');
+  assert.equal(document.activeElement.getAttribute('aria-pressed'), 'true');
+  assert.equal(view.heading(), today);
+  await press(document.activeElement, 'PageDown');
+  assert.equal(document.activeElement.dataset.date, today);
+  assert.equal(view.heading(), today);
+  assert.equal(view.saves.length, 0);
+});
+
+test('day controls expose names, selected/today semantics and an accessible keyboard explanation', async t => {
+  const view = await mount(t);
+  const selected = view.day(today);
+  assert.match(selected.getAttribute('aria-label'), /12.*noviembre.*2026/i);
+  assert.equal(selected.type, 'button');
+  assert.equal(selected.getAttribute('aria-current'), 'date');
+  assert.equal(selected.getAttribute('aria-pressed'), 'true');
+  const described = selected.closest('[aria-describedby]');
+  assert.ok(described);
+  const help = document.getElementById(described.getAttribute('aria-describedby'));
+  assert.ok(help);
+  assert.match(help.textContent, /Flechas|flechas/);
+  assert.ok(document.querySelector('[aria-live="polite"]'), 'Selection feedback is announced without a page navigation');
+  const icons = [...selected.querySelectorAll('svg')];
+  assert.ok(icons.every(icon => icon.getAttribute('aria-hidden') === 'true'));
+  assert.equal(view.saves.length, 0);
+});
+
+test('opening the complete day is explicit and uses precisely the previewed date', async t => {
+  const view = await mount(t);
+  await view.selectDay(mealDay);
+  assert.equal(view.heading(), today);
+  await view.open();
+  assert.equal(view.heading(), mealDay);
+  assert.match(document.querySelector('.daily-records').textContent, /Almuerzo con verduras/);
+  assert.equal(view.day(mealDay).getAttribute('aria-pressed'), 'true');
+  assert.equal(view.saves.length, 0);
+});
+
+test('returning to activity restores the explored date and view, with focus instead of an unexpected selection change', async t => {
+  const view = await mount(t);
+  await view.selectDay(yesterday);
+  await view.scale('Semana');
+  await view.open();
+  assert.equal(view.heading(), yesterday);
+  assert.ok(document.activeElement.matches('h2, h3, h4'));
+  assert.match(document.activeElement.textContent, /Registros del día/);
+  assert.equal(view.scrolls.at(-1).node, document.activeElement);
+  await view.click(view.button('← Volver a Tu actividad'));
+  assert.equal(document.querySelector('[aria-label="Período del historial"] [aria-pressed="true"]').textContent.trim(), 'Semana');
+  assert.equal(view.day(yesterday).getAttribute('aria-pressed'), 'true');
+  assert.equal(document.activeElement, document.querySelector('[data-history-root]'));
+  assert.equal(view.heading(), yesterday);
+  assert.equal(view.saves.length, 0);
+});
+
+test('controlled activity context survives a Home unmount and return from another section', async t => {
+  const view = await mount(t, fixtures(), { controlled: true });
+  await view.selectDay(yesterday);
+  await view.scale('Semana');
+  await view.open();
+  assert.equal(view.heading(), yesterday);
+  await view.click(view.button('Otra sección de prueba'));
+  assert.ok(document.querySelector('[data-other-view]'));
+  assert.equal(document.querySelector('.activity-history-v2'), null);
+  await view.click(view.button('Regresar a Inicio de prueba'));
+  assert.equal(view.heading(), yesterday);
+  assert.equal(view.day(yesterday).getAttribute('aria-pressed'), 'true');
+  assert.equal(document.querySelector('[aria-label="Período del historial"] [aria-pressed="true"]').textContent.trim(), 'Semana');
+  assert.match(view.detail().textContent, /Comida de ayer/);
+  assert.equal(view.saves.length, 0);
+});
+
+test('a boundary arrow cannot leave a stale focus request that steals focus on the next mouse selection', async t => {
+  const view = await mount(t);
+  await act(() => view.day(today).focus());
+  await press(document.activeElement, 'ArrowRight');
+  assert.equal(document.activeElement, view.day(today));
+  await act(() => { view.day(yesterday).focus(); view.day(yesterday).click(); });
+  assert.equal(document.activeElement, view.day(yesterday));
+  assert.equal(view.day(yesterday).getAttribute('aria-pressed'), 'true');
+  assert.equal(view.heading(), today);
+  assert.equal(view.saves.length, 0);
+});
+
+test('meal drafts survive date, period and month exploration and submit once to their original day', async t => {
+  const view = await mount(t);
+  await view.click(view.button('+ Comida'));
+  await fill('add-meal-description', 'Borrador conservado al explorar');
   await fill('add-meal-calories', '400');
   const textarea = document.getElementById('add-meal-description');
-  for (const scale of ['Semana', 'Mes', 'Año']) {
-    await view.scale(scale);
-    await act(() => view.groups()[0].click());
-    assert.equal(document.getElementById('add-meal-description'), textarea);
-    assert.equal(textarea.value, 'Borrador conservado durante exploración');
-    assert.equal(view.saves.length, 0);
-  }
-  await act(async () => {
-    document.querySelector('.entry-form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
-    await new Promise(setImmediate); // Include the real async save continuation and draft cleanup.
-  });
+  await view.selectDay(mealDay);
+  for (const scale of ['Semana', 'Año', 'Mes']) await view.scale(scale);
+  await view.click(view.button('Mes anterior'));
+  assert.equal(document.getElementById('add-meal-description'), textarea);
+  assert.equal(textarea.value, 'Borrador conservado al explorar');
+  assert.equal(view.heading(), today);
+  assert.equal(view.saves.length, 0);
+  await submit();
   assert.equal(view.saves.length, 1);
-  assert.equal(view.saves[0].date, past);
+  assert.equal(view.saves[0].date, today);
   assert.equal(view.saves[0].record.meals.length, 2);
-  assert.equal(view.saves[0].record.meals[1].name, 'Borrador conservado durante exploración');
-  assert.match(document.querySelector('.daily-records').textContent, /Borrador conservado durante exploración/);
-  assert.equal(document.querySelector('.heatmap-frame').dataset.period, 'year');
-  await view.scale('Día');
-  assert.match(view.heading(), new RegExp(past));
-  assert.equal(document.querySelectorAll('.daily-records li').length, 2);
+  assert.equal(view.saves[0].record.meals.at(-1).name, 'Borrador conservado al explorar');
+  assert.match(document.querySelector('.daily-records').textContent, /Borrador conservado al explorar/);
 });
 
-test('empty and future-only records stay unknown in every aggregated view, with no false activity borders', async t => {
-  const future = new Date(); future.setDate(future.getDate() + 1);
-  const stamp = formatDateStr(future);
-  const view = await mount(t, { [stamp]: makeRecord(stamp) });
-  for (const scale of ['Semana', 'Mes', 'Año']) {
-    await view.scale(scale);
-    assert.ok(view.groups().every(node => node.dataset.empty === 'true'));
-    assert.ok(view.groups().every(node => /Sin datos/.test(node.getAttribute('aria-label'))));
-    assert.match(view.detail().textContent, /0 de/);
-    assert.ok([...view.detail().querySelectorAll('dd')].every(node => node.textContent === 'Sin datos'));
-  }
-  assert.equal(view.saves.length, 0);
-});
-
-test('the touch-friendly date control changes only the daily selection, rejects empty/future values and performs no write', async t => {
+test('a pending meal form prevents explicit opening from silently retargeting or discarding its input', async t => {
   const view = await mount(t);
-  await view.scale('Mes');
-  const selectedMonth = view.groups().find(node => node.getAttribute('aria-pressed') === 'true').getAttribute('aria-label');
-  async function choose(value) {
-    const input = document.querySelector('.history-navigation input');
-    await act(() => {
-      Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, value);
-      input.dispatchEvent(new window.Event('input', { bubbles: true }));
-    });
-  }
-  await view.scale('Día');
-  await choose(past);
-  assert.match(view.heading(), new RegExp(past));
-  await view.scale('Mes');
-  assert.equal(view.groups().find(node => node.getAttribute('aria-pressed') === 'true').getAttribute('aria-label'), selectedMonth);
-  await view.scale('Día');
-  await choose('');
-  assert.match(view.heading(), new RegExp(past));
-  const future = new Date(); future.setDate(future.getDate() + 1);
-  await choose(formatDateStr(future));
-  assert.match(view.heading(), new RegExp(past));
+  await view.click(view.button('+ Comida'));
+  await fill('add-meal-description', 'No cambiar mi día');
+  const form = document.querySelector('.entry-form');
+  await view.selectDay(mealDay);
+  await view.open();
+  assert.equal(view.heading(), today);
+  assert.equal(document.querySelector('.entry-form'), form);
+  assert.equal(document.getElementById('add-meal-description').value, 'No cambiar mi día');
   assert.equal(view.saves.length, 0);
-  await view.scale('Día');
-  assert.equal(document.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(past), true);
 });
 
-test('weekly ribbon keyboard follows its single visual row without selecting or writing', async t => {
+test('exercise drafts retain their fields and original date while browsing a different calendar day', async t => {
   const view = await mount(t);
-  await view.scale('Semana');
-  const grid = document.querySelector('.history-period-grid');
-  // JSDOM does not apply media queries. Match the compact one-row ribbon.
-  grid.style.gridAutoFlow = 'column';
-  grid.style.setProperty('--history-grid-rows', '1');
-  const buttons = view.groups();
-  await act(() => buttons[0].focus());
-  const press = async key => act(() => document.activeElement.dispatchEvent(
-    new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })));
-  await press('ArrowRight'); assert.equal(document.activeElement, buttons[1]);
-  await press('ArrowRight'); assert.equal(document.activeElement, buttons[2]);
-  await press('ArrowLeft'); assert.equal(document.activeElement, buttons[1]);
-  await press('Home'); assert.equal(document.activeElement, buttons[0]);
-  await press('End'); assert.equal(document.activeElement, buttons.at(-1));
-  assert.equal(buttons.at(-1).getAttribute('aria-pressed'), 'true');
-  assert.equal(buttons[0].getAttribute('aria-pressed'), 'false');
-  assert.equal(view.saves.length, 0);
-});
-
-test('context disclosure retains all official metrics, scale selection and an open meal draft', async t => {
-  const view = await mount(t);
-  await view.scale('Mes');
-  await act(() => view.groups()[0].click());
-  const selected = view.groups()[0].getAttribute('aria-label');
-  const values = [...view.detail().querySelectorAll('dd')].map(node => node.textContent);
-  await act(() => view.button('+ Comida').click());
-  const draft = document.getElementById('add-meal-description');
-  const toggle = document.querySelector('.history-detail-toggle');
-  const extra = document.getElementById(toggle.getAttribute('aria-controls'));
-  assert.equal(toggle.getAttribute('aria-expanded'), 'false');
-  assert.equal(extra.dataset.expanded, 'false');
-  for (const expanded of ['true', 'false', 'true']) {
-    await act(() => toggle.click());
-    assert.equal(toggle.getAttribute('aria-expanded'), expanded);
-    assert.equal(extra.dataset.expanded, expanded);
-    assert.deepEqual([...view.detail().querySelectorAll('dd')].map(node => node.textContent), values);
-    assert.equal(document.getElementById('add-meal-description'), draft);
-    assert.equal(view.groups()[0].getAttribute('aria-label'), selected);
-  }
-  await view.scale('Año');
-  assert.equal(toggle.getAttribute('aria-expanded'), 'true');
-  assert.equal(view.detail().querySelectorAll('dd').length, 3, 'Primary figures stay directly available');
-  assert.equal(document.querySelector('.history-detail-extra').querySelectorAll('dd').length, 1, 'Supplemental accumulated balance remains available');
-  await view.scale('Día');
-  assert.equal(view.detail().querySelectorAll('dd').length, 3);
-  assert.equal(view.saves.length, 0);
-});
-
-test('manual ribbon scroll survives selection, resize and scale changes without moving the page', async t => {
-  const view = await mount(t);
-  await view.scale('Semana');
-  const grid = document.querySelector('.history-period-grid');
-  Object.defineProperties(grid, { scrollWidth: { value: 1440 }, clientWidth: { value: 293 } });
-  const scrollTop = document.documentElement.scrollTop;
-  grid.scrollLeft = 25;
-  await act(() => grid.dispatchEvent(new window.Event('scroll', { bubbles: true })));
-  await act(() => view.groups()[0].click());
-  assert.equal(grid.scrollLeft, 25, 'Selection must not recenter after the user scrolls');
-  await act(() => window.dispatchEvent(new window.Event('resize')));
-  assert.equal(grid.scrollLeft, 25, 'A resize must not replace a remembered manual position');
-  assert.equal(document.documentElement.scrollTop, scrollTop);
-  await view.scale('Mes');
-  const months = document.querySelector('.history-period-grid');
-  months.scrollLeft = 50;
-  await act(() => months.dispatchEvent(new window.Event('scroll', { bubbles: true })));
-  await view.scale('Semana');
-  assert.equal(document.querySelector('.history-period-grid').scrollLeft, 25);
-  assert.equal(view.groups()[0].getAttribute('aria-pressed'), 'true');
-  await view.scale('Mes');
-  assert.equal(document.querySelector('.history-period-grid').scrollLeft, 50);
-  assert.equal(view.saves.length, 0);
-});
-
-test('the single annual calendar and supporting explanation preserve selection, figures, draft and focus', async t => {
-  const view = await mount(t);
-  await view.selectDay(past);
-  await act(() => view.button('+ Comida').click());
-  const draft = document.getElementById('add-meal-description');
-  await act(() => {
-    Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(draft, 'Borrador de prueba');
-    draft.dispatchEvent(new window.Event('input', { bubbles: true }));
-  });
-  const daily = document.querySelector('.daily-panel');
-  assert.equal(document.querySelectorAll('.history-annual-calendar').length, 1);
-  assert.equal(document.querySelector('.history-full-toggle'), null, 'The full year is already the primary interactive calendar');
-  assert.equal(document.querySelector('.history-day-strip'), null, 'No duplicate date selector needs synchronization');
-  assert.equal(document.querySelector('.history-day'), null);
-  const details = document.querySelector('.history-detail-toggle');
-  const explanation = document.getElementById(details.getAttribute('aria-controls'));
-  const values = [...view.detail().querySelectorAll('.history-detail-primary dd')].map(node => node.textContent);
-  assert.equal(values.length, 3);
-  const grid = document.querySelector('.heatmap-grid');
-  assert.match(document.getElementById(grid.getAttribute('aria-describedby')).textContent, /Flechas.*Inicio.*Fin.*Enter/);
-  await act(() => { details.focus(); details.click(); });
-  assert.equal(document.activeElement, details);
-  assert.equal(explanation.hidden, false);
-  assert.deepEqual([...view.detail().querySelectorAll('.history-detail-primary dd')].map(node => node.textContent), values);
-  for (const [scale, count] of [['Semana', 53], ['Mes', 12], ['Año', 2]]) {
-    await view.scale(scale);
-    assert.equal(document.querySelector('.history-full-toggle'), null);
-    assert.equal(view.groups().length, count);
-    assert.equal(document.querySelectorAll('.history-period-grid').length, 1);
-    await act(() => view.groups()[0].click());
-    assert.equal(view.groups()[0].getAttribute('aria-pressed'), 'true');
-    assert.equal(details.getAttribute('aria-expanded'), 'true');
-    assert.equal(document.getElementById('add-meal-description'), draft);
-    assert.equal(draft.value, 'Borrador de prueba');
-  }
-  await view.scale('Día');
-  assert.equal(document.querySelectorAll('.history-annual-calendar').length, 1);
-  assert.equal(document.querySelectorAll('button.heatmap-date[aria-pressed="true"]').length, 1);
-  assert.ok(document.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(past));
-  await act(() => { details.focus(); details.click(); });
-  assert.equal(document.activeElement, details);
-  assert.equal(explanation.hidden, true);
-  assert.equal(document.querySelector('.daily-panel'), daily);
-  assert.equal(document.getElementById('add-meal-description'), draft);
-  assert.equal(draft.value, 'Borrador de prueba');
-  assert.equal(view.heading(), past);
-  assert.equal(view.saves.length, 0);
-});
-
-test('compact controls select each period directly and expose official balance, intake and expenditure immediately', async t => {
-  const records = { [today]: makeRecord(today), [past]: { ...makeRecord(past), meals: [{ ...makeRecord(past).meals[0], calories: 2450 }] } };
-  const snapshot = structuredClone(records);
-  const view = await mount(t, records);
-  assert.equal(document.querySelector('.history-preview-grid'), null, 'Decorative fake controls are removed');
-  const calendar = buildHistoryPeriods(new Date());
-  const text = value => value.toLocaleString('es-AR');
-  for (const [scale, kind] of [['Semana', 'week'], ['Mes', 'month'], ['Año', 'year']]) {
-    await view.scale(scale);
-    assert.equal(document.querySelector('.history-full-toggle'), null);
-    const index = calendar[kind].findIndex(interval => interval.dates.includes(past));
-    const interval = calendar[kind][index];
-    const control = view.groups()[index];
-    assert.equal(control.tagName, 'BUTTON');
-    assert.equal(control.type, 'button');
-    await act(() => control.click()); // One activation: no disclosure and no second click.
-    const summary = aggregateEnergy(records, interval.dates, profile, today);
-    const figures = [...view.detail().querySelectorAll('.history-detail-primary dd')];
-    assert.equal(figures.length, 3);
-    assert.ok(figures[0].textContent.includes(text(summary.averageBalance)));
-    assert.ok(figures[1].textContent.includes(text(summary.consumed)));
-    assert.ok(figures[2].textContent.includes(text(summary.expenditure)));
-    assert.ok(figures.every(node => !node.closest('[hidden]')), 'Essential values are never hidden in an explanation');
-    assert.ok(view.detail().textContent.includes(interval.label));
-    assert.equal(control.getAttribute('aria-pressed'), 'true');
-    assert.equal(view.heading(), today, 'A grouped selection never changes the daily writer');
-    assert.equal(document.querySelector('.history-detail-toggle').getAttribute('aria-expanded'), 'false');
-  }
-  await view.scale('Día');
-  const compactDay = document.querySelector('.heatmap-date[aria-label^="Seleccionar ' + past + '"]');
-  assert.ok(compactDay);
-  assert.equal(compactDay.tagName, 'BUTTON');
-  await act(() => compactDay.click());
-  assert.equal(view.heading(), past);
-  assert.equal(compactDay.getAttribute('aria-pressed'), 'true');
-  const daySummary = aggregateEnergy(records, [past], profile, today);
-  const dayFigures = [...view.detail().querySelectorAll('.history-detail-primary dd')];
-  assert.ok(dayFigures[0].textContent.includes(text(daySummary.averageBalance)));
-  assert.ok(dayFigures[1].textContent.includes(text(daySummary.consumed)));
-  assert.ok(dayFigures[2].textContent.includes(text(daySummary.expenditure)));
-  assert.equal(document.querySelector('.history-full-toggle'), null);
-  assert.equal(document.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(past), true);
-  assert.equal(view.saves.length, 0);
-  assert.deepEqual(records, snapshot);
-});
-
-test('one annual heatmap preserves seven rows, exact dates, semantic inner squares and calendar keyboard geometry', async t => {
-  const view = await mount(t);
-  const calendar = buildHistoryPeriods(new Date());
-  const columns = [...document.querySelectorAll('.heatmap-column')];
-  const buttons = [...document.querySelectorAll('button.heatmap-date')];
-  const actualDates = calendar.columns.flat().filter(Boolean);
-  assert.equal(columns.length, calendar.columns.length);
-  assert.ok(columns.every(column => column.children.length === 7));
-  assert.deepEqual(buttons.map(button => button.dataset.date), actualDates);
-  assert.equal(new Set(buttons.map(button => button.dataset.date)).size, buttons.length);
-  assert.ok(buttons.every(button => button.dataset.date <= today), 'Future dates are placeholders, never enabled date buttons');
-  assert.equal(document.querySelectorAll('.heatmap-column > span.invisible').length, calendar.columns.flat().filter(date => date === null).length);
-  assert.ok([...document.querySelectorAll('.heatmap-column > span.invisible')].every(node => !node.hasAttribute('data-date') && node.tabIndex === -1 && node.getAttribute('aria-hidden') === 'true'));
-  assert.ok(buttons.every(button => button.tagName === 'BUTTON' && button.type === 'button'));
-  assert.ok(buttons.every(button => button.children.length === 1 && button.firstElementChild.matches('span.heatmap-cell')));
-  assert.ok(buttons.every(button => button.firstElementChild.getAttribute('aria-hidden') === 'true'));
-  assert.equal(buttons.filter(button => button.tabIndex === 0).length, 1);
-  const selected = document.querySelector('.heatmap-date[aria-pressed="true"]');
-  const index = buttons.indexOf(selected);
-  selected.focus();
-  const press = async key => act(() => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })));
-  await press('ArrowLeft');
-  assert.equal(document.activeElement, buttons[index - 7], 'Left moves one calendar week');
-  await press('ArrowUp');
-  assert.equal(document.activeElement, buttons[index - 8], 'Up moves one weekday row');
-  assert.equal(selected.getAttribute('aria-pressed'), 'true', 'Roving alone does not change the consulted day');
-  const newDate = document.activeElement.dataset.date;
-  await act(() => document.activeElement.click());
-  assert.equal(view.heading(), newDate);
-  assert.equal(document.querySelector('.history-navigation input').value, newDate);
-  assert.equal(document.querySelectorAll('.heatmap-date[aria-pressed="true"]').length, 1);
-  assert.ok(document.querySelector('.heatmap-date[aria-pressed="true"]').getAttribute('aria-label').includes(newDate));
-  assert.equal(view.saves.length, 0);
-});
-
-test('partial and provisional history explain missing data without changing official arithmetic', async t => {
-  const activity = { ...makeRecord(today), meals: [], steps: 7000 };
-  const records = { [today]: activity, [past]: makeRecord(past) };
-  const snapshot = structuredClone(records);
-  const view = await mount(t, records);
-  const official = aggregateEnergy(records, [today], profile, today);
-  const primary = document.querySelector('.history-detail-primary');
-  assert.match(primary.textContent, /Balance provisional/);
-  assert.match(view.detail().textContent, /Sin comidas registradas/);
-  assert.match(primary.textContent, /0 kcal registradas/);
-  assert.ok(primary.querySelector('dd').textContent.includes(official.averageBalance.toLocaleString('es-AR')));
-  assert.ok([...primary.querySelectorAll('dd')].at(-1).textContent.includes(official.expenditure.toLocaleString('es-AR')));
-  await view.scale('Semana');
-  const weeks = buildHistoryPeriods(new Date()).week;
-  const pastWeek = weeks.findIndex(interval => interval.dates.includes(past));
-  await act(() => view.groups()[pastWeek].click());
-  assert.match(view.detail().textContent, /1 de 7 días transcurridos con datos/);
-  assert.match(view.detail().textContent, /Cobertura parcial/);
-  await act(() => view.groups()[0].click());
-  assert.match(view.detail().textContent, /0 de 7/);
-  assert.ok([...document.querySelectorAll('.history-detail-primary dd')].every(node => node.textContent === 'Sin datos'));
-  assert.doesNotMatch(view.detail().textContent, /0 kcal registradas/);
-  assert.equal(view.saves.length, 0);
-  assert.deepEqual(records, snapshot);
-});
-
-test('direct history interaction retains an exercise draft through dates, groups and explanation without writes', async t => {
-  const view = await mount(t);
-  await act(() => view.button('+ Ejercicio').click());
+  await view.click(view.button('+ Ejercicio'));
   const values = { 'add-workout-activity': 'Correr', 'add-workout-duration': '35', 'add-workout-calories': '280',
     'add-workout-notes': 'Borrador de ejercicio que debe seguir disponible' };
-  for (const [id, value] of Object.entries(values)) {
-    const input = document.getElementById(id);
-    const prototype = input.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
-    await act(() => {
-      Object.getOwnPropertyDescriptor(prototype, 'value').set.call(input, value);
-      input.dispatchEvent(new window.Event('input', { bubbles: true }));
-    });
-  }
-  const form = document.getElementById('add-workout-activity').closest('form');
-  await view.selectDay(past);
-  for (const scale of ['Semana', 'Mes', 'Año']) {
-    await view.scale(scale);
-    await act(() => view.groups()[0].click());
-    for (const [id, value] of Object.entries(values)) {
-      assert.equal(document.getElementById(id).value, value);
-      assert.equal(document.getElementById(id).closest('form'), form);
-    }
-  }
-  await view.scale('Día');
-  await act(() => document.querySelector('.history-detail-toggle').click());
-  await view.selectDay(today);
-  await view.selectDay(past);
-  await act(() => document.querySelector('.history-detail-toggle').click());
+  for (const [id, value] of Object.entries(values)) await fill(id, value);
+  const form = document.querySelector('.entry-form');
+  await view.selectDay(workoutDay);
+  for (const scale of ['Semana', 'Año', 'Mes']) await view.scale(scale);
+  await view.open();
   for (const [id, value] of Object.entries(values)) assert.equal(document.getElementById(id).value, value);
-  assert.equal(view.heading(), past);
-  assert.equal(view.saves.length, 0);
-});
-
-// JSDOM does not perform responsive layout. Bounded geometry fixtures cover the
-// single calendar scrollport; the browser review measures actual CSS and touch targets.
-test('calendar resize reveals the selected date and keeps compact and wide manual positions separate', async t => {
-  const view = await mount(t);
-  const scroll = document.querySelector('.heatmap-scroll');
-  const selected = scroll.querySelector('[aria-pressed="true"]');
-  let compact = false;
-  Object.defineProperties(scroll, { clientWidth: { get: () => compact ? 300 : 1400 }, scrollWidth: { get: () => compact ? 4000 : 1400 } });
-  Object.defineProperty(selected, 'offsetWidth', { value: 24 });
-  scroll.getBoundingClientRect = () => ({ left: 10, right: compact ? 310 : 1410 });
-  selected.getBoundingClientRect = () => ({ left: 910 - scroll.scrollLeft, right: 934 - scroll.scrollLeft });
-  const pageScroll = document.documentElement.scrollTop;
-  await act(() => scroll.dispatchEvent(new window.Event('scroll', { bubbles: true })));
-  compact = true;
-  await view.resize(true);
-  assert.equal(scroll.scrollLeft, 762, 'First compact entry reveals the selected date in the same calendar');
-  assert.equal(document.documentElement.scrollTop, pageScroll);
-  scroll.scrollLeft = 200;
-  await act(() => scroll.dispatchEvent(new window.Event('scroll', { bubbles: true })));
-  await view.selectDay(past);
-  assert.equal(scroll.scrollLeft, 200, 'Direct date selection preserves manual horizontal exploration');
-  compact = false;
-  await view.resize(false);
-  scroll.scrollLeft = 0;
-  await act(() => scroll.dispatchEvent(new window.Event('scroll', { bubbles: true })));
-  compact = true;
-  await view.resize(true);
-  assert.equal(scroll.scrollLeft, 200, 'The non-overflowing wide calendar cannot overwrite the compact position');
-  assert.equal(view.heading(), past);
-  assert.equal(view.saves.length, 0);
-});
-
-test('exact-date jumps reveal the selected square once while direct calendar clicks preserve manual scroll', async t => {
-  const view = await mount(t);
-  const scroll = document.querySelector('.heatmap-scroll');
-  const pastDay = scroll.querySelector('[data-date="' + past + '"]');
-  const todayDay = scroll.querySelector('[data-date="' + today + '"]');
-  Object.defineProperties(scroll, { clientWidth: { value: 300 }, scrollWidth: { value: 4000 } });
-  scroll.getBoundingClientRect = () => ({ left: 10, right: 310 });
-  for (const [button, offset] of [[pastDay, 600], [todayDay, 1800]]) {
-    Object.defineProperty(button, 'offsetWidth', { value: 24 });
-    button.getBoundingClientRect = () => ({ left: 10 + offset - scroll.scrollLeft, right: 34 + offset - scroll.scrollLeft });
-  }
-  await view.resize(true);
-  scroll.scrollLeft = 1000;
-  await act(() => scroll.dispatchEvent(new window.Event('scroll', { bubbles: true })));
-  const input = document.querySelector('.history-navigation input');
-  const choose = async value => act(() => {
-    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, value);
-    input.dispatchEvent(new window.Event('input', { bubbles: true }));
-  });
-  const pageScroll = document.documentElement.scrollTop;
-  await choose(past);
-  assert.equal(scroll.scrollLeft, 462, 'The accessible date input reveals a distant square within the existing calendar');
-  assert.ok(pastDay.getBoundingClientRect().left >= 10 && pastDay.getBoundingClientRect().right <= 310);
-  scroll.scrollLeft = 250;
-  await act(() => scroll.dispatchEvent(new window.Event('scroll', { bubbles: true })));
-  await view.selectDay(today);
+  assert.equal(document.querySelector('.entry-form'), form);
   assert.equal(view.heading(), today);
-  assert.equal(scroll.scrollLeft, 250, 'Calendar activation never recenters a manual position');
-  await choose(past);
-  assert.equal(scroll.scrollLeft, 462);
-  scroll.scrollLeft = 350;
-  await act(() => scroll.dispatchEvent(new window.Event('scroll', { bubbles: true })));
-  await act(() => document.querySelector('.history-detail-toggle').click());
-  assert.equal(scroll.scrollLeft, 350, 'A completed reveal is not replayed by unrelated UI state');
-  assert.equal(document.documentElement.scrollTop, pageScroll);
+  assert.equal(view.saves.length, 0);
+  await submit();
+  assert.equal(view.saves.length, 1);
+  assert.equal(view.saves[0].date, today);
+  assert.equal(view.saves[0].record.workouts.length, 1);
+  assert.equal(view.saves[0].record.workouts[0].details, values['add-workout-notes']);
+});
+
+test('resizing the activity surface preserves selected context, daily date and pending text', async t => {
+  const view = await mount(t);
+  await view.click(view.button('+ Comida'));
+  await fill('add-meal-description', 'Borrador durante cambio de ancho');
+  const form = document.querySelector('.entry-form');
+  await view.selectDay(yesterday);
+  for (const width of [320, 375, 393, 430, 768, 1440]) {
+    await view.resize(width);
+    assert.equal(view.heading(), today);
+    assert.equal(view.day(yesterday).getAttribute('aria-pressed'), 'true');
+    assert.equal(document.getElementById('add-meal-description').value, 'Borrador durante cambio de ancho');
+  }
+  // EntryFormShell may portal when crossing its existing mobile breakpoint.
+  // The form content and date, not DOM identity across that portal, are the contract.
+  assert.ok(form);
   assert.equal(view.saves.length, 0);
 });
 
-test('calendar arrow navigation respects weekday boundaries and never focuses a missing future cell', async t => {
-  const view = await mount(t);
-  const calendar = buildHistoryPeriods(new Date());
-  const buttons = [...document.querySelectorAll('button.heatmap-date')];
-  const press = async key => act(() => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })));
-  await act(() => buttons[0].focus());
-  await press('ArrowUp');
-  assert.equal(document.activeElement, buttons[0], 'Sunday cannot wrap up to the previous week');
-  await press('ArrowLeft');
-  assert.equal(document.activeElement, buttons[0], 'The first week cannot navigate before the calendar horizon');
-  await act(() => buttons[6].focus());
-  await press('ArrowDown');
-  assert.equal(document.activeElement, buttons[6], 'Saturday cannot wrap down to the next week');
-  const lastColumn = calendar.columns.at(-1);
-  const firstFutureRow = lastColumn.findIndex(date => date === null);
-  if (firstFutureRow >= 0) {
-    const priorDate = calendar.columns.at(-2)[firstFutureRow];
-    const prior = buttons.find(button => button.dataset.date === priorDate);
-    await act(() => prior.focus());
-    await press('ArrowRight');
-    assert.equal(document.activeElement, prior, 'A missing future weekday must not clamp to a different weekday');
-  }
-  assert.equal(view.heading(), today, 'Roving never activates another date');
-  assert.equal(document.querySelectorAll('.heatmap-date[aria-pressed="true"]').length, 1);
+test('optional energy disclosure preserves official period arithmetic and does not complete missing days', async t => {
+  const records = fixtures(), frozen = structuredClone(records);
+  const view = await mount(t, records);
+  await view.selectDay(mealDay);
+  const energy = document.querySelector('.activity-history-v2 .ah-energy');
+  assert.ok(energy);
+  assert.equal(energy.querySelector('summary').textContent.trim(), 'Ver resumen energético');
+  const month = buildHistoryPeriods(new Date(today + 'T12:00:00')).month.at(-1);
+  const expected = aggregateEnergy(records, month.dates, profile, today);
+  const numeric = number => number.toLocaleString('es-AR');
+  assert.ok(energy.textContent.includes(numeric(expected.consumed)));
+  assert.ok(energy.textContent.includes(numeric(expected.expenditure)));
+  assert.ok(energy.textContent.includes(numeric(expected.averageBalance)));
+  const accumulated = [...energy.querySelectorAll('div')].find(node => node.querySelector('dt')?.textContent === 'Balance acumulado');
+  assert.ok(accumulated, 'The advanced period disclosure retains the existing accumulated balance');
+  assert.ok(accumulated.querySelector('dd').textContent.includes(numeric(expected.balance)));
+  assert.match(accumulated.querySelector('dd').textContent, /kcal$/);
+  assert.ok(energy.textContent.includes(expected.days + ' días con datos energéticos'));
+  const originalFigures = [...energy.querySelectorAll('dd')].map(node => node.textContent);
+  await view.selectDay(partialDay);
+  assert.match(view.detail().textContent, /incomplet|sin comidas/i);
+  assert.deepEqual([...energy.querySelectorAll('dd')].map(node => node.textContent), originalFigures,
+    'Day preview does not silently change a monthly aggregate into another denominator');
+  await view.selectDay(emptyDay);
+  assert.doesNotMatch(view.detail().textContent, /0 kcal/);
+  await view.click(view.button('Mes anterior'));
+  assert.ok([...energy.querySelectorAll('dd')].every(node => node.textContent === 'Sin datos'));
   assert.equal(view.saves.length, 0);
+  assert.deepEqual(records, frozen);
+});
+
+test('habit detail and its accessible date label preserve precision in the stored values', async t => {
+  const records = { [waterDay]: record(waterDay, { water: 2500, weight: 80.12345 }) };
+  const view = await mount(t, records);
+  await view.selectDay(waterDay);
+  assert.match(view.detail().querySelector('.ah-habits').textContent, /80,12345/);
+  assert.match(view.day(waterDay).getAttribute('aria-label'), /80,12345/);
+  assert.equal(view.saves.length, 0);
+  assert.equal(records[waterDay].weight, 80.12345);
 });

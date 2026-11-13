@@ -1,0 +1,83 @@
+{
+  "source": {
+    "baselineCommit": "c623f9beb726a3940ab564432260d7908302f9e5",
+    "finalCommit": "288ed9e1403031a170b956b8e84431a4ba0cddfa",
+    "applicationSourceTree": "82a54ed2ff163be2575fa7d89282399a4a006691",
+    "fixtureDate": "2026-11-12",
+    "browser": "157.0.8103.51",
+    "browserDriver": "Playwright 1.56.1",
+    "data": "Synthetic records and account only",
+    "services": "Actual React UI/store/aggregation helpers; Auth, record RPC, Storage and Gemini simulated; external requests blocked",
+    "notCertified": [
+      "remote Supabase Auth",
+      "remote Storage",
+      "Gemini",
+      "physical mobile device or keyboard",
+      "real NVDA/VoiceOver screen-reader session"
+    ]
+  },
+  "laterInvisibleChange": "Final browser source only defers ResizeObserver reserve cleanup on resize; video presentation and demonstrated flows are unchanged. Final resize is certified separately.",
+  "synthetic": true,
+  "sha256": "26c7dc70b17aa1fd38d9f5b872cec1b81de688a874420d921029f73fe4b2e42a",
+  "bytes": 300508,
+  "codec": "h264",
+  "width": 394,
+  "height": 852,
+  "fps": "10/1",
+  "pixelFormat": "yuv420p",
+  "frames": 197,
+  "durationSeconds": 19.7,
+  "decode": "PASSED",
+  "recordingMethod": "Actual Chrome screencast JPEG frames at 10 fps, encoded by existing local FFmpeg; no UI layout overrides during video",
+  "steps": [
+    {
+      "seconds": 0,
+      "label": "Calendario mensual, hoy y controles"
+    },
+    {
+      "seconds": 1.9,
+      "label": "Seleccionar ayer sin cambiar el registro diario"
+    },
+    {
+      "seconds": 4.3,
+      "label": "Volver a Hoy"
+    },
+    {
+      "seconds": 5.8,
+      "label": "Consultar un día vacío"
+    },
+    {
+      "seconds": 7.7,
+      "label": "Actividad incompleta: hábitos sin comidas"
+    },
+    {
+      "seconds": 9.6,
+      "label": "Doce meses resumidos"
+    },
+    {
+      "seconds": 11.4,
+      "label": "Profundizar de año a mes"
+    },
+    {
+      "seconds": 13.3,
+      "label": "Semana con siete fechas legibles"
+    },
+    {
+      "seconds": 15.9,
+      "label": "Abrir explícitamente los registros completos"
+    },
+    {
+      "seconds": 17.9,
+      "label": "Regresar conservando la semana y la fecha"
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "reviewedFrameTimes": [
+    0.7,
+    10.1,
+    16.4,
+    19
+  ],
+  "codecPadding": "393px browser viewport is padded by one pixel to 394px for yuv420p encoding; content is not scaled."
+}

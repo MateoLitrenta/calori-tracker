@@ -39,7 +39,7 @@ const boundaries = {
   'components/Onboarding.tsx': blank,
   'components/ViewSkeleton.tsx': blank,
   'components/UserAvatar.tsx': blank,
-  'components/Heatmap.tsx': 'export default ({records}) => { globalThis.__syncHarness.historyRecords = records; return null; };',
+  'components/Heatmap.tsx': 'export default props => { globalThis.__syncHarness.historyRecords = props.records; globalThis.__syncHarness.historyProps = props; return null; };',
   'components/MealPhoto.tsx': 'export const MealPhotoPicker = () => null; export const MealThumbnail = () => null;',
 };
 async function compile(file) {
@@ -162,6 +162,53 @@ async function sendActions(state, hasProposal = true, text = 'Registrá estos da
   }
 }
 const meal = { type: 'add_meal', estimated: true, payload: { dateStr: today, name: 'Comida de prueba', type: 'Almuerzo', calories: 500, time: '12:30' } };
+
+test('activity exploration and the explicitly opened day survive real App tab navigation without writes', async t => {
+  const state = await mountApp(t, []);
+  const date = new Date(today + 'T12:00:00'); date.setDate(date.getDate() - 40);
+  const explored = formatDateStr(date);
+  const history = { view: 'month', dateStr: explored, anchor: explored };
+  await act(async () => { state.historyProps.onHistoryStateChange(history); await turn(); });
+  assert.equal(state.document.querySelector('.daily-active-date').dateTime, today, 'Exploration cannot retarget the record writer');
+  await act(async () => { state.historyProps.onSelectDate(explored); await turn(); });
+  assert.equal(state.document.querySelector('.daily-active-date').dateTime, explored);
+  await click(state, 'Datos'); await click(state, 'Coach'); await click(state, 'Inicio');
+  assert.deepEqual(state.historyProps.historyState, history);
+  assert.equal(state.document.querySelector('.daily-active-date').dateTime, explored);
+  assert.ok(state.document.querySelector('.history-record-return'));
+  assert.equal(state.logWrites, 0);
+});
+
+test('activity presentation context from one account is not passed to a different authenticated owner', async t => {
+  const state = await mountApp(t, []);
+  const history = { view: 'year', dateStr: '2025-10-05', anchor: '2025-10-05' };
+  await act(async () => { state.historyProps.onHistoryStateChange(history); await turn(); });
+  await click(state, 'Datos');
+  state.currentProfile = { ...profile, id: 'other-profile', user_id: 'other-owner' };
+  await act(async () => {
+    for (const listener of state.listeners) listener('SIGNED_IN', { user: { id: 'other-owner' } });
+    await turn();
+  });
+  assert.notDeepEqual(state.historyProps.historyState, history);
+  assert.equal(state.historyProps.historyState.dateStr, today);
+  assert.equal(state.historyProps.historyState.view, 'month');
+  assert.equal(state.document.querySelector('.daily-active-date').dateTime, today);
+  assert.equal(state.logWrites, 0);
+});
+
+test('leaving Inicio cannot silently discard an active entry draft', async t => {
+  const state = await mountApp(t, []);
+  await click(state, '+ Comida');
+  await inputValue(state, '#add-meal-description', 'Borrador que debe conservarse');
+  await click(state, 'Datos');
+  assert.equal(state.document.querySelector('#add-meal-description')?.value, 'Borrador que debe conservarse');
+  assert.equal(state.document.querySelector('.charts-insights'), null, 'Finish or close the draft before changing sections');
+  assert.equal(state.logWrites, 0);
+  await click(state, '+ Comida'); // Explicitly close the entry, then navigation is available again.
+  await click(state, 'Datos');
+  assert.ok(state.document.querySelector('.charts-insights'));
+  assert.equal(state.logWrites, 0);
+});
 
 test('confirming a Coach meal publishes the saved record to Inicio, Datos and history without reloading', async t => {
   const state = await mountApp(t, [meal]);

@@ -1,0 +1,438 @@
+{
+  "source": {
+    "baselineCommit": "c623f9beb726a3940ab564432260d7908302f9e5",
+    "finalCommit": "b98fbe0511138cf70abe62e540d7718df3559d18",
+    "applicationSourceTree": "d3b3afb2d6f6a6f2fd03e8e6f73fd56bfce908c6",
+    "fixtureDate": "2026-11-12",
+    "browser": "157.0.8103.51",
+    "browserDriver": "Playwright 1.56.1",
+    "data": "Synthetic records and account only",
+    "services": "Actual React UI/store/aggregation helpers; Auth, record RPC, Storage and Gemini simulated; external requests blocked",
+    "notCertified": [
+      "remote Supabase Auth",
+      "remote Storage",
+      "Gemini",
+      "physical mobile device or keyboard",
+      "real NVDA/VoiceOver screen-reader session"
+    ]
+  },
+  "widths": [
+    320,
+    375,
+    393,
+    430,
+    768,
+    1440
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "heights": {
+    "mobile": 852,
+    "tablet": 1024,
+    "desktop": 900
+  },
+  "before": [
+    {
+      "width": 320,
+      "theme": "light",
+      "defaultPeriod": "Día",
+      "visibleDateNumbers": 0,
+      "dateTargetWidth": 24,
+      "dateTargetHeight": 24,
+      "noPageHorizontalOverflow": true,
+      "explanationExpanded": "false",
+      "selectionChangesWriterImmediately": null,
+      "jsErrors": 0
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "defaultPeriod": "Día",
+      "visibleDateNumbers": 0,
+      "dateTargetWidth": 24,
+      "dateTargetHeight": 24,
+      "noPageHorizontalOverflow": true,
+      "explanationExpanded": "false",
+      "selectionChangesWriterImmediately": null,
+      "jsErrors": 0
+    },
+    {
+      "width": 393,
+      "theme": "light",
+      "defaultPeriod": "Día",
+      "visibleDateNumbers": 0,
+      "dateTargetWidth": 24,
+      "dateTargetHeight": 24,
+      "noPageHorizontalOverflow": true,
+      "explanationExpanded": "false",
+      "selectionChangesWriterImmediately": true,
+      "jsErrors": 0
+    },
+    {
+      "width": 430,
+      "theme": "light",
+      "defaultPeriod": "Día",
+      "visibleDateNumbers": 0,
+      "dateTargetWidth": 24,
+      "dateTargetHeight": 24,
+      "noPageHorizontalOverflow": true,
+      "explanationExpanded": "false",
+      "selectionChangesWriterImmediately": null,
+      "jsErrors": 0
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "defaultPeriod": "Día",
+      "visibleDateNumbers": 0,
+      "dateTargetWidth": 24,
+      "dateTargetHeight": 24,
+      "noPageHorizontalOverflow": true,
+      "explanationExpanded": "false",
+      "selectionChangesWriterImmediately": null,
+      "jsErrors": 0
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "defaultPeriod": "Día",
+      "visibleDateNumbers": 0,
+      "dateTargetWidth": 15.921875,
+      "dateTargetHeight": 15.921875,
+      "noPageHorizontalOverflow": true,
+      "explanationExpanded": "false",
+      "selectionChangesWriterImmediately": null,
+      "jsErrors": 0
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "defaultPeriod": "Día",
+      "visibleDateNumbers": 0,
+      "dateTargetWidth": 24,
+      "dateTargetHeight": 24,
+      "noPageHorizontalOverflow": true,
+      "explanationExpanded": "false",
+      "selectionChangesWriterImmediately": null,
+      "jsErrors": 0
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "defaultPeriod": "Día",
+      "visibleDateNumbers": 0,
+      "dateTargetWidth": 24,
+      "dateTargetHeight": 24,
+      "noPageHorizontalOverflow": true,
+      "explanationExpanded": "false",
+      "selectionChangesWriterImmediately": null,
+      "jsErrors": 0
+    },
+    {
+      "width": 393,
+      "theme": "dark",
+      "defaultPeriod": "Día",
+      "visibleDateNumbers": 0,
+      "dateTargetWidth": 24,
+      "dateTargetHeight": 24,
+      "noPageHorizontalOverflow": true,
+      "explanationExpanded": "false",
+      "selectionChangesWriterImmediately": null,
+      "jsErrors": 0
+    },
+    {
+      "width": 430,
+      "theme": "dark",
+      "defaultPeriod": "Día",
+      "visibleDateNumbers": 0,
+      "dateTargetWidth": 24,
+      "dateTargetHeight": 24,
+      "noPageHorizontalOverflow": true,
+      "explanationExpanded": "false",
+      "selectionChangesWriterImmediately": null,
+      "jsErrors": 0
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "defaultPeriod": "Día",
+      "visibleDateNumbers": 0,
+      "dateTargetWidth": 24,
+      "dateTargetHeight": 24,
+      "noPageHorizontalOverflow": true,
+      "explanationExpanded": "false",
+      "selectionChangesWriterImmediately": null,
+      "jsErrors": 0
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "defaultPeriod": "Día",
+      "visibleDateNumbers": 0,
+      "dateTargetWidth": 15.921875,
+      "dateTargetHeight": 15.921875,
+      "noPageHorizontalOverflow": true,
+      "explanationExpanded": "false",
+      "selectionChangesWriterImmediately": null,
+      "jsErrors": 0
+    }
+  ],
+  "after": [
+    {
+      "width": 272,
+      "theme": "light",
+      "height": 1040.890625,
+      "noOverflow": true,
+      "visibleWeeks": 1,
+      "visibleNumberedDays": 7,
+      "minDayWidth": 44,
+      "minDayHeight": 52,
+      "minControlWidth": 44,
+      "minControlHeight": 44,
+      "advancedSummaryLabels": [
+        "Balance promedio",
+        "Balance acumulado",
+        "Consumidas en el período",
+        "Gasto estimado del período"
+      ],
+      "advancedSummaryKeyboard": true,
+      "jsErrors": 0,
+      "windowErrors": 0
+    },
+    {
+      "width": 327,
+      "theme": "light",
+      "height": 1096.890625,
+      "noOverflow": true,
+      "visibleWeeks": 5,
+      "visibleNumberedDays": 35,
+      "minDayWidth": 44,
+      "minDayHeight": 52,
+      "minControlWidth": 44,
+      "minControlHeight": 44,
+      "advancedSummaryLabels": [
+        "Balance promedio",
+        "Balance acumulado",
+        "Consumidas en el período",
+        "Gasto estimado del período"
+      ],
+      "advancedSummaryKeyboard": true,
+      "jsErrors": 0,
+      "windowErrors": 0
+    },
+    {
+      "width": 345,
+      "theme": "light",
+      "height": 1077.390625,
+      "noOverflow": true,
+      "visibleWeeks": 5,
+      "visibleNumberedDays": 35,
+      "minDayWidth": 45,
+      "minDayHeight": 52,
+      "minControlWidth": 44,
+      "minControlHeight": 44,
+      "advancedSummaryLabels": [
+        "Balance promedio",
+        "Balance acumulado",
+        "Consumidas en el período",
+        "Gasto estimado del período"
+      ],
+      "advancedSummaryKeyboard": true,
+      "jsErrors": 0,
+      "windowErrors": 0
+    },
+    {
+      "width": 382,
+      "theme": "light",
+      "height": 1061.390625,
+      "noOverflow": true,
+      "visibleWeeks": 5,
+      "visibleNumberedDays": 35,
+      "minDayWidth": 50.28125,
+      "minDayHeight": 52,
+      "minControlWidth": 44,
+      "minControlHeight": 44,
+      "advancedSummaryLabels": [
+        "Balance promedio",
+        "Balance acumulado",
+        "Consumidas en el período",
+        "Gasto estimado del período"
+      ],
+      "advancedSummaryKeyboard": true,
+      "jsErrors": 0,
+      "windowErrors": 0
+    },
+    {
+      "width": 407.9375,
+      "theme": "light",
+      "height": 1043.390625,
+      "noOverflow": true,
+      "visibleWeeks": 5,
+      "visibleNumberedDays": 35,
+      "minDayWidth": 47.703125,
+      "minDayHeight": 52,
+      "minControlWidth": 44,
+      "minControlHeight": 44,
+      "advancedSummaryLabels": [
+        "Balance promedio",
+        "Balance acumulado",
+        "Consumidas en el período",
+        "Gasto estimado del período"
+      ],
+      "advancedSummaryKeyboard": true,
+      "jsErrors": 0,
+      "windowErrors": 0
+    },
+    {
+      "width": 1126,
+      "theme": "light",
+      "height": 600,
+      "noOverflow": true,
+      "visibleWeeks": 5,
+      "visibleNumberedDays": 35,
+      "minDayWidth": 75.59375,
+      "minDayHeight": 52,
+      "minControlWidth": 44,
+      "minControlHeight": 44,
+      "advancedSummaryLabels": [
+        "Balance promedio",
+        "Balance acumulado",
+        "Consumidas en el período",
+        "Gasto estimado del período"
+      ],
+      "advancedSummaryKeyboard": true,
+      "jsErrors": 0,
+      "windowErrors": 0
+    },
+    {
+      "width": 272,
+      "theme": "dark",
+      "height": 1040.890625,
+      "noOverflow": true,
+      "visibleWeeks": 1,
+      "visibleNumberedDays": 7,
+      "minDayWidth": 44,
+      "minDayHeight": 52,
+      "minControlWidth": 44,
+      "minControlHeight": 44,
+      "advancedSummaryLabels": [
+        "Balance promedio",
+        "Balance acumulado",
+        "Consumidas en el período",
+        "Gasto estimado del período"
+      ],
+      "advancedSummaryKeyboard": true,
+      "jsErrors": 0,
+      "windowErrors": 0
+    },
+    {
+      "width": 327,
+      "theme": "dark",
+      "height": 1096.890625,
+      "noOverflow": true,
+      "visibleWeeks": 5,
+      "visibleNumberedDays": 35,
+      "minDayWidth": 44,
+      "minDayHeight": 52,
+      "minControlWidth": 44,
+      "minControlHeight": 44,
+      "advancedSummaryLabels": [
+        "Balance promedio",
+        "Balance acumulado",
+        "Consumidas en el período",
+        "Gasto estimado del período"
+      ],
+      "advancedSummaryKeyboard": true,
+      "jsErrors": 0,
+      "windowErrors": 0
+    },
+    {
+      "width": 345,
+      "theme": "dark",
+      "height": 1077.390625,
+      "noOverflow": true,
+      "visibleWeeks": 5,
+      "visibleNumberedDays": 35,
+      "minDayWidth": 45,
+      "minDayHeight": 52,
+      "minControlWidth": 44,
+      "minControlHeight": 44,
+      "advancedSummaryLabels": [
+        "Balance promedio",
+        "Balance acumulado",
+        "Consumidas en el período",
+        "Gasto estimado del período"
+      ],
+      "advancedSummaryKeyboard": true,
+      "jsErrors": 0,
+      "windowErrors": 0
+    },
+    {
+      "width": 382,
+      "theme": "dark",
+      "height": 1061.390625,
+      "noOverflow": true,
+      "visibleWeeks": 5,
+      "visibleNumberedDays": 35,
+      "minDayWidth": 50.28125,
+      "minDayHeight": 52,
+      "minControlWidth": 44,
+      "minControlHeight": 44,
+      "advancedSummaryLabels": [
+        "Balance promedio",
+        "Balance acumulado",
+        "Consumidas en el período",
+        "Gasto estimado del período"
+      ],
+      "advancedSummaryKeyboard": true,
+      "jsErrors": 0,
+      "windowErrors": 0
+    },
+    {
+      "width": 407.9375,
+      "theme": "dark",
+      "height": 1043.390625,
+      "noOverflow": true,
+      "visibleWeeks": 5,
+      "visibleNumberedDays": 35,
+      "minDayWidth": 47.703125,
+      "minDayHeight": 52,
+      "minControlWidth": 44,
+      "minControlHeight": 44,
+      "advancedSummaryLabels": [
+        "Balance promedio",
+        "Balance acumulado",
+        "Consumidas en el período",
+        "Gasto estimado del período"
+      ],
+      "advancedSummaryKeyboard": true,
+      "jsErrors": 0,
+      "windowErrors": 0
+    },
+    {
+      "width": 1126,
+      "theme": "dark",
+      "height": 600,
+      "noOverflow": true,
+      "visibleWeeks": 5,
+      "visibleNumberedDays": 35,
+      "minDayWidth": 75.59375,
+      "minDayHeight": 52,
+      "minControlWidth": 44,
+      "minControlHeight": 44,
+      "advancedSummaryLabels": [
+        "Balance promedio",
+        "Balance acumulado",
+        "Consumidas en el período",
+        "Gasto estimado del período"
+      ],
+      "advancedSummaryKeyboard": true,
+      "jsErrors": 0,
+      "windowErrors": 0
+    }
+  ],
+  "externalRequestsAttempted": 0,
+  "captureMethod": "Isolated component PNG: temporarily unfold only app scroll containers and hide fixed bottom navigation; preserve exact measured component width. All interaction checks and video use original layout."
+}

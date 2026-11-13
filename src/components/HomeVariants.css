@@ -17,6 +17,10 @@
   color-scheme: dark;
 }
 .home-variants button:focus-visible, .home-variants summary:focus-visible { outline: 2px solid var(--home-orange); outline-offset: 4px; }
+.home-variants .history-record-return { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 12px; border: 1px solid var(--home-line); border-radius: var(--home-radius-control); background: var(--home-control); color: var(--home-text); font-size: 13px; }
+.home-variants .history-record-return:hover { background: var(--home-hover); }
+.home-variants .daily-logs-heading h4 { scroll-margin-block: var(--space-inset); }
+.home-variants .daily-logs-heading h4:focus-visible { outline: 2px solid var(--home-orange); outline-offset: 4px; border-radius: var(--radius-micro); }
 .home-variants, .home-variants :is(.energy-card, .daily-habits > .habit-card, .daily-logs) { transition: background-color var(--motion-control) var(--motion-ease-control), border-color var(--motion-control) var(--motion-ease-control), color var(--motion-control) var(--motion-ease-control); }
 .home-variants :is([class~="bg-white"], [class~="bg-slate-50"], [class~="bg-slate-100"]) { background-color: var(--home-card); }
 .home-variants :is([class~="border-slate-200"], [class~="border-slate-300"], [class~="divide-slate-200"] > *) { border-color: var(--home-line); }
