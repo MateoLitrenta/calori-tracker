@@ -18,6 +18,8 @@ const imports = {
     export const useEffect = (...args) => globalThis.__entryHarness.hooks.useEffect?.(...args);
     export const useLayoutEffect = (...args) => globalThis.__entryHarness.hooks.useEffect?.(...args);
     export const useCallback = callback => callback;
+    export const useMemo = factory => factory();
+    export const useId = () => 'synthetic-entry-id';
     export const lazy = () => () => null;
     export const Suspense = () => null;`),
   '../lib/supabase': stub('export const supabase = { auth: globalThis.__entryHarness.auth };'),
@@ -30,9 +32,11 @@ const imports = {
   './UserAvatar': stub('export default () => null;'),
   './Heatmap': stub('export default () => null;'),
   './DailyPanel': stub('export default () => null;'),
+  './WeeklyDateNav': stub('export default () => null;'),
   './ViewSkeleton': stub('export default props => globalThis.__entryHarness.ViewSkeleton(props);'),
   './components/ViewSkeleton': stub('export default props => globalThis.__entryHarness.ViewSkeleton(props);'),
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,
+  '../utils/homeDateNavigation': new URL('../src/utils/homeDateNavigation.ts', import.meta.url).href,
   '../lib/habitDraft': new URL('../src/lib/habitDraft.ts', import.meta.url).href,
   './hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
   './utils/entryRoute': new URL('../src/utils/entryRoute.ts', import.meta.url).href,
@@ -698,7 +702,7 @@ test('Home uses the ready profile and existing record writer supplied by App wit
   const panel = node(home, element => element.props.onUpdateRecord === updateRecord);
   assert.equal(panel.props.profile, readyProfile);
   assert.equal(panel.props.records, readyProfile.records);
-  assert.equal(node(home, element => !!element.props.onSelectDate).props.profile, readyProfile);
+  assert.equal(node(home, element => !!element.props.onSelectDate && !!element.props.profile).props.profile, readyProfile);
   assert.doesNotMatch(markup(home), /Cargando perfil/);
 });
 

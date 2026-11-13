@@ -6,7 +6,7 @@ import { JSDOM } from 'jsdom';
 
 // CSS contracts only. JSDOM has no layout/container-query engine: these fixtures
 // explicitly select a container width. Browser geometry is verified separately.
-const files = ['DesktopExperience.css', 'components/HomeVariants.css', 'components/PremiumViews.css', 'components/ActivityHistory.css', 'components/ActivityHistoryMotion.css'];
+const files = ['DesktopExperience.css', 'components/HomeVariants.css', 'components/HomeMobile.css', 'components/PremiumViews.css', 'components/ActivityHistory.css', 'components/ActivityHistoryMotion.css'];
 const source = (await Promise.all(files.map(file => readFile(new URL('../src/' + file, import.meta.url), 'utf8')))).join('\n');
 function stylesAt(width, height = 900, containerWidth = width) {
   const css = postcss.parse(source);
@@ -27,7 +27,9 @@ function view(t, width, height = 900, containerWidth = width) {
     '<div class="app-main"><div class="app-content">' +
     '<section class="assistant-view"><header class="chat-heading"></header><div class="chat-messages">' +
     '<div class="chat-message chat-message-bot chat-message-structured"><div class="chat-bubble">Text</div></div></div><form class="chat-composer"></form></section>' +
-    '<div class="home-variants"><div class="daily-summary"><div class="energy-card"></div><div class="daily-habits"><div class="habit-card"><div class="habit-controls"><button>+</button></div></div></div></div>' +
+    '<div class="home-variants"><div class="daily-panel" data-period="day"><div class="daily-summary"><div class="energy-card"><div class="energy-headline"><div>Balance energético</div><div class="energy-number">-600 kcal</div><div class="energy-status bg-heatmap-deficit-high">Déficit Alto</div></div><div class="energy-footer"><p class="energy-coverage">1 comida · 0 ejercicios<span>Según tus registros</span></p><details class="energy-breakdown"><summary>Ver desglose</summary></details></div></div></div>' +
+    '<div class="daily-journal"><div class="daily-quick-actions"><button>Comida</button><button>Ejercicio</button></div><div class="daily-logs"></div></div>' +
+    '<section class="daily-habits-block"><div class="daily-habits"><div class="habit-card"><div class="habit-controls"><button>+</button></div></div></div></section></div>' +
     '<section class="activity-history-v2"><header class="ah-header"><div><h2>Tu actividad</h2></div><div class="ah-view-switch"><button aria-pressed="true">Mes</button></div></header>' +
     '<div class="ah-layout"><div class="ah-calendar"><div class="ah-navigation"><h3>Noviembre 2026</h3><div class="ah-nav-actions"><button>←</button><button>Hoy</button><button>→</button></div></div>' +
     '<div class="ah-compact-week"><p>Semana 2 de 5</p><div><button>←</button><button>→</button></div></div>' +
@@ -78,6 +80,39 @@ test('dashboard row follows its tallest content and analysis/settings share spac
   assert.equal(style('.charts-panel').padding, style('.profile-panel').padding);
   assert.equal(style('.charts-summary').alignSelf, 'stretch');
   assert.equal(style('.charts-summary').height, '');
+});
+
+test('daily energy categories share neutral presentation instead of rewarding a large recorded deficit', t => {
+  const { document, style } = view(t, 393);
+  const pill = document.querySelector('.energy-status');
+  const luminance = channels => channels.map(value => value / 255).map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4)
+    .reduce((total, value, index) => total + value * [.2126, .7152, .0722][index], 0);
+  for (const dark of [false, true]) {
+    document.documentElement.classList.toggle('dark', dark);
+    for (const category of ['deficit-high', 'deficit-medium', 'deficit-low', 'surplus-high', 'surplus-low', 'neutral']) {
+      pill.className = `energy-status bg-heatmap-${category}`;
+      assert.equal(style('.energy-status').background, 'var(--home-control)', `${dark}:${category}`);
+      assert.equal(style('.energy-status').color, dark ? 'var(--home-muted)' : 'rgb(88, 102, 122)', `${dark}:${category}`);
+      if (!dark) {
+        const foreground = style('.energy-status').color.match(/\d+/g).map(Number);
+        const background = style('.home-variants').getPropertyValue('--home-control').trim().slice(1).match(/../g).map(value => parseInt(value, 16));
+        assert.ok((luminance(background) + .05) / (luminance(foreground) + .05) >= 4.5, 'The light energy status keeps readable text contrast');
+      }
+    }
+  }
+});
+
+test('mobile daily actions and compact complementary controls retain comfortable targets with a single page scroll', t => {
+  for (const width of [320, 375, 393, 440, 768]) {
+    const { style } = view(t, width);
+    assert.ok(parseInt(style('.daily-quick-actions button').minHeight) >= 44);
+    assert.ok(parseInt(style('.habit-controls button').minHeight) >= 44);
+    assert.ok(parseInt(style('.energy-breakdown summary').minHeight) >= 44);
+    assert.equal(style('.habit-controls').gridTemplateColumns, 'repeat(2, minmax(44px, 1fr))');
+    assert.equal(style('.daily-habits .habit-card').borderTopWidth, '0px');
+    assert.equal(style('.daily-logs').maxHeight, '');
+    assert.equal(style('.daily-logs').overflowY, '');
+  }
 });
 
 test('numbered history retains seven columns and accessible target sizes across all required widths', t => {

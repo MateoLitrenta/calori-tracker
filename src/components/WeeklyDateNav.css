@@ -1,0 +1,50 @@
+.home-date-nav { min-width: 0; color: var(--home-text); }
+.home-date-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.home-date-context { min-width: 0; }
+.home-date-kicker { color: var(--home-muted); font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+.home-date-context h2 { margin: 3px 0 0; font-size: clamp(15px, 3.8vw, 19px); font-weight: 600; line-height: 1.3; letter-spacing: -.025em; }
+.home-date-context h2::first-letter { text-transform: uppercase; }
+.home-date-shortcuts { display: flex; flex-shrink: 0; gap: 4px; }
+.home-date-nav button, .home-history-toggle { touch-action: manipulation; }
+.home-date-shortcuts button, .home-week-heading button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; border-radius: var(--home-radius-control); color: var(--home-text); background: var(--home-control); }
+.home-date-shortcuts button:hover:not(:disabled), .home-week-heading button:hover:not(:disabled) { background: var(--home-hover); }
+.home-date-today { padding: 0 9px; font-size: 13px; font-weight: 600; }
+.home-date-shortcuts button:disabled, .home-week-heading button:disabled { opacity: .4; cursor: default; }
+.home-week-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; }
+.home-week-heading > span { color: var(--home-muted); font-size: 12px; text-align: center; }
+.home-week-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.home-week-days button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-width: 0; min-height: 62px; padding: 5px 0; border-radius: var(--home-radius-control); color: var(--home-muted); border: 1px solid transparent; }
+.home-week-days button > span { font-size: 12px; text-transform: uppercase; line-height: 1.2; }
+.home-week-days button strong { color: var(--home-text); font-size: 17px; line-height: 1.2; font-weight: 600; }
+.home-week-days button i { width: 3px; height: 3px; border-radius: 50%; background: transparent; }
+.home-week-days button[aria-current="date"] i { background: currentColor; }
+.home-week-days button:hover:not(:disabled) { background: var(--home-hover); }
+.home-week-days button[aria-pressed="true"] { background: var(--home-orange); color: #3b2418; }
+.home-week-days button[aria-pressed="true"] strong { color: inherit; }
+.home-week-days button:disabled { opacity: .35; cursor: default; }
+.home-history { min-width: 0; }
+.home-date-blocked { padding: 12px; border: 1px solid var(--home-line); border-radius: var(--home-radius-control); background: var(--home-control); color: var(--home-text); font-size: 13px; }
+.home-date-blocked button { min-height: 44px; margin-top: 4px; color: var(--home-orange); font-weight: 600; }
+.home-history-toggle { display: none; }
+.home-history-content[hidden] { display: none; }
+@media (min-width: 1280px) {
+  .home-date-nav { display: grid; grid-template-columns: minmax(240px, .95fr) 44px minmax(350px, 1.6fr) 44px; gap: 4px 12px; align-items: center; }
+  .home-date-heading { grid-column: 1; grid-row: 1 / 3; padding-right: 12px; }
+  .home-week-heading { display: contents; }
+  .home-week-heading > span { grid-column: 3; grid-row: 1; }
+  .home-week-heading > button:first-child { grid-column: 2; grid-row: 1 / 3; }
+  .home-week-heading > button:last-child { grid-column: 4; grid-row: 1 / 3; }
+  .home-week-days { grid-column: 3; grid-row: 2; }
+  .home-week-days button { min-height: 56px; }
+}
+@media (max-width: 767px) {
+  .home-date-nav { margin-bottom: 2px; }
+  .home-week-heading { margin-top: 4px; }
+  .home-week-days { gap: 2px; }
+  .home-history-toggle { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 52px; padding: 8px 0; text-align: left; color: var(--home-text); }
+  .home-history-toggle > span { display: flex; flex-direction: column; gap: 2px; }
+  .home-history-toggle strong { font-size: 15px; font-weight: 600; }
+  .home-history-toggle small { color: var(--home-muted); font-size: 12px; }
+  .home-history-toggle svg { color: var(--home-muted); flex-shrink: 0; }
+  .home-history-content:not([hidden]) { margin-top: 12px; }
+}

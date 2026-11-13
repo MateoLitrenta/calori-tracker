@@ -136,7 +136,10 @@ async function mount(t, initial = fixtures(), { width: initialWidth = 1440, cont
   const unmount = async () => { if (mounted) { mounted = false; await act(() => root.unmount()); } };
   t.after(async () => { await unmount(); dom.window.close();
     for (const [name, value] of Object.entries(saved)) globalThis[name] = value; });
-  const button = text => [...document.querySelectorAll('button')].find(node => node.textContent.trim() === text || node.getAttribute('aria-label') === text);
+  // Daily navigation has its own Hoy/week controls. These history scenarios
+  // intentionally address the existing exploration controls first.
+  const button = text => [...document.querySelectorAll('[data-history-root] button'), ...document.querySelectorAll('button')]
+    .find(node => node.textContent.trim() === text || node.getAttribute('aria-label') === text);
   const day = date => document.querySelector('.history-day[data-date="' + date + '"]');
   const click = async node => { assert.ok(node, 'The requested control must exist'); await act(() => node.click()); };
   return { saves, button, day, scrolls, contextChanges, resizeObservers, unmount, click,
