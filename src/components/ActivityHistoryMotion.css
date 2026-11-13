@@ -1,0 +1,19 @@
+.activity-history-v2 .ah-motion-viewport {
+  min-width: 0;
+  overflow: clip;
+  overflow-clip-margin: 6px;
+}
+.activity-history-v2 .ah-motion-surface {
+  min-width: 0;
+  transform-origin: center;
+}
+.activity-history-v2 .ah-motion-surface[data-history-motion] {
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .activity-history-v2 .ah-motion-surface {
+    transform: none !important;
+    opacity: 1 !important;
+    will-change: auto;
+  }
+}
