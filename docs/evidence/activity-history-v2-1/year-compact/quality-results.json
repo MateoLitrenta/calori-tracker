@@ -1,0 +1,83 @@
+{
+  "result": "PASSED",
+  "sourceCommit": "99b6af303df8e0496f050442a297930d6e2006f2",
+  "applicationSourceTreeSha1": "39e8ea045d2dfe5edc85ace6d64c1cb737a86a78",
+  "testSourceTreeSha1": "313722b46980e4f519c4cd13c753dd2eccd69f87",
+  "scope": "Compact annual history cards only; existing navigation and persistence unchanged",
+  "runtime": {
+    "platform": "win32",
+    "node": "24.4.1",
+    "ui": "React/JSDOM and CSS declaration contracts"
+  },
+  "tests": {
+    "tests": 93,
+    "pass": 93,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "focalDurationMs": 90906.1256,
+  "newRegressionCases": 10,
+  "responsiveInputs": {
+    "widthsPx": [
+      320,
+      375,
+      393,
+      430,
+      1440
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ]
+  },
+  "coverage": [
+    "signed canonical deficit, surplus and equilibrium averages with units",
+    "provisional averages and food-day coverage",
+    "football, gym and other workouts",
+    "neutral empty and future months",
+    "single activation opens month and existing daily detail",
+    "drafts, focus, keyboard, reduced motion and existing period navigation"
+  ],
+  "quality": {
+    "frontendTypes": "PASSED",
+    "aiTypes": "PASSED",
+    "coachTypes": "PASSED",
+    "lint": "PASSED",
+    "lintWarnings": 12,
+    "lintErrors": 0,
+    "newLintWarnings": 0,
+    "build": "PASSED",
+    "buildWarnings": [
+      "Existing large-chunk warning above 500 kB"
+    ],
+    "fullChangeDiffCheck": "PASSED",
+    "workingDiffCheck": "PASSED",
+    "indexDiffCheck": "PASSED"
+  },
+  "commands": [
+    "node --test --test-concurrency=1 tests/history-presentation.test.mjs tests/history-motion.test.mjs tests/history-experience.test.mjs tests/precision-layout.test.mjs tests/ui-polish.test.mjs",
+    "node node_modules/typescript/bin/tsc -b --force",
+    "node node_modules/typescript/bin/tsc -p api/ai/tsconfig.json --noEmit",
+    "node node_modules/typescript/bin/tsc -p api/coach/tsconfig.json --noEmit",
+    "npm run lint",
+    "npm run build",
+    "git diff --check",
+    "git diff --cached --check"
+  ],
+  "limitations": [
+    "JSDOM verifies semantics and interactions but cannot certify actual wrapping, clipping or browser geometry. Those are recorded separately using the real browser.",
+    "Persistence, AI and Storage boundaries in these component tests are synthetic. No hosted Auth, Storage or Production services were certified by this run.",
+    "The previously recorded 615-test Linux suite remains historical evidence for its original commit; it was not repeated or relabeled for this visual-only adjustment."
+  ],
+  "safety": {
+    "productionModified": false,
+    "remoteSQLExecuted": false,
+    "realUserDataUsed": false,
+    "calculationsAndPersistenceUnchanged": true,
+    "rawLogsPublished": false,
+    "secretsPublished": false
+  },
+  "recordedUTC": "2026-11-13T03:46:02.478Z"
+}
