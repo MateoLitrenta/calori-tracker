@@ -17,6 +17,33 @@ const goal = (overrides = {}) => ({ id: '00000000-0000-0000-0000-000000000001', 
   startDate: dates[0], endDate: today, stepThreshold: null, status: 'active', version: 1,
   createdAt: '2026-11-07T10:00:00Z', updatedAt: '2026-11-07T10:00:00Z', ...overrides });
 
+test('opening actions identify the task for each context, including goal progress and reached goals', () => {
+  const training = context({ [today]: record(today, { workouts: [workout('Fútbol'), workout('Gimnasio')] }) });
+  const regularFood = context(Object.fromEntries(dates.map(date => [date, record(date, { meals: [meal()] })])));
+  const changedCoverage = context(Object.fromEntries([...coachDates(today, 7, 7), today].map(date => [date, record(date, { meals: [meal()] })])));
+  const steps = context({ [today]: record(today, { steps: 8500 }) });
+  const cases = [
+    [buildProactiveInsight(context()), 'Elegir mi próximo registro'],
+    [buildProactiveInsight(context({ [today]: record(today, { water: 800 }) })), 'Elegir qué registrar ahora'],
+    [buildProactiveInsight(context({ [today]: record(today, { meals: [meal(-1)] }) })), 'Revisar datos incompletos'],
+    [buildProactiveInsight(context({ [today]: record(today, { meals: [meal()] }) })), 'Completar mi registro'],
+    [buildProactiveInsight(regularFood), 'Revisar mi alimentación'],
+    [buildProactiveInsight(changedCoverage), 'Entender mi regularidad'],
+    [buildProactiveInsight(training), 'Organizar mis entrenamientos'],
+    [buildProactiveInsight(context({ [today]: record(today, { workouts: [workout('Gimnasio')] }) })), 'Elegir mi próximo entrenamiento'],
+    [buildProactiveInsight(steps), 'Explorar mis pasos'],
+    [buildProactiveInsight(training, [goal()]), 'Ver avance de entrenamientos'],
+    [buildProactiveInsight(steps, [goal({ type: 'step_days', stepThreshold: 8000 })]), 'Ver avance de pasos'],
+    [buildProactiveInsight(training, [goal({ target: 2 })]), 'Sostener mi objetivo'],
+  ];
+  for (const [insight, action] of cases) {
+    assert.equal(insight.actionLabel, action);
+    assert.ok(insight.actionLabel.length <= 32);
+    assert.doesNotMatch(insight.actionLabel, /Revisar juntos/);
+    assert.ok(insight.prompt.endsWith('?'), 'The action opens a question, not an automatic write');
+  }
+});
+
 test('loading and a new account have distinct useful states without fabricated tendencies', () => {
   assert.equal(buildProactiveInsight(null), null);
   assert.deepEqual(coachSuggestions(null), []);

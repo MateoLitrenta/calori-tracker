@@ -75,7 +75,7 @@ export function buildProactiveInsight(context: CoachContext | null, goals: Coach
     : null;
   const suggestions = [...new Set([goalSuggestion, trainingSuggestion, foodSuggestion, stepSuggestion,
     '¿Cómo puedo registrar una comida?', '¿Cómo funciona Calori?'].filter((value): value is string => Boolean(value)))].slice(0, 3);
-  const base = { period, actionLabel: 'Revisar juntos', suggestions };
+  const base = { period, suggestions };
   const recentValuesInvalid = context.recentDays.some(day => day.meals.some(meal => meal.calories === null)
     || (day.meals.length > 0 && day.omittedMeals === 0 && day.calories !== null
       && Math.abs(day.meals.reduce((sum, meal) => sum + (meal.calories ?? 0), 0) - day.calories) > 0.01));
@@ -84,6 +84,7 @@ export function buildProactiveInsight(context: CoachContext | null, goals: Coach
   const validGoalHistory = relevantGoalDays.every(day => validCount(day.steps) && validCount(day.workoutCount));
   if (recentValuesInvalid || !days.every(consistentDay) || !validGoalHistory) {
     return identify({ ...base, kind: 'data_quality', title: 'Revisemos tus registros',
+      actionLabel: 'Revisar datos incompletos',
       observation: 'Hay datos incompletos o inconsistentes. Prefiero revisarlos antes de sacar conclusiones.',
       evidence: ['No hay una base confiable para comparar estos registros.'],
       limitation: 'Un registro incompleto no permite inferir consumo ni actividad.',
@@ -99,6 +100,7 @@ export function buildProactiveInsight(context: CoachContext | null, goals: Coach
       const unit = goal.type === 'workout_sessions' ? 'entrenamientos' : 'días con el umbral de pasos';
       const reached = progress.registered >= goal.target;
       return identify({ ...base, kind: 'goal', title: reached ? 'Tu registro alcanzó el objetivo' : 'Tu objetivo tiene un próximo paso',
+        actionLabel: reached ? 'Sostener mi objetivo' : goal.type === 'step_days' ? 'Ver avance de pasos' : 'Ver avance de entrenamientos',
         period: progress.period, goalId: goal.id,
         observation: `Tenés ${progress.registered} de ${goal.target} ${unit} registrados en el período de tu objetivo confirmado.`,
         evidence: [`Objetivo confirmado: ${goal.target} ${unit}.`,
@@ -115,6 +117,7 @@ export function buildProactiveInsight(context: CoachContext | null, goals: Coach
 
   if (current.workoutCount > 1 && names.length > 1) {
     return identify({ ...base, kind: 'training', title: 'Tus actividades, en conjunto',
+      actionLabel: 'Organizar mis entrenamientos',
       observation: `Registraste ${current.workoutCount} entrenamientos en ${current.workoutDays} de los últimos 7 días. Podemos pensar cómo organizar el próximo.`,
       evidence: [`Actividades registradas: ${names.join(' · ')}.`, `${current.workoutDays} de 7 días con entrenamientos registrados.`],
       limitation: 'Estos registros no describen toda tu actividad ni permiten evaluar tu recuperación.',
@@ -129,6 +132,7 @@ export function buildProactiveInsight(context: CoachContext | null, goals: Coach
       ? `Hay comidas registradas en ${current.mealDays} de los últimos 7 días, frente a ${previous.mealDays} de 7 en el período anterior.`
       : `Hay comidas registradas en ${current.mealDays} de los últimos 7 días.${sparse ? ' Todavía es poco para hablar de una tendencia.' : ' Esa continuidad nos da un punto de partida para revisar tu alimentación.'}`;
     return identify({ ...base, kind: 'nutrition_logging', title: coverageChanged ? 'Tu regularidad de registro cambió' : sparse ? 'Completar el registro ayuda' : 'Tu registro tiene continuidad',
+      actionLabel: coverageChanged ? 'Entender mi regularidad' : sparse ? 'Completar mi registro' : 'Revisar mi alimentación',
       observation,
       evidence: [`${current.mealCount} ${plural(current.mealCount, 'comida registrada', 'comidas registradas')} en ${current.mealDays} de 7 días.`,
         ...(coverageChanged ? [`Período anterior: ${previous.mealDays} de 7 días con comidas registradas.`] : [])],
@@ -143,6 +147,7 @@ export function buildProactiveInsight(context: CoachContext | null, goals: Coach
 
   if (current.workoutCount) {
     return identify({ ...base, kind: 'training', title: 'Un punto de partida para entrenar',
+      actionLabel: 'Elegir mi próximo entrenamiento',
       observation: `Tenés ${current.workoutCount} ${plural(current.workoutCount, 'entrenamiento registrado', 'entrenamientos registrados')} en los últimos 7 días. Podemos usarlo para pensar tu próximo paso.`,
       evidence: [`${current.workoutDays} de 7 días con entrenamientos registrados.`,
         ...(names.length ? [`Actividad registrada: ${names.join(' · ')}.`] : [])],
@@ -154,6 +159,7 @@ export function buildProactiveInsight(context: CoachContext | null, goals: Coach
   if (current.stepDays) {
     const enough = current.stepDays >= 4;
     return identify({ ...base, kind: 'steps', title: enough ? 'Tu movimiento tiene registros' : 'Empecemos por tus pasos',
+      actionLabel: 'Explorar mis pasos',
       observation: enough
         ? `Tenés pasos registrados en ${current.stepDays} de los últimos 7 días. Podemos usarlos como referencia para un próximo paso realista.`
         : `Hay pasos registrados en ${current.stepDays} de los últimos 7 días. Necesito más días para hablar de una tendencia.`,
@@ -172,7 +178,7 @@ export function buildProactiveInsight(context: CoachContext | null, goals: Coach
       : 'Todavía no hay comidas, entrenamientos ni pasos registrados en los últimos 7 días. Tu próximo registro me ayuda a conocerte.',
     evidence: [hasOtherData ? 'Hay registros de agua o peso en los últimos 7 días.' : 'Sin registros recientes de alimentación o actividad.'],
     limitation: 'Sin registros suficientes no puedo identificar tendencias ni asumir tus hábitos.',
-    actionLabel: 'Elegir por dónde empezar',
+    actionLabel: hasOtherData ? 'Elegir qué registrar ahora' : 'Elegir mi próximo registro',
     prompt: hasOtherData ? 'Tengo registros de agua o peso. ¿Qué me conviene registrar ahora para recibir orientación útil?'
       : 'Quiero empezar a usar mi Coach. ¿Qué registro simple puedo hacer primero?',
     suggestions: ['¿Cómo puedo empezar a registrar mis comidas sin complicarme?', '¿Qué datos necesitás para orientarme con mi actividad?', '¿Cómo funciona Calori?'],

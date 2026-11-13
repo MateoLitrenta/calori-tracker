@@ -441,7 +441,7 @@ html:not(.dark) .charts-insights .charts-surplus { color: #c4413a; }
 .assistant-view .chat-proactive-evidence ul { margin: 0 0 8px; padding-left: 18px; }
 .assistant-view .chat-proactive-evidence p { margin: 6px 0 0; }
 .assistant-view .chat-proactive summary:focus-visible { outline: 2px solid #f5a064; outline-offset: -3px; border-radius: var(--radius-control); }
-.assistant-view .chat-empty { width: 100%; max-width: 480px; padding: 22px 0; }
+.assistant-view .chat-empty { width: 100%; max-width: 480px; margin-block: auto; padding: 22px 0; }
 .assistant-view .chat-empty .chat-empty-label { color: var(--chat-muted); margin: 0; font-size: 12px; }
 .assistant-view .chat-empty .chat-empty-suggestions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 12px; }
 .assistant-view .chat-empty-suggestions .chat-suggestion { max-width: 100%; border: 1px solid var(--chat-line); white-space: normal; text-wrap: pretty; }
@@ -473,6 +473,12 @@ html:not(.dark) .assistant-view .chat-proactive-observation { color: #475569; }
   .assistant-view .chat-empty p { max-width: 270px; margin-inline: auto; font-size: 12px; line-height: 1.5; }
   .assistant-view .chat-empty-suggestions { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 20px; }
   .assistant-view .chat-empty-suggestions .chat-suggestion { max-width: 100%; min-height: 44px; padding: 8px 14px; line-height: 1.4; border: 1px solid var(--chat-line); }
+  /* The opening options follow the observation in the mobile reading flow. */
+  .assistant-view .chat-proactive + .chat-messages { padding-top: 12px; }
+  .assistant-view .chat-proactive + .chat-messages .chat-empty { max-width: none; margin-block: 0; padding: 0; }
+  .assistant-view .chat-proactive + .chat-messages .chat-empty-label { display: none; }
+  .assistant-view .chat-proactive + .chat-messages .chat-empty-suggestions { margin-top: 0; }
+  .assistant-view .chat-proactive + .chat-messages .chat-empty-suggestions .chat-suggestion { width: 100%; }
   .assistant-view .chat-message-avatar { display: none; }
   .assistant-view .chat-message { max-width: 92%; gap: 0; }
   .assistant-view .chat-message-bot { max-width: 100%; }

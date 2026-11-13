@@ -10,10 +10,11 @@ import { fixtures, TODAY } from './fixtures.mjs';
 // services and unrelated screens are replaced at the Vite module boundary.
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const phase = process.argv.includes('--before') ? 'before' : 'after';
-const base = '742bd78d553d99f75f604e0b3fdb577829f1253d';
+const review2 = process.argv.includes('--review-2');
+const base = review2 ? 'e8c16fc242d567f2fccc31373433e4b05d2be9fc' : '742bd78d553d99f75f604e0b3fdb577829f1253d';
 let root = repo;
 if (phase === 'before') {
-  root = path.resolve(repo, '../coach-v10-baseline');
+  root = path.resolve(repo, review2 ? '../coach-v10-baseline-review2' : '../coach-v10-baseline');
   mkdirSync(root, { recursive: true });
   if (!existsSync(path.join(root, 'src'))) {
     const archive = path.join(root, 'baseline.tar');
@@ -25,7 +26,7 @@ if (phase === 'before') {
 const { createServer } = await import(pathToFileURL(path.join(repo, 'node_modules/vite/dist/node/index.js')));
 const { default: react } = await import(pathToFileURL(path.join(repo, 'node_modules/@vitejs/plugin-react/dist/index.js')));
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ? pathToFileURL(process.env.PLAYWRIGHT_MODULE).href : 'playwright');
-const output = path.join(repo, 'docs/evidence/v10-1'); mkdirSync(output, { recursive: true });
+const output = path.join(repo, 'docs/evidence/v10-1', ...(review2 ? ['review-2'] : [])); mkdirSync(output, { recursive: true });
 console.log(JSON.stringify({ phase, step: 'create-local-server' }));
 const external = {
   '/hooks/useAppStore.ts': `import {useSyncExternalStore} from 'react';
@@ -37,6 +38,7 @@ const external = {
 const blank = ['HomeView', 'ChartsView', 'ProfileView', 'AuthModal', 'LandingPage', 'Onboarding'];
 const entry = `import React from 'react';import{createRoot}from'react-dom/client';
 import App from '/src/App.tsx';import{ThemeProvider}from'/src/components/ThemeProvider.tsx';import'/src/index.css';
+${phase === 'after' || review2 ? `import{buildCoachContext}from'/src/utils/coachContext.ts';import{buildProactiveInsight}from'/src/utils/coachProactive.ts';window.__qa.expectedInsight=()=>buildProactiveInsight(buildCoachContext(window.__qa.store.activeProfile,${JSON.stringify(TODAY)}),window.__qa.goals);` : ''}
 createRoot(document.getElementById('root')).render(React.createElement(ThemeProvider,null,React.createElement(App)));`;
 const server = await createServer({ root, configFile: false, plugins: [{ name: 'synthetic-coach-boundaries', enforce: 'pre',
   resolveId(id) { if (id === '/__qa_entry.tsx') return '\0qa-entry.tsx'; },
@@ -50,16 +52,18 @@ const server = await createServer({ root, configFile: false, plugins: [{ name: '
     if (req.url?.split('?')[0] !== '/qa') return next();
     res.setHeader('Content-Type', 'text/html'); res.end(await s.transformIndexHtml('/qa', '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="root"></div><script type="module" src="/__qa_entry.tsx"></script></body></html>'));
   }); },
-}, react()], server: { host: '127.0.0.1', port: 0 }, logLevel: 'warn' });
+}, react()], server: { host: '127.0.0.1', port: 0, hmr: false }, logLevel: 'warn' });
 await server.listen();
 console.log(JSON.stringify({ phase, step: 'launch-browser' }));
 const address = server.httpServer.address(), url = `http://127.0.0.1:${address.port}`;
 const browser = await chromium.launch({ channel: process.env.QA_BROWSER_CHANNEL || 'chrome', headless: true });
 console.log(JSON.stringify({ phase, step: 'browser-ready' }));
-const report = { phase, baseCommit: base, localSyntheticOnly: true, productionRequests: 0, geminiCalls: 0, cases: [], issues: [] };
+const report = { phase, baseCommit: base, review: review2 ? 2 : 1, localSyntheticOnly: true, productionRequests: 0, geminiCalls: 0, cases: [], issues: [] };
 const functionalOnly = process.argv.includes('--functional-only');
 const missingOnly = process.argv.includes('--missing-only');
 const evidenceOnly = process.argv.includes('--evidence-only');
+const selectedScenarios = (process.argv.find(value => value.startsWith('--scenarios='))?.split('=')[1] ?? '').split(',').filter(Boolean);
+assert.ok(selectedScenarios.every(value => Object.hasOwn(fixtures, value)), 'Only known synthetic scenarios may be selected');
 if (missingOnly && existsSync(path.join(output, `${phase}-browser-report.json`))) {
   const previous = JSON.parse(readFileSync(path.join(output, `${phase}-browser-report.json`), 'utf8'));
   report.cases = previous.cases;
@@ -69,6 +73,13 @@ if (functionalOnly && existsSync(path.join(output, 'after-browser-report.json'))
   report.cases = previous.cases.filter(value => !['responsive', 'account-switch', 'data-refresh', 'reopen-conversation'].includes(value.scenario));
 }
 if (evidenceOnly && existsSync(path.join(output, 'after-browser-report.json'))) report.cases = JSON.parse(readFileSync(path.join(output, 'after-browser-report.json'), 'utf8')).cases;
+if (selectedScenarios.length && existsSync(path.join(output, `${phase}-browser-report.json`))) {
+  report.cases = JSON.parse(readFileSync(path.join(output, `${phase}-browser-report.json`), 'utf8')).cases.filter(value => !selectedScenarios.includes(value.scenario));
+}
+const recordCase = value => {
+  report.cases = report.cases.filter(previous => !(previous.scenario === value.scenario && previous.theme === value.theme && previous.width === value.width));
+  report.cases.push(value);
+};
 async function open(scenario, theme, width, height = 900) {
   console.log(JSON.stringify({ phase, step: 'opening', scenario, theme, width }));
   const started = performance.now();
@@ -93,18 +104,28 @@ async function open(scenario, theme, width, height = 900) {
   await page.goto(url + '/qa', { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.getByRole('button', { name: 'Coach', exact: true }).filter({ visible: true }).click();
   await page.getByRole('textbox', { name: 'Mensaje para Coach' }).waitFor();
-  if (phase === 'after') await page.waitForFunction(expected => document.querySelector('.chat-proactive')?.dataset.insightKind === expected, fixtures[scenario].expected);
+  if (phase === 'after' || review2) await page.waitForFunction(expected => document.querySelector('.chat-proactive')?.dataset.insightKind === expected, fixtures[scenario].expected);
   return { page, context, errors, openLatencyMs: Math.round(performance.now() - started) };
 }
 try {
-  const screenshots = functionalOnly || evidenceOnly ? [] : phase === 'before' ? ['sufficient'] : Object.keys(fixtures);
+  const screenshots = functionalOnly || evidenceOnly ? [] : selectedScenarios.length ? selectedScenarios : phase === 'before' ? ['sufficient'] : Object.keys(fixtures);
   for (const scenario of screenshots) {
-    const layouts = [['light', 393, 852], ['dark', 1440, 900], ...(scenario === 'sufficient' ? [['dark', 393, 852], ['light', 1440, 900]] : [])];
+    const layouts = review2 && scenario === 'sufficient'
+      ? [[320, 568], [375, 667], [393, 852], [1440, 900]].flatMap(([width, height]) => ['light', 'dark'].map(theme => [theme, width, height]))
+      : [['light', 393, 852], ['dark', 1440, 900], ...(scenario === 'sufficient' ? [['dark', 393, 852], ['light', 1440, 900]] : [])];
     for (const [theme, width, height] of layouts) {
       if (missingOnly && existsSync(path.join(output, `${phase}-${scenario}-${theme}-${width}.png`))) continue;
       const { page, context, errors, openLatencyMs } = await open(scenario, theme, width, height);
       const data = await page.evaluate(() => ({ calls: window.__qa.calls.length, writes: window.__qa.writes,
         scrollWidth: document.documentElement.scrollWidth, width: innerWidth, text: document.querySelector('.assistant-view')?.innerText,
+        openingGeometry: (() => {
+          const card = document.querySelector('.chat-proactive')?.getBoundingClientRect();
+          const empty = document.querySelector('.chat-empty')?.getBoundingClientRect();
+          const suggestions = document.querySelector('.chat-empty-suggestions')?.getBoundingClientRect();
+          return card && suggestions ? { cardBottom: card.bottom, emptyTop: empty?.top, suggestionsTop: suggestions.top,
+            gapToSuggestions: Math.round((suggestions.top - card.bottom) * 100) / 100,
+            gapToEmpty: empty ? Math.round((empty.top - card.bottom) * 100) / 100 : null } : null;
+        })(),
         composer: (() => { const r = document.querySelector('.chat-composer')?.getBoundingClientRect();return r && { top: r.top, bottom: r.bottom }; })() }));
       assert.equal(data.calls, 0, 'Opening Coach must not call Gemini'); assert.equal(data.writes, 0);
       assert.ok(data.scrollWidth <= width + 1, 'No horizontal page overflow'); assert.deepEqual(errors, []);
@@ -112,19 +133,27 @@ try {
       await page.screenshot({ path: path.join(output, filename), fullPage: false });
       if (phase === 'after') {
         assert.equal(await page.locator('.chat-proactive').count(), 1, 'One proactive observation');
+        if (review2) {
+          assert.notEqual((await page.locator('.chat-proactive-action').innerText()).trim(), 'Revisar juntos', 'Action is specific to its observation');
+          if (width < 768) assert.ok(data.openingGeometry?.gapToSuggestions >= 0 && data.openingGeometry.gapToSuggestions <= 24,
+            `Opening options sit within 24px of the observation: ${data.openingGeometry?.gapToSuggestions}`);
+        }
         await page.getByText('Ver evidencia y límites', { exact: true }).click();
         assert.ok((await page.locator('.chat-proactive-evidence').innerText()).length > 80, 'Evidence and limitations are available');
+        const displayedInsight = await page.evaluate(() => window.__qa.expectedInsight());
         const beforeClick = performance.now();
         await page.locator('.chat-proactive-action').click();
         await page.waitForFunction(() => window.__qa.calls.length === 1 && !document.querySelector('[aria-label="Coach está respondiendo"]'));
         const request = await page.evaluate(() => window.__qa.calls[0]);
         assert.ok(request.proactiveInsightId?.startsWith('proactive-v1-'), 'CTA references displayed evidence');
+        assert.equal(request.proactiveInsightId, displayedInsight.id, 'CTA sends the exact current observation identifier');
+        assert.equal(request.messages.at(-1).text, displayedInsight.prompt, 'CTA sends the selected observation question');
         assert.equal(request.coachContext.profile.name, fixtures[scenario].profile.name);
         assert.equal(request.messages.filter(message => message.role === 'user').length, 1, 'One click starts one contextual request');
         assert.equal(await page.locator('.chat-proactive > details[open]').count(), 0, 'Observation compacts during conversation');
         data.contextualAction = { aiTransportCalls: 1, userSteps: 1, mockResponseLatencyMs: Math.round(performance.now() - beforeClick), reference: request.proactiveInsightId };
       }
-      report.cases.push({ scenario, theme, width, height, openLatencyMs, ...data, errors, screenshot: filename });
+      recordCase({ scenario, theme, width, height, openLatencyMs, ...data, errors, screenshot: filename });
       console.log(JSON.stringify({ phase, step: 'case-passed', scenario, theme, width }));
       await context.close();
     }
@@ -152,7 +181,7 @@ try {
         await page.screenshot({ path: path.join(output, `after-evidence-light-${width}.png`) });
         await page.locator('.chat-proactive').evaluate(card => { card.scrollTop = card.scrollHeight; });
         const limit = await page.evaluate(() => {
-          const card = document.querySelector('.chat-proactive').getBoundingClientRect(), element = document.querySelector('.chat-proactive-evidence p'), text = element.getBoundingClientRect();
+          const card = document.querySelector('.chat-proactive').getBoundingClientRect(), element = document.querySelector('.chat-proactive-evidence > p:last-of-type'), text = element.getBoundingClientRect();
           return { text: element.textContent, visibleInsideCard: text.top >= card.top && text.bottom <= card.bottom + 1 };
         });
         assert.ok(limit.visibleInsideCard, 'Full limitation can be read by scrolling the observation');
@@ -166,7 +195,7 @@ try {
         geometry.fullLimitationReadable = limit; geometry.collapseKeepsComposerVisible = true;
       }
       if (evidenceOnly) report.cases = report.cases.filter(value => !(value.scenario === 'responsive' && value.width === width));
-      report.cases.push({ scenario: 'responsive', width, height, geometry, screenshot: filename }); await context.close();
+      recordCase({ scenario: 'responsive', width, height, geometry, screenshot: filename }); await context.close();
     }
     if (!evidenceOnly) {
     const { page, context } = await open('sufficient', 'light', 393, 852);
@@ -185,7 +214,7 @@ try {
     assert.equal(second.coachContext.profile.name, 'Ana');
     assert.ok(second.coachContext.historyDays.every(day => day.workoutCount === 0));
     assert.equal(second.messages.filter(message => message.role === 'user').length, 1);
-    report.cases.push({ scenario: 'account-switch', status: 'passed', autoAICalls: 0, contextualCalls: 2, secondAccount: 'steps-only' });
+    recordCase({ scenario: 'account-switch', status: 'passed', autoAICalls: 0, contextualCalls: 2, secondAccount: 'steps-only' });
     await context.close();
     const changed = await open('incomplete', 'light', 393, 852);
     const originalSuggestions = await changed.page.locator('.chat-empty-suggestions').innerText();
@@ -195,7 +224,7 @@ try {
     await changed.page.waitForFunction(() => document.querySelector('.chat-proactive')?.dataset.insightKind === 'training');
     assert.notEqual(await changed.page.locator('.chat-empty-suggestions').innerText(), originalSuggestions, 'Suggestions change with data');
     assert.equal(await changed.page.evaluate(() => window.__qa.calls.length), 0);
-    report.cases.push({ scenario: 'data-refresh', status: 'passed', autoAICalls: 0, suggestionsChanged: true });
+    recordCase({ scenario: 'data-refresh', status: 'passed', autoAICalls: 0, suggestionsChanged: true });
     await changed.context.close();
     const reopened = await open('incomplete', 'dark', 393, 852);
     await reopened.page.locator('.chat-proactive-action').click();
@@ -208,7 +237,7 @@ try {
     assert.equal(await reopened.page.locator('.chat-proactive > details[open]').count(), 1, 'Reopening shows current observation beside stored conversation');
     assert.equal(await reopened.page.evaluate(() => window.__qa.calls.length), 0, 'Reopening does not call AI');
     assert.ok(await reopened.page.locator('.chat-message').count() > 0, 'Stored conversation remains');
-    report.cases.push({ scenario: 'reopen-conversation', status: 'passed', autoAICalls: 0 });
+    recordCase({ scenario: 'reopen-conversation', status: 'passed', autoAICalls: 0 });
     await reopened.context.close();
     }
   }
