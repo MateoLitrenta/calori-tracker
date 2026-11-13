@@ -1,0 +1,75 @@
+- region "Historial de actividad":
+  - heading "Tu actividad" [level=2]
+  - group "Período del historial":
+    - button "Semana"
+    - button "Mes" [pressed]
+    - button "Año"
+  - heading "noviembre de 2026" [level=3]
+  - button "Mes anterior"
+  - button "Hoy"
+  - button "Mes siguiente" [disabled]
+  - group "Calendario de noviembre de 2026":
+    - button "domingo 1 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 11.000 pasos · 1.500 ml de agua · Peso 72,4 kg · Sin comidas registradas": "1"
+    - button "lunes 2 de noviembre de 2026 · 2 comidas · 0 entrenamientos · 10.100 pasos · 1.500 ml de agua · Peso 72,4 kg": "2"
+    - button "martes 3 de noviembre de 2026 · 2 comidas · 1 entrenamiento · 9.200 pasos · 1.500 ml de agua · Peso 72,4 kg": "3"
+    - button "miércoles 4 de noviembre de 2026 · 2 comidas · 0 entrenamientos · 8.300 pasos · 1.500 ml de agua · Peso 72,4 kg": "4"
+    - button "jueves 5 de noviembre de 2026 · 2 comidas · 0 entrenamientos · 7.400 pasos · 1.500 ml de agua · Peso 72,4 kg": "5"
+    - button "viernes 6 de noviembre de 2026 · 2 comidas · 1 entrenamiento · 6.500 pasos · 1.500 ml de agua · Peso 72,4 kg": "6"
+    - button "sábado 7 de noviembre de 2026 · Sin registros": "7"
+    - button "domingo 8 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 10.100 pasos · 1.500 ml de agua · Peso 72,4 kg · Sin comidas registradas": "8"
+    - button "lunes 9 de noviembre de 2026 · 2 comidas · 1 entrenamiento · 9.200 pasos · 1.500 ml de agua · Peso 72,4 kg": "9"
+    - button "martes 10 de noviembre de 2026 · 2 comidas · 0 entrenamientos · 8.300 pasos · 1.500 ml de agua · Peso 72,4 kg": "10"
+    - button "miércoles 11 de noviembre de 2026 · 2 comidas · 0 entrenamientos · 7.400 pasos · 1.500 ml de agua · Peso 72,4 kg": "11"
+    - button "jueves 12 de noviembre de 2026 · Hoy · 2 comidas · 1 entrenamiento · 6.500 pasos · 1.500 ml de agua · Peso 72,4 kg" [pressed]: "12"
+    - button "viernes 13 de noviembre de 2026 · Fecha no disponible" [disabled]: "13"
+    - button "sábado 14 de noviembre de 2026 · Fecha no disponible" [disabled]: "14"
+    - button "domingo 15 de noviembre de 2026 · Fecha no disponible" [disabled]: "15"
+    - button "lunes 16 de noviembre de 2026 · Fecha no disponible" [disabled]: "16"
+    - button "martes 17 de noviembre de 2026 · Fecha no disponible" [disabled]: "17"
+    - button "miércoles 18 de noviembre de 2026 · Fecha no disponible" [disabled]: "18"
+    - button "jueves 19 de noviembre de 2026 · Fecha no disponible" [disabled]: "19"
+    - button "viernes 20 de noviembre de 2026 · Fecha no disponible" [disabled]: "20"
+    - button "sábado 21 de noviembre de 2026 · Fecha no disponible" [disabled]: "21"
+    - button "domingo 22 de noviembre de 2026 · Fecha no disponible" [disabled]: "22"
+    - button "lunes 23 de noviembre de 2026 · Fecha no disponible" [disabled]: "23"
+    - button "martes 24 de noviembre de 2026 · Fecha no disponible" [disabled]: "24"
+    - button "miércoles 25 de noviembre de 2026 · Fecha no disponible" [disabled]: "25"
+    - button "jueves 26 de noviembre de 2026 · Fecha no disponible" [disabled]: "26"
+    - button "viernes 27 de noviembre de 2026 · Fecha no disponible" [disabled]: "27"
+    - button "sábado 28 de noviembre de 2026 · Fecha no disponible" [disabled]: "28"
+    - button "domingo 29 de noviembre de 2026 · Fecha no disponible" [disabled]: "29"
+    - button "lunes 30 de noviembre de 2026 · Fecha no disponible" [disabled]: "30"
+    - button "martes 1 de diciembre de 2026 · Fecha no disponible" [disabled]: "1"
+    - button "miércoles 2 de diciembre de 2026 · Fecha no disponible" [disabled]: "2"
+    - button "jueves 3 de diciembre de 2026 · Fecha no disponible" [disabled]: "3"
+    - button "viernes 4 de diciembre de 2026 · Fecha no disponible" [disabled]: "4"
+    - button "sábado 5 de diciembre de 2026 · Fecha no disponible" [disabled]: "5"
+  - text: Comida Entrenamiento Sin comidas
+  - paragraph: Flechas para cambiar de fecha; Inicio y Fin para los extremos de la semana; RePág y AvPág para cambiar de mes. Seleccionar no abre ni modifica el registro diario.
+  - text: 11 días con registros Elegí un día para ver su detalle
+  - region "Detalle del día":
+    - paragraph: Hoy
+    - heading "jueves 12 de noviembre de 2026" [level=3]
+    - paragraph: 2 comidas · 1 entrenamiento
+    - list:
+      - listitem:
+        - text: Almuerzo · 13:00
+        - strong: Comida sintética de ejemplo
+        - text: 620 kcal
+      - listitem:
+        - text: Entrenamiento · 18:00
+        - strong: Caminata
+        - text: 40 min
+      - listitem:
+        - text: Cena · 21:00
+        - strong: Cena sintética con pollo y ensalada
+        - text: 780 kcal
+    - term: Pasos
+    - definition: "6.500"
+    - term: Agua
+    - definition: 1.500 ml
+    - term: Peso
+    - definition: 72,4 kg
+    - button "Abrir registros del día"
+    - paragraph: Abrir cambia el día de Inicio. Explorar el calendario no cambia tus formularios.
+  - group: Ver resumen energético

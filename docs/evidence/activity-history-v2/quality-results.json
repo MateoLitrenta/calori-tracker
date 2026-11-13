@@ -1,0 +1,77 @@
+{
+  "result": "PASSED",
+  "sourceCommit": "b98fbe0511138cf70abe62e540d7718df3559d18",
+  "applicationSourceTreeSha1": "d3b3afb2d6f6a6f2fd03e8e6f73fd56bfce908c6",
+  "sourceSnapshotSha256": "838831aa840a4ccc411b30792d4116d4f56e1b9a22237b8e73aa9f3076685ee1",
+  "sourceFileCount": 502,
+  "testFileCount": 47,
+  "runtime": {
+    "platform": "linux",
+    "node": "24.4.1",
+    "postgresql": "17.6",
+    "postgrest": "16.5",
+    "oxlint": "1.80.0",
+    "processUid": 100,
+    "externalNetwork": "disabled"
+  },
+  "tests": {
+    "tests": 569,
+    "pass": 569,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "fullSuiteDurationMs": 509188,
+  "quality": {
+    "frontendTypes": "PASSED",
+    "aiTypes": "PASSED",
+    "coachTypes": "PASSED",
+    "lint": "PASSED",
+    "lintWarnings": 12,
+    "lintErrors": 0,
+    "build": "PASSED",
+    "fullPRCodeDiffCheck": "PASSED",
+    "workingDiffCheck": "PASSED",
+    "indexDiffCheck": "PASSED"
+  },
+  "commands": [
+    "node --test --test-reporter=spec --test-concurrency=1 tests/*.test.mjs",
+    "node node_modules/typescript/bin/tsc -b --force",
+    "node node_modules/typescript/bin/tsc -p api/ai/tsconfig.json --noEmit",
+    "node node_modules/typescript/bin/tsc -p api/coach/tsconfig.json --noEmit",
+    "npm run lint",
+    "npm run build",
+    "git diff --check c623f9b b98fbe0511138cf70abe62e540d7718df3559d18",
+    "git diff --check",
+    "git diff --cached --check"
+  ],
+  "serviceCoverage": {
+    "realDisposablePostgreSQL": true,
+    "realLocalPostgRESTHTTP": true,
+    "identityFixture": "Synthetic roles and signed JWTs",
+    "authAndStorageSQLStandins": true,
+    "realGoTrueCertified": false,
+    "realStorageHTTPCertified": false,
+    "uiUnitRuntime": "React/JSDOM with synthetic adapters",
+    "browserMatrix": "Recorded separately using synthetic visual fixtures"
+  },
+  "safety": {
+    "productionModified": false,
+    "remoteSQLExecuted": false,
+    "realUserDataUsed": false,
+    "protectedPersistenceAndBusinessSourcesUnchangedFromMain": true,
+    "postgresLeftovers": 0,
+    "postgrestConfigLeftovers": 0,
+    "rawLogsPublished": false,
+    "privatePathsPublished": false,
+    "secretsPublished": false
+  },
+  "harnessNotes": [
+    "El primer gate completo sobre 288ed9e1 terminó con 567/569 y dos fallos en fixtures VM de App que dependían del índice de useRef. Se corrigió la búsqueda por contrato manteniendo sus aserciones. Este resultado corresponde a una nueva ejecución completa del commit final, sin filtros ni omisiones.",
+    "La validación de navegador reprodujo un clamp de scroll al acortar el detalle y un ResizeObserver loop durante un cambio real de ancho. La reserva medida previa a la selección y su limpieza coalescida en requestAnimationFrame tienen regresiones de timing, revisión y cancelación; el navegador se informa por separado.",
+    "Se reutilizó el entorno local oficial de PostgreSQL con Node y PostgREST verificados. Su wrapper ldd de musl se conservó y se seleccionó el ldd GNU ya instalado para que los bindings correspondieran a glibc. No se modificaron binarios, extensiones ni dependencias del producto.",
+    "El snapshot incluye todos los archivos de aplicación y tests del commit indicado. Documentación y evidencia nueva todavía en redacción quedaron fuera de ese snapshot y no modifican el árbol src certificado."
+  ],
+  "recordedUTC": "2026-11-13T00:43:00.502Z"
+}

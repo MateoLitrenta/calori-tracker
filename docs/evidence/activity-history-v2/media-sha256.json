@@ -1,0 +1,175 @@
+{
+  "source": {
+    "baselineCommit": "c623f9beb726a3940ab564432260d7908302f9e5",
+    "finalCommit": "b98fbe0511138cf70abe62e540d7718df3559d18",
+    "applicationSourceTree": "d3b3afb2d6f6a6f2fd03e8e6f73fd56bfce908c6",
+    "fixtureDate": "2026-11-12",
+    "browser": "157.0.8103.51",
+    "browserDriver": "Playwright 1.56.1",
+    "data": "Synthetic records and account only",
+    "services": "Actual React UI/store/aggregation helpers; Auth, record RPC, Storage and Gemini simulated; external requests blocked",
+    "notCertified": [
+      "remote Supabase Auth",
+      "remote Storage",
+      "Gemini",
+      "physical mobile device or keyboard",
+      "real NVDA/VoiceOver screen-reader session"
+    ]
+  },
+  "files": [
+    {
+      "file": "before-history-light-320.png",
+      "bytes": 23073,
+      "sha256": "2aa2aae73c881e98d85e3b7e6ccdbcad90b85ff91a84a9c572048c7111775262",
+      "synthetic": true,
+      "captureCommit": "c623f9beb726a3940ab564432260d7908302f9e5"
+    },
+    {
+      "file": "before-history-light-393.png",
+      "bytes": 23397,
+      "sha256": "4c5d0830186b5212711dd210151ad895884d956475a70250c3e7773ab5426de8",
+      "synthetic": true,
+      "captureCommit": "c623f9beb726a3940ab564432260d7908302f9e5"
+    },
+    {
+      "file": "before-history-light-1440.png",
+      "bytes": 26724,
+      "sha256": "498d5c14023b274ba78573c42d161da2d3e7bd153bf0a5646f9fa518c7e80e31",
+      "synthetic": true,
+      "captureCommit": "c623f9beb726a3940ab564432260d7908302f9e5"
+    },
+    {
+      "file": "before-history-dark-320.png",
+      "bytes": 22807,
+      "sha256": "19849459fa90254adee8ffa138915bea2d7cd0f5e8c6dccc70d7147ff5d99436",
+      "synthetic": true,
+      "captureCommit": "c623f9beb726a3940ab564432260d7908302f9e5"
+    },
+    {
+      "file": "before-history-dark-393.png",
+      "bytes": 23236,
+      "sha256": "8ace83b7225549ce8b16504e855aec52bf2445b42ef781e6df3ae4d8ac83f864",
+      "synthetic": true,
+      "captureCommit": "c623f9beb726a3940ab564432260d7908302f9e5"
+    },
+    {
+      "file": "before-history-dark-1440.png",
+      "bytes": 26222,
+      "sha256": "14aa3d5fb68ebbee32a548ba14185e590c849d9a895addb6e7328dd37045f479",
+      "synthetic": true,
+      "captureCommit": "c623f9beb726a3940ab564432260d7908302f9e5"
+    },
+    {
+      "file": "after-history-light-320.png",
+      "bytes": 43922,
+      "sha256": "264331fba58770524ecc6d147b04c97300a3f9930d944922093caa95f2f2b5a0",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "after-history-light-393.png",
+      "bytes": 49562,
+      "sha256": "13244970156427907a78f7a7a27e94cc966afbec278451628fa5a977993527d9",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "after-history-light-1440.png",
+      "bytes": 53249,
+      "sha256": "5b05edc5dc18cca21cf2edca3ea33ac34f0b633bd6ba08ff1832efb6fb1afd53",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "after-history-dark-320.png",
+      "bytes": 44377,
+      "sha256": "8f70135a4d00b37e5c5573609a3ed988f2b540af1a48176d91daa5039440a1f6",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "after-history-dark-393.png",
+      "bytes": 49754,
+      "sha256": "43009f839d2d58c5e65210ba480c141277aa0247ce2d8ba6026ddd4291805384",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "after-history-dark-1440.png",
+      "bytes": 53485,
+      "sha256": "9f0e64ac29b3e58f00b56bc1815ec21d8b2a422f3f79332e2ab8d4d86c541ee0",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "week-light-393.png",
+      "bytes": 41894,
+      "sha256": "4f63b1c736b5f6710f2e00ed177d8b4b3378fcb6f068acfc6f5e58bcb5b1f551",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "week-dark-1440.png",
+      "bytes": 45465,
+      "sha256": "2129e9e3b89f2e6449e4f293e37f4220f327a758d28fd36df2a94c1607baa577",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "year-light-393.png",
+      "bytes": 60416,
+      "sha256": "b52a0672eee80330330637e18ea622072cdb0c52c8ab2d84e230e186cadcd634",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "year-dark-1440.png",
+      "bytes": 64748,
+      "sha256": "ca440cb461f8e7ed6c983cbdd7c28260eb2edcbaf43010ffcde63990e8f82a00",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "incomplete-light-393.png",
+      "bytes": 44094,
+      "sha256": "5d5084aa30da9acdf52f15cee2dbe828172100533b0cffacb5b6429734ac38d3",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "incomplete-dark-1440.png",
+      "bytes": 47552,
+      "sha256": "43e7a3e6ad6503c03e53980dd5fcf0d07bcafa062b4fcd7f4ae11632fd1e532e",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "opened-registers-light-393.png",
+      "bytes": 42166,
+      "sha256": "2db5fe164bce925b4b459b45e16553ad3d718438061831a05536271d66710668",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "opened-registers-dark-1440.png",
+      "bytes": 105494,
+      "sha256": "46b9c8bece3846cbc34fdac65ab4e6bdfa0c51855371e7181f390bddffb51a0f",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "energy-dark-1440.png",
+      "bytes": 63838,
+      "sha256": "b47273313c1d3e947ac2e0e2fb43236fe3f4ff7b272501968502bbafdc5bac54",
+      "synthetic": true,
+      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+    },
+    {
+      "file": "walkthrough-mobile.mp4",
+      "bytes": 300508,
+      "sha256": "26c7dc70b17aa1fd38d9f5b872cec1b81de688a874420d921029f73fe4b2e42a",
+      "synthetic": true,
+      "captureCommit": "288ed9e1403031a170b956b8e84431a4ba0cddfa"
+    }
+  ]
+}

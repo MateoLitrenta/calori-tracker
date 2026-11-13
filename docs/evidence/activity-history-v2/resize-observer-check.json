@@ -1,0 +1,28 @@
+{
+  "source": {
+    "baselineCommit": "c623f9beb726a3940ab564432260d7908302f9e5",
+    "finalCommit": "b98fbe0511138cf70abe62e540d7718df3559d18",
+    "applicationSourceTree": "d3b3afb2d6f6a6f2fd03e8e6f73fd56bfce908c6",
+    "fixtureDate": "2026-11-12",
+    "browser": "157.0.8103.51",
+    "browserDriver": "Playwright 1.56.1",
+    "data": "Synthetic records and account only",
+    "services": "Actual React UI/store/aggregation helpers; Auth, record RPC, Storage and Gemini simulated; external requests blocked",
+    "notCertified": [
+      "remote Supabase Auth",
+      "remote Storage",
+      "Gemini",
+      "physical mobile device or keyboard",
+      "real NVDA/VoiceOver screen-reader session"
+    ]
+  },
+  "windowListenersInstalledBeforeVite": true,
+  "sequence": [
+    "select at 768x1024",
+    "resize to 375x852",
+    "select another date",
+    "resize to 768x1024"
+  ],
+  "actualUIErrors": [],
+  "captureOverrideErrors": []
+}
