@@ -79,13 +79,15 @@ export async function generateAIResponse(
   systemInstruction: string,
   today: string,
   attachment?: MediaAttachment,
-  coachContext?: CoachContext
+  coachContext?: CoachContext,
+  proactiveInsightId?: string
 ): Promise<{ reply: string; actions: unknown; presentation: CoachPresentationHint; goalProposal?: CoachGoalProposal }> {
   const payload = await requestAI({
     messages: messages.map(({ role, text, localTime }) => ({ role, text, localTime })),
     systemInstruction,
     today,
     ...(coachContext ? { coachContext } : {}),
+    ...(proactiveInsightId ? { proactiveInsightId } : {}),
     ...(attachment ? { attachment } : {})
   });
   if (typeof payload.reply !== 'string' || !payload.reply.trim()) {

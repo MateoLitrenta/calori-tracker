@@ -425,6 +425,30 @@ html:not(.dark) .charts-insights .charts-surplus { color: #c4413a; }
 }
 .assistant-view .chat-mobile-title,
 .assistant-view .chat-empty-suggestions { display: none; }
+/* One deterministic observation, kept outside the conversation log. */
+.assistant-view .chat-proactive { flex: 0 1 auto; min-height: 58px; max-height: 52%; overflow-y: auto; margin: 4px 24px 0; border: 1px solid var(--chat-line); border-radius: var(--radius-widget); background: var(--chat-proposal-soft, #1e2124); }
+.assistant-view .chat-proactive-heading { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 16px 44px 14px 18px; cursor: pointer; list-style: none; }
+.assistant-view .chat-proactive-heading::-webkit-details-marker { display: none; }
+.assistant-view .chat-proactive-eyebrow { color: #f5a064; font-size: 11px; font-weight: 500; line-height: 1.5; letter-spacing: .02em; }
+.assistant-view .chat-proactive-title { color: var(--chat-text, #f1f0ec); font-size: 19px; font-weight: 500; line-height: 1.3; letter-spacing: -.025em; overflow-wrap: anywhere; }
+.assistant-view .chat-proactive-toggle { position: absolute; right: 16px; top: 23px; color: var(--chat-muted); font-size: 18px; line-height: 1; }
+.assistant-view .chat-proactive-body { padding: 0 18px 14px; }
+.assistant-view .chat-proactive-observation { margin: 0; color: var(--chat-text, #e3e2df); font-size: 13px; line-height: 1.65; overflow-wrap: anywhere; }
+.assistant-view .chat-proactive-action { display: inline-flex; align-items: center; justify-content: center; gap: 16px; min-height: 44px; margin-top: 12px; padding: 8px 14px; border-radius: var(--radius-control); background: #f5a064; color: #241a13; font-size: 13px; font-weight: 500; }
+.assistant-view .chat-proactive-action:disabled { opacity: .5; }
+.assistant-view .chat-proactive-evidence { margin-top: 6px; color: var(--chat-muted); font-size: 12px; line-height: 1.6; }
+.assistant-view .chat-proactive-evidence summary { display: flex; align-items: center; min-height: 44px; width: fit-content; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.assistant-view .chat-proactive-evidence ul { margin: 0 0 8px; padding-left: 18px; }
+.assistant-view .chat-proactive-evidence p { margin: 6px 0 0; }
+.assistant-view .chat-proactive summary:focus-visible { outline: 2px solid #f5a064; outline-offset: -3px; border-radius: var(--radius-control); }
+.assistant-view .chat-empty { width: 100%; max-width: 480px; padding: 22px 0; }
+.assistant-view .chat-empty .chat-empty-label { color: var(--chat-muted); margin: 0; font-size: 12px; }
+.assistant-view .chat-empty .chat-empty-suggestions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 12px; }
+.assistant-view .chat-empty-suggestions .chat-suggestion { max-width: 100%; border: 1px solid var(--chat-line); white-space: normal; text-wrap: pretty; }
+html:not(.dark) .assistant-view .chat-proactive { background: #ffffff; }
+html:not(.dark) .assistant-view .chat-proactive-eyebrow { color: #9a4d1f; }
+html:not(.dark) .assistant-view .chat-proactive-title { color: #1f2937; }
+html:not(.dark) .assistant-view .chat-proactive-observation { color: #475569; }
 @media (max-width: 767px) {
   .assistant-view { height: 100%; min-height: 0; max-width: none; flex: 1 1 0; border: 0; border-radius: 0; background: transparent; }
   .assistant-view .chat-heading p { font-size: 12px; }
@@ -440,6 +464,10 @@ html:not(.dark) .charts-insights .charts-surplus { color: #c4413a; }
   .assistant-view .chat-mobile-title { display: inline; }
   .assistant-view .chat-history-picker { flex: 0 0 auto; }
   .assistant-view .chat-messages { flex: 1 1 0; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; padding: 16px 12px; gap: 12px; }
+  .assistant-view .chat-proactive { margin: 4px 12px 0; }
+  .assistant-view .chat-proactive-heading { padding: 14px 40px 12px 14px; }
+  .assistant-view .chat-proactive-title { font-size: 18px; }
+  .assistant-view .chat-proactive-body { padding: 0 14px 8px; }
   .assistant-view .chat-empty { width: 100%; max-width: 340px; margin-block: auto; padding: 16px 8px; }
   .assistant-view .chat-empty h3 { font-size: 22px; }
   .assistant-view .chat-empty p { max-width: 270px; margin-inline: auto; font-size: 12px; line-height: 1.5; }
