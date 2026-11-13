@@ -6,7 +6,7 @@ import { JSDOM } from 'jsdom';
 
 // CSS contracts only. JSDOM has no layout/container-query engine: these fixtures
 // explicitly select a container width. Browser geometry is verified separately.
-const files = ['DesktopExperience.css', 'components/HomeVariants.css', 'components/PremiumViews.css', 'components/ActivityHistory.css'];
+const files = ['DesktopExperience.css', 'components/HomeVariants.css', 'components/PremiumViews.css', 'components/ActivityHistory.css', 'components/ActivityHistoryMotion.css'];
 const source = (await Promise.all(files.map(file => readFile(new URL('../src/' + file, import.meta.url), 'utf8')))).join('\n');
 function stylesAt(width, height = 900, containerWidth = width) {
   const css = postcss.parse(source);
