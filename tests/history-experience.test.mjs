@@ -77,10 +77,16 @@ async function mount(t, initial = fixtures(), { width: initialWidth = 1440, cont
   }
   const dom = new JSDOM('<main class="app-main"><div id="root"></div></main>', { pretendToBeVisual: true });
   const saved = {};
-  for (const name of ['window', 'document', 'HTMLElement', 'getComputedStyle', 'IS_REACT_ACT_ENVIRONMENT', 'Date']) saved[name] = globalThis[name];
+  for (const name of ['window', 'document', 'HTMLElement', 'getComputedStyle', 'IS_REACT_ACT_ENVIRONMENT', 'Date', 'ResizeObserver']) saved[name] = globalThis[name];
   globalThis.window = dom.window; globalThis.document = dom.window.document;
   globalThis.HTMLElement = dom.window.HTMLElement; globalThis.getComputedStyle = dom.window.getComputedStyle;
   globalThis.IS_REACT_ACT_ENVIRONMENT = true; globalThis.Date = FixedDate;
+  const resizeObservers = [];
+  globalThis.ResizeObserver = class {
+    constructor(callback) { this.callback = callback; this.targets = new Set(); this.disconnected = false; resizeObservers.push(this); }
+    observe(target) { this.targets.add(target); }
+    disconnect() { this.disconnected = true; this.targets.clear(); }
+  };
   let width = initialWidth;
   const queries = [];
   window.matchMedia = query => {
@@ -96,13 +102,16 @@ async function mount(t, initial = fixtures(), { width: initialWidth = 1440, cont
   window.scrollTo = () => {};
   const { createRoot } = await import('react-dom/client');
   const root = createRoot(document.getElementById('root'));
-  const saves = [];
+  const saves = [], contextChanges = [];
   function App() {
     const [records, setRecords] = React.useState(initial);
     const [showHome, setShowHome] = React.useState(true);
     const [viewState, setViewState] = React.useState(undefined);
     const home = React.createElement(HomeView, { activeProfile: { ...profile, records },
-      ...(controlled ? { viewState, onViewStateChange: setViewState } : {}),
+      ...(controlled ? { viewState, onViewStateChange: next => {
+        contextChanges.push({ state: structuredClone(next), detailMinBlockSize: document.querySelector('.ah-detail')?.style.minBlockSize });
+        setViewState(next);
+      } } : {}),
       updateRecord: async (date, value, options) => {
         saves.push({ date, record: structuredClone(value) });
         const canonical = { ...value, version: String(Number(value.version ?? 0) + 1), generation };
@@ -117,16 +126,19 @@ async function mount(t, initial = fixtures(), { width: initialWidth = 1440, cont
       showHome ? home : React.createElement('p', { 'data-other-view': true }, 'Otra vista sintética'));
   }
   await act(() => root.render(React.createElement(App)));
-  t.after(async () => { await act(() => root.unmount()); dom.window.close();
+  let mounted = true;
+  const unmount = async () => { if (mounted) { mounted = false; await act(() => root.unmount()); } };
+  t.after(async () => { await unmount(); dom.window.close();
     for (const [name, value] of Object.entries(saved)) globalThis[name] = value; });
   const button = text => [...document.querySelectorAll('button')].find(node => node.textContent.trim() === text || node.getAttribute('aria-label') === text);
   const day = date => document.querySelector('.history-day[data-date="' + date + '"]');
   const click = async node => { assert.ok(node, 'The requested control must exist'); await act(() => node.click()); };
-  return { saves, button, day, scrolls, click,
+  return { saves, button, day, scrolls, contextChanges, resizeObservers, unmount, click,
     scale: async name => click(button(name)),
     resize: async nextWidth => act(() => { width = nextWidth;
       for (const query of queries) query.listeners.forEach(listener => listener({ matches: query.matches, media: query.media }));
-      window.dispatchEvent(new window.Event('resize')); }),
+      window.dispatchEvent(new window.Event('resize'));
+      for (const observer of resizeObservers) if (!observer.disconnected) observer.callback([], observer); }),
     selectDay: async date => click(day(date)),
     open: async () => click(button('Abrir registros del día')),
     heading: () => document.querySelector('.daily-heading time').dateTime,
@@ -182,6 +194,37 @@ test('selecting yesterday updates only its contextual detail, without changing t
   assert.equal(document.documentElement.scrollTop, 128);
   assert.equal(view.scrolls.length, beforeScrolls, 'Previewing a date must not scroll another section');
   assert.equal(view.saves.length, 0);
+});
+
+test('a shorter preview reserves its measured detail before publishing selection, and releases it for another width or period', async t => {
+  const view = await mount(t, fixtures(), { controlled: true, width: 768 });
+  const detail = view.detail();
+  const observer = view.resizeObservers.find(candidate => candidate.targets.has(detail));
+  assert.ok(observer, 'The detail observes line-wrapping width changes');
+  let detailWidth = 400, detailHeight = 312;
+  detail.getBoundingClientRect = () => ({ width: detailWidth, height: detailHeight, top: 0, bottom: detailHeight, left: 0, right: detailWidth });
+  await view.resize(768); // Deliver its first real geometry before a selection.
+  assert.equal(detail.style.minBlockSize, '', 'There is no arbitrary fixed height before interaction');
+  await view.selectDay(emptyDay);
+  assert.equal(view.contextChanges.at(-1).detailMinBlockSize, '312px',
+    'Reserve is applied in the activation event, before React can shrink the page and clamp scroll');
+  assert.equal(detail.style.minBlockSize, '312px');
+  assert.equal(view.heading(), today);
+  detailHeight = 190;
+  await view.selectDay(mealDay);
+  assert.equal(detail.style.minBlockSize, '312px', 'A shorter measured follow-up must not shrink the reserved area');
+  detailWidth = 360;
+  await view.resize(393);
+  assert.equal(detail.style.minBlockSize, '', 'A reserve must not survive a different wrapping width');
+  detailHeight = 284;
+  await view.selectDay(workoutDay);
+  assert.equal(detail.style.minBlockSize, '284px', 'The next reserve comes from the new measurement');
+  await view.scale('Año');
+  assert.equal(view.contextChanges.at(-1).detailMinBlockSize, '');
+  assert.equal(detail.style.minBlockSize, '', 'A different period can find its own natural height');
+  assert.equal(view.saves.length, 0);
+  await view.unmount();
+  assert.equal(observer.disconnected, true);
 });
 
 test('Hoy immediately returns the explored date and calendar context, without submitting anything', async t => {

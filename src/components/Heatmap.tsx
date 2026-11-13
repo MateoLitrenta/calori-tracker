@@ -75,8 +75,20 @@ export default function Heatmap({
     anchor: clampDate(selectedDateStr),
   }));
   const state = historyState ?? local;
+  const detailRef = useRef<HTMLDivElement>(null);
   const change = (patch: Partial<ActivityHistoryState>) => {
     const next = { ...state, ...patch };
+    const detail = detailRef.current;
+    if (detail) {
+      if (next.view !== state.view) detail.style.minBlockSize = '';
+      else if (next.dateStr !== state.dateStr) {
+        // Keep the space already on screen before React renders a shorter day.
+        // This avoids the browser clamping the page's scroll position near its end.
+        // A longer day can still grow naturally; no content is clipped or capped.
+        const height = Math.max(detail.getBoundingClientRect().height, parseFloat(detail.style.minBlockSize) || 0);
+        if (height > 0) detail.style.minBlockSize = height + 'px';
+      }
+    }
     setLocal(next);
     onHistoryStateChange?.(next);
   };
@@ -123,6 +135,20 @@ export default function Heatmap({
       metric: number(workout.duration) + ' min',
     })),
   ].sort((a, b) => (a.time ?? '99:99').localeCompare(b.time ?? '99:99'));
+
+  useLayoutEffect(() => {
+    const detail = detailRef.current;
+    if (!detail || typeof ResizeObserver === 'undefined') return;
+    let previousWidth = detail.getBoundingClientRect().width;
+    const observer = new ResizeObserver(() => {
+      const width = detail.getBoundingClientRect().width;
+      // A measured reserve belongs to its current line wrapping, not another width.
+      if (Math.abs(width - previousWidth) > 0.5) detail.style.minBlockSize = '';
+      previousWidth = width;
+    });
+    observer.observe(detail);
+    return () => observer.disconnect();
+  }, []);
 
   useLayoutEffect(() => {
     if (!focusRequest.current) return;
@@ -445,6 +471,7 @@ export default function Heatmap({
         </div>
         <div
           className="ah-detail history-day-detail"
+          ref={detailRef}
           id={detailId}
           role="region"
           aria-label="Detalle del día"
