@@ -27,6 +27,9 @@ const { createServer } = await import(pathToFileURL(path.join(repo, 'node_module
 const { default: react } = await import(pathToFileURL(path.join(repo, 'node_modules/@vitejs/plugin-react/dist/index.js')));
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ? pathToFileURL(process.env.PLAYWRIGHT_MODULE).href : 'playwright');
 const output = path.join(repo, 'docs/evidence/v10-1', ...(review2 ? ['review-2'] : [])); mkdirSync(output, { recursive: true });
+// Tailwind v3 resolves content globs from cwd. Bind it to the chosen source
+// tree so baseline-only classes cannot be purged using the candidate's files.
+process.chdir(root);
 console.log(JSON.stringify({ phase, step: 'create-local-server' }));
 const external = {
   '/hooks/useAppStore.ts': `import {useSyncExternalStore} from 'react';
@@ -62,8 +65,11 @@ const report = { phase, baseCommit: base, review: review2 ? 2 : 1, localSyntheti
 const functionalOnly = process.argv.includes('--functional-only');
 const missingOnly = process.argv.includes('--missing-only');
 const evidenceOnly = process.argv.includes('--evidence-only');
+const screenshotsOnly = process.argv.includes('--screenshots-only');
 const selectedScenarios = (process.argv.find(value => value.startsWith('--scenarios='))?.split('=')[1] ?? '').split(',').filter(Boolean);
+const selectedWidths = (process.argv.find(value => value.startsWith('--widths='))?.split('=')[1] ?? '').split(',').filter(Boolean).map(Number);
 assert.ok(selectedScenarios.every(value => Object.hasOwn(fixtures, value)), 'Only known synthetic scenarios may be selected');
+assert.ok(selectedWidths.every(value => Number.isSafeInteger(value) && value > 0), 'Viewport widths must be positive integers');
 if (missingOnly && existsSync(path.join(output, `${phase}-browser-report.json`))) {
   const previous = JSON.parse(readFileSync(path.join(output, `${phase}-browser-report.json`), 'utf8'));
   report.cases = previous.cases;
@@ -74,7 +80,7 @@ if (functionalOnly && existsSync(path.join(output, 'after-browser-report.json'))
 }
 if (evidenceOnly && existsSync(path.join(output, 'after-browser-report.json'))) report.cases = JSON.parse(readFileSync(path.join(output, 'after-browser-report.json'), 'utf8')).cases;
 if (selectedScenarios.length && existsSync(path.join(output, `${phase}-browser-report.json`))) {
-  report.cases = JSON.parse(readFileSync(path.join(output, `${phase}-browser-report.json`), 'utf8')).cases.filter(value => !selectedScenarios.includes(value.scenario));
+  report.cases = JSON.parse(readFileSync(path.join(output, `${phase}-browser-report.json`), 'utf8')).cases.filter(value => !(selectedScenarios.includes(value.scenario) && (!selectedWidths.length || selectedWidths.includes(value.width))));
 }
 const recordCase = value => {
   report.cases = report.cases.filter(previous => !(previous.scenario === value.scenario && previous.theme === value.theme && previous.width === value.width));
@@ -114,6 +120,7 @@ try {
       ? [[320, 568], [375, 667], [393, 852], [1440, 900]].flatMap(([width, height]) => ['light', 'dark'].map(theme => [theme, width, height]))
       : [['light', 393, 852], ['dark', 1440, 900], ...(scenario === 'sufficient' ? [['dark', 393, 852], ['light', 1440, 900]] : [])];
     for (const [theme, width, height] of layouts) {
+      if (selectedWidths.length && !selectedWidths.includes(width)) continue;
       if (missingOnly && existsSync(path.join(output, `${phase}-${scenario}-${theme}-${width}.png`))) continue;
       const { page, context, errors, openLatencyMs } = await open(scenario, theme, width, height);
       const data = await page.evaluate(() => ({ calls: window.__qa.calls.length, writes: window.__qa.writes,
@@ -158,7 +165,7 @@ try {
       await context.close();
     }
   }
-  if (phase === 'after') {
+  if (phase === 'after' && !screenshotsOnly) {
     for (const [width, height] of (evidenceOnly ? [[320, 568]] : [[320, 568], [375, 667], [768, 1024], [1920, 1080]])) {
       const { page, context, errors } = await open('sufficient', 'light', width, height);
       const geometry = await page.evaluate(() => ({ width: innerWidth, scrollWidth: document.documentElement.scrollWidth,

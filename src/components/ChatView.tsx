@@ -1000,7 +1000,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           </div>
         )}
         {messages.length === 0 && (
-          <div className="chat-empty text-center">
+          <div className="chat-empty my-auto text-center">
             <p className="chat-empty-label">{isPastConversation ? 'No hay mensajes en esta conversación.' : currentContext ? 'También podés empezar por acá' : 'Cargando tus registros…'}</p>
             {!isPastConversation && currentContext && <div className="chat-empty-suggestions">
               {suggestions.slice(0, 3).map(suggestion => (
