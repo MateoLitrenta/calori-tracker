@@ -1,6 +1,6 @@
 # V10.1: comprobación funcional posterior al despliegue
 
-**IA real: PENDIENTE.** Este procedimiento no se ejecutó y no autoriza acciones actuales sobre Production. Solo se realizará después de aprobar el PR #77, hacer merge y comprobar el despliegue correspondiente.
+**IA real: validación parcial ejecutada el 13/11/2026**, después del merge de PR #77, despliegue de `44c79e8` y autorización expresa de una cuenta de prueba. Hubo recorridos aprobados y dos fallos conversacionales recuperables en objetivos; no se declara una certificación general. Consultar el [informe de resultados y pendientes](coach-intelligence-v10-1-post-deploy-results.md). Este protocolo no autoriza por sí solo nuevas pruebas, escrituras o despliegues en Production.
 
 El Preview no dispone de la configuración completa para Gemini/Coach. No se intentará certificar IA real allí ni se modificarán sus variables. Production conserva su configuración funcional; no se copiarán secretos ni se cambiarán cupos para esta comprobación.
 
@@ -35,4 +35,4 @@ El Preview no dispone de la configuración completa para Gemini/Coach. No se int
 
 **Detener** ante actividad/cifras inventadas, datos de otra cuenta, guardado sin confirmación, duplicados, consumo automático al abrir, discrepancias de cuota o exposición de información privada. Conservar referencias mínimas para diagnóstico y comunicar el hallazgo; no corregirlo cambiando secretos, datos o cupos de Production dentro de esta sesión.
 
-Hasta completar la comprobación, el estado de IA real seguirá siendo **PENDIENTE**. Después se documentará cada recorrido como aprobado, fallido o pendiente, manteniendo explícitas las pruebas remotas que no se hayan realizado. No equivale a una certificación general del modelo.
+Cada ejecución debe documentar los recorridos como aprobados, fallidos o pendientes, manteniendo explícitas las pruebas remotas que no se hayan realizado. Los resultados de una muestra no equivalen a una certificación general del modelo; una corrección local tampoco se considera validada en Production antes de su despliegue autorizado.

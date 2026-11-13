@@ -68,10 +68,14 @@ export function buildProactiveInsight(context: CoachContext | null, goals: Coach
   const trainingSuggestion = current.workoutCount
     ? names.length > 1
       ? `¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de ${names.join(' y ')}?`
-      : `¿Qué muestran mis ${current.workoutCount} ${plural(current.workoutCount, 'entrenamiento registrado', 'entrenamientos registrados')} en los últimos 7 días?`
+      : current.workoutCount === 1
+        ? '¿Qué muestra mi entrenamiento registrado en los últimos 7 días?'
+        : `¿Qué muestran mis ${current.workoutCount} entrenamientos registrados en los últimos 7 días?`
     : null;
   const stepSuggestion = current.stepDays
-    ? `¿Qué puedo aprender de mis ${current.stepDays} días con pasos registrados?`
+    ? current.stepDays === 1
+      ? '¿Qué puedo aprender de mi día con pasos registrados?'
+      : `¿Qué puedo aprender de mis ${current.stepDays} días con pasos registrados?`
     : null;
   const suggestions = [...new Set([goalSuggestion, trainingSuggestion, foodSuggestion, stepSuggestion,
     '¿Cómo puedo registrar una comida?', '¿Cómo funciona Calori?'].filter((value): value is string => Boolean(value)))].slice(0, 3);

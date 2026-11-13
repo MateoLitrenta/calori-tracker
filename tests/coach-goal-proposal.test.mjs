@@ -63,6 +63,136 @@ test('natural workout requests and explicit monthly totals produce exact inclusi
   }
 });
 
+const naturalToday = '2026-11-13';
+const naturalRequest = 'Quiero fijar un objetivo de 2 entrenamientos en total del 13 al 19 de noviembre de 2026.';
+const naturalValues = { type: 'workout_sessions', target: 2, startDate: naturalToday, endDate: '2026-11-19', stepThreshold: null };
+const resolveNatural = (texts, overrides = {}) => resolveCoachGoalProposal({ today: naturalToday,
+  text: texts.at(-1), messages: conversation(texts), availability: 'available', goals: [],
+  reply: 'Ya guardé tu objetivo de 31 sesiones.', suggestion: null, ...overrides });
+
+test('the observed explicit natural range and en total preserve user values when the model omits or contradicts the proposal', () => {
+  for (const text of [naturalRequest, naturalRequest.replace(' en total', ''), naturalRequest.replace('de 2 entrenamientos', 'de dos entrenamientos'),
+    'Quiero fijar un objetivo de 2 entrenamientos en total del 2026-11-13 al 2026-11-19.']) {
+    for (const suggestion of [null, undefined, { ...naturalValues, operation: 'accept', target: 31,
+      startDate: '2026-11-14', endDate: '2026-11-20' }]) {
+      const result = resolveNatural([text], { suggestion });
+      assert.deepEqual({ ...result.goalProposal, id: undefined }, { ...naturalValues, operation: 'accept', id: undefined });
+      assert.match(result.reply, /2 sesiones.*2026-11-13 al 2026-11-19/);
+      assert.match(result.reply, /todavía no está guardada/);
+      assert.doesNotMatch(result.reply, /31 sesiones|Ya guardé/);
+    }
+  }
+});
+
+test('unambiguous named ranges support same day, month boundaries, explicit years and leap days without rolling dates', () => {
+  for (const [today, range, startDate, endDate] of [
+    ['2026-11-13', 'del 13 al 13 de noviembre de 2026', '2026-11-13', '2026-11-13'],
+    ['2026-11-13', 'del 13 de noviembre al 13 de diciembre de 2026', '2026-11-13', '2026-12-13'],
+    ['2026-11-28', 'del 28 de noviembre al 4 de diciembre de 2026', '2026-11-28', '2026-12-04'],
+    ['2026-12-28', 'del 28 de diciembre de 2026 al 3 de enero de 2027', '2026-12-28', '2027-01-03'],
+    ['2028-02-28', 'del 28 de febrero al 1 de marzo de 2028', '2028-02-28', '2028-03-01'],
+    ['2028-02-29', 'del 29 al 29 de febrero de 2028', '2028-02-29', '2028-02-29'],
+  ]) {
+    const result = resolveNatural([`Quiero una meta de 2 entrenamientos en total ${range}`], { today });
+    assert.equal(result.goalProposal.target, 2);
+    assert.equal(result.goalProposal.startDate, startDate); assert.equal(result.goalProposal.endDate, endDate);
+    assert.match(result.reply, /todavía no está guardada/);
+  }
+});
+
+test('invalid calendars, reversed ranges, excessive periods and distant starts require a concrete correction', () => {
+  for (const [today, range, expected] of [
+    [naturalToday, 'del 13 al 31 de noviembre de 2026', /fechas válidas y ordenadas/],
+    ['2027-02-28', 'del 28 al 29 de febrero de 2027', /fechas válidas y ordenadas/],
+    [naturalToday, 'del 19 al 13 de noviembre de 2026', /fechas válidas y ordenadas/],
+    [naturalToday, 'del 13 de noviembre al 14 de diciembre de 2026', /período debe tener entre 1 y 31 días/],
+    [naturalToday, 'del 15 al 19 de diciembre de 2026', /inicio debe estar/],
+    [naturalToday, 'del 13 al 19 de octubre de 2026', /período ya pasó/],
+    ['2026-12-28', 'del 28 de diciembre al 3 de enero de 2027', /fechas válidas y ordenadas/],
+  ]) {
+    const result = resolveNatural([`Quiero fijar un objetivo de 2 entrenamientos en total ${range}`], { today,
+      suggestion: { ...naturalValues, operation: 'accept' } });
+    assert.equal(result.goalProposal, undefined, range); assert.match(result.reply, expected);
+    assert.match(result.reply, /no se guardó/);
+  }
+  for (const target of [0, 32, 999]) {
+    const result = resolveNatural([naturalRequest.replace('de 2 entrenamientos', `de ${target} entrenamientos`)]);
+    assert.equal(result.goalProposal, undefined); assert.match(result.reply, /meta debe ser de 1 a 31 sesiones/);
+  }
+});
+
+test('missing years and partial date ranges preserve the target for an explicit date clarification only', () => {
+  for (const range of ['del 13 al 19 de noviembre', 'del 13 al 19',
+    'del 13 de noviembre de 2026 al 19 de noviembre', 'del 13/11/2026 al 19/11/2026']) {
+    const initial = `Quiero fijar un objetivo de 2 entrenamientos en total ${range}`;
+    const incomplete = resolveNatural([initial], { suggestion: { ...naturalValues, operation: 'accept' } });
+    assert.equal(incomplete.goalProposal, undefined); assert.match(incomplete.reply, /Conservo tu meta de 2 sesiones/);
+    assert.match(incomplete.reply, /AAAA-MM-DD/);
+    const corrected = resolveNatural([initial, 'del 13 al 19 de noviembre de 2026']);
+    assert.equal(corrected.goalProposal.target, 2); assert.equal(corrected.goalProposal.endDate, '2026-11-19');
+    assert.equal(resolveNatural([initial, '¿Cuántas calorías tiene una manzana?', 'del 13 al 19 de noviembre de 2026']).goalProposal, undefined);
+  }
+});
+
+test('natural date recognition cannot convert noncommitting requests, extra restrictions or weekly recurrence into accepted totals', () => {
+  for (const text of ['No ' + naturalRequest, 'Si pudiera, ' + naturalRequest,
+    `Mi amigo dijo: "${naturalRequest}"`, naturalRequest + ' pero no lo guardes',
+    naturalRequest + ' si puedo', naturalRequest + ' o 3 entrenamientos', naturalRequest + ' solo gimnasio']) {
+    assert.equal(resolveNatural([text], { suggestion: { ...naturalValues, operation: 'accept' } }).goalProposal, undefined, text);
+  }
+  const weekly = resolveNatural(['Quiero fijar un objetivo de 2 entrenamientos por semana del 13 al 19 de noviembre de 2026']);
+  assert.equal(weekly.goalProposal, undefined); assert.match(weekly.reply, /2 sesiones por semana/);
+  for (const availability of ['disabled', 'unavailable']) {
+    const result = resolveNatural([naturalRequest], { availability });
+    assert.equal(result.goalProposal, undefined); assert.match(result.reply, availability === 'disabled' ? /no están habilitados/ : /No pude consultar/);
+  }
+});
+
+const cancelRequest = 'Quiero cancelar mi objetivo de entrenamiento confirmado.';
+const activeWorkout = { ...naturalValues, id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', target: 3,
+  status: 'active', version: 2, createdAt: '2026-11-13T12:00:00Z', updatedAt: '2026-11-13T12:05:00Z' };
+
+test('the exact current cancellation command uses only the unique official active workout and version', () => {
+  for (const suggestion of [null, undefined, { operation: 'cancel', id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb' },
+    { ...activeWorkout, operation: 'cancel', expectedVersion: 1, target: 31 },
+    { ...naturalValues, operation: 'accept' }]) {
+    const result = resolveNatural([cancelRequest], { goals: [activeWorkout], goalsTruncated: false,
+      suggestion, reply: 'Ya cancelé tu objetivo.' });
+    assert.deepEqual(result.goalProposal, { ...activeWorkout, operation: 'cancel', expectedVersion: 2 });
+    assert.match(result.reply, /cancelar tu objetivo de 3 sesiones.*2026-11-13 al 2026-11-19/);
+    assert.match(result.reply, /confirmala con el botón; todavía no se guardó/);
+    assert.doesNotMatch(result.reply, /Ya cancelé|31 sesiones/);
+  }
+});
+
+test('cancellation requires complete available goals and a single active workout, ignoring model-selected alternatives', () => {
+  const stepGoal = { ...activeWorkout, id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', type: 'step_days', target: 3, stepThreshold: 8000 };
+  for (const overrides of [
+    { goals: [] }, { goals: [{ ...activeWorkout, status: 'cancelled' }] }, { goals: [stepGoal] },
+    { goals: [activeWorkout, { ...activeWorkout, id: stepGoal.id }] }, { goals: [activeWorkout, stepGoal] },
+    { goals: [activeWorkout], goalsTruncated: true }, { goals: [activeWorkout], availability: 'disabled' },
+    { goals: [activeWorkout], availability: 'unavailable' },
+  ]) {
+    const result = resolveNatural([cancelRequest], { suggestion: { operation: 'cancel', id: activeWorkout.id }, ...overrides });
+    assert.equal(result.goalProposal, undefined); assert.match(result.reply, /todavía no se guardó/);
+    assert.doesNotMatch(result.reply, /meta y el período|Preparé la propuesta/);
+  }
+  const result = resolveNatural([cancelRequest], { goals: [activeWorkout, { ...stepGoal, status: 'cancelled' }] });
+  assert.equal(result.goalProposal.id, activeWorkout.id);
+});
+
+test('cancellation does not use a prior command or noncommitting current messages', () => {
+  for (const text of ['No ' + cancelRequest, 'Si pudiera, ' + cancelRequest,
+    `Mi amigo dijo: "${cancelRequest}"`, cancelRequest + ' pero no lo canceles',
+    '¿Cómo cancelo mi objetivo de entrenamiento confirmado?', 'Quiero saber si puedo cancelar mi objetivo de entrenamiento confirmado']) {
+    const result = resolveNatural([text], { goals: [activeWorkout], suggestion: { operation: 'cancel', id: activeWorkout.id } });
+    assert.equal(result.goalProposal, undefined, text);
+  }
+  const current = '¿Cómo voy con mi objetivo?';
+  const result = resolveNatural([cancelRequest, current], { goals: [activeWorkout], suggestion: null, reply: 'Tu progreso sigue disponible.' });
+  assert.equal(result.goalProposal, undefined); assert.equal(result.reply, 'Tu progreso sigue disponible.');
+});
+
 test('safe clarifications reuse only user counts and the corrected month; save references work without repeating the request', () => {
   for (const correction of ['Perdón, es para el mes de noviembre', 'Perdón, quise decir noviembre, no septiembre']) {
     const result = resolveConversation(['Quiero una meta de 12 entrenamientos', 'Septiembre', correction, 'Quiero guardar el objetivo que acabamos de definir']);

@@ -243,6 +243,57 @@ test('confirmed modifications and cancellation reject stale versions and cross-u
   assert.equal((await state.goals({proposal:{...change,expectedVersion:3}})).status,409);
   assert.equal(state.modelCalls,0);
 });
+test('an exact cancellation recovers the official updated goal despite omitted or foreign model IDs and writes only on confirmation', async t => {
+  const state=infrastructure(t), accepted=proposal({target:2}); await state.goals({proposal:accepted});
+  await state.goals({proposal:{...accepted,operation:'update',expectedVersion:1,target:3}});
+  let cancellation;
+  for(const goalProposal of [undefined,null,{operation:'cancel',id:randomUUID()}]) {
+    state.result={reply:'Ya cancelé el objetivo.',actions:[],presentation:'none',goalProposal};
+    const response=await state.chat(users(['Quiero cancelar mi objetivo de entrenamiento confirmado.']),context({}));
+    assert.equal(response.status,200);const body=await response.json();cancellation=body.goalProposal;
+    assert.equal(cancellation.operation,'cancel');assert.equal(cancellation.id,accepted.id);
+    assert.equal(cancellation.target,3);assert.equal(cancellation.expectedVersion,2);
+    assert.equal(cancellation.startDate,accepted.startDate);assert.equal(cancellation.endDate,accepted.endDate);
+    assert.match(body.reply,/confirmala con el botón; todavía no se guardó/);
+    assert.equal(state.writes,2);
+  }
+  assert.equal(state.modelCalls,3);assert.equal(state.quotas,3);
+  state.quotaDenied=true;
+  const confirmed=await state.goals({proposal:cancellation});assert.equal(confirmed.status,200);
+  const saved=(await confirmed.json()).goal;assert.equal(saved.status,'cancelled');assert.equal(saved.version,3);assert.equal(saved.target,3);
+  assert.equal((await state.goals({proposal:cancellation})).status,409);
+  assert.equal(state.writes,3);assert.equal(state.modelCalls,3);assert.equal(state.quotas,3);
+});
+
+test('exact cancellation uses only the authenticated account and refuses ambiguous, unavailable or disabled objectives', async t => {
+  const state=infrastructure(t), accepted=proposal(), foreign=proposal();
+  await insert(own,accepted);await insert(other,foreign);
+  state.result={reply:'Ya cancelé el objetivo.',actions:[],presentation:'none',goalProposal:{operation:'cancel',id:foreign.id}};
+  const ask=async(id=own)=>(await (await state.chat(users(['Quiero cancelar mi objetivo de entrenamiento confirmado.']),context({}),id)).json());
+  assert.equal((await ask()).goalProposal.id,accepted.id);
+  state.result.goalProposal={operation:'cancel',id:accepted.id};
+  assert.equal((await ask(other)).goalProposal.id,foreign.id);
+  await insert(own,proposal({target:4}));
+  const ambiguous=await ask();assert.equal(ambiguous.goalProposal,undefined);assert.match(ambiguous.reply,/más de un objetivo activo/);
+  state.goalsDown=true;const unavailable=await ask();assert.equal(unavailable.goalProposal,undefined);assert.match(unavailable.reply,/No pude consultar/);
+  state.goalsDown=false;process.env.AI_COACH_GOALS_ENABLED='false';
+  const disabled=await ask();assert.equal(disabled.goalProposal,undefined);assert.match(disabled.reply,/no están habilitados/);
+  assert.equal(state.writes,0);assert.equal(state.modelCalls,5);assert.equal(state.quotas,5);
+});
+
+test('a truncated official goal list cannot establish a unique cancellation target', async t => {
+  const state=infrastructure(t), accepted=proposal({target:1});await insert(own,accepted);
+  for(let target=2;target<=13;target++) {
+    const previous=proposal({target});await insert(own,previous);
+    await db.exec('reset role');await db.query("update public.coach_goals set status='cancelled' where id=$1",[previous.id]);
+  }
+  state.result={reply:'Ya cancelé el objetivo.',actions:[],presentation:'none',goalProposal:{operation:'cancel',id:accepted.id}};
+  const response=await state.chat(users(['Quiero cancelar mi objetivo de entrenamiento confirmado.']),context({}));
+  assert.equal(response.status,200);const body=await response.json();
+  assert.equal(body.goalProposal,undefined);assert.match(body.reply,/No pude verificar todos tus objetivos/);
+  assert.equal(state.writes,0);assert.equal(state.modelCalls,1);assert.equal(state.quotas,1);
+});
+
 test('fresh conversations and devices recover only persisted owner goals and compute progress from current records', async t => {
   const state=infrastructure(t), proposed=proposal(); await state.goals({proposal:proposed});
   await db.exec('reset role'); await db.query('insert into public.workouts values ($1,$2),($1,$2),($3,$2)',[own,today,other]);

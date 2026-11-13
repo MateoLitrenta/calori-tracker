@@ -549,7 +549,7 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
       }
       const goalResult = actionableQuery && result.actions.length === 0 && (!proactiveDiscussion || explicitGoalOperation)
         ? resolveCoachGoalProposal({ text: lastMessage.text, messages: goalHistory, today: body.today, reply: result.reply,
-          suggestion: result.goalProposal, availability: goalAvailability, goals: acceptedGoals }) : { reply: result.reply };
+          suggestion: result.goalProposal, availability: goalAvailability, goals: acceptedGoals, goalsTruncated }) : { reply: result.reply };
       return json({ ...goalResult, actions: result.actions,
         presentation: proactiveDiscussion || actionableQuery || !coachContext || habitPeriod !== 7 || result.actions.length > 0 || attachment?.kind === 'image'
           ? 'none' : normalizePresentation(result.presentation) });

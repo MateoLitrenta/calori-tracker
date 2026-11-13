@@ -25,8 +25,23 @@ function isNonCommittingRequest(text: string) {
     || /^(?:¿\s*)?(?:si\b|supongamos\b|imagina\b|imaginemos\b|hipoteticamente\b|que pasaria\b|y si\b|como\b|cuantos\b|cuantas\b|cuales\b|que objetivos tengo\b|quiero (?:ver|consultar|saber)\b)/.test(text);
 }
 
+const cancelWorkoutRequest = /^quiero cancelar mi objetivo de entrenamiento confirmado\.?$/;
+
 export function resolveCoachGoalProposal(input: { text: string; messages?: { role: string; text: string }[]; today: string; reply: string; suggestion: unknown;
-  availability: 'available' | 'disabled' | 'unavailable'; goals: CoachGoal[] }) {
+  availability: 'available' | 'disabled' | 'unavailable'; goals: CoachGoal[]; goalsTruncated?: boolean }) {
+  const text = normalized(input.text);
+  // Only the current complete command can identify a cancellation. Neither
+  // earlier conversation nor a model-supplied ID can choose the saved goal.
+  if (cancelWorkoutRequest.test(text)) {
+    if (input.availability === 'disabled') return { reply: 'Los objetivos persistentes no están habilitados. No preparé una propuesta para cancelar; todavía no se guardó ningún cambio.' };
+    if (input.availability === 'unavailable') return { reply: 'No pude consultar tus objetivos. Intentá nuevamente cuando estén disponibles; todavía no se guardó ningún cambio.' };
+    if (input.goalsTruncated) return { reply: 'No pude verificar todos tus objetivos. Abrí «Mis objetivos» y elegí cuál querés cancelar; todavía no se guardó ningún cambio.' };
+    const active = input.goals.filter(goal => goal.status === 'active');
+    if (active.length > 1) return { reply: 'Hay más de un objetivo activo. Abrí «Mis objetivos» y elegí cuál querés cancelar; todavía no se guardó ningún cambio.' };
+    if (active.length !== 1 || active[0].type !== 'workout_sessions') return { reply: 'No encontré un único objetivo de entrenamiento activo para cancelar. Revisá «Mis objetivos»; todavía no se guardó ningún cambio.' };
+    const goalProposal = normalizeGoalSuggestion({ operation: 'cancel', id: active[0].id }, input.today, input.goals)!;
+    return { goalProposal, reply: `Preparé la propuesta para cancelar tu objetivo de ${goalProposal.target} sesiones de entrenamiento del ${goalProposal.startDate} al ${goalProposal.endDate}. Revisala y confirmala con el botón; todavía no se guardó ningún cambio.` };
+  }
   const conversation = workoutGoalConversation(input.messages ?? [{ role: 'user', text: input.text }], input.today);
   if (conversation) {
     if (input.availability === 'disabled') return { reply: 'Los objetivos persistentes no están habilitados. No preparé una propuesta para guardar; podemos seguir conversando sobre un plan.' };
@@ -35,7 +50,7 @@ export function resolveCoachGoalProposal(input: { text: string; messages?: { rol
     const goalProposal = normalizeGoalSuggestion({ ...conversation.values, operation: 'accept' }, input.today, input.goals);
     if (goalProposal) return { goalProposal, reply: `Preparé una propuesta de ${goalProposal.target} sesiones de entrenamiento del ${goalProposal.startDate} al ${goalProposal.endDate}. Cuenta todos los entrenamientos registrados, sin exigir una frecuencia semanal ni filtrar solo gimnasio. Revisala y aceptala con el botón; todavía no está guardada.` };
   }
-  const text = normalized(input.text), reply = normalized(input.reply);
+  const reply = normalized(input.reply);
   const blocked = isNonCommittingRequest(text);
   const unsupportedRecurrence = !blocked && /\b(?:(?:por|a la|cada) semana|semanales?)\b/.test(text);
   const explicit = blocked ? undefined : explicitWorkoutGoal(input.text, input.today);

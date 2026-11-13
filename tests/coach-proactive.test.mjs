@@ -65,6 +65,29 @@ test('water or weight alone is acknowledged without inventing meals, workouts or
   assert.match(value.prompt, /registrar ahora/);
 });
 
+test('training suggestions agree with one recorded walk and switch to plural when another is logged', () => {
+  const one = context({ [today]: record(today, { workouts: [workout('Caminata')] }) });
+  const two = context({
+    [dates[2]]: record(dates[2], { workouts: [workout('Caminata')] }),
+    [today]: record(today, { workouts: [workout('Caminata')] }),
+  });
+  assert.equal(coachSuggestions(one)[0], '¿Qué muestra mi entrenamiento registrado en los últimos 7 días?');
+  assert.equal(coachSuggestions(two)[0], '¿Qué muestran mis 2 entrenamientos registrados en los últimos 7 días?');
+  assert.equal(buildProactiveInsight(one).metrics.workoutCount, 1);
+  assert.equal(buildProactiveInsight(two).metrics.workoutCount, 2);
+  assert.doesNotMatch(coachSuggestions(one)[0], /muestran|mis 1/);
+});
+
+test('step suggestions use singular for one recorded day and plural for two without changing coverage', () => {
+  const one = context({ [today]: record(today, { steps: 7000 }) });
+  const two = context({ [dates[2]]: record(dates[2], { steps: 6500 }), [today]: record(today, { steps: 7000 }) });
+  const stepQuestion = value => coachSuggestions(value).find(text => text.includes('pasos registrados'));
+  assert.equal(stepQuestion(one), '¿Qué puedo aprender de mi día con pasos registrados?');
+  assert.equal(stepQuestion(two), '¿Qué puedo aprender de mis 2 días con pasos registrados?');
+  assert.equal(buildProactiveInsight(one).metrics.stepDays, 1);
+  assert.equal(buildProactiveInsight(two).metrics.stepDays, 2);
+});
+
 test('sparse food is registered coverage, not an intake trend or a complete-day assertion', () => {
   const records = Object.fromEntries(dates.slice(-2).map(date => [date, record(date, { meals: [meal()] })]));
   const value = buildProactiveInsight(context(records));

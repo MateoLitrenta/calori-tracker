@@ -11,8 +11,17 @@ const count = '(\\d{1,3}|un|uno|una|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|
 const asCount = (value: string) => counts[value] ?? Number(value);
 const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 const month = `(?:${months.join('|')})(?: (?:de )?\\d{4})?`;
-const periodText = `(?:(?:los )?proximos ${count} dias|esta semana|(?:el )?(?:mes de )?${month}|del \\d{4}-\\d{2}-\\d{2} al \\d{4}-\\d{2}-\\d{2})`;
-const request = new RegExp(`^quiero (?:(?:(?:establecer|crear|definir|fijar) un objetivo de|un objetivo de|una meta de) )?(?:${count} (?:sesiones de entrenamiento|entrenamientos)|(?:entrenar|ir al gimnasio) ${count} veces)( por semana| a la semana)?(?: (?:durante |para |en )?(${periodText}))?$`);
+const monthNamePattern = `(?:${months.join('|')})`;
+const naturalRange = `del \\d{1,2}(?: de ${monthNamePattern}(?: (?:de )?\\d{4})?)? al \\d{1,2} de ${monthNamePattern}(?: (?:de )?\\d{4})?`;
+const naturalRangePattern = new RegExp(`^del (\\d{1,2})(?: de (${months.join('|')})(?: (?:de )?(\\d{4}))?)? al (\\d{1,2}) de (${months.join('|')})(?: (?:de )?(\\d{4}))?$`);
+const periodText = `(?:(?:los )?proximos ${count} dias|esta semana|(?:el )?(?:mes de )?${month}|del \\d{4}-\\d{2}-\\d{2} al \\d{4}-\\d{2}-\\d{2}|${naturalRange})`;
+const requestStart = `^quiero (?:(?:(?:establecer|crear|definir|fijar) un objetivo de|un objetivo de|una meta de) )?(?:${count} (?:sesiones de entrenamiento|entrenamientos)|(?:entrenar|ir al gimnasio) ${count} veces)(?: en total)?`;
+const request = new RegExp(`${requestStart}( por semana| a la semana)?(?: (?:durante |para |en )?(${periodText}))?$`);
+// An incomplete date range may retain the explicitly requested count, but it
+// can only ask for clarification, never produce a commitment from model data.
+const dateToken = `(?:\\d{1,4}(?:[-/]\\d{1,4}){0,2}|de|al|${monthNamePattern})`;
+const unclearRangeRequest = new RegExp(`${requestStart} (del ${dateToken}(?: ${dateToken})*)$`);
+const nonCommittingRange = /["“”«»]|\b(?:no|nunca|tampoco|si|quizas|tal vez|o|pero)\b/;
 const clarifyPeriod = new RegExp(`^(?:(?:perdon,? )?(?:(?:es|era) para |quise decir |para |durante |en )?)(${periodText})(?:,? no (?:${periodText}))?$`);
 const totalChoice = new RegExp(`^(?:quiero|prefiero|acepto) (?:una meta|un objetivo) total de ${count} (?:sesiones|entrenamientos)(?: (?:durante |para |en )?(${periodText}))?(?:,? (?:sin exigir|sin tener que cumplir) (?:tres|\\d+) (?:sesiones|veces) (?:por|cada) semana)?$`);
 const weeklyChoice = new RegExp(`^(?:quiero|prefiero|acepto) (?:la opcion semanal|un objetivo semanal)(?: (?:de )?${count} sesiones)?(?: (?:durante|para) (?:los )?proximos siete dias)?$`);
@@ -32,6 +41,18 @@ function period(value: string, today: string): Period | undefined {
   }
   const dates = value.match(/^del (\d{4}-\d{2}-\d{2}) al (\d{4}-\d{2}-\d{2})$/);
   if (dates) return { startDate: dates[1], endDate: dates[2] };
+  const natural = value.match(naturalRangePattern);
+  if (natural) {
+    // A final explicit year is shared only within that same calendar year.
+    // Crossing December/January requires both years; never roll one silently.
+    const endYear = natural[6];
+    if (!endYear) return;
+    const startYear = natural[3] ?? endYear;
+    const date = (day: string, name: string, year: string) =>
+      `${year}-${String(months.indexOf(name) + 1).padStart(2, '0')}-${day.padStart(2, '0')}`;
+    return { startDate: date(natural[1], natural[2] ?? natural[5], startYear),
+      endDate: date(natural[4], natural[5], endYear) };
+  }
   const namedMonth = value.match(new RegExp(`^(?:el )?(?:mes de )?(${months.join('|')})(?: (?:de )?(\\d{4}))?$`));
   if (!namedMonth) return;
   // An omitted year means the current year, never a silently rolled-over year.
@@ -49,6 +70,7 @@ export function workoutGoalConversation(messages: Message[], today: string): Wor
   if (!isGoalDate(today)) return;
   let draft: Draft | undefined;
   let invalidPeriod = false;
+  let unclearRange = false;
   for (const message of messages) {
     if (message.role !== 'user') continue;
     const text = normalize(message.text).replace(/(?: y guardarlo en calori|\. quiero guardarlo en calori(?: para que puedas hacer seguimiento de mi progreso)?)$/, '')
@@ -60,6 +82,13 @@ export function workoutGoalConversation(messages: Message[], today: string): Wor
       const periodValue = initial[4];
       draft = { target, weekly: !!initial[3], period: periodValue ? period(periodValue, today) : undefined };
       invalidPeriod = !!periodValue && !draft.period;
+      unclearRange = invalidPeriod && periodValue.startsWith('del ');
+      continue;
+    }
+    const incomplete = text.match(unclearRangeRequest);
+    if (incomplete && !nonCommittingRange.test(text)) {
+      draft = { target: asCount(incomplete[1] ?? incomplete[2]), weekly: false };
+      invalidPeriod = true; unclearRange = true;
       continue;
     }
     if (!draft) continue;
@@ -68,20 +97,26 @@ export function workoutGoalConversation(messages: Message[], today: string): Wor
     const weekly = text.match(weeklyChoice);
     if (correction) {
       draft.period = period(correction[1], today); invalidPeriod = !draft.period;
+      unclearRange = invalidPeriod && correction[1].startsWith('del ');
     } else if (total) {
       draft.target = asCount(total[1]); draft.weekly = false;
-      if (total[2]) { draft.period = period(total[2], today); invalidPeriod = !draft.period; }
+      if (total[2]) { draft.period = period(total[2], today); invalidPeriod = !draft.period;
+        unclearRange = invalidPeriod && total[2].startsWith('del '); }
     } else if (weekly) {
       // Choosing the offered weekly alternative is explicit consent to a NEW
       // seven-day period starting today, not a monthly recurrence conversion.
       if (weekly[1]) draft.target = asCount(weekly[1]);
-      draft.weekly = false; draft.period = period('proximos siete dias', today); invalidPeriod = false;
+      draft.weekly = false; draft.period = period('proximos siete dias', today); invalidPeriod = false; unclearRange = false;
     } else if (!saveReference.test(text) && !noOtherGoals.test(text)) {
-      draft = undefined; invalidPeriod = false;
+      draft = undefined; invalidPeriod = false; unclearRange = false;
     }
   }
   if (!draft) return;
+  if (unclearRange) return { reply: `Conservo tu meta de ${draft.target} sesiones. Para confirmar ese rango, usá fechas completas con el formato «del AAAA-MM-DD al AAAA-MM-DD», o indicá día, mes y año. Si cambia el año, escribilo en ambas fechas. Todavía no se guardó ningún objetivo.` };
   if (invalidPeriod) return { reply: 'El período debe tener entre 1 y 31 días y fechas válidas. ¿Qué fechas querés usar? Todavía no se guardó ningún objetivo.' };
+  if (draft.period && !parseGoalValues({ type: 'workout_sessions', target: 1, ...draft.period, stepThreshold: null })) {
+    return { reply: `Conservo tu meta de ${draft.target} sesiones. El período debe tener entre 1 y 31 días con fechas válidas y ordenadas. Revisá las fechas o usá el formato «del AAAA-MM-DD al AAAA-MM-DD»; todavía no se guardó ningún objetivo.` };
+  }
   if (draft.period && draft.period.endDate < today) return { reply: 'Ese período ya pasó. Conservo la meta que pediste: ¿qué período futuro querés usar? Todavía no se guardó ningún objetivo.' };
   if (draft.weekly) return { reply: `Pediste ${draft.target} sesiones por semana. Por ahora Calori guarda un total de sesiones por período y cuenta todos los entrenamientos registrados; no puede exigir una frecuencia cada semana ni filtrar solo gimnasio. Podés elegir un objetivo semanal de ${draft.target} sesiones en los próximos 7 días, o indicar y aceptar un total para el mes, sin exigir esa frecuencia semanal. ¿Cuál preferís? Todavía no se guardó ningún objetivo.` };
   if (!draft.period) return { reply: `Conservo tu meta de ${draft.target} sesiones. ¿Qué período o fechas querés usar? Todavía no se guardó ningún objetivo.` };

@@ -1,0 +1,193 @@
+{
+  "version": "V10.1",
+  "productionCommit": "44c79e85654408557037be4304a27aa2f26c5fbf",
+  "dateUTC": "2026-11-13",
+  "scope": "Authorized test account, synthetic workflow; no identity or message content",
+  "requests": [
+    {
+      "case": "first-proactive-conversation",
+      "event": "ai_request",
+      "endpoint": "/api/ai/chat",
+      "status": 200,
+      "durationMs": 1935,
+      "mode": "chat",
+      "modality": "text",
+      "result": "ok",
+      "category": "success",
+      "providerCalls": 1,
+      "tokens": {
+        "prompt": 9106,
+        "output": 73,
+        "total": 9179
+      },
+      "tokenCoverage": "complete"
+    },
+    {
+      "case": "explain-evidence",
+      "event": "ai_request",
+      "endpoint": "/api/ai/chat",
+      "status": 200,
+      "durationMs": 1577,
+      "mode": "chat",
+      "modality": "text",
+      "result": "ok",
+      "category": "success",
+      "providerCalls": 1,
+      "tokens": {
+        "prompt": 9945,
+        "output": 84,
+        "total": 10029
+      },
+      "tokenCoverage": "complete"
+    },
+    {
+      "case": "natural-date-goal-failed",
+      "event": "ai_request",
+      "endpoint": "/api/ai/chat",
+      "status": 200,
+      "durationMs": 1841,
+      "mode": "chat",
+      "modality": "text",
+      "result": "ok",
+      "category": "success",
+      "providerCalls": 1,
+      "tokens": {
+        "prompt": 8647,
+        "output": 145,
+        "total": 8792
+      },
+      "tokenCoverage": "complete"
+    },
+    {
+      "case": "iso-date-goal-proposed",
+      "event": "ai_request",
+      "endpoint": "/api/ai/chat",
+      "status": 200,
+      "durationMs": 1814,
+      "mode": "chat",
+      "modality": "text",
+      "result": "ok",
+      "category": "success",
+      "providerCalls": 1,
+      "tokens": {
+        "prompt": 8737,
+        "output": 113,
+        "total": 8850
+      },
+      "tokenCoverage": "complete"
+    },
+    {
+      "case": "synthetic-workout-proposed",
+      "event": "ai_request",
+      "endpoint": "/api/ai/chat",
+      "status": 200,
+      "durationMs": 2067,
+      "mode": "chat",
+      "modality": "text",
+      "result": "ok",
+      "category": "success",
+      "providerCalls": 1,
+      "tokens": {
+        "prompt": 6046,
+        "output": 184,
+        "total": 6230
+      },
+      "tokenCoverage": "complete"
+    },
+    {
+      "case": "updated-goal-evidence",
+      "event": "ai_request",
+      "endpoint": "/api/ai/chat",
+      "status": 200,
+      "durationMs": 1978,
+      "mode": "chat",
+      "modality": "text",
+      "result": "ok",
+      "category": "success",
+      "providerCalls": 1,
+      "tokens": {
+        "prompt": 10593,
+        "output": 92,
+        "total": 10685
+      },
+      "tokenCoverage": "complete"
+    },
+    {
+      "case": "goal-update-proposed",
+      "event": "ai_request",
+      "endpoint": "/api/ai/chat",
+      "status": 200,
+      "durationMs": 1927,
+      "mode": "chat",
+      "modality": "text",
+      "result": "ok",
+      "category": "success",
+      "providerCalls": 1,
+      "tokens": {
+        "prompt": 9156,
+        "output": 174,
+        "total": 9330
+      },
+      "tokenCoverage": "complete"
+    },
+    {
+      "case": "conversational-cancel-failed",
+      "event": "ai_request",
+      "endpoint": "/api/ai/chat",
+      "status": 200,
+      "durationMs": 1523,
+      "mode": "chat",
+      "modality": "text",
+      "result": "ok",
+      "category": "success",
+      "providerCalls": 1,
+      "tokens": {
+        "prompt": 9116,
+        "output": 39,
+        "total": 9155
+      },
+      "tokenCoverage": "complete"
+    }
+  ],
+  "summary": {
+    "manualSends": 8,
+    "providerCalls": 8,
+    "quotaBefore": 0,
+    "quotaAfter": 8,
+    "dailyLimitUnchanged": 30,
+    "automaticCallsObserved": 0,
+    "promptTokens": 71346,
+    "outputTokens": 904,
+    "totalTokens": 72250,
+    "endpointDurationMs": {
+      "min": 1523,
+      "median": 1884,
+      "max": 2067,
+      "samples": 8
+    },
+    "notes": [
+      "HTTP 200 does not certify semantic success: two goal requests failed to prepare a confirmation.",
+      "durationMs measures the complete endpoint, not just Gemini and not browser-to-result latency.",
+      "tokenCoverage is provider metadata coverage; currency billing and model configuration were not inspected."
+    ]
+  },
+  "confirmedWrites": {
+    "syntheticWorkoutCount": 1,
+    "syntheticGoal": {
+      "initialTarget": 2,
+      "updatedTarget": 3,
+      "finalStatus": "cancelled",
+      "finalVersion": 3
+    },
+    "mealsCreatedByWorkflow": 0
+  },
+  "pendingRemote": [
+    "corrected code, before any deployment",
+    "authenticated invalid400",
+    "natural quota429",
+    "provider failure or timeout not induced",
+    "second authorized account",
+    "fresh conversation separate from restored local history",
+    "food-rich and football-plus-gym real contexts"
+  ]
+}

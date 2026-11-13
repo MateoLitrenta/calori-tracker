@@ -1,0 +1,56 @@
+{
+  "branch": "codex/coach-goal-natural-date-range-fix",
+  "baseCommit": "44c79e85654408557037be4304a27aa2f26c5fbf",
+  "node": "v24.4.1",
+  "manifest": "final-automated-manifest.json",
+  "fileCount": 23,
+  "counts": {
+    "tests": 254,
+    "pass": 254,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0,
+    "durationMs": 121507.9941
+  },
+  "checks": [
+    {
+      "name": "automated-23-file-regression",
+      "exitCode": 0
+    },
+    {
+      "name": "frontend-types",
+      "exitCode": 0
+    },
+    {
+      "name": "ai-types",
+      "exitCode": 0
+    },
+    {
+      "name": "goals-types",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "exitCode": 0
+    },
+    {
+      "name": "diff-check",
+      "exitCode": 0
+    }
+  ],
+  "sourceHashBefore": "684a36aa4df9e206dd39230537570c017b2bb12215c24f6280d3c37949b0f40d",
+  "sourceHashAfter": "684a36aa4df9e206dd39230537570c017b2bb12215c24f6280d3c37949b0f40d",
+  "sourceStable": true,
+  "wallDurationMs": 182493,
+  "lintWarnings": 12,
+  "harnessActWarnings": 2,
+  "productionRequests": 0,
+  "remoteMutations": 0,
+  "liveGeminiEvaluated": false,
+  "scope": "Local final working tree only; remote Auth/Gemini/records/goals simulated, PGlite and loopback HTTP real. Not a fresh Linux654 run and not a live-model validation."
+}
