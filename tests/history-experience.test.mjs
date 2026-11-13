@@ -201,9 +201,18 @@ test('a shorter preview reserves its measured detail before publishing selection
   const detail = view.detail();
   const observer = view.resizeObservers.find(candidate => candidate.targets.has(detail));
   assert.ok(observer, 'The detail observes line-wrapping width changes');
+  const frames = new Map();
+  let nextFrame = 0;
+  window.requestAnimationFrame = callback => { const id = ++nextFrame; frames.set(id, callback); return id; };
+  window.cancelAnimationFrame = id => frames.delete(id);
+  const flushFrame = async () => act(() => {
+    const callbacks = [...frames.values()]; frames.clear();
+    for (const callback of callbacks) callback(Date.now());
+  });
   let detailWidth = 400, detailHeight = 312;
   detail.getBoundingClientRect = () => ({ width: detailWidth, height: detailHeight, top: 0, bottom: detailHeight, left: 0, right: detailWidth });
   await view.resize(768); // Deliver its first real geometry before a selection.
+  await flushFrame();
   assert.equal(detail.style.minBlockSize, '', 'There is no arbitrary fixed height before interaction');
   await view.selectDay(emptyDay);
   assert.equal(view.contextChanges.at(-1).detailMinBlockSize, '312px',
@@ -215,16 +224,40 @@ test('a shorter preview reserves its measured detail before publishing selection
   assert.equal(detail.style.minBlockSize, '312px', 'A shorter measured follow-up must not shrink the reserved area');
   detailWidth = 360;
   await view.resize(393);
-  assert.equal(detail.style.minBlockSize, '', 'A reserve must not survive a different wrapping width');
+  assert.equal(detail.style.minBlockSize, '312px', 'ResizeObserver delivery itself must not write layout');
+  assert.equal(frames.size, 1);
+  detailWidth = 350;
+  await view.resize(375);
+  assert.equal(frames.size, 1, 'Multiple observer deliveries are coalesced into one frame');
+  await flushFrame();
+  assert.equal(detail.style.minBlockSize, '', 'The next frame releases a reserve from another wrapping width');
   detailHeight = 284;
   await view.selectDay(workoutDay);
   assert.equal(detail.style.minBlockSize, '284px', 'The next reserve comes from the new measurement');
+  detailWidth = 340;
+  await view.resize(375);
+  assert.equal(frames.size, 1);
+  detailHeight = 350;
+  await view.selectDay(partialDay);
+  assert.equal(detail.style.minBlockSize, '350px');
+  await flushFrame();
+  assert.equal(detail.style.minBlockSize, '350px', 'An older resize frame must not remove a newer click reservation');
   await view.scale('Año');
   assert.equal(view.contextChanges.at(-1).detailMinBlockSize, '');
   assert.equal(detail.style.minBlockSize, '', 'A different period can find its own natural height');
   assert.equal(view.saves.length, 0);
+  await view.scale('Mes');
+  await view.selectDay(mealDay);
+  detailWidth = 330;
+  await view.resize(320);
+  assert.equal(frames.size, 1);
+  const cancelledCallbacks = [...frames.values()];
+  const beforeUnmount = detail.style.minBlockSize;
   await view.unmount();
   assert.equal(observer.disconnected, true);
+  assert.equal(frames.size, 0, 'Unmount cancels the outstanding frame');
+  for (const callback of cancelledCallbacks) callback(Date.now());
+  assert.equal(detail.style.minBlockSize, beforeUnmount, 'A late disposed callback cannot touch the detached detail');
 });
 
 test('Hoy immediately returns the explored date and calendar context, without submitting anything', async t => {

@@ -76,17 +76,24 @@ export default function Heatmap({
   }));
   const state = historyState ?? local;
   const detailRef = useRef<HTMLDivElement>(null);
+  const reserveRevision = useRef(0);
   const change = (patch: Partial<ActivityHistoryState>) => {
     const next = { ...state, ...patch };
     const detail = detailRef.current;
     if (detail) {
-      if (next.view !== state.view) detail.style.minBlockSize = '';
+      if (next.view !== state.view) {
+        reserveRevision.current++;
+        detail.style.minBlockSize = '';
+      }
       else if (next.dateStr !== state.dateStr) {
         // Keep the space already on screen before React renders a shorter day.
         // This avoids the browser clamping the page's scroll position near its end.
         // A longer day can still grow naturally; no content is clipped or capped.
         const height = Math.max(detail.getBoundingClientRect().height, parseFloat(detail.style.minBlockSize) || 0);
-        if (height > 0) detail.style.minBlockSize = height + 'px';
+        if (height > 0) {
+          reserveRevision.current++;
+          detail.style.minBlockSize = height + 'px';
+        }
       }
     }
     setLocal(next);
@@ -140,14 +147,29 @@ export default function Heatmap({
     const detail = detailRef.current;
     if (!detail || typeof ResizeObserver === 'undefined') return;
     let previousWidth = detail.getBoundingClientRect().width;
+    let frame: number | null = null;
+    let revision = reserveRevision.current;
+    let disposed = false;
     const observer = new ResizeObserver(() => {
+      if (disposed) return;
       const width = detail.getBoundingClientRect().width;
       // A measured reserve belongs to its current line wrapping, not another width.
-      if (Math.abs(width - previousWidth) > 0.5) detail.style.minBlockSize = '';
+      if (Math.abs(width - previousWidth) > 0.5) {
+        revision = reserveRevision.current;
+        // Writing during the observer delivery itself can trigger a resize loop.
+        if (frame === null) frame = window.requestAnimationFrame(() => {
+          frame = null;
+          if (!disposed && revision === reserveRevision.current) detail.style.minBlockSize = '';
+        });
+      }
       previousWidth = width;
     });
     observer.observe(detail);
-    return () => observer.disconnect();
+    return () => {
+      disposed = true;
+      observer.disconnect();
+      if (frame !== null) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   useLayoutEffect(() => {
