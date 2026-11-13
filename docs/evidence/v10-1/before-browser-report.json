@@ -1,0 +1,76 @@
+{
+  "phase": "before",
+  "baseCommit": "742bd78d553d99f75f604e0b3fdb577829f1253d",
+  "localSyntheticOnly": true,
+  "productionRequests": 0,
+  "geminiCalls": 0,
+  "cases": [
+    {
+      "scenario": "sufficient",
+      "theme": "light",
+      "width": 393,
+      "height": 852,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\n¿En qué te puedo ayudar?\n\nTengo en cuenta tus comidas, pasos, entrenamiento y balance energético.\n\n¿Cómo vengo entrenando?\nArmame una rutina para hoy\n¿Cómo comí esta semana?",
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "errors": [],
+      "screenshot": "before-sufficient-light-393.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\n¿En qué te puedo ayudar hoy?\n\nTengo en cuenta tus comidas, pasos, entrenamiento y balance energético.\n\n¿Cómo vengo entrenando?\nArmame una rutina para hoy\n¿Cómo comí esta semana?",
+      "composer": {
+        "top": 747,
+        "bottom": 875
+      },
+      "errors": [],
+      "screenshot": "before-sufficient-dark-1440.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "dark",
+      "width": 393,
+      "height": 852,
+      "openLatencyMs": 16872,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\n¿En qué te puedo ayudar?\n\nTengo en cuenta tus comidas, pasos, entrenamiento y balance energético.\n\n¿Cómo vengo entrenando?\nArmame una rutina para hoy\n¿Cómo comí esta semana?",
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "errors": [],
+      "screenshot": "before-sufficient-dark-393.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "openLatencyMs": 9518,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\n¿En qué te puedo ayudar hoy?\n\nTengo en cuenta tus comidas, pasos, entrenamiento y balance energético.\n\n¿Cómo vengo entrenando?\nArmame una rutina para hoy\n¿Cómo comí esta semana?",
+      "composer": {
+        "top": 747,
+        "bottom": 875
+      },
+      "errors": [],
+      "screenshot": "before-sufficient-light-1440.png"
+    }
+  ],
+  "issues": []
+}

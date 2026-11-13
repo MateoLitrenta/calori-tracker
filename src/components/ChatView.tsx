@@ -1,5 +1,5 @@
 import './PremiumViews.css';
-import { useState, useRef, useEffect, useCallback, type RefObject } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
 import { CheckCircle, ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, Target, X } from '@phosphor-icons/react';
 import UserAvatar from './UserAvatar';
@@ -12,7 +12,8 @@ import { goalProgressQuery } from '../utils/coachGoalPresentation';
 import { confirmCoachGoal } from '../services/coachGoals';
 import type { CoachGoalProposal } from '../utils/coachGoals';
 import { buildCoachCard, parseCoachCard, type CoachCardSnapshot } from '../utils/coachPresentation';
-import { buildCoachContext, coachSuggestions } from '../utils/coachContext';
+import { buildCoachContext } from '../utils/coachContext';
+import { buildProactiveInsight } from '../utils/coachProactive';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
@@ -186,6 +187,8 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const storageKey = `calori:assistant:messages:${userId}:${dateStr}`;
   const [messages, setMessages] = useState<Message[]>(() => readDailyHistory(userId, dateStr, today));
   const [initialMessageIds] = useState(() => new Set(messages.map(message => message.id)));
+  const [proactiveExpanded, setProactiveExpanded] = useState(true);
+  const proactiveReference = useRef<string | undefined>(undefined);
   const isPastConversation = dateStr !== today;
   const [showHistory, setShowHistory] = useState(false);
   const [showGoals, setShowGoals] = useState(false);
@@ -572,8 +575,11 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     }
   }, [messages, storageKey, isPastConversation]);
 
-  const currentContext = activeProfile?.user_id === userId ? buildCoachContext(activeProfile, today) : null;
-  const suggestions = coachSuggestions(currentContext);
+  const currentContext = useMemo(() => activeProfile?.user_id === userId ? buildCoachContext(activeProfile, today) : null,
+    [activeProfile, userId, today]);
+  const proactiveInsight = useMemo(() => buildProactiveInsight(currentContext,
+    goals.status === 'ready' && goals.ownerId === userId ? goals.goals : []), [currentContext, goals.status, goals.ownerId, goals.goals, userId]);
+  const suggestions = proactiveInsight?.suggestions ?? [];
 
   const startConversation = () => {
     if (busy.current || audioBusy.current || imageBusy.current || isCameraOpen || isPastConversation) return;
@@ -581,6 +587,8 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       localStorage.removeItem(storageKey);
       setMessages([]);
       setInputValue('');
+      setProactiveExpanded(true);
+      proactiveReference.current = undefined;
       clearPendingImage();
       setShowPhotoMenu(false);
       setPending(null);
@@ -602,9 +610,15 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     return () => cancelAnimationFrame(frame);
   }, [messages, isTyping, hasPending, isEditingProposal, scrollToEnd]);
 
-  const handleSend = async (text: string, attachment?: MediaAttachment) => {
+  const handleSend = async (text: string, attachment?: MediaAttachment, proactiveInsightId?: string) => {
     if ((!text.trim() && !attachment) || (audioBusy.current && !attachment) || busy.current || pending || !activeProfile || isPastConversation || dateStr !== formatDateStr(new Date())) return;
     busy.current = true;
+    // Keep short evidence follow-ups tied to the observation; a new topic or
+    // attachment returns to the ordinary conversation/action flow.
+    const evidenceFollowup = /^[¿\s]*(?:por que\b|que registros\b|explica\b|en que te bas|y el periodo anterior\b)/iu.test(text.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
+    const observationId = !attachment ? proactiveInsightId ?? (evidenceFollowup ? proactiveReference.current : undefined) : undefined;
+    proactiveReference.current = observationId;
+    setProactiveExpanded(false);
 
     const now = new Date();
     const localTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -634,7 +648,7 @@ ANTEAYER: ${dayBeforeStr}.
 HORA LOCAL ACTUAL: ${localTime}.
 DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
 
-      const response = await generateAIResponse(newHistory, systemPrompt, todayStr, attachment, coachContext);
+      const response = await generateAIResponse(newHistory, systemPrompt, todayStr, attachment, coachContext, observationId);
       if (!mounted.current || dateStr !== formatDateStr(new Date())) return;
       const actions = validActions(response.actions, todayStr);
       const requestedActions = Array.isArray(response.actions) && response.actions.length > 0;
@@ -875,6 +889,33 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         </div>
       )}
 
+      {!isPastConversation && proactiveInsight && (
+        <aside className="chat-proactive" aria-label="Una observación para vos" data-insight-kind={proactiveInsight.kind}>
+          <details open={proactiveExpanded} onToggle={event => setProactiveExpanded(event.currentTarget.open)}>
+            <summary className="chat-proactive-heading">
+              <span className="chat-proactive-eyebrow">Para vos <span aria-hidden="true">·</span> Tus registros</span>
+              <span className="chat-proactive-title">{proactiveInsight.title}</span>
+              <span className="chat-proactive-toggle" aria-hidden="true">{proactiveExpanded ? '−' : '+'}</span>
+            </summary>
+            <div className="chat-proactive-body">
+              <p className="chat-proactive-observation">{proactiveInsight.observation}</p>
+              <button type="button" className="chat-proactive-action"
+                onClick={() => handleSend(proactiveInsight.prompt, undefined, proactiveInsight.id)}
+                disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !currentContext}>
+                {proactiveInsight.actionLabel}<span aria-hidden="true">→</span>
+              </button>
+              <details className="chat-proactive-evidence">
+                <summary>Ver evidencia y límites</summary>
+                <p>{new Date(`${proactiveInsight.period.startDate}T12:00:00`).toLocaleDateString('es-AR')} – {new Date(`${proactiveInsight.period.endDate}T12:00:00`).toLocaleDateString('es-AR')} · Hoy sigue en curso.</p>
+                <ul>{proactiveInsight.evidence.map(item => <li key={item}>{item}</li>)}</ul>
+                <p>{proactiveInsight.limitation}</p>
+                {goals.status === 'error' && <p>No pude consultar tus objetivos confirmados. Esta observación usa tus registros disponibles.</p>}
+              </details>
+            </div>
+          </details>
+        </aside>
+      )}
+
       {/* Messages Area */}
       <section ref={messagesScrollRef} className="chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4"
         role="log" aria-label="Conversación con Coach" aria-live="polite" aria-relevant="additions text">
@@ -959,14 +1000,11 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           </div>
         )}
         {messages.length === 0 && (
-          <div className="chat-empty my-auto py-12 text-center">
-            <h3 className="text-lg font-semibold"><span className="chat-desktop-title">¿En qué te puedo ayudar hoy?</span><span className="chat-mobile-title">¿En qué te puedo ayudar?</span></h3>
-            <p className="mt-2 text-sm text-slate-500 dark:text-gray-400">
-              Tengo en cuenta tus comidas, pasos, entrenamiento y balance energético.
-            </p>
-            {!isPastConversation && <div className="chat-empty-suggestions">
-              {suggestions.slice(0, 3).map((suggestion, i) => (
-                <button key={i} type="button" onClick={() => handleSend(suggestion)}
+          <div className="chat-empty my-auto text-center">
+            <p className="chat-empty-label">{isPastConversation ? 'No hay mensajes en esta conversación.' : currentContext ? 'También podés empezar por acá' : 'Cargando tus registros…'}</p>
+            {!isPastConversation && currentContext && <div className="chat-empty-suggestions">
+              {suggestions.slice(0, 3).map(suggestion => (
+                <button key={suggestion} type="button" onClick={() => handleSend(suggestion)}
                   disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !activeProfile}
                   className="chat-suggestion text-xs">
                   {suggestion}
@@ -1030,10 +1068,10 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       {/* Input Area */}
       {!isPastConversation && <footer className={`chat-composer ${isRecording ? 'chat-composer-recording' : ''} p-4 border-t border-slate-200 dark:border-[#ffffff0d] bg-slate-50 dark:bg-[#151719]`}>
         {/* Quick Suggestions */}
-        <div className="chat-composer-suggestions flex overflow-x-auto gap-2 pb-3 mb-2 hide-scrollbar">
-          {suggestions.map((suggestion, i) => (
+        {messages.length > 0 && <div className="chat-composer-suggestions flex overflow-x-auto gap-2 pb-3 mb-2 hide-scrollbar">
+          {suggestions.map(suggestion => (
             <button
-              key={i}
+              key={suggestion}
               onClick={() => handleSend(suggestion)}
               disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !activeProfile}
               className="chat-suggestion flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] text-slate-700 dark:text-gray-300 hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 disabled:opacity-50 transition-colors whitespace-nowrap shadow-none"
@@ -1041,7 +1079,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
               {suggestion}
             </button>
           ))}
-        </div>
+        </div>}
 
         {pendingImage && (
           <div className="chat-image-preview mb-3 flex items-center gap-3 rounded-xl p-2">

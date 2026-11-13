@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-13",
+  "deploymentId": "dpl_8qfncHLnpUx5Kz8vavVDSDoecH5M",
+  "sourceCommit": "f628fe450807473150211b812a326a7db50ac9f5",
+  "branch": "codex/coach-intelligence-v10-1",
+  "environment": "preview",
+  "state": "READY",
+  "url": "https://calori-tracker-nww3cmdat-mateolitrenta-gmailcoms-projects.vercel.app",
+  "checks": [
+    {
+      "path": "/app",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/assets/index-BgUFOdao.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "characters": 584426
+    },
+    {
+      "path": "/assets/index-CzjwRUZQ.css",
+      "status": 200,
+      "contentType": "text/css; charset=utf-8",
+      "characters": 103008
+    },
+    {
+      "path": "/assets/ChatView-B-gEYllm.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "contextualActionPresent": true,
+      "nextRecordActionPresent": true
+    },
+    {
+      "path": "/assets/PremiumViews-ut1NZg__.css",
+      "status": 200,
+      "contentType": "text/css; charset=utf-8",
+      "compactMobileRulePresent": true
+    }
+  ],
+  "scope": "Static HTML and assets only. No authenticated Coach requests and no live Gemini evaluation.",
+  "previewFullCoachAvailable": false,
+  "previewMissingConfiguration": "As reported by the user; no environment variables inspected or changed.",
+  "remoteEnvironmentVariablesChanged": false,
+  "geminiRequestsMadeByThisVerification": 0,
+  "productionModified": false
+}

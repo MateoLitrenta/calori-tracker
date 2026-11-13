@@ -1,0 +1,125 @@
+{
+  "date": "2026-11-13",
+  "baseCommit": "742bd78d553d99f75f604e0b3fdb577829f1253d",
+  "visualBaselineCommit": "e8c16fc242d567f2fccc31373433e4b05d2be9fc",
+  "sourceCommit": "f628fe450807473150211b812a326a7db50ac9f5",
+  "pullRequest": "https://github.com/MateoLitrenta/calori-tracker/pull/77",
+  "certificationScope": "Automated regressions with synthetic remote services and native disposable Linux PostgreSQL/PostgREST. Not live AI certification.",
+  "globalSuite": {
+    "certified": true,
+    "environment": "Ubuntu 24.04",
+    "node": "24.4.1",
+    "postgres": "17.5",
+    "postgrest": "16.5",
+    "files": 52,
+    "tests": 654,
+    "passed": 654,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0,
+    "focusedTests": 14,
+    "focusedPassed": 14,
+    "cleanup": [],
+    "run": "https://github.com/MateoLitrenta/calori-tracker/actions/runs/43477100255",
+    "jobId": 132063639651,
+    "artifactId": 14064316452,
+    "evidence": "linux-ci-final.json",
+    "historicalGate": "The separate PR71-specific workflow is inapplicable; the active gate ran every current test file with no skipped tests.",
+    "historicalWindowsAttempt": "The initial Windows runtime limitations are superseded by this complete compatible Linux run; no source or native tests were excluded."
+  },
+  "qualityChecks": {
+    "frontendTypeScript": 0,
+    "aiEndpointTypeScript": 0,
+    "goalsEndpointTypeScript": 0,
+    "lint": 0,
+    "build": 0,
+    "diffCheck": 0,
+    "existingLintWarnings": 12
+  },
+  "syntheticEvaluation": {
+    "scenarios": 8,
+    "passed": 8,
+    "browserChecks": 29,
+    "browserPassed": 29,
+    "pageErrors": 0,
+    "externalRequests": 0,
+    "automaticModelCalls": 0,
+    "recordWrites": 0,
+    "pngs": 41,
+    "evidence": "review-2/README.md",
+    "finalMobileRecheck": 6,
+    "mobileGapPx": {
+      "width320": {
+        "before": 62,
+        "after": 12
+      },
+      "width375": {
+        "before": 62,
+        "after": 12
+      },
+      "width393": {
+        "before": 137.23,
+        "after": 12
+      }
+    },
+    "desktopGapPx": {
+      "before": 163.89,
+      "after": 163.89
+    }
+  },
+  "selectedObservationFlow": {
+    "realLayers": [
+      "React click",
+      "generateAIResponse",
+      "requestAI",
+      "local HTTP",
+      "API handler"
+    ],
+    "tests": 4,
+    "apiContractTests": 11,
+    "compiledProbe": true,
+    "recalculatesCurrentEvidence": true,
+    "usesAuthenticatedGoalActivity": true,
+    "remoteServices": "simulated"
+  },
+  "preview": {
+    "status": "ready",
+    "deploymentId": "dpl_8qfncHLnpUx5Kz8vavVDSDoecH5M",
+    "sourceCommit": "f628fe450807473150211b812a326a7db50ac9f5",
+    "environment": "preview",
+    "url": "https://calori-tracker-nww3cmdat-mateolitrenta-gmailcoms-projects.vercel.app",
+    "scope": "Static HTML and assets only",
+    "fullCoachFunctionalVerification": false,
+    "missingConfiguration": "Confirmed by the user; no remote variables inspected or changed.",
+    "checks": "review-2/preview.json"
+  },
+  "constraints": {
+    "productionDeployment": false,
+    "merge": false,
+    "remoteEnvironmentVariablesChanged": false,
+    "supabaseChanges": false,
+    "quotaChanges": false,
+    "schemaChanges": false,
+    "liveGeminiEvaluated": false
+  },
+  "postDeployment": {
+    "status": "pending",
+    "prerequisites": [
+      "PR approval",
+      "merge",
+      "verified Production deployment",
+      "authorized test account"
+    ],
+    "plan": "../../coach-intelligence-v10-1-post-deploy.md",
+    "checks": [
+      "real Gemini conversation and evidence",
+      "confirmed goals and persistence",
+      "proposed and confirmed actions",
+      "quota accounting",
+      "controlled errors",
+      "monitoring, latency and real token coverage"
+    ]
+  },
+  "documentationOnlyFollowup": "The final evidence/report commit does not change application code, tests, build configuration or CI scripts validated at sourceCommit."
+}

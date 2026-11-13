@@ -4,10 +4,16 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/staging-schema-v9-1.yml'
+      - 'src/**'
+      - 'api/**'
+      - 'server/**'
       - 'supabase/**'
       - 'scripts/staging/**'
+      - 'scripts/integration/**'
+      - 'scripts/coach-intelligence/**'
       - 'tests/**'
       - 'package*.json'
+      - '*config*'
 permissions:
   contents: read
 jobs:

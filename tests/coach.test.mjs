@@ -35,7 +35,9 @@ test('coach context includes seven local dates, real recent activity and no acco
   for (const forbidden of ['private-', 'secret-', 'email', 'avatar', 'password', '2026-09-29']) assert.ok(!serialized.includes(forbidden));
   assert.ok(context.recentDays.every(day => day.date >= recentLocalDates(today)[0]));
   assert.equal(context.historyDays.length, 60);
-  assert.deepEqual(coachSuggestions(context), ['¿Cómo vengo entrenando?', 'Armame una rutina para hoy', '¿Cómo comí esta semana?']);
+  assert.equal(coachSuggestions(context).length, 3);
+  assert.match(coachSuggestions(context)[0], /Gimnasio y Fútbol/);
+  assert.match(coachSuggestions(context)[1], /1 de 7 días/);
 });
 
 test('empty and activity-only days never become zero-food days; local month/year boundaries are stable', () => {

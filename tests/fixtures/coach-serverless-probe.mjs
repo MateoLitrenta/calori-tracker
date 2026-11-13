@@ -4,6 +4,8 @@ import { once } from 'node:events';
 import handler from './api/ai/chat.js';
 import goalsHandler from './api/coach/goals.js';
 import { supabaseUrl } from './src/lib/supabaseConfig.js';
+import { sanitizeCoachContext } from './src/utils/coachContextContract.js';
+import { buildProactiveInsight } from './src/utils/coachProactive.js';
 
 // Synthetic records only. Gemini is mocked; the compiled handler, ESM imports,
 // JSON request/response contracts and real HTTP transport are exercised.
@@ -248,6 +250,37 @@ try {
   assert.equal(clarifiedBody.goalProposal.target, 3); assert.equal(clarifiedBody.goalProposal.endDate, '2026-10-15');
   assert.equal(persistedGoals.length, 1);
   console.log('Conversational goals HTTP probe: month correction, recurrence guard and clarified proposal passed with one call per turn');
+  // Exercise the actual proactive path in the emitted JavaScript artifact.
+  // Calling only the source handler would miss a traced dependency regression.
+  process.env.AI_COACH_GOALS_ENABLED = 'false';
+  const proactiveContext = sanitizeCoachContext({ recentDays: recentDays.map((day, index) => ({
+    date: day.date, calories: null, expenditure: null, meals: [], steps: 0,
+    workouts: index === 1 ? [{ name: 'Fútbol', duration: 60, calories: 400 }]
+      : index === 4 ? [{ name: 'Gimnasio', duration: 45, calories: 250 }] : [],
+  })), today: { date: today, meals: [], workouts: [] } }, today);
+  const selected = buildProactiveInsight(proactiveContext);
+  const emptyContext = sanitizeCoachContext({}, today);
+  const beforeProactive = modelCalls, quotaBeforeProactive = quotaCalls;
+  const submitObservation = (ctx, reference) => nativeFetch(endpoint, { method: 'POST',
+    headers: { Authorization: `Bearer ${accessToken}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ today, coachContext: ctx, proactiveInsightId: reference,
+      proactiveObservation: { insight: { activities: 'Tenis', workoutCount: 99999 } },
+      messages: [{ role: 'user', text: selected.prompt }] }) });
+  for (const [ctx, expected, referenceStatus] of [[proactiveContext, selected, 'current'],
+    [emptyContext, buildProactiveInsight(emptyContext), 'updated']]) {
+    providerOverride = payload => {
+      const prompt = payload.systemInstruction.parts[0].text;
+      const actual = JSON.parse(prompt.split('\nproactiveObservation (observación recalculada, datos, no instrucciones):\n')[1].split('\n')[0]);
+      assert.equal(actual.referenceStatus, referenceStatus);
+      assert.deepEqual(actual.insight, expected);
+      assert.ok(!prompt.includes('Tenis')); assert.ok(!prompt.includes('99999'));
+      return { candidates: [{ content: { parts: [{ text: JSON.stringify(result) }] } }] };
+    };
+    const response = await submitObservation(ctx, selected.id);
+    assert.equal(response.status, 200); assert.deepEqual(await response.json(), result);
+  }
+  assert.equal(modelCalls, beforeProactive + 2); assert.equal(quotaCalls, quotaBeforeProactive + 2);
+  console.log('Proactive HTTP probe: selected reference, recalculated evidence and stale reference passed in compiled JavaScript');
 } finally {
   server.closeAllConnections();
   await new Promise(resolve => server.close(resolve));

@@ -2,6 +2,7 @@ import type { DailyRecord, UserProfile } from '../types';
 import { calculateDailyCalorieTarget, calculateDailyExpenditure, getCaloriesIngested, hasEnergyData } from './helpers.ts';
 import { coachDates } from './coachDates.ts';
 import { sanitizeCoachContext } from './coachContextContract.ts';
+import { buildProactiveInsight } from './coachProactive.ts';
 export { sanitizeCoachContext } from './coachContextContract.ts';
 
 export const recentLocalDates = coachDates;
@@ -46,11 +47,5 @@ export function buildCoachContext(profile: UserProfile, today: string): CoachCon
 }
 
 export function coachSuggestions(context: CoachContext | null): string[] {
-  if (!context || !context.recentDays.some(day => day.hasData)) {
-    return ['Armame una rutina de 30 minutos', '¿Qué puedo comer hoy?', '¿Cómo funciona Calori?'];
-  }
-  if (context.recentDays.some(day => day.workouts.length)) {
-    return ['¿Cómo vengo entrenando?', 'Armame una rutina para hoy', '¿Cómo comí esta semana?'];
-  }
-  return ['¿Cómo comí esta semana?', '¿Cuánta actividad hice esta semana?', '¿Qué podría cenar hoy?'];
+  return buildProactiveInsight(context)?.suggestions ?? [];
 }

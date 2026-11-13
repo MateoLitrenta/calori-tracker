@@ -29,6 +29,7 @@ const imports = {
   react: stub(`export const useState = (...args) => globalThis.__chatViewHarness.hooks.useState(...args);
     export const useRef = (...args) => globalThis.__chatViewHarness.hooks.useRef(...args);
     export const useCallback = callback => callback;
+    export const useMemo = callback => callback();
     export const useEffect = (...args) => globalThis.__chatViewHarness.hooks.useEffect(...args);`),
   '../hooks/useAppStore': stub(`export const useAppStore = () => ({
     user: { id: 'user-a' }, activeProfile: globalThis.__chatViewHarness.profile,
@@ -70,6 +71,7 @@ function mount(component, props) {
     },
   };
   return {
+    updateProps(next) { props = { ...props, ...next }; },
     render() { cursor = 0; effects = []; globalThis.__chatViewHarness.hooks = hooks; return component(props); },
     flushAnchor() { effects.find(effect => effect.deps?.length === 5 && Array.isArray(effect.deps[0]))?.callback(); },
     flushPersistence() { effects.find(effect => typeof effect.deps?.[1] === 'string' && effect.deps[1].startsWith('calori:assistant:messages:'))?.callback(); },
@@ -98,7 +100,8 @@ test('Coach empty state contains at most three suggestions and disappears with s
   const empty = render();
   const emptyState = nodes(empty, element => hasClass(element, 'chat-empty'))[0];
   assert.ok(emptyState);
-  assert.match(renderToStaticMarkup(emptyState), /¿En qué te puedo ayudar\?/);
+  assert.match(renderToStaticMarkup(emptyState), /También podés empezar por acá/);
+  assert.equal(nodes(empty, element => hasClass(element, 'chat-proactive')).length, 1);
   const suggestions = nodes(emptyState, element => hasClass(element, 'chat-empty-suggestions'))[0];
   assert.ok(suggestions);
   assert.equal(nodes(suggestions, element => element.type === 'button').length, 3);
@@ -111,6 +114,53 @@ test('Coach empty state contains at most three suggestions and disappears with s
   assert.match(markup, /¿Cómo estuvo mi día\?/);
   assert.match(markup, /Revisemos tus registros de hoy\./);
   assert.equal(nodes(conversation, element => hasClass(element, 'chat-message-new')).length, 0);
+});
+
+test('opening Coach is deterministic; only an explicit observation click sends its reference and relevant evidence', async t => {
+  const previous = globalThis.__chatViewHarness.generateAIResponse;
+  t.after(() => { globalThis.__chatViewHarness.generateAIResponse = previous; });
+  const calls = [];
+  globalThis.__chatViewHarness.generateAIResponse = async (...args) => {
+    calls.push(args); return { reply: 'Revisemos tus registros disponibles.', actions: [], presentation: 'none' };
+  };
+  const view = conversation();
+  const get = predicate => nodes(view.render(), predicate)[0];
+  view.render(); view.render();
+  assert.equal(calls.length, 0);
+  assert.equal(nodes(view.render(), e => hasClass(e, 'chat-proactive')).length, 1);
+  await get(e => hasClass(e, 'chat-proactive-action')).props.onClick();
+  assert.equal(calls.length, 1);
+  assert.match(calls[0][5], /^proactive-v1-/);
+  assert.deepEqual(calls[0][4], buildCoachContext(profile, calls[0][2]));
+  assert.equal(nodes(view.render(), e => e.type === 'details')[0].props.open, false);
+  for (const text of ['¿Por qué me sugerís eso?', '¿Qué puedo cenar hoy?']) {
+    get(e => e.type === 'textarea').props.onChange({ target: { value: text } });
+    get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+    await new Promise(setImmediate);
+  }
+  assert.equal(calls.length, 3);
+  assert.equal(calls[1][5], calls[0][5]);
+  assert.equal(calls[2][5], undefined);
+});
+
+test('observation and suggestions refresh with records and cannot display a different account profile', t => {
+  const original = globalThis.__chatViewHarness.profile;
+  t.after(() => { globalThis.__chatViewHarness.profile = original; });
+  const date = new Date().toLocaleDateString('en-CA');
+  const view = conversation();
+  const opening = renderToStaticMarkup(view.render());
+  globalThis.__chatViewHarness.profile = { ...profile, records: { [date]: { meals: [], workouts: [
+    { activity: 'Fútbol', duration: 60, calories: 400 }, { activity: 'Gimnasio', duration: 40, calories: 200 },
+  ], steps: 0, water: 0 } } };
+  view.updateProps({ activeProfile: globalThis.__chatViewHarness.profile });
+  const updated = renderToStaticMarkup(view.render());
+  assert.notEqual(updated, opening);
+  assert.match(updated, /Fútbol/); assert.match(updated, /Gimnasio/);
+  globalThis.__chatViewHarness.profile = { ...profile, user_id: 'other-account', records: {} };
+  view.updateProps({ activeProfile: globalThis.__chatViewHarness.profile });
+  assert.equal(nodes(view.render(), e => hasClass(e, 'chat-proactive')).length, 0);
+  assert.equal(nodes(view.render(), e => hasClass(e, 'chat-suggestion')).length, 0);
+  assert.match(renderToStaticMarkup(view.render()), /Cargando tus registros/);
 });
 
 test('only new interaction messages animate, while confirmation still edits and persists after approval', async () => {

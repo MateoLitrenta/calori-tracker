@@ -1,0 +1,807 @@
+{
+  "phase": "after",
+  "baseCommit": "e8c16fc242d567f2fccc31373433e4b05d2be9fc",
+  "review": 2,
+  "localSyntheticOnly": true,
+  "productionRequests": 0,
+  "geminiCalls": 0,
+  "cases": [
+    {
+      "scenario": "incomplete",
+      "theme": "light",
+      "width": 393,
+      "height": 852,
+      "openLatencyMs": 6572,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\nPara vos · Tus registros\nCompletar el registro ayuda\n−\n\nHay comidas registradas en 1 de los últimos 7 días. Todavía es poco para hablar de una tendencia.\n\nCompletar mi registro\n→\nVer evidencia y límites\nTengo comidas registradas en 1 de 7 días. ¿Cómo puedo completar mi registro?\n¿Cómo puedo registrar una comida?\n¿Cómo funciona Calori?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 306.765625,
+        "suggestionsTop": 306.765625,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 185,
+        "reference": "proactive-v1-nutrition_logging-1tyhnao"
+      },
+      "errors": [],
+      "screenshot": "after-incomplete-light-393.png"
+    },
+    {
+      "scenario": "incomplete",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "openLatencyMs": 7453,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\nPara vos · Tus registros\nCompletar el registro ayuda\n−\n\nHay comidas registradas en 1 de los últimos 7 días. Todavía es poco para hablar de una tendencia.\n\nCompletar mi registro\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\nTengo comidas registradas en 1 de 7 días. ¿Cómo puedo completar mi registro?\n¿Cómo puedo registrar una comida?\n¿Cómo funciona Calori?",
+      "openingGeometry": {
+        "cardBottom": 325.625,
+        "emptyTop": 464.125,
+        "suggestionsTop": 518.515625,
+        "gapToSuggestions": 192.89,
+        "gapToEmpty": 138.5
+      },
+      "composer": {
+        "top": 799,
+        "bottom": 875
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 214,
+        "reference": "proactive-v1-nutrition_logging-1tyhnao"
+      },
+      "errors": [],
+      "screenshot": "after-incomplete-dark-1440.png"
+    },
+    {
+      "scenario": "variable",
+      "theme": "light",
+      "width": 393,
+      "height": 852,
+      "openLatencyMs": 5434,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\nPara vos · Tus registros\nTu regularidad de registro cambió\n−\n\nHay comidas registradas en 3 de los últimos 7 días, frente a 6 de 7 en el período anterior.\n\nEntender mi regularidad\n→\nVer evidencia y límites\nTengo comidas registradas en 3 de 7 días. ¿Cómo puedo completar mi registro?\n¿Cómo puedo registrar una comida?\n¿Cómo funciona Calori?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 306.765625,
+        "suggestionsTop": 306.765625,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 152,
+        "reference": "proactive-v1-nutrition_logging-16zqozq"
+      },
+      "errors": [],
+      "screenshot": "after-variable-light-393.png"
+    },
+    {
+      "scenario": "variable",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "openLatencyMs": 4645,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\nPara vos · Tus registros\nTu regularidad de registro cambió\n−\n\nHay comidas registradas en 3 de los últimos 7 días, frente a 6 de 7 en el período anterior.\n\nEntender mi regularidad\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\nTengo comidas registradas en 3 de 7 días. ¿Cómo puedo completar mi registro?\n¿Cómo puedo registrar una comida?\n¿Cómo funciona Calori?",
+      "openingGeometry": {
+        "cardBottom": 325.625,
+        "emptyTop": 464.125,
+        "suggestionsTop": 518.515625,
+        "gapToSuggestions": 192.89,
+        "gapToEmpty": 138.5
+      },
+      "composer": {
+        "top": 799,
+        "bottom": 875
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 126,
+        "reference": "proactive-v1-nutrition_logging-16zqozq"
+      },
+      "errors": [],
+      "screenshot": "after-variable-dark-1440.png"
+    },
+    {
+      "scenario": "football",
+      "theme": "light",
+      "width": 393,
+      "height": 852,
+      "openLatencyMs": 4348,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 3 entrenamientos en 3 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nOrganizar mis entrenamientos\n→\nVer evidencia y límites\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Cómo puedo empezar a registrar mis comidas sin complicarme?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 306.765625,
+        "suggestionsTop": 306.765625,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 144,
+        "reference": "proactive-v1-training-1wtg941"
+      },
+      "errors": [],
+      "screenshot": "after-football-light-393.png"
+    },
+    {
+      "scenario": "football",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "openLatencyMs": 4870,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 3 entrenamientos en 3 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nOrganizar mis entrenamientos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Cómo puedo empezar a registrar mis comidas sin complicarme?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 325.625,
+        "emptyTop": 435.125,
+        "suggestionsTop": 489.515625,
+        "gapToSuggestions": 163.89,
+        "gapToEmpty": 109.5
+      },
+      "composer": {
+        "top": 799,
+        "bottom": 875
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 127,
+        "reference": "proactive-v1-training-1wtg941"
+      },
+      "errors": [],
+      "screenshot": "after-football-dark-1440.png"
+    },
+    {
+      "scenario": "goals",
+      "theme": "light",
+      "width": 393,
+      "height": 852,
+      "openLatencyMs": 5392,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\nPara vos · Tus registros\nTu objetivo tiene un próximo paso\n−\n\nTenés 2 de 3 entrenamientos registrados en el período de tu objetivo confirmado.\n\nVer avance de entrenamientos\n→\nVer evidencia y límites\n¿Qué próximo paso puedo dar con mi objetivo confirmado?\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de mantenimiento?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 306.765625,
+        "suggestionsTop": 306.765625,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 273,
+        "reference": "proactive-v1-goal-xezgu9"
+      },
+      "errors": [],
+      "screenshot": "after-goals-light-393.png"
+    },
+    {
+      "scenario": "goals",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "openLatencyMs": 8013,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\nPara vos · Tus registros\nTu objetivo tiene un próximo paso\n−\n\nTenés 2 de 3 entrenamientos registrados en el período de tu objetivo confirmado.\n\nVer avance de entrenamientos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Qué próximo paso puedo dar con mi objetivo confirmado?\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de mantenimiento?",
+      "openingGeometry": {
+        "cardBottom": 325.625,
+        "emptyTop": 432.125,
+        "suggestionsTop": 486.515625,
+        "gapToSuggestions": 160.89,
+        "gapToEmpty": 106.5
+      },
+      "composer": {
+        "top": 799,
+        "bottom": 875
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 274,
+        "reference": "proactive-v1-goal-xezgu9"
+      },
+      "errors": [],
+      "screenshot": "after-goals-dark-1440.png"
+    },
+    {
+      "scenario": "inconsistent",
+      "theme": "light",
+      "width": 393,
+      "height": 852,
+      "openLatencyMs": 6793,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\nPara vos · Tus registros\nRevisemos tus registros\n−\n\nHay datos incompletos o inconsistentes. Prefiero revisarlos antes de sacar conclusiones.\n\nRevisar datos incompletos\n→\nVer evidencia y límites\n¿Qué datos conviene revisar antes de comparar mis registros?\n¿Cómo puedo completar mi registro?\n¿Cómo funciona Calori?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 306.765625,
+        "suggestionsTop": 306.765625,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 183,
+        "reference": "proactive-v1-data_quality-331y45"
+      },
+      "errors": [],
+      "screenshot": "after-inconsistent-light-393.png"
+    },
+    {
+      "scenario": "inconsistent",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "openLatencyMs": 5108,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\nPara vos · Tus registros\nRevisemos tus registros\n−\n\nHay datos incompletos o inconsistentes. Prefiero revisarlos antes de sacar conclusiones.\n\nRevisar datos incompletos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Qué datos conviene revisar antes de comparar mis registros?\n¿Cómo puedo completar mi registro?\n¿Cómo funciona Calori?",
+      "openingGeometry": {
+        "cardBottom": 325.625,
+        "emptyTop": 464.125,
+        "suggestionsTop": 518.515625,
+        "gapToSuggestions": 192.89,
+        "gapToEmpty": 138.5
+      },
+      "composer": {
+        "top": 799,
+        "bottom": 875
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 154,
+        "reference": "proactive-v1-data_quality-331y45"
+      },
+      "errors": [],
+      "screenshot": "after-inconsistent-dark-1440.png"
+    },
+    {
+      "scenario": "new",
+      "theme": "light",
+      "width": 393,
+      "height": 852,
+      "openLatencyMs": 9440,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\nPara vos · Tus registros\nEmpecemos con algo simple\n−\n\nTodavía no hay comidas, entrenamientos ni pasos registrados en los últimos 7 días. Tu próximo registro me ayuda a conocerte.\n\nElegir mi próximo registro\n→\nVer evidencia y límites\n¿Cómo puedo empezar a registrar mis comidas sin complicarme?\n¿Qué datos necesitás para orientarme con mi actividad?\n¿Cómo funciona Calori?",
+      "openingGeometry": {
+        "cardBottom": 316.203125,
+        "emptyTop": 328.203125,
+        "suggestionsTop": 328.203125,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 127,
+        "reference": "proactive-v1-getting_started-1dcm8w7"
+      },
+      "errors": [],
+      "screenshot": "after-new-light-393.png"
+    },
+    {
+      "scenario": "new",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "openLatencyMs": 3664,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\nPara vos · Tus registros\nEmpecemos con algo simple\n−\n\nTodavía no hay comidas, entrenamientos ni pasos registrados en los últimos 7 días. Tu próximo registro me ayuda a conocerte.\n\nElegir mi próximo registro\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo empezar a registrar mis comidas sin complicarme?\n¿Qué datos necesitás para orientarme con mi actividad?\n¿Cómo funciona Calori?",
+      "openingGeometry": {
+        "cardBottom": 325.625,
+        "emptyTop": 438.125,
+        "suggestionsTop": 492.515625,
+        "gapToSuggestions": 166.89,
+        "gapToEmpty": 112.5
+      },
+      "composer": {
+        "top": 799,
+        "bottom": 875
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 124,
+        "reference": "proactive-v1-getting_started-1dcm8w7"
+      },
+      "errors": [],
+      "screenshot": "after-new-dark-1440.png"
+    },
+    {
+      "scenario": "steps",
+      "theme": "light",
+      "width": 393,
+      "height": 852,
+      "openLatencyMs": 4023,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\nPara vos · Tus registros\nTu movimiento tiene registros\n−\n\nTenés pasos registrados en 7 de los últimos 7 días. Podemos usarlos como referencia para un próximo paso realista.\n\nExplorar mis pasos\n→\nVer evidencia y límites\n¿Cómo puedo empezar a registrar mis comidas sin complicarme?\n¿Qué puedo aprender de mis 7 días con pasos registrados?\n¿Cómo puedo registrar una comida?",
+      "openingGeometry": {
+        "cardBottom": 316.203125,
+        "emptyTop": 328.203125,
+        "suggestionsTop": 328.203125,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 110,
+        "reference": "proactive-v1-steps-1ujva5z"
+      },
+      "errors": [],
+      "screenshot": "after-steps-light-393.png"
+    },
+    {
+      "scenario": "steps",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "openLatencyMs": 3839,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\nPara vos · Tus registros\nTu movimiento tiene registros\n−\n\nTenés pasos registrados en 7 de los últimos 7 días. Podemos usarlos como referencia para un próximo paso realista.\n\nExplorar mis pasos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo empezar a registrar mis comidas sin complicarme?\n¿Qué puedo aprender de mis 7 días con pasos registrados?\n¿Cómo puedo registrar una comida?",
+      "openingGeometry": {
+        "cardBottom": 325.625,
+        "emptyTop": 438.125,
+        "suggestionsTop": 492.515625,
+        "gapToSuggestions": 166.89,
+        "gapToEmpty": 112.5
+      },
+      "composer": {
+        "top": 799,
+        "bottom": 875
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 111,
+        "reference": "proactive-v1-steps-1ujva5z"
+      },
+      "errors": [],
+      "screenshot": "after-steps-dark-1440.png"
+    },
+    {
+      "scenario": "responsive",
+      "width": 320,
+      "height": 568,
+      "geometry": {
+        "width": 320,
+        "scrollWidth": 320,
+        "action": {
+          "left": 27,
+          "right": 260.203125,
+          "top": 213.203125,
+          "bottom": 257.203125,
+          "height": 44
+        },
+        "composer": {
+          "top": 421,
+          "bottom": 504
+        },
+        "expandedEvidence": {
+          "actionTop": 213.203125,
+          "actionBottom": 257.203125,
+          "composerTop": 421,
+          "cardHeight": 260,
+          "cardScrollHeight": 360,
+          "overflow": "auto"
+        },
+        "fullLimitationReadable": {
+          "text": "Estos registros no describen toda tu actividad ni permiten evaluar tu recuperación.",
+          "visibleInsideCard": true
+        },
+        "collapseKeepsComposerVisible": true
+      },
+      "screenshot": "after-responsive-light-320.png"
+    },
+    {
+      "scenario": "responsive",
+      "width": 375,
+      "height": 667,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "action": {
+          "left": 27,
+          "right": 260.203125,
+          "top": 191.765625,
+          "bottom": 235.765625,
+          "height": 44
+        },
+        "composer": {
+          "top": 538,
+          "bottom": 603
+        },
+        "expandedEvidence": {
+          "actionTop": 191.765625,
+          "actionBottom": 235.765625,
+          "composerTop": 538,
+          "cardHeight": 312,
+          "cardScrollHeight": 339,
+          "overflow": "auto"
+        },
+        "fullLimitationReadable": {
+          "text": "Estos registros no describen toda tu actividad ni permiten evaluar tu recuperación.",
+          "visibleInsideCard": true
+        },
+        "collapseKeepsComposerVisible": true
+      },
+      "screenshot": "after-responsive-light-375.png"
+    },
+    {
+      "scenario": "responsive",
+      "width": 768,
+      "height": 1024,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "action": {
+          "left": 324,
+          "right": 557.203125,
+          "top": 290.0625,
+          "bottom": 334.0625,
+          "height": 44
+        },
+        "composer": {
+          "top": 923,
+          "bottom": 999
+        }
+      },
+      "screenshot": "after-responsive-light-768.png"
+    },
+    {
+      "scenario": "responsive",
+      "width": 1920,
+      "height": 1080,
+      "geometry": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "action": {
+          "left": 407,
+          "right": 640.203125,
+          "top": 216.625,
+          "bottom": 260.625,
+          "height": 44
+        },
+        "composer": {
+          "top": 979,
+          "bottom": 1055
+        }
+      },
+      "screenshot": "after-responsive-light-1920.png"
+    },
+    {
+      "scenario": "account-switch",
+      "status": "passed",
+      "autoAICalls": 0,
+      "contextualCalls": 2,
+      "secondAccount": "steps-only"
+    },
+    {
+      "scenario": "data-refresh",
+      "status": "passed",
+      "autoAICalls": 0,
+      "suggestionsChanged": true
+    },
+    {
+      "scenario": "reopen-conversation",
+      "status": "passed",
+      "autoAICalls": 0
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "openLatencyMs": 12186,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nOrganizar mis entrenamientos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 325.625,
+        "emptyTop": 435.125,
+        "suggestionsTop": 489.515625,
+        "gapToSuggestions": 163.89,
+        "gapToEmpty": 109.5
+      },
+      "composer": {
+        "top": 799,
+        "bottom": 875
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 127,
+        "reference": "proactive-v1-training-nezcbh"
+      },
+      "errors": [],
+      "screenshot": "after-sufficient-light-1440.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "openLatencyMs": 4706,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nOrganizar mis entrenamientos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 325.625,
+        "emptyTop": 435.125,
+        "suggestionsTop": 489.515625,
+        "gapToSuggestions": 163.89,
+        "gapToEmpty": 109.5
+      },
+      "composer": {
+        "top": 799,
+        "bottom": 875
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 174,
+        "reference": "proactive-v1-training-nezcbh"
+      },
+      "errors": [],
+      "screenshot": "after-sufficient-dark-1440.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "light",
+      "width": 320,
+      "height": 568,
+      "openLatencyMs": 8872,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 320,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nOrganizar mis entrenamientos\n→\nVer evidencia y límites\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 316.203125,
+        "emptyTop": 328.203125,
+        "suggestionsTop": 328.203125,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 421,
+        "bottom": 504
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 170,
+        "reference": "proactive-v1-training-nezcbh"
+      },
+      "errors": [],
+      "screenshot": "after-sufficient-light-320.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "dark",
+      "width": 320,
+      "height": 568,
+      "openLatencyMs": 5471,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 320,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nOrganizar mis entrenamientos\n→\nVer evidencia y límites\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 316.203125,
+        "emptyTop": 328.203125,
+        "suggestionsTop": 328.203125,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 421,
+        "bottom": 504
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 171,
+        "reference": "proactive-v1-training-nezcbh"
+      },
+      "errors": [],
+      "screenshot": "after-sufficient-dark-320.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "light",
+      "width": 375,
+      "height": 667,
+      "openLatencyMs": 4791,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 375,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nOrganizar mis entrenamientos\n→\nVer evidencia y límites\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 306.765625,
+        "suggestionsTop": 306.765625,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 538,
+        "bottom": 603
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 139,
+        "reference": "proactive-v1-training-nezcbh"
+      },
+      "errors": [],
+      "screenshot": "after-sufficient-light-375.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "dark",
+      "width": 375,
+      "height": 667,
+      "openLatencyMs": 6068,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 375,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nOrganizar mis entrenamientos\n→\nVer evidencia y límites\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 306.765625,
+        "suggestionsTop": 306.765625,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 538,
+        "bottom": 603
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 196,
+        "reference": "proactive-v1-training-nezcbh"
+      },
+      "errors": [],
+      "screenshot": "after-sufficient-dark-375.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "light",
+      "width": 393,
+      "height": 852,
+      "openLatencyMs": 6826,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nOrganizar mis entrenamientos\n→\nVer evidencia y límites\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 306.765625,
+        "suggestionsTop": 306.765625,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 167,
+        "reference": "proactive-v1-training-nezcbh"
+      },
+      "errors": [],
+      "screenshot": "after-sufficient-light-393.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "dark",
+      "width": 393,
+      "height": 852,
+      "openLatencyMs": 6879,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nOrganizar mis entrenamientos\n→\nVer evidencia y límites\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 306.765625,
+        "suggestionsTop": 306.765625,
+        "gapToSuggestions": 12,
+        "gapToEmpty": 12
+      },
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "contextualAction": {
+        "aiTransportCalls": 1,
+        "userSteps": 1,
+        "mockResponseLatencyMs": 157,
+        "reference": "proactive-v1-training-nezcbh"
+      },
+      "errors": [],
+      "screenshot": "after-sufficient-dark-393.png"
+    }
+  ],
+  "issues": [],
+  "sourceCommit": "f628fe450807473150211b812a326a7db50ac9f5",
+  "finalMobileRecheck": {
+    "gapPx": 12,
+    "automaticAICalls": 0,
+    "cases": 6,
+    "composerWithinViewport": true,
+    "writes": 0
+  }
+}
