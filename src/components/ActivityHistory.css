@@ -436,6 +436,7 @@
 .ah-year {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
   gap: 8px;
 }
 .ah-month {
@@ -443,8 +444,8 @@
   flex-direction: column;
   gap: 4px;
   min-width: 0;
-  min-height: 84px;
-  padding: 12px;
+  min-height: 44px;
+  padding: 10px;
   text-align: left;
   border: 1px solid var(--home-line);
   border-radius: var(--radius-widget);
@@ -454,9 +455,17 @@
   background: var(--home-hover);
   border-color: var(--ah-accent-text);
 }
-.ah-month > span:first-child {
+.ah-month-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px 6px;
+}
+.ah-month-name {
   font-size: 13px;
   font-weight: 500;
+  line-height: 1.4;
   text-transform: capitalize;
 }
 .ah-month strong {
@@ -466,7 +475,14 @@
 }
 .ah-month-caption {
   color: var(--home-muted);
-  font-size: 10px;
+  font-size: 9px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+@container (max-width: 480px) {
+  .ah-year {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 .ah-energy {
   margin: 0 20px 8px;
@@ -588,9 +604,6 @@
   }
   .ah-calendar-surface--month .ah-week {
     margin-top: 0;
-  }
-  .ah-year {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .ah-period-note {
     margin-top: 12px;
@@ -741,7 +754,8 @@ html:not(.dark) .activity-history-v2 {
 }
 .ah-month .ah-balance-reading {
   border: 0;
-  padding: 6px;
+  padding: 5px 6px;
+  gap: 2px;
   border-radius: var(--radius-micro);
   width: 100%;
 }
@@ -752,13 +766,13 @@ html:not(.dark) .activity-history-v2 {
   font-size: 10px;
 }
 .ah-month .ah-balance-reading small {
-  font-size: 9px;
+  font-size: 10px;
 }
 .ah-month-coverage {
   display: block;
   color: var(--home-muted);
   font-size: 11px;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 .ah-month-coverage small {
   display: block;
@@ -768,7 +782,7 @@ html:not(.dark) .activity-history-v2 {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px 8px;
+  gap: 2px 6px;
   color: var(--home-muted);
   font-size: 10px;
   line-height: 1.5;

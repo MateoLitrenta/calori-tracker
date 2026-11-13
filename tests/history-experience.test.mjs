@@ -73,13 +73,14 @@ const energyRecord = (dateStr, balance, patch = {}) => {
   return { ...base, meals: [{ ...meal(), calories: calculateDailyExpenditure(profile, base) + balance }] };
 };
 
-async function mount(t, initial = fixtures(), { width: initialWidth = 1440, controlled = false, reducedMotion = false } = {}) {
+async function mount(t, initial = fixtures(), { width: initialWidth = 1440, controlled = false, reducedMotion = false, dark = false } = {}) {
   const NativeDate = globalThis.Date;
   class FixedDate extends NativeDate {
     constructor(...args) { super(...(args.length ? args : ['2026-11-12T12:00:00'])); }
     static now() { return new NativeDate('2026-11-12T12:00:00').getTime(); }
   }
   const dom = new JSDOM('<main class="app-main"><div id="root"></div></main>', { pretendToBeVisual: true });
+  dom.window.document.documentElement.classList.toggle('dark', dark);
   const saved = {};
   for (const name of ['window', 'document', 'HTMLElement', 'getComputedStyle', 'IS_REACT_ACT_ENVIRONMENT', 'Date', 'ResizeObserver']) saved[name] = globalThis[name];
   globalThis.window = dom.window; globalThis.document = dom.window.document;
@@ -209,7 +210,7 @@ test('activity without food stays visibly partial and neutral despite its negati
   assert.equal(month.dataset.balance, 'empty');
   assert.equal(!!month.querySelector('.ah-balance-reading'), false,
     'A month with zero meal days must not advertise its activity-only estimate as a confirmed average');
-  assert.match(month.querySelector('.ah-month-coverage').textContent, /0\/12.*comidas/);
+  assert.match(month.querySelector('.ah-month-coverage').textContent, /comidas.*0\/12/i);
   assert.match(month.textContent, /parcial|sin comidas/i);
   assert.ok(month.querySelector('[data-sport="football"]'));
   assert.equal(view.saves.length, 0);
@@ -283,8 +284,8 @@ test('week and annual month averages preserve the official mixed-period denomina
   assert.equal(month.dataset.balance, 'empty');
   assert.match(month.textContent, /provisional/i);
   assert.ok(month.textContent.includes(expected.averageBalance.toLocaleString('es-AR')));
-  assert.match(month.textContent, /1.*comidas/i);
-  assert.match(month.textContent, /2.*energ/i);
+  assert.match(month.querySelector('.ah-month-coverage').textContent, /comidas.*1\/12/i);
+  assert.match(month.getAttribute('aria-label'), /Base 2 días energéticos/i);
   assert.match(month.getAttribute('aria-label'), /fútbol/i);
   assert.ok(month.querySelector('[data-sport="football"]'));
   assert.equal(view.saves.length, 0);
@@ -297,10 +298,85 @@ test('food-backed annual averages keep balance color while explicitly reporting 
   assert.equal(month.dataset.balance, 'deficit-low');
   assert.ok(month.textContent.includes('-92'));
   assert.match(month.textContent, /kcal\/día/);
-  assert.match(month.textContent, /1.*comidas/i);
+  assert.match(month.querySelector('.ah-month-coverage').textContent, /comidas.*1\/12/i);
   assert.match(month.textContent, /12/);
   assert.equal(view.saves.length, 0);
 });
+
+// Verify the compact annual card's semantic content at each responsive input.
+// JSDOM does not measure layout; browser captures certify wrapping and clipping.
+for (const width of [320, 375, 393, 430, 1440]) for (const dark of [false, true]) {
+  test('compact annual cards retain balances, coverage, sports and drill-down at ' + width +
+    'px in the ' + (dark ? 'dark' : 'light') + ' theme', async t => {
+    const septemberDate = '2026-09-12', octoberDate = '2026-10-12';
+    const workouts = [
+      { ...workout, id: 'compact-football', activity: 'Fútbol', duration: 60 },
+      { ...workout, id: 'compact-gym', activity: 'Gimnasio', duration: 45 },
+      { ...workout, id: 'compact-other', activity: 'Natación', duration: 35 },
+    ];
+    const initial = {
+      '2026-03-12': energyRecord('2026-03-12', 0),
+      [septemberDate]: energyRecord(septemberDate, -123, { workouts }),
+      [octoberDate]: energyRecord(octoberDate, 321),
+      [mealDay]: energyRecord(mealDay, 75),
+      [yesterday]: record(yesterday, { steps: 1000 }),
+      '2026-12-12': energyRecord('2026-12-12', -600),
+    };
+    const view = await mount(t, initial, { width, dark });
+    assert.equal(document.documentElement.classList.contains('dark'), dark);
+    await view.scale('Año');
+    const month = key => document.querySelector('.ah-month[data-month="' + key + '"]');
+    assert.equal(document.querySelectorAll('.ah-month[data-month]').length, 12);
+    for (const [key, value, name] of [
+      ['2026-03', 0, 'marzo'],
+      ['2026-09', -123, 'septiembre'],
+      ['2026-10', 321, 'octubre'],
+    ]) {
+      const card = month(key), balance = card.querySelector('.ah-balance-reading');
+      assert.ok(card.textContent.includes(name), 'The month name remains visible');
+      assert.equal(card.dataset.balance, getBalanceCategory(value));
+      assert.equal(balance.dataset.balance, getBalanceCategory(value));
+      assert.match(balance.textContent, new RegExp(value > 0 ? '\\+' + value : String(value)));
+      assert.match(balance.textContent, /kcal\/día/);
+      assert.match(balance.textContent, value < 0 ? /déficit/i : value > 0 ? /superávit/i : /equilibrio/i);
+      assert.match(card.querySelector('.ah-month-coverage').textContent, /comidas.*1\/3[01]/i);
+      assert.ok(!card.disabled);
+    }
+    const september = month('2026-09');
+    for (const sport of ['football', 'gym', 'other']) {
+      assert.ok(september.querySelector('[data-sport="' + sport + '"]'), sport + ' is still represented');
+    }
+    assert.match(september.getAttribute('aria-label'), /fútbol.*gimnasio.*otros entrenamientos/i);
+    assert.match(september.getAttribute('aria-label'), /3 entrenamientos/);
+
+    const november = month('2026-11');
+    const canonical = aggregateEnergy(initial, [mealDay, yesterday], profile, today).averageBalance;
+    assert.equal(november.dataset.balance, 'empty');
+    assert.equal(november.dataset.provisional, 'true');
+    assert.match(november.querySelector('.ah-balance-reading').textContent, /provisional/i);
+    assert.match(november.querySelector('.ah-balance-reading').textContent, /kcal\/día/);
+    assert.ok(november.textContent.includes(canonical.toLocaleString('es-AR')));
+    assert.match(november.querySelector('.ah-month-coverage').textContent, /comidas.*1\/12/i);
+    for (const key of ['2026-08', '2026-12']) {
+      const card = month(key);
+      assert.equal(card.dataset.balance, 'empty');
+      assert.equal(!!card.querySelector('.ah-balance-reading'), false);
+      assert.equal(!!card.querySelector('[data-sport]'), false);
+      assert.doesNotMatch(card.textContent, /déficit|superávit|kcal|-600/i);
+    }
+    assert.match(month('2026-08').textContent, /sin registros/i);
+    assert.match(month('2026-12').textContent, /próximamente/i);
+    assert.equal(month('2026-12').disabled, true);
+
+    await view.click(september);
+    assert.equal(document.querySelector('[aria-label="Período del historial"] [aria-pressed="true"]').textContent.trim(), 'Mes');
+    await view.selectDay(septemberDate);
+    assert.match(view.detail().textContent, /Fútbol.*60.*Gimnasio.*45.*Natación.*35/s);
+    assert.match(view.detail().textContent, /-123.*kcal/s);
+    assert.equal(view.heading(), today, 'Exploration does not change the daily editor');
+    assert.equal(view.saves.length, 0, 'Inspecting an annual card never persists a record');
+  });
+}
 
 test('rapid month and scale changes keep the latest context, one calendar and an untouched record writer', async t => {
   const view = await mount(t, fixtures(), { reducedMotion: false });
@@ -530,7 +606,7 @@ test('the year exposes twelve real months and one activation drills into the cho
   assert.match(november.getAttribute('aria-label'), /noviembre.*2026/i);
   assert.match(november.getAttribute('aria-label'), /6 días con registros/,
     'Activity coverage includes the water/weight day; energy averages retain their separate existing denominator');
-  assert.match(november.querySelector('.ah-month-coverage').textContent, /3\/12.*comidas/);
+  assert.match(november.querySelector('.ah-month-coverage').textContent, /comidas.*3\/12/i);
   await view.click(november);
   assert.equal(document.querySelector('[aria-label="Período del historial"] [aria-pressed="true"]').textContent.trim(), 'Mes');
   await view.selectDay(mealDay);
@@ -564,7 +640,7 @@ for (const currentHasActivity of [true, false]) {
     if (currentHasActivity) {
       assert.ok(november.querySelector('.ah-balance-reading'), 'Food-backed months expose the existing average');
       assert.match(november.getAttribute('aria-label'), /6 días con registros/);
-      assert.match(november.querySelector('.ah-month-coverage').textContent, /3\/12.*comidas/);
+      assert.match(november.querySelector('.ah-month-coverage').textContent, /comidas.*3\/12/i);
     } else assert.equal(november.querySelector('strong').textContent, 'Sin registros');
     assert.equal(november.querySelector('.ah-month-caption').textContent.trim(), 'En curso');
     assert.equal(november.dataset.activity, String(currentHasActivity));

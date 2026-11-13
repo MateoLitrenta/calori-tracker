@@ -571,7 +571,12 @@ export default function Heatmap({
                           change({ view: 'month', anchor: next, dateStr: next });
                         }}
                       >
-                        <span>{format(new Date(year, index, 1), 'MMMM', { locale: es })}</span>
+                        <span className="ah-month-heading">
+                          <span className="ah-month-name">
+                            {format(new Date(year, index, 1), 'MMMM', { locale: es })}
+                          </span>
+                          {caption && <span className="ah-month-caption">{caption}</span>}
+                        </span>
                         {(future || count === 0) && (
                           <strong>{future ? 'Próximamente' : 'Sin registros'}</strong>
                         )}
@@ -582,28 +587,32 @@ export default function Heatmap({
                           <BalanceReading
                             value={monthInfo.summary.averageBalance}
                             category={monthInfo.category}
-                            label={averageLabel(monthInfo)}
+                            label={
+                              monthInfo.provisional
+                                ? 'Provisional'
+                                : averageLabel(monthInfo).replace(' promedio', '')
+                            }
                             unit="kcal/día"
                           />
                         )}
                         {!future && count > 0 && (
                           <span className="ah-month-coverage">
-                            {monthInfo.foodDays}/{monthInfo.elapsedDays} días con comidas
+                            Comidas {monthInfo.foodDays}/{monthInfo.elapsedDays} días
                             {monthInfo.summary.days > 0 && (
-                              <small>Base: {monthInfo.summary.days} días energéticos</small>
+                              <small>Base: {monthInfo.summary.days} días</small>
                             )}
-                            {monthInfo.foodDays === 0 && <small>Registro parcial · Sin comidas</small>}
                           </span>
                         )}
                         {!future && count > 0 && (
                           <span className="ah-month-sports">
                             <span>
-                              {countLabel(monthInfo.sports.total, 'entrenamiento', 'entrenamientos')}
+                              {monthInfo.sports.total
+                                ? monthInfo.sports.total + ' entrenos'
+                                : 'Sin entrenos'}
                             </span>
                             <SportMarks sports={monthInfo.sports} counts />
                           </span>
                         )}
-                        {caption && <span className="ah-month-caption">{caption}</span>}
                       </button>
                     );
                   })}
