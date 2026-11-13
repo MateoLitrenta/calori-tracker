@@ -1,4 +1,9 @@
 {
+  "git": {
+    "deploymentEnabled": {
+      "codex/coach-goal-natural-date-range-fix": false
+    }
+  },
   "rewrites": [
     { "source": "/login", "destination": "/index.html" },
     { "source": "/register", "destination": "/index.html" },
