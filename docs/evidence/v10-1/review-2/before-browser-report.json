@@ -1,0 +1,203 @@
+{
+  "phase": "before",
+  "baseCommit": "e8c16fc242d567f2fccc31373433e4b05d2be9fc",
+  "review": 2,
+  "localSyntheticOnly": true,
+  "productionRequests": 0,
+  "geminiCalls": 0,
+  "cases": [
+    {
+      "scenario": "sufficient",
+      "theme": "light",
+      "width": 320,
+      "height": 568,
+      "openLatencyMs": 29597,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 320,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nRevisar juntos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 316.203125,
+        "emptyTop": 332.203125,
+        "suggestionsTop": 378.203125,
+        "gapToSuggestions": 62,
+        "gapToEmpty": 16
+      },
+      "composer": {
+        "top": 421,
+        "bottom": 504
+      },
+      "errors": [],
+      "screenshot": "before-sufficient-light-320.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "dark",
+      "width": 320,
+      "height": 568,
+      "openLatencyMs": 7534,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 320,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nRevisar juntos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 316.203125,
+        "emptyTop": 332.203125,
+        "suggestionsTop": 378.203125,
+        "gapToSuggestions": 62,
+        "gapToEmpty": 16
+      },
+      "composer": {
+        "top": 421,
+        "bottom": 504
+      },
+      "errors": [],
+      "screenshot": "before-sufficient-dark-320.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "light",
+      "width": 375,
+      "height": 667,
+      "openLatencyMs": 7054,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 375,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nRevisar juntos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 310.765625,
+        "suggestionsTop": 356.765625,
+        "gapToSuggestions": 62,
+        "gapToEmpty": 16
+      },
+      "composer": {
+        "top": 538,
+        "bottom": 603
+      },
+      "errors": [],
+      "screenshot": "before-sufficient-light-375.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "dark",
+      "width": 375,
+      "height": 667,
+      "openLatencyMs": 8823,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 375,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nRevisar juntos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 310.765625,
+        "suggestionsTop": 356.765625,
+        "gapToSuggestions": 62,
+        "gapToEmpty": 16
+      },
+      "composer": {
+        "top": 538,
+        "bottom": 603
+      },
+      "errors": [],
+      "screenshot": "before-sufficient-dark-375.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "light",
+      "width": 393,
+      "height": 852,
+      "openLatencyMs": 9200,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nRevisar juntos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 386,
+        "suggestionsTop": 432,
+        "gapToSuggestions": 137.23,
+        "gapToEmpty": 91.23
+      },
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "errors": [],
+      "screenshot": "before-sufficient-light-393.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "dark",
+      "width": 393,
+      "height": 852,
+      "openLatencyMs": 8146,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 393,
+      "text": "Coach\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nRevisar juntos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 294.765625,
+        "emptyTop": 386,
+        "suggestionsTop": 432,
+        "gapToSuggestions": 137.23,
+        "gapToEmpty": 91.23
+      },
+      "composer": {
+        "top": 723,
+        "bottom": 788
+      },
+      "errors": [],
+      "screenshot": "before-sufficient-dark-393.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "openLatencyMs": 9238,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nRevisar juntos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 325.625,
+        "emptyTop": 435.125,
+        "suggestionsTop": 489.515625,
+        "gapToSuggestions": 163.89,
+        "gapToEmpty": 109.5
+      },
+      "composer": {
+        "top": 799,
+        "bottom": 875
+      },
+      "errors": [],
+      "screenshot": "before-sufficient-light-1440.png"
+    },
+    {
+      "scenario": "sufficient",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "openLatencyMs": 3463,
+      "calls": 0,
+      "writes": 0,
+      "scrollWidth": 1440,
+      "text": "Calori\n\nCoach de nutrición y entrenamiento\n\nMis objetivos\nHistorial\nNueva conversación\nPara vos · Tus registros\nTus actividades, en conjunto\n−\n\nRegistraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.\n\nRevisar juntos\n→\nVer evidencia y límites\n\nTambién podés empezar por acá\n\n¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?\n¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?\n¿Qué puedo aprender de mis 7 días con pasos registrados?",
+      "openingGeometry": {
+        "cardBottom": 325.625,
+        "emptyTop": 435.125,
+        "suggestionsTop": 489.515625,
+        "gapToSuggestions": 163.89,
+        "gapToEmpty": 109.5
+      },
+      "composer": {
+        "top": 799,
+        "bottom": 875
+      },
+      "errors": [],
+      "screenshot": "before-sufficient-dark-1440.png"
+    }
+  ],
+  "issues": []
+}

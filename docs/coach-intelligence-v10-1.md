@@ -1,110 +1,84 @@
 # Coach Intelligence V10.1
 
-El Coach presenta una observación personalizada al abrir la pantalla y permite conversar sobre ella con un toque. La apertura y las sugerencias se calculan en el dispositivo; Gemini interviene únicamente cuando el usuario envía una pregunta.
+El PR #77 permanece abierto en Draft, sin merge ni cambios en Production. Las fuentes de este cierre son `f628fe450807473150211b812a326a7db50ac9f5`; los commits posteriores de evidencia no modifican la aplicación.
 
-## Diagnóstico focalizado
+El Coach muestra una observación determinística al abrir, evidencia desplegable y una pregunta contextual iniciada por el usuario. Abrir, desplegar evidencia, cambiar registros o actualizar sugerencias no llama a Gemini.
 
-Base de comparación: `742bd78d553d99f75f604e0b3fdb577829f1253d`, último `main` con Historial 2.1 al iniciar esta iteración.
+## Cambios del cierre
 
-- `ChatView.tsx` ya tenía conversación por fecha y cuenta, confirmación de acciones y tarjetas de resumen. El inicio pedía una pregunta y elegía sugerencias con tres ramas estáticas: sin registros, con entrenamiento y resto.
-- `coachContext.ts` ya conserva siete fechas locales de detalle y sesenta días de totales acotados. Los contadores oficiales sobreviven al recorte de listas. Se reutiliza sin agregar lecturas ni persistencia.
-- `habitInsights.ts` ya entrega cobertura, ventanas comparables y límites explícitos. Alimentación registrada no equivale a ingesta completa; pasos desconocidos no equivalen a sedentarismo; una sesión ausente no demuestra inactividad. Se reutiliza como fuente de evidencia.
-- `coachGoals.ts` ya evalúa objetivos confirmados y distingue progreso registrado de incumplimiento. Se reutiliza; la tarjeta no crea ni modifica compromisos.
-- `CoachInsightCard`, `CoachGoalCards` y sus métricas conservan su función dentro de la conversación. La apertura agrega una sola observación compacta, fuera del log, con evidencia desplegable. No agrega otro dashboard.
-- El servidor ya separa cifras oficiales e interpretación. La referencia de la tarjeta permite reconstruir evidencia vigente y acotada para el envío contextual; el texto visible no se acepta como prueba independiente.
+- En móvil, las opciones siguen a la observación dentro del flujo de lectura. Se elimina el centrado vertical y el rótulo intermedio cuando ya hay una tarjeta, conservando los estados de carga y conversaciones pasadas.
+- La separación tarjeta→sugerencias queda en **12 px**: antes era 62 px en 320/375 y 137,23 px en 393, en ambos temas. Desktop conserva 163,89 px antes y después.
+- Cada acción nombra su tarea: «Completar mi registro», «Entender mi regularidad», «Revisar mi alimentación», «Organizar mis entrenamientos», «Elegir mi próximo entrenamiento», «Explorar mis pasos» o «Ver avance de pasos/entrenamientos». Un objetivo alcanzado ofrece «Sostener mi objetivo».
+- Sin registros recientes se ofrece «Elegir mi próximo registro», sin asumir que nunca existieron registros antiguos; datos inconsistentes ofrecen «Revisar datos incompletos». Todas las acciones abren una pregunta pertinente, sin guardar datos automáticamente.
 
-No se repitieron auditorías de seguridad o persistencia cerradas. Este cambio no modifica Supabase Production, RLS, protocolo transaccional, cuotas, tablas, pagos ni notificaciones.
+## Diagnóstico y reutilización
 
-## Comportamiento y límites
+La base original es `742bd78` de main, con Historial 2.1. Se reutilizan `coachContext` (detalle de siete fechas locales y totales históricos acotados), `habitInsights` (cobertura y limitaciones), el cálculo de objetivos confirmados y las tarjetas conversacionales existentes. La apertura añade una sola observación, no otro dashboard.
 
-La selección prioriza datos inconsistentes, un objetivo confirmado vigente, actividades distintas registradas, cobertura de alimentación, entrenamiento y pasos. Sin evidencia suficiente, la observación explica qué falta y propone empezar con un registro simple. La prioridad es determinística: no rota recomendaciones al azar.
+La selección es determinística: calidad de datos, objetivo confirmado vigente, actividades distintas registradas, cobertura de alimentación, entrenamiento y pasos. Un día con registros puede estar incompleto; huecos de registro no demuestran ausencia de comida o actividad. No se deducen recuperación, carga física ni resultados corporales.
 
-El identificador cambia con la evidencia pertinente y el contexto. Las sugerencias se regeneran con los registros y objetivos disponibles. La tarjeta abre su explicación con datos y limitaciones; después de enviar se compacta para dejar espacio a la conversación.
+No se modifican RLS, persistencia transaccional, cuotas, esquema, pagos, notificaciones ni planes persistentes. No se reabrieron auditorías cerradas; sus pruebas existentes forman parte de la regresión completa.
 
-El CTA envía una referencia explícita. El servidor reconstruye la observación a partir del contexto saneado y de los objetivos oficiales disponibles. La respuesta debe explicar la evidencia sin atribuir actividades no registradas ni convertir estimaciones en certezas. Un consejo no registra una actividad. La confirmación existente sigue siendo necesaria para acciones solicitadas por el usuario.
+## Selección y evidencia: comprobación automatizada
 
-## Escenarios sintéticos reproducibles
+`tests/coach-proactive-flow.test.mjs` conecta **clic React real → generateAIResponse/requestAI reales → HTTP local → handler real**. Solo el store, el recurso de objetivos y los servicios externos usan fixtures.
 
-Las fixtures están en `scripts/coach-intelligence/fixtures.mjs`; ninguna representa una cuenta real.
+Sus cuatro recorridos verifican:
 
-- **Nuevo:** sin comidas, sesiones ni pasos. Debe explicar que todavía no conoce hábitos y permitir elegir el primer registro.
-- **Incompleto:** una comida en una sola fecha. Debe mostrar cobertura parcial y evitar una tendencia, evaluación nutricional o déficit real.
-- **Suficiente:** catorce fechas de comidas, pasos y actividad registrada; objetivo de déficit en el perfil. Debe usar datos registrados y conservar el carácter estimado de la energía.
-- **Regularidad variable:** seis fechas con comidas en la ventana anterior y tres en la actual. Debe hablar de cambio de registro, sin afirmar que la persona come menos.
-- **Fútbol y gimnasio:** sesiones de ambas actividades y pasos. Debe citar solamente esas actividades, separar pasos y sesiones y pedir contexto antes de recomendar carga o recuperación.
-- **Objetivo confirmado:** objetivo de tres sesiones con dos registradas en su período. Debe mostrar progreso registrado y no tratar fechas sin datos como incumplimiento.
-- **Inconsistente:** calorías y pasos inválidos, con agua en otra fecha. Debe pedir revisión de los datos antes de comparar.
-- **Segunda cuenta:** solo pasos, sin sesiones. Al pasar desde la cuenta con fútbol y gimnasio, la nueva observación y el próximo envío no deben heredar actividades, mensajes ni objetivos anteriores.
+- El backend recibe exactamente el identificador y la pregunta de la observación mostrada; el cliente no envía un objeto de evidencia como autoridad.
+- Una referencia anterior y agregados manipulados no reemplazan la evidencia actual recalculada.
+- El progreso de objetivos procede de actividad del propietario autenticado: el caso muestra dos sesiones en UI y una oficial en backend, y conserva el valor oficial. Cambiar de cuenta descarta conversación y referencia anteriores.
+- Una desconexión muestra un error honesto, sin reintento automático, cuota reservada ni escritura.
 
-`evaluate.mjs` evalúa claridad mediante reglas verificables: observación de hasta 280 caracteres, CTA de hasta 32, evidencia presente y límite explícito. Evalúa relevancia por el tipo de observación esperado en cada fixture, métricas disponibles y pregunta contextual. Es una rúbrica de implementación, no una investigación con usuarios ni una calificación generada por otro modelo.
+Las once pruebas de `coach-proactive-chat.test.mjs` conservan los casos de validación, evidencia actualizada, objetivos no disponibles y propuestas inesperadas. El probe del artefacto compilado añade selección y recalculación proactivas sin TypeScript nativo. Los tests del motor cubren también doce combinaciones de acciones contextuales.
 
-## Verificación funcional y responsive
+Auth, cuota y Gemini de estas pruebas son simulados. Verifican el contrato y la evidencia enviada, no la obediencia de una IA real.
 
-`browser-qa.mjs` utiliza Chrome, Vite y el App/Coach/CSS reales. Solo reemplaza los límites de Auth/store, transporte de IA, servicio de objetivos y pantallas ajenas. Bloquea conexiones externas. El baseline se extrae del commit citado, por lo que no depende de archivos de UI ya modificados.
+## Regresión Linux y calidad
 
-Las comprobaciones cubren apertura sin llamadas de IA ni escrituras, una sola observación, evidencia accesible, CTA con una sola solicitud y referencia contextual, compactación al enviar, sugerencias al cambiar datos y separación de dos cuentas. Las capturas incluyen claro/oscuro en móvil y desktop. Se verifican además anchos 320, 768 y 1920, desborde horizontal, área táctil del CTA y su posición respecto del compositor.
+El gate final de las fuentes `f628fe4` pasó **654/654 pruebas completas sobre 52 archivos y 14/14 del ensayo específico**, sin fallos, omisiones, cancelaciones ni pendientes. TypeScript de frontend/IA/objetivos, lint, build y diff check terminaron con código cero. Quedaron doce advertencias preexistentes de lint y ningún recurso temporal de PostgreSQL. [Run 43477100255](https://github.com/MateoLitrenta/calori-tracker/actions/runs/43477100255) · [resultado completo](evidence/v10-1/linux-ci-final.json) · [artefacto](https://github.com/MateoLitrenta/calori-tracker/actions/runs/43477100255/artifacts/14064316452).
 
-Resultado del navegador: **25/25 comprobaciones**, sin errores de página ni intentos de red externa; cuatro capturas baseline y 31 PNG de evidencia en total. Incluye 375×667, lectura completa de límites tras desplazar la tarjeta en 320×568, cierre de evidencia y observación con compositor accesible, y reapertura de conversación guardada sin solicitud de IA.
+El gate existente usa Ubuntu 24.04, Node 24.4.1, PostgreSQL 17.5 y PostgREST 16.5. Descubre todos los archivos de prueba actuales, conserva el manifest histórico y falla ante cualquier prueba omitida. Ahora también se activa para cambios de src, API, servidor, scripts y configuración.
 
-Comparativas de la misma fixture:
+El job histórico restringido al PR #71 no aplica a este PR; el gate actual ejecutó la suite completa sin omitir pruebas. El commit posterior de documentación y capturas no cambia las fuentes validadas ni requiere una nueva ejecución de la suite.
 
-- Móvil claro: [antes](evidence/v10-1/before-sufficient-light-393.png) · [después](evidence/v10-1/after-sufficient-light-393.png).
-- Móvil oscuro: [antes](evidence/v10-1/before-sufficient-dark-393.png) · [después](evidence/v10-1/after-sufficient-dark-393.png).
-- Desktop claro: [antes](evidence/v10-1/before-sufficient-light-1440.png) · [después](evidence/v10-1/after-sufficient-light-1440.png).
-- Desktop oscuro: [antes](evidence/v10-1/before-sufficient-dark-1440.png) · [después](evidence/v10-1/after-sufficient-dark-1440.png).
-- Pantalla compacta: [evidencia completa tras scroll](evidence/v10-1/after-evidence-scrolled-light-320.png) · [observación cerrada](evidence/v10-1/after-evidence-closed-light-320.png).
+Los bloqueos del intento Windows inicial se resuelven verificando los runtimes compatibles en Linux, sin excluir archivos o subtests nativos. No se presenta una ejecución incompleta como verde.
 
-Evidencia legible por máquina:
+## Capturas y evaluación sintética
 
-- `docs/evidence/v10-1/deterministic-evaluation.json`: observaciones, evidencia y límites por contexto; rúbrica y tiempos del motor local.
-- `docs/evidence/v10-1/before-browser-report.json` y `after-browser-report.json`: dimensiones, texto renderizado, capturas, errores y comprobaciones funcionales.
+El baseline de este ajuste es `e8c16fc`, la versión anterior del propio PR. [La evidencia de la revisión final](evidence/v10-1/review-2/README.md) conserva **41 PNG y 29/29 comprobaciones**: claro/oscuro, móvil de 320/375/393 y desktop de 1440; además responsive de 768/1920, evidencia completa, cierre, compositor, cambio de cuenta, actualización de sugerencias y reapertura del chat.
 
-Pasos después de entrar a Coach: **0** para recibir la observación; **1** para ver la evidencia; **1** para iniciar la pregunta contextual. La respuesta del navegador está simulada. Los tiempos de apertura incluyen arranque del bundle de desarrollo en este equipo; los tiempos de respuesta del harness incluyen una espera simulada. Ninguno representa latencia de Gemini ni de Vercel.
+Las seis comparativas móviles y las dos de desktop se recapturaron con el markup final. El harness ejecuta Tailwind desde el árbol de fuentes seleccionado para que la compilación del baseline no dependa de las clases de la versión candidata.
 
-La ejecución determinística cubrió 8/8 escenarios. En 1.000 iteraciones después de calentamiento, el motor local registró p50 de 0,382 ms y p95 de 1,546 ms (máximo 6,436 ms). Son tiempos de este entorno y contexto sintético, sin red ni modelo.
+- Móvil claro: [antes](evidence/v10-1/review-2/before-sufficient-light-393.png) · [después](evidence/v10-1/review-2/after-sufficient-light-393.png).
+- Móvil oscuro: [antes](evidence/v10-1/review-2/before-sufficient-dark-393.png) · [después](evidence/v10-1/review-2/after-sufficient-dark-393.png).
+- Desktop claro: [antes](evidence/v10-1/review-2/before-sufficient-light-1440.png) · [después](evidence/v10-1/review-2/after-sufficient-light-1440.png).
+- Desktop oscuro: [antes](evidence/v10-1/review-2/before-sufficient-dark-1440.png) · [después](evidence/v10-1/review-2/after-sufficient-dark-1440.png).
 
-En las 18 aperturas de la matriz visual, el tiempo desde crear el contexto de navegador hasta disponer del compositor fue p50 **9.996 ms**, p95 **27.821 ms**, rango **6.198–27.821 ms**. El primer caso nuevo duró 27.821 ms durante la carga del bundle de desarrollo y contención con otras pruebas del equipo. Se conservan todas las muestras; no se presentan como tiempos de apertura de producción ni se sustituyen por el benchmark del motor.
+La evaluación determinística pasó **8/8 escenarios**: cuenta nueva, información incompleta, suficiente, regularidad variable, fútbol y gimnasio, objetivos confirmados, datos inconsistentes y otra cuenta con pasos. La rúbrica comprueba observación compacta, acción específica, evidencia y límite explícito; no sustituye una investigación con usuarios.
 
-Para reproducir:
+En 1.000 iteraciones, el motor local registró p50 0,101 ms y p95 0,187 ms. Los tiempos de apertura y respuesta del harness se conservan por caso en el JSON; incluyen bundle de desarrollo y respuesta simulada, y no representan latencia de Gemini o Production. Son cero pasos para recibir la observación y un toque para abrir evidencia o iniciar su pregunta.
 
-```powershell
-node scripts/coach-intelligence/evaluate.mjs
-$env:PLAYWRIGHT_MODULE = 'C:\ruta\a\playwright\index.mjs'
-node scripts/coach-intelligence/browser-qa.mjs --before
-node scripts/coach-intelligence/browser-qa.mjs
-```
+## Preview y límite de configuración
 
-Playwright es una herramienta de QA externa al producto. No se agregó al lock ni a las dependencias de la aplicación. El ejecutor permite elegir canal con `QA_BROWSER_CHANNEL`.
+La [Preview actualizada](https://calori-tracker-nww3cmdat-mateolitrenta-gmailcoms-projects.vercel.app/app) está READY desde `f628fe4`. Se verificaron HTML, JavaScript, CSS y el bundle de Coach con HTTP 200; el artefacto contiene las acciones nuevas y las reglas móviles compactas. [Comprobación estática](evidence/v10-1/review-2/preview.json).
 
-## Validación técnica
+**El usuario confirmó que faltan variables para Gemini y el Coach completo en Preview.** No se inspeccionaron ni modificaron variables remotas, no se copiaron valores de Production y no se intentó certificar Gemini real allí. READY y los recursos estáticos no certifican la conversación autenticada, objetivos, acciones ni cuotas remotas.
 
-La regresión final de Coach pasó **186/186 pruebas**, sin omisiones. Incluye motor proactivo, UI, transporte, hábitos, acciones, objetivos, política de respuestas y el handler compilado servido por HTTP local con TypeScript nativo desactivado. Auth, objetivos, cuota y Gemini están simulados; esta comprobación no usa servicios remotos.
+## Impacto y costo estimado
 
-`npm run build`, TypeScript del servidor (`tsc -p api/ai/tsconfig.json --noEmit`) y `git diff --check` terminaron correctamente. Lint terminó con cero errores y doce advertencias preexistentes. No se agregaron dependencias al producto.
+Apertura, evidencia y sugerencias: **0 llamadas adicionales a Gemini y USD 0 de modelo**. Conversar usa el envío existente: una llamada por envío en los casos sintéticos proactivos, sin precarga ni llamada adicional para redactar la tarjeta. Se conservan las cuotas existentes.
 
-La suite global no se certifica como verde. Un intento durante la implementación produjo 556 aprobadas, ocho fallos y una cancelación sobre 565 pruebas: el sandbox bloqueó archivos/conexiones locales de PostgreSQL y HTTP, y faltaba el runtime nativo PostgREST. También incluyó una aserción del harness de UI corregida antes del commit de implementación. La regresión final de Coach volvió a validar la UI (24/24) y el HTTP compilado con loopback permitido. No se reabrieron ni modificaron las auditorías cerradas de seguridad o persistencia. El detalle y el alcance están en `docs/evidence/v10-1/validation.json`.
+Con la misma pregunta de fútbol/gimnasio, el prompt base ocupa 33.532 caracteres y el contextual 36.701: +3.169 (+9,45 %). Con el supuesto presupuestario de 3–4 caracteres por token, son aproximadamente 792–1.056 tokens adicionales de entrada, no tokens facturados medidos.
 
-## Impacto y costo
+La [tarifa estándar publicada de Gemini 2.5 Flash](https://aistudio.google.com/docs/pricing#gemini-2.5-flash), consultada el 13 de noviembre de 2026, es USD 0,30/M de entrada y USD 2,50/M de salida, incluido pensamiento. Bajo ese supuesto, el contexto extra cuesta aproximadamente USD 0,00024–0,00032 por envío, o USD 0,24–0,32 por mil. Cien conversaciones nuevas con este prompt y 500 tokens totales de salida costarían aproximadamente USD 0,40–0,49. No se verificó el modelo configurado ni la facturación real.
 
-Abrir Coach agrega **0 llamadas a Gemini y USD 0 de costo de modelo**. Consultar la evidencia y actualizar sugerencias también son operaciones locales. El CTA usa el envío conversacional existente: una solicitud por interacción, sin precarga ni segundo llamado para redactar la tarjeta. Las cuotas existentes se conservan.
+La fuente advierte un cambio de ruta/tarifa para `gemini-2.5-flash` desde el 1 de diciembre de 2026. Esta iteración no migra el modelo; las estimaciones deberán revalidarse frente al modelo y los tokens reales de la comprobación autorizada.
 
-En el escenario sintético de fútbol y gimnasio, con la misma pregunta, el prompt sin referencia ocupa 33.532 caracteres y el contextual 36.687: diferencia de 3.155 (+9,41%). Incluye instrucciones y evidencia, no datos nuevos persistidos. Con el supuesto presupuestario de 3–4 caracteres por token, son aproximadamente 789–1.052 tokens de entrada adicionales; no son tokens facturados medidos.
+## Pruebas posteriores al despliegue
 
-Al 13 de noviembre de 2026, la tarifa estándar publicada para texto de `gemini-2.5-flash` es USD 0,30 por millón de tokens de entrada y USD 2,50 por millón de salida, incluidos tokens de pensamiento. El incremento de contexto estimado equivale a aproximadamente **USD 0,00024–0,00032 por envío contextual**, o USD 0,24–0,32 por mil envíos. Fuente: [precios oficiales de Gemini](https://aistudio.google.com/docs/pricing#gemini-2.5-flash).
+**IA real: PENDIENTE.** Solo después de aprobación del PR, merge y despliegue se hará la [comprobación funcional controlada](coach-intelligence-v10-1-post-deploy.md), con una cuenta autorizada y la configuración funcional existente de Production.
 
-Si 100 de cada 1.000 aperturas provocaran conversaciones que antes no existían, con el prompt sintético de unos 9.200–12.200 tokens de entrada y 500 tokens de salida total por respuesta, esas 100 interacciones costarían alrededor de USD 0,40–0,49. Es un escenario de presupuesto, no una predicción de adopción, consumo o facturación. El costo real depende de `GEMINI_MODEL`, historial, tokens de pensamiento, respuestas, tarifas y uso efectivo.
+Quedan para ese recorrido la conversación y explicación reales con Gemini, objetivos confirmados y progreso persistido, propuesta/confirmación de acciones, contabilización de cuotas, errores y monitoreo de latencia/llamadas/tokens. Los fallos que no se observen en ese entorno seguirán marcados como pendientes o simulados; no se provocarán caídas ni agotamientos de cuota. No hay autorización actual para merge o acciones de Production.
 
-La documentación oficial advierte que `gemini-2.5-flash` está deprecado y describe un cambio de ruta y tarifa desde el 1 de diciembre de 2026. Esta iteración no migra el modelo; será necesario revalidar precio y comportamiento con el modelo configurado antes de cualquier publicación posterior a esa fecha.
-
-## Riesgos y pendientes de revisión
-
-La [Preview Vercel está disponible](https://calori-tracker-bx61kjw71-mateolitrenta-gmailcoms-projects.vercel.app), en estado **READY**, desde `6ea12e14dc5a7627c0292f0091a1930cb4b3b2ec`. El usuario regularizó la facturación que había bloqueado la creación. Se verificaron `/`, `/app`, JavaScript/CSS y el bundle de Coach con HTTP 200; el bundle incluye la tarjeta proactiva. `GET /api/ai/chat` devuelve 405 JSON, como corresponde. La lectura sin sesión de objetivos devolvió 401, pero el conector no expuso el cuerpo y no se certifica ese flujo por esta comprobación. No se inició sesión en Supabase ni se llamó a Gemini. La revisión funcional autenticada y el ensayo del modelo real siguen pendientes; esta actualización de documentación no cambia el código de la aplicación desplegada.
-
-- Las pruebas de transporte y prompts usan mocks: comprueban datos enviados, invariantes, conteo de solicitudes y renderizado. **No certifican obediencia de un Gemini real**, ausencia total de alucinaciones textuales ni latencia de producción. La revisión humana de respuestas reales en un entorno permitido sigue pendiente.
-- Una lista de actividad recortada puede omitir nombres. Los totales conservan su significado, pero no permiten reconstruir una actividad ausente ni toda la carga física.
-- Cobertura no mide jornadas completas ni calidad nutricional. La regularidad de registro no demuestra regularidad real de alimentación.
-- Los objetivos pueden estar cargando o no estar disponibles. La apertura usa otra evidencia mientras tanto; solo un objetivo confirmado y disponible puede sustentar progreso de compromiso.
-- La selección presenta una observación prioritaria. Puede haber otros datos relevantes; el usuario conserva la conversación y las tarjetas existentes para explorarlos.
-- La densidad visual, el tono y la utilidad percibida requieren la revisión del usuario en la preview. No se midió superioridad frente a CAL AI ni se afirma.
-- En pantallas de poca altura, desplegar evidencia genera desplazamiento dentro de la observación para conservar el compositor visible. Es un compromiso de UX: leer todo el límite puede requerir desplazar esa tarjeta. Puede volver a cerrarse sin bloquear el envío.
-- No se hizo merge ni publicación en Production. El PR debe permanecer Draft hasta la revisión visual y funcional solicitada.
+Persisten los límites de datos incompletos, listas recortadas, prioridad de una sola observación y dispositivos físicos/accesibilidad asistida no probados. En pantallas de poca altura, leer todos los límites puede requerir scroll dentro de la tarjeta. No se afirma ausencia total de alucinaciones, certificación del modelo ni superioridad medida frente a CAL AI.

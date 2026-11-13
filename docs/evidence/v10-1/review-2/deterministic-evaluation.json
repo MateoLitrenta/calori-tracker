@@ -1,0 +1,397 @@
+{
+  "syntheticOnly": true,
+  "liveModelEvaluated": false,
+  "date": "2026-11-13",
+  "method": "Deterministic rule checks, not a user study or live-model score.",
+  "clarityRubric": "Observation <=280 characters, CTA <=32 characters, evidence and uncertainty present; CTA matches the specific scenario.",
+  "relevanceRubric": "Expected insight kind for each fixture, nonempty official metrics and contextual question.",
+  "engineLatencyMs": {
+    "iterations": 1000,
+    "p50": 0.101,
+    "p95": 0.187,
+    "max": 0.471
+  },
+  "cases": [
+    {
+      "scenario": "new",
+      "profileGoal": "Mantenimiento",
+      "id": "proactive-v1-getting_started-1dcm8w7",
+      "period": {
+        "startDate": "2026-11-07",
+        "endDate": "2026-11-13",
+        "days": 7
+      },
+      "suggestions": [
+        "¿Cómo puedo empezar a registrar mis comidas sin complicarme?",
+        "¿Qué datos necesitás para orientarme con mi actividad?",
+        "¿Cómo funciona Calori?"
+      ],
+      "kind": "getting_started",
+      "title": "Empecemos con algo simple",
+      "observation": "Todavía no hay comidas, entrenamientos ni pasos registrados en los últimos 7 días. Tu próximo registro me ayuda a conocerte.",
+      "evidence": [
+        "Sin registros recientes de alimentación o actividad."
+      ],
+      "limitation": "Sin registros suficientes no puedo identificar tendencias ni asumir tus hábitos.",
+      "actionLabel": "Elegir mi próximo registro",
+      "prompt": "Quiero empezar a usar mi Coach. ¿Qué registro simple puedo hacer primero?",
+      "metrics": {
+        "mealDays": 0,
+        "workoutCount": 0,
+        "stepDays": 0,
+        "otherRecords": null
+      },
+      "clarity": {
+        "conciseObservation": true,
+        "conciseAction": true,
+        "evidenceAvailable": true,
+        "uncertaintyExplicit": true,
+        "contextualAction": true
+      },
+      "relevance": {
+        "expectedEvidenceSelected": true,
+        "hasMetrics": true,
+        "contextualQuestion": true,
+        "noAutomaticRequest": true
+      },
+      "stepsToObservation": 0,
+      "stepsToEvidence": 1,
+      "stepsToContextualQuestion": 1,
+      "automaticGeminiCalls": 0
+    },
+    {
+      "scenario": "incomplete",
+      "profileGoal": "Mantenimiento",
+      "id": "proactive-v1-nutrition_logging-1tyhnao",
+      "period": {
+        "startDate": "2026-11-07",
+        "endDate": "2026-11-13",
+        "days": 7
+      },
+      "suggestions": [
+        "Tengo comidas registradas en 1 de 7 días. ¿Cómo puedo completar mi registro?",
+        "¿Cómo puedo registrar una comida?",
+        "¿Cómo funciona Calori?"
+      ],
+      "kind": "nutrition_logging",
+      "title": "Completar el registro ayuda",
+      "actionLabel": "Completar mi registro",
+      "observation": "Hay comidas registradas en 1 de los últimos 7 días. Todavía es poco para hablar de una tendencia.",
+      "evidence": [
+        "1 comida registrada en 1 de 7 días."
+      ],
+      "limitation": "Un día con registros puede estar incompleto. Registrar menos no significa comer menos; hoy sigue en curso.",
+      "prompt": "¿Qué puedo hacer para completar mi registro y recibir orientación más útil?",
+      "metrics": {
+        "mealDays": 1,
+        "mealCount": 1,
+        "previousMealDays": 0,
+        "comparison": "registered_entries_only",
+        "averageCalories": null
+      },
+      "clarity": {
+        "conciseObservation": true,
+        "conciseAction": true,
+        "evidenceAvailable": true,
+        "uncertaintyExplicit": true,
+        "contextualAction": true
+      },
+      "relevance": {
+        "expectedEvidenceSelected": true,
+        "hasMetrics": true,
+        "contextualQuestion": true,
+        "noAutomaticRequest": true
+      },
+      "stepsToObservation": 0,
+      "stepsToEvidence": 1,
+      "stepsToContextualQuestion": 1,
+      "automaticGeminiCalls": 0
+    },
+    {
+      "scenario": "sufficient",
+      "profileGoal": "Déficit",
+      "id": "proactive-v1-training-nezcbh",
+      "period": {
+        "startDate": "2026-11-07",
+        "endDate": "2026-11-13",
+        "days": 7
+      },
+      "suggestions": [
+        "¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?",
+        "¿Qué muestran mis 7 días con comidas registradas para mi objetivo de déficit?",
+        "¿Qué puedo aprender de mis 7 días con pasos registrados?"
+      ],
+      "kind": "training",
+      "title": "Tus actividades, en conjunto",
+      "actionLabel": "Organizar mis entrenamientos",
+      "observation": "Registraste 2 entrenamientos en 2 de los últimos 7 días. Podemos pensar cómo organizar el próximo.",
+      "evidence": [
+        "Actividades registradas: Fútbol · Gimnasio.",
+        "2 de 7 días con entrenamientos registrados."
+      ],
+      "limitation": "Estos registros no describen toda tu actividad ni permiten evaluar tu recuperación.",
+      "prompt": "¿Qué muestran mis registros de Fútbol y Gimnasio y qué necesitarías saber para ayudarme a organizar el próximo entrenamiento?",
+      "metrics": {
+        "workoutCount": 2,
+        "workoutDays": 2,
+        "activities": "Fútbol · Gimnasio"
+      },
+      "clarity": {
+        "conciseObservation": true,
+        "conciseAction": true,
+        "evidenceAvailable": true,
+        "uncertaintyExplicit": true,
+        "contextualAction": true
+      },
+      "relevance": {
+        "expectedEvidenceSelected": true,
+        "hasMetrics": true,
+        "contextualQuestion": true,
+        "noAutomaticRequest": true
+      },
+      "stepsToObservation": 0,
+      "stepsToEvidence": 1,
+      "stepsToContextualQuestion": 1,
+      "automaticGeminiCalls": 0
+    },
+    {
+      "scenario": "variable",
+      "profileGoal": "Mantenimiento",
+      "id": "proactive-v1-nutrition_logging-16zqozq",
+      "period": {
+        "startDate": "2026-11-07",
+        "endDate": "2026-11-13",
+        "days": 7
+      },
+      "suggestions": [
+        "Tengo comidas registradas en 3 de 7 días. ¿Cómo puedo completar mi registro?",
+        "¿Cómo puedo registrar una comida?",
+        "¿Cómo funciona Calori?"
+      ],
+      "kind": "nutrition_logging",
+      "title": "Tu regularidad de registro cambió",
+      "actionLabel": "Entender mi regularidad",
+      "observation": "Hay comidas registradas en 3 de los últimos 7 días, frente a 6 de 7 en el período anterior.",
+      "evidence": [
+        "3 comidas registradas en 3 de 7 días.",
+        "Período anterior: 6 de 7 días con comidas registradas."
+      ],
+      "limitation": "Un día con registros puede estar incompleto. Registrar menos no significa comer menos; hoy sigue en curso.",
+      "prompt": "¿Qué registros respaldan el cambio en mi regularidad y cómo puedo sostener un registro útil?",
+      "metrics": {
+        "mealDays": 3,
+        "mealCount": 3,
+        "previousMealDays": 6,
+        "comparison": "logging_coverage_changed",
+        "averageCalories": null
+      },
+      "clarity": {
+        "conciseObservation": true,
+        "conciseAction": true,
+        "evidenceAvailable": true,
+        "uncertaintyExplicit": true,
+        "contextualAction": true
+      },
+      "relevance": {
+        "expectedEvidenceSelected": true,
+        "hasMetrics": true,
+        "contextualQuestion": true,
+        "noAutomaticRequest": true
+      },
+      "stepsToObservation": 0,
+      "stepsToEvidence": 1,
+      "stepsToContextualQuestion": 1,
+      "automaticGeminiCalls": 0
+    },
+    {
+      "scenario": "football",
+      "profileGoal": "Mantenimiento",
+      "id": "proactive-v1-training-1wtg941",
+      "period": {
+        "startDate": "2026-11-07",
+        "endDate": "2026-11-13",
+        "days": 7
+      },
+      "suggestions": [
+        "¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?",
+        "¿Cómo puedo empezar a registrar mis comidas sin complicarme?",
+        "¿Qué puedo aprender de mis 7 días con pasos registrados?"
+      ],
+      "kind": "training",
+      "title": "Tus actividades, en conjunto",
+      "actionLabel": "Organizar mis entrenamientos",
+      "observation": "Registraste 3 entrenamientos en 3 de los últimos 7 días. Podemos pensar cómo organizar el próximo.",
+      "evidence": [
+        "Actividades registradas: Fútbol · Gimnasio.",
+        "3 de 7 días con entrenamientos registrados."
+      ],
+      "limitation": "Estos registros no describen toda tu actividad ni permiten evaluar tu recuperación.",
+      "prompt": "¿Qué muestran mis registros de Fútbol y Gimnasio y qué necesitarías saber para ayudarme a organizar el próximo entrenamiento?",
+      "metrics": {
+        "workoutCount": 3,
+        "workoutDays": 3,
+        "activities": "Fútbol · Gimnasio"
+      },
+      "clarity": {
+        "conciseObservation": true,
+        "conciseAction": true,
+        "evidenceAvailable": true,
+        "uncertaintyExplicit": true,
+        "contextualAction": true
+      },
+      "relevance": {
+        "expectedEvidenceSelected": true,
+        "hasMetrics": true,
+        "contextualQuestion": true,
+        "noAutomaticRequest": true
+      },
+      "stepsToObservation": 0,
+      "stepsToEvidence": 1,
+      "stepsToContextualQuestion": 1,
+      "automaticGeminiCalls": 0
+    },
+    {
+      "scenario": "goals",
+      "profileGoal": "Mantenimiento",
+      "id": "proactive-v1-goal-xezgu9",
+      "period": {
+        "startDate": "2026-11-07",
+        "endDate": "2026-11-13",
+        "days": 7
+      },
+      "suggestions": [
+        "¿Qué próximo paso puedo dar con mi objetivo confirmado?",
+        "¿Cómo puedo organizar mis próximos entrenamientos teniendo en cuenta mis registros de Fútbol y Gimnasio?",
+        "¿Qué muestran mis 7 días con comidas registradas para mi objetivo de mantenimiento?"
+      ],
+      "kind": "goal",
+      "title": "Tu objetivo tiene un próximo paso",
+      "actionLabel": "Ver avance de entrenamientos",
+      "goalId": "10000000-0000-4000-8000-000000000001",
+      "observation": "Tenés 2 de 3 entrenamientos registrados en el período de tu objetivo confirmado.",
+      "evidence": [
+        "Objetivo confirmado: 3 entrenamientos.",
+        "2 días con registros de 7 transcurridos."
+      ],
+      "limitation": "El progreso refleja registros; los días sin datos no demuestran incumplimiento. Hoy sigue en curso.",
+      "prompt": "¿Qué registros respaldan mi progreso y qué próximo paso puedo dar con mi objetivo confirmado?",
+      "metrics": {
+        "registered": 2,
+        "target": 3,
+        "observedDays": 2,
+        "elapsedDays": 7,
+        "remainingToRegister": 1,
+        "stepThreshold": null,
+        "goalVersion": 1,
+        "goalType": "workout_sessions"
+      },
+      "clarity": {
+        "conciseObservation": true,
+        "conciseAction": true,
+        "evidenceAvailable": true,
+        "uncertaintyExplicit": true,
+        "contextualAction": true
+      },
+      "relevance": {
+        "expectedEvidenceSelected": true,
+        "hasMetrics": true,
+        "contextualQuestion": true,
+        "noAutomaticRequest": true
+      },
+      "stepsToObservation": 0,
+      "stepsToEvidence": 1,
+      "stepsToContextualQuestion": 1,
+      "automaticGeminiCalls": 0
+    },
+    {
+      "scenario": "inconsistent",
+      "profileGoal": "Mantenimiento",
+      "id": "proactive-v1-data_quality-331y45",
+      "period": {
+        "startDate": "2026-11-07",
+        "endDate": "2026-11-13",
+        "days": 7
+      },
+      "suggestions": [
+        "¿Qué datos conviene revisar antes de comparar mis registros?",
+        "¿Cómo puedo completar mi registro?",
+        "¿Cómo funciona Calori?"
+      ],
+      "kind": "data_quality",
+      "title": "Revisemos tus registros",
+      "actionLabel": "Revisar datos incompletos",
+      "observation": "Hay datos incompletos o inconsistentes. Prefiero revisarlos antes de sacar conclusiones.",
+      "evidence": [
+        "No hay una base confiable para comparar estos registros."
+      ],
+      "limitation": "Un registro incompleto no permite inferir consumo ni actividad.",
+      "prompt": "¿Qué datos conviene revisar para que mi Coach pueda orientarme con evidencia?",
+      "metrics": {
+        "dataQuality": "inconsistent"
+      },
+      "clarity": {
+        "conciseObservation": true,
+        "conciseAction": true,
+        "evidenceAvailable": true,
+        "uncertaintyExplicit": true,
+        "contextualAction": true
+      },
+      "relevance": {
+        "expectedEvidenceSelected": true,
+        "hasMetrics": true,
+        "contextualQuestion": true,
+        "noAutomaticRequest": true
+      },
+      "stepsToObservation": 0,
+      "stepsToEvidence": 1,
+      "stepsToContextualQuestion": 1,
+      "automaticGeminiCalls": 0
+    },
+    {
+      "scenario": "steps",
+      "profileGoal": "Mantenimiento",
+      "id": "proactive-v1-steps-1ujva5z",
+      "period": {
+        "startDate": "2026-11-07",
+        "endDate": "2026-11-13",
+        "days": 7
+      },
+      "suggestions": [
+        "¿Cómo puedo empezar a registrar mis comidas sin complicarme?",
+        "¿Qué puedo aprender de mis 7 días con pasos registrados?",
+        "¿Cómo puedo registrar una comida?"
+      ],
+      "kind": "steps",
+      "title": "Tu movimiento tiene registros",
+      "actionLabel": "Explorar mis pasos",
+      "observation": "Tenés pasos registrados en 7 de los últimos 7 días. Podemos usarlos como referencia para un próximo paso realista.",
+      "evidence": [
+        "7 de 7 días con pasos registrados.",
+        "Promedio: 7500 pasos en los días con registros."
+      ],
+      "limitation": "Cero o falta de pasos significa información desconocida, no que no te moviste. Los pasos no equivalen a entrenamientos.",
+      "prompt": "¿Qué muestran mis pasos registrados y cómo puedo elegir un próximo paso realista?",
+      "metrics": {
+        "stepDays": 7,
+        "averageSteps": 7500
+      },
+      "clarity": {
+        "conciseObservation": true,
+        "conciseAction": true,
+        "evidenceAvailable": true,
+        "uncertaintyExplicit": true,
+        "contextualAction": true
+      },
+      "relevance": {
+        "expectedEvidenceSelected": true,
+        "hasMetrics": true,
+        "contextualQuestion": true,
+        "noAutomaticRequest": true
+      },
+      "stepsToObservation": 0,
+      "stepsToEvidence": 1,
+      "stepsToContextualQuestion": 1,
+      "automaticGeminiCalls": 0
+    }
+  ]
+}
