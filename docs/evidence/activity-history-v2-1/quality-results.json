@@ -1,0 +1,77 @@
+{
+  "result": "PASSED",
+  "sourceCommit": "8cf38cd867568214bd011dde6387747f228b2efe",
+  "applicationSourceTreeSha1": "10287d5ecd0f8df8280e498a5355e1c232d606f2",
+  "sourceSnapshotSha256": "176963d7a8b94872053e9f2b61d73aec67c8287a9c43c7af7b82c59434fd0d4d",
+  "sourceFileCount": 542,
+  "testFileCount": 49,
+  "runtime": {
+    "platform": "linux",
+    "node": "24.4.1",
+    "postgresql": "postgres (PostgreSQL) 17.6",
+    "postgrest": "PostgREST 16.5",
+    "processUid": 100,
+    "externalNetwork": "disabled"
+  },
+  "tests": {
+    "tests": 615,
+    "pass": 615,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "fullSuiteDurationMs": 570770,
+  "quality": {
+    "frontendTypes": "PASSED",
+    "aiTypes": "PASSED",
+    "coachTypes": "PASSED",
+    "lint": "PASSED",
+    "lintWarnings": 12,
+    "lintErrors": 0,
+    "build": "PASSED",
+    "fullPRCodeDiffCheck": "PASSED",
+    "workingDiffCheck": "PASSED",
+    "indexDiffCheck": "PASSED"
+  },
+  "commands": [
+    "node --test --test-reporter=spec --test-concurrency=1 tests/*.test.mjs",
+    "node node_modules/typescript/bin/tsc -b --force",
+    "node node_modules/typescript/bin/tsc -p api/ai/tsconfig.json --noEmit",
+    "node node_modules/typescript/bin/tsc -p api/coach/tsconfig.json --noEmit",
+    "npm run lint",
+    "npm run build",
+    "git diff --check 72021c2 8cf38cd867568214bd011dde6387747f228b2efe",
+    "git diff --check",
+    "git diff --cached --check"
+  ],
+  "serviceCoverage": {
+    "realDisposablePostgreSQL": true,
+    "realLocalPostgRESTHTTP": true,
+    "identityFixture": "Synthetic roles and signed JWTs",
+    "authAndStorageSQLStandins": true,
+    "realGoTrueCertified": false,
+    "realStorageHTTPCertified": false,
+    "uiUnitRuntime": "React/JSDOM with synthetic adapters",
+    "browserMatrix": "Recorded separately using synthetic visual fixtures"
+  },
+  "safety": {
+    "productionModified": false,
+    "remoteSQLExecuted": false,
+    "realUserDataUsed": false,
+    "protectedCalculationsPersistenceAndDatabaseUnchanged": true,
+    "postgresLeftovers": 0,
+    "postgrestConfigLeftovers": 0,
+    "rawLogsPublished": false,
+    "privatePathsPublished": false,
+    "secretsPublished": false
+  },
+  "harnessNotes": [
+    "Se ejecutaron todos los archivos de tests descubiertos en el commit congelado, sin filtros ni omisiones.",
+    "PostgreSQL y PostgREST son procesos reales locales con identidades sintéticas. Los fixtures SQL de Auth/Storage no certifican los servicios HTTP reales de Supabase.",
+    "El adaptador de presentación conserva los helpers oficiales de cálculo y clasificación; sus tests comparan valores y denominadores canónicos con cobertura independiente.",
+    "El entorno reutiliza la imagen local oficial de PostgreSQL y los binarios verificados de Node/PostgREST. El wrapper ldd de musl se conserva y se selecciona el ldd GNU existente para los bindings glibc; no se cambian dependencias del producto.",
+    "La documentación y evidencia nueva fuera del snapshot no modifican el árbol src ni tests certificado."
+  ],
+  "recordedUTC": "2026-11-13T03:24:02.492Z"
+}
