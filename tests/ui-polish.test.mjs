@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { JSDOM } from 'jsdom';
@@ -9,14 +11,32 @@ import { formatDateStr } from '../src/utils/helpers.ts';
 
 const css = await readFile(new URL('../src/components/HomeVariants.css', import.meta.url), 'utf8');
 const rawSource = await readFile(new URL('../src/components/Heatmap.tsx', import.meta.url), 'utf8');
-const source = rawSource.replace(/import ['"][^'"]+\.css['"];?/g, '')
-  .replace(/import\s+\{([^}]+)\}\s+from ['"]@phosphor-icons\/react['"];?/g, (_, names) =>
-    names.split(',').filter(name => name.trim()).map(name => 'const ' + name.trim() + ' = () => null;').join('\n'));
-const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext,
-  jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText
-  .replace(/from ["']([^"']+)["']/g, (_, specifier) => `from ${JSON.stringify(specifier.startsWith('../utils/')
-    ? new URL(`../src/utils/${specifier.slice(9).replace(/\.ts$/, '')}.ts`, import.meta.url).href : import.meta.resolve(specifier))}`);
-const { default: Heatmap } = await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
+// Resolve the same relative TS dependency graph as Vite, including presentation
+// adapters and the motion hook; service/animation boundaries are not reimplemented.
+const sourceRoot = fileURLToPath(new URL('../src/', import.meta.url));
+const cache = new Map();
+async function compile(file) {
+  if (cache.has(file)) return cache.get(file);
+  const source = (await readFile(file, 'utf8')).replace(/import ['"][^'"]+\.css['"];?/g, '')
+    .replace(/import\s+\{([^}]+)\}\s+from ['"]@phosphor-icons\/react['"];?/g, (_, names) =>
+      names.split(',').filter(name => name.trim()).map(name => 'const ' + name.trim() + ' = () => null;').join('\n'));
+  let code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext,
+    jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText;
+  for (const specifier of new Set([...code.matchAll(/from\s+['"]([^'"]+)['"]/g)].map(match => match[1]))) {
+    let target;
+    if (specifier.startsWith('.')) {
+      let dependency = path.resolve(path.dirname(file), specifier);
+      if (!path.extname(dependency)) {
+        try { await readFile(dependency + '.ts'); dependency += '.ts'; } catch { dependency += '.tsx'; }
+      }
+      target = await compile(dependency);
+    } else target = import.meta.resolve(specifier);
+    code = code.replaceAll("'" + specifier + "'", JSON.stringify(target)).replaceAll('"' + specifier + '"', JSON.stringify(target));
+  }
+  const url = 'data:text/javascript;base64,' + Buffer.from(code).toString('base64');
+  cache.set(file, url); return url;
+}
+const { default: Heatmap } = await import(await compile(path.join(sourceRoot, 'components/Heatmap.tsx')));
 const today = formatDateStr(new Date());
 const profile = { age: 30, sex: 'Masculino', height: 170, weight: 70, goal: 'Mantenimiento' };
 

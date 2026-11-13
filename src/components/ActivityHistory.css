@@ -1,4 +1,5 @@
 .activity-history-v2 {
+  --ah-accent-text: var(--home-orange);
   min-width: 0;
   width: 100%;
   container-type: inline-size;
@@ -12,7 +13,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 .activity-history-v2 :is(button, summary):focus-visible {
-  outline: 2px solid var(--home-orange);
+  outline: 2px solid var(--home-text);
   outline-offset: 3px;
 }
 .activity-history-v2 button:disabled {
@@ -61,7 +62,7 @@
   font-weight: 500;
 }
 .ah-view-switch button[aria-pressed='true'] {
-  color: var(--home-orange);
+  color: var(--ah-accent-text);
   background: var(--home-hover);
 }
 .ah-layout {
@@ -116,7 +117,7 @@
   padding-inline: 10px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--home-orange);
+  color: var(--ah-accent-text);
 }
 .ah-calendar-surface {
   min-width: 0;
@@ -177,7 +178,7 @@
   border-bottom-style: dashed;
 }
 .ah-day[aria-current='date'] .ah-day-number {
-  color: var(--home-orange);
+  color: var(--home-text);
   font-weight: 700;
 }
 .ah-day[aria-current='date'] .ah-day-number::after {
@@ -187,12 +188,12 @@
   height: 4px;
   margin: -1px auto 0;
   border-radius: 50%;
-  background: currentColor;
+  background: var(--home-orange);
 }
 .ah-day[aria-pressed='true'] {
-  border: 1px solid var(--home-orange);
+  border: 1px solid var(--ah-accent-text);
   background: var(--home-hover);
-  box-shadow: inset 0 0 0 1px var(--home-orange);
+  box-shadow: inset 0 0 0 1px var(--ah-accent-text);
 }
 .ah-day:hover:not(:disabled) {
   background: var(--home-hover);
@@ -203,7 +204,7 @@
   justify-content: center;
   gap: 3px;
   height: 13px;
-  color: var(--home-orange);
+  color: var(--ah-accent-text);
 }
 .ah-day-marks svg {
   width: 11px;
@@ -231,7 +232,7 @@
 .ah-key svg {
   width: 12px;
   height: 12px;
-  color: var(--home-orange);
+  color: var(--ah-accent-text);
 }
 .ah-key i {
   width: 12px;
@@ -278,7 +279,7 @@
   line-height: 1.5;
 }
 .ah-day-status[data-incomplete='true'] {
-  color: var(--home-orange);
+  color: var(--ah-accent-text);
 }
 .ah-entries {
   display: flex;
@@ -302,7 +303,7 @@
   flex: none;
   width: 30px;
   height: 34px;
-  color: var(--home-orange);
+  color: var(--ah-accent-text);
 }
 .ah-entry-icon svg {
   width: 19px;
@@ -400,14 +401,14 @@
   padding: 10px 14px;
   border: 1px solid var(--home-line);
   border-radius: var(--radius-control);
-  color: var(--home-orange);
+  color: var(--ah-accent-text);
   background: var(--home-control);
   font-size: 13px;
   font-weight: 600;
 }
 .ah-open:hover:not(:disabled) {
   background: var(--home-hover);
-  border-color: var(--home-orange);
+  border-color: var(--ah-accent-text);
 }
 .ah-open svg {
   width: 17px;
@@ -421,7 +422,7 @@
   margin: -7px 0 0;
 }
 .ah-draft-warning {
-  color: var(--home-orange);
+  color: var(--ah-accent-text);
   font-size: 12px;
   line-height: 1.6;
 }
@@ -435,6 +436,7 @@
 .ah-year {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
   gap: 8px;
 }
 .ah-month {
@@ -442,8 +444,8 @@
   flex-direction: column;
   gap: 4px;
   min-width: 0;
-  min-height: 84px;
-  padding: 12px;
+  min-height: 44px;
+  padding: 10px;
   text-align: left;
   border: 1px solid var(--home-line);
   border-radius: var(--radius-widget);
@@ -451,11 +453,19 @@
 }
 .ah-month:hover:not(:disabled) {
   background: var(--home-hover);
-  border-color: var(--home-orange);
+  border-color: var(--ah-accent-text);
 }
-.ah-month > span:first-child {
+.ah-month-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px 6px;
+}
+.ah-month-name {
   font-size: 13px;
   font-weight: 500;
+  line-height: 1.4;
   text-transform: capitalize;
 }
 .ah-month strong {
@@ -463,12 +473,16 @@
   font-weight: 500;
   color: var(--home-muted);
 }
-.ah-month[data-activity="true"] strong {
-  color: var(--home-orange);
-}
 .ah-month-caption {
   color: var(--home-muted);
-  font-size: 10px;
+  font-size: 9px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+@container (max-width: 480px) {
+  .ah-year {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 .ah-energy {
   margin: 0 20px 8px;
@@ -591,9 +605,6 @@
   .ah-calendar-surface--month .ah-week {
     margin-top: 0;
   }
-  .ah-year {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .ah-period-note {
     margin-top: 12px;
   }
@@ -601,5 +612,200 @@
 @media (prefers-reduced-motion: reduce) {
   .ah-day {
     transition: none;
+  }
+}
+
+/* History 2.1: the established heatmap palette carries the balance, while
+   dates and values keep the theme's readable foreground. Selection stays orange. */
+html:not(.dark) .activity-history-v2 {
+  --ah-accent-text: #9a4d1f;
+  --home-muted: #475569;
+}
+.ah-day {
+  isolation: isolate;
+  min-height: 64px;
+}
+.ah-day-fill,
+.ah-balance-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: -1;
+}
+.ah-day-fill {
+  border-bottom: 3px solid transparent;
+}
+.ah-day > :not(.ah-day-fill) {
+  position: relative;
+}
+.ah-day-balance {
+  min-height: 13px;
+  font-size: 10px;
+  line-height: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--home-text);
+}
+.ah-day[data-completeness='partial'] .ah-day-balance {
+  color: var(--home-muted);
+  font-size: 9px;
+}
+.ah-day-marks {
+  height: auto;
+  min-height: 13px;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 2px;
+}
+.ah-sports {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: var(--ah-accent-text);
+}
+.ah-sports > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.ah-sports svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+.ah-day-marks .ah-sports {
+  display: contents;
+}
+.ah-day-marks .ah-sports svg {
+  width: 11px;
+  height: 11px;
+}
+.ah-balance-reading {
+  display: grid;
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--home-line);
+  border-radius: var(--radius-control);
+  color: var(--home-text);
+  font-variant-numeric: tabular-nums;
+}
+.ah-balance-label {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.ah-balance-reading b {
+  font-size: 19px;
+  line-height: 1.35;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.ah-balance-reading small {
+  font-size: 11px;
+  font-weight: 400;
+}
+.ah-balance-reading[data-balance='empty'] {
+  background: var(--home-control);
+}
+.ah-balance-reading[data-balance='empty'] b {
+  font-weight: 500;
+}
+.ah-balance-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 14px;
+  color: var(--home-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.ah-balance-key > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ah-balance-key i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  flex: none;
+}
+.ah-period-summary {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+}
+.ah-period-summary > p {
+  color: var(--home-muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+.ah-period-summary .ah-balance-reading {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+.ah-period-summary .ah-balance-reading b {
+  font-size: 17px;
+}
+.ah-month .ah-balance-reading {
+  border: 0;
+  padding: 5px 6px;
+  gap: 2px;
+  border-radius: var(--radius-micro);
+  width: 100%;
+}
+.ah-month .ah-balance-reading b {
+  font-size: 16px;
+}
+.ah-month .ah-balance-label {
+  font-size: 10px;
+}
+.ah-month .ah-balance-reading small {
+  font-size: 10px;
+}
+.ah-month-coverage {
+  display: block;
+  color: var(--home-muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+.ah-month-coverage small {
+  display: block;
+  font-size: 10px;
+}
+.ah-month-sports {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 6px;
+  color: var(--home-muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+.ah-month-sports .ah-sports {
+  font-size: 11px;
+}
+.ah-entry-icon .ah-sports {
+  gap: 2px;
+}
+.ah-entry-icon .ah-sports svg {
+  width: 18px;
+  height: 18px;
+}
+@container (max-width: 380px) {
+  .ah-period-summary,
+  .ah-balance-key {
+    margin-inline: 16px;
+  }
+  .ah-period-summary .ah-balance-reading {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ah-period-summary .ah-balance-reading b {
+    font-size: 18px;
   }
 }
