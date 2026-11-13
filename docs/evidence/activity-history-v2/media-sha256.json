@@ -117,17 +117,19 @@
     },
     {
       "file": "year-light-393.png",
-      "bytes": 60416,
-      "sha256": "b52a0672eee80330330637e18ea622072cdb0c52c8ab2d84e230e186cadcd634",
+      "bytes": 58840,
+      "sha256": "b5be23f35c52c19c6b36098733a4f62a44bb848c0d223ac97e86472696935562",
       "synthetic": true,
-      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+      "captureCommit": "217067e78692229898a1992cd65399e153711509",
+      "scopedVerification": "year-labels-checks.json"
     },
     {
       "file": "year-dark-1440.png",
-      "bytes": 64748,
-      "sha256": "ca440cb461f8e7ed6c983cbdd7c28260eb2edcbaf43010ffcde63990e8f82a00",
+      "bytes": 62026,
+      "sha256": "7975e3c8bec237799e3f1a775d1c9d57ca3ebcf7348836608fe40be8cf812f86",
       "synthetic": true,
-      "captureCommit": "b98fbe0511138cf70abe62e540d7718df3559d18"
+      "captureCommit": "217067e78692229898a1992cd65399e153711509",
+      "scopedVerification": "year-labels-checks.json"
     },
     {
       "file": "incomplete-light-393.png",
@@ -170,6 +172,30 @@
       "sha256": "26c7dc70b17aa1fd38d9f5b872cec1b81de688a874420d921029f73fe4b2e42a",
       "synthetic": true,
       "captureCommit": "288ed9e1403031a170b956b8e84431a4ba0cddfa"
+    },
+    {
+      "file": "year-light-1440.png",
+      "bytes": 62156,
+      "sha256": "56940a60cb25dfb51f99df2b81d7add3e4cbe1ab3a8782fd8b0180c9a551dc98",
+      "synthetic": true,
+      "captureCommit": "217067e78692229898a1992cd65399e153711509",
+      "scopedVerification": "year-labels-checks.json"
+    },
+    {
+      "file": "year-dark-393.png",
+      "bytes": 58964,
+      "sha256": "1b8b896d28e6f567a994eca25b03bf15c352f2b94d843f4bc263868513d4c25f",
+      "synthetic": true,
+      "captureCommit": "217067e78692229898a1992cd65399e153711509",
+      "scopedVerification": "year-labels-checks.json"
+    }
+  ],
+  "scopedUpdates": [
+    {
+      "manifest": "year-labels-checks.json",
+      "sourceCommit": "217067e78692229898a1992cd65399e153711509",
+      "sourceTree": "4e4d0146de7d0680745397682cdf09613f2ce820",
+      "scope": "Annual month labels, four captures only"
     }
   ]
 }

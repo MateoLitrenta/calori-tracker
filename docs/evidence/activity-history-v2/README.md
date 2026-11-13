@@ -1,6 +1,8 @@
 # Historial de actividad 2.0 — evidencia visual
 
-Datos, cuentas y registros exclusivamente sintéticos. No se consultó Production ni se copiaron capturas del video original. Referencia real: `c623f9b`; fuente final: `b98fbe0` (árbol `d3b3afb2d6f6a6f2fd03e8e6f73fd56bfce908c6`). Chrome `157.0.8103.51`, Playwright 1.56.1, fecha fija 12 de noviembre de 2026.
+Datos, cuentas y registros exclusivamente sintéticos. No se consultó Production ni se copiaron capturas del video original. Referencia real: `c623f9b`; fuente inicial de la matriz: `b98fbe0` (árbol `d3b3afb2d6f6a6f2fd03e8e6f73fd56bfce908c6`). Chrome `157.0.8103.51`, Playwright 1.56.1, fecha fija 12 de noviembre de 2026.
+
+Actualización acotada de Año: `217067e`. Se verificaron 393 y 1440 px en ambos temas, con escenarios con registros y vacíos: **4 vistas y 40 comprobaciones**, sin errores, desbordamientos, peticiones externas ni guardados. Los meses pasados vacíos muestran sólo «Sin registros» neutral; el actual indica «En curso» y el futuro sólo «Próximamente» neutral. La matriz general, la suite completa y el video anteriores conservan sus fuentes y resultados originales; no se repitieron para esta corrección. [Manifiesto del parche](year-labels-checks.json).
 
 ## Antes y después
 
@@ -15,9 +17,9 @@ Los PNG aislados muestran el componente completo: el harness despliega temporalm
 
 ## Recorrido y estados
 
-- [Video móvil, 19.7 segundos](walkthrough-mobile.mp4): calendario mensual, ayer, Hoy, día vacío, actividad incompleta, Año → Mes, Semana, abrir registros y volver conservando fecha y período. H.264, 394×852, 10 fps, sin audio. El viewport original de 393 px tiene un píxel adicional de padding para el codec, sin escalar el contenido. [Decodificación y SHA-256](video-verification.json).
+- [Video móvil, 19.7 segundos](walkthrough-mobile.mp4): calendario mensual, ayer, Hoy, día vacío, actividad incompleta, Año → Mes, Semana, abrir registros y volver conservando fecha y período. H.264, 394×852, 10 fps, sin audio. El viewport original de 393 px tiene un píxel adicional de padding para el codec, sin escalar el contenido. [Decodificación y SHA-256](video-verification.json). Sus rótulos de Año son anteriores al parche; para aprobar esos estados usá las cuatro capturas actualizadas.
 - Semana: [móvil](week-light-393.png) · [desktop](week-dark-1440.png).
-- Año: [móvil](year-light-393.png) · [desktop](year-dark-1440.png).
+- Año actualizado: móvil [claro](year-light-393.png) · [oscuro](year-dark-393.png); desktop [claro](year-light-1440.png) · [oscuro](year-dark-1440.png).
 - Día incompleto: [móvil](incomplete-light-393.png) · [desktop](incomplete-dark-1440.png).
 - [Resumen energético avanzado](energy-dark-1440.png): conserva promedio, acumulado, consumidas y gasto estimado; no domina la exploración principal.
 
