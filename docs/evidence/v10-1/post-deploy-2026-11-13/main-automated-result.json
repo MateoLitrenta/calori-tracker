@@ -1,0 +1,36 @@
+{
+  "commit": "44c79e85654408557037be4304a27aa2f26c5fbf",
+  "node": "v24.4.1",
+  "exitCode": 0,
+  "durationMs": 190481,
+  "fileCount": 23,
+  "manifest": "automated-manifest.json",
+  "log": "automated-tests.log",
+  "services": "Synthetic Auth, quotas, Gemini, records and goals; PGlite and loopback HTTP local only",
+  "productionRequests": 0,
+  "remoteMutations": 0,
+  "counts": {
+    "tests": 241,
+    "pass": 241,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 189957.7005
+  },
+  "command": "node --test --test-reporter=spec --test-concurrency=1 <automated-manifest.json>",
+  "mergedTree": "b90a7c635d50732915ecd00e6d75df363e9ee626",
+  "previousPRTree": "b90a7c635d50732915ecd00e6d75df363e9ee626",
+  "inheritedLinux": {
+    "source": "f628fe450807473150211b812a326a7db50ac9f5",
+    "run": "https://github.com/MateoLitrenta/calori-tracker/actions/runs/43477100255",
+    "tests": 654,
+    "passed": 654,
+    "skipped": 0,
+    "nativePostgres": "17.5",
+    "postgrest": "16.5",
+    "sameApplicationAndTestSources": true,
+    "freshExecution": false
+  },
+  "harnessActWarnings": 2
+}
