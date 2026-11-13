@@ -5,11 +5,12 @@ import type { Tab } from './components/BottomNav';
 import AuthModal from './components/AuthModal';
 import ViewSkeleton from './components/ViewSkeleton';
 import { useAppStore } from './hooks/useAppStore';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import LandingPage from './components/LandingPage';
 import Onboarding from './components/Onboarding';
 import { resolveEntryRoute } from './utils/entryRoute';
 import type { EntryRoute } from './utils/entryRoute';
+import type { HomeViewState } from './components/HomeView';
 import './DesktopExperience.css';
 
 const HomeView = lazy(() => import('./components/HomeView'));
@@ -32,6 +33,9 @@ function RestoreTabScroll({ children, onReady }: {
 function App() {
   const { user, loading, activeProfile, updateRecord, habitDrafts, completeOnboarding, signOut } = useAppStore();
   const [activeTab, setActiveTab] = useState<Tab>('home');
+  // Presentation context only: no records, drafts or credentials are persisted.
+  const [homeContext, setHomeContext] = useState<{ ownerId: string; value: HomeViewState } | null>(null);
+  const [homeEntry, setHomeEntry] = useState<{ ownerId: string | null; active: boolean }>({ ownerId: null, active: false });
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [entryError, setEntryError] = useState('');
   const [path, setPath] = useState(() => window.location.pathname.replace(/\/$/, '') || '/');
@@ -43,6 +47,9 @@ function App() {
   const profileReady = !!user && activeProfile?.user_id === user.id;
   const route = resolveEntryRoute(path, !!user, activeProfile?.onboarding_completed);
   const isCoachLayout = activeTab === 'chat' && route === '/app' && profileReady;
+  const reportEntryActivity = useCallback((active: boolean) => {
+    setHomeEntry(current => current.ownerId === userId && current.active === active ? current : { ownerId: userId, active });
+  }, [userId]);
 
   const navigate = (next: EntryRoute) => {
     if (window.location.pathname !== next) window.history.pushState(null, '', next);
@@ -60,6 +67,10 @@ function App() {
 
   const changeTab = (next: Tab) => {
     if (next === activeTab) return;
+    if (activeTab === 'home' && homeEntry.ownerId === userId && homeEntry.active) {
+      toast.error('Guardá o cerrá el registro en edición antes de cambiar de sección. Tu borrador se conserva.', { id: 'entry-navigation-blocked' });
+      return;
+    }
     if (activeTab !== 'chat') {
       scrollPositionsRef.current[activeTab] = mainRef.current?.scrollTop ?? 0;
     }
@@ -202,7 +213,10 @@ function App() {
           <div className="app-content p-4 md:p-0">
             <Suspense fallback={<ViewSkeleton view={activeTab} />}>
             <RestoreTabScroll key={`${userId}:${activeTab}`} onReady={restoreTabScroll}>
-            {activeTab === 'home' && <HomeView activeProfile={activeProfile} updateRecord={updateRecord} habitDrafts={habitDrafts} />}
+            {activeTab === 'home' && <HomeView key={user.id} activeProfile={activeProfile} updateRecord={updateRecord} habitDrafts={habitDrafts}
+              viewState={homeContext?.ownerId === user.id ? homeContext.value : undefined}
+              onViewStateChange={value => setHomeContext({ ownerId: user.id, value })}
+              onEntryActiveChange={reportEntryActivity} />}
             {activeTab === 'chat' && <ChatView scrollContainer={mainRef} />}
             {activeTab === 'charts' && <ChartsView />}
             {activeTab === 'profile' && <ProfileView />}

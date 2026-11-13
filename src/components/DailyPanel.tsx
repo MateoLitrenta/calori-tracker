@@ -49,6 +49,9 @@ interface DailyPanelProps {
   selectedGroup?: { type: 'day'|'week'|'month'|'year', label: string, dates: string[] } | null;
   records?: DailyRecordsMap;
   habitDrafts?: HabitDraftController | null;
+  onRecordsHeadingReady?: (element: HTMLHeadingElement | null) => void;
+  onEntryActiveChange?: (active: boolean) => void;
+  onReturnToHistory?: () => void;
 }
 
 const habitRecord = (props: DailyPanelProps, day: string) => snapshotEntryRecord(
@@ -56,7 +59,7 @@ const habitRecord = (props: DailyPanelProps, day: string) => snapshotEntryRecord
     meals: [], workouts: [], steps: 0, water: 0, version: null }, props.profile.recordGeneration);
 
 const DailyPanel: React.FC<DailyPanelProps> = (props) => {
-  const { record, dateStr, onUpdateRecord, profile, selectedGroup, records, habitDrafts } = props;
+  const { record, dateStr, onUpdateRecord, profile, selectedGroup, records, habitDrafts, onRecordsHeadingReady, onEntryActiveChange } = props;
   const [activeTab, setActiveTab] = useState<'comida' | 'entrenamiento' | null>(null);
   const tabContainerRef = useRef<HTMLDivElement>(null);
   const dayContextId = useId();
@@ -205,6 +208,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const savingWorkoutRef = useRef(false);
   const workoutDraftRef = useRef<{ id: string; base: DailyRecord; fallbackTime?: string } | null>(null);
 
+  const entryActive = !!(activeTab || editingMealId || editingWorkoutId || isEditingWater || isEditingSteps || isEditingWeight);
+  useEffect(() => { onEntryActiveChange?.(entryActive); }, [entryActive, onEntryActiveChange]);
+
   const clearEstimates = () => {
     estimateSessionRef.current += 1;
     setWorkEstimate(null);
@@ -278,6 +284,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       // and it's NOT removed from the DOM, we also want to ignore it!
       const target = event.target as Element;
       if (target.closest('.fixed.inset-0')) return; // Ignore clicks inside modals
+      // The navigation guard keeps an active entry in place. A rejected tab
+      // change must not also be interpreted as dismissing its form.
+      if (target.closest('.app-bottom-nav, .app-sidebar nav')) return;
 
       if (tabContainerRef.current && !tabContainerRef.current.contains(event.target as Node)) {
         setActiveTab(null);
@@ -915,10 +924,13 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       {/* Logs List */}
         <div className={`daily-logs ${currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 ? 'daily-logs--empty' : ''} bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden`}>
           <div className="daily-logs-heading bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
-            <h4 className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
+            <h4 ref={onRecordsHeadingReady} tabIndex={-1} aria-describedby={dayContextId} className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
             <time id={dayContextId} dateTime={dateStr} className="daily-active-date">
               {dateStr === formatDateStr(new Date()) ? 'Hoy · ' : ''}{panelSubtitle}
             </time>
+            {props.onReturnToHistory && <button type="button" className="history-record-return" onClick={event => {
+              event.stopPropagation(); props.onReturnToHistory?.();
+            }}>← Volver a Tu actividad</button>}
           </div>
           
           {currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 && (
