@@ -1,0 +1,158 @@
+/* Daily UI only. The record writer, calculations and History 2.1 keep their
+   existing contracts; the DOM follows the everyday reading order at all sizes. */
+.home-variants .daily-panel .energy-card .energy-headline .energy-status {
+  border: 1px solid var(--home-line);
+  background: var(--home-control);
+  color: var(--home-muted);
+}
+html:not(.dark) .home-variants .daily-panel .energy-card .energy-headline .energy-status { color: #58667a; }
+.home-variants .daily-panel .energy-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  width: 100%;
+  min-width: 0;
+}
+.home-variants .daily-panel .energy-coverage {
+  margin: 0;
+  min-width: 0;
+  color: var(--home-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.home-variants .daily-panel .energy-coverage span { display: block; }
+.home-variants .daily-panel .energy-breakdown { margin: 0; flex: none; text-align: right; }
+.home-variants .daily-panel .energy-breakdown summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px;
+  border-radius: var(--radius-control);
+  color: var(--home-text);
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.home-variants .daily-panel .energy-breakdown summary:hover { background: var(--home-hover); }
+.home-variants .daily-panel .energy-breakdown > div {
+  padding: 0 8px 8px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.home-variants .daily-panel .daily-habits-block { min-width: 0; }
+.home-variants .daily-panel .daily-habits-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-bottom: 12px;
+}
+.home-variants .daily-panel .daily-habits-heading h4 { margin: 0; font-size: 14px; font-weight: 600; }
+.home-variants .daily-panel .daily-habits-heading time { color: var(--home-muted); font-size: 12px; }
+
+@media (max-width: 1279px) {
+  .home-variants .daily-panel { gap: 16px; }
+  .home-variants .daily-panel .daily-summary { gap: 0; }
+  .home-variants .daily-panel .daily-journal { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .home-variants .daily-panel .energy-card { padding: 10px 16px; gap: 4px; box-shadow: none; }
+  .home-variants .daily-panel .energy-headline {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0 12px;
+    text-align: left;
+    align-items: center;
+  }
+  .home-variants .daily-panel .energy-headline > div:first-child { grid-column: 1; grid-row: 1; justify-content: flex-start; margin: 0; font-size: 12px; line-height: 18px; }
+  .home-variants .daily-panel .energy-qualifier { grid-column: 1; grid-row: 2; margin: 0; font-size: 12px; line-height: 16px; font-weight: 400; color: var(--home-muted); }
+  .home-variants .daily-panel .energy-card .energy-number,
+  .home-variants .daily-panel .energy-card[data-provisional='true'] .energy-number {
+    grid-column: 1;
+    grid-row: 3;
+    margin: 2px 0 0;
+    font-size: clamp(28px, 7.5vw, 34px);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -.045em;
+    overflow-wrap: anywhere;
+  }
+  .home-variants .daily-panel .energy-status { grid-column: 2; grid-row: 1 / 4; max-width: 110px; margin: 0; padding: 5px 8px; font-size: 12px; line-height: 1.4; text-align: center; }
+  .home-variants .daily-panel .energy-metrics { width: 100%; max-width: none; gap: 2px 12px; margin-top: 2px; }
+  .home-variants .daily-panel .energy-metrics > div > div:first-child { text-align: left; justify-content: flex-start; font-size: 12px; line-height: 18px; }
+  .home-variants .daily-panel .energy-metrics > div > div:nth-child(2) { text-align: left; font-size: 22px; line-height: 24px; }
+  .home-variants .daily-panel .energy-footer { border-top: 1px solid var(--home-line); padding-top: 2px; }
+  .home-variants .daily-panel .daily-quick-actions button { min-height: 48px; padding: 10px 12px; font-size: 15px; }
+  .home-variants .daily-panel .daily-logs { padding: 14px; }
+  .home-variants .daily-panel .daily-record-open { padding: 12px; }
+  .home-variants .daily-panel .daily-record-title { font-size: 15px; }
+  .home-variants .daily-panel .daily-record-meta { font-size: 12px; }
+  .home-variants .daily-panel .daily-habits-block {
+    padding: 10px 12px;
+    border: 1px solid var(--home-line);
+    border-radius: var(--radius-panel);
+    background: var(--home-card);
+  }
+  .home-variants .daily-panel .daily-habits-heading { margin-bottom: 8px; }
+  .home-variants .daily-panel .daily-habits-heading h4 { font-size: 13px; }
+  .home-variants .daily-panel .daily-habits { gap: 6px; align-items: start; }
+  .home-variants .daily-panel .daily-habits > .habit-card {
+    min-width: 0;
+    height: auto;
+    padding: 0;
+    gap: 2px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .home-variants .daily-panel .daily-habits .habit-header { flex-direction: row; gap: 4px; }
+  .home-variants .daily-panel .daily-habits .habit-label { font-size: 13px; font-weight: 400; }
+  .home-variants .daily-panel .daily-habits .habit-metric { width: 100%; min-height: 44px; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 2px; font-size: 20px; line-height: 1.25; }
+  .home-variants .daily-panel .daily-habits .habit-value { min-width: 44px; font-size: inherit; line-height: 1.25; }
+  .home-variants .daily-panel .daily-habits input { min-height: 44px; font-size: 16px; }
+  .home-variants .daily-panel .daily-habits .habit-controls { grid-template-columns: repeat(2, minmax(44px, 1fr)); gap: 2px; }
+  .home-variants .daily-panel .daily-habits :is(.habit-controls button, .habit-edit) { min-height: 44px; padding: 6px 2px; font-size: 14px; }
+}
+@media (max-width: 767px) {
+  .app-shell .app-content:has(> .home-variants) { padding: 12px; }
+  .app-shell .home-header { height: calc(48px + env(safe-area-inset-top)); padding: calc(4px + env(safe-area-inset-top)) 12px 4px; border-bottom: 0; }
+  .app-shell .home-header .brand-symbol { width: 28px; height: 28px; }
+  .home-variants { padding: 0; border-radius: 0; }
+  .home-variants .daily-panel[data-period='day'] > .daily-heading { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+@media (max-width: 359px) {
+  .home-variants .daily-panel .daily-habits-block { padding: 10px 8px; }
+  .home-variants .daily-panel .daily-habits { gap: 4px; }
+  .home-variants .daily-panel .energy-card { padding-inline: 12px; }
+  .home-variants .daily-panel .energy-status { max-width: 104px; font-size: 11px; }
+}
+/* Keep the established desktop summary row while the DOM puts records before
+   complementary metrics. Each node exists once; keyboard order stays logical. */
+@media (min-width: 1280px) {
+  .app-shell .home-variants .daily-panel { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: stretch; }
+  .app-shell .home-variants .daily-panel > .daily-heading { grid-column: 1 / -1; grid-row: 1; }
+  .app-shell .home-variants .daily-panel > .daily-summary { display: flex; grid-column: 1; grid-row: 2; }
+  .app-shell .home-variants .daily-panel[data-period='group'] > .daily-summary { grid-column: 1 / -1; }
+  .app-shell .home-variants .daily-panel .energy-card { width: 100%; height: 100%; }
+  .app-shell .home-variants .daily-panel .energy-footer { grid-column: 1 / -1; }
+  .app-shell .home-variants .daily-panel > .daily-habits-block { grid-column: 2; grid-row: 2; }
+  .app-shell .home-variants .daily-panel > .daily-journal { grid-column: 1 / -1; grid-row: 3; }
+  .app-shell .home-variants .daily-panel .daily-habits-block { display: flex; flex-direction: column; }
+  .app-shell .home-variants .daily-panel .daily-habits { flex: 1; }
+  .app-shell .home-variants .daily-panel .daily-habits > .habit-card { padding: 16px 10px; }
+}
+html:not(.dark) .home-variants .daily-panel .energy-card { box-shadow: none; }
+
+/* Weight keeps the established record modal and exposes its selected day. */
+.home-variants .entry-weight-form { display: flex; flex-direction: column; gap: 0; }
+.home-variants .entry-weight-form .entry-form-content { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
+.home-variants .entry-weight-form .entry-date-context { font-size: 13px; line-height: 1.5; }
+.home-variants .entry-weight-form .entry-date-context time { color: var(--home-text); font-weight: 600; }
+.home-variants .entry-weight-form .entry-field { display: flex; flex-direction: column; gap: 8px; }
+.home-variants .entry-weight-form .entry-field-label { position: static; width: auto; height: auto; overflow: visible; clip-path: none; white-space: normal; color: var(--home-text); font-size: 14px; }
+.home-variants .entry-weight-form .entry-form-content input { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid var(--home-line); border-radius: var(--radius-control); background: var(--home-control); color: var(--home-text); font-size: 20px; line-height: 1.4; }
+.home-variants .entry-weight-form .entry-form-footer { display: block; padding: 16px; border-top: 1px solid var(--home-line); }
+.home-variants .entry-weight-form .entry-weight-save { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; border-radius: var(--radius-control); background: var(--home-orange); color: #3b2418; font-size: 16px; font-weight: 600; }
+.home-variants .entry-desktop-modal:has(.entry-weight-form) > div:first-child > button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }

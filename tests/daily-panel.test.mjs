@@ -157,6 +157,41 @@ test('habit controls keep accessible names and daily quick actions', () => {
   assert.match(html,/aria-label="Editar total de pasos"/);
 });
 
+test('daily reading order puts actions and every record before complementary metrics without duplicate controls', () => {
+  const record = { ...base, meals: [{ id: 'meal-priority', name: 'Comida de prueba', type: 'Almuerzo', calories: 400 }],
+    workouts: [{ id: 'work-priority', activity: 'Caminata de prueba', duration: 20, calories: 70 }], steps: 2500, water: 1000, weight: 70 };
+  const dom = new JSDOM(renderToStaticMarkup(React.createElement(DailyPanel, {
+    profile, record, dateStr, records: { [dateStr]: record }, onUpdateRecord() {},
+  })));
+  const document = dom.window.document;
+  try {
+    const inOrder = [...document.querySelectorAll('.energy-card, .daily-quick-actions, .daily-logs, .daily-habits-block')].map(node => node.className.split(' ')[0]);
+    assert.deepEqual(inOrder, ['energy-card', 'daily-quick-actions', 'daily-logs', 'daily-habits-block']);
+    assert.equal(document.querySelectorAll('.daily-quick-actions').length, 1);
+    assert.equal(document.querySelectorAll('.daily-habits').length, 1);
+    assert.equal(document.querySelectorAll('.daily-record-open').length, 2);
+    assert.equal(document.querySelectorAll('[aria-label="Sumar 250 ml de agua"]').length, 1);
+    assert.equal(document.querySelectorAll('[aria-label="Sumar 500 pasos"]').length, 1);
+    assert.equal(document.querySelector('.daily-habits-heading time').dateTime, dateStr);
+  } finally { dom.window.close(); }
+});
+
+test('coverage reports exact meal and exercise counts without claiming that food entries complete the day', () => {
+  for (const [mealCount, workoutCount] of [[0, 0], [1, 1], [2, 3]]) {
+    const record = { ...base,
+      meals: Array.from({ length: mealCount }, (_, i) => ({ id: `coverage-meal-${i}`, name: 'Comida', type: 'Almuerzo', calories: 300 })),
+      workouts: Array.from({ length: workoutCount }, (_, i) => ({ id: `coverage-workout-${i}`, activity: 'Caminata', duration: 20, calories: 70 })),
+    };
+    const dom = new JSDOM(renderToStaticMarkup(React.createElement(DailyPanel, { profile, record, dateStr, records: {}, onUpdateRecord() {} })));
+    try {
+      const coverage = dom.window.document.querySelector('.energy-coverage').textContent;
+      assert.equal(coverage, `${mealCount} ${mealCount === 1 ? 'comida' : 'comidas'} · ${workoutCount} ${workoutCount === 1 ? 'ejercicio' : 'ejercicios'}Según tus registros`);
+      assert.doesNotMatch(coverage, /día completo|objetivo cumplido|consumo completo/i);
+      assert.equal(dom.window.document.querySelectorAll('.energy-breakdown').length, 1);
+    } finally { dom.window.close(); }
+  }
+});
+
 test('grouped periods keep accumulated balance and hide daily controls and records', () => {
   const records = { [dateStr]: { ...base, steps: 7000, meals: [{ calories: 1200 }] } };
   for (const type of ['week', 'month', 'year']) {
@@ -742,6 +777,8 @@ test('global outside-click behavior leaves mobile sheets to their backdrop and s
   handlers.get('click')(event);
   assert.ok(shell(view));
   globalThis.window.matchMedia = () => ({ matches: false });
+  handlers.get('click')({ target: { closest: selector => selector.includes('.home-date-nav') ? {} : null } });
+  assert.ok(nodes(view(), element => element.type === 'form').length, 'The guarded date selector cannot dismiss an active desktop entry');
   handlers.get('click')(event);
   assert.equal(nodes(view(), element => element.type === 'form').length, 0);
   view.unmount();
@@ -988,6 +1025,59 @@ test('missing meals qualify the visible balance without changing its number, exp
   assert.match(recorded, /-1\.218 kcal/);
   assert.doesNotMatch(recorded, /Balance provisional/);
   assert.equal(base.meals.length, 0);
+});
+
+for (const mobile of [false, true]) test(`weight dialog names its historical day, contains keyboard focus and submits once (${mobile ? 'mobile' : 'desktop'})`, async t => {
+  const day = '2026-11-11';
+  const record = { ...journalRecord(2, day), steps: 9200, water: 2300, weight: 71.2 };
+  const view = await journalDOM(t, { dateStr: day, record, records: { [day]: record } });
+  window.HTMLElement.prototype.getClientRects = () => [{ width: 100, height: 44 }];
+  await view.resize(mobile);
+  const trigger = document.querySelector('[title="Registrar peso"]');
+  trigger.focus();
+  await act(() => trigger.click());
+  let dialog = document.querySelector('[role="dialog"]');
+  assert.equal(dialog.getAttribute('aria-modal'), 'true');
+  assert.equal(document.getElementById(dialog.getAttribute('aria-labelledby')).textContent, 'Registrar Peso');
+  assert.equal(dialog.querySelector('time').dateTime, day);
+  assert.match(dialog.querySelector('.entry-date-context').textContent, /Día del registro.*11 nov 2026/);
+  const input = dialog.querySelector('input[name="weight"]');
+  assert.equal(dialog.querySelector('label').htmlFor, input.id);
+  assert.equal(dialog.querySelector('label').textContent, 'Peso (kg)');
+  const close = dialog.querySelector('[aria-label="Cerrar formulario"]');
+  const save = dialog.querySelector('[type="submit"]');
+  assert.equal(document.activeElement, close);
+  await act(() => close.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true })));
+  assert.equal(document.activeElement, save);
+  await act(() => save.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })));
+  assert.equal(document.activeElement, close);
+  await act(() => input.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })));
+  assert.equal(document.querySelector('[role="dialog"]'), null);
+  assert.equal(document.activeElement, trigger);
+  assert.equal(view.saves.length, 0);
+
+  await act(() => trigger.click());
+  dialog = document.querySelector('[role="dialog"]');
+  const edited = dialog.querySelector('input[name="weight"]');
+  await act(() => {
+    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(edited, '72,5');
+    edited.dispatchEvent(new window.Event('input', { bubbles: true }));
+  });
+  assert.equal(edited.value, '72.5');
+  // JSDOM does not perform implicit Enter submission. Send the key, then invoke
+  // that native form action: only onSubmit may write, never an extra key handler.
+  await act(() => edited.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })));
+  assert.equal(view.saves.length, 0);
+  await act(async () => { dialog.querySelector('form').requestSubmit(); });
+  assert.equal(view.saves.length, 1);
+  assert.equal(view.saves[0].day, day);
+  assert.equal(view.saves[0].record.weight, 72.5);
+  assert.equal(view.saves[0].record.steps, 9200);
+  assert.equal(view.saves[0].record.water, 2300);
+  assert.deepEqual(view.saves[0].record.meals, record.meals);
+  assert.deepEqual(view.saves[0].record.workouts, record.workouts);
+  assert.equal(document.querySelector('[role="dialog"]'), null);
+  assert.equal(document.activeElement, trigger);
 });
 
 test('workout deletion reports success only after persistence confirms it', async t => {

@@ -286,7 +286,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       if (target.closest('.fixed.inset-0')) return; // Ignore clicks inside modals
       // The navigation guard keeps an active entry in place. A rejected tab
       // change must not also be interpreted as dismissing its form.
-      if (target.closest('.app-bottom-nav, .app-sidebar nav')) return;
+      if (target.closest('.app-bottom-nav, .app-sidebar nav, .home-date-nav')) return;
 
       if (tabContainerRef.current && !tabContainerRef.current.contains(event.target as Node)) {
         setActiveTab(null);
@@ -487,7 +487,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   </div>;
 
   return (
-    <div className="daily-panel flex flex-col gap-6 w-full">
+    <div className="daily-panel flex flex-col gap-6 w-full" data-period={isGroup ? 'group' : 'day'}>
       <div className="daily-heading flex justify-between items-end border-b border-slate-200 dark:border-gray-800 pb-2">
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{panelTitle}</h3>
         <span className="text-slate-500 dark:text-gray-400">{isGroup ? panelSubtitle : <time dateTime={dateStr}>{panelSubtitle}</time>}</span>
@@ -530,155 +530,30 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 <Flame size={16} className="text-orange-400" /> Gasto estimado
               </div>
               <div className="text-xl font-bold text-slate-900 dark:text-white tabular-nums">{(isGroup ? summary.expenditure : expenditure).toLocaleString('es-AR')} <span className="text-xs font-normal text-slate-500 dark:text-gray-400">kcal</span></div>
-              {!isGroup && (
-                <details className="text-xs text-slate-500 dark:text-gray-400 text-center mt-2">
-                  <summary className="cursor-pointer font-medium">Ver desglose</summary>
-                  <div className="space-y-1 mt-2">
-                    <div>TMB: {calculateBMR(profile).toLocaleString('es-AR')} kcal</div>
-                    <div>Pasos: {getStepCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
-                    <div>Ejercicio: {getWorkoutCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
-                  </div>
-                </details>
-              )}
+
             </div>
           </div>
           
+          {!isGroup && <div className="energy-footer">
+            <p className="energy-coverage">
+              {currentRecord.meals.length} {currentRecord.meals.length === 1 ? 'comida' : 'comidas'} · {currentRecord.workouts.length} {currentRecord.workouts.length === 1 ? 'ejercicio' : 'ejercicios'}
+              <span>Según tus registros</span>
+            </p>
+            <details className="energy-breakdown text-xs text-slate-500 dark:text-gray-400">
+              <summary className="cursor-pointer font-medium">Ver desglose</summary>
+              <div className="space-y-1 mt-2">
+                <div>TMB: {calculateBMR(profile).toLocaleString('es-AR')} kcal</div>
+                <div>Pasos: {getStepCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
+                <div>Ejercicio: {getWorkoutCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
+              </div>
+            </details>
+          </div>}
+
           {isGroup && <p className="text-xs text-slate-500 dark:text-gray-400">{summary.days} días con datos.</p>}
 
         </div>
 
-        {/* Hábitos Compactos */}
-        {!isGroup && (
-          <>
-          <div className="daily-habits grid grid-cols-3 gap-2">
-            <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
-              <div className="habit-header flex flex-col items-center gap-1">
-                <Drop size={20} className="text-cyan-400" />
-                <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Agua</span>
-              </div>
-              <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
-                {isEditingWater ? (
-                  <input
-                    type="number"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    min="0"
-                    autoFocus
-                    value={editWaterVal}
-                    onChange={(e) => setEditWaterVal(e.target.value)}
-                    onBlur={() => {
-                      handleSetWater(Number(editWaterVal) || 0);
-                      setIsEditingWater(false);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleSetWater(Number(editWaterVal) || 0);
-                        setIsEditingWater(false);
-                      }
-                    }}
-                    className="w-16 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-cyan-500"
-                  />
-                ) : (
-                  <button type="button"
-                    className="habit-value cursor-pointer hover:text-cyan-400 transition-colors"
-                    onClick={() => {
-                      habitController.begin(dateStr);
-                      setEditWaterVal(localWater ? String(localWater) : '');
-                      setIsEditingWater(true);
-                    }}
-                    title="Editar cantidad"
-                    aria-label="Editar cantidad de agua"
-                  >
-                    {localWater.toLocaleString('es-AR')}
-                  </button>
-                )}
-                <span className="text-[10px] font-normal text-slate-500 dark:text-gray-400 mt-0.5">ml</span>
-              </div>
-              <div className="habit-controls">
-                <button type="button" onClick={() => handleAddWater(-250)} aria-label="Restar 250 ml de agua">−</button>
-                <button type="button" onClick={() => handleAddWater(250)} aria-label="Sumar 250 ml de agua">+250</button>
-              </div>
-            </div>
 
-            <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
-              <div className="habit-header flex flex-col items-center gap-1">
-                <Sneaker size={20} className="text-green-400" />
-                <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Pasos</span>
-              </div>
-              <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
-                {isEditingSteps ? (
-                  <input
-                    type="number"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    min="0"
-                    autoFocus
-                    value={editStepsVal}
-                    onChange={(e) => setEditStepsVal(e.target.value)}
-                    onBlur={() => {
-                      handleUpdateSteps(Number(editStepsVal) || 0);
-                      setIsEditingSteps(false);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleUpdateSteps(Number(editStepsVal) || 0);
-                        setIsEditingSteps(false);
-                      }
-                    }}
-                    className="w-16 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-green-500"
-                  />
-                ) : (
-                  <button type="button"
-                    className="habit-value cursor-pointer hover:text-green-400 transition-colors"
-                    onClick={() => {
-                      habitController.begin(dateStr);
-                      setEditStepsVal(localSteps);
-                      setIsEditingSteps(true);
-                    }}
-                    title="Editar pasos"
-                    aria-label="Editar total de pasos"
-                  >
-                    {Number(localSteps || 0).toLocaleString('es-AR')}
-                  </button>
-                )}
-              </div>
-              <div className="habit-controls">
-                <button type="button" onClick={() => handleAddSteps(-500)} aria-label="Restar 500 pasos">−</button>
-                <button type="button" onClick={() => handleAddSteps(500)} aria-label="Sumar 500 pasos">+500</button>
-              </div>
-            </div>
-
-            <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
-              <div className="habit-header flex flex-col items-center gap-1">
-                <Scales size={20} className="text-pink-400" />
-                <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Peso</span>
-              </div>
-              <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
-                <span className="hover:text-pink-400 transition-colors">
-                  {currentRecord.weight ? currentRecord.weight.toLocaleString('es-AR') : '--'}
-                </span>
-                <span className="text-[10px] font-normal text-slate-500 dark:text-gray-400 mt-0.5">kg</span>
-              </div>
-              <button type="button" className="habit-edit"
-                onClick={() => {
-                  setEditWeightVal(currentRecord.weight ? String(currentRecord.weight) : '');
-                  weightDraftBaseRef.current = snapshotEntryRecord(currentRecord, profile.recordGeneration);
-                  setIsEditingWeight(true);
-                }} title="Registrar peso">Editar</button>
-            </div>
-          </div>
-            {habit.status && <div className="habit-feedback flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-gray-300"
-              role={habit.status === 'conflict' || habit.status === 'unconfirmed' ? 'alert' : 'status'} aria-atomic="true">
-              <span>{habit.status === 'editing' ? 'Editando · Cambios pendientes' : habit.status === 'saving' ? 'Guardando… Podés seguir ajustando.' :
-                habit.status === 'saved' ? 'Guardado' : habit.status === 'conflict' ? 'Conflicto · Tu borrador se conserva.' : 'No confirmado · Tu borrador se conserva.'}</span>
-              {habit.status === 'unconfirmed' && <button type="button" className="habit-feedback-action"
-                onClick={() => habitController.retry(dateStr)}>Comprobar y reintentar</button>}
-              {habit.status === 'conflict' && <button type="button" className="habit-feedback-action"
-                onClick={() => setHabitReview(snapshotEntryRecord(currentRecord, profile.recordGeneration))}>Revisar borrador</button>}
-              {(habit.status === 'unconfirmed' || habit.status === 'conflict') && <p className="w-full">{habit.failure?.message}</p>}
-            </div>}
-          </>
-        )}
       </div>
 
       {habitReview && habitReview.dateStr === dateStr && <EntryFormShell title="Revisar cambios del día" desktopModal onClose={() => setHabitReview(null)}>
@@ -1007,6 +882,140 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       </div>
       )}
 
+        {/* Hábitos Compactos */}
+        {!isGroup && (
+          <section className="daily-habits-block" aria-label="Agua, pasos y peso">
+            <div className="daily-habits-heading"><h4>Agua, pasos y peso</h4><time dateTime={dateStr}>{dateStr === formatDateStr(new Date()) ? 'Hoy' : panelSubtitle}</time></div>
+          <div className="daily-habits grid grid-cols-3 gap-2">
+            <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
+              <div className="habit-header flex flex-col items-center gap-1">
+                <Drop size={20} className="text-cyan-400" />
+                <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Agua</span>
+              </div>
+              <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
+                {isEditingWater ? (
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    min="0"
+                    autoFocus
+                    value={editWaterVal}
+                    onChange={(e) => setEditWaterVal(e.target.value)}
+                    onBlur={() => {
+                      handleSetWater(Number(editWaterVal) || 0);
+                      setIsEditingWater(false);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSetWater(Number(editWaterVal) || 0);
+                        setIsEditingWater(false);
+                      }
+                    }}
+                    className="w-16 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-cyan-500"
+                  />
+                ) : (
+                  <button type="button"
+                    className="habit-value cursor-pointer hover:text-cyan-400 transition-colors"
+                    onClick={() => {
+                      habitController.begin(dateStr);
+                      setEditWaterVal(localWater ? String(localWater) : '');
+                      setIsEditingWater(true);
+                    }}
+                    title="Editar cantidad"
+                    aria-label="Editar cantidad de agua"
+                  >
+                    {localWater.toLocaleString('es-AR')}
+                  </button>
+                )}
+                <span className="text-[10px] font-normal text-slate-500 dark:text-gray-400 mt-0.5">ml</span>
+              </div>
+              <div className="habit-controls">
+                <button type="button" onClick={() => handleAddWater(-250)} aria-label="Restar 250 ml de agua">−</button>
+                <button type="button" onClick={() => handleAddWater(250)} aria-label="Sumar 250 ml de agua">+250</button>
+              </div>
+            </div>
+
+            <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
+              <div className="habit-header flex flex-col items-center gap-1">
+                <Sneaker size={20} className="text-green-400" />
+                <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Pasos</span>
+              </div>
+              <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
+                {isEditingSteps ? (
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    min="0"
+                    autoFocus
+                    value={editStepsVal}
+                    onChange={(e) => setEditStepsVal(e.target.value)}
+                    onBlur={() => {
+                      handleUpdateSteps(Number(editStepsVal) || 0);
+                      setIsEditingSteps(false);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleUpdateSteps(Number(editStepsVal) || 0);
+                        setIsEditingSteps(false);
+                      }
+                    }}
+                    className="w-16 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-green-500"
+                  />
+                ) : (
+                  <button type="button"
+                    className="habit-value cursor-pointer hover:text-green-400 transition-colors"
+                    onClick={() => {
+                      habitController.begin(dateStr);
+                      setEditStepsVal(localSteps);
+                      setIsEditingSteps(true);
+                    }}
+                    title="Editar pasos"
+                    aria-label="Editar total de pasos"
+                  >
+                    {Number(localSteps || 0).toLocaleString('es-AR')}
+                  </button>
+                )}
+              </div>
+              <div className="habit-controls">
+                <button type="button" onClick={() => handleAddSteps(-500)} aria-label="Restar 500 pasos">−</button>
+                <button type="button" onClick={() => handleAddSteps(500)} aria-label="Sumar 500 pasos">+500</button>
+              </div>
+            </div>
+
+            <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
+              <div className="habit-header flex flex-col items-center gap-1">
+                <Scales size={20} className="text-pink-400" />
+                <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Peso</span>
+              </div>
+              <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
+                <span className="hover:text-pink-400 transition-colors">
+                  {currentRecord.weight ? currentRecord.weight.toLocaleString('es-AR') : '--'}
+                </span>
+                <span className="text-[10px] font-normal text-slate-500 dark:text-gray-400 mt-0.5">kg</span>
+              </div>
+              <button type="button" className="habit-edit"
+                onClick={() => {
+                  setEditWeightVal(currentRecord.weight ? String(currentRecord.weight) : '');
+                  weightDraftBaseRef.current = snapshotEntryRecord(currentRecord, profile.recordGeneration);
+                  setIsEditingWeight(true);
+                }} title="Registrar peso">Editar</button>
+            </div>
+          </div>
+            {habit.status && <div className="habit-feedback flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-gray-300"
+              role={habit.status === 'conflict' || habit.status === 'unconfirmed' ? 'alert' : 'status'} aria-atomic="true">
+              <span>{habit.status === 'editing' ? 'Editando · Cambios pendientes' : habit.status === 'saving' ? 'Guardando… Podés seguir ajustando.' :
+                habit.status === 'saved' ? 'Guardado' : habit.status === 'conflict' ? 'Conflicto · Tu borrador se conserva.' : 'No confirmado · Tu borrador se conserva.'}</span>
+              {habit.status === 'unconfirmed' && <button type="button" className="habit-feedback-action"
+                onClick={() => habitController.retry(dateStr)}>Comprobar y reintentar</button>}
+              {habit.status === 'conflict' && <button type="button" className="habit-feedback-action"
+                onClick={() => setHabitReview(snapshotEntryRecord(currentRecord, profile.recordGeneration))}>Revisar borrador</button>}
+              {(habit.status === 'unconfirmed' || habit.status === 'conflict') && <p className="w-full">{habit.failure?.message}</p>}
+            </div>}
+          </section>
+        )}
+
       {/* Detail Modal */}
       {detailModalItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
@@ -1094,54 +1103,33 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         </div>
       )}
 
-      {/* Peso Modal */}
+      {/* Weight uses the same accessible shell and selected-day context as other records. */}
       {isEditingWeight && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-xs rounded-2xl shadow-xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
-              <h3 className="font-bold text-lg text-slate-900 dark:text-white">Registrar Peso</h3>
-              <button 
-                onClick={() => { setIsEditingWeight(false); weightDraftBaseRef.current = null; }}
-                className="text-slate-500 dark:text-gray-400 hover:text-white transition-colors p-1"
-              >
-                <X size={20} />
-              </button>
+        <EntryFormShell title="Registrar Peso" desktopModal onClose={() => { setIsEditingWeight(false); weightDraftBaseRef.current = null; }}>
+          <form className="entry-form entry-weight-form" onSubmit={async event => {
+            event.preventDefault();
+            await handleSetWeight(parseFloat(editWeightVal) || 0);
+          }}>
+            <div className="entry-form-content">
+              <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>
+              <div className="entry-field">
+                <label className="entry-field-label" htmlFor={dayContextId + '-weight'}>Peso (kg)</label>
+                <input id={dayContextId + '-weight'} name="weight" type="text" inputMode="decimal"
+                  value={editWeightVal}
+                  onChange={event => {
+                    const valorLimpio = event.target.value.replace(',', '.');
+                    setEditWeightVal(valorLimpio.replace(/[^0-9.]/g, ''));
+                  }}
+                />
+              </div>
             </div>
-            <div className="p-6 flex flex-col items-center gap-4">
-               <input
-                 type="text"
-                 inputMode="decimal"
-                 autoFocus
-                 value={editWeightVal}
-                 onChange={(e) => {
-                   const valorLimpio = e.target.value.replace(',', '.');
-                   const filtrado = valorLimpio.replace(/[^0-9.]/g, '');
-                   setEditWeightVal(filtrado);
-                 }}
-                 onKeyDown={async (e) => {
-                   if (e.key === 'Enter') {
-                     await handleSetWeight(parseFloat(editWeightVal) || 0);
-                   }
-                 }}
-                 className="w-32 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-lg px-4 py-3 text-center text-xl focus:outline-none focus:border-pink-500"
-               />
-               <span className="text-sm text-slate-500 dark:text-gray-400">kilogramos</span>
+            <div className="entry-form-footer">
+              <button type="submit" className="entry-weight-save"><Check size={18} weight="bold" aria-hidden="true" /> Guardar</button>
             </div>
-            <div className="p-4 border-t border-slate-200 dark:border-gray-800 flex gap-3 bg-slate-100 dark:bg-[#0f141c]">
-              <button 
-                onClick={async () => {
-                  await handleSetWeight(parseFloat(editWeightVal) || 0);
-                }}
-                className="flex-1 bg-pink-600 hover:bg-pink-700 text-white py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-              >
-                <Check size={18} weight="bold" /> Guardar
-              </button>
-            </div>
-          </div>
-        </div>
+          </form>
+        </EntryFormShell>
       )}
 
-    
       {/* Edit Modal para Comidas */}
       {editingMealId && (
         <EntryFormShell title="Editar comida" onClose={closeEntry} desktopModal>
