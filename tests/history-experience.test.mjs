@@ -590,6 +590,10 @@ test('optional energy disclosure preserves official period arithmetic and does n
   assert.ok(energy.textContent.includes(numeric(expected.consumed)));
   assert.ok(energy.textContent.includes(numeric(expected.expenditure)));
   assert.ok(energy.textContent.includes(numeric(expected.averageBalance)));
+  const accumulated = [...energy.querySelectorAll('div')].find(node => node.querySelector('dt')?.textContent === 'Balance acumulado');
+  assert.ok(accumulated, 'The advanced period disclosure retains the existing accumulated balance');
+  assert.ok(accumulated.querySelector('dd').textContent.includes(numeric(expected.balance)));
+  assert.match(accumulated.querySelector('dd').textContent, /kcal$/);
   assert.ok(energy.textContent.includes(expected.days + ' días con datos energéticos'));
   const originalFigures = [...energy.querySelectorAll('dd')].map(node => node.textContent);
   await view.selectDay(partialDay);

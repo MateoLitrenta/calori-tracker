@@ -595,6 +595,14 @@ export default function Heatmap({
               </dd>
             </div>
             <div>
+              <dt>Balance acumulado</dt>
+              <dd>
+                {summary.balance === null
+                  ? 'Sin datos'
+                  : (summary.balance > 0 ? '+' : '') + number(summary.balance) + ' kcal'}
+              </dd>
+            </div>
+            <div>
               <dt>Consumidas en el período</dt>
               <dd>{summary.days ? number(summary.consumed) + ' kcal' : 'Sin datos'}</dd>
             </div>
