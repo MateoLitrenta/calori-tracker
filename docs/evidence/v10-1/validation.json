@@ -29,14 +29,27 @@
     "scope": "Closed persistence and security audits were not reopened or modified. The global attempt is not represented as a green gate."
   },
   "preview": {
-    "status": "blocked",
-    "httpStatus": 402,
-    "code": "resource_creation_blocked",
+    "status": "ready",
+    "deploymentId": "dpl_EUDaBeLgPW7XUPGsSVWYBXSLbrD6",
+    "sourceCommit": "6ea12e14dc5a7627c0292f0091a1930cb4b3b2ec",
+    "branch": "codex/coach-intelligence-v10-1",
     "project": "calori-tracker",
     "projectId": "prj_uS28Bgl4CSeONLL3K7wrnLEHVxwj",
     "environment": "preview",
-    "requiresAccountAdministration": true,
-    "url": null
+    "requiresAccountAdministration": false,
+    "url": "https://calori-tracker-bx61kjw71-mateolitrenta-gmailcoms-projects.vercel.app",
+    "previousBlockResolved": "The user regularized billing and the preview was created successfully.",
+    "checks": [
+      { "path": "/", "status": 200, "contentType": "text/html" },
+      { "path": "/app", "status": 200, "contentType": "text/html" },
+      { "path": "/assets/index-CMTx5zzo.js", "status": 200, "contentType": "application/javascript" },
+      { "path": "/assets/index-CzjwRUZQ.css", "status": 200, "contentType": "text/css" },
+      { "path": "/assets/ChatView-C6JmdpGV.js", "status": 200, "proactiveCardPresent": true },
+      { "path": "/api/ai/chat", "method": "GET", "status": 405, "code": "method_not_allowed" },
+      { "path": "/api/coach/goals", "method": "GET", "status": 401,
+        "result": "inconclusive: connector classifies the response as deployment_authentication_required and does not expose the endpoint body" }
+    ],
+    "scope": "Authenticated Vercel connector reads only, no Supabase session or Gemini calls. Authenticated Coach interaction remains for human review. Documentation was updated after this deployment without changing application code."
   },
   "constraints": {
     "productionDeployment": false,

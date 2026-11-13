@@ -98,7 +98,7 @@ La documentación oficial advierte que `gemini-2.5-flash` está deprecado y desc
 
 ## Riesgos y pendientes de revisión
 
-La **preview Vercel está pendiente**: el proveedor rechazó crearla con HTTP 402 `resource_creation_blocked`, asociado a la facturación del equipo. No se publicó una URL alternativa ni se modificó Production para resolverlo. El PR puede revisarse con su evidencia local; falta habilitar la creación de la preview para la revisión interactiva solicitada.
+La [Preview Vercel está disponible](https://calori-tracker-bx61kjw71-mateolitrenta-gmailcoms-projects.vercel.app), en estado **READY**, desde `6ea12e14dc5a7627c0292f0091a1930cb4b3b2ec`. El usuario regularizó la facturación que había bloqueado la creación. Se verificaron `/`, `/app`, JavaScript/CSS y el bundle de Coach con HTTP 200; el bundle incluye la tarjeta proactiva. `GET /api/ai/chat` devuelve 405 JSON, como corresponde. La lectura sin sesión de objetivos devolvió 401, pero el conector no expuso el cuerpo y no se certifica ese flujo por esta comprobación. No se inició sesión en Supabase ni se llamó a Gemini. La revisión funcional autenticada y el ensayo del modelo real siguen pendientes; esta actualización de documentación no cambia el código de la aplicación desplegada.
 
 - Las pruebas de transporte y prompts usan mocks: comprueban datos enviados, invariantes, conteo de solicitudes y renderizado. **No certifican obediencia de un Gemini real**, ausencia total de alucinaciones textuales ni latencia de producción. La revisión humana de respuestas reales en un entorno permitido sigue pendiente.
 - Una lista de actividad recortada puede omitir nombres. Los totales conservan su significado, pero no permiten reconstruir una actividad ausente ni toda la carga física.
