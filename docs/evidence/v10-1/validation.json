@@ -1,0 +1,49 @@
+{
+  "date": "2026-11-13",
+  "baseCommit": "742bd78d553d99f75f604e0b3fdb577829f1253d",
+  "implementationCommit": "1b30d5de2aafa21141d9b7d3b25e9e4b217f71ca",
+  "pullRequest": "https://github.com/MateoLitrenta/calori-tracker/pull/77",
+  "nodeVersion": "24.4.1",
+  "focusedRegression": {
+    "selection": "tests whose names start with coach, habit, chat-view or ai-transport, excluding native postgres suites",
+    "passed": 186,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 98249.6801,
+    "includesCompiledHTTPHandler": true,
+    "services": "Synthetic Auth, quota, goals and Gemini; loopback HTTP only. No remote model evaluation."
+  },
+  "build": "passed: npm run build",
+  "serverTypecheck": "passed: tsc -p api/ai/tsconfig.json --noEmit",
+  "lint": { "exitCode": 0, "errors": 0, "existingWarnings": 12 },
+  "diffCheck": "passed",
+  "globalSuite": {
+    "certified": false,
+    "attempt": { "tests": 565, "passed": 556, "failed": 8, "cancelled": 1 },
+    "limitations": [
+      "The sandbox denied native PostgreSQL file operations and loopback connections.",
+      "The native PostgREST runtime required by the transactional HTTP suite was unavailable.",
+      "The initial attempt included a UI harness assertion corrected before the implementation commit; the final 24 UI tests passed.",
+      "The compiled HTTP test passed in the final focused regression after allowing local loopback."
+    ],
+    "scope": "Closed persistence and security audits were not reopened or modified. The global attempt is not represented as a green gate."
+  },
+  "preview": {
+    "status": "blocked",
+    "httpStatus": 402,
+    "code": "resource_creation_blocked",
+    "project": "calori-tracker",
+    "projectId": "prj_uS28Bgl4CSeONLL3K7wrnLEHVxwj",
+    "environment": "preview",
+    "requiresAccountAdministration": true,
+    "url": null
+  },
+  "constraints": {
+    "productionDeployment": false,
+    "merge": false,
+    "supabaseChanges": false,
+    "quotaChanges": false,
+    "schemaChanges": false,
+    "liveGeminiEvaluated": false
+  }
+}
