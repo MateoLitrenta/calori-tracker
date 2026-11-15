@@ -1,4 +1,4 @@
-import { addDays, isValid, parseISO, startOfWeek } from 'date-fns';
+import { addDays, addMonths, endOfMonth, isValid, parseISO, startOfMonth, startOfWeek } from 'date-fns';
 import { formatDateStr } from './helpers.ts';
 
 export interface HomePresentationState {
@@ -21,6 +21,17 @@ export const homeWeek = (date: string) => {
 };
 export function moveHomeWeek(date: string, direction: -1 | 1, today: string): string {
   const next = formatDateStr(addDays(parseISO(date), direction * 7)), { min, max } = homeDateBounds(today);
+  return next < min ? min : next > max ? max : next;
+}
+export function homeMonth(date: string): string[][] {
+  const start = startOfWeek(startOfMonth(parseISO(date)), { weekStartsOn: 0 }), end = endOfMonth(parseISO(date));
+  const weeks: string[][] = [];
+  for (let current = start; current <= end; current = addDays(current, 7))
+    weeks.push(Array.from({ length: 7 }, (_, index) => formatDateStr(addDays(current, index))));
+  return weeks;
+}
+export function moveHomeMonth(date: string, months: number, today: string): string {
+  const next = formatDateStr(addMonths(parseISO(date), months)), { min, max } = homeDateBounds(today);
   return next < min ? min : next > max ? max : next;
 }
 export function normalizeHomePresentation(value: unknown, today: string): HomePresentationState {

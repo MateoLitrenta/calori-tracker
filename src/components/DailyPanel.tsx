@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useId } from 'react';
-import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, X, CaretRight, Clock, Sparkle } from '@phosphor-icons/react';
+import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, CaretRight, Clock, Sparkle } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
@@ -86,8 +86,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const balance = emptyHistory ? null : isGroup ? summary.balance : Math.round(ingested - expenditure);
   const classifiedBalance = isGroup ? summary.averageBalance : balance;
   const balanceLabel = getBalanceLabel(classifiedBalance);
-  // Presentation only: the existing number stays unchanged when meals are absent.
-  const provisionalBalance = !isGroup && !emptyHistory && currentRecord.meals.length === 0;
+  // Presentation only: calculations and their numeric breakdown stay unchanged.
+  const noDailyEnergy = !isGroup && !hasEnergyData(currentRecord);
+  const provisionalBalance = !isGroup && !noDailyEnergy && currentRecord.meals.length === 0;
 
   let panelTitle = "Resumen del día";
   let panelSubtitle = format(new Date(dateStr + 'T12:00:00'), 'd MMM yyyy', { locale: es });
@@ -496,23 +497,23 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       {/* Summary Cards */}
       <div className="daily-summary flex flex-col gap-4">
         {/* Hero Card de Calorías */}
-        <div data-provisional={provisionalBalance} className="energy-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl p-4 md:p-6 flex flex-col items-center gap-4">
+        <div data-provisional={provisionalBalance} data-energy-state={isGroup ? 'period' : noDailyEnergy ? 'empty' : provisionalBalance ? 'partial' : 'recorded'} className="energy-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl p-4 md:p-6 flex flex-col items-center gap-4">
           <div className="energy-headline flex flex-col items-center text-center">
             <div className="flex items-center gap-2 text-slate-500 dark:text-gray-400 text-sm font-semibold mb-1">
               <Barbell size={20} className="text-purple-400" /> {isGroup ? 'Balance acumulado' : provisionalBalance ? 'Balance provisional' : 'Balance energético'}
             </div>
-            {provisionalBalance && <p className="energy-qualifier">Este día está incompleto</p>}
+            {provisionalBalance && <p className="energy-qualifier">Sin comidas registradas</p>}
             <div className="energy-number text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2 tabular-nums">
-              {balance === null ? 'Sin datos' : `${balance > 0 ? '+' : ''}${balance.toLocaleString('es-AR')} kcal`}
+              {noDailyEnergy ? 'Sin datos de energía' : balance === null ? 'Sin datos' : `${balance > 0 ? '+' : ''}${balance.toLocaleString('es-AR')} kcal`}
             </div>
             {isGroup && classifiedBalance !== null && (
               <div className="text-xs text-slate-500 dark:text-gray-400 tabular-nums mb-2">
                 Promedio diario: {classifiedBalance > 0 ? '+' : ''}{classifiedBalance.toLocaleString('es-AR')} kcal/día
               </div>
             )}
-            <div className={`energy-status text-xs px-3 py-1 rounded-full font-medium ${getBalancePillColor(provisionalBalance ? null : classifiedBalance)}`}>
-              {provisionalBalance ? 'Sin comidas registradas' : balanceLabel}
-            </div>
+            {!noDailyEnergy && !provisionalBalance && <div className={`energy-status text-xs px-3 py-1 rounded-full font-medium ${getBalancePillColor(classifiedBalance)}`}>
+              {balanceLabel}
+            </div>}
           </div>
 
           <div className="energy-metrics w-full flex justify-between md:justify-around items-start border-t border-slate-200 dark:border-gray-800/30 pt-4 mt-2">
@@ -542,9 +543,11 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
             <details className="energy-breakdown text-xs text-slate-500 dark:text-gray-400">
               <summary className="cursor-pointer font-medium">Ver desglose</summary>
               <div className="space-y-1 mt-2">
+                {noDailyEnergy && <p className="energy-breakdown-note">El gasto incluye la estimación basal. Todavía no hay registros de energía.</p>}
                 <div>TMB: {calculateBMR(profile).toLocaleString('es-AR')} kcal</div>
                 <div>Pasos: {getStepCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
                 <div>Ejercicio: {getWorkoutCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
+                {noDailyEnergy && balance !== null && <div>Balance estimado: {balance > 0 ? '+' : ''}{balance.toLocaleString('es-AR')} kcal</div>}
               </div>
             </details>
           </div>}
@@ -896,6 +899,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 {isEditingWater ? (
                   <input
                     type="number"
+                    aria-label="Cantidad de agua (ml)"
                     inputMode="numeric"
                     pattern="[0-9]*"
                     min="0"
@@ -945,6 +949,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 {isEditingSteps ? (
                   <input
                     type="number"
+                    aria-label="Total de pasos"
                     inputMode="numeric"
                     pattern="[0-9]*"
                     min="0"
@@ -1000,7 +1005,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   setEditWeightVal(currentRecord.weight ? String(currentRecord.weight) : '');
                   weightDraftBaseRef.current = snapshotEntryRecord(currentRecord, profile.recordGeneration);
                   setIsEditingWeight(true);
-                }} title="Registrar peso">Editar</button>
+                }} title="Registrar peso" aria-label="Editar peso">Editar</button>
             </div>
           </div>
             {habit.status && <div className="habit-feedback flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-gray-300"
@@ -1018,19 +1023,10 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Detail Modal */}
       {detailModalItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="record-detail-modal bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm rounded-2xl shadow-xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
-              <h3 className="font-bold text-lg text-slate-900 dark:text-white">Detalle del Registro</h3>
-              <button 
-                onClick={() => setDetailModalItem(null)}
-                className="text-slate-500 dark:text-gray-400 hover:text-white transition-colors p-1"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            
-            <div className="p-6 flex flex-col gap-4">
+        <EntryFormShell title="Detalle del Registro" desktopModal closeLabel="Cerrar detalle" onClose={() => setDetailModalItem(null)}>
+          <div className="record-detail-modal flex min-h-0 flex-col">
+            <div className="record-detail-content entry-form-content p-6 flex flex-col gap-4">
+              <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>
               <div className="flex flex-col gap-1 text-center">
                 <span className="record-detail-main text-xl font-bold text-white break-words">
                   {detailModalItem._type === 'meal' ? detailModalItem.name : detailModalItem.activity}
@@ -1074,8 +1070,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               )}
             </div>
             
-            <div className="p-4 border-t border-slate-200 dark:border-gray-800 flex gap-3 bg-slate-100 dark:bg-[#0f141c]">
+            <div className="record-detail-actions p-4 border-t border-slate-200 dark:border-gray-800 flex gap-3 bg-slate-100 dark:bg-[#0f141c]">
               <button 
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   const item = detailModalItem;
@@ -1088,6 +1085,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 <PencilSimple size={18} /> Editar
               </button>
               <button 
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   if (detailModalItem._type === 'meal') handleDeleteMeal(detailModalItem.id);
@@ -1100,7 +1098,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               </button>
             </div>
           </div>
-        </div>
+        </EntryFormShell>
       )}
 
       {/* Weight uses the same accessible shell and selected-day context as other records. */}

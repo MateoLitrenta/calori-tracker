@@ -3,6 +3,7 @@ import { CaretDown, CaretUp } from '@phosphor-icons/react';
 import Heatmap, { type ActivityHistoryState } from './Heatmap';
 import DailyPanel from './DailyPanel';
 import WeeklyDateNav from './WeeklyDateNav';
+import HomeDatePicker from './HomeDatePicker';
 import type { UserProfile } from '../types';
 import type { RecordWriter } from '../lib/recordFeedback';
 import type { HabitDraftController } from '../lib/habitDraft';
@@ -83,6 +84,8 @@ export default function HomeView({ activeProfile, updateRecord, habitDrafts, vie
   const entryActive = entry.ownerId === ownerId && entry.active;
   const [blockedOwner, setBlockedOwner] = useState<string | null>(null);
   const openDayBlocked = blockedOwner === ownerId;
+  const blockedActionRef = useRef<HTMLButtonElement>(null);
+  const [calendarOwner, setCalendarOwner] = useState<string | null>(null);
   const [historyDisclosure, setHistoryDisclosure] = useState({ ownerId, expanded: false });
   const [mobile, setMobile] = useState(() => typeof window !== 'undefined' && !!window.matchMedia?.('(max-width: 767px)').matches);
   const historyExpanded = !mobile || (historyDisclosure.ownerId === ownerId && historyDisclosure.expanded);
@@ -95,6 +98,7 @@ export default function HomeView({ activeProfile, updateRecord, habitDrafts, vie
   const records = activeProfile.records || {};
 
   useEffect(() => { saveHomePresentation(ownerId, state, today); }, [ownerId, state, today]);
+  useLayoutEffect(() => { if (openDayBlocked) blockedActionRef.current?.focus({ preventScroll: true }); }, [openDayBlocked]);
   useEffect(() => {
     const query = window.matchMedia?.('(max-width: 767px)');
     if (!query) return;
@@ -106,11 +110,14 @@ export default function HomeView({ activeProfile, updateRecord, habitDrafts, vie
   // Browsing the calendar never changes a writer's date. Opening is explicit,
   // and an existing form/editor keeps its original day until the user closes it.
   const selectDay = (dateStr: string, fromHistory = false) => {
-    if (!isHomeDate(dateStr, today)) return;
-    if (entryActive && dateStr !== selectedDateStr) { setBlockedOwner(ownerId); return; }
+    if (!isHomeDate(dateStr, today)) return false;
+    if (entryActive && dateStr !== selectedDateStr) {
+      setBlockedOwner(ownerId); blockedActionRef.current?.focus({ preventScroll: true }); return false;
+    }
     setBlockedOwner(null);
     if (fromHistory) scrollRequest.current = 'records';
     setState({ ...state, dailyDateStr: dateStr, openedFromHistory: fromHistory });
+    return true;
   };
   const returnToHistory = () => {
     setHistoryDisclosure({ ownerId, expanded: true });
@@ -118,9 +125,9 @@ export default function HomeView({ activeProfile, updateRecord, habitDrafts, vie
     setState({ ...state, openedFromHistory: false });
   };
   const openCalendar = () => {
-    setHistoryDisclosure({ ownerId, expanded: true });
-    scrollRequest.current = 'history';
-    setState({ ...state, history: { view: 'month', dateStr: selectedDateStr, anchor: selectedDateStr } });
+    if (entryActive) { setBlockedOwner(ownerId); blockedActionRef.current?.focus({ preventScroll: true }); return; }
+    setBlockedOwner(null);
+    setCalendarOwner(ownerId);
   };
   const returnToDraft = () => {
     const field = rootRef.current?.querySelector<HTMLElement>('form textarea, form input, form button, .daily-habits input');
@@ -141,8 +148,10 @@ export default function HomeView({ activeProfile, updateRecord, habitDrafts, vie
       <WeeklyDateNav selectedDateStr={selectedDateStr} today={today} onSelectDate={date => selectDay(date)} onOpenCalendar={openCalendar} />
       {openDayBlocked && <div className="home-date-blocked" role="alert">
         <p>Guardá o cerrá el registro en edición antes de cambiar de día. Tu borrador se conserva.</p>
-        <button type="button" onClick={event => { event.stopPropagation(); returnToDraft(); }}>Volver al registro en edición</button>
+        <button ref={blockedActionRef} type="button" onClick={event => { event.stopPropagation(); returnToDraft(); }}>Volver al registro en edición</button>
       </div>}
+      {calendarOwner === ownerId && <HomeDatePicker key={`calendar-${ownerId}`} selectedDateStr={selectedDateStr} today={today}
+        onSelectDate={date => selectDay(date)} onClose={() => setCalendarOwner(null)} />}
       <DailyPanel
         key={ownerId}
         record={records[selectedDateStr]}

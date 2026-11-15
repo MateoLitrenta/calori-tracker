@@ -8,12 +8,14 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 // App, HomeView, DailyPanel, Heatmap, ChartsView and CSS are product sources.
 // Auth, record writer, Storage and AI are isolated synthetic boundaries.
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const before = process.argv.includes('--before');
-const base = '5a74e7279c77a7d1dc25fb5604d5fa0d657d6bf5';
-const phase = before ? 'before' : 'after';
+const beforeRefinement = process.argv.includes('--before-refinement');
+const refinement = beforeRefinement || process.argv.includes('--refinement');
+const before = process.argv.includes('--before') || beforeRefinement;
+const base = refinement ? 'fe01ecb86e0933c5260c2630fe4d7a6e82ebccdd' : '5a74e7279c77a7d1dc25fb5604d5fa0d657d6bf5';
+const phase = beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
 let root = repo;
 if (before) {
-  root = path.resolve(repo, '../home-v10-1-1-baseline');
+  root = path.resolve(repo, beforeRefinement ? '../home-v10-1-1-refinement-baseline' : '../home-v10-1-1-baseline');
   mkdirSync(root, { recursive: true });
   if (!existsSync(path.join(root, 'src'))) {
     const archive = path.join(root, 'baseline.tar');
@@ -82,7 +84,7 @@ function Controls(){const q=window.__homeQA;useSyncExternalStore(fn=>{q.listener
 createRoot(document.getElementById('root')).render(<ThemeProvider><App/><Controls/></ThemeProvider>);`;
 const entryCode = ts.transpileModule(entry, { compilerOptions: { module: ts.ModuleKind.ESNext,
   jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText;
-const port=Number(process.argv.find(value=>value.startsWith('--port='))?.split('=')[1] || (before?5181:5182));
+const port=Number(process.argv.find(value=>value.startsWith('--port='))?.split('=')[1] || (beforeRefinement?5183:refinement?5184:before?5181:5182));
 // The baseline links the same installed dependencies, but each source tree must
 // own its optimizer cache. Sharing node_modules/.vite can invalidate the other
 // server's dependency URLs and return 504s instead of mounting the real App.

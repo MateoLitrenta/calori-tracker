@@ -1,4 +1,4 @@
-import { useId, useRef, type KeyboardEvent } from 'react';
+import { useId, useLayoutEffect, useRef, type KeyboardEvent } from 'react';
 import { CalendarBlank, CaretLeft, CaretRight } from '@phosphor-icons/react';
 import { addDays, format, parseISO, startOfWeek } from 'date-fns';
 import { es } from 'date-fns/locale/es';
@@ -15,7 +15,22 @@ export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, on
   const days = homeWeek(selectedDateStr), { min } = homeDateBounds(today);
   const date = parseISO(selectedDateStr), titleId = useId();
   const rootRef = useRef<HTMLElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
   const label = format(date, selectedDateStr.slice(0, 4) === today.slice(0, 4) ? "EEEE d 'de' MMMM" : "EEEE d 'de' MMMM 'de' yyyy", { locale: es });
+  const compactLabel = `${selectedDateStr === today ? 'Hoy · ' : ''}${format(date, selectedDateStr.slice(0, 4) === today.slice(0, 4) ? 'd MMM' : 'd MMM yy', { locale: es })}`;
+  const compactWeek = `${format(parseISO(days[0]), days[0].slice(0, 7) === days[6].slice(0, 7) ? 'd' : 'd MMM', { locale: es })}–${format(parseISO(days[6]), 'd MMM', { locale: es })}`;
+  const reveal = (day: string) => {
+    const strip = stripRef.current, button = rootRef.current?.querySelector<HTMLButtonElement>(`[data-day="${day}"]`);
+    if (!strip || !button || strip.clientWidth === 0) return;
+    const left = button.getBoundingClientRect().left - strip.getBoundingClientRect().left + strip.scrollLeft;
+    if (left < strip.scrollLeft) strip.scrollLeft = left;
+    else if (left + button.offsetWidth > strip.scrollLeft + strip.clientWidth) strip.scrollLeft = left + button.offsetWidth - strip.clientWidth;
+  };
+  useLayoutEffect(() => {
+    const update = () => reveal(selectedDateStr);
+    update(); window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [selectedDateStr]);
   const moveFocus = (event: KeyboardEvent<HTMLButtonElement>, current: string) => {
     const index = days.indexOf(current);
     const next = event.key === 'ArrowLeft' ? formatDateStr(addDays(parseISO(current), -1))
@@ -26,16 +41,19 @@ export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, on
     event.preventDefault();
     // Arrow keys move through the seven visible controls without changing the
     // writer's date. Enter/Space is the explicit selection, just like a click.
-    if (isHomeDate(next, today) && days.includes(next)) rootRef.current?.querySelector<HTMLButtonElement>(`[data-day="${next}"]`)?.focus();
+    if (isHomeDate(next, today) && days.includes(next)) {
+      rootRef.current?.querySelector<HTMLButtonElement>(`[data-day="${next}"]`)?.focus({ preventScroll: true }); reveal(next);
+    }
     else if (index >= 0) event.currentTarget.focus();
   };
   const currentWeek = formatDateStr(startOfWeek(parseISO(today), { weekStartsOn: 0 }));
   const firstWeek = formatDateStr(startOfWeek(parseISO(min), { weekStartsOn: 0 }));
   return <section ref={rootRef} className="home-date-nav" aria-label="Fecha de Inicio">
     <div className="home-date-heading">
-      <div className="home-date-context" aria-live="polite" aria-atomic="true">
+      <div className="home-date-context" data-date-context={selectedDateStr === today ? 'today' : 'past'} aria-live="polite" aria-atomic="true">
         <span className="home-date-kicker">{selectedDateStr === today ? 'Hoy' : 'Fecha anterior'}</span>
-        <h2 id={titleId}><time dateTime={selectedDateStr}>{label}</time></h2>
+        <h2 id={titleId}><time dateTime={selectedDateStr} aria-label={label}><span className="home-date-long-label">{label}</span><span className="home-date-compact-label">{compactLabel}</span></time></h2>
+        <span className="home-date-mobile-week">{compactWeek}</span>
       </div>
       <div className="home-date-shortcuts">
         <button type="button" className="home-date-today" onClick={() => onSelectDate(today)} disabled={selectedDateStr === today}>Hoy</button>
@@ -53,6 +71,7 @@ export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, on
         <CaretRight size={19} aria-hidden="true" />
       </button>
     </div>
+    <div ref={stripRef} className="home-week-scroll" role="region" aria-label="Días de la semana; desplazamiento horizontal si es necesario" tabIndex={0}>
     <div className="home-week-days" role="group" aria-labelledby={titleId}>
       {days.map(day => <button type="button" key={day} data-day={day}
         disabled={!isHomeDate(day, today)} aria-pressed={day === selectedDateStr}
@@ -63,6 +82,7 @@ export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, on
         <strong>{format(parseISO(day), 'd')}</strong>
         <i aria-hidden="true" />
       </button>)}
+    </div>
     </div>
   </section>;
 }

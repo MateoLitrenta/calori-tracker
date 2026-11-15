@@ -31,12 +31,13 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
         </div>
 
         {user && (
-          <nav className="flex flex-col gap-2">
+          <nav aria-label="Navegación principal" className="flex flex-col gap-2">
             {navItems.map(({ id, label, icon: Icon }) => {
               const isActive = activeTab === id;
               return (
                 <button
                   key={id}
+                  aria-current={isActive ? 'page' : undefined}
                   onClick={() => onTabChange(id)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-[var(--radius-control)] font-medium transition-colors ${
                     isActive

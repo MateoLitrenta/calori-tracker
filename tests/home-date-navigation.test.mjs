@@ -6,7 +6,7 @@ import { test } from 'node:test';
 import React, { act } from 'react';
 import ts from 'typescript';
 import { JSDOM } from 'jsdom';
-import { homeDateBounds, homePresentationKey, homeWeek, isHomeDate, moveHomeWeek, normalizeHomePresentation } from '../src/utils/homeDateNavigation.ts';
+import { homeDateBounds, homeMonth, homePresentationKey, homeWeek, isHomeDate, moveHomeMonth, moveHomeWeek, normalizeHomePresentation } from '../src/utils/homeDateNavigation.ts';
 
 const root = fileURLToPath(new URL('../src/', import.meta.url));
 const url = code => 'data:text/javascript;base64,' + Buffer.from(code).toString('base64');
@@ -71,6 +71,11 @@ async function mount(t, { width = 375, stored = {}, controlled = false, accounts
   window.scrollTo = () => {}; window.confirm = () => true;
   for (const [key, value] of Object.entries(stored)) window.sessionStorage.setItem(key, value);
   const saves = [];
+  const originalError = console.error, duplicateKeys = [];
+  console.error = (...args) => {
+    if (/Encountered two children with the same key|unique.*key.*prop/.test(args.map(String).join(' '))) duplicateKeys.push(args.map(String).join(' '));
+    originalError(...args);
+  };
   let changeOwner, toggleView, finishSave;
   function App() {
     const [owner, setOwner] = React.useState('A'), [records, setRecords] = React.useState(accounts);
@@ -89,12 +94,14 @@ async function mount(t, { width = 375, stored = {}, controlled = false, accounts
   const { createRoot } = await import('react-dom/client');
   let reactRoot = createRoot(document.getElementById('root'));
   await act(() => reactRoot.render(React.createElement(App)));
-  t.after(async () => { await act(() => reactRoot.unmount()); dom.window.close();
-    for (const [name, value] of Object.entries(saved)) globalThis[name] = value; });
+  t.after(async () => { await act(() => reactRoot.unmount()); dom.window.close(); console.error = originalError;
+    for (const [name, value] of Object.entries(saved)) globalThis[name] = value;
+    assert.deepEqual(duplicateKeys, [], 'Stable sibling keys must not leave orphaned calendar dialogs'); });
   const click = async node => { assert.ok(node, 'Requested control exists'); await act(async () => { node.click(); await new Promise(setImmediate); }); };
   const button = name => [...document.querySelectorAll('button')].find(el => el.getAttribute('aria-label') === name || el.textContent.trim() === name);
   return { saves, scrolls, click, button,
     day: date => document.querySelector(`.home-date-nav [data-day="${date}"]`),
+    calendarDay: date => document.querySelector(`[data-calendar-day="${date}"]`),
     selected: () => document.querySelector('.home-date-context time').dateTime,
     switchOwner: async owner => act(() => changeOwner(owner)),
     awayAndBack: async () => { await act(() => toggleView(false)); await act(() => toggleView(true)); },
@@ -122,6 +129,9 @@ test('local calendar validation and week navigation preserve the existing range,
   assert.deepEqual(homeWeek('2027-01-01'), ['2026-12-27','2026-12-28','2026-12-29','2026-12-30','2026-12-31','2027-01-01','2027-01-02']);
   assert.equal(moveHomeWeek('2026-11-08', 1, today), today);
   assert.equal(moveHomeWeek('2025-01-03', -1, today), '2025-01-01');
+  assert.equal(homeMonth('2028-02-15').flat().filter(day => day.startsWith('2028-02')).length, 29);
+  assert.equal(homeMonth('2026-11-12')[0][0], homeWeek('2026-11-01')[0]);
+  assert.equal(moveHomeMonth('2026-03-31', -1, today), '2026-02-28');
   assert.equal(normalizeHomePresentation({ dailyDateStr: '2026-02-30', history: { view: 'invalid', dateStr: '2030-01-01', anchor: 'oops' } }, today).dailyDateStr, today);
 });
 
@@ -233,16 +243,78 @@ test('blurred step edits save their selected day before navigation and weight co
   assert.equal(view.saves[1].record.steps, 9200); assert.equal(view.saves[1].record.meals[0].name, 'Comida de ayer');
 });
 
-test('mobile monthly access opens the preserved history without changing the daily date, and arrows move focus without selecting', async t => {
+test('mobile calendar opens contextually, focuses the selected day, and Escape restores its trigger without changing history', async t => {
   const view = await mount(t); const history = document.querySelector('[data-history-root]');
+  await view.click(document.querySelector(`.history-day[data-date="${yesterday}"]`));
   assert.equal(document.querySelector('.home-history-content').hidden, true);
-  await view.click(view.button('Abrir calendario mensual'));
-  assert.equal(document.querySelector('.home-history-content').hidden, false);
+  const trigger = view.button('Abrir calendario mensual'); trigger.focus(); await view.click(trigger);
+  assert.ok(document.querySelector('[role="dialog"]')); assert.equal(document.activeElement, view.calendarDay(today));
+  assert.equal(document.querySelector('.home-history-content').hidden, true);
   assert.equal(document.querySelector('[data-history-root]'), history); assert.equal(view.selected(), today);
-  assert.equal(view.scrolls.at(-1), history);
-  view.day(today).focus(); await act(() => view.day(today).dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true })));
+  assert.equal(view.scrolls.length, 0, 'The contextual calendar does not scroll the page into History');
+  await act(() => view.calendarDay(today).dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true })));
+  assert.equal(document.activeElement, view.calendarDay(yesterday)); assert.equal(view.selected(), today);
+  await act(() => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
+  assert.equal(document.querySelector('[role="dialog"]'), null); assert.equal(document.activeElement, trigger);
+  assert.equal(document.querySelector('.history-day[aria-pressed="true"]').dataset.date, yesterday);
+  await view.click(trigger); await view.click(view.button('Cerrar calendario'));
+  assert.equal(document.querySelector('[role="dialog"]'), null, 'The X action must remove the dialog, not leave a portal orphan');
+  assert.equal(document.activeElement, trigger);
+  await view.click(trigger); await view.click(view.calendarDay(yesterday));
+  assert.equal(document.querySelector('[role="dialog"]'), null, 'Explicit date selection removes the dialog');
+  assert.equal(view.selected(), yesterday); assert.equal(document.activeElement, trigger);
+  await view.click(view.button('Hoy'));
+  await act(() => view.day(today).focus());
+  await act(() => view.day(today).dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true })));
   assert.equal(document.activeElement, view.day(yesterday)); assert.equal(view.selected(), today);
   assert.equal(view.saves.length, 0);
+});
+
+test('desktop calendar navigation retains arrow focus, while a selection changes only the daily view and Hoy returns directly', async t => {
+  const view = await mount(t, { width: 1440 });
+  const trigger = view.button('Abrir calendario mensual'); trigger.focus(); await view.click(trigger);
+  const previous = document.querySelector('.home-date-picker [aria-label="Mes anterior"]');
+  await act(() => previous.focus()); await view.click(previous);
+  assert.equal(document.activeElement, previous); assert.match(document.querySelector('.home-month-heading h4').textContent, /octubre/);
+  await view.click(previous); assert.equal(document.activeElement, previous); assert.match(document.querySelector('.home-month-heading h4').textContent, /septiembre/);
+  assert.equal(view.selected(), today); assert.equal(view.saves.length, 0);
+  await view.click(view.calendarDay('2026-09-17')); assert.equal(view.selected(), '2026-09-17');
+  assert.equal(document.querySelector('[role="dialog"]'), null); assert.equal(document.activeElement, trigger);
+  assert.equal(document.querySelector('.history-day[aria-pressed="true"]').dataset.date, today);
+  await view.click(trigger); await view.click(document.querySelector('[data-calendar-today]'));
+  assert.equal(view.selected(), today); assert.equal(document.querySelector('[role="dialog"]'), null); assert.equal(view.saves.length, 0);
+});
+
+test('calendar keyboard crosses months, keeps future/boundary days disabled and commits only on activation', async t => {
+  const view = await mount(t); await view.click(view.button('Abrir calendario mensual'));
+  await act(() => view.calendarDay(today).dispatchEvent(new window.KeyboardEvent('keydown', { key: 'PageUp', bubbles: true })));
+  assert.equal(document.activeElement, view.calendarDay('2026-10-12')); assert.equal(view.selected(), today);
+  await act(() => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true })));
+  assert.equal(document.activeElement, view.calendarDay('2026-10-05'));
+  await act(() => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Home', bubbles: true })));
+  assert.equal(document.activeElement, view.calendarDay('2026-10-04'));
+  await act(() => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'End', bubbles: true })));
+  assert.equal(document.activeElement, view.calendarDay('2026-10-10'));
+  await view.click(view.calendarDay('2026-10-10')); assert.equal(view.selected(), '2026-10-10');
+  await view.click(view.button('Abrir calendario mensual'));
+  await view.click(document.querySelector('.home-date-picker [aria-label="Mes siguiente"]'));
+  assert.equal(view.calendarDay('2026-11-13').disabled, true);
+  await view.click(view.calendarDay('2026-11-13')); assert.equal(view.selected(), '2026-10-10');
+  assert.equal(view.saves.length, 0);
+});
+
+test('calendar access with an active draft announces and focuses recovery without losing the original date or text', async t => {
+  const view = await mount(t, { width: 1440 }); await view.click(document.querySelector('.daily-quick-actions button'));
+  await fill('add-meal-description', 'Borrador ante calendario');
+  const textarea = document.getElementById('add-meal-description'); await view.click(view.button('Abrir calendario mensual'));
+  assert.equal(document.querySelector('.home-date-picker'), null); assert.equal(document.getElementById('add-meal-description'), textarea);
+  assert.equal(view.selected(), today); assert.equal(textarea.value, 'Borrador ante calendario');
+  assert.equal(document.activeElement, view.button('Volver al registro en edición')); assert.equal(view.saves.length, 0);
+});
+
+test('mobile week ranges spell out both months when they cross a month boundary', async t => {
+  const view = await mount(t, { initialNow: '2026-12-03T12:00:00', stored: { [homePresentationKey('A')]: JSON.stringify({ version: 1, dailyDateStr: '2026-11-30' }) } });
+  assert.equal(view.selected(), '2026-11-30'); assert.equal(document.querySelector('.home-date-mobile-week').textContent, '29 nov–5 dic');
 });
 
 test('a local midnight refresh changes Hoy to a past date without changing a draft or its writer date', async t => {

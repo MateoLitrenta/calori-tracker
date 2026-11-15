@@ -1,0 +1,616 @@
+{
+  "dateUTC": "2026-11-15T21:24:59.037Z",
+  "source": "App and Home sources with synthetic Auth/writer/Storage/AI boundaries",
+  "browser": "Chrome headless, disposable contexts",
+  "localOnly": true,
+  "remoteServicesCertified": false,
+  "blockedExternalRequests": [],
+  "cases": [
+    {
+      "scenario": "A",
+      "label": "Comprender balance de Hoy",
+      "width": 393,
+      "status": "passed",
+      "actions": [],
+      "clicks": 0,
+      "fieldEdits": 0,
+      "keyActions": 0,
+      "observedMainScrollChangePx": 0,
+      "durationMs": 12554,
+      "before": {
+        "date": "2026-11-13",
+        "writes": 0
+      },
+      "after": {
+        "date": "2026-11-13",
+        "writes": [],
+        "aiCalls": 0,
+        "externalRequests": 0
+      },
+      "details": {
+        "consumed": 1250,
+        "estimatedExpenditure": 2281,
+        "balance": -1031,
+        "stepsToRead": 0,
+        "canonicalValuesVisible": true
+      },
+      "screenshots": []
+    },
+    {
+      "scenario": "B",
+      "label": "Registrar comida",
+      "width": 393,
+      "status": "passed",
+      "actions": [
+        {
+          "kind": "click",
+          "label": "Registrar comida",
+          "mainScroll": 0
+        },
+        {
+          "kind": "field-edit",
+          "label": "Descripción",
+          "mainScroll": 0
+        },
+        {
+          "kind": "field-edit",
+          "label": "Calorías",
+          "mainScroll": 0
+        },
+        {
+          "kind": "field-edit",
+          "label": "Hora",
+          "mainScroll": 0
+        },
+        {
+          "kind": "click",
+          "label": "Guardar registro",
+          "mainScroll": 0
+        }
+      ],
+      "clicks": 2,
+      "fieldEdits": 3,
+      "keyActions": 0,
+      "observedMainScrollChangePx": 0,
+      "durationMs": 18648,
+      "before": {
+        "date": "2026-11-13",
+        "writes": 0
+      },
+      "after": {
+        "date": "2026-11-13",
+        "writes": [
+          {
+            "owner": "A",
+            "date": "2026-11-13",
+            "status": "confirmed"
+          }
+        ],
+        "aiCalls": 0,
+        "externalRequests": 0
+      },
+      "details": {
+        "oneConfirmedRecord": true,
+        "writerDate": "2026-11-13",
+        "aiCalls": 0
+      },
+      "screenshots": [
+        "journey-B-meal-form-393-light.png"
+      ]
+    },
+    {
+      "scenario": "C",
+      "label": "Ir a ayer y editar un registro",
+      "width": 393,
+      "status": "passed",
+      "actions": [
+        {
+          "kind": "click",
+          "label": "Elegir 2026-11-12",
+          "mainScroll": 0
+        },
+        {
+          "kind": "click",
+          "label": "Abrir comida de ayer",
+          "mainScroll": 0
+        },
+        {
+          "kind": "click",
+          "label": "Editar registro",
+          "mainScroll": 0
+        },
+        {
+          "kind": "field-edit",
+          "label": "Editar descripción",
+          "mainScroll": 0
+        },
+        {
+          "kind": "click",
+          "label": "Guardar registro",
+          "mainScroll": 0
+        }
+      ],
+      "clicks": 4,
+      "fieldEdits": 1,
+      "keyActions": 0,
+      "observedMainScrollChangePx": 0,
+      "durationMs": 20009,
+      "before": {
+        "date": "2026-11-13",
+        "writes": 0
+      },
+      "after": {
+        "date": "2026-11-12",
+        "writes": [
+          {
+            "owner": "A",
+            "date": "2026-11-12",
+            "status": "confirmed"
+          }
+        ],
+        "aiCalls": 0,
+        "externalRequests": 0
+      },
+      "details": {
+        "writerDate": "2026-11-12",
+        "todayUnchanged": true
+      },
+      "screenshots": []
+    },
+    {
+      "scenario": "D",
+      "label": "Calendario contextual y otro mes",
+      "width": 375,
+      "status": "passed",
+      "actions": [
+        {
+          "kind": "click",
+          "label": "Abrir calendario",
+          "mainScroll": 0
+        },
+        {
+          "kind": "click",
+          "label": "Mes anterior",
+          "mainScroll": 0
+        },
+        {
+          "kind": "click",
+          "label": "Elegir 31 de octubre",
+          "mainScroll": 0
+        },
+        {
+          "kind": "click",
+          "label": "Reabrir calendario",
+          "mainScroll": 0
+        },
+        {
+          "kind": "click",
+          "label": "Volver a Hoy",
+          "mainScroll": 0
+        }
+      ],
+      "clicks": 5,
+      "fieldEdits": 0,
+      "keyActions": 0,
+      "observedMainScrollChangePx": 0,
+      "durationMs": 15643,
+      "before": {
+        "date": "2026-11-13",
+        "writes": 0
+      },
+      "after": {
+        "date": "2026-11-13",
+        "writes": [],
+        "aiCalls": 0,
+        "externalRequests": 0
+      },
+      "details": {
+        "monthExplorationDoesNotRetarget": true,
+        "directSelectionCloses": true,
+        "futureDisabled": true,
+        "focusRestored": true,
+        "todayShortcut": true
+      },
+      "screenshots": []
+    },
+    {
+      "scenario": "E",
+      "label": "Registrar agua, pasos y peso",
+      "width": 320,
+      "status": "passed",
+      "actions": [
+        {
+          "kind": "click",
+          "label": "Sumar agua",
+          "mainScroll": 685
+        },
+        {
+          "kind": "click",
+          "label": "Sumar pasos",
+          "mainScroll": 685
+        },
+        {
+          "kind": "click",
+          "label": "Editar peso",
+          "mainScroll": 685
+        },
+        {
+          "kind": "field-edit",
+          "label": "Peso",
+          "mainScroll": 685
+        },
+        {
+          "kind": "key",
+          "label": "Guardar peso con Enter",
+          "mainScroll": 685
+        }
+      ],
+      "clicks": 3,
+      "fieldEdits": 1,
+      "keyActions": 1,
+      "observedMainScrollChangePx": 685,
+      "durationMs": 21682,
+      "before": {
+        "date": "2026-11-13",
+        "writes": 0
+      },
+      "after": {
+        "date": "2026-11-13",
+        "writes": [
+          {
+            "owner": "A",
+            "date": "2026-11-13",
+            "status": "confirmed"
+          },
+          {
+            "owner": "A",
+            "date": "2026-11-13",
+            "status": "confirmed"
+          },
+          {
+            "owner": "A",
+            "date": "2026-11-13",
+            "status": "confirmed"
+          }
+        ],
+        "aiCalls": 0,
+        "externalRequests": 0
+      },
+      "details": {
+        "water": 2000,
+        "steps": 6800,
+        "weight": 73.6,
+        "writerDate": "2026-11-13",
+        "nativeEnter": true
+      },
+      "screenshots": [
+        "journey-E-habits-320-light.png"
+      ]
+    },
+    {
+      "scenario": "E",
+      "label": "Registrar agua, pasos y peso",
+      "width": 375,
+      "status": "passed",
+      "actions": [
+        {
+          "kind": "click",
+          "label": "Sumar agua",
+          "mainScroll": 401
+        },
+        {
+          "kind": "click",
+          "label": "Sumar pasos",
+          "mainScroll": 401
+        },
+        {
+          "kind": "click",
+          "label": "Editar peso",
+          "mainScroll": 401
+        },
+        {
+          "kind": "field-edit",
+          "label": "Peso",
+          "mainScroll": 401
+        },
+        {
+          "kind": "key",
+          "label": "Guardar peso con Enter",
+          "mainScroll": 401
+        }
+      ],
+      "clicks": 3,
+      "fieldEdits": 1,
+      "keyActions": 1,
+      "observedMainScrollChangePx": 401,
+      "durationMs": 15073,
+      "before": {
+        "date": "2026-11-13",
+        "writes": 0
+      },
+      "after": {
+        "date": "2026-11-13",
+        "writes": [
+          {
+            "owner": "A",
+            "date": "2026-11-13",
+            "status": "confirmed"
+          },
+          {
+            "owner": "A",
+            "date": "2026-11-13",
+            "status": "confirmed"
+          },
+          {
+            "owner": "A",
+            "date": "2026-11-13",
+            "status": "confirmed"
+          }
+        ],
+        "aiCalls": 0,
+        "externalRequests": 0
+      },
+      "details": {
+        "water": 2000,
+        "steps": 6800,
+        "weight": 73.6,
+        "writerDate": "2026-11-13",
+        "nativeEnter": true
+      },
+      "screenshots": [
+        "journey-E-habits-375-light.png"
+      ]
+    },
+    {
+      "scenario": "F",
+      "label": "Explorar Historial y regresar",
+      "width": 375,
+      "status": "passed",
+      "actions": [
+        {
+          "kind": "click",
+          "label": "Abrir Historial",
+          "mainScroll": 401
+        },
+        {
+          "kind": "click",
+          "label": "Explorar ayer en Historial",
+          "mainScroll": 1038
+        },
+        {
+          "kind": "click",
+          "label": "Abrir registros del día",
+          "mainScroll": 444
+        },
+        {
+          "kind": "click",
+          "label": "Volver a Tu actividad",
+          "mainScroll": 938
+        },
+        {
+          "kind": "click",
+          "label": "Ir a Datos",
+          "mainScroll": 0
+        },
+        {
+          "kind": "click",
+          "label": "Volver a Inicio",
+          "mainScroll": 182
+        }
+      ],
+      "clicks": 6,
+      "fieldEdits": 0,
+      "keyActions": 0,
+      "observedMainScrollChangePx": 3246,
+      "durationMs": 15707,
+      "before": {
+        "date": "2026-11-13",
+        "writes": 0
+      },
+      "after": {
+        "date": "2026-11-12",
+        "writes": [],
+        "aiCalls": 0,
+        "externalRequests": 0
+      },
+      "details": {
+        "historyPreviewIndependent": true,
+        "explicitOpen": true,
+        "returnDoesNotRetarget": true,
+        "tabContextPreserved": true
+      },
+      "screenshots": []
+    },
+    {
+      "scenario": "G",
+      "label": "Día empty",
+      "width": 393,
+      "status": "passed",
+      "actions": [
+        {
+          "kind": "click",
+          "label": "Elegir 2026-11-10",
+          "mainScroll": 0
+        }
+      ],
+      "clicks": 1,
+      "fieldEdits": 0,
+      "keyActions": 0,
+      "observedMainScrollChangePx": 0,
+      "durationMs": 11989,
+      "before": {
+        "date": "2026-11-13",
+        "writes": 0
+      },
+      "after": {
+        "date": "2026-11-10",
+        "writes": [],
+        "aiCalls": 0,
+        "externalRequests": 0
+      },
+      "details": {
+        "state": "empty",
+        "date": "2026-11-10",
+        "coverageHonest": true,
+        "balancePresentation": "empty"
+      },
+      "screenshots": [
+        "journey-G-empty-393-light.png"
+      ]
+    },
+    {
+      "scenario": "G",
+      "label": "Día partial",
+      "width": 393,
+      "status": "passed",
+      "actions": [
+        {
+          "kind": "click",
+          "label": "Elegir 2026-11-11",
+          "mainScroll": 0
+        }
+      ],
+      "clicks": 1,
+      "fieldEdits": 0,
+      "keyActions": 0,
+      "observedMainScrollChangePx": 0,
+      "durationMs": 12327,
+      "before": {
+        "date": "2026-11-13",
+        "writes": 0
+      },
+      "after": {
+        "date": "2026-11-11",
+        "writes": [],
+        "aiCalls": 0,
+        "externalRequests": 0
+      },
+      "details": {
+        "state": "partial",
+        "date": "2026-11-11",
+        "coverageHonest": true,
+        "balancePresentation": "provisional"
+      },
+      "screenshots": [
+        "journey-G-partial-393-light.png"
+      ]
+    },
+    {
+      "scenario": "H",
+      "label": "Borrador y cambio de día en desktop",
+      "width": 1440,
+      "status": "passed",
+      "actions": [
+        {
+          "kind": "click",
+          "label": "Registrar comida",
+          "mainScroll": 0
+        },
+        {
+          "kind": "field-edit",
+          "label": "Borrador",
+          "mainScroll": 0
+        },
+        {
+          "kind": "click",
+          "label": "Intentar seleccionar ayer",
+          "mainScroll": 0
+        },
+        {
+          "kind": "click",
+          "label": "Intentar abrir calendario",
+          "mainScroll": 0
+        },
+        {
+          "kind": "click",
+          "label": "Recuperar foco del borrador",
+          "mainScroll": 140
+        }
+      ],
+      "clicks": 4,
+      "fieldEdits": 1,
+      "keyActions": 0,
+      "observedMainScrollChangePx": 140,
+      "durationMs": 13298,
+      "before": {
+        "date": "2026-11-13",
+        "writes": 0
+      },
+      "after": {
+        "date": "2026-11-13",
+        "writes": [],
+        "aiCalls": 0,
+        "externalRequests": 0
+      },
+      "details": {
+        "dayRetained": "2026-11-13",
+        "draftRetained": true,
+        "calendarBlocked": true,
+        "explicitRecovery": true
+      },
+      "screenshots": [
+        "journey-H-draft-guard-1440-light.png"
+      ]
+    },
+    {
+      "scenario": "H",
+      "label": "Sheet móvil protege el borrador",
+      "width": 375,
+      "status": "passed",
+      "actions": [
+        {
+          "kind": "click",
+          "label": "Registrar comida",
+          "mainScroll": 0
+        },
+        {
+          "kind": "field-edit",
+          "label": "Borrador",
+          "mainScroll": 0
+        }
+      ],
+      "clicks": 1,
+      "fieldEdits": 1,
+      "keyActions": 0,
+      "observedMainScrollChangePx": 0,
+      "durationMs": 12169,
+      "before": {
+        "date": "2026-11-13",
+        "writes": 0
+      },
+      "after": {
+        "date": "2026-11-13",
+        "writes": [],
+        "aiCalls": 0,
+        "externalRequests": 0
+      },
+      "details": {
+        "dayRetained": "2026-11-13",
+        "backgroundInert": true,
+        "focusContained": true,
+        "draftRetained": true,
+        "keyboardFocusMoves": 12
+      },
+      "screenshots": [
+        "journey-H-mobile-sheet-375-light.png"
+      ]
+    }
+  ],
+  "summary": {
+    "cases": 11,
+    "passed": 11,
+    "failed": 0,
+    "semanticScenarios": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "interactionCounts": "Task clicks, field edits and save keys are counted separately. The mobile H case additionally verifies 12 Tab presses, reported in keyboardFocusMoves. These are scripted task steps, not usability scores.",
+    "scrollMeasurement": "Sum of observed absolute .app-main scrollTop changes between actions; not physical gestures or a performance benchmark."
+  }
+}

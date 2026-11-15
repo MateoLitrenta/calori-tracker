@@ -28,8 +28,8 @@ function view(t, width, height = 900, containerWidth = width) {
     '<section class="assistant-view"><header class="chat-heading"></header><div class="chat-messages">' +
     '<div class="chat-message chat-message-bot chat-message-structured"><div class="chat-bubble">Text</div></div></div><form class="chat-composer"></form></section>' +
     '<div class="home-variants"><div class="daily-panel" data-period="day"><div class="daily-summary"><div class="energy-card"><div class="energy-headline"><div>Balance energético</div><div class="energy-number">-600 kcal</div><div class="energy-status bg-heatmap-deficit-high">Déficit Alto</div></div><div class="energy-footer"><p class="energy-coverage">1 comida · 0 ejercicios<span>Según tus registros</span></p><details class="energy-breakdown"><summary>Ver desglose</summary></details></div></div></div>' +
-    '<div class="daily-journal"><div class="daily-quick-actions"><button>Comida</button><button>Ejercicio</button></div><div class="daily-logs"></div></div>' +
-    '<section class="daily-habits-block"><div class="daily-habits"><div class="habit-card"><div class="habit-controls"><button>+</button></div></div></div></section></div>' +
+    '<div class="daily-journal"><div class="daily-quick-actions"><button>Comida</button><button>Ejercicio</button></div><div class="daily-logs"><ul class="daily-records"><li><button class="daily-record-open"><span class="daily-record-title">Comida</span><span class="daily-record-meta">12:00 · Almuerzo</span></button></li></ul></div></div>' +
+    '<section class="daily-habits-block"><div class="daily-habits"><div class="habit-card"><div class="habit-header">Agua</div><div class="habit-metric"><button class="habit-value">1.500</button><span>ml</span></div><div class="habit-controls"><button>+</button></div></div></div></section></div>' +
     '<section class="activity-history-v2"><header class="ah-header"><div><h2>Tu actividad</h2></div><div class="ah-view-switch"><button aria-pressed="true">Mes</button></div></header>' +
     '<div class="ah-layout"><div class="ah-calendar"><div class="ah-navigation"><h3>Noviembre 2026</h3><div class="ah-nav-actions"><button>←</button><button>Hoy</button><button>→</button></div></div>' +
     '<div class="ah-compact-week"><p>Semana 2 de 5</p><div><button>←</button><button>→</button></div></div>' +
@@ -110,6 +110,15 @@ test('mobile daily actions and compact complementary controls retain comfortable
     assert.ok(parseInt(style('.energy-breakdown summary').minHeight) >= 44);
     assert.equal(style('.habit-controls').gridTemplateColumns, 'repeat(2, minmax(44px, 1fr))');
     assert.equal(style('.daily-habits .habit-card').borderTopWidth, '0px');
+    assert.equal(style('.daily-habits').alignItems, 'stretch');
+    assert.equal(style('.daily-habits .habit-card').gridTemplateRows, 'auto minmax(58px, 1fr) auto');
+    assert.equal(style('.habit-metric').display, 'grid');
+    assert.equal(style('.habit-metric').gridTemplateRows, '44px 14px');
+    assert.equal(style('.habit-metric > :first-child').gridRow, '1');
+    assert.equal(style('.habit-metric > span:nth-child(2)').gridRow, '2');
+    assert.equal(style('.daily-records').gap, '8px');
+    assert.equal(style('.daily-record-open').padding, '10px 12px');
+    assert.equal(style('.daily-record-meta').flexWrap, 'wrap');
     assert.equal(style('.daily-logs').maxHeight, '');
     assert.equal(style('.daily-logs').overflowY, '');
   }

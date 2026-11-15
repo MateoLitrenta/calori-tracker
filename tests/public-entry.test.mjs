@@ -33,6 +33,7 @@ const imports = {
   './Heatmap': stub('export default () => null;'),
   './DailyPanel': stub('export default () => null;'),
   './WeeklyDateNav': stub('export default () => null;'),
+  './HomeDatePicker': stub('export default () => null;'),
   './ViewSkeleton': stub('export default props => globalThis.__entryHarness.ViewSkeleton(props);'),
   './components/ViewSkeleton': stub('export default props => globalThis.__entryHarness.ViewSkeleton(props);'),
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,

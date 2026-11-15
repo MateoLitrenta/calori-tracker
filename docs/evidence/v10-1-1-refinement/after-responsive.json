@@ -1,0 +1,654 @@
+{
+  "phase": "after",
+  "results": [
+    {
+      "width": 320,
+      "height": 740,
+      "theme": "light",
+      "docWidth": 320,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 296,
+        "h": 104
+      },
+      "weekDay": {
+        "x": 6,
+        "y": 108,
+        "w": 44,
+        "h": 56
+      },
+      "balance": {
+        "x": 12,
+        "y": 190,
+        "w": 296,
+        "h": 175
+      },
+      "actions": {
+        "x": 12,
+        "y": 381,
+        "w": 296,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 492,
+        "w": 266,
+        "h": 67
+      },
+      "activeNav": "rgb(146, 71, 15)",
+      "contrast": {
+        "activeNavigation": 6.69,
+        "selectedDay": 6.95,
+        "balance": 14.68
+      },
+      "calendar": {
+        "x": 0,
+        "y": 272,
+        "width": 320,
+        "height": 468,
+        "dayWidth": 44,
+        "dayHeight": 44,
+        "mainScroll": 0,
+        "hasFocus": true
+      },
+      "returnFocus": true
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "theme": "light",
+      "docWidth": 375,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 351,
+        "h": 104
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 108,
+        "w": 48,
+        "h": 56
+      },
+      "balance": {
+        "x": 12,
+        "y": 190,
+        "w": 351,
+        "h": 175
+      },
+      "actions": {
+        "x": 12,
+        "y": 381,
+        "w": 351,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 492,
+        "w": 321,
+        "h": 67
+      },
+      "activeNav": "rgb(146, 71, 15)",
+      "contrast": {
+        "activeNavigation": 6.69,
+        "selectedDay": 6.95,
+        "balance": 14.68
+      },
+      "calendar": {
+        "x": 0,
+        "y": 344,
+        "width": 375,
+        "height": 468,
+        "dayWidth": 49,
+        "dayHeight": 44,
+        "mainScroll": 0,
+        "hasFocus": true
+      },
+      "returnFocus": true
+    },
+    {
+      "width": 393,
+      "height": 852,
+      "theme": "light",
+      "docWidth": 393,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 369,
+        "h": 104
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 108,
+        "w": 51,
+        "h": 56
+      },
+      "balance": {
+        "x": 12,
+        "y": 190,
+        "w": 369,
+        "h": 177
+      },
+      "actions": {
+        "x": 12,
+        "y": 383,
+        "w": 369,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 494,
+        "w": 339,
+        "h": 67
+      },
+      "activeNav": "rgb(146, 71, 15)",
+      "contrast": {
+        "activeNavigation": 6.69,
+        "selectedDay": 6.95,
+        "balance": 14.68
+      },
+      "calendar": {
+        "x": 0,
+        "y": 384,
+        "width": 393,
+        "height": 468,
+        "dayWidth": 51,
+        "dayHeight": 44,
+        "mainScroll": 0,
+        "hasFocus": true
+      },
+      "returnFocus": true
+    },
+    {
+      "width": 440,
+      "height": 900,
+      "theme": "light",
+      "docWidth": 440,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 416,
+        "h": 104
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 108,
+        "w": 58,
+        "h": 56
+      },
+      "balance": {
+        "x": 12,
+        "y": 190,
+        "w": 416,
+        "h": 181
+      },
+      "actions": {
+        "x": 12,
+        "y": 387,
+        "w": 416,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 498,
+        "w": 386,
+        "h": 67
+      },
+      "activeNav": "rgb(146, 71, 15)",
+      "contrast": {
+        "activeNavigation": 6.69,
+        "selectedDay": 6.95,
+        "balance": 14.68
+      },
+      "calendar": {
+        "x": 0,
+        "y": 432,
+        "width": 440,
+        "height": 468,
+        "dayWidth": 58,
+        "dayHeight": 44,
+        "mainScroll": 0,
+        "hasFocus": true
+      },
+      "returnFocus": true
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "light",
+      "docWidth": 768,
+      "mainOverflow": 0,
+      "date": {
+        "x": 303,
+        "y": 47,
+        "w": 408,
+        "h": 162
+      },
+      "weekDay": {
+        "x": 303,
+        "y": 153,
+        "w": 55,
+        "h": 56
+      },
+      "balance": {
+        "x": 303,
+        "y": 281,
+        "w": 408,
+        "h": 182
+      },
+      "actions": {
+        "x": 303,
+        "y": 479,
+        "w": 408,
+        "h": 48
+      },
+      "row": {
+        "x": 318,
+        "y": 590,
+        "w": 378,
+        "h": 67
+      },
+      "activeNav": "rgb(146, 71, 15)",
+      "contrast": {
+        "activeNavigation": 6.06,
+        "selectedDay": 6.95,
+        "balance": 14.68
+      },
+      "calendar": {
+        "x": 192,
+        "y": 280,
+        "width": 384,
+        "height": 464,
+        "dayWidth": 50,
+        "dayHeight": 44,
+        "mainScroll": 0,
+        "hasFocus": true
+      },
+      "returnFocus": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "docWidth": 1440,
+      "mainOverflow": 0,
+      "date": {
+        "x": 280,
+        "y": 24,
+        "w": 1126,
+        "h": 78
+      },
+      "weekDay": {
+        "x": 721,
+        "y": 46,
+        "w": 86,
+        "h": 56
+      },
+      "balance": {
+        "x": 280,
+        "y": 166,
+        "w": 617,
+        "h": 198
+      },
+      "actions": {
+        "x": 1069,
+        "y": 397,
+        "w": 320,
+        "h": 44
+      },
+      "row": {
+        "x": 297,
+        "y": 453,
+        "w": 542,
+        "h": 61
+      },
+      "activeNav": "rgb(146, 71, 15)",
+      "contrast": {
+        "activeNavigation": 6.06,
+        "selectedDay": 6.95,
+        "balance": 14.68
+      },
+      "calendar": {
+        "x": 528,
+        "y": 218,
+        "width": 384,
+        "height": 464,
+        "dayWidth": 50,
+        "dayHeight": 44,
+        "mainScroll": 0,
+        "hasFocus": true
+      },
+      "returnFocus": true
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "theme": "dark",
+      "docWidth": 320,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 296,
+        "h": 104
+      },
+      "weekDay": {
+        "x": 6,
+        "y": 108,
+        "w": 44,
+        "h": 56
+      },
+      "balance": {
+        "x": 12,
+        "y": 190,
+        "w": 296,
+        "h": 175
+      },
+      "actions": {
+        "x": 12,
+        "y": 381,
+        "w": 296,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 492,
+        "w": 266,
+        "h": 67
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 7.82,
+        "selectedDay": 6.95,
+        "balance": 14.19
+      },
+      "calendar": {
+        "x": 0,
+        "y": 272,
+        "width": 320,
+        "height": 468,
+        "dayWidth": 44,
+        "dayHeight": 44,
+        "mainScroll": 0,
+        "hasFocus": true
+      },
+      "returnFocus": true
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "theme": "dark",
+      "docWidth": 375,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 351,
+        "h": 104
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 108,
+        "w": 48,
+        "h": 56
+      },
+      "balance": {
+        "x": 12,
+        "y": 190,
+        "w": 351,
+        "h": 175
+      },
+      "actions": {
+        "x": 12,
+        "y": 381,
+        "w": 351,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 492,
+        "w": 321,
+        "h": 67
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 7.82,
+        "selectedDay": 6.95,
+        "balance": 14.19
+      },
+      "calendar": {
+        "x": 0,
+        "y": 344,
+        "width": 375,
+        "height": 468,
+        "dayWidth": 49,
+        "dayHeight": 44,
+        "mainScroll": 0,
+        "hasFocus": true
+      },
+      "returnFocus": true
+    },
+    {
+      "width": 393,
+      "height": 852,
+      "theme": "dark",
+      "docWidth": 393,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 369,
+        "h": 104
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 108,
+        "w": 51,
+        "h": 56
+      },
+      "balance": {
+        "x": 12,
+        "y": 190,
+        "w": 369,
+        "h": 177
+      },
+      "actions": {
+        "x": 12,
+        "y": 383,
+        "w": 369,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 494,
+        "w": 339,
+        "h": 67
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 7.82,
+        "selectedDay": 6.95,
+        "balance": 14.19
+      },
+      "calendar": {
+        "x": 0,
+        "y": 384,
+        "width": 393,
+        "height": 468,
+        "dayWidth": 51,
+        "dayHeight": 44,
+        "mainScroll": 0,
+        "hasFocus": true
+      },
+      "returnFocus": true
+    },
+    {
+      "width": 440,
+      "height": 900,
+      "theme": "dark",
+      "docWidth": 440,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 416,
+        "h": 104
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 108,
+        "w": 58,
+        "h": 56
+      },
+      "balance": {
+        "x": 12,
+        "y": 190,
+        "w": 416,
+        "h": 181
+      },
+      "actions": {
+        "x": 12,
+        "y": 387,
+        "w": 416,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 498,
+        "w": 386,
+        "h": 67
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 7.82,
+        "selectedDay": 6.95,
+        "balance": 14.19
+      },
+      "calendar": {
+        "x": 0,
+        "y": 432,
+        "width": 440,
+        "height": 468,
+        "dayWidth": 58,
+        "dayHeight": 44,
+        "mainScroll": 0,
+        "hasFocus": true
+      },
+      "returnFocus": true
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "dark",
+      "docWidth": 768,
+      "mainOverflow": 0,
+      "date": {
+        "x": 303,
+        "y": 47,
+        "w": 408,
+        "h": 162
+      },
+      "weekDay": {
+        "x": 303,
+        "y": 153,
+        "w": 55,
+        "h": 56
+      },
+      "balance": {
+        "x": 303,
+        "y": 281,
+        "w": 408,
+        "h": 182
+      },
+      "actions": {
+        "x": 303,
+        "y": 479,
+        "w": 408,
+        "h": 48
+      },
+      "row": {
+        "x": 318,
+        "y": 590,
+        "w": 378,
+        "h": 67
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 6.78,
+        "selectedDay": 6.95,
+        "balance": 14.19
+      },
+      "calendar": {
+        "x": 192,
+        "y": 280,
+        "width": 384,
+        "height": 464,
+        "dayWidth": 50,
+        "dayHeight": 44,
+        "mainScroll": 0,
+        "hasFocus": true
+      },
+      "returnFocus": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "docWidth": 1440,
+      "mainOverflow": 0,
+      "date": {
+        "x": 280,
+        "y": 24,
+        "w": 1126,
+        "h": 78
+      },
+      "weekDay": {
+        "x": 721,
+        "y": 46,
+        "w": 86,
+        "h": 56
+      },
+      "balance": {
+        "x": 280,
+        "y": 166,
+        "w": 617,
+        "h": 198
+      },
+      "actions": {
+        "x": 1069,
+        "y": 397,
+        "w": 320,
+        "h": 44
+      },
+      "row": {
+        "x": 297,
+        "y": 453,
+        "w": 542,
+        "h": 61
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 6.78,
+        "selectedDay": 6.95,
+        "balance": 14.19
+      },
+      "calendar": {
+        "x": 528,
+        "y": 218,
+        "width": 384,
+        "height": 464,
+        "dayWidth": 50,
+        "dayHeight": 44,
+        "mainScroll": 0,
+        "hasFocus": true
+      },
+      "returnFocus": true
+    }
+  ],
+  "errors": []
+}
