@@ -614,8 +614,7 @@
   }
 }
 
-/* History 2.1: the established heatmap palette carries the balance, while
-   dates and values keep the theme's readable foreground. Selection stays orange. */
+/* The signed heatmap uses the same scale in the calendar, detail and legend. */
 .ah-day {
   isolation: isolate;
   min-height: 64px;

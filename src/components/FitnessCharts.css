@@ -99,7 +99,8 @@
 .charts-comparison dl { margin-block: 12px 8px; }
 .charts-comparison dd span { display: block; font-weight: 400; font-size: 12px; color: var(--fit-quiet); }
 .charts-scroll-hint { display: none; }
-@container energy (max-width: 600px) { .charts-scroll-hint { display: block; margin-top: 4px; } }
+@container energy (max-width: 600px) { .charts-year-hint { display: block; margin-top: 4px; } }
+@container energy (max-width: 360px) { .charts-week-hint { display: block; margin-top: 4px; } }
 .charts-mobile-only { display: none; }
 @media (max-width: 600px) {
   .charts-view .charts-desktop-only { display: none; }

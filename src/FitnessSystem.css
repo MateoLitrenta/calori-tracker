@@ -44,6 +44,14 @@
   --fit-danger: #9f302c;
   --fit-danger-soft: #f9eae5;
   --fit-success: #266941;
+  --fit-balance-deficit-high: #375678;
+  --fit-balance-deficit-medium: #597b9b;
+  --fit-balance-deficit-low: #94aec1;
+  --fit-balance-neutral: #747b77;
+  --fit-balance-surplus-low: #d2a375;
+  --fit-balance-surplus-medium: #aa7445;
+  --fit-balance-surplus-high: #80512f;
+  --fit-balance-empty: var(--fit-soft);
 }
 html.dark {
   color-scheme: dark;
@@ -65,6 +73,14 @@ html.dark {
   --fit-danger: #ffaaa0;
   --fit-danger-soft: #392624;
   --fit-success: #98d4a4;
+  --fit-balance-deficit-high: #9abde1;
+  --fit-balance-deficit-medium: #789bbd;
+  --fit-balance-deficit-low: #577490;
+  --fit-balance-neutral: #8c9690;
+  --fit-balance-surplus-low: #8a6d51;
+  --fit-balance-surplus-medium: #b08b67;
+  --fit-balance-surplus-high: #ddae7c;
+  --fit-balance-empty: var(--fit-soft);
 }
 .app-shell, .app-main { background: var(--fit-page); color: var(--fit-ink); }
 .app-sidebar, .app-bottom-nav, .appearance-picker {
