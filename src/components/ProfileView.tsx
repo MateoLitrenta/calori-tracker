@@ -1,9 +1,10 @@
-import './PremiumViews.css';
-import { useState, useEffect, useRef } from 'react';
+import './PeriodSelector.css';
+import './FitnessProfile.css';
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
 import { useTheme } from './ThemeProvider';
 import type { UserProfile, UserSex } from '../types';
-import { Check, Trash, PencilSimple, LockKey, SignOut, Info, CaretDown, SlidersHorizontal } from '@phosphor-icons/react';
+import { Check, Camera, Trash, PencilSimple, LockKey, SignOut, Info, CaretDown, SlidersHorizontal } from '@phosphor-icons/react';
 import { supabase } from '../lib/supabase';
 import { prepareAvatar } from '../lib/avatar';
 import UserAvatar from './UserAvatar';
@@ -206,22 +207,21 @@ export default function ProfileView() {
   };
 
   return (
-    <div data-editing={isEditing} className="premium-view dark profile-view profile-v2 flex flex-col w-full max-w-4xl mx-auto animate-in fade-in duration-300">
+    <div data-editing={isEditing} className="profile-view">
       <h1 className="profile-page-title">Perfil</h1>
 
       <section className="profile-panel profile-personal-panel" aria-labelledby="profile-name">
         <div className="profile-identity">
           {draftAvatar ? (
-            <img src={draftAvatar.url} alt="Vista previa de la foto de perfil" className="w-20 h-20 flex-none rounded-full object-cover" />
+            <img src={draftAvatar.url} alt="Vista previa de la foto de perfil" className="profile-avatar" />
           ) : (
-            <UserAvatar userId={user.id} path={activeProfile.avatar_path} revision={avatarRevision} size={80} />
+            <UserAvatar userId={user.id} path={activeProfile.avatar_path} revision={avatarRevision} size={72} className="profile-avatar" />
           )}
           <div className="profile-identity-copy">
             <h2 id="profile-name">{activeProfile.name}</h2>
-            <p className="profile-muted profile-email">{user.email}</p>
           </div>
         </div>
-        <input ref={photoInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only"
+        <input ref={photoInputRef} type="file" accept="image/jpeg,image/png,image/webp" hidden
           aria-label="Elegir foto de perfil" onChange={event => {
             const file = event.target.files?.[0];
             event.target.value = '';
@@ -229,12 +229,10 @@ export default function ProfileView() {
           }} />
         <div className="profile-actions profile-photo-actions">
           {!draftAvatar ? (
-            <>
-              <button type="button" disabled={photoBusy} onClick={() => photoInputRef.current?.click()}
-                className="profile-button profile-button-accent">
-                {photoBusy ? 'Preparando…' : 'Cambiar foto'}
-              </button>
-            </>
+            <button type="button" disabled={photoBusy} onClick={() => photoInputRef.current?.click()}
+              className="profile-button profile-button-neutral">
+              <Camera size={17} aria-hidden="true" />{photoBusy ? 'Preparando…' : 'Cambiar foto'}
+            </button>
           ) : (
             <>
               <button type="button" disabled={photoBusy} onClick={handleSavePhoto}
@@ -245,12 +243,6 @@ export default function ProfileView() {
                 className="profile-button profile-button-neutral">Cancelar</button>
             </>
           )}
-          {!isEditing && (
-            <button type="button" onClick={() => { initFromProfile(); setIsEditing(true); }}
-              className="profile-button profile-button-neutral">
-              <PencilSimple size={18} aria-hidden="true" /> Editar perfil
-            </button>
-          )}
           {!draftAvatar && activeProfile.avatar_path && (
             <button type="button" disabled={photoBusy} onClick={handleRemovePhoto}
               className="profile-button profile-button-quiet">Eliminar foto</button>
@@ -259,7 +251,13 @@ export default function ProfileView() {
 
         {!isEditing ? (
           <div className="profile-personal">
-            <h3 className="profile-subheading">Datos personales</h3>
+            <div className="profile-personal-heading">
+              <h3 className="profile-subheading">Datos personales</h3>
+              <button type="button" onClick={() => { initFromProfile(); setIsEditing(true); }}
+                className="profile-button profile-button-quiet">
+                <PencilSimple size={16} aria-hidden="true" /> Editar perfil
+              </button>
+            </div>
             <dl className="profile-facts">
               <div><dt>Edad</dt><dd>{age} <span>años</span></dd></div>
               <div><dt>Peso</dt><dd>{weight} <span>kg</span></dd></div>
@@ -269,7 +267,7 @@ export default function ProfileView() {
           </div>
         ) : (
           <form onSubmit={handleSave} className="profile-form profile-personal">
-            <h3 className="profile-subheading">Datos personales</h3>
+            <h3 className="profile-subheading">Editar datos personales</h3>
             <div className="profile-field-grid">
               <label className="profile-field sm:col-span-2">Nombre
                 <input required type="text" value={name} onChange={e => setName(e.target.value)} />
@@ -297,6 +295,45 @@ export default function ProfileView() {
               </button>
             </div>
           </form>
+        )}
+      </section>
+
+      <section className="profile-information" aria-labelledby="profile-information-heading">
+        <h2 id="profile-information-heading" className="profile-section-title"><SlidersHorizontal size={20} aria-hidden="true" /> Preferencias e información</h2>
+        <div className="profile-appearance-row">
+          <div>
+            <h3 className="profile-setting-value">Apariencia</h3>
+            <p className="profile-muted profile-appearance-copy">Elegí cómo querés ver Calori.</p>
+          </div>
+          <div className="profile-theme-control period-selector" role="group" aria-label="Apariencia"
+            style={{ '--active-index': (['system', 'light', 'dark'] as const).indexOf(theme) } as CSSProperties}>
+            <span className="profile-theme-indicator" aria-hidden="true" />
+            {([
+              { value: 'system', label: 'Sistema' },
+              { value: 'light', label: 'Claro' },
+              { value: 'dark', label: 'Oscuro' },
+            ] as const).map(({ value, label }) => (
+              <button key={value} type="button" aria-pressed={theme === value} onClick={() => setTheme(value)}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <button type="button" className="profile-info-toggle" aria-expanded={showEnergyInfo} aria-controls="profile-energy-details"
+          onClick={() => setShowEnergyInfo(value => !value)}>
+          <Info size={20} aria-hidden="true" />
+          <span className="flex-1 min-w-0">
+            <span className="block">Cómo calculamos tu gasto</span>
+            <span className="block profile-muted">TMB + pasos + ejercicio registrado</span>
+          </span>
+          <CaretDown size={18} aria-hidden="true" className={showEnergyInfo ? 'rotate-180' : ''} />
+        </button>
+        {showEnergyInfo && (
+          <div id="profile-energy-details" className="profile-energy-details profile-muted">
+            <p>TMB: tu gasto en reposo.</p>
+            <p>Gasto estimado = TMB + calorías de pasos + calorías de ejercicio registrados.</p>
+            <p>Pasos y ejercicio pueden solaparse. Usamos los valores registrados sin correcciones.</p>
+          </div>
         )}
       </section>
 
@@ -345,45 +382,6 @@ export default function ProfileView() {
         </button>
       </section>
 
-      <section className="profile-information" aria-labelledby="profile-information-heading">
-        <h2 id="profile-information-heading" className="profile-section-title"><SlidersHorizontal size={20} aria-hidden="true" /> Preferencias e información</h2>
-        <div className="profile-appearance-row">
-          <div>
-            <h3 className="profile-setting-value">Apariencia</h3>
-            <p className="profile-muted profile-appearance-copy">Elegí cómo querés ver Calori.</p>
-          </div>
-          <div className="profile-theme-control" role="group" aria-label="Apariencia">
-            <span className="profile-theme-indicator" aria-hidden="true"
-              style={{ transform: `translateX(${(['system', 'light', 'dark'] as const).indexOf(theme) * 100}%)` }} />
-            {([
-              { value: 'system', label: 'Sistema' },
-              { value: 'light', label: 'Claro' },
-              { value: 'dark', label: 'Oscuro' },
-            ] as const).map(({ value, label }) => (
-              <button key={value} type="button" aria-pressed={theme === value} onClick={() => setTheme(value)}>
-                {label}
-              </button>
-            ))}
-          </div>
-        </div>
-        <button type="button" className="profile-info-toggle" aria-expanded={showEnergyInfo} aria-controls="profile-energy-details"
-          onClick={() => setShowEnergyInfo(value => !value)}>
-          <Info size={20} aria-hidden="true" />
-          <span className="flex-1 min-w-0">
-            <span className="block">Cómo calculamos tu gasto</span>
-            <span className="block profile-muted">TMB + pasos + ejercicio registrado</span>
-          </span>
-          <CaretDown size={18} aria-hidden="true" className={showEnergyInfo ? 'rotate-180' : ''} />
-        </button>
-        {showEnergyInfo && (
-          <div id="profile-energy-details" className="profile-energy-details profile-muted">
-            <p>TMB: tu gasto en reposo.</p>
-            <p>Gasto estimado = TMB + calorías de pasos + calorías de ejercicio registrados.</p>
-            <p>Pasos y ejercicio pueden solaparse. Usamos los valores registrados sin correcciones.</p>
-          </div>
-        )}
-      </section>
-
       {!isEditing && (
         <div className="profile-danger profile-v2-danger">
           <h2 className="profile-section-title"><Trash size={18} aria-hidden="true" /> Zona de peligro</h2>
@@ -410,17 +408,17 @@ export default function ProfileView() {
         onClick={event => {
           if (!isSigningOut && event.target === event.currentTarget) event.currentTarget.close();
         }}
-        className="fixed inset-0 m-auto w-[calc(100vw_-_2rem)] max-w-sm max-h-[calc(100dvh_-_2rem)] overflow-y-auto p-0 bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] rounded-[var(--radius-panel)] backdrop:bg-black/50">
-        <div className="p-6">
-          <h2 id="signout-title" className="text-xl text-slate-900 dark:text-white">¿Cerrar sesión?</h2>
-          <p id="signout-description" className="mt-3 text-sm text-slate-500 dark:text-gray-400">Vas a salir de tu cuenta en este dispositivo.</p>
-          <div className="mt-6 flex gap-3">
+        className="profile-dialog">
+        <div className="profile-dialog-body">
+          <h2 id="signout-title" className="profile-section-title">¿Cerrar sesión?</h2>
+          <p id="signout-description" className="profile-muted">Vas a salir de tu cuenta en este dispositivo.</p>
+          <div className="profile-actions profile-form-actions">
             <button ref={signOutCancelRef} type="button" disabled={isSigningOut} onClick={() => signOutDialogRef.current?.close()}
-              className="flex-1 min-h-11 px-3 py-3 bg-slate-50 dark:bg-[#191c1f] border border-slate-200 dark:border-[#ffffff0d] text-slate-700 dark:text-gray-300 rounded-[var(--radius-control)] hover:bg-slate-100 dark:hover:bg-[#292d30] disabled:opacity-50 disabled:cursor-not-allowed">
+              className="profile-button profile-button-neutral">
               Cancelar
             </button>
             <button type="button" onClick={handleSignOut} disabled={isSigningOut} aria-busy={isSigningOut}
-              className="flex-1 min-h-11 px-3 py-3 bg-[#f5a064] text-[#241a13] rounded-[var(--radius-control)] hover:bg-[#e58b4f] disabled:opacity-50 disabled:cursor-not-allowed">
+              className="profile-button profile-button-primary">
               {isSigningOut ? 'Cerrando sesión…' : 'Cerrar sesión'}
             </button>
           </div>

@@ -37,7 +37,7 @@ export default function UserAvatar({ userId, path, size, revision = 0, className
   const url = validPath && resolved?.key === key ? resolved.url : null;
   return (
     <span
-      className={`inline-flex flex-none items-center justify-center overflow-hidden rounded-full bg-slate-100 text-slate-500 dark:bg-white/5 dark:text-gray-400 ${className}`}
+      className={`inline-flex flex-none items-center justify-center overflow-hidden rounded-full bg-[var(--fit-soft)] text-[var(--fit-quiet)] ${className}`}
       style={{ width: size, height: size }}
     >
       {url ? (
