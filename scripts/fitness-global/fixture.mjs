@@ -63,8 +63,8 @@ export function installGlobalFixture() {
       if(init?.method!=='POST') return respond({goals,hasMore:false});
       const {proposal}=JSON.parse(init.body);
       const previous=goals.find(goal=>goal.id===proposal.id);
-      if(previous?proposal.expectedVersion!==previous.version:proposal.operation!=='accept') return respond({},409);
       const {operation,expectedVersion,...values}=proposal;
+      if(previous?expectedVersion!==previous.version:operation!=='accept') return respond({},409);
       const now=new Date().toISOString();
       const goal={...values,createdAt:previous?.createdAt||now,updatedAt:now,
         status:operation==='cancel'?'cancelled':'active',version:(previous?.version||0)+1};
