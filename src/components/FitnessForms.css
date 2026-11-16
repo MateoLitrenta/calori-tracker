@@ -1,0 +1,219 @@
+/* The mobile shell is portalled beside .app-shell. Only Home opts in. */
+:is(.fitness-home, .fitness-entry-portal) {
+  --fitness-field: #fbfaf6;
+  --fitness-field-line: #b9bfb7;
+  --fitness-focus: #974518;
+}
+html.dark :is(.fitness-home, .fitness-entry-portal) {
+  --fitness-field: #202726;
+  --fitness-field-line: #626b69;
+  --fitness-focus: #ffac72;
+}
+
+.fitness-entry-portal .entry-bottom-sheet,
+.fitness-home .entry-desktop-modal {
+  color: var(--fit-ink);
+  background: var(--fit-page);
+  border-color: var(--fit-rule);
+}
+.fitness-entry-portal .entry-bottom-sheet { border-radius: 13px 13px 0 0; }
+.fitness-home .entry-desktop-modal { border-radius: 12px; }
+.fitness-home .entry-desktop-modal:has(.entry-fields-grid) { max-width: 34rem; }
+.fitness-entry-portal .entry-sheet-handle { display: none; }
+
+:is(.fitness-entry-portal, .fitness-home .entry-desktop-modal) .entry-sheet-header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 12px 12px 0 0;
+  background: var(--fit-board);
+  color: #f7f6ed;
+}
+:is(.fitness-entry-portal, .fitness-home .entry-desktop-modal) .entry-sheet-heading h3 {
+  margin: 0;
+  color: #f7f6ed;
+  font: 730 25px/1.1 var(--fit-face);
+  letter-spacing: -.025em;
+}
+:is(.fitness-entry-portal, .fitness-home .entry-desktop-modal) .entry-sheet-header .entry-date-context {
+  margin: 4px 0 0;
+  color: #c8d0cb;
+  font-size: 12px;
+  line-height: 1.4;
+}
+:is(.fitness-entry-portal, .fitness-home .entry-desktop-modal) .entry-sheet-header button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: #f7f6ed;
+  border: 1px solid #65716e;
+  border-radius: 5px;
+}
+:is(.fitness-entry-portal, .fitness-home .entry-desktop-modal) .entry-sheet-header button:focus-visible {
+  outline: 2px solid var(--fit-orange);
+  outline-offset: -2px;
+}
+.fitness-entry-portal .entry-fields-grid > .entry-date-context { display: none; }
+
+:is(.fitness-home, .fitness-entry-portal) .entry-form {
+  min-width: 0;
+  border-color: var(--fit-rule);
+  background: var(--fit-page);
+  color: var(--fit-ink);
+}
+.fitness-home .entry-form:has(.entry-fields-grid) { border-radius: 9px; gap: 0; padding: 0; }
+.fitness-home .entry-form .entry-fields-grid {
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  grid-template-areas: none;
+  gap: 16px;
+  padding: 18px;
+}
+.fitness-home .entry-form .entry-fields-grid > * { grid-area: auto; grid-column: 1/-1; }
+.fitness-home .entry-form-title {
+  font: 730 24px/1.1 var(--fit-face);
+  color: var(--fit-ink);
+}
+.fitness-home .entry-form .entry-date-context { margin: -8px 0 0; color: var(--fit-quiet); }
+.fitness-entry-portal.home-variants .entry-form .entry-fields-grid { padding: 16px 18px; gap: 14px; }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-field-label {
+  position: static;
+  display: block;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
+  white-space: normal;
+  color: var(--fit-ink);
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 600;
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-field-label span { color: var(--fit-quiet); font-weight: 450; }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-form-content :is(input:not([type="file"]), select, textarea) {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--fitness-field-line);
+  border-radius: 6px;
+  background: var(--fitness-field);
+  color: var(--fit-ink);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.4;
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-content :is(input,select,textarea):focus-visible {
+  outline: 2px solid var(--fitness-focus);
+  outline-offset: 1px;
+}
+:is(.fitness-home, .fitness-entry-portal) .fitness-field-pair {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  align-items: start;
+  gap: 12px;
+}
+:is(.fitness-home, .fitness-entry-portal) .fitness-meal-pair { grid-template-columns: minmax(0,.85fr) minmax(0,1.15fr); }
+:is(.fitness-home, .fitness-entry-portal) .fitness-field-pair > .entry-field { grid-area: auto; }
+:is(.fitness-home, .fitness-entry-portal) .entry-time-row { gap: 4px; min-width: 0; }
+:is(.fitness-home, .fitness-entry-portal) .entry-time-row input { flex: 1 1 0; }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-content .entry-time-now {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 48px;
+  border: 1px solid var(--fitness-field-line);
+  border-radius: 6px;
+  background: var(--fitness-field);
+  color: var(--fit-quiet);
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-unit-control { position: relative; display: block; }
+html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-form-content .entry-unit-control input { padding-right: 38px; }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-unit {
+  display: inline;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: var(--fit-quiet);
+  font-size: 12px;
+  pointer-events: none;
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-ai-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  align-self: flex-start;
+  padding: 5px 10px;
+  border: 1px solid var(--fit-rule);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--fit-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-ai-icon { display: inline-block; }
+:is(.fitness-home, .fitness-entry-portal) .entry-estimate-result {
+  border-radius: 6px;
+  border-color: var(--fit-rule);
+  background: var(--fitness-field);
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-activity-chips { gap: 6px; }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-activity-chips button {
+  min-height: 44px;
+  border: 1px solid var(--fit-rule);
+  border-radius: 6px;
+  color: var(--fit-ink);
+  background: var(--fitness-field);
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-activity-chips [aria-pressed=true] {
+  background: var(--fit-board); color: #fff; border-color: var(--fit-orange);
+}
+:is(.fitness-home, .fitness-entry-portal) .fitness-extras { border-top: 1px solid var(--fit-rule); }
+:is(.fitness-home, .fitness-entry-portal) .fitness-extras summary {
+  min-height: 44px; padding: 11px 2px; cursor: pointer; font-size: 14px; font-weight: 600;
+}
+:is(.fitness-home, .fitness-entry-portal) .fitness-extras summary span {
+  margin-left: 6px; font-size: 12px; font-weight: 450; color: var(--fit-quiet);
+}
+:is(.fitness-home, .fitness-entry-portal) .fitness-extra-fields {
+  display: grid; gap: 14px; padding-block: 4px 8px;
+}
+:is(.fitness-home, .fitness-entry-portal) .fitness-extra-fields > * { grid-area: auto; }
+:is(.fitness-home, .fitness-entry-portal) .fitness-extras .entry-photo-heading { display: block; }
+:is(.fitness-home, .fitness-entry-portal) .fitness-extras .entry-photo-hint { display: block; margin-top: 2px; font-size: 12px; color: var(--fit-quiet); }
+:is(.fitness-home, .fitness-entry-portal) .fitness-extras .entry-desktop-photo-label { display: none; }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer {
+  display: flex; justify-content: flex-end; margin: 0; padding: 12px 18px; border-top: 1px solid var(--fit-rule);
+}
+.fitness-entry-portal .entry-form .entry-form-footer { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 48px; border-radius: 6px; padding: 9px 18px; color: #241b15; background: var(--fit-orange); font-size: 15px; font-weight: 700;
+}
+.fitness-entry-portal .entry-form .entry-form-footer button { width: 100%; }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer button:hover:not(:disabled) { background: #f4a56d; color: #241b15; }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer button:disabled { opacity: .65; cursor: wait; }
+:is(.fitness-home, .fitness-entry-portal) .record-detail-modal .record-detail-content { gap: 14px; }
+:is(.fitness-home, .fitness-entry-portal) .record-detail-modal :is(.record-detail-content,.record-detail-actions) { background: var(--fit-page); border-color: var(--fit-rule); }
+:is(.fitness-home, .fitness-entry-portal) .record-detail-content .record-detail-main { color: var(--fit-ink); font: 700 24px/1.15 var(--fit-face); }
+:is(.fitness-home, .fitness-entry-portal) .record-detail-actions button { min-height: 44px; border-radius: 6px; }
+@media (min-width: 1024px) {
+  .fitness-home .entry-form .entry-meal-fields:not(.entry-edit-fields) > :is(.entry-description,.entry-type) { grid-column: auto; }
+}
+@media (max-width: 350px) {
+  .fitness-entry-portal.home-variants .entry-form .entry-fields-grid { padding-inline: 12px; }
+  .fitness-entry-portal .fitness-meal-pair { grid-template-columns: minmax(0,.72fr) minmax(0,1.28fr); gap: 8px; }
+}

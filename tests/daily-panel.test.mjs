@@ -89,7 +89,8 @@ test('incomplete-day context precedes the provisional balance without changing i
   const html = renderToStaticMarkup(React.createElement(DailyPanel, { profile, record, dateStr, records: {}, onUpdateRecord() {} }));
   assert.match(html, /data-provisional="true"/);
   assert.match(html, /data-energy-state="partial"/);
-  assert.ok(html.indexOf('Sin comidas registradas') < html.indexOf('-1.898 kcal'));
+  const text = html.replace(/<[^>]+>/g, '');
+  assert.ok(text.indexOf('Sin comidas registradas') < text.indexOf('-1.898 kcal'));
   assert.match(html, /Sin comidas registradas/);
   assert.equal((html.match(/Sin comidas registradas/g) || []).length, 1);
   assert.ok(render(record).includes('-1.898 kcal'));
@@ -112,7 +113,9 @@ test('days without energy logs name the missing energy data and keep estimates i
       assert.equal(breakdown.open, false);
       assert.match(breakdown.textContent, /El gasto incluye la estimación basal/);
       assert.match(breakdown.textContent, /TMB: 1\.618 kcal/);
-      assert.match(document.querySelector('.energy-metrics').textContent, /Gasto estimado1\.618 kcal/);
+      assert.equal(document.querySelector('.energy-metrics').textContent, 'Calorías consumidas—Gasto estimado—');
+      assert.equal(document.querySelectorAll('.fitness-track > span').length, 0);
+      assert.match(breakdown.textContent, /Gasto estimado1\.618 kcal/);
       if (day === dateStr) assert.match(breakdown.textContent, /Balance estimado: -1\.618 kcal/);
       else assert.doesNotMatch(breakdown.textContent, /Balance estimado:/);
       assert.deepEqual(record, snapshot);
@@ -128,6 +131,26 @@ test('daily summary has a collapsed breakdown and no profile explanations', () =
   assert.doesNotMatch(html, /<details[^>]* open/);
   assert.match(html, /Ver desglose/);
   assert.doesNotMatch(html, /TDEE|solaparse|Meta de hoy/);
+});
+
+test('energy bars use the same daily maximum, including days with intake above expenditure', () => {
+  for (const calories of [0, 400, 1618, 2400]) {
+    const record = { ...base, meals: [{ id: 'food', name: 'Almuerzo', type: 'Almuerzo', calories }] };
+    const dom = new JSDOM(renderToStaticMarkup(React.createElement(DailyPanel, {
+      profile, record, dateStr, records: {}, onUpdateRecord() {},
+    })));
+    try {
+      const { document } = dom.window;
+      const scale = Math.max(calories, 1618);
+      const bars = [...document.querySelectorAll('.fitness-track')];
+      assert.equal(bars.length, 2);
+      assert.deepEqual(bars.map(bar => bar.getAttribute('aria-hidden')), ['true', 'true']);
+      for (const [index, value] of [calories, 1618].entries()) {
+        assert.ok(Math.abs(parseFloat(bars[index].firstElementChild.style.width) - 100 * value / scale) < 0.001);
+      }
+      assert.match(document.querySelector('.energy-breakdown').textContent, /misma escala/);
+    } finally { dom.window.close(); }
+  }
 });
 
 test('only empty meal and workout lists use the compact records state', () => {
@@ -162,7 +185,7 @@ test('journal keeps every record and its full description in chronological DOM o
     assert.equal(html.includes('daily-records--columns'), count >= 2);
     for (let index = 0; index < count; index++) {
       assert.ok(html.includes(records[index].name), 'Long descriptions must remain complete');
-      assert.ok(html.includes(`+${records[index].calories} kcal`));
+      assert.ok(html.replace(/<[^>]+>/g, '').includes(`+${records[index].calories} kcal`));
       if (index) assert.ok(html.indexOf(records[index - 1].name) < html.indexOf(records[index].name));
     }
     assert.ok(html.indexOf('+ Comida') < html.indexOf('Registros del día'), 'Keep the existing mobile reading order');
@@ -185,7 +208,7 @@ test('habit controls keep accessible names and daily quick actions', () => {
   assert.match(html,/aria-label="Editar total de pasos"/);
 });
 
-test('daily reading order puts actions and every record before complementary metrics without duplicate controls', () => {
+test('daily reading order keeps actions, habits and chronological records together without duplicate controls', () => {
   const record = { ...base, meals: [{ id: 'meal-priority', name: 'Comida de prueba', type: 'Almuerzo', calories: 400 }],
     workouts: [{ id: 'work-priority', activity: 'Caminata de prueba', duration: 20, calories: 70 }], steps: 2500, water: 1000, weight: 70 };
   const dom = new JSDOM(renderToStaticMarkup(React.createElement(DailyPanel, {
@@ -194,7 +217,7 @@ test('daily reading order puts actions and every record before complementary met
   const document = dom.window.document;
   try {
     const inOrder = [...document.querySelectorAll('.energy-card, .daily-quick-actions, .daily-logs, .daily-habits-block')].map(node => node.className.split(' ')[0]);
-    assert.deepEqual(inOrder, ['energy-card', 'daily-quick-actions', 'daily-logs', 'daily-habits-block']);
+    assert.deepEqual(inOrder, ['energy-card', 'daily-quick-actions', 'daily-habits-block', 'daily-logs']);
     assert.equal(document.querySelectorAll('.daily-quick-actions').length, 1);
     assert.equal(document.querySelectorAll('.daily-habits').length, 1);
     assert.equal(document.querySelectorAll('.daily-record-open').length, 2);

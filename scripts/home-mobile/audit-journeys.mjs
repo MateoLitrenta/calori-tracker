@@ -8,9 +8,10 @@ import { getCaloriesIngested, calculateDailyExpenditure } from '../../src/utils/
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const browserModule = process.env.PLAYWRIGHT_MODULE || path.resolve(repo, '../qa-tools/node_modules/playwright/index.mjs');
 const { chromium } = await import(pathToFileURL(browserModule));
-const origin = process.env.HOME_QA_URL || 'http://127.0.0.1:5184';
+const fitness = process.argv.includes('--fitness');
+const origin = process.env.HOME_QA_URL || (fitness ? 'http://127.0.0.1:5192' : 'http://127.0.0.1:5184');
 assert.equal(new URL(origin).hostname, '127.0.0.1', 'Journey tests only target the local synthetic fixture');
-const output = path.resolve(repo, 'docs/evidence/v10-1-1-refinement');
+const output = path.resolve(repo, fitness ? 'docs/evidence/fitness-moderno/journeys' : 'docs/evidence/v10-1-1-refinement');
 mkdirSync(output, {
     recursive: true
 });
@@ -156,11 +157,11 @@ try {
     await runCase('A', 'Comprender balance de Hoy', 393, async (t) => {
         const s = await snapshots(t.page), r = s.profile.records[today];
         const consumed = getCaloriesIngested(r), expenditure = calculateDailyExpenditure(s.profile, r), balance = Math.round(consumed - expenditure);
-        const card = await t.page.locator('.energy-card').innerText();
+        const card = (await t.page.locator('.energy-card').innerText()).replaceAll('−', '-');
         for (const value of [consumed, expenditure, balance])
             assert.ok(card.includes(value.toLocaleString('es-AR')), 'Canonical energy value is visible: ' + value);
         assert.match(card, /estimado|estimación/i);
-        assert.match(card, /registros|comidas/i);
+        assert.match(card, /registros|comidas|consumidas/i);
         return {
             consumed, estimatedExpenditure: expenditure, balance, stepsToRead: 0, canonicalValuesVisible: true
         };
@@ -355,6 +356,71 @@ try {
             dayRetained: today, backgroundInert: true, focusContained: true, keyboardFocusMoves: 12, draftRetained: true
         };
     });
+    if (fitness) {
+        await runCase('I', 'Ejercicio en ayer: error, reintento, edición y eliminación', 375, async t => {
+            await t.select(yesterday);
+            const initial = (await snapshots(t.page)).profile.records;
+            const name = 'Caminata sintética de revisión';
+            await t.click('Abrir ejercicio', t.page.locator('.daily-quick-actions').getByRole('button', { name: /Ejercicio/i }));
+            await t.fill('Actividad', t.page.locator('#add-workout-activity'), name);
+            await t.fill('Duración', t.page.locator('#add-workout-duration'), '25');
+            await t.fill('Calorías', t.page.locator('#add-workout-calories'), '140');
+            await t.fill('Hora', t.page.locator('#add-workout-time'), '09:00');
+            await t.page.evaluate(() => { window.__homeQA.failed = 'reject'; });
+            await t.submit();
+            await t.page.waitForFunction(() => window.__homeQA.writes.some(w => w.status === 'failed'));
+            await t.page.getByText('No se pudo guardar el ejercicio. Intentá nuevamente.', { exact:true }).waitFor();
+            assert.equal(await t.page.locator('#add-workout-activity').inputValue(), name);
+            assert.deepEqual((await snapshots(t.page)).profile.records, initial);
+            await t.page.evaluate(() => { window.__homeQA.failed = false; });
+            await t.submit();
+            await waitWrites(t.page, 1);
+            const entry = (await snapshots(t.page)).profile.records[yesterday].workouts.find(w => w.activity === name);
+            assert.ok(entry);
+            const row = t.page.locator('.daily-records').getByRole('button', { name: new RegExp(name) });
+            const detail = t.page.locator('.record-detail-modal');
+            await t.click('Consultar ejercicio', row);
+            await t.click('Editar ejercicio', detail.getByRole('button', { name: 'Editar', exact: true }));
+            await t.fill('Corregir duración', t.page.locator('#edit-workout-duration'), '35');
+            await t.submit();
+            await waitWrites(t.page, 2);
+            const updates = (await snapshots(t.page)).profile.records[yesterday].workouts.filter(w => w.activity === name);
+            assert.equal(updates.length, 1);
+            assert.equal(updates[0].id, entry.id);
+            assert.equal(updates[0].duration, 35);
+            await t.click('Reabrir ejercicio', row);
+            await t.click('Eliminar ejercicio', detail.getByRole('button', { name: 'Eliminar', exact: true }));
+            await waitWrites(t.page, 3);
+            const final = await snapshots(t.page);
+            assert.deepEqual(final.profile.records[yesterday].workouts, initial[yesterday].workouts);
+            assert.deepEqual(final.profile.records[today], initial[today]);
+            assert.ok(final.writes.every(w => w.date === yesterday && w.owner === 'A'));
+            return { visibleSaveError: true, failedDraftRetained: true, retryOnce: true, sameEntryId: true, deletionConfirmed: true };
+        });
+        await runCase('J', 'Eliminar comida y cambiar de cuenta', 393, async t => {
+            await t.select(yesterday);
+            const baseline = (await snapshots(t.page)).profile.records;
+            await t.click('Consultar comida de ayer', t.page.locator('.daily-records').getByRole('button', { name: /Comida de ayer/ }));
+            await t.click('Eliminar comida', t.page.locator('.record-detail-modal').getByRole('button', { name: 'Eliminar', exact: true }));
+            await waitWrites(t.page, 1);
+            const saved = (await snapshots(t.page)).profile.records;
+            assert.equal(saved[yesterday].meals.length, 0);
+            assert.deepEqual(saved[today], baseline[today]);
+            await t.page.evaluate(() => window.__homeQA.switchAccount('B'));
+            await selected(t.page, today);
+            assert.equal((await snapshots(t.page)).profile.id, 'synthetic-home-b');
+            assert.equal(await t.page.locator('.daily-record-open').count(), 0);
+            await t.click('Sumar agua en la cuenta B', t.page.getByRole('button', { name: 'Sumar 250 ml de agua', exact: true }));
+            await waitWrites(t.page, 2);
+            assert.equal((await snapshots(t.page)).profile.records[today].water, 500);
+            await t.page.evaluate(() => window.__homeQA.switchAccount('A'));
+            await selected(t.page, yesterday);
+            const final = await snapshots(t.page);
+            assert.deepEqual(final.profile.records, saved);
+            assert.deepEqual(final.writes.map(w => [w.owner,w.date]), [['A',yesterday],['B',today]]);
+            return { mealDeletedOnSelectedDay: true, twoOwnersIsolated: true, dateRestored: true };
+        });
+    }
 }
 finally {
     await browser.close();

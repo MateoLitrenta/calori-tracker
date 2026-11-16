@@ -8,14 +8,17 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 // App, HomeView, DailyPanel, Heatmap, ChartsView and CSS are product sources.
 // Auth, record writer, Storage and AI are isolated synthetic boundaries.
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const beforeFitness = process.argv.includes('--before-fitness');
+const fitness = beforeFitness || process.argv.includes('--fitness');
 const beforeRefinement = process.argv.includes('--before-refinement');
 const refinement = beforeRefinement || process.argv.includes('--refinement');
-const before = process.argv.includes('--before') || beforeRefinement;
-const base = refinement ? 'fe01ecb86e0933c5260c2630fe4d7a6e82ebccdd' : '5a74e7279c77a7d1dc25fb5604d5fa0d657d6bf5';
-const phase = beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
+const before = process.argv.includes('--before') || beforeRefinement || beforeFitness;
+const base = fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
+  : refinement ? 'fe01ecb86e0933c5260c2630fe4d7a6e82ebccdd' : '5a74e7279c77a7d1dc25fb5604d5fa0d657d6bf5';
+const phase = beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
 let root = repo;
 if (before) {
-  root = path.resolve(repo, beforeRefinement ? '../home-v10-1-1-refinement-baseline' : '../home-v10-1-1-baseline');
+  root = path.resolve(repo, beforeFitness ? '../home-fitness-baseline-' + base.slice(0,7) : beforeRefinement ? '../home-v10-1-1-refinement-baseline' : '../home-v10-1-1-baseline');
   mkdirSync(root, { recursive: true });
   if (!existsSync(path.join(root, 'src'))) {
     const archive = path.join(root, 'baseline.tar');
@@ -61,7 +64,7 @@ const boot = `(() => {
   qa.makeStore=()=>({user:{id:qa.profiles[qa.account].user_id,email:'synthetic@example.test'},activeProfile:qa.profiles[qa.account],avatarRevision:0,loading:false,habitDrafts:null,
     signOut:async()=>{},completeOnboarding:async()=>{},updateRecord:async(date,value,options)=>{
       const owner=qa.account;qa.writes.push({owner,date,record:structuredClone(value),status:'pending'});const call=qa.writes.at(-1);
-      if(qa.failed||date!==value.dateStr||date>today){call.status='failed';options?.onFailure?.({kind:'invalid',message:'Fallo sintético de QA. No se guardó.'});qa.notify();return false;}
+      if(qa.failed||date!==value.dateStr||date>today){call.status='failed';options?.onFailure?.({kind:'invalid',message:'Fallo sintético de QA. No se guardó.'});qa.notify();if(qa.failed==='reject')throw Error('Transporte sintético no disponible');return false;}
       const canonical={...structuredClone(value),date:date+'T12:00:00',generation,version:String(Number(value.version||0)+1)};
       qa.profiles={...qa.profiles,[owner]:{...qa.profiles[owner],records:{...qa.profiles[owner].records,[date]:canonical}}};
       localStorage.setItem(fixtureKey,JSON.stringify(qa.profiles));call.status='confirmed';qa.store=qa.makeStore();options?.onConfirmed?.(canonical,generation);qa.notify();return true;
@@ -84,7 +87,7 @@ function Controls(){const q=window.__homeQA;useSyncExternalStore(fn=>{q.listener
 createRoot(document.getElementById('root')).render(<ThemeProvider><App/><Controls/></ThemeProvider>);`;
 const entryCode = ts.transpileModule(entry, { compilerOptions: { module: ts.ModuleKind.ESNext,
   jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText;
-const port=Number(process.argv.find(value=>value.startsWith('--port='))?.split('=')[1] || (beforeRefinement?5183:refinement?5184:before?5181:5182));
+const port=Number(process.argv.find(value=>value.startsWith('--port='))?.split('=')[1] || (beforeFitness?5191:fitness?5192:beforeRefinement?5183:refinement?5184:before?5181:5182));
 // The baseline links the same installed dependencies, but each source tree must
 // own its optimizer cache. Sharing node_modules/.vite can invalidate the other
 // server's dependency URLs and return 504s instead of mounting the real App.

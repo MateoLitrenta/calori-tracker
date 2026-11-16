@@ -1,0 +1,486 @@
+{
+  "source": "before",
+  "browser": "Chrome headless",
+  "timezone": "America/Buenos_Aires",
+  "date": "2026-11-13",
+  "externalRequests": [],
+  "browserErrors": [],
+  "results": [
+    {
+      "width": 320,
+      "height": 740,
+      "theme": "light",
+      "viewport": 320,
+      "documentWidth": 320,
+      "mainOverflow": 0,
+      "scroll": 0,
+      "energy": {
+        "x": 12,
+        "y": 190,
+        "w": 296,
+        "h": 175
+      },
+      "weekDay": {
+        "x": 6,
+        "y": 108,
+        "w": 44,
+        "h": 56
+      },
+      "actions": {
+        "x": 12,
+        "y": 381,
+        "w": 296,
+        "h": 48
+      },
+      "habits": {
+        "x": 12,
+        "y": 888,
+        "w": 296,
+        "h": 175
+      },
+      "records": {
+        "x": 12,
+        "y": 441,
+        "w": 296,
+        "h": 431
+      }
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "theme": "light",
+      "viewport": 375,
+      "documentWidth": 375,
+      "mainOverflow": 0,
+      "scroll": 0,
+      "energy": {
+        "x": 12,
+        "y": 190,
+        "w": 351,
+        "h": 175
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 108,
+        "w": 48,
+        "h": 56
+      },
+      "actions": {
+        "x": 12,
+        "y": 381,
+        "w": 351,
+        "h": 48
+      },
+      "habits": {
+        "x": 12,
+        "y": 888,
+        "w": 351,
+        "h": 175
+      },
+      "records": {
+        "x": 12,
+        "y": 441,
+        "w": 351,
+        "h": 431
+      },
+      "calendarDay": {
+        "w": 49,
+        "h": 44
+      }
+    },
+    {
+      "width": 393,
+      "height": 852,
+      "theme": "light",
+      "viewport": 393,
+      "documentWidth": 393,
+      "mainOverflow": 0,
+      "scroll": 0,
+      "energy": {
+        "x": 12,
+        "y": 190,
+        "w": 369,
+        "h": 177
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 108,
+        "w": 51,
+        "h": 56
+      },
+      "actions": {
+        "x": 12,
+        "y": 383,
+        "w": 369,
+        "h": 48
+      },
+      "habits": {
+        "x": 12,
+        "y": 889,
+        "w": 369,
+        "h": 175
+      },
+      "records": {
+        "x": 12,
+        "y": 443,
+        "w": 369,
+        "h": 431
+      }
+    },
+    {
+      "width": 440,
+      "height": 900,
+      "theme": "light",
+      "viewport": 440,
+      "documentWidth": 440,
+      "mainOverflow": 0,
+      "scroll": 0,
+      "energy": {
+        "x": 12,
+        "y": 190,
+        "w": 416,
+        "h": 181
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 108,
+        "w": 58,
+        "h": 56
+      },
+      "actions": {
+        "x": 12,
+        "y": 387,
+        "w": 416,
+        "h": 48
+      },
+      "habits": {
+        "x": 12,
+        "y": 893,
+        "w": 416,
+        "h": 175
+      },
+      "records": {
+        "x": 12,
+        "y": 447,
+        "w": 416,
+        "h": 431
+      }
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "light",
+      "viewport": 768,
+      "documentWidth": 768,
+      "mainOverflow": 0,
+      "scroll": 0,
+      "energy": {
+        "x": 303,
+        "y": 281,
+        "w": 408,
+        "h": 182
+      },
+      "weekDay": {
+        "x": 303,
+        "y": 153,
+        "w": 55,
+        "h": 56
+      },
+      "actions": {
+        "x": 303,
+        "y": 479,
+        "w": 408,
+        "h": 48
+      },
+      "habits": {
+        "x": 303,
+        "y": 985,
+        "w": 408,
+        "h": 175
+      },
+      "records": {
+        "x": 303,
+        "y": 539,
+        "w": 408,
+        "h": 431
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "mainOverflow": 0,
+      "scroll": 0,
+      "energy": {
+        "x": 280,
+        "y": 166,
+        "w": 617,
+        "h": 198
+      },
+      "weekDay": {
+        "x": 721,
+        "y": 46,
+        "w": 86,
+        "h": 56
+      },
+      "actions": {
+        "x": 1069,
+        "y": 397,
+        "w": 320,
+        "h": 44
+      },
+      "habits": {
+        "x": 913,
+        "y": 166,
+        "w": 493,
+        "h": 198
+      },
+      "records": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "theme": "dark",
+      "viewport": 320,
+      "documentWidth": 320,
+      "mainOverflow": 0,
+      "scroll": 0,
+      "energy": {
+        "x": 12,
+        "y": 190,
+        "w": 296,
+        "h": 175
+      },
+      "weekDay": {
+        "x": 6,
+        "y": 108,
+        "w": 44,
+        "h": 56
+      },
+      "actions": {
+        "x": 12,
+        "y": 381,
+        "w": 296,
+        "h": 48
+      },
+      "habits": {
+        "x": 12,
+        "y": 888,
+        "w": 296,
+        "h": 175
+      },
+      "records": {
+        "x": 12,
+        "y": 441,
+        "w": 296,
+        "h": 431
+      }
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "theme": "dark",
+      "viewport": 375,
+      "documentWidth": 375,
+      "mainOverflow": 0,
+      "scroll": 0,
+      "energy": {
+        "x": 12,
+        "y": 190,
+        "w": 351,
+        "h": 175
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 108,
+        "w": 48,
+        "h": 56
+      },
+      "actions": {
+        "x": 12,
+        "y": 381,
+        "w": 351,
+        "h": 48
+      },
+      "habits": {
+        "x": 12,
+        "y": 888,
+        "w": 351,
+        "h": 175
+      },
+      "records": {
+        "x": 12,
+        "y": 441,
+        "w": 351,
+        "h": 431
+      },
+      "calendarDay": {
+        "w": 49,
+        "h": 44
+      }
+    },
+    {
+      "width": 393,
+      "height": 852,
+      "theme": "dark",
+      "viewport": 393,
+      "documentWidth": 393,
+      "mainOverflow": 0,
+      "scroll": 0,
+      "energy": {
+        "x": 12,
+        "y": 190,
+        "w": 369,
+        "h": 177
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 108,
+        "w": 51,
+        "h": 56
+      },
+      "actions": {
+        "x": 12,
+        "y": 383,
+        "w": 369,
+        "h": 48
+      },
+      "habits": {
+        "x": 12,
+        "y": 889,
+        "w": 369,
+        "h": 175
+      },
+      "records": {
+        "x": 12,
+        "y": 443,
+        "w": 369,
+        "h": 431
+      }
+    },
+    {
+      "width": 440,
+      "height": 900,
+      "theme": "dark",
+      "viewport": 440,
+      "documentWidth": 440,
+      "mainOverflow": 0,
+      "scroll": 0,
+      "energy": {
+        "x": 12,
+        "y": 190,
+        "w": 416,
+        "h": 181
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 108,
+        "w": 58,
+        "h": 56
+      },
+      "actions": {
+        "x": 12,
+        "y": 387,
+        "w": 416,
+        "h": 48
+      },
+      "habits": {
+        "x": 12,
+        "y": 893,
+        "w": 416,
+        "h": 175
+      },
+      "records": {
+        "x": 12,
+        "y": 447,
+        "w": 416,
+        "h": 431
+      }
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "dark",
+      "viewport": 768,
+      "documentWidth": 768,
+      "mainOverflow": 0,
+      "scroll": 0,
+      "energy": {
+        "x": 303,
+        "y": 281,
+        "w": 408,
+        "h": 182
+      },
+      "weekDay": {
+        "x": 303,
+        "y": 153,
+        "w": 55,
+        "h": 56
+      },
+      "actions": {
+        "x": 303,
+        "y": 479,
+        "w": 408,
+        "h": 48
+      },
+      "habits": {
+        "x": 303,
+        "y": 985,
+        "w": 408,
+        "h": 175
+      },
+      "records": {
+        "x": 303,
+        "y": 539,
+        "w": 408,
+        "h": 431
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "mainOverflow": 0,
+      "scroll": 0,
+      "energy": {
+        "x": 280,
+        "y": 166,
+        "w": 617,
+        "h": 198
+      },
+      "weekDay": {
+        "x": 721,
+        "y": 46,
+        "w": 86,
+        "h": 56
+      },
+      "actions": {
+        "x": 1069,
+        "y": 397,
+        "w": 320,
+        "h": 44
+      },
+      "habits": {
+        "x": 913,
+        "y": 166,
+        "w": 493,
+        "h": 198
+      },
+      "records": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    }
+  ]
+}

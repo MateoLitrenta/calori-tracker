@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect, useId } from 'react';
-import { ForkKnife, Flame, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, CaretRight, Clock, Sparkle } from '@phosphor-icons/react';
+import { ForkKnife, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, CaretRight, Clock, Sparkle } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap, UserProfile } from '../types';
-import { hasEnergyData, formatDateStr, getCaloriesIngested, generateUUID, aggregateEnergy, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure, getBalanceLabel, getBalancePillColor } from '../utils/helpers';
+import { hasEnergyData, formatDateStr, getCaloriesIngested, generateUUID, aggregateEnergy, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure, getBalanceLabel } from '../utils/helpers';
 import { estimateMeal, estimateWorkout } from '../services/aiService';
 import { AIRequestError } from '../services/aiTransport';
 import { supabase } from '../lib/supabase';
@@ -90,6 +90,14 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const noDailyEnergy = !isGroup && !hasEnergyData(currentRecord);
   const provisionalBalance = !isGroup && !noDailyEnergy && currentRecord.meals.length === 0;
 
+  const totalEntries = currentRecord.meals.length + currentRecord.workouts.length;
+  const comparisonExpenditure = isGroup ? summary.expenditure : expenditure;
+  const scaleMax = Math.max(ingested, comparisonExpenditure, 1);
+  const energyRows = [
+    { label: 'Calorías consumidas', value: ingested, known: !noDailyEnergy && !provisionalBalance },
+    { label: 'Gasto estimado', value: comparisonExpenditure, known: !noDailyEnergy },
+  ];
+
   let panelTitle = "Resumen del día";
   let panelSubtitle = format(new Date(dateStr + 'T12:00:00'), 'd MMM yyyy', { locale: es });
   if (selectedGroup) {
@@ -160,11 +168,11 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const [mealName, setMealName] = useState('');
   const [isEditingWater, setIsEditingWater] = useState(false);
   const [editWaterVal, setEditWaterVal] = useState('');
-  
+
   const [isEditingWeight, setIsEditingWeight] = useState(false);
   const [editWeightVal, setEditWeightVal] = useState('');
   const weightDraftBaseRef = useRef<DailyRecord | null>(null);
-  
+
   const [isEditingSteps, setIsEditingSteps] = useState(false);
   const [editStepsVal, setEditStepsVal] = useState('');
   const [mealType, setMealType] = useState<MealType>('Almuerzo');
@@ -243,7 +251,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     setPhotoProcessing(false);
     setMealPhotoRemoved(false);
     setWorkCategory(null);
-    
+
     setEditingWorkoutId(null);
     setWorkActivity('');
     setWorkDuration('');
@@ -279,7 +287,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       if ((activeTab === 'comida' || activeTab === 'entrenamiento') && window.matchMedia('(max-width: 767px)').matches) return;
       // Ignore clicks on elements that have been removed from the DOM (like the modal buttons)
       if (!document.contains(event.target as Node)) return;
-      
+
       // Also ignore clicks inside any modal (which we give a special class or check by closest)
       // Actually, checking if it's inside the tabContainer is enough, BUT if they click inside the modal
       // and it's NOT removed from the DOM, we also want to ignore it!
@@ -456,8 +464,10 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   };
 
   const [detailModalItem, setDetailModalItem] = useState<(MealEntry & { _type: 'meal' }) | (WorkoutEntry & { _type: 'workout' }) | null>(null);
+  const entryDate = <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>;
+  const mealPhotoPath = mealPhotoRemoved ? null : currentRecord.meals.find(m => m.id === editingMealId)?.photo_path;
   const mealPhotoControls = <MealPhotoPicker blob={mealPhoto}
-    path={mealPhotoRemoved ? null : currentRecord.meals.find(m => m.id === editingMealId)?.photo_path}
+    path={mealPhotoPath}
     onChange={blob => { reviseEstimate('mealInput'); setMealPhoto(blob); setMealPhotoRemoved(false); }}
     onRemove={() => { reviseEstimate('mealInput'); setMealPhoto(null); setMealPhotoRemoved(true); }} onBusyChange={setPhotoProcessing} />;
   const mealEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
@@ -494,72 +504,45 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         <span className="text-slate-500 dark:text-gray-400">{isGroup ? panelSubtitle : <time dateTime={dateStr}>{panelSubtitle}</time>}</span>
       </div>
 
-      {/* Summary Cards */}
-      <div className="daily-summary flex flex-col gap-4">
-        {/* Hero Card de Calorías */}
-        <div data-provisional={provisionalBalance} data-energy-state={isGroup ? 'period' : noDailyEnergy ? 'empty' : provisionalBalance ? 'partial' : 'recorded'} className="energy-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl p-4 md:p-6 flex flex-col items-center gap-4">
-          <div className="energy-headline flex flex-col items-center text-center">
-            <div className="flex items-center gap-2 text-slate-500 dark:text-gray-400 text-sm font-semibold mb-1">
-              <Barbell size={20} className="text-purple-400" /> {isGroup ? 'Balance acumulado' : provisionalBalance ? 'Balance provisional' : 'Balance energético'}
-            </div>
+      <div className="daily-summary">
+        <section className="energy-card fitness-score" aria-label={isGroup ? 'Balance acumulado' : 'Resumen energético'}
+          data-provisional={provisionalBalance} data-energy-state={isGroup ? 'period' : noDailyEnergy ? 'empty' : provisionalBalance ? 'partial' : 'recorded'}>
+          <div className="fitness-readout">
+            <h4>{isGroup ? 'Balance acumulado' : provisionalBalance ? 'Balance provisional' : 'Balance energético'}</h4>
             {provisionalBalance && <p className="energy-qualifier">Sin comidas registradas</p>}
-            <div className="energy-number text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2 tabular-nums">
-              {noDailyEnergy ? 'Sin datos de energía' : balance === null ? 'Sin datos' : `${balance > 0 ? '+' : ''}${balance.toLocaleString('es-AR')} kcal`}
+            <div className="energy-number">
+              {noDailyEnergy ? 'Sin datos de energía' : balance === null ? 'Sin datos' : <>{balance > 0 ? '+' : ''}{balance.toLocaleString('es-AR')}<small> kcal</small></>}
             </div>
-            {isGroup && classifiedBalance !== null && (
-              <div className="text-xs text-slate-500 dark:text-gray-400 tabular-nums mb-2">
-                Promedio diario: {classifiedBalance > 0 ? '+' : ''}{classifiedBalance.toLocaleString('es-AR')} kcal/día
-              </div>
-            )}
-            {!noDailyEnergy && !provisionalBalance && <div className={`energy-status text-xs px-3 py-1 rounded-full font-medium ${getBalancePillColor(classifiedBalance)}`}>
-              {balanceLabel}
-            </div>}
+            {isGroup && classifiedBalance !== null && <p>Promedio diario: {classifiedBalance > 0 ? '+' : ''}{classifiedBalance.toLocaleString('es-AR')} kcal/día</p>}
           </div>
-
-          <div className="energy-metrics w-full flex justify-between md:justify-around items-start border-t border-slate-200 dark:border-gray-800/30 pt-4 mt-2">
-            <div className="flex flex-col items-center gap-1 flex-1">
-              <div className="flex items-center gap-1 text-slate-500 dark:text-gray-400 text-xs font-semibold">
-                <ForkKnife size={16} className="text-blue-400" /> Calorías consumidas
-              </div>
-              <div className="text-xl font-bold text-slate-900 dark:text-white tabular-nums">{ingested.toLocaleString('es-AR')} <span className="text-xs font-normal text-slate-500 dark:text-gray-400">kcal</span></div>
+          <dl className="energy-metrics fitness-comparison" aria-label="Consumo registrado y gasto estimado a la misma escala">
+            {energyRows.map(({ label, value, known }) => <div key={label} className="fitness-channel">
+              <dt>{label}</dt><dd>{known ? <>{value.toLocaleString('es-AR')} <small>kcal</small></> : <span aria-label="Sin registros">—</span>}</dd>
+              <dd className="fitness-track" aria-hidden="true">{known && <span style={{ width: `${100 * Math.max(0, value) / scaleMax}%` }} />}</dd>
+            </div>)}
+          </dl>
+          {!isGroup && <details className="energy-breakdown fitness-breakdown">
+            <summary>Ver desglose <CaretRight size={14} aria-hidden="true" /></summary>
+            <div className="fitness-breakdown-body">
+              <p className="energy-coverage">{currentRecord.meals.length} {currentRecord.meals.length === 1 ? 'comida' : 'comidas'} · {currentRecord.workouts.length} {currentRecord.workouts.length === 1 ? 'ejercicio' : 'ejercicios'}<span>Según tus registros</span></p>
+              {noDailyEnergy && <p>El gasto incluye la estimación basal. Todavía no hay registros de energía.</p>}
+              <p>Las dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.</p>
+              <dl className="fitness-breakdown-values">
+                <div><dt>Calorías consumidas</dt><dd>{ingested.toLocaleString('es-AR')} kcal</dd></div>
+                <div><dt>Gasto estimado</dt><dd>{expenditure.toLocaleString('es-AR')} kcal</dd></div>
+              </dl>
+              <div>TMB: {calculateBMR(profile).toLocaleString('es-AR')} kcal</div>
+              <div>Pasos: {getStepCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
+              <div>Ejercicio: {getWorkoutCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
+              {noDailyEnergy && balance !== null && <div>Balance estimado: {balance > 0 ? '+' : ''}{balance.toLocaleString('es-AR')} kcal</div>}
+              {!noDailyEnergy && !provisionalBalance && <p className="fitness-balance-category">{balanceLabel}</p>}
             </div>
-            
-            <div className="h-10 w-px bg-slate-200 dark:bg-gray-800/50"></div>
-            
-            <div className="flex flex-col items-center gap-1 flex-1">
-              <div className="flex items-center gap-1 text-slate-500 dark:text-gray-400 text-xs font-semibold">
-                <Flame size={16} className="text-orange-400" /> Gasto estimado
-              </div>
-              <div className="text-xl font-bold text-slate-900 dark:text-white tabular-nums">{(isGroup ? summary.expenditure : expenditure).toLocaleString('es-AR')} <span className="text-xs font-normal text-slate-500 dark:text-gray-400">kcal</span></div>
-
-            </div>
-          </div>
-          
-          {!isGroup && <div className="energy-footer">
-            <p className="energy-coverage">
-              {currentRecord.meals.length} {currentRecord.meals.length === 1 ? 'comida' : 'comidas'} · {currentRecord.workouts.length} {currentRecord.workouts.length === 1 ? 'ejercicio' : 'ejercicios'}
-              <span>Según tus registros</span>
-            </p>
-            <details className="energy-breakdown text-xs text-slate-500 dark:text-gray-400">
-              <summary className="cursor-pointer font-medium">Ver desglose</summary>
-              <div className="space-y-1 mt-2">
-                {noDailyEnergy && <p className="energy-breakdown-note">El gasto incluye la estimación basal. Todavía no hay registros de energía.</p>}
-                <div>TMB: {calculateBMR(profile).toLocaleString('es-AR')} kcal</div>
-                <div>Pasos: {getStepCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
-                <div>Ejercicio: {getWorkoutCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
-                {noDailyEnergy && balance !== null && <div>Balance estimado: {balance > 0 ? '+' : ''}{balance.toLocaleString('es-AR')} kcal</div>}
-              </div>
-            </details>
-          </div>}
-
-          {isGroup && <p className="text-xs text-slate-500 dark:text-gray-400">{summary.days} días con datos.</p>}
-
-        </div>
-
-
+          </details>}
+          {isGroup && <p className="fitness-period-days">{summary.days} días con datos. {balanceLabel}</p>}
+        </section>
       </div>
 
-      {habitReview && habitReview.dateStr === dateStr && <EntryFormShell title="Revisar cambios del día" desktopModal onClose={() => setHabitReview(null)}>
+      {habitReview && habitReview.dateStr === dateStr && <EntryFormShell fitness title="Revisar cambios del día" desktopModal onClose={() => setHabitReview(null)}>
         <div className="habit-review p-5 text-slate-900 dark:text-white">
           <p className="text-sm text-slate-600 dark:text-gray-300">{habit.failure?.message}</p>
           <p className="mt-2 text-sm font-medium">{panelSubtitle} · Pasos y agua</p>
@@ -583,7 +566,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       </EntryFormShell>}
 
       {!isGroup && (
-        <div className="daily-journal contents" data-record-count={currentRecord.meals.length + currentRecord.workouts.length}>
+        <div className="daily-journal contents" data-record-count={totalEntries}>
         <div ref={tabContainerRef} className="daily-entry flex flex-col gap-4">
           {/* Action Buttons */}
           <div className="daily-quick-actions flex gap-2 mt-2">
@@ -608,11 +591,11 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
           {/* Forms Area */}
         {activeTab === 'comida' && (
-            <EntryFormShell title="Agregar comida" onClose={closeEntry}>
-              <form onSubmit={handleAddMeal} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+            <EntryFormShell fitness dateContext={entryDate} title="Agregar comida" onClose={closeEntry}>
+              <form onSubmit={handleAddMeal} aria-busy={savingMeal || photoProcessing} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
                 <div className="entry-form-content entry-fields-grid entry-meal-fields">
                   <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Comida</h4>
-              <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>
+                  {entryDate}
                   <div className="entry-field entry-description">
                     <label className="entry-field-label" htmlFor="add-meal-description">Descripción</label>
                     <AutoResizeTextarea id="add-meal-description"
@@ -636,7 +619,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                       <option value="Snack">Snack</option>
                     </select>
                   </div>
-                  <div className="entry-calorie-block">
+                  <div className="fitness-field-pair fitness-meal-pair">
                     <div className="entry-field entry-calories">
                       <label className="entry-field-label" htmlFor="add-meal-calories">Calorías</label>
                       <input id="add-meal-calories"
@@ -646,15 +629,6 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                         className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                       />
                     </div>
-                    {mealEstimateControls}
-                  </div>
-                  <div className="entry-photo-section">
-                    <div className="entry-photo-heading">
-                      <span className="entry-field-label">Foto de la comida</span>
-                      <span className="entry-photo-hint">Opcional · ayuda a estimar mejor</span></div><span className="entry-desktop-photo-label text-xs text-slate-500 dark:text-gray-400">Foto opcional</span>
-                    {mealPhotoControls}
-                  </div>
-                  <div className="entry-secondary-fields">
                     <div className="entry-field entry-time">
                       <label className="entry-field-label" htmlFor="add-meal-time">Hora</label>
                       <div className="entry-time-row flex items-center gap-2">
@@ -675,23 +649,32 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                         </button>
                       </div>
                     </div>
-                    <div className="entry-field entry-notes">
-                      <label className="entry-field-label" htmlFor="add-meal-notes">Notas <span>· Opcional</span></label>
-                      <AutoResizeTextarea id="add-meal-notes"
-                        placeholder="Agregá detalles si querés."
-                        value={mealDetails}
-                        onChange={e => { reviseEstimate('mealInput'); setMealDetails(e.target.value); }}
-                        className="flex-1 min-w-[200px] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
                   </div>
-                  <button type="submit" disabled={savingMeal || photoProcessing} className="entry-inline-submit bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2 disabled:opacity-50">
-                    <Check weight="bold" /> Guardar
-                  </button>
+                  {mealEstimateControls}
+                  <details className="fitness-extras">
+                    <summary>Foto y notas <span>Opcionales</span></summary>
+                    <div className="fitness-extra-fields">
+                      <div className="entry-photo-section">
+                        <div className="entry-photo-heading">
+                          <span className="entry-field-label">Foto de la comida</span>
+                          <span className="entry-photo-hint">Opcional · ayuda a estimar mejor</span></div><span className="entry-desktop-photo-label text-xs text-slate-500 dark:text-gray-400">Foto opcional</span>
+                        {mealPhotoControls}
+                      </div>
+                      <div className="entry-field entry-notes">
+                        <label className="entry-field-label" htmlFor="add-meal-notes">Notas <span>· Opcional</span></label>
+                        <AutoResizeTextarea id="add-meal-notes"
+                          placeholder="Agregá detalles si querés."
+                          value={mealDetails}
+                          onChange={e => { reviseEstimate('mealInput'); setMealDetails(e.target.value); }}
+                          className="flex-1 min-w-[200px] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+                    </div>
+                  </details>
                 </div>
-                <div className="entry-form-footer entry-mobile-footer">
+                <div className="entry-form-footer">
                   <button type="submit" disabled={savingMeal || photoProcessing} className="disabled:opacity-50">
-                    <Check weight="bold" /> {savingMeal ? 'Guardando…' : 'Guardar comida'}
+                    <Check weight="bold" /> {savingMeal ? 'Guardando…' : photoProcessing ? 'Preparando foto…' : 'Guardar comida'}
                   </button>
                 </div>
               </form>
@@ -699,11 +682,11 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         )}
 
         {activeTab === 'entrenamiento' && (
-            <EntryFormShell title="Agregar ejercicio" onClose={closeEntry}>
-              <form onSubmit={handleAddWorkout} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+            <EntryFormShell fitness dateContext={entryDate} title="Agregar ejercicio" onClose={closeEntry}>
+              <form onSubmit={handleAddWorkout} aria-busy={savingWorkout} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
                 <div className="entry-form-content entry-fields-grid entry-workout-fields">
                   <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Entrenamiento</h4>
-              <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>
+                  {entryDate}
                   <div className="entry-field entry-description entry-activity">
                     <label className="entry-field-label" htmlFor="add-workout-activity">Actividad</label>
                     <AutoResizeTextarea id="add-workout-activity"
@@ -715,18 +698,18 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                     />
                   </div>
                   {workCategoryControls}
-                  <div className="entry-field entry-duration">
-                    <label className="entry-field-label" htmlFor="add-workout-duration">Duración</label>
-                    <div className="entry-unit-control">
-                      <input id="add-workout-duration"
-                        required
-                        type="number" inputMode="numeric" pattern="[0-9]*" min="1" placeholder="Minutos"
-                        value={workDuration} onChange={e => { reviseEstimate('workInput'); setWorkDuration(Number(e.target.value)); }}
-                        className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                      />
-                      <span className="entry-unit" aria-hidden="true">min</span></div>
-                  </div>
-                  <div className="entry-calorie-block">
+                  <div className="fitness-field-pair">
+                    <div className="entry-field entry-duration">
+                      <label className="entry-field-label" htmlFor="add-workout-duration">Duración</label>
+                      <div className="entry-unit-control">
+                        <input id="add-workout-duration"
+                          required
+                          type="number" inputMode="numeric" pattern="[0-9]*" min="1" placeholder="Minutos"
+                          value={workDuration} onChange={e => { reviseEstimate('workInput'); setWorkDuration(Number(e.target.value)); }}
+                          className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                        />
+                        <span className="entry-unit" aria-hidden="true">min</span></div>
+                    </div>
                     <div className="entry-field entry-calories">
                       <label className="entry-field-label" htmlFor="add-workout-calories">Calorías</label>
                       <input id="add-workout-calories"
@@ -736,56 +719,54 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                         className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                       />
                     </div>
-                    {workEstimateControls}
                   </div>
-                  <div className="entry-secondary-fields">
-                    <div className="entry-field entry-time">
-                      <label className="entry-field-label" htmlFor="add-workout-time">Hora</label>
-                      <div className="entry-time-row flex items-center gap-2">
-                        <input id="add-workout-time"
-                          type="time"
-                          required
-                          value={workTime}
-                          onChange={e => setWorkTime(e.target.value)}
-                          className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                        />
-                        <button
-                          type="button" aria-label="Usar hora actual"
-                          title="Hora actual"
-                          onClick={() => setWorkTime(format(new Date(), 'HH:mm'))}
-                          className="entry-time-now bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 p-2 rounded-md hover:text-orange-400 text-slate-500 dark:text-gray-400 transition-colors flex-shrink-0"
-                        >
-                          <Clock size={18} />
-                        </button>
-                      </div>
+                  <div className="entry-field entry-time">
+                    <label className="entry-field-label" htmlFor="add-workout-time">Hora</label>
+                    <div className="entry-time-row flex items-center gap-2">
+                      <input id="add-workout-time"
+                        type="time"
+                        required
+                        value={workTime}
+                        onChange={e => setWorkTime(e.target.value)}
+                        className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                      />
+                      <button
+                        type="button" aria-label="Usar hora actual"
+                        title="Hora actual"
+                        onClick={() => setWorkTime(format(new Date(), 'HH:mm'))}
+                        className="entry-time-now bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 p-2 rounded-md hover:text-orange-400 text-slate-500 dark:text-gray-400 transition-colors flex-shrink-0"
+                      >
+                        <Clock size={18} />
+                      </button>
                     </div>
-                    {selectedWorkCategory !== null && ['Correr', 'Natación', 'Caminata'].includes(selectedWorkCategory) && (<div className="entry-workout-metrics flex gap-4">
-                      <div className="entry-field entry-distance">
-                        <label className="entry-field-label" htmlFor="add-workout-distance">Distancia</label>
-                        <input id="add-workout-distance"
-                          type="number" step="0.01" min="0" placeholder="Distancia (km) opc."
-                          value={workDistance} onChange={e => setWorkDistance(e.target.value === '' ? '' : Number(e.target.value))}
-                          className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
-                        />
-                      </div>
-                      <div className="entry-field entry-pace">
-                        <label className="entry-field-label" htmlFor="add-workout-pace">Ritmo</label>
-                        <input id="add-workout-pace"
-                          type="text" placeholder="Ritmo (ej: 5:30) opc."
-                          value={workPace} onChange={e => setWorkPace(e.target.value)}
-                          className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
-                        />
-                      </div>
-                    </div>)}
-                    <div className="entry-field entry-notes">
-                      <label className="entry-field-label" htmlFor="add-workout-notes">{selectedWorkCategory === 'Gimnasio' ? 'Detalle de la rutina' : 'Notas'} <span>· Opcional</span></label>
-                      <AutoResizeTextarea id="add-workout-notes"
-                        placeholder={selectedWorkCategory === 'Gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Agregá detalles si querés."}
-                        value={workDetails}
-                        onChange={e => { reviseEstimate('workInput'); setWorkDetails(e.target.value); }}
-                        className="flex-1 w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-[200px]"
+                  </div>
+                  {workEstimateControls}
+                  {selectedWorkCategory !== null && ['Correr', 'Natación', 'Caminata'].includes(selectedWorkCategory) && (<div className="entry-workout-metrics flex gap-4">
+                    <div className="entry-field entry-distance">
+                      <label className="entry-field-label" htmlFor="add-workout-distance">Distancia</label>
+                      <input id="add-workout-distance"
+                        type="number" step="0.01" min="0" placeholder="Distancia (km) opc."
+                        value={workDistance} onChange={e => setWorkDistance(e.target.value === '' ? '' : Number(e.target.value))}
+                        className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
                       />
                     </div>
+                    <div className="entry-field entry-pace">
+                      <label className="entry-field-label" htmlFor="add-workout-pace">Ritmo</label>
+                      <input id="add-workout-pace"
+                        type="text" placeholder="Ritmo (ej: 5:30) opc."
+                        value={workPace} onChange={e => setWorkPace(e.target.value)}
+                        className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
+                      />
+                    </div>
+                  </div>)}
+                  <div className="entry-field entry-notes">
+                    <label className="entry-field-label" htmlFor="add-workout-notes">{selectedWorkCategory === 'Gimnasio' ? 'Detalle de la rutina' : 'Notas'} <span>· Opcional</span></label>
+                    <AutoResizeTextarea id="add-workout-notes"
+                      placeholder={selectedWorkCategory === 'Gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Agregá detalles si querés."}
+                      value={workDetails}
+                      onChange={e => { reviseEstimate('workInput'); setWorkDetails(e.target.value); }}
+                      className="flex-1 w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-[200px]"
+                    />
                   </div>
 
                 </div>
@@ -799,100 +780,12 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         )}
 
         </div>
-      {/* Logs List */}
-        <div className={`daily-logs ${currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 ? 'daily-logs--empty' : ''} bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden`}>
-          <div className="daily-logs-heading bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
-            <h4 ref={onRecordsHeadingReady} tabIndex={-1} aria-describedby={dayContextId} className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
-            <time id={dayContextId} dateTime={dateStr} className="daily-active-date">
-              {dateStr === formatDateStr(new Date()) ? 'Hoy · ' : ''}{panelSubtitle}
-            </time>
-            {props.onReturnToHistory && <button type="button" className="history-record-return" onClick={event => {
-              event.stopPropagation(); props.onReturnToHistory?.();
-            }}>← Volver a Tu actividad</button>}
-          </div>
-          
-          {currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 && (
-            <div className="daily-logs-empty p-8 text-center text-slate-500 dark:text-gray-400">
-              Todavía no cargaste comidas ni entrenamientos.
-            </div>
-          )}
-
-        <DailyRecords key={`${profile.id}:${dateStr}:${selectedGroup?.type || 'day'}`}
-          count={currentRecord.meals.length + currentRecord.workouts.length}>
-          {
-            [
-              ...currentRecord.meals.map(m => ({ ...m, _type: 'meal' as const })),
-              ...currentRecord.workouts.map(w => ({ ...w, _type: 'workout' as const }))
-            ]
-            .sort((a, b) => {
-              const timeA = a.time || '00:00';
-              const timeB = b.time || '00:00';
-              return timeA.localeCompare(timeB);
-            })
-            .map(item => {
-              if (item._type === 'meal') {
-                const meal = item as (MealEntry & { _type: 'meal' });
-                return (
-                  <li 
-                    key={`meal-${meal.id}`} 
-                    className="p-3.5 hover:bg-white dark:bg-[#161b22] flex flex-col gap-1.5 group transition-colors cursor-pointer"
-                  >
-                    <button type="button" className="daily-record-open" onClick={() => setDetailModalItem(meal)}>
-                    <span className="daily-record-title flex items-center gap-3 w-full font-medium text-wrap break-words leading-tight">
-                      {meal.photo_path && <MealThumbnail path={meal.photo_path} />}
-                      <span><ForkKnife size={18} className="inline-block mr-2 text-orange-400" aria-hidden="true" />{meal.name}</span>
-                    </span>
-                    <span className="daily-record-meta flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
-                      <span>
-                        {meal.time ? `${meal.time} hs • ` : ''}{meal.type}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <span className="font-semibold text-blue-400 whitespace-nowrap text-sm">+{meal.calories} kcal</span>
-                        <CaretRight size={14} className="text-slate-500 dark:text-gray-400 group-hover:text-white transition-colors" />
-                      </span>
-                    </span>
-                    </button>
-                  </li>
-                );
-              } else {
-                const workout = item as (WorkoutEntry & { _type: 'workout' });
-                return (
-                  <li 
-                    key={`workout-${workout.id}`} 
-                    className="p-3.5 hover:bg-white dark:bg-[#161b22] flex flex-col gap-1.5 group transition-colors cursor-pointer"
-                  >
-                    <button type="button" className="daily-record-open" onClick={() => setDetailModalItem(workout)}>
-                    <span className="daily-record-title block w-full font-medium text-wrap break-words leading-tight">
-                      <Barbell size={18} className="inline-block mr-2 text-orange-400" aria-hidden="true" />{workout.activity}
-                    </span>
-                    <span className="daily-record-meta flex justify-between items-center text-xs mt-1 text-slate-500 dark:text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity">
-                      <span>
-                        {workout.time ? `${workout.time} hs • ` : ''}Ejercicio · {workout.duration} min
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <span className="font-semibold text-orange-400 whitespace-nowrap text-sm">-{workout.calories} kcal</span>
-                        <CaretRight size={14} className="text-slate-500 dark:text-gray-400 group-hover:text-white transition-colors" />
-                      </span>
-                    </span>
-                    </button>
-                  </li>
-                );
-              }
-            })
-          }
-        </DailyRecords>
-      </div>
-      </div>
-      )}
-
-        {/* Hábitos Compactos */}
-        {!isGroup && (
           <section className="daily-habits-block" aria-label="Agua, pasos y peso">
-            <div className="daily-habits-heading"><h4>Agua, pasos y peso</h4><time dateTime={dateStr}>{dateStr === formatDateStr(new Date()) ? 'Hoy' : panelSubtitle}</time></div>
+            <div className="daily-habits-heading"><h4>Hábitos</h4><time dateTime={dateStr}>{dateStr === formatDateStr(new Date()) ? 'Hoy' : panelSubtitle}</time></div>
           <div className="daily-habits grid grid-cols-3 gap-2">
             <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
               <div className="habit-header flex flex-col items-center gap-1">
-                <Drop size={20} className="text-cyan-400" />
+                <Drop size={16} aria-hidden="true" />
                 <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Agua</span>
               </div>
               <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
@@ -942,7 +835,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
             <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
               <div className="habit-header flex flex-col items-center gap-1">
-                <Sneaker size={20} className="text-green-400" />
+                <Sneaker size={16} aria-hidden="true" />
                 <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Pasos</span>
               </div>
               <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
@@ -991,7 +884,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
             <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
               <div className="habit-header flex flex-col items-center gap-1">
-                <Scales size={20} className="text-pink-400" />
+                <Scales size={16} aria-hidden="true" />
                 <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Peso</span>
               </div>
               <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
@@ -1019,14 +912,69 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               {(habit.status === 'unconfirmed' || habit.status === 'conflict') && <p className="w-full">{habit.failure?.message}</p>}
             </div>}
           </section>
-        )}
+
+        {/* Registros en orden cronológico */}
+        <div className={`daily-logs ${currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 ? 'daily-logs--empty' : ''} bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden`}>
+          <div className="daily-logs-heading bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
+            <h4 id="fitness-daily-entries" ref={onRecordsHeadingReady} tabIndex={-1} aria-describedby={dayContextId} className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
+            <span className="fitness-entry-count">{totalEntries} {totalEntries === 1 ? 'registro' : 'registros'}</span>
+            <time id={dayContextId} dateTime={dateStr} className="daily-active-date">
+              {dateStr === formatDateStr(new Date()) ? 'Hoy · ' : ''}{panelSubtitle}
+            </time>
+            {props.onReturnToHistory && <button type="button" className="history-record-return" onClick={event => {
+              event.stopPropagation(); props.onReturnToHistory?.();
+            }}>← Volver a Tu actividad</button>}
+          </div>
+
+          {currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 && (
+            <div className="daily-logs-empty p-8 text-center text-slate-500 dark:text-gray-400">
+              Todavía no cargaste comidas ni entrenamientos.
+            </div>
+          )}
+
+        <DailyRecords key={`${profile.id}:${dateStr}:${selectedGroup?.type || 'day'}`}
+          count={currentRecord.meals.length + currentRecord.workouts.length}>
+          {
+            [
+              ...currentRecord.meals.map(m => ({ ...m, _type: 'meal' as const })),
+              ...currentRecord.workouts.map(w => ({ ...w, _type: 'workout' as const }))
+            ]
+            .sort((a, b) => {
+              const timeA = a.time || '00:00';
+              const timeB = b.time || '00:00';
+              return timeA.localeCompare(timeB);
+            })
+            .map(item => {
+              const meal = item._type === 'meal';
+              return (
+                <li key={`${item._type}-${item.id}`}>
+                  <button type="button" className="daily-record-open" onClick={() => setDetailModalItem(item)}>
+                    <span className="fitness-record-mark">
+                      {meal && item.photo_path ? <MealThumbnail path={item.photo_path} /> : meal
+                        ? <ForkKnife size={17} aria-hidden="true" /> : <Barbell size={17} aria-hidden="true" />}
+                    </span>
+                    <span className="fitness-record-copy">
+                      <span className="daily-record-title">{meal ? item.name : item.activity}</span>
+                      <span className="daily-record-meta">{item.time && `${item.time} hs • `}{meal ? item.type : `Ejercicio · ${item.duration} min`}</span>
+                    </span>
+                    <span className="fitness-record-kcal">{meal ? '+' : '-'}{item.calories} <small>kcal</small></span>
+                    <CaretRight size={14} aria-hidden="true" />
+                  </button>
+                </li>
+              );
+            })
+          }
+        </DailyRecords>
+      </div>
+      </div>
+      )}
 
       {/* Detail Modal */}
       {detailModalItem && (
-        <EntryFormShell title="Detalle del Registro" desktopModal closeLabel="Cerrar detalle" onClose={() => setDetailModalItem(null)}>
+        <EntryFormShell fitness dateContext={entryDate} title="Detalle del Registro" desktopModal closeLabel="Cerrar detalle" onClose={() => setDetailModalItem(null)}>
           <div className="record-detail-modal flex min-h-0 flex-col">
             <div className="record-detail-content entry-form-content p-6 flex flex-col gap-4">
-              <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>
+
               <div className="flex flex-col gap-1 text-center">
                 <span className="record-detail-main text-xl font-bold text-white break-words">
                   {detailModalItem._type === 'meal' ? detailModalItem.name : detailModalItem.activity}
@@ -1036,7 +984,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   {detailModalItem._type === 'meal' ? detailModalItem.type : `${detailModalItem.duration} min`}
                 </span>
               </div>
-              
+
               <div className="text-center py-2">
                 <span className={`text-3xl font-black tracking-tight ${detailModalItem._type === 'meal' ? 'text-blue-400' : 'text-orange-400'}`}>
                   {detailModalItem._type === 'meal' ? '+' : '-'}{detailModalItem.calories} <span className="text-lg font-medium text-slate-500 dark:text-gray-400">kcal</span>
@@ -1069,7 +1017,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 </div>
               )}
             </div>
-            
+
             <div className="record-detail-actions p-4 border-t border-slate-200 dark:border-gray-800 flex gap-3 bg-slate-100 dark:bg-[#0f141c]">
               <button 
                 type="button"
@@ -1103,13 +1051,13 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Weight uses the same accessible shell and selected-day context as other records. */}
       {isEditingWeight && (
-        <EntryFormShell title="Registrar Peso" desktopModal onClose={() => { setIsEditingWeight(false); weightDraftBaseRef.current = null; }}>
+        <EntryFormShell fitness dateContext={entryDate} title="Registrar Peso" desktopModal onClose={() => { setIsEditingWeight(false); weightDraftBaseRef.current = null; }}>
           <form className="entry-form entry-weight-form" onSubmit={async event => {
             event.preventDefault();
             await handleSetWeight(parseFloat(editWeightVal) || 0);
           }}>
             <div className="entry-form-content">
-              <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>
+
               <div className="entry-field">
                 <label className="entry-field-label" htmlFor={dayContextId + '-weight'}>Peso (kg)</label>
                 <input id={dayContextId + '-weight'} name="weight" type="text" inputMode="decimal"
@@ -1130,10 +1078,10 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Edit Modal para Comidas */}
       {editingMealId && (
-        <EntryFormShell title="Editar comida" onClose={closeEntry} desktopModal>
-          <form onSubmit={handleAddMeal} className="entry-form p-4 flex flex-col gap-4">
+        <EntryFormShell fitness dateContext={entryDate} title="Editar comida" onClose={closeEntry} desktopModal>
+          <form onSubmit={handleAddMeal} aria-busy={savingMeal || photoProcessing} className="entry-form p-4 flex flex-col gap-4">
             <div className="entry-form-content entry-fields-grid entry-meal-fields entry-edit-fields">
-              <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>
+
               <div className="entry-field entry-description">
                 <label className="entry-field-label" htmlFor="edit-meal-description">Descripción</label>
                 <AutoResizeTextarea id="edit-meal-description"
@@ -1157,7 +1105,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   <option value="Snack">Snack</option>
                 </select>
               </div>
-              <div className="entry-calorie-block">
+              <div className="fitness-field-pair fitness-meal-pair">
                 <div className="entry-field entry-calories">
                   <label className="entry-field-label" htmlFor="edit-meal-calories">Calorías</label>
                   <input id="edit-meal-calories"
@@ -1167,15 +1115,6 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                     className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                   />
                 </div>
-                {mealEstimateControls}
-              </div>
-              <div className="entry-photo-section">
-                <div className="entry-photo-heading">
-                  <span className="entry-field-label">Foto de la comida</span>
-                  <span className="entry-photo-hint">Opcional · ayuda a estimar mejor</span></div>
-                {mealPhotoControls}
-              </div>
-              <div className="entry-secondary-fields">
                 <div className="entry-field entry-time">
                   <label className="entry-field-label" htmlFor="edit-meal-time">Hora</label>
                   <div className="entry-time-row flex items-center gap-2">
@@ -1195,20 +1134,32 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                     </button>
                   </div>
                 </div>
-                <div className="entry-field entry-notes">
-                  <label className="entry-field-label" htmlFor="edit-meal-notes">Notas <span>· Opcional</span></label>
-                  <AutoResizeTextarea id="edit-meal-notes"
-                    placeholder="Agregá detalles si querés."
-                    value={mealDetails} onChange={e => { reviseEstimate('mealInput'); setMealDetails(e.target.value); }}
-                    className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                  />
-                </div>
               </div>
+              {mealEstimateControls}
+              <details className="fitness-extras" open={Boolean(mealDetails || mealPhoto || mealPhotoPath) || undefined}>
+                <summary>Foto y notas <span>Opcionales</span></summary>
+                <div className="fitness-extra-fields">
+                  <div className="entry-photo-section">
+                    <div className="entry-photo-heading">
+                      <span className="entry-field-label">Foto de la comida</span>
+                      <span className="entry-photo-hint">Opcional · ayuda a estimar mejor</span></div>
+                    {mealPhotoControls}
+                  </div>
+                  <div className="entry-field entry-notes">
+                    <label className="entry-field-label" htmlFor="edit-meal-notes">Notas <span>· Opcional</span></label>
+                    <AutoResizeTextarea id="edit-meal-notes"
+                      placeholder="Agregá detalles si querés."
+                      value={mealDetails} onChange={e => { reviseEstimate('mealInput'); setMealDetails(e.target.value); }}
+                      className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+              </details>
 
             </div>
             <div className="entry-form-footer flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
               <button type="submit" disabled={savingMeal || photoProcessing} className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
-                <Check weight="bold" /> {savingMeal ? 'Guardando…' : <><span className="entry-desktop-copy">Guardar Cambios</span><span className="entry-mobile-copy">Guardar cambios</span></>}
+                <Check weight="bold" /> {savingMeal ? 'Guardando…' : photoProcessing ? 'Preparando foto…' : <><span className="entry-desktop-copy">Guardar Cambios</span><span className="entry-mobile-copy">Guardar cambios</span></>}
               </button>
             </div>
           </form>
@@ -1217,10 +1168,10 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Edit Modal para Entrenamiento */}
       {editingWorkoutId && (
-        <EntryFormShell title="Editar ejercicio" onClose={closeEntry} desktopModal>
-          <form onSubmit={handleAddWorkout} className="entry-form p-4 flex flex-col gap-4">
+        <EntryFormShell fitness dateContext={entryDate} title="Editar ejercicio" onClose={closeEntry} desktopModal>
+          <form onSubmit={handleAddWorkout} aria-busy={savingWorkout} className="entry-form p-4 flex flex-col gap-4">
             <div className="entry-form-content entry-fields-grid entry-workout-fields entry-edit-fields">
-              <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>
+
               <div className="entry-field entry-description entry-activity">
                 <label className="entry-field-label" htmlFor="edit-workout-activity">Actividad</label>
                 <AutoResizeTextarea id="edit-workout-activity"
@@ -1231,18 +1182,18 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 />
               </div>
               {workCategoryControls}
-              <div className="entry-field entry-duration">
-                <label className="entry-field-label" htmlFor="edit-workout-duration">Duración</label>
-                <div className="entry-unit-control">
-                  <input id="edit-workout-duration"
-                    required
-                    type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Minutos"
-                    value={workDuration} onChange={e => { reviseEstimate('workInput'); setWorkDuration(Number(e.target.value)); }}
-                    className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                  />
-                  <span className="entry-unit" aria-hidden="true">min</span></div>
-              </div>
-              <div className="entry-calorie-block">
+              <div className="fitness-field-pair">
+                <div className="entry-field entry-duration">
+                  <label className="entry-field-label" htmlFor="edit-workout-duration">Duración</label>
+                  <div className="entry-unit-control">
+                    <input id="edit-workout-duration"
+                      required
+                      type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Minutos"
+                      value={workDuration} onChange={e => { reviseEstimate('workInput'); setWorkDuration(Number(e.target.value)); }}
+                      className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                    />
+                    <span className="entry-unit" aria-hidden="true">min</span></div>
+                </div>
                 <div className="entry-field entry-calories">
                   <label className="entry-field-label" htmlFor="edit-workout-calories">Calorías</label>
                   <input id="edit-workout-calories"
@@ -1252,54 +1203,52 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                     className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                   />
                 </div>
-                {workEstimateControls}
               </div>
-              <div className="entry-secondary-fields">
-                <div className="entry-field entry-time">
-                  <label className="entry-field-label" htmlFor="edit-workout-time">Hora</label>
-                  <div className="entry-time-row flex items-center gap-2">
-                    <input id="edit-workout-time"
-                      type="time"
-                      value={workTime}
-                      onChange={e => setWorkTime(e.target.value)}
-                      className="w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                    />
-                    <button
-                      type="button" aria-label="Usar hora actual"
-                      onClick={() => setWorkTime(new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }))}
-                      className="entry-time-now p-2 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md hover:bg-slate-200 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-white transition-colors"
-                      title="Hora actual"
-                    >
-                      <Clock size={16} />
-                    </button>
-                  </div>
+              <div className="entry-field entry-time">
+                <label className="entry-field-label" htmlFor="edit-workout-time">Hora</label>
+                <div className="entry-time-row flex items-center gap-2">
+                  <input id="edit-workout-time"
+                    type="time"
+                    value={workTime}
+                    onChange={e => setWorkTime(e.target.value)}
+                    className="w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  />
+                  <button
+                    type="button" aria-label="Usar hora actual"
+                    onClick={() => setWorkTime(new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }))}
+                    className="entry-time-now p-2 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md hover:bg-slate-200 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-white transition-colors"
+                    title="Hora actual"
+                  >
+                    <Clock size={16} />
+                  </button>
                 </div>
-                <div className="entry-workout-metrics flex gap-4">
-                  <div className="entry-field entry-distance">
-                    <label className="entry-field-label" htmlFor="edit-workout-distance">Distancia</label>
-                    <input id="edit-workout-distance"
-                      type="number" step="0.1" inputMode="decimal" placeholder="Distancia (km) opcional"
-                      value={workDistance} onChange={e => setWorkDistance(Number(e.target.value))}
-                      className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                    />
-                  </div>
-                  <div className="entry-field entry-pace">
-                    <label className="entry-field-label" htmlFor="edit-workout-pace">Ritmo</label>
-                    <input id="edit-workout-pace"
-                      type="text" placeholder="Ritmo (min/km) opcional"
-                      value={workPace} onChange={e => setWorkPace(e.target.value)}
-                      className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                    />
-                  </div>
-                </div>
-                <div className="entry-field entry-notes">
-                  <label className="entry-field-label" htmlFor="edit-workout-notes">{selectedWorkCategory === 'Gimnasio' ? 'Detalle de la rutina' : 'Notas'} <span>· Opcional</span></label>
-                  <AutoResizeTextarea id="edit-workout-notes"
-                    placeholder={selectedWorkCategory === 'Gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Agregá detalles si querés."}
-                    value={workDetails} onChange={e => { reviseEstimate('workInput'); setWorkDetails(e.target.value); }}
-                    className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+              </div>
+              {workEstimateControls}
+              <div className="entry-workout-metrics flex gap-4">
+                <div className="entry-field entry-distance">
+                  <label className="entry-field-label" htmlFor="edit-workout-distance">Distancia</label>
+                  <input id="edit-workout-distance"
+                    type="number" step="0.1" inputMode="decimal" placeholder="Distancia (km) opcional"
+                    value={workDistance} onChange={e => setWorkDistance(Number(e.target.value))}
+                    className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                   />
                 </div>
+                <div className="entry-field entry-pace">
+                  <label className="entry-field-label" htmlFor="edit-workout-pace">Ritmo</label>
+                  <input id="edit-workout-pace"
+                    type="text" placeholder="Ritmo (min/km) opcional"
+                    value={workPace} onChange={e => setWorkPace(e.target.value)}
+                    className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                  />
+                </div>
+              </div>
+              <div className="entry-field entry-notes">
+                <label className="entry-field-label" htmlFor="edit-workout-notes">{selectedWorkCategory === 'Gimnasio' ? 'Detalle de la rutina' : 'Notas'} <span>· Opcional</span></label>
+                <AutoResizeTextarea id="edit-workout-notes"
+                  placeholder={selectedWorkCategory === 'Gimnasio' ? "Detalle de la rutina (ej: Pecho y Tríceps / Press banca 4x10...)" : "Agregá detalles si querés."}
+                  value={workDetails} onChange={e => { reviseEstimate('workInput'); setWorkDetails(e.target.value); }}
+                  className="flex-[2] bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                />
               </div>
 
             </div>

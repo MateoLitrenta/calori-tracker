@@ -188,7 +188,7 @@ function App() {
   }
 
   return (
-    <div ref={appShellRef} className={`app-shell ${isCoachLayout ? 'app-shell-coach' : ''} h-screen flex flex-col md:flex-row overflow-hidden bg-slate-50 dark:bg-[#151719] text-slate-900 dark:text-white`}>
+    <div ref={appShellRef} className={`app-shell ${isCoachLayout ? 'app-shell-coach' : activeTab === 'home' ? 'app-shell-fitness' : ''} h-screen flex flex-col md:flex-row overflow-hidden bg-slate-50 dark:bg-[#151719] text-slate-900 dark:text-white`}>
       <Toaster position="bottom-right" containerStyle={{ bottom: 'var(--feedback-offset)' }} toastOptions={{ style: { maxWidth: 'min(24rem, calc(100vw - 2rem))' } }} />
       
       {/* Desktop Sidebar */}
@@ -208,6 +208,7 @@ function App() {
                 <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol" />
                 <h1 className="text-lg font-bold">Calori</h1>
               </div>
+              <a href="#fitness-daily-entries" className="fitness-records-link">Ver registros</a>
             </header>
           )}
           <div className="app-content p-4 md:p-0">

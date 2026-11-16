@@ -11,6 +11,9 @@ import { formatDateStr } from '../utils/helpers';
 import { isHomeDate, normalizeHomePresentation, readHomePresentation, saveHomePresentation } from '../utils/homeDateNavigation';
 import './HomeVariants.css';
 import './HomeMobile.css';
+import './FitnessHome.css';
+import './FitnessDaily.css';
+import './FitnessForms.css';
 
 export interface HomeViewState {
   ownerId?: string;
@@ -144,7 +147,7 @@ export default function HomeView({ activeProfile, updateRecord, habitDrafts, vie
   }, [state, historyExpanded]);
 
   return (
-    <div ref={rootRef} className="home-variants dark flex flex-col gap-6 w-full max-w-4xl mx-auto">
+    <div ref={rootRef} className="home-variants fitness-home dark flex flex-col w-full max-w-4xl mx-auto">
       <WeeklyDateNav selectedDateStr={selectedDateStr} today={today} onSelectDate={date => selectDay(date)} onOpenCalendar={openCalendar} />
       {openDayBlocked && <div className="home-date-blocked" role="alert">
         <p>Guardá o cerrá el registro en edición antes de cambiar de día. Tu borrador se conserva.</p>

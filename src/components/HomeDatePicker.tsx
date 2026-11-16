@@ -56,7 +56,7 @@ export default function HomeDatePicker({ selectedDateStr, today, onSelectDate, o
     focusRequest.current = null;
     contentRef.current?.querySelector<HTMLButtonElement>(`[data-calendar-day="${date}"]`)?.focus({ preventScroll: true });
   }, [cursor]);
-  return <EntryFormShell title="Elegir fecha" desktopModal closeLabel="Cerrar calendario" onClose={onClose}>
+  return <EntryFormShell title="Elegir fecha" fitness desktopModal closeLabel="Cerrar calendario" onClose={onClose}>
     <div ref={contentRef} className="home-date-picker">
       <div className="home-month-heading">
         <button type="button" aria-label="Mes anterior" disabled={month <= min.slice(0, 7)} onClick={() => move(moveHomeMonth(cursor, -1, today), false)}>

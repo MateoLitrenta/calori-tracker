@@ -50,23 +50,18 @@ export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, on
   const firstWeek = formatDateStr(startOfWeek(parseISO(min), { weekStartsOn: 0 }));
   return <section ref={rootRef} className="home-date-nav" aria-label="Fecha de Inicio">
     <div className="home-date-heading">
-      <div className="home-date-context" data-date-context={selectedDateStr === today ? 'today' : 'past'} aria-live="polite" aria-atomic="true">
-        <span className="home-date-kicker">{selectedDateStr === today ? 'Hoy' : 'Fecha anterior'}</span>
-        <h2 id={titleId}><time dateTime={selectedDateStr} aria-label={label}><span className="home-date-long-label">{label}</span><span className="home-date-compact-label">{compactLabel}</span></time></h2>
-        <span className="home-date-mobile-week">{compactWeek}</span>
-      </div>
-      <div className="home-date-shortcuts">
-        <button type="button" className="home-date-today" onClick={() => onSelectDate(today)} disabled={selectedDateStr === today}>Hoy</button>
-        <button type="button" className="home-date-calendar" aria-label="Abrir calendario mensual" onClick={onOpenCalendar}>
-          <CalendarBlank size={21} aria-hidden="true" />
-        </button>
-      </div>
-    </div>
-    <div className="home-week-heading">
       <button type="button" aria-label="Semana anterior" disabled={days[0] <= firstWeek} onClick={() => onSelectDate(moveHomeWeek(selectedDateStr, -1, today))}>
         <CaretLeft size={19} aria-hidden="true" />
       </button>
-      <span>{format(parseISO(days[0]), 'd MMM', { locale: es })} – {format(parseISO(days[6]), 'd MMM yyyy', { locale: es })}</span>
+      <div className="home-date-context" data-date-context={selectedDateStr === today ? 'today' : 'past'} aria-live="polite" aria-atomic="true">
+        <span className="home-date-kicker sr-only">{selectedDateStr === today ? 'Hoy' : 'Fecha anterior'}</span>
+        <h2 id={titleId}><time dateTime={selectedDateStr} aria-label={label}><span className="home-date-long-label">{label}</span><span className="home-date-compact-label">{compactLabel}</span></time></h2>
+        <span className="home-date-mobile-week">{compactWeek}</span>
+      </div>
+      <button type="button" className="home-date-today" onClick={() => onSelectDate(today)} disabled={selectedDateStr === today}>Hoy</button>
+      <button type="button" className="home-date-calendar" aria-label="Abrir calendario mensual" onClick={onOpenCalendar}>
+        <CalendarBlank size={21} aria-hidden="true" />
+      </button>
       <button type="button" aria-label="Semana siguiente" disabled={days[0] >= currentWeek} onClick={() => onSelectDate(moveHomeWeek(selectedDateStr, 1, today))}>
         <CaretRight size={19} aria-hidden="true" />
       </button>
@@ -80,7 +75,6 @@ export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, on
         onKeyDown={event => moveFocus(event, day)} onClick={() => onSelectDate(day)}>
         <span>{format(parseISO(day), 'EEE', { locale: es })}</span>
         <strong>{format(parseISO(day), 'd')}</strong>
-        <i aria-hidden="true" />
       </button>)}
     </div>
     </div>
