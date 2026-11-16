@@ -3,22 +3,25 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, symlinkSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { globalSupabase, installGlobalFixture } from '../fitness-global/fixture.mjs';
 
 // Local browser QA only. This server does not launch or control a browser.
 // App, HomeView, DailyPanel, Heatmap, ChartsView and CSS are product sources.
 // Auth, record writer, Storage and AI are isolated synthetic boundaries.
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const beforeGlobal = process.argv.includes('--before-global');
+const globalQA = beforeGlobal || process.argv.includes('--global');
 const beforeFitness = process.argv.includes('--before-fitness');
 const fitness = beforeFitness || process.argv.includes('--fitness');
 const beforeRefinement = process.argv.includes('--before-refinement');
 const refinement = beforeRefinement || process.argv.includes('--refinement');
-const before = process.argv.includes('--before') || beforeRefinement || beforeFitness;
-const base = fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
+const before = process.argv.includes('--before') || beforeRefinement || beforeFitness || beforeGlobal;
+const base = globalQA ? '10117215cf7071dc754e175294588f4a30a959b9' : fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
   : refinement ? 'fe01ecb86e0933c5260c2630fe4d7a6e82ebccdd' : '5a74e7279c77a7d1dc25fb5604d5fa0d657d6bf5';
-const phase = beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
+const phase = beforeGlobal ? 'before-global' : globalQA ? 'global' : beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
 let root = repo;
 if (before) {
-  root = path.resolve(repo, beforeFitness ? '../home-fitness-baseline-' + base.slice(0,7) : beforeRefinement ? '../home-v10-1-1-refinement-baseline' : '../home-v10-1-1-baseline');
+  root = path.resolve(repo, beforeGlobal ? '../global-baseline-' + base.slice(0,7) : beforeFitness ? '../home-fitness-baseline-' + base.slice(0,7) : beforeRefinement ? '../home-v10-1-1-refinement-baseline' : '../home-v10-1-1-baseline');
   mkdirSync(root, { recursive: true });
   if (!existsSync(path.join(root, 'src'))) {
     const archive = path.join(root, 'baseline.tar');
@@ -55,7 +58,7 @@ const boot = `(() => {
   const NativeDate=Date; class FixedDate extends NativeDate { constructor(...args){super(...(args.length?args:[today+'T15:00:00Z']));} static now(){return new NativeDate(today+'T15:00:00Z').getTime();} } window.Date=FixedDate;
   if(params.has('theme'))localStorage.setItem('calori-theme',params.get('theme'));
   if(params.has('controls'))localStorage.setItem(controlsKey,params.get('controls'));
-  document.documentElement.classList.toggle('dark',localStorage.getItem('calori-theme')==='dark');
+  if(!${globalQA})document.documentElement.classList.toggle('dark',localStorage.getItem('calori-theme')==='dark');
   if(params.get('reset')==='1'){localStorage.removeItem(fixtureKey);localStorage.removeItem(accountKey);}
   let saved;try{saved=JSON.parse(localStorage.getItem(fixtureKey)||'null');}catch{}
   const qa={phase,today,profiles:saved||initial,listeners:new Set(),revision:0,controlsHidden:localStorage.getItem(controlsKey)==='0',controlsKey,writes:[],aiCalls:[],failed:false,externalRequests:0,account:params.get('account')||localStorage.getItem(accountKey)||'A'};
@@ -74,20 +77,25 @@ const boot = `(() => {
   qa.store=qa.makeStore();window.__homeQA=qa;
   // No credential/session/storage/API request may escape the local QA origin.
   const fetchLocal=window.fetch.bind(window);window.fetch=(input,init)=>{const url=new URL(typeof input==='string'?input:input.url,location.href);if(url.origin!==location.origin){qa.externalRequests++;return Promise.reject(Error('Remote requests blocked in local synthetic QA'));}return fetchLocal(input,init);};
-})();`;
+})();` + (globalQA ? '(' + installGlobalFixture.toString() + ')();' : '');
 const external = {
   '/hooks/useAppStore.ts': `import{useSyncExternalStore}from'react';export function useAppStore(){return useSyncExternalStore(fn=>{window.__homeQA.listeners.add(fn);return()=>window.__homeQA.listeners.delete(fn)},()=>window.__homeQA.store);}`,
   '/lib/supabase.ts': `export const supabase={auth:{getSession:async()=>({data:{session:null}})},storage:{from:()=>({createSignedUrl:async()=>({data:null,error:null}),upload:async()=>({error:Error('Storage disabled in QA')})})}};`,
   '/services/aiTransport.ts': `export class AIRequestError extends Error{};export async function requestAI(body){window.__homeQA.aiCalls.push(body);window.__homeQA.notify();return body.mode==='estimate'?{estimated:true,calories:body.estimateType==='workout'?220:450,assumptions:['Estimación sintética de QA'],description:'Comida sintética'}:{reply:'Respuesta sintética de QA',actions:[],presentation:'none'};}`,
   '/services/coachGoals.ts': `export class CoachGoalsError extends Error{};export async function fetchCoachGoals(){return{goals:[],hasMore:false}};export async function confirmCoachGoal(){throw Error('No goal writes in home QA')}`,
 };
-const blank = ['AuthModal','LandingPage','Onboarding','ProfileView'];
+if (globalQA) {
+  external['/lib/supabase.ts'] = globalSupabase;
+  delete external['/services/aiTransport.ts'];
+  delete external['/services/coachGoals.ts'];
+}
+const blank = globalQA ? ['AuthModal','LandingPage','Onboarding'] : ['AuthModal','LandingPage','Onboarding','ProfileView'];
 const entry = `import React,{useState,useSyncExternalStore}from'react';import{createRoot}from'react-dom/client';import App from'/src/App.tsx';import{ThemeProvider}from'/src/components/ThemeProvider.tsx';import'/src/index.css';
 function Controls(){const q=window.__homeQA;useSyncExternalStore(fn=>{q.listeners.add(fn);return()=>q.listeners.delete(fn)},()=>q.revision);const[hidden,setHidden]=useState(q.controlsHidden);return hidden?null:<details style={{position:'fixed',right:8,top:8,zIndex:99999,maxWidth:300,background:'#fff',color:'#111',border:'1px solid #999',padding:8,font:'12px sans-serif'}}><summary style={{minHeight:28}}>Prueba sintética · ${phase}</summary><p>Sin servicios remotos. Cuenta {q.account}. Guardados: {q.writes.filter(x=>x.status==='confirmed').length}. IA simulada: {q.aiCalls.length}.</p><button onClick={()=>q.switchAccount('A')}>Cuenta A</button> <button onClick={()=>q.switchAccount('B')}>Cuenta B</button> <button onClick={()=>q.reset()}>Restablecer fixtures</button><p><label><input type='checkbox' onChange={e=>{q.failed=e.target.checked}}/>Simular fallo de guardado</label></p><button onClick={()=>{localStorage.setItem(q.controlsKey,'0');setHidden(true);}}>Ocultar controles de prueba</button><pre style={{whiteSpace:'pre-wrap'}}>{JSON.stringify(q.writes.map(x=>({owner:x.owner,date:x.date,status:x.status})),null,2)}</pre></details>}
 createRoot(document.getElementById('root')).render(<ThemeProvider><App/><Controls/></ThemeProvider>);`;
 const entryCode = ts.transpileModule(entry, { compilerOptions: { module: ts.ModuleKind.ESNext,
   jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText;
-const port=Number(process.argv.find(value=>value.startsWith('--port='))?.split('=')[1] || (beforeFitness?5191:fitness?5192:beforeRefinement?5183:refinement?5184:before?5181:5182));
+const port=Number(process.argv.find(value=>value.startsWith('--port='))?.split('=')[1] || (beforeGlobal?5193:globalQA?5194:beforeFitness?5191:fitness?5192:beforeRefinement?5183:refinement?5184:before?5181:5182));
 // The baseline links the same installed dependencies, but each source tree must
 // own its optimizer cache. Sharing node_modules/.vite can invalidate the other
 // server's dependency URLs and return 504s instead of mounting the real App.

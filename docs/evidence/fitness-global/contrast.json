@@ -1,0 +1,610 @@
+[
+  {
+    "theme": "light",
+    "tab": "Inicio",
+    "selector": ".energy-number",
+    "text": "-1.031 kcal",
+    "foreground": [
+      152,
+      64,
+      21
+    ],
+    "background": [
+      241,
+      233,
+      219
+    ],
+    "fontSize": 71.25,
+    "ratio": 5.66,
+    "minimum": 3
+  },
+  {
+    "theme": "light",
+    "tab": "Inicio",
+    "selector": ".fitness-readout h4",
+    "text": "Balance energético",
+    "foreground": [
+      37,
+      40,
+      33
+    ],
+    "background": [
+      241,
+      233,
+      219
+    ],
+    "fontSize": 14,
+    "ratio": 12.41,
+    "minimum": 4.5
+  },
+  {
+    "theme": "light",
+    "tab": "Inicio",
+    "selector": ".home-date-context time",
+    "text": "viernes 13 de noviembreHoy · 13 nov",
+    "foreground": [
+      37,
+      40,
+      33
+    ],
+    "background": [
+      241,
+      233,
+      219
+    ],
+    "fontSize": 14,
+    "ratio": 12.41,
+    "minimum": 4.5
+  },
+  {
+    "theme": "light",
+    "tab": "Coach",
+    "selector": ".chat-heading h2",
+    "text": "Coach",
+    "foreground": [
+      28,
+      37,
+      34
+    ],
+    "background": [
+      246,
+      245,
+      239
+    ],
+    "fontSize": 29,
+    "ratio": 14.38,
+    "minimum": 3
+  },
+  {
+    "theme": "light",
+    "tab": "Coach",
+    "selector": ".chat-proactive-title",
+    "text": "Tus actividades, en conjunto",
+    "foreground": [
+      28,
+      37,
+      34
+    ],
+    "background": [
+      255,
+      254,
+      250
+    ],
+    "fontSize": 25,
+    "ratio": 15.56,
+    "minimum": 3
+  },
+  {
+    "theme": "light",
+    "tab": "Coach",
+    "selector": ".chat-proactive-action",
+    "text": "Organizar mis entrenamientos",
+    "foreground": [
+      36,
+      27,
+      20
+    ],
+    "background": [
+      255,
+      154,
+      83
+    ],
+    "fontSize": 14,
+    "ratio": 8.05,
+    "minimum": 4.5
+  },
+  {
+    "theme": "light",
+    "tab": "Datos",
+    "selector": ".charts-heading h1",
+    "text": "Datos",
+    "foreground": [
+      28,
+      37,
+      34
+    ],
+    "background": [
+      246,
+      245,
+      239
+    ],
+    "fontSize": 36,
+    "ratio": 14.38,
+    "minimum": 3
+  },
+  {
+    "theme": "light",
+    "tab": "Datos",
+    "selector": ".charts-range",
+    "text": "9 nov – 15 nov 2026",
+    "foreground": [
+      80,
+      93,
+      85
+    ],
+    "background": [
+      246,
+      245,
+      239
+    ],
+    "fontSize": 13,
+    "ratio": 6.33,
+    "minimum": 4.5
+  },
+  {
+    "theme": "light",
+    "tab": "Datos",
+    "selector": ".charts-summary dt",
+    "text": "Consumidas",
+    "foreground": [
+      28,
+      37,
+      34
+    ],
+    "background": [
+      255,
+      254,
+      250
+    ],
+    "fontSize": 14,
+    "ratio": 15.56,
+    "minimum": 4.5
+  },
+  {
+    "theme": "light",
+    "tab": "Datos",
+    "selector": ".charts-secondary",
+    "text": "Valores diarios. kcal · Elegí una barra para ",
+    "foreground": [
+      80,
+      93,
+      85
+    ],
+    "background": [
+      255,
+      254,
+      250
+    ],
+    "fontSize": 12,
+    "ratio": 6.85,
+    "minimum": 4.5
+  },
+  {
+    "theme": "light",
+    "tab": "Perfil",
+    "selector": ".profile-page-title",
+    "text": "Perfil",
+    "foreground": [
+      28,
+      37,
+      34
+    ],
+    "background": [
+      246,
+      245,
+      239
+    ],
+    "fontSize": 36,
+    "ratio": 14.38,
+    "minimum": 3
+  },
+  {
+    "theme": "light",
+    "tab": "Perfil",
+    "selector": "#profile-name",
+    "text": "Alex",
+    "foreground": [
+      28,
+      37,
+      34
+    ],
+    "background": [
+      255,
+      254,
+      250
+    ],
+    "fontSize": 27,
+    "ratio": 15.56,
+    "minimum": 3
+  },
+  {
+    "theme": "light",
+    "tab": "Perfil",
+    "selector": ".profile-facts dt",
+    "text": "Edad",
+    "foreground": [
+      80,
+      93,
+      85
+    ],
+    "background": [
+      255,
+      254,
+      250
+    ],
+    "fontSize": 13,
+    "ratio": 6.85,
+    "minimum": 4.5
+  },
+  {
+    "theme": "light",
+    "tab": "Perfil",
+    "selector": ".profile-facts dd",
+    "text": "30 años",
+    "foreground": [
+      28,
+      37,
+      34
+    ],
+    "background": [
+      255,
+      254,
+      250
+    ],
+    "fontSize": 24,
+    "ratio": 15.56,
+    "minimum": 3
+  },
+  {
+    "theme": "light",
+    "tab": "Perfil",
+    "selector": ".profile-muted",
+    "text": "Elegí cómo querés ver Calori.",
+    "foreground": [
+      80,
+      93,
+      85
+    ],
+    "background": [
+      255,
+      254,
+      250
+    ],
+    "fontSize": 13,
+    "ratio": 6.85,
+    "minimum": 4.5
+  },
+  {
+    "theme": "light",
+    "tab": "Perfil",
+    "selector": ".profile-button-neutral",
+    "text": "Cambiar foto",
+    "foreground": [
+      28,
+      37,
+      34
+    ],
+    "background": [
+      235,
+      236,
+      228
+    ],
+    "fontSize": 14,
+    "ratio": 13.2,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "tab": "Inicio",
+    "selector": ".energy-number",
+    "text": "-1.031 kcal",
+    "foreground": [
+      255,
+      154,
+      83
+    ],
+    "background": [
+      32,
+      39,
+      39
+    ],
+    "fontSize": 71.25,
+    "ratio": 7.24,
+    "minimum": 3
+  },
+  {
+    "theme": "dark",
+    "tab": "Inicio",
+    "selector": ".fitness-readout h4",
+    "text": "Balance energético",
+    "foreground": [
+      247,
+      246,
+      237
+    ],
+    "background": [
+      32,
+      39,
+      39
+    ],
+    "fontSize": 14,
+    "ratio": 14.02,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "tab": "Inicio",
+    "selector": ".home-date-context time",
+    "text": "viernes 13 de noviembreHoy · 13 nov",
+    "foreground": [
+      247,
+      246,
+      237
+    ],
+    "background": [
+      32,
+      39,
+      39
+    ],
+    "fontSize": 14,
+    "ratio": 14.02,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "tab": "Coach",
+    "selector": ".chat-heading h2",
+    "text": "Coach",
+    "foreground": [
+      245,
+      244,
+      238
+    ],
+    "background": [
+      16,
+      21,
+      21
+    ],
+    "fontSize": 29,
+    "ratio": 16.72,
+    "minimum": 3
+  },
+  {
+    "theme": "dark",
+    "tab": "Coach",
+    "selector": ".chat-proactive-title",
+    "text": "Tus actividades, en conjunto",
+    "foreground": [
+      245,
+      244,
+      238
+    ],
+    "background": [
+      26,
+      33,
+      31
+    ],
+    "fontSize": 25,
+    "ratio": 14.87,
+    "minimum": 3
+  },
+  {
+    "theme": "dark",
+    "tab": "Coach",
+    "selector": ".chat-proactive-action",
+    "text": "Organizar mis entrenamientos",
+    "foreground": [
+      36,
+      27,
+      20
+    ],
+    "background": [
+      255,
+      154,
+      83
+    ],
+    "fontSize": 14,
+    "ratio": 8.05,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "tab": "Datos",
+    "selector": ".charts-heading h1",
+    "text": "Datos",
+    "foreground": [
+      245,
+      244,
+      238
+    ],
+    "background": [
+      16,
+      21,
+      21
+    ],
+    "fontSize": 36,
+    "ratio": 16.72,
+    "minimum": 3
+  },
+  {
+    "theme": "dark",
+    "tab": "Datos",
+    "selector": ".charts-range",
+    "text": "9 nov – 15 nov 2026",
+    "foreground": [
+      186,
+      196,
+      189
+    ],
+    "background": [
+      16,
+      21,
+      21
+    ],
+    "fontSize": 13,
+    "ratio": 10.28,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "tab": "Datos",
+    "selector": ".charts-summary dt",
+    "text": "Consumidas",
+    "foreground": [
+      245,
+      244,
+      238
+    ],
+    "background": [
+      26,
+      33,
+      31
+    ],
+    "fontSize": 14,
+    "ratio": 14.87,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "tab": "Datos",
+    "selector": ".charts-secondary",
+    "text": "Valores diarios. kcal · Elegí una barra para ",
+    "foreground": [
+      186,
+      196,
+      189
+    ],
+    "background": [
+      26,
+      33,
+      31
+    ],
+    "fontSize": 12,
+    "ratio": 9.15,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "tab": "Perfil",
+    "selector": ".profile-page-title",
+    "text": "Perfil",
+    "foreground": [
+      245,
+      244,
+      238
+    ],
+    "background": [
+      16,
+      21,
+      21
+    ],
+    "fontSize": 36,
+    "ratio": 16.72,
+    "minimum": 3
+  },
+  {
+    "theme": "dark",
+    "tab": "Perfil",
+    "selector": "#profile-name",
+    "text": "Alex",
+    "foreground": [
+      245,
+      244,
+      238
+    ],
+    "background": [
+      26,
+      33,
+      31
+    ],
+    "fontSize": 27,
+    "ratio": 14.87,
+    "minimum": 3
+  },
+  {
+    "theme": "dark",
+    "tab": "Perfil",
+    "selector": ".profile-facts dt",
+    "text": "Edad",
+    "foreground": [
+      186,
+      196,
+      189
+    ],
+    "background": [
+      26,
+      33,
+      31
+    ],
+    "fontSize": 13,
+    "ratio": 9.15,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "tab": "Perfil",
+    "selector": ".profile-facts dd",
+    "text": "30 años",
+    "foreground": [
+      245,
+      244,
+      238
+    ],
+    "background": [
+      26,
+      33,
+      31
+    ],
+    "fontSize": 24,
+    "ratio": 14.87,
+    "minimum": 3
+  },
+  {
+    "theme": "dark",
+    "tab": "Perfil",
+    "selector": ".profile-muted",
+    "text": "Elegí cómo querés ver Calori.",
+    "foreground": [
+      186,
+      196,
+      189
+    ],
+    "background": [
+      26,
+      33,
+      31
+    ],
+    "fontSize": 13,
+    "ratio": 9.15,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "tab": "Perfil",
+    "selector": ".profile-button-neutral",
+    "text": "Cambiar foto",
+    "foreground": [
+      245,
+      244,
+      238
+    ],
+    "background": [
+      38,
+      46,
+      43
+    ],
+    "fontSize": 14,
+    "ratio": 12.64,
+    "minimum": 4.5
+  }
+]

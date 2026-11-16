@@ -41,11 +41,11 @@ Las láminas enfrentan el commit de referencia con esta revisión. Cada columna 
 
 ## Recorridos y alcance de la evidencia
 
-- **Apariencia y geometría.** La [matriz anterior](evidence/fitness-global/before/matrix.json) y la [del candidato](evidence/fitness-global/after/matrix.json) cubren Inicio, Coach, Datos y Perfil a 320, 375, 393, 440, 768 y 1440 px. Cada ancho se prueba en Claro, Oscuro, Sistema con dispositivo claro y Sistema con dispositivo oscuro. El gráfico conserva desplazamiento propio en anchos estrechos. Los [recorridos de apariencia](evidence/fitness-global/interactions/) cubren cambio en vivo, formulario abierto, diálogo, recarga y navegación.
+- **Apariencia y geometría.** La [matriz anterior](evidence/fitness-global/before/matrix.json) y la [del candidato](evidence/fitness-global/after/matrix.json) cubren Inicio, Coach, Datos y Perfil a 320, 375, 393, 440, 768 y 1440 px. Cada ancho se prueba en Claro, Oscuro, Sistema con dispositivo claro y Sistema con dispositivo oscuro. Las 96 celdas del candidato terminaron sin desbordamiento de página ni interferencia entre navegación y compositor. La navegación midió al menos 76 px de ancho y 48 px de alto por destino. El gráfico conserva desplazamiento propio en anchos estrechos. Los [recorridos de apariencia](evidence/fitness-global/interactions/) cubren cambio en vivo, formulario abierto, diálogo, recarga y navegación.
 - **Registros.** Los [13 recorridos de Inicio](evidence/fitness-global/home-journeys/journeys.json) ejercitan fecha activa, captura y edición, calendario, hábitos, reintento, cambio de cuenta y controles de borrador. La prueba local del panel también exige que el saldo provisional sea exacto y quede dentro del desglose cerrado.
 - **Datos y Perfil.** Se comparan uno a uno promedios, cobertura, denominadores y valores de las barras entre ambas revisiones para dos cuentas y tres períodos. Los recorridos usan interacción real de teclado y prueban errores y reintentos, además de las operaciones de foto con un archivo sintético. [Paridad numérica](evidence/fitness-global/numerical-parity.json) · [Comprobaciones](evidence/fitness-global/views-flows/checks.json).
 - **Coach.** La observación, las sugerencias, la evidencia y el compositor se renderizan desde la aplicación. Las confirmaciones de registros y objetivos atraviesan el controlador de la interfaz. Las respuestas del transporte de IA, la cuota y los dispositivos de captura se simulan de forma explícita. En los dos recorridos (375 claro y 1440 oscuro) abrir Coach generó cero peticiones automáticas. Cada recorrido incluyó cinco solicitudes explícitas simuladas, un registro confirmado y tres cambios de objetivo con confirmación. [Recorridos del Coach](evidence/fitness-global/coach-flows/results.json).
-- **Legibilidad.** El contraste se mide sobre elementos renderizados en los dos temas. Las 32 muestras pasaron el umbral correspondiente a su tamaño. Las mediciones, sus colores y sus umbrales están disponibles en el [informe de contraste](evidence/fitness-global/contrast.json).
+- **Legibilidad.** El contraste se mide sobre elementos renderizados en los dos temas. Las 32 muestras pasaron el umbral correspondiente a su tamaño. El menor contraste medido fue de 5,66:1. Las mediciones, sus colores y sus umbrales están disponibles en el [informe de contraste](evidence/fitness-global/contrast.json).
 
 ### Reproducción
 
@@ -66,7 +66,7 @@ node scripts/fitness-global/journeys.mjs
 node scripts/fitness-global/readability.mjs
 node scripts/fitness-global/views-flows.mjs
 node scripts/fitness-global/coach-flows.mjs
-node scripts/home-mobile/audit-journeys.mjs --global
+node --experimental-strip-types scripts/home-mobile/audit-journeys.mjs --global
 node scripts/fitness-global/boards.mjs
 ```
 

@@ -1,0 +1,48 @@
+[
+  {
+    "width": 375,
+    "theme": "light",
+    "calls": 5,
+    "writes": 1,
+    "goals": 3,
+    "external": 0,
+    "checks": [
+      "evidence",
+      "context",
+      "typing",
+      "menu-focus",
+      "camera-capture-and-remove",
+      "cancel-dictation",
+      "edit-and-confirm-meal",
+      "dismiss-and-accept-goal",
+      "modify-and-cancel-goal",
+      "dialog-focus-restore",
+      "history",
+      "quota",
+      "account-isolation"
+    ]
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "calls": 5,
+    "writes": 1,
+    "goals": 3,
+    "external": 0,
+    "checks": [
+      "evidence",
+      "context",
+      "typing",
+      "menu-focus",
+      "camera-capture-and-remove",
+      "cancel-dictation",
+      "edit-and-confirm-meal",
+      "dismiss-and-accept-goal",
+      "modify-and-cancel-goal",
+      "dialog-focus-restore",
+      "history",
+      "quota",
+      "account-isolation"
+    ]
+  }
+]

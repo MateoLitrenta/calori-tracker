@@ -8,10 +8,11 @@ import { getCaloriesIngested, calculateDailyExpenditure } from '../../src/utils/
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const browserModule = process.env.PLAYWRIGHT_MODULE || path.resolve(repo, '../qa-tools/node_modules/playwright/index.mjs');
 const { chromium } = await import(pathToFileURL(browserModule));
-const fitness = process.argv.includes('--fitness');
-const origin = process.env.HOME_QA_URL || (fitness ? 'http://127.0.0.1:5192' : 'http://127.0.0.1:5184');
+const globalQA = process.argv.includes('--global');
+const fitness = globalQA || process.argv.includes('--fitness');
+const origin = process.env.HOME_QA_URL || (globalQA ? 'http://127.0.0.1:5194' : fitness ? 'http://127.0.0.1:5192' : 'http://127.0.0.1:5184');
 assert.equal(new URL(origin).hostname, '127.0.0.1', 'Journey tests only target the local synthetic fixture');
-const output = path.resolve(repo, fitness ? 'docs/evidence/fitness-moderno/journeys' : 'docs/evidence/v10-1-1-refinement');
+const output = path.resolve(repo, globalQA ? 'docs/evidence/fitness-global/home-journeys' : fitness ? 'docs/evidence/fitness-moderno/journeys' : 'docs/evidence/v10-1-1-refinement');
 mkdirSync(output, {
     recursive: true
 });

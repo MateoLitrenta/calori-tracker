@@ -1,0 +1,32 @@
+{
+  "scope": "Chromium local. Datos y Perfil reales. Auth, Storage y persistencia simulados.",
+  "checks": [
+    "Semana/Mes/Año con foco, detalle exacto, Escape y deselección",
+    "Metodología y cobertura por teclado",
+    "Objetivo táctil >= 44 px en barras",
+    "Cancelación de borrado",
+    "Contraseñas distintas, error y reintento",
+    "Previsualización, cancelación, guardado y eliminación de foto sintética",
+    "Registros intactos y cero llamadas externas"
+  ],
+  "runs": [
+    {
+      "theme": "light",
+      "width": 393,
+      "result": "passed",
+      "counters": {
+        "requests": 0,
+        "ai": 0
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 393,
+      "result": "passed",
+      "counters": {
+        "requests": 0,
+        "ai": 0
+      }
+    }
+  ]
+}

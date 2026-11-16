@@ -1,0 +1,225 @@
+[
+  {
+    "status": "passed",
+    "account": "A",
+    "period": "Semana",
+    "balance": "-828",
+    "averages": [
+      "1.363",
+      "2.082"
+    ],
+    "denominators": [
+      "· 3 días con comidas",
+      "· 3 días con comidas",
+      "· 4 días con datos energéticos"
+    ],
+    "coverage": "4 días con datos · 3 días con comidas",
+    "buckets": [
+      [
+        "740",
+        "1.843",
+        "-1.103"
+      ],
+      [],
+      [
+        "1.755"
+      ],
+      [
+        "2.100",
+        "2.449",
+        "-349"
+      ],
+      [
+        "1.250",
+        "2.281",
+        "-1.031"
+      ],
+      [],
+      []
+    ]
+  },
+  {
+    "status": "passed",
+    "account": "A",
+    "period": "Mes",
+    "balance": "-658",
+    "averages": [
+      "1.510",
+      "2.085"
+    ],
+    "denominators": [
+      "· 4 días con comidas",
+      "· 4 días con comidas",
+      "· 5 días con datos energéticos"
+    ],
+    "coverage": "5 días con datos · 4 días con comidas",
+    "buckets": [
+      [
+        "1",
+        "1",
+        "7",
+        "1.950",
+        "2.099",
+        "-149"
+      ],
+      [
+        "2",
+        "8",
+        "14",
+        "1.363",
+        "2.082",
+        "-828"
+      ],
+      [
+        "3",
+        "15",
+        "21"
+      ],
+      [
+        "4",
+        "22",
+        "28"
+      ],
+      [
+        "5",
+        "29",
+        "30"
+      ]
+    ]
+  },
+  {
+    "status": "passed",
+    "account": "A",
+    "period": "Año",
+    "balance": "-533",
+    "averages": [
+      "1.668",
+      "2.127"
+    ],
+    "denominators": [
+      "· 5 días con comidas",
+      "· 5 días con comidas",
+      "· 6 días con datos energéticos"
+    ],
+    "coverage": "6 días con datos · 5 días con comidas",
+    "buckets": [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [
+        "2.300",
+        "2.333",
+        "-33"
+      ],
+      [
+        "1.510",
+        "2.085",
+        "-658"
+      ],
+      []
+    ]
+  },
+  {
+    "status": "passed",
+    "account": "B",
+    "period": "Semana",
+    "balance": "Sin datos",
+    "averages": [
+      "Sin datos",
+      "1.711"
+    ],
+    "denominators": [
+      "· 1 día con datos energéticos"
+    ],
+    "coverage": "1 día con datos · 0 días con comidas",
+    "buckets": [
+      [],
+      [],
+      [],
+      [],
+      [
+        "1.711"
+      ],
+      [],
+      []
+    ]
+  },
+  {
+    "status": "passed",
+    "account": "B",
+    "period": "Mes",
+    "balance": "Sin datos",
+    "averages": [
+      "Sin datos",
+      "1.711"
+    ],
+    "denominators": [
+      "· 1 día con datos energéticos"
+    ],
+    "coverage": "1 día con datos · 0 días con comidas",
+    "buckets": [
+      [
+        "1",
+        "1",
+        "7"
+      ],
+      [
+        "2",
+        "8",
+        "14",
+        "1.711"
+      ],
+      [
+        "3",
+        "15",
+        "21"
+      ],
+      [
+        "4",
+        "22",
+        "28"
+      ],
+      [
+        "5",
+        "29",
+        "30"
+      ]
+    ]
+  },
+  {
+    "status": "passed",
+    "account": "B",
+    "period": "Año",
+    "balance": "Sin datos",
+    "averages": [
+      "Sin datos",
+      "1.711"
+    ],
+    "denominators": [
+      "· 1 día con datos energéticos"
+    ],
+    "coverage": "1 día con datos · 0 días con comidas",
+    "buckets": [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [
+        "1.711"
+      ],
+      []
+    ]
+  }
+]
