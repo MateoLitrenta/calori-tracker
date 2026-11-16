@@ -35,8 +35,8 @@ export default function CoachGoalCard({ goal, history, today, children }: {
 export function CoachGoalCards({ resource, history, today, type, limit, children }: {
   resource: CoachGoalsResource; history: HabitDay[]; today: string; type?: CoachGoal['type']; limit?: number; children?: ReactNode;
 }) {
-  if (resource.status === 'loading') return <p role="status">Cargando objetivos…</p>;
-  if (resource.status === 'disabled') return <p role="status">Los objetivos persistentes todavía no están habilitados.</p>;
+  if (resource.status === 'loading') return <p className="coach-goal-note" role="status">Cargando objetivos…</p>;
+  if (resource.status === 'disabled') return <p className="coach-goal-note" role="status">Los objetivos persistentes todavía no están habilitados.</p>;
   if (resource.status === 'error') return <div role="alert" className="coach-goal-list"><p>{resource.error}</p><button type="button" onClick={() => { void resource.reload(); }}>Volver a consultar</button></div>;
   const goals = resource.goals.filter(goal => (!limit || goal.status === 'active') && (!type || goal.type === type));
   return <div className="coach-goal-list">

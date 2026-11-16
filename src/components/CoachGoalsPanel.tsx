@@ -8,6 +8,7 @@ import { goalLabel } from '../utils/coachGoalPresentation';
 import type { HabitDay } from '../utils/coachContextContract';
 import type { CoachGoalsResource } from '../hooks/useCoachGoals';
 import './HomeVariants.css';
+import './FitnessForms.css';
 
 export default function CoachGoalsPanel({ resource, history, today, userId, onClose }: {
   resource: CoachGoalsResource; history: HabitDay[]; today: string; userId: string; onClose: () => void;
@@ -54,7 +55,7 @@ export default function CoachGoalsPanel({ resource, history, today, userId, onCl
       await resource.reload();
     } finally { lock.current = false; if (mounted.current) setSaving(false); }
   };
-  return <EntryFormShell title="Mis objetivos" onClose={() => { if (!lock.current) onClose(); }} desktopModal>
+  return <EntryFormShell title="Mis objetivos" onClose={() => { if (!lock.current) onClose(); }} desktopModal fitness>
     <div className="entry-form coach-goals-panel p-4 flex flex-col gap-4" aria-busy={saving}>
       <div className="entry-form-content coach-goals-content">
         {notice && <p role="status">{notice}</p>}

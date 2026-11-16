@@ -1,7 +1,7 @@
-import './PremiumViews.css';
+import './CoachFitness.css';
 import { useState, useRef, useEffect, useCallback, useMemo, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
-import { CheckCircle, ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, Target, X } from '@phosphor-icons/react';
+import { ArrowRight, CaretDown, ChartLineUp, CheckCircle, ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, Target, X } from '@phosphor-icons/react';
 import UserAvatar from './UserAvatar';
 import CoachInsightCard from './CoachInsightCard';
 import CoachGoalConfirmation from './CoachGoalConfirmation';
@@ -186,6 +186,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
 }) {
   const storageKey = `calori:assistant:messages:${userId}:${dateStr}`;
   const [messages, setMessages] = useState<Message[]>(() => readDailyHistory(userId, dateStr, today));
+  const hasMessages = messages.length > 0;
   const [initialMessageIds] = useState(() => new Set(messages.map(message => message.id)));
   const [proactiveExpanded, setProactiveExpanded] = useState(true);
   const proactiveReference = useRef<string | undefined>(undefined);
@@ -206,6 +207,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const galleryInputRef = useRef<HTMLInputElement | null>(null);
   const photoMenuRef = useRef<HTMLDivElement | null>(null);
   const textInputRef = useRef<HTMLTextAreaElement | null>(null);
+  const cameraDialogRef = useRef<HTMLDialogElement | null>(null);
   const cameraVideoRef = useRef<HTMLVideoElement | null>(null);
   const cameraStreamRef = useRef<MediaStream | null>(null);
   const cameraRequestId = useRef(0);
@@ -219,6 +221,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const recordingCancelled = useRef(false);
   const audioBusy = useRef(false);
   const messagesScrollRef = useRef<HTMLElement | null>(null);
+  const composerRef = useRef<HTMLElement | null>(null);
   const messagesContentRef = useRef<HTMLDivElement | null>(null);
   const scrollToEnd = useCallback((behavior: ScrollBehavior) => {
     const container = messagesScrollRef.current ?? scrollContainer.current;
@@ -379,11 +382,15 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
 
   useEffect(() => {
     if (!showPhotoMenu) return;
+    photoMenuRef.current?.querySelector<HTMLButtonElement>('[role="menuitem"]')?.focus();
     const closeOnOutside = (event: PointerEvent) => {
       if (!photoMenuRef.current?.contains(event.target as Node)) setShowPhotoMenu(false);
     };
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setShowPhotoMenu(false);
+      if (event.key === 'Escape') {
+        setShowPhotoMenu(false);
+        photoMenuRef.current?.querySelector<HTMLButtonElement>('.chat-image-button')?.focus();
+      }
     };
     document.addEventListener('pointerdown', closeOnOutside);
     document.addEventListener('keydown', closeOnEscape);
@@ -392,6 +399,25 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       document.removeEventListener('keydown', closeOnEscape);
     };
   }, [showPhotoMenu]);
+
+  useEffect(() => {
+    const dialog = cameraDialogRef.current;
+    if (!isCameraOpen || !dialog) return;
+    dialog.showModal();
+    const trigger = photoMenuRef.current?.querySelector<HTMLButtonElement>('.chat-image-button');
+    return () => { dialog.close(); trigger?.focus({ preventScroll: true }); };
+  }, [isCameraOpen]);
+
+  useEffect(() => {
+    const composer = composerRef.current;
+    const shell = composer?.closest<HTMLElement>('.app-shell-coach');
+    if (!composer || !shell) return;
+    const measure = () => shell.style.setProperty('--coach-composer-height', `${composer.offsetHeight}px`);
+    measure();
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(measure);
+    observer?.observe(composer);
+    return () => { observer?.disconnect(); shell.style.removeProperty('--coach-composer-height'); };
+  }, [isPastConversation]);
 
   const editProposal = (index: number, field: string, value: string | number | undefined) => {
     setPending(prev => prev && ({ ...prev, actions: prev.actions.map((action, i) =>
@@ -551,7 +577,9 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
 
   useEffect(() => {
     const container = messagesScrollRef.current;
-    if (!container || typeof ResizeObserver === 'undefined') return;
+    if (!container) return;
+    if (!hasMessages) { container.scrollTop = 0; return; }
+    if (typeof ResizeObserver === 'undefined') return;
     let previousHeight = container.clientHeight;
     let previousScrollHeight = container.scrollHeight;
     const observer = new ResizeObserver(() => {
@@ -563,7 +591,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     observer.observe(container);
     if (messagesContentRef.current) observer.observe(messagesContentRef.current);
     return () => observer.disconnect();
-  }, []);
+  }, [hasMessages]);
 
   useEffect(() => {
     if (isPastConversation) return;
@@ -843,27 +871,27 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
   };
 
   return (
-    <div className="premium-view dark assistant-view flex flex-col flex-1 min-h-0 w-full max-w-3xl mx-auto bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+    <div className="assistant-view">
       
       {/* Header */}
-      <header className="chat-heading px-6 py-5 border-b border-slate-200 dark:border-[#ffffff0d] bg-slate-50 dark:bg-[#151719] flex flex-wrap items-center gap-3">
+      <header className="chat-heading">
         <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-assistant" />
-        <div>
-          <h2 className="font-bold text-lg text-slate-900 dark:text-white"><span className="chat-desktop-title">Calori</span><span className="chat-mobile-title">Coach</span></h2>
-          <p className="text-xs text-slate-500 dark:text-gray-400">Coach de nutrición y entrenamiento</p>
+        <div className="chat-heading-title">
+          <h2>Coach</h2>
+          <p>Nutrición y entrenamiento</p>
         </div>
-        <div className="chat-heading-actions ml-auto flex items-center gap-1">
+        <div className="chat-heading-actions">
           <button type="button" onClick={() => { setShowGoals(true); void goals.reload(); }}
             disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || hasPending}
-            aria-label="Mis objetivos" aria-haspopup="dialog" aria-expanded={showGoals} className="text-xs font-medium disabled:opacity-50">
+            aria-label="Mis objetivos" aria-haspopup="dialog" aria-expanded={showGoals} title="Mis objetivos">
             <Target className="chat-action-icon" size={19} aria-hidden="true" /><span>Mis objetivos</span>
           </button>
           <button type="button" onClick={() => setShowHistory(prev => !prev)} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || hasPending}
-            aria-label="Historial" aria-expanded={showHistory} className="chat-history-button text-xs font-medium disabled:opacity-50">
+            aria-label="Historial" aria-expanded={showHistory} title="Historial">
             <ClockCounterClockwise className="chat-action-icon" size={19} aria-hidden="true" /><span>Historial</span>
           </button>
           <button type="button" onClick={startConversation} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || isPastConversation}
-            aria-label="Nueva conversación" className="text-xs font-medium text-slate-500 dark:text-gray-400 hover:text-orange-500 disabled:opacity-50">
+            aria-label="Nueva conversación" title="Nueva conversación">
             <Plus className="chat-action-icon" size={19} aria-hidden="true" /><span>Nueva conversación</span>
           </button>
         </div>
@@ -872,10 +900,10 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         onClose={() => setShowGoals(false)} />}
 
       {showHistory && (
-        <label className="chat-history-picker flex flex-col gap-2 px-4 py-3 text-sm">
+        <label className="chat-history-picker">
           Conversación
           <select value={dateStr} onChange={e => { setShowHistory(false); onSelectDate(e.target.value); }}
-            className="w-full min-w-0 rounded-xl border border-slate-300 dark:border-[#ffffff0d] bg-white dark:bg-[#191c1f] px-3 py-2">
+            className="chat-field">
             {conversationDates(userId, today).map(date => (
               <option key={date} value={date}>{date === today ? 'Hoy' : new Date(`${date}T12:00:00`).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })}</option>
             ))}
@@ -883,9 +911,9 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         </label>
       )}
       {isPastConversation && (
-        <div className="chat-history-picker px-4 py-3 text-sm">
+        <div className="chat-history-picker">
           <p>{new Date(`${dateStr}T12:00:00`).toLocaleDateString('es-AR')} · Solo lectura</p>
-          <button type="button" onClick={() => onSelectDate(today)} className="mt-2 underline">Volver a hoy</button>
+          <button type="button" onClick={() => onSelectDate(today)} className="chat-return-today">Volver a hoy</button>
         </div>
       )}
 
@@ -893,19 +921,19 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         <aside className="chat-proactive" aria-label="Una observación para vos" data-insight-kind={proactiveInsight.kind}>
           <details open={proactiveExpanded} onToggle={event => setProactiveExpanded(event.currentTarget.open)}>
             <summary className="chat-proactive-heading">
-              <span className="chat-proactive-eyebrow">Para vos <span aria-hidden="true">·</span> Tus registros</span>
+              <span className="chat-proactive-eyebrow"><ChartLineUp size={17} weight="bold" aria-hidden="true" />Tus registros</span>
               <span className="chat-proactive-title">{proactiveInsight.title}</span>
-              <span className="chat-proactive-toggle" aria-hidden="true">{proactiveExpanded ? '−' : '+'}</span>
+              <CaretDown className="chat-proactive-toggle" size={18} weight="bold" aria-hidden="true" />
             </summary>
             <div className="chat-proactive-body">
               <p className="chat-proactive-observation">{proactiveInsight.observation}</p>
               <button type="button" className="chat-proactive-action"
                 onClick={() => handleSend(proactiveInsight.prompt, undefined, proactiveInsight.id)}
                 disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !currentContext}>
-                {proactiveInsight.actionLabel}<span aria-hidden="true">→</span>
+                {proactiveInsight.actionLabel}<ArrowRight size={16} weight="bold" aria-hidden="true" />
               </button>
               <details className="chat-proactive-evidence">
-                <summary>Ver evidencia y límites</summary>
+                <summary>Ver evidencia y límites <CaretDown size={13} aria-hidden="true" /></summary>
                 <p>{new Date(`${proactiveInsight.period.startDate}T12:00:00`).toLocaleDateString('es-AR')} – {new Date(`${proactiveInsight.period.endDate}T12:00:00`).toLocaleDateString('es-AR')} · Hoy sigue en curso.</p>
                 <ul>{proactiveInsight.evidence.map(item => <li key={item}>{item}</li>)}</ul>
                 <p>{proactiveInsight.limitation}</p>
@@ -917,13 +945,13 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       )}
 
       {/* Messages Area */}
-      <section ref={messagesScrollRef} className="chat-messages flex-1 p-4 md:p-6 flex flex-col gap-4"
+      <section ref={messagesScrollRef} className="chat-messages"
         role="log" aria-label="Conversación con Coach" aria-live="polite" aria-relevant="additions text">
-        <div ref={messagesContentRef} className="chat-message-list flex flex-col grow shrink-0 min-w-0" style={{ gap: 'inherit' }}>
+        <div ref={messagesContentRef} className="chat-message-list">
         {pendingGoal && <CoachGoalConfirmation proposal={pendingGoal} busy={isTyping}
           onConfirm={() => { void confirmGoal(); }} onDismiss={() => setPendingGoal(null)} />}
         {pending && (
-          <div className="chat-confirmation order-last border text-sm" role="region" aria-label="Propuesta de registros para revisar" aria-busy={isConfirming}>
+          <div className="chat-confirmation order-last" role="region" aria-label="Propuesta de registros para revisar" aria-busy={isConfirming}>
             <div className="chat-proposal-heading">
               <p className="chat-proposal-state" role="status">{isConfirming ? 'Confirmando el guardado…' : 'Propuesta pendiente'}</p>
               <h3>{pending.actions.length === 1 ? 'Revisá tu registro' : 'Revisá tus registros'}</h3>
@@ -942,7 +970,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                       onChange={event => { const checked = event.target.checked; setPending(previous => previous && ({ ...previous,
                         registerAgain: checked ? [...previous.registerAgain.filter(value => value !== index), index]
                           : previous.registerAgain.filter(value => value !== index) })); }}
-                      className="accent-orange-500" />
+                      />
                     {action.type === 'add_meal' ? 'Registrar otra comida igual' : 'Registrar otro ejercicio igual'}
                   </label>
                 </div>}
@@ -965,14 +993,14 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                           min={type === 'number' ? '0.01' : undefined} step={type === 'number' ? 'any' : undefined}
                           onChange={e => editProposal(index, field, type === 'number'
                             ? (e.target.value === '' ? undefined : Number(e.target.value)) : e.target.value)}
-                          className="w-full min-w-0 rounded-xl border border-slate-300 dark:border-[#ffffff0d] bg-white dark:bg-[#191c1f] px-3 py-2" />
+                          className="chat-field" />
                       </label>
                     ))}
                     {action.type === 'add_meal' && (
                       <label className="flex flex-col gap-1">
                         Tipo
                         <select value={String(action.payload.type)} onChange={e => editProposal(index, 'type', e.target.value)}
-                          className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] bg-white dark:bg-[#191c1f] px-3 py-2">
+                          className="chat-field">
                           {(['Desayuno', 'Almuerzo', 'Merienda', 'Cena', 'Snack'] as MealType[]).map(type => <option key={type}>{type}</option>)}
                         </select>
                       </label>
@@ -980,7 +1008,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                     <label className="flex flex-col gap-1 sm:col-span-2">
                       Detalles
                       <textarea value={String(action.payload.details ?? '')} onChange={e => editProposal(index, 'details', e.target.value)}
-                        className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] bg-white dark:bg-[#191c1f] px-3 py-2" />
+                        className="chat-field" />
                     </label>
                   </div>
                 ) : (
@@ -991,23 +1019,23 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             <p className="chat-proposal-footnote">{isConfirming ? 'Esperando la confirmación del guardado.' : 'Confirmá para guardar los registros seleccionados.'}</p>
             <div className="chat-proposal-actions">
               <button type="button" disabled={isTyping || !actionsToSave.length} onClick={confirmActions}
-                className="chat-proposal-confirm rounded-xl bg-[#f5a064] px-3 py-2 disabled:opacity-50">Confirmar</button>
+                className="chat-proposal-confirm">Confirmar</button>
               <button type="button" disabled={isTyping} onClick={() => setIsEditingProposal(true)}
-                className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Editar</button>
+                className="chat-secondary">Editar</button>
               <button type="button" disabled={isTyping} onClick={() => { setPending(null); pendingCommitRef.current = null; appendReply('Registro cancelado.'); }}
-                className="rounded-xl border border-slate-300 dark:border-[#ffffff0d] px-3 py-2">Cancelar</button>
+                className="chat-secondary">Cancelar</button>
             </div>
           </div>
         )}
         {messages.length === 0 && (
-          <div className="chat-empty my-auto text-center">
+          <div className="chat-empty">
             <p className="chat-empty-label">{isPastConversation ? 'No hay mensajes en esta conversación.' : currentContext ? 'También podés empezar por acá' : 'Cargando tus registros…'}</p>
             {!isPastConversation && currentContext && <div className="chat-empty-suggestions">
               {suggestions.slice(0, 3).map(suggestion => (
                 <button key={suggestion} type="button" onClick={() => handleSend(suggestion)}
                   disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !activeProfile}
-                  className="chat-suggestion text-xs">
-                  {suggestion}
+                  className="chat-suggestion">
+                  {suggestion}<ArrowRight size={16} aria-hidden="true" />
                 </button>
               ))}
             </div>}
@@ -1027,20 +1055,16 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
               <div className="chat-coach-stack">
                 {msg.goalProgress && (msg.goalProgress === 'all' || goals.status !== 'ready' || goals.goals.some(goal => goal.status === 'active' && goal.type === msg.goalProgress)) ? <CoachGoalCards resource={goals} history={currentContext?.historyDays ?? []} today={today}
                   type={msg.goalProgress === 'all' ? undefined : msg.goalProgress} limit={2} /> : msg.coachCard && <CoachInsightCard card={msg.coachCard} />}
-                <div className="chat-bubble bg-slate-100 text-slate-900 dark:bg-[#191c1f] dark:text-gray-100 rounded-tl-sm text-sm">
-                  <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-snug prose-p:mb-2 prose-ul:my-1 prose-li:my-0 last:prose-p:mb-0">
+                <div className="chat-bubble">
+                  <div className="chat-markdown">
                     <ReactMarkdown>{msg.text}</ReactMarkdown>
                   </div>
                 </div>
               </div>
             ) : (
-            <div className={`chat-bubble ${msg.role === 'bot' && msg.recordedActions?.length ? 'chat-saved' : ''} px-4 py-3 rounded-3xl text-sm shadow-none ${
-              msg.role === 'user' 
-                ? 'chat-user text-white rounded-tr-sm whitespace-pre-wrap' 
-                : 'bg-slate-100 text-slate-900 dark:bg-[#191c1f] dark:text-gray-100 rounded-tl-sm border border-slate-200 dark:border-[#ffffff0d]'
-            }`}>
+            <div className={`chat-bubble ${msg.role === 'bot' && msg.recordedActions?.length ? 'chat-saved' : ''} ${msg.role === 'user' ? 'chat-user' : ''}`}>
               {msg.role === 'bot' ? (
-                <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-snug prose-p:mb-2 prose-ul:my-1 prose-li:my-0 last:prose-p:mb-0">
+                <div className="chat-markdown">
                   {msg.recordedActions?.length ? <p className="chat-save-status"><CheckCircle size={16} aria-hidden="true" />Guardado confirmado</p> : null}
                   <ReactMarkdown>{msg.text}</ReactMarkdown>
                 </div>
@@ -1054,10 +1078,10 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         {isTyping && !pending && (
           <div className="chat-typing flex gap-3 max-w-[75%] mr-auto" role="status" aria-label="Coach está respondiendo">
             <img src="/brand/calori-logo-symbol.png" alt="" className="chat-message-avatar brand-symbol brand-symbol-message" />
-            <div className="px-4 py-4 rounded-3xl bg-slate-100 dark:bg-[#191c1f] rounded-tl-sm border border-slate-200 dark:border-[#ffffff0d] flex items-center gap-1">
-              <span aria-hidden="true" className="chat-typing-dot w-1.5 h-1.5 bg-slate-400 rounded-full" />
-              <span aria-hidden="true" className="chat-typing-dot w-1.5 h-1.5 bg-slate-400 rounded-full" />
-              <span aria-hidden="true" className="chat-typing-dot w-1.5 h-1.5 bg-slate-400 rounded-full" />
+            <div className="chat-bubble chat-typing-indicator">
+              <span aria-hidden="true" className="chat-typing-dot" />
+              <span aria-hidden="true" className="chat-typing-dot" />
+              <span aria-hidden="true" className="chat-typing-dot" />
             </div>
           </div>
         )}
@@ -1066,15 +1090,15 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       </section>
 
       {/* Input Area */}
-      {!isPastConversation && <footer className={`chat-composer ${isRecording ? 'chat-composer-recording' : ''} p-4 border-t border-slate-200 dark:border-[#ffffff0d] bg-slate-50 dark:bg-[#151719]`}>
+      {!isPastConversation && <footer ref={composerRef} className={`chat-composer ${isRecording ? 'chat-composer-recording' : ''}`}>
         {/* Quick Suggestions */}
-        {messages.length > 0 && <div className="chat-composer-suggestions flex overflow-x-auto gap-2 pb-3 mb-2 hide-scrollbar">
+        {messages.length > 0 && <div className="chat-composer-suggestions">
           {suggestions.map(suggestion => (
             <button
               key={suggestion}
               onClick={() => handleSend(suggestion)}
               disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !activeProfile}
-              className="chat-suggestion flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-[#ffffff0d] text-slate-700 dark:text-gray-300 hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 disabled:opacity-50 transition-colors whitespace-nowrap shadow-none"
+              className="chat-suggestion"
             >
               {suggestion}
             </button>
@@ -1107,7 +1131,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         )}
         <form 
           onSubmit={(e) => { e.preventDefault(); void sendComposer(); }}
-          className="chat-composer-form flex items-center gap-2 relative"
+          className="chat-composer-form"
         >
           <textarea
             ref={textInputRef}
@@ -1121,47 +1145,64 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 void sendComposer();
               }
             }}
-            onFocus={() => scrollToEnd('smooth')}
+            onFocus={() => { if (hasMessages) scrollToEnd('smooth'); }}
             disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || !!pending || !activeProfile}
-            placeholder="Escribe un mensaje..."
-            className="chat-textarea min-w-0 flex-1 bg-white dark:bg-[#1e2124] border border-slate-300 dark:border-[#ffffff0d] rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#f5a064] dark:focus:border-[#f5a064] shadow-none disabled:opacity-50"
+            placeholder="Tu mensaje…"
+            className="chat-textarea"
           />
-          <div ref={photoMenuRef} className="chat-photo-control relative flex-none">
+          <div ref={photoMenuRef} className="chat-photo-control relative flex-none"
+            onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setShowPhotoMenu(false); }}>
             <input ref={galleryInputRef} type="file" accept="image/jpeg,image/png,image/webp"
               onChange={e => { const file = e.target.files?.[0]; e.target.value = ''; void selectImage(file); }}
               className="hidden" tabIndex={-1} aria-label="Elegir foto de galería" />
             <button type="button" onClick={() => setShowPhotoMenu(previous => !previous)}
               disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || hasPending || !activeProfile}
               aria-label="Adjuntar foto de comida" aria-haspopup="menu" aria-expanded={showPhotoMenu}
-              className="chat-image-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50">
-              <ImageSquare size={20} weight="fill" />
+              className="chat-image-button">
+              <ImageSquare size={21} aria-hidden="true" />
             </button>
             {showPhotoMenu && (
-              <div className="chat-photo-menu" role="menu" aria-label="Opciones de foto">
-                <button type="button" role="menuitem" onClick={() => { void openCamera(); }}>Tomar foto</button>
-                <button type="button" role="menuitem" onClick={() => { setShowPhotoMenu(false); galleryInputRef.current?.click(); }}>Elegir de galería</button>
+              <div className="chat-photo-menu" role="menu" aria-label="Opciones de foto"
+                onKeyDown={event => {
+                  if (event.key === 'Tab') {
+                    // Continue from the menu button in the normal document tab order.
+                    photoMenuRef.current?.querySelector<HTMLButtonElement>('.chat-image-button')?.focus();
+                    setShowPhotoMenu(false);
+                    return;
+                  }
+                  if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+                  event.preventDefault();
+                  const items = Array.from(event.currentTarget.querySelectorAll('button'));
+                  const active = items.indexOf(document.activeElement as HTMLButtonElement);
+                  const offset = event.key === 'ArrowDown' ? 1 : -1;
+                  const index = event.key === 'Home' ? 0 : event.key === 'End' ? items.length - 1
+                    : (active + offset + items.length) % items.length;
+                  items[index].focus();
+                }}>
+                <button type="button" role="menuitem" tabIndex={-1} onClick={() => { void openCamera(); }}>Tomar foto</button>
+                <button type="button" role="menuitem" tabIndex={-1} onClick={() => { setShowPhotoMenu(false); galleryInputRef.current?.click(); }}>Elegir de galería</button>
               </div>
             )}
           </div>
           <button type="button" onClick={startRecording}
             disabled={isRecording || isRequestingAudio || isProcessingAudio || isProcessingImage || isCameraOpen || isTyping || hasPending || !activeProfile}
             aria-label="Iniciar dictado por voz"
-            className={`chat-audio-button flex items-center justify-center rounded-xl transition-colors disabled:opacity-50 ${isRecording ? 'chat-audio-recording' : ''}`}>
-            <Microphone size={20} weight="fill" />
+            className={`chat-audio-button ${isRecording ? 'chat-audio-recording' : ''}`}>
+            <Microphone size={21} aria-hidden="true" />
           </button>
           <button
             type="submit"
             disabled={(!inputValue.trim() && !pendingImage) || isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pending || !activeProfile}
             aria-label="Enviar mensaje"
-            className="p-2 bg-[#f5a064] hover:bg-[#f8b17f] disabled:bg-slate-300 dark:disabled:bg-[#34383b] text-white rounded-xl transition-colors flex items-center justify-center"
+            className="chat-send"
           >
             <PaperPlaneRight size={18} weight="fill" />
           </button>
         </form>
       </footer>}
       {isCameraOpen && createPortal(
-        <div className="chat-camera-overlay fixed inset-0 z-50 flex items-center justify-center p-4" role="presentation">
-          <div className="chat-camera-panel w-full max-w-lg rounded-3xl p-4" role="dialog" aria-modal="true" aria-label="Tomar foto">
+        <dialog ref={cameraDialogRef} className="chat-camera-panel" aria-label="Tomar foto"
+          onCancel={event => { event.preventDefault(); closeCamera(); }}>
             <h3 className="mb-3 text-lg">Tomar foto</h3>
             <div className="chat-camera-frame relative overflow-hidden rounded-2xl">
               <video ref={cameraVideoRef} autoPlay playsInline muted onLoadedMetadata={() => setIsCameraReady(true)}
@@ -1173,19 +1214,8 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
               <button type="button" onClick={() => { void capturePhoto(); }} disabled={!isCameraReady}
                 className="chat-camera-capture rounded-xl px-4 py-2 disabled:opacity-50">Capturar</button>
             </div>
-          </div>
-        </div>, document.body
+        </dialog>, document.body
       )}
-      
-      <style>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </div>
   );
 }
