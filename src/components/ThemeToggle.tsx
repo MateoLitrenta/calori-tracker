@@ -27,29 +27,33 @@ export default function ThemeToggle() {
   const CurrentIcon = currentIcon;
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative" ref={dropdownRef} onKeyDown={event => {
+      if (event.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+        dropdownRef.current?.querySelector('button')?.focus();
+      }
+    }}>
       <button
+        aria-label="Cambiar Tema" aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-11 h-11 flex items-center justify-center bg-white dark:bg-[#1e2124] hover:bg-slate-100 dark:hover:bg-[#292d30] border border-slate-200 dark:border-white/5 rounded-[var(--radius-control)] transition-colors text-slate-600 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white"
+        className="appearance-trigger w-11 h-11 flex items-center justify-center"
         title="Cambiar Tema"
       >
         <CurrentIcon size={20} />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-[#1e2124] border border-slate-200 dark:border-white/5 rounded-[var(--radius-widget)] shadow-lg overflow-hidden z-50">
+        <div className="appearance-picker absolute right-0 mt-2 w-36 shadow-lg overflow-hidden z-50">
           {themes.map(({ value, label, icon: Icon }) => (
             <button
               key={value}
               onClick={() => {
                 setTheme(value);
                 setIsOpen(false);
+                dropdownRef.current?.querySelector('button')?.focus();
               }}
-              className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors ${
-                theme === value
-                  ? 'bg-slate-200 dark:bg-gray-800 text-slate-900 dark:text-white font-medium'
-                  : 'text-slate-500 dark:text-gray-400 hover:bg-slate-200 dark:hover:bg-gray-800/50 hover:text-slate-900 dark:hover:text-white'
-              }`}
+              aria-pressed={theme === value}
+              className="w-full text-left px-4 py-2 text-sm flex items-center gap-2"
             >
               <Icon size={16} />
               {label}

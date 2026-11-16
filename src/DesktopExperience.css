@@ -8,9 +8,9 @@
   --space-section: 24px;
   --space-wide: 32px;
   --content-max: 1440px;
-  --radius-panel: 20px;
-  --radius-widget: 14px;
-  --radius-control: 12px;
+  --radius-panel: var(--fit-radius);
+  --radius-widget: var(--fit-radius);
+  --radius-control: var(--fit-control-radius);
   --desktop-gap: var(--space-section);
   --desktop-padding: var(--space-panel);
   --desktop-inset: var(--space-inset);

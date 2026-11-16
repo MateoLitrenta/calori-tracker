@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useLayoutEffect, useState } from 'react';
 
 type Theme = 'dark' | 'light' | 'system';
 
@@ -26,41 +26,27 @@ export function ThemeProvider({
   storageKey = 'calori-theme',
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
-  );
+  const [theme, setTheme] = useState<Theme>(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved === 'dark' || saved === 'light' || saved === 'system') return saved;
+    } catch { /* The preference can still apply for this session. */ }
+    return defaultTheme;
+  });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = window.document.documentElement;
-    
-    const applyTheme = (t: Theme) => {
-      if (t === 'dark') {
-        root.classList.add('dark');
-      } else if (t === 'light') {
-        root.classList.remove('dark');
-      } else if (t === 'system') {
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          root.classList.add('dark');
-        } else {
-          root.classList.remove('dark');
-        }
-      }
-    };
-
-    applyTheme(theme);
-
-    if (theme === 'system') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const handleChange = () => applyTheme('system');
-      mediaQuery.addEventListener('change', handleChange);
-      return () => mediaQuery.removeEventListener('change', handleChange);
-    }
+    const media = theme === 'system' ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+    const apply = () => root.classList.toggle('dark', theme === 'dark' || Boolean(media?.matches));
+    apply();
+    media?.addEventListener('change', apply);
+    return () => media?.removeEventListener('change', apply);
   }, [theme]);
 
   const value = {
     theme,
     setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
+      try { localStorage.setItem(storageKey, theme); } catch { /* Storage may be unavailable. */ }
       setTheme(theme);
     },
   };

@@ -171,7 +171,7 @@ test('the existing theme provider persists preferences across remounts and follo
   const media = { matches: true, addEventListener(type, callback) { this.callback = callback; }, removeEventListener() {} };
   globalThis.localStorage = { getItem: key => stored.get(key) ?? null, setItem: (key, value) => stored.set(key, value) };
   globalThis.window = { document: { documentElement: { classList: {
-    add: value => classes.add(value), remove: value => classes.delete(value),
+    toggle: (value, enabled) => enabled ? classes.add(value) : classes.delete(value),
   } } }, matchMedia: () => media };
   globalThis.__entryHarness.profileStore = { user: { id: 'user-a' }, activeProfile: profile };
   try {
