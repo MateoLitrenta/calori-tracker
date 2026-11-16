@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Apariencia en vivo, formularios, diálogo y recarga",
+    "status": "passed"
+  },
+  {
+    "name": "Perfil, guardado local recuperable y fallo visible",
+    "status": "passed"
+  },
+  {
+    "name": "Carga, cuenta nueva, registro parcial y datos completos",
+    "status": "passed"
+  }
+]

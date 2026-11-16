@@ -1,0 +1,522 @@
+{
+  "phase": "before",
+  "results": [
+    {
+      "width": 320,
+      "height": 740,
+      "theme": "light",
+      "docWidth": 320,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 296,
+        "h": 157
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 155,
+        "w": 41,
+        "h": 62
+      },
+      "balance": {
+        "x": 12,
+        "y": 243,
+        "w": 296,
+        "h": 175
+      },
+      "actions": {
+        "x": 12,
+        "y": 434,
+        "w": 296,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 545,
+        "w": 266,
+        "h": 79
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 2.08,
+        "selectedDay": 6.95,
+        "balance": 14.68
+      }
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "theme": "light",
+      "docWidth": 375,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 351,
+        "h": 157
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 155,
+        "w": 48,
+        "h": 62
+      },
+      "balance": {
+        "x": 12,
+        "y": 243,
+        "w": 351,
+        "h": 175
+      },
+      "actions": {
+        "x": 12,
+        "y": 434,
+        "w": 351,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 545,
+        "w": 321,
+        "h": 79
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 2.08,
+        "selectedDay": 6.95,
+        "balance": 14.68
+      }
+    },
+    {
+      "width": 393,
+      "height": 852,
+      "theme": "light",
+      "docWidth": 393,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 369,
+        "h": 157
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 155,
+        "w": 51,
+        "h": 62
+      },
+      "balance": {
+        "x": 12,
+        "y": 243,
+        "w": 369,
+        "h": 177
+      },
+      "actions": {
+        "x": 12,
+        "y": 435,
+        "w": 369,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 546,
+        "w": 339,
+        "h": 79
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 2.08,
+        "selectedDay": 6.95,
+        "balance": 14.68
+      }
+    },
+    {
+      "width": 440,
+      "height": 900,
+      "theme": "light",
+      "docWidth": 440,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 416,
+        "h": 159
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 157,
+        "w": 58,
+        "h": 62
+      },
+      "balance": {
+        "x": 12,
+        "y": 245,
+        "w": 416,
+        "h": 181
+      },
+      "actions": {
+        "x": 12,
+        "y": 442,
+        "w": 416,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 553,
+        "w": 386,
+        "h": 79
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 2.08,
+        "selectedDay": 6.95,
+        "balance": 14.68
+      }
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "light",
+      "docWidth": 768,
+      "mainOverflow": 0,
+      "date": {
+        "x": 303,
+        "y": 47,
+        "w": 408,
+        "h": 168
+      },
+      "weekDay": {
+        "x": 303,
+        "y": 153,
+        "w": 55,
+        "h": 62
+      },
+      "balance": {
+        "x": 303,
+        "y": 287,
+        "w": 408,
+        "h": 182
+      },
+      "actions": {
+        "x": 303,
+        "y": 485,
+        "w": 408,
+        "h": 48
+      },
+      "row": {
+        "x": 318,
+        "y": 596,
+        "w": 378,
+        "h": 79
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 3.22,
+        "selectedDay": 6.95,
+        "balance": 14.68
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "docWidth": 1440,
+      "mainOverflow": 0,
+      "date": {
+        "x": 280,
+        "y": 24,
+        "w": 1126,
+        "h": 78
+      },
+      "weekDay": {
+        "x": 721,
+        "y": 46,
+        "w": 86,
+        "h": 56
+      },
+      "balance": {
+        "x": 280,
+        "y": 166,
+        "w": 617,
+        "h": 198
+      },
+      "actions": {
+        "x": 1069,
+        "y": 397,
+        "w": 320,
+        "h": 44
+      },
+      "row": {
+        "x": 297,
+        "y": 453,
+        "w": 542,
+        "h": 61
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 3.22,
+        "selectedDay": 6.95,
+        "balance": 14.68
+      }
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "theme": "dark",
+      "docWidth": 320,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 296,
+        "h": 157
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 155,
+        "w": 41,
+        "h": 62
+      },
+      "balance": {
+        "x": 12,
+        "y": 243,
+        "w": 296,
+        "h": 175
+      },
+      "actions": {
+        "x": 12,
+        "y": 434,
+        "w": 296,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 545,
+        "w": 266,
+        "h": 79
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 7.82,
+        "selectedDay": 6.95,
+        "balance": 14.19
+      }
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "theme": "dark",
+      "docWidth": 375,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 351,
+        "h": 157
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 155,
+        "w": 48,
+        "h": 62
+      },
+      "balance": {
+        "x": 12,
+        "y": 243,
+        "w": 351,
+        "h": 175
+      },
+      "actions": {
+        "x": 12,
+        "y": 434,
+        "w": 351,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 545,
+        "w": 321,
+        "h": 79
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 7.82,
+        "selectedDay": 6.95,
+        "balance": 14.19
+      }
+    },
+    {
+      "width": 393,
+      "height": 852,
+      "theme": "dark",
+      "docWidth": 393,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 369,
+        "h": 157
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 155,
+        "w": 51,
+        "h": 62
+      },
+      "balance": {
+        "x": 12,
+        "y": 243,
+        "w": 369,
+        "h": 177
+      },
+      "actions": {
+        "x": 12,
+        "y": 435,
+        "w": 369,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 546,
+        "w": 339,
+        "h": 79
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 7.82,
+        "selectedDay": 6.95,
+        "balance": 14.19
+      }
+    },
+    {
+      "width": 440,
+      "height": 900,
+      "theme": "dark",
+      "docWidth": 440,
+      "mainOverflow": 0,
+      "date": {
+        "x": 12,
+        "y": 60,
+        "w": 416,
+        "h": 159
+      },
+      "weekDay": {
+        "x": 12,
+        "y": 157,
+        "w": 58,
+        "h": 62
+      },
+      "balance": {
+        "x": 12,
+        "y": 245,
+        "w": 416,
+        "h": 181
+      },
+      "actions": {
+        "x": 12,
+        "y": 442,
+        "w": 416,
+        "h": 48
+      },
+      "row": {
+        "x": 27,
+        "y": 553,
+        "w": 386,
+        "h": 79
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 7.82,
+        "selectedDay": 6.95,
+        "balance": 14.19
+      }
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "dark",
+      "docWidth": 768,
+      "mainOverflow": 0,
+      "date": {
+        "x": 303,
+        "y": 47,
+        "w": 408,
+        "h": 168
+      },
+      "weekDay": {
+        "x": 303,
+        "y": 153,
+        "w": 55,
+        "h": 62
+      },
+      "balance": {
+        "x": 303,
+        "y": 287,
+        "w": 408,
+        "h": 182
+      },
+      "actions": {
+        "x": 303,
+        "y": 485,
+        "w": 408,
+        "h": 48
+      },
+      "row": {
+        "x": 318,
+        "y": 596,
+        "w": 378,
+        "h": 79
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 5.03,
+        "selectedDay": 6.95,
+        "balance": 14.19
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "docWidth": 1440,
+      "mainOverflow": 0,
+      "date": {
+        "x": 280,
+        "y": 24,
+        "w": 1126,
+        "h": 78
+      },
+      "weekDay": {
+        "x": 721,
+        "y": 46,
+        "w": 86,
+        "h": 56
+      },
+      "balance": {
+        "x": 280,
+        "y": 166,
+        "w": 617,
+        "h": 198
+      },
+      "actions": {
+        "x": 1069,
+        "y": 397,
+        "w": 320,
+        "h": 44
+      },
+      "row": {
+        "x": 297,
+        "y": 453,
+        "w": 542,
+        "h": 61
+      },
+      "activeNav": "rgb(245, 160, 100)",
+      "contrast": {
+        "activeNavigation": 5.03,
+        "selectedDay": 6.95,
+        "balance": 14.19
+      }
+    }
+  ],
+  "errors": []
+}

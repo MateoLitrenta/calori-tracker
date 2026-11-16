@@ -7,7 +7,8 @@ import { JSDOM } from 'jsdom';
 import postcss from 'postcss';
 import ts from 'typescript';
 
-const source = await readFile(new URL('../src/components/HomeVariants.css', import.meta.url), 'utf8');
+const source = (await Promise.all(['FitnessSystem.css', 'components/HomeVariants.css'].map(file =>
+  readFile(new URL('../src/' + file, import.meta.url), 'utf8')))).join('\n');
 const viewportSizes = [[1920, 1080], [1440, 900], [1366, 768], [1280, 720], [768, 1024], [430, 932], [375, 812], [320, 740]];
 function stylesAt(width, height, dark) {
   const css = postcss.parse(source);
@@ -21,10 +22,10 @@ function stylesAt(width, height, dark) {
   });
   // JSDOM does not resolve var() in border shorthand. Substitute only the
   // existing theme token for this style contract; browser checks measure layout.
-  const tokenSelector = dark ? '.home-variants' : 'html:not(.dark) .home-variants';
+  const tokenSelector = dark ? 'html.dark' : ':root';
   let line;
   css.walkRules(rule => {
-    if (rule.selector === tokenSelector) line = rule.nodes.find(node => node.prop === '--home-line')?.value ?? line;
+    if (rule.selector === tokenSelector) line = rule.nodes.find(node => node.prop === '--fit-rule')?.value ?? line;
   });
   assert.ok(line);
   return css.toString().replaceAll('var(--home-line)', line);

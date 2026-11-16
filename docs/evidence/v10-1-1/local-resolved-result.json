@@ -1,0 +1,99 @@
+{
+  "base": "5a74e7279c77a7d1dc25fb5604d5fa0d657d6bf5",
+  "node": "v24.4.1",
+  "scope": "Local Windows regression and quality checks. Not a single fresh full-suite run; initial failures and targeted reruns are retained explicitly. Full native Linux CI on the PR HEAD remains the definitive complete run.",
+  "initial": {
+    "fileCount": 41,
+    "counts": {
+      "tests": 565,
+      "pass": 559,
+      "fail": 6,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0
+    },
+    "durationMs": 495018,
+    "failures": {
+      "loopbackSandboxEACCES": 4,
+      "legacyWeightTests": 2
+    },
+    "sourceStable": false,
+    "sourceChangeDuringInitialRun": [
+      "src/components/WeeklyDateNav.css"
+    ]
+  },
+  "loopbackRerun": {
+    "files": [
+      "tests/coach-proactive-flow.test.mjs",
+      "tests/coach-serverless-runtime.test.mjs"
+    ],
+    "exitCode": 0,
+    "counts": {
+      "tests": 5,
+      "pass": 5,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0
+    },
+    "explanation": "Unchanged HTTP-loopback tests passed with networking execution permission; the Windows sandbox had blocked 127.0.0.1."
+  },
+  "weightRerun": {
+    "files": [
+      "tests/workout-entry-premium.test.mjs"
+    ],
+    "exitCode": 0,
+    "counts": {
+      "tests": 25,
+      "pass": 25,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "explanation": "Two legacy tests now locate the semantic submit button and submit the real form. All pending/failure/confirmation/conflict/value/version assertions remain. JSDOM does not perform Enter default actions; native Enter is verified separately by the root browser workflow."
+  },
+  "unresolvedTestFailures": [],
+  "checks": [
+    {
+      "name": "frontend-types",
+      "exitCode": 0,
+      "durationMs": 26097
+    },
+    {
+      "name": "ai-types",
+      "exitCode": 0,
+      "durationMs": 5301
+    },
+    {
+      "name": "coach-types",
+      "exitCode": 0,
+      "durationMs": 3145
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "durationMs": 624
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "durationMs": 13249
+    },
+    {
+      "name": "diff",
+      "exitCode": 0,
+      "durationMs": 409
+    }
+  ],
+  "lintRecheckedAfterWeightTestEdits": true,
+  "lintWarnings": 12,
+  "buildWarning": "Existing chunk-size warning above 500 kB",
+  "finalAssessment": "All selected regression contracts passed across the initial execution and targeted reruns; all quality checks passed. Do not describe this as one 565/565 final execution.",
+  "remoteAuth": false,
+  "remoteStorage": false,
+  "liveGemini": false,
+  "nativeLinuxCIExecuted": false,
+  "productionRequests": 0,
+  "remoteMutations": 0
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "background": [
+      255,
+      255,
+      255
+    ],
+    "color": "rgb(31, 41, 55)",
+    "ratio": 14.68,
+    "selector": ".energy-number",
+    "theme": "light"
+  },
+  {
+    "background": [
+      248,
+      247,
+      244
+    ],
+    "color": "rgb(88, 102, 122)",
+    "ratio": 5.45,
+    "selector": ".energy-status",
+    "theme": "light"
+  },
+  {
+    "background": [
+      255,
+      255,
+      255
+    ],
+    "color": "rgb(100, 116, 139)",
+    "ratio": 4.76,
+    "selector": ".energy-coverage",
+    "theme": "light"
+  },
+  {
+    "background": [
+      248,
+      247,
+      244
+    ],
+    "color": "rgb(31, 41, 55)",
+    "ratio": 13.7,
+    "selector": ".home-date-context h2",
+    "theme": "light"
+  },
+  {
+    "background": [
+      245,
+      160,
+      100
+    ],
+    "color": "rgb(59, 36, 24)",
+    "ratio": 6.95,
+    "selector": ".home-week-days button[aria-pressed=\"true\"]",
+    "theme": "light"
+  },
+  {
+    "background": [
+      245,
+      160,
+      100
+    ],
+    "color": "rgb(59, 36, 24)",
+    "ratio": 6.95,
+    "selector": ".daily-quick-actions button:first-child",
+    "theme": "light"
+  },
+  {
+    "background": [
+      30,
+      33,
+      36
+    ],
+    "color": "rgb(241, 240, 236)",
+    "ratio": 14.19,
+    "selector": ".energy-number",
+    "theme": "dark"
+  },
+  {
+    "background": [
+      35,
+      38,
+      41
+    ],
+    "color": "rgb(169, 171, 174)",
+    "ratio": 6.58,
+    "selector": ".energy-status",
+    "theme": "dark"
+  },
+  {
+    "background": [
+      30,
+      33,
+      36
+    ],
+    "color": "rgb(169, 171, 174)",
+    "ratio": 7.03,
+    "selector": ".energy-coverage",
+    "theme": "dark"
+  },
+  {
+    "background": [
+      21,
+      23,
+      25
+    ],
+    "color": "rgb(241, 240, 236)",
+    "ratio": 15.76,
+    "selector": ".home-date-context h2",
+    "theme": "dark"
+  },
+  {
+    "background": [
+      245,
+      160,
+      100
+    ],
+    "color": "rgb(59, 36, 24)",
+    "ratio": 6.95,
+    "selector": ".home-week-days button[aria-pressed=\"true\"]",
+    "theme": "dark"
+  },
+  {
+    "background": [
+      245,
+      160,
+      100
+    ],
+    "color": "rgb(59, 36, 24)",
+    "ratio": 6.95,
+    "selector": ".daily-quick-actions button:first-child",
+    "theme": "dark"
+  }
+]

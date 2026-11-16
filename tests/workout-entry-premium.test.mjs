@@ -235,23 +235,30 @@ test('weight save keeps the modal and entered value until persistence returns tr
   await view.click(document.querySelector('[title="Registrar peso"]'));
   const input = document.querySelector('input[inputmode="decimal"]'); assert.ok(input);
   await act(() => { Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, '73.5'); input.dispatchEvent(new window.InputEvent('input', { bubbles: true })); });
-  const save = () => [...document.querySelectorAll('button')].find(button => button.className.includes('bg-pink-600') && button.textContent.includes('Guardar'));
+  const save = () => {
+    const button = document.querySelector('[role="dialog"] form button[type="submit"]');
+    assert.equal(button?.textContent.trim(), 'Guardar');
+    return button;
+  };
   await view.click(save()); assert.equal(input.isConnected, true); assert.equal(input.value, '73.5');
   await view.settle(() => pending.resolve(false)); assert.equal(input.isConnected, true); assert.equal(input.value, '73.5'); assert.equal(view.record().weight, 70);
   await view.click(save()); assert.equal(document.querySelector('input[inputmode="decimal"]'), null); assert.equal(view.record().weight, 73.5);
 });
 
-test('Enter in weight retains a failed draft and requires review before saving it over refreshed data', async t => {
+test('weight form submission retains a failed draft and requires review before saving it over refreshed data', async t => {
   let attempts = 0; const initial = { ...emptyRecord(), version: '1', generation: 'generation-one' };
   const view = await mount(t, { record: initial, profile: { recordGeneration: 'generation-one' }, save: () => ++attempts > 1 });
   await view.click(document.querySelector('[title="Registrar peso"]'));
   const input = document.querySelector('input[inputmode="decimal"]');
   await act(() => { Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, '73.5'); input.dispatchEvent(new window.InputEvent('input', { bubbles: true })); });
-  const enter = () => act(async () => { input.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); await new Promise(setImmediate); });
-  await enter(); assert.equal(input.isConnected, true); assert.equal(input.value, '73.5');
+  const submitWeight = () => act(async () => {
+    document.querySelector('[role="dialog"] form').requestSubmit();
+    await new Promise(setImmediate);
+  });
+  await submitWeight(); assert.equal(input.isConnected, true); assert.equal(input.value, '73.5');
   await view.refresh({ ...initial, version: '2', weight: 71, water: 999 }); window.confirm = () => false;
-  await enter(); assert.equal(view.saves.length, 1); assert.equal(input.value, '73.5');
-  window.confirm = () => true; await enter(); assert.equal(view.saves.length, 2); assert.equal(view.record().weight, 73.5); assert.equal(view.record().water, 999); assert.equal(view.saves[1].record.version, '2'); assert.equal(input.isConnected, false);
+  await submitWeight(); assert.equal(view.saves.length, 1); assert.equal(input.value, '73.5');
+  window.confirm = () => true; await submitWeight(); assert.equal(view.saves.length, 2); assert.equal(view.record().weight, 73.5); assert.equal(view.record().water, 999); assert.equal(view.saves[1].record.version, '2'); assert.equal(input.isConnected, false);
 });
 
 for (const kind of ['water', 'steps']) test(`${kind} conflict refresh retains the dirty value and retries only after explicit accepted review`, async t => {

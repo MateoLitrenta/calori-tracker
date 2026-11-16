@@ -1,0 +1,200 @@
+[
+  {
+    "actionsTop": 433.6953125,
+    "day": "2026-11-13",
+    "docWidth": 320,
+    "energyHeight": 175.1953125,
+    "firstRecordTop": 544.6953125,
+    "habitOverlaps": 0,
+    "minHabitHeight": 44,
+    "minHabitWidth": 44,
+    "scrollTop": 0,
+    "theme": "light",
+    "weekCellCount": 7,
+    "weekCellWidths": [
+      39.140625,
+      39.140625,
+      39.140625,
+      39.1484375,
+      39.140625,
+      39.140625,
+      39.140625
+    ],
+    "width": 320
+  },
+  {
+    "actionsTop": 433.84375,
+    "day": "2026-11-13",
+    "docWidth": 375,
+    "energyHeight": 175.34375,
+    "firstRecordTop": 544.84375,
+    "habitOverlaps": 0,
+    "minHabitHeight": 44,
+    "minHabitWidth": 45.8046875,
+    "scrollTop": 0,
+    "theme": "light",
+    "weekCellCount": 7,
+    "weekCellWidths": [
+      47,
+      47,
+      47,
+      47,
+      47,
+      47,
+      47
+    ],
+    "width": 375
+  },
+  {
+    "actionsTop": 435.390625,
+    "day": "2026-11-13",
+    "docWidth": 393,
+    "energyHeight": 176.890625,
+    "firstRecordTop": 546.390625,
+    "habitOverlaps": 0,
+    "minHabitHeight": 44,
+    "minHabitWidth": 45.8046875,
+    "scrollTop": 0,
+    "theme": "light",
+    "weekCellCount": 7,
+    "weekCellWidths": [
+      49.5703125,
+      49.5703125,
+      49.5703125,
+      49.5703125,
+      49.5703125,
+      49.5703125,
+      49.578125
+    ],
+    "width": 393
+  },
+  {
+    "actionsTop": 441.6796875,
+    "day": "2026-11-13",
+    "docWidth": 440,
+    "energyHeight": 180.9453125,
+    "firstRecordTop": 552.6796875,
+    "habitOverlaps": 0,
+    "minHabitHeight": 44,
+    "minHabitWidth": 45.8046875,
+    "scrollTop": 0,
+    "theme": "light",
+    "weekCellCount": 7,
+    "weekCellWidths": [
+      56.28125,
+      56.2890625,
+      56.28125,
+      56.2890625,
+      56.28125,
+      56.2890625,
+      56.28125
+    ],
+    "width": 440
+  },
+  {
+    "actionsTop": 484.828125,
+    "day": "2026-11-13",
+    "docWidth": 768,
+    "energyHeight": 182.09375,
+    "firstRecordTop": 595.828125,
+    "habitOverlaps": 0,
+    "minHabitHeight": 44,
+    "minHabitWidth": 45.8046875,
+    "scrollTop": 0,
+    "theme": "light",
+    "weekCellCount": 7,
+    "weekCellWidths": [
+      54.84375,
+      54.84375,
+      54.84375,
+      54.8515625,
+      54.84375,
+      54.84375,
+      54.84375
+    ],
+    "width": 768
+  },
+  {
+    "actionsTop": 396.6796875,
+    "day": "2026-11-13",
+    "docWidth": 1440,
+    "energyHeight": 197.6796875,
+    "firstRecordTop": 452.6796875,
+    "habitOverlaps": 0,
+    "minHabitHeight": 44,
+    "minHabitWidth": 52,
+    "scrollTop": 0,
+    "theme": "light",
+    "weekCellCount": 7,
+    "weekCellWidths": [
+      86.3828125,
+      86.390625,
+      86.3828125,
+      86.390625,
+      86.3828125,
+      86.390625,
+      86.3828125
+    ],
+    "width": 1440
+  },
+  {
+    "actionsTop": 433.6953125,
+    "day": "2026-11-13",
+    "docWidth": 320,
+    "energyHeight": 175.1953125,
+    "firstRecordTop": 544.6953125,
+    "theme": "dark",
+    "weekCellCount": 7,
+    "width": 320
+  },
+  {
+    "actionsTop": 433.84375,
+    "day": "2026-11-13",
+    "docWidth": 375,
+    "energyHeight": 175.34375,
+    "firstRecordTop": 544.84375,
+    "theme": "dark",
+    "weekCellCount": 7,
+    "width": 375
+  },
+  {
+    "actionsTop": 435.390625,
+    "day": "2026-11-13",
+    "docWidth": 393,
+    "energyHeight": 176.890625,
+    "firstRecordTop": 546.390625,
+    "theme": "dark",
+    "weekCellCount": 7,
+    "width": 393
+  },
+  {
+    "actionsTop": 441.6796875,
+    "day": "2026-11-13",
+    "docWidth": 440,
+    "energyHeight": 180.9453125,
+    "firstRecordTop": 552.6796875,
+    "theme": "dark",
+    "weekCellCount": 7,
+    "width": 440
+  },
+  {
+    "actionsTop": 484.828125,
+    "day": "2026-11-13",
+    "docWidth": 768,
+    "energyHeight": 182.09375,
+    "firstRecordTop": 595.828125,
+    "theme": "dark",
+    "weekCellCount": 7,
+    "width": 768
+  },
+  {
+    "actionsTop": 396.6796875,
+    "day": "2026-11-13",
+    "docWidth": 1440,
+    "energyHeight": 197.6796875,
+    "firstRecordTop": 452.6796875,
+    "theme": "dark",
+    "weekCellCount": 7,
+    "width": 1440
+  }
+]

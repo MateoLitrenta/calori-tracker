@@ -669,6 +669,8 @@ test('Coach keeps header/composer outside its log and anchors delayed content on
   assert.equal(heading.parentElement, log.parentElement); assert.equal(composer.parentElement, log.parentElement);
   for (const name of ['Mis objetivos', 'Historial', 'Nueva conversación']) assert.ok(heading.querySelector(`[aria-label="${name}"]`));
   for (const name of ['Iniciar dictado por voz', 'Enviar mensaje']) assert.ok(composer.querySelector(`[aria-label="${name}"]`));
+  assert.equal(observers.some(item => item.targets.includes(log)), false, 'Empty suggestions stay anchored at the first suggestion');
+  await sendActions(state, false, 'Una consulta de prueba.');
   const observer = observers.find(item => item.targets.includes(log)); assert.ok(observer);
   assert.ok(observer.targets.includes(state.document.querySelector('.chat-message-list')), 'Late card/image content must be observed, not only the viewport');
   let total = 2000;

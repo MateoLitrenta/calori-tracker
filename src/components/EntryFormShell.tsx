@@ -7,6 +7,9 @@ interface EntryFormShellProps {
   onClose: () => void;
   children: ReactNode;
   desktopModal?: boolean;
+  closeLabel?: string;
+  fitness?: boolean;
+  dateContext?: ReactNode;
 }
 
 // A tall textarea cannot fit in the viewport. Follow its caret rather than its bottom edge.
@@ -37,7 +40,7 @@ function focusedBounds(field: HTMLElement) {
   return { top, bottom: top + height };
 }
 
-export default function EntryFormShell({ title, onClose, children, desktopModal = false }: EntryFormShellProps) {
+export default function EntryFormShell({ title, onClose, children, desktopModal = false, closeLabel = 'Cerrar formulario', fitness = false, dateContext }: EntryFormShellProps) {
   const [mobile, setMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -138,15 +141,19 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
     };
   }, [mobile, desktopModal]);
 
-  const header = <div className="entry-sheet-header">
+  const heading = fitness ? <div className="entry-sheet-heading">
     <h3 id={titleId}>{title}</h3>
-    <button ref={closeRef} type="button" onClick={onClose} aria-label="Cerrar formulario">
+    {dateContext}
+  </div> : <h3 id={titleId}>{title}</h3>;
+  const header = <div className="entry-sheet-header">
+    {heading}
+    <button ref={closeRef} type="button" onClick={onClose} aria-label={closeLabel}>
       <X size={22} aria-hidden="true" />
     </button>
   </div>;
 
   if (mobile) return createPortal(
-    <div className="home-variants dark entry-sheet-root">
+    <div className={`home-variants entry-sheet-root${fitness ? ' fitness-entry-portal' : ''}`}>
       <div className="entry-sheet-backdrop" onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
         <div ref={dialogRef} className="entry-bottom-sheet" role="dialog" aria-labelledby={titleId} aria-modal="true">
           <span className="entry-sheet-handle" aria-hidden="true" />
@@ -158,11 +165,11 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
   );
 
   if (desktopModal) return <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} className="entry-desktop-modal bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl shadow-xl flex flex-col animate-in zoom-in-95 duration-200">
-      <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
+    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} data-fitness={fitness || undefined} className="entry-desktop-modal bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl shadow-xl flex flex-col animate-in zoom-in-95 duration-200">
+      {fitness ? header : <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
         <h3 id={titleId} className="font-bold text-lg text-slate-900 dark:text-white">{title}</h3>
-        <button ref={closeRef} type="button" onClick={onClose} className="text-slate-500 dark:text-gray-400 hover:text-white transition-colors p-1" aria-label="Cerrar formulario"><X size={20} /></button>
-      </div>
+        <button ref={closeRef} type="button" onClick={onClose} className="text-slate-500 dark:text-gray-400 hover:text-white transition-colors p-1" aria-label={closeLabel}><X size={20} /></button>
+      </div>}
       {children}
     </div>
   </div>;

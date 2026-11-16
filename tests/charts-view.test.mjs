@@ -89,6 +89,28 @@ function kpis(tree) {
   ];
 }
 
+test('the visible calorie scale matches the plotted bars and exact amounts across periods', () => {
+  for (const period of ['Semana', 'Mes', 'Año']) {
+    const { tree } = render(weeklyRecords, period);
+    const scale = nodes(tree, item => item.props.className === 'charts-scale')[0];
+    const [top, middle, bottom] = nodes(scale, item => item.type === 'span').map(
+      item => Number(String(item.props.children).replaceAll('.', ''))
+    );
+    assert.equal(top, middle * 2);
+    assert.equal(bottom, 0);
+    for (const bucket of nodes(tree, item => item.props.className === 'charts-bucket')) {
+      const label = bucket.props['aria-label'];
+      for (const [series, metric] of [['consumed', /Consumidas(?: promedio)?: ([\d.]+) kcal/],
+        ['expenditure', /Gasto (?:estimado|promedio): ([\d.]+) kcal/]]) {
+        const bar = nodes(bucket, item => item.props.className === `charts-bar charts-bar-${series}`)[0];
+        const amount = metric.exec(label)?.[1];
+        assert.equal(Boolean(bar), amount !== undefined);
+        if (bar) assert.equal(Math.round(parseFloat(bar.props.style.height) * top / 100), Number(amount.replaceAll('.', '')));
+      }
+    }
+  }
+});
+
 test('visible KPIs belong to the selected period with clear meal and activity denominators', () => {
   const records = { ...weeklyRecords,
     '2026-09-01': record('2026-09-01', { meals: [meal(1000)] }),

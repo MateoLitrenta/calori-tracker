@@ -84,12 +84,50 @@ test('DailyPanel displays equilibrium and surplus states', () => {
   }
 });
 
-test('incomplete-day context precedes the provisional balance without changing its value', () => {
-  const html = renderToStaticMarkup(React.createElement(DailyPanel, { profile, record: base, dateStr, records: {}, onUpdateRecord() {} }));
+test('activity without meals keeps the exact provisional balance inside the closed breakdown', () => {
+  const record = { ...base, steps: 7000 };
+  const html = renderToStaticMarkup(React.createElement(DailyPanel, { profile, record, dateStr, records: {}, onUpdateRecord() {} }));
   assert.match(html, /data-provisional="true"/);
-  assert.ok(html.indexOf('Este día está incompleto') < html.indexOf('-1.618 kcal'));
+  assert.match(html, /data-energy-state="partial"/);
+  const dom = new JSDOM(html);
+  try {
+    const doc = dom.window.document;
+    assert.equal(doc.querySelector('.energy-number').textContent, 'Sin comidas registradas');
+    assert.doesNotMatch(doc.querySelector('.fitness-readout').textContent, /kcal|déficit/i);
+    const details = doc.querySelector('.fitness-breakdown');
+    assert.equal(details.open, false);
+    assert.match(details.textContent, /Saldo calculado con la ingesta registrada: -1\.898 kcal/);
+  } finally { dom.window.close(); }
   assert.match(html, /Sin comidas registradas/);
+  assert.equal((html.match(/Sin comidas registradas/g) || []).length, 1);
+  assert.ok(render(record).includes('-1.898 kcal'));
   assert.ok(render(base).includes('-1.618 kcal'));
+});
+
+test('days without energy logs name the missing energy data and keep estimates in the collapsed breakdown', () => {
+  for (const day of [dateStr, '2000-01-01']) for (const habits of [{}, { water: 1500, weight: 72.5 }]) {
+    const record = { ...base, ...habits, dateStr: day };
+    const snapshot = structuredClone(record);
+    const dom = new JSDOM(renderToStaticMarkup(React.createElement(DailyPanel, {
+      profile, record, dateStr: day, records: {}, onUpdateRecord() {},
+    })));
+    try {
+      const document = dom.window.document;
+      assert.equal(document.querySelector('.energy-card').dataset.energyState, 'empty');
+      assert.equal(document.querySelector('.energy-number').textContent, 'Sin datos de energía');
+      assert.equal(document.querySelector('.energy-status'), null);
+      const breakdown = document.querySelector('.energy-breakdown');
+      assert.equal(breakdown.open, false);
+      assert.match(breakdown.textContent, /El gasto incluye la estimación basal/);
+      assert.match(breakdown.textContent, /TMB: 1\.618 kcal/);
+      assert.equal(document.querySelector('.energy-metrics').textContent, 'Calorías consumidas—Gasto estimado—');
+      assert.equal(document.querySelectorAll('.fitness-track > span').length, 0);
+      assert.match(breakdown.textContent, /Gasto estimado1\.618 kcal/);
+      if (day === dateStr) assert.match(breakdown.textContent, /Balance estimado: -1\.618 kcal/);
+      else assert.doesNotMatch(breakdown.textContent, /Balance estimado:/);
+      assert.deepEqual(record, snapshot);
+    } finally { dom.window.close(); }
+  }
 });
 
 test('daily summary has a collapsed breakdown and no profile explanations', () => {
@@ -100,6 +138,26 @@ test('daily summary has a collapsed breakdown and no profile explanations', () =
   assert.doesNotMatch(html, /<details[^>]* open/);
   assert.match(html, /Ver desglose/);
   assert.doesNotMatch(html, /TDEE|solaparse|Meta de hoy/);
+});
+
+test('energy bars use the same daily maximum, including days with intake above expenditure', () => {
+  for (const calories of [0, 400, 1618, 2400]) {
+    const record = { ...base, meals: [{ id: 'food', name: 'Almuerzo', type: 'Almuerzo', calories }] };
+    const dom = new JSDOM(renderToStaticMarkup(React.createElement(DailyPanel, {
+      profile, record, dateStr, records: {}, onUpdateRecord() {},
+    })));
+    try {
+      const { document } = dom.window;
+      const scale = Math.max(calories, 1618);
+      const bars = [...document.querySelectorAll('.fitness-track')];
+      assert.equal(bars.length, 2);
+      assert.deepEqual(bars.map(bar => bar.getAttribute('aria-hidden')), ['true', 'true']);
+      for (const [index, value] of [calories, 1618].entries()) {
+        assert.ok(Math.abs(parseFloat(bars[index].firstElementChild.style.width) - 100 * value / scale) < 0.001);
+      }
+      assert.match(document.querySelector('.energy-breakdown').textContent, /misma escala/);
+    } finally { dom.window.close(); }
+  }
 });
 
 test('only empty meal and workout lists use the compact records state', () => {
@@ -134,7 +192,7 @@ test('journal keeps every record and its full description in chronological DOM o
     assert.equal(html.includes('daily-records--columns'), count >= 2);
     for (let index = 0; index < count; index++) {
       assert.ok(html.includes(records[index].name), 'Long descriptions must remain complete');
-      assert.ok(html.includes(`+${records[index].calories} kcal`));
+      assert.ok(html.replace(/<[^>]+>/g, '').includes(`+${records[index].calories} kcal`));
       if (index) assert.ok(html.indexOf(records[index - 1].name) < html.indexOf(records[index].name));
     }
     assert.ok(html.indexOf('+ Comida') < html.indexOf('Registros del día'), 'Keep the existing mobile reading order');
@@ -155,6 +213,41 @@ test('habit controls keep accessible names and daily quick actions', () => {
   assert.doesNotMatch(html,/Pasos\/Agua|habit-adjustments/);
   assert.match(html,/aria-label="Editar cantidad de agua"/);
   assert.match(html,/aria-label="Editar total de pasos"/);
+});
+
+test('daily reading order keeps actions, habits and chronological records together without duplicate controls', () => {
+  const record = { ...base, meals: [{ id: 'meal-priority', name: 'Comida de prueba', type: 'Almuerzo', calories: 400 }],
+    workouts: [{ id: 'work-priority', activity: 'Caminata de prueba', duration: 20, calories: 70 }], steps: 2500, water: 1000, weight: 70 };
+  const dom = new JSDOM(renderToStaticMarkup(React.createElement(DailyPanel, {
+    profile, record, dateStr, records: { [dateStr]: record }, onUpdateRecord() {},
+  })));
+  const document = dom.window.document;
+  try {
+    const inOrder = [...document.querySelectorAll('.energy-card, .daily-quick-actions, .daily-logs, .daily-habits-block')].map(node => node.className.split(' ')[0]);
+    assert.deepEqual(inOrder, ['energy-card', 'daily-quick-actions', 'daily-habits-block', 'daily-logs']);
+    assert.equal(document.querySelectorAll('.daily-quick-actions').length, 1);
+    assert.equal(document.querySelectorAll('.daily-habits').length, 1);
+    assert.equal(document.querySelectorAll('.daily-record-open').length, 2);
+    assert.equal(document.querySelectorAll('[aria-label="Sumar 250 ml de agua"]').length, 1);
+    assert.equal(document.querySelectorAll('[aria-label="Sumar 500 pasos"]').length, 1);
+    assert.equal(document.querySelector('.daily-habits-heading time').dateTime, dateStr);
+  } finally { dom.window.close(); }
+});
+
+test('coverage reports exact meal and exercise counts without claiming that food entries complete the day', () => {
+  for (const [mealCount, workoutCount] of [[0, 0], [1, 1], [2, 3]]) {
+    const record = { ...base,
+      meals: Array.from({ length: mealCount }, (_, i) => ({ id: `coverage-meal-${i}`, name: 'Comida', type: 'Almuerzo', calories: 300 })),
+      workouts: Array.from({ length: workoutCount }, (_, i) => ({ id: `coverage-workout-${i}`, activity: 'Caminata', duration: 20, calories: 70 })),
+    };
+    const dom = new JSDOM(renderToStaticMarkup(React.createElement(DailyPanel, { profile, record, dateStr, records: {}, onUpdateRecord() {} })));
+    try {
+      const coverage = dom.window.document.querySelector('.energy-coverage').textContent;
+      assert.equal(coverage, `${mealCount} ${mealCount === 1 ? 'comida' : 'comidas'} · ${workoutCount} ${workoutCount === 1 ? 'ejercicio' : 'ejercicios'}Según tus registros`);
+      assert.doesNotMatch(coverage, /día completo|objetivo cumplido|consumo completo/i);
+      assert.equal(dom.window.document.querySelectorAll('.energy-breakdown').length, 1);
+    } finally { dom.window.close(); }
+  }
 });
 
 test('grouped periods keep accumulated balance and hide daily controls and records', () => {
@@ -281,8 +374,10 @@ test('quick actions toggle existing forms and values retain inline editing', () 
   }
   node(view(), e => e.props.title === 'Editar cantidad').props.onClick();
   assert.ok(nodes(view(), e => e.type === 'input' && e.props.autoFocus).length);
+  assert.equal(node(view(), e => e.type === 'input' && e.props['aria-label'] === 'Cantidad de agua (ml)').props.inputMode, 'numeric');
   node(view(), e => e.props.title === 'Editar pasos').props.onClick();
   assert.equal(nodes(view(), e => e.type === 'input' && e.props.autoFocus).length, 2);
+  assert.equal(node(view(), e => e.type === 'input' && e.props['aria-label'] === 'Total de pasos').props.inputMode, 'numeric');
   node(view(), e => e.props.title === 'Registrar peso').props.onClick();
   assert.match(renderToStaticMarkup(view()), /Registrar Peso/);
 });
@@ -742,6 +837,8 @@ test('global outside-click behavior leaves mobile sheets to their backdrop and s
   handlers.get('click')(event);
   assert.ok(shell(view));
   globalThis.window.matchMedia = () => ({ matches: false });
+  handlers.get('click')({ target: { closest: selector => selector.includes('.home-date-nav') ? {} : null } });
+  assert.ok(nodes(view(), element => element.type === 'form').length, 'The guarded date selector cannot dismiss an active desktop entry');
   handlers.get('click')(event);
   assert.equal(nodes(view(), element => element.type === 'form').length, 0);
   view.unmount();
@@ -976,18 +1073,113 @@ test('visible and expanded journal rows open the same edit dialog and save once 
 
 test('missing meals qualify the visible balance without changing its number, expenditure or records', () => {
   const empty = render(base);
-  assert.match(empty, /Balance provisional/);
-  assert.match(empty, /Sin comidas registradas/);
+  assert.match(empty, /Sin datos de energía/);
+  assert.match(empty, /Balance estimado: -1\.618 kcal/);
+  assert.doesNotMatch(empty, /Balance provisional|Sin comidas registradas/);
   assert.match(empty, /-1\.618 kcal/);
   assert.doesNotMatch(empty, /Déficit Alto/);
   const activityOnly = render({ ...base, steps: 7000 });
   assert.match(activityOnly, /Balance provisional/);
+  assert.match(activityOnly, /Sin comidas registradas/);
   assert.match(activityOnly, /-1\.898 kcal/);
   const recorded = render({ ...base, meals: [{ id: 'meal', name: 'Comida', calories: 400, type: 'Almuerzo', time: '12:00' }] });
   assert.match(recorded, /Balance energético/);
   assert.match(recorded, /-1\.218 kcal/);
   assert.doesNotMatch(recorded, /Balance provisional/);
   assert.equal(base.meals.length, 0);
+});
+
+for (const mobile of [false, true]) test(`record details preserve date, keyboard focus and the transition to editing (${mobile ? 'mobile' : 'desktop'})`, async t => {
+  const day = '2026-11-11';
+  const view = await journalDOM(t, { dateStr: day, record: journalRecord(2, day) });
+  window.HTMLElement.prototype.getClientRects = () => [{ width: 100, height: 44 }];
+  await view.resize(mobile);
+  for (const index of [0, 1]) {
+    const trigger = view.list().children[index].querySelector('.daily-record-open');
+    trigger.focus();
+    await act(() => trigger.click());
+    let dialog = document.querySelector('[role="dialog"]');
+    assert.equal(dialog.getAttribute('aria-modal'), 'true');
+    assert.equal(document.getElementById(dialog.getAttribute('aria-labelledby')).textContent, 'Detalle del Registro');
+    assert.equal(dialog.querySelector('time').dateTime, day);
+    assert.equal(dialog.querySelector('.record-detail-main').textContent.trim(), `${index ? 'Ejercicio' : 'Comida'} ${index}`);
+    const close = dialog.querySelector('[aria-label="Cerrar detalle"]');
+    const remove = [...dialog.querySelectorAll('button')].find(button => button.textContent.includes('Eliminar'));
+    assert.equal(document.activeElement, close);
+    await act(() => close.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true })));
+    assert.equal(document.activeElement, remove);
+    await act(() => remove.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })));
+    assert.equal(document.activeElement, close);
+    await act(() => close.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })));
+    assert.equal(document.querySelector('[role="dialog"]'), null);
+    assert.equal(document.activeElement, trigger);
+
+    await act(() => trigger.click());
+    await act(() => document.querySelector('.record-detail-edit').click());
+    dialog = document.querySelector('[role="dialog"]');
+    assert.equal(document.querySelectorAll('[role="dialog"]').length, 1);
+    assert.equal(document.querySelector('.record-detail-modal'), null);
+    assert.equal(document.activeElement, dialog.querySelector('[aria-label="Cerrar formulario"]'));
+    assert.equal(dialog.querySelector('time').dateTime, day);
+    assert.equal(document.getElementById(`edit-${index ? 'workout-activity' : 'meal-description'}`).value, `${index ? 'Ejercicio' : 'Comida'} ${index}`);
+    await act(() => document.activeElement.click());
+    assert.equal(document.querySelector('[role="dialog"]'), null);
+    assert.equal(document.activeElement, trigger);
+  }
+  assert.equal(view.saves.length, 0);
+});
+
+for (const mobile of [false, true]) test(`weight dialog names its historical day, contains keyboard focus and submits once (${mobile ? 'mobile' : 'desktop'})`, async t => {
+  const day = '2026-11-11';
+  const record = { ...journalRecord(2, day), steps: 9200, water: 2300, weight: 71.2 };
+  const view = await journalDOM(t, { dateStr: day, record, records: { [day]: record } });
+  window.HTMLElement.prototype.getClientRects = () => [{ width: 100, height: 44 }];
+  await view.resize(mobile);
+  const trigger = document.querySelector('[title="Registrar peso"]');
+  trigger.focus();
+  await act(() => trigger.click());
+  let dialog = document.querySelector('[role="dialog"]');
+  assert.equal(dialog.getAttribute('aria-modal'), 'true');
+  assert.equal(document.getElementById(dialog.getAttribute('aria-labelledby')).textContent, 'Registrar Peso');
+  assert.equal(dialog.querySelector('time').dateTime, day);
+  assert.match(dialog.querySelector('.entry-date-context').textContent, /Día del registro.*11 nov 2026/);
+  const input = dialog.querySelector('input[name="weight"]');
+  assert.equal(dialog.querySelector('label').htmlFor, input.id);
+  assert.equal(dialog.querySelector('label').textContent, 'Peso (kg)');
+  const close = dialog.querySelector('[aria-label="Cerrar formulario"]');
+  const save = dialog.querySelector('[type="submit"]');
+  assert.equal(document.activeElement, close);
+  await act(() => close.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true })));
+  assert.equal(document.activeElement, save);
+  await act(() => save.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })));
+  assert.equal(document.activeElement, close);
+  await act(() => input.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })));
+  assert.equal(document.querySelector('[role="dialog"]'), null);
+  assert.equal(document.activeElement, trigger);
+  assert.equal(view.saves.length, 0);
+
+  await act(() => trigger.click());
+  dialog = document.querySelector('[role="dialog"]');
+  const edited = dialog.querySelector('input[name="weight"]');
+  await act(() => {
+    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(edited, '72,5');
+    edited.dispatchEvent(new window.Event('input', { bubbles: true }));
+  });
+  assert.equal(edited.value, '72.5');
+  // JSDOM does not perform implicit Enter submission. Send the key, then invoke
+  // that native form action: only onSubmit may write, never an extra key handler.
+  await act(() => edited.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })));
+  assert.equal(view.saves.length, 0);
+  await act(async () => { dialog.querySelector('form').requestSubmit(); });
+  assert.equal(view.saves.length, 1);
+  assert.equal(view.saves[0].day, day);
+  assert.equal(view.saves[0].record.weight, 72.5);
+  assert.equal(view.saves[0].record.steps, 9200);
+  assert.equal(view.saves[0].record.water, 2300);
+  assert.deepEqual(view.saves[0].record.meals, record.meals);
+  assert.deepEqual(view.saves[0].record.workouts, record.workouts);
+  assert.equal(document.querySelector('[role="dialog"]'), null);
+  assert.equal(document.activeElement, trigger);
 });
 
 test('workout deletion reports success only after persistence confirms it', async t => {

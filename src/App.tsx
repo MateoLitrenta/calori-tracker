@@ -12,6 +12,7 @@ import { resolveEntryRoute } from './utils/entryRoute';
 import type { EntryRoute } from './utils/entryRoute';
 import type { HomeViewState } from './components/HomeView';
 import './DesktopExperience.css';
+import './FitnessSystem.css';
 
 const HomeView = lazy(() => import('./components/HomeView'));
 const loadChatView = () => import('./components/ChatView');
@@ -151,7 +152,7 @@ function App() {
 
   if (loading) {
     if (user) {
-      return <div className="app-shell h-screen flex flex-col overflow-hidden bg-slate-50 dark:bg-[#151719] text-slate-900 dark:text-white">
+      return <div className="app-shell h-screen flex flex-col overflow-hidden">
         <main className="app-main flex-1 overflow-hidden p-4 md:p-8 md:ml-64" aria-busy="true">
           <ViewSkeleton view="home" />
         </main>
@@ -188,8 +189,8 @@ function App() {
   }
 
   return (
-    <div ref={appShellRef} className={`app-shell ${isCoachLayout ? 'app-shell-coach' : ''} h-screen flex flex-col md:flex-row overflow-hidden bg-slate-50 dark:bg-[#151719] text-slate-900 dark:text-white`}>
-      <Toaster position="bottom-right" containerStyle={{ bottom: 'var(--feedback-offset)' }} toastOptions={{ style: { maxWidth: 'min(24rem, calc(100vw - 2rem))' } }} />
+    <div ref={appShellRef} className={`app-shell ${isCoachLayout ? 'app-shell-coach' : activeTab === 'home' ? 'app-shell-fitness' : ''} h-screen flex flex-col md:flex-row overflow-hidden`}>
+      <Toaster position="bottom-right" containerStyle={{ bottom: 'var(--feedback-offset)' }} toastOptions={{ style: { background: 'var(--fit-surface)', color: 'var(--fit-ink)', border: '1px solid var(--fit-rule)', maxWidth: 'min(24rem, calc(100vw - 2rem))' } }} />
       
       {/* Desktop Sidebar */}
       <Sidebar 
@@ -200,7 +201,7 @@ function App() {
 
       <div className="app-stage flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Main Content Area */}
-        <main ref={mainRef} className="app-main flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8 w-full bg-slate-50 dark:bg-[#151719]">
+        <main ref={mainRef} className="app-main flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8 w-full">
           {/* Mobile Header */}
           {activeTab === 'home' && route === '/app' && (
             <header className="home-header md:hidden flex-shrink-0 flex items-center justify-start">
@@ -208,6 +209,7 @@ function App() {
                 <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol" />
                 <h1 className="text-lg font-bold">Calori</h1>
               </div>
+              <a href="#fitness-daily-entries" className="fitness-records-link">Ver registros</a>
             </header>
           )}
           <div className="app-content p-4 md:p-0">

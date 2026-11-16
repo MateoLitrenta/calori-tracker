@@ -1,0 +1,128 @@
+[
+  {
+    "case": "reload-keeps-selected-day",
+    "date": "2026-11-12",
+    "energy": "Balance energético-349 kcalDéficit Moderado Calorías consumidas2.100 kcal Gasto estimado2.449 kcal1 comida · 1 ejercicioSegún tus registrosVer desgloseTMB: 1.679 kcalPasos: 350 kcalEjercicio: 420 kcal",
+    "habits": [
+      "2.250ml",
+      "8.750",
+      "73,2kg"
+    ],
+    "records": [
+      "Comida de ayer",
+      "Fútbol 5"
+    ]
+  },
+  {
+    "case": "return-from-datos",
+    "date": "2026-11-12"
+  },
+  {
+    "case": "save-synthetic-exercise",
+    "date": "2026-11-12",
+    "record": "Prueba V10.1.1 · movilidad\n14:00 hs • Ejercicio · 20 min\n-75 kcal"
+  },
+  {
+    "case": "save-water-and-steps",
+    "date": "2026-11-12",
+    "habits": [
+      "2.500ml",
+      "9.250",
+      "73,2kg"
+    ]
+  },
+  {
+    "case": "save-weight",
+    "date": "2026-11-12",
+    "habits": [
+      "2.500ml",
+      "9.250",
+      "74,1kg"
+    ]
+  },
+  {
+    "case": "today-unchanged-by-yesterday-writes",
+    "date": "2026-11-13",
+    "energy": "Balance energético\n-1.031 kcal\nDéficit Alto\nCalorías consumidas\n1.250 kcal\nGasto estimado\n2.281 kcal\n\n3 comidas · 2 ejercicios\nSegún tus registros\n\nVer desglose",
+    "habits": [
+      "1.750\nml",
+      "6.300",
+      "72,8\nkg"
+    ],
+    "recordTitles": [
+      "Yogur, fruta y avena",
+      "Gimnasio",
+      "Arroz con verduras y pollo",
+      "Caminata",
+      "Tostadas con queso"
+    ]
+  },
+  {
+    "case": "previous-week",
+    "date": "2026-11-06"
+  },
+  {
+    "case": "next-week",
+    "date": "2026-11-13"
+  },
+  {
+    "case": "keyboard-select",
+    "date": "2026-11-12"
+  },
+  {
+    "case": "history-exploration-does-not-change-writer",
+    "date": "2026-11-12"
+  },
+  {
+    "case": "history-explicit-open",
+    "date": "2026-11-09"
+  },
+  {
+    "case": "account-b-isolated",
+    "date": "2026-11-13",
+    "habits": [
+      "250ml",
+      "800",
+      "--kg"
+    ],
+    "records": []
+  },
+  {
+    "case": "account-a-restores-own-date",
+    "date": "2026-11-09",
+    "records": [
+      "Almuerzo del lunes"
+    ]
+  },
+  {
+    "case": "simulated-save-failure",
+    "draft": "Prueba de fallo sin guardar",
+    "receipt": "[\n  {\n    \"owner\": \"A\",\n    \"date\": \"2026-11-09\",\n    \"status\": \"failed\"\n  }\n]",
+    "retainedDraftObserved": true
+  },
+  {
+    "case": "accessible-weight-form-on-selected-date",
+    "date": "2026-11-12",
+    "weight": [
+      "2.250ml",
+      "8.750",
+      "73,4kg"
+    ],
+    "focus": "Editar"
+  },
+  {
+    "case": "desktop-draft-protected-and-recovered",
+    "date": "2026-11-13",
+    "draft": "Borrador protegido V10.1.1",
+    "focusedId": "add-meal-description"
+  },
+  {
+    "case": "native-enter-saves-weight-on-selected-date",
+    "date": "2026-11-12",
+    "habits": [
+      "2.250ml",
+      "8.750",
+      "73,6kg"
+    ]
+  }
+]

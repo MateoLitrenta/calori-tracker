@@ -790,17 +790,12 @@ export default function Heatmap({
                       : '')}
             </p>
           </div>
-          {hasData && (
-            <BalanceReading
-              value={selectedInfo.balance}
-              category={selectedInfo.category}
-              label={
-                selectedInfo.canColorBalance
-                  ? selectedInfo.label + ' · Con comidas registradas'
-                  : 'Balance provisional · Sin comidas'
-              }
-            />
-          )}
+          {hasData && (selectedInfo.canColorBalance ? (
+            <BalanceReading value={selectedInfo.balance} category={selectedInfo.category}
+              label={selectedInfo.label + ' · Con comidas registradas'} />
+          ) : (
+            <p className="ah-incomplete-note" data-balance="empty">Balance provisional · Sin comidas registradas</p>
+          ))}
           {!hasData ? (
             <div className="ah-empty">
               <CalendarBlank aria-hidden="true" />
@@ -857,7 +852,8 @@ export default function Heatmap({
               </dl>
               {incomplete && (
                 <p className="ah-incomplete-note">
-                  Los registros de este día están incompletos: todavía no hay comidas registradas.
+                  {selectedInfo.balance !== null ? `Saldo calculado con la ingesta registrada: ${signed(selectedInfo.balance)} kcal. ` : ''}
+                  Falta registrar comidas para interpretar el balance del día.
                 </p>
               )}
             </>

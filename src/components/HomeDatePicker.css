@@ -1,0 +1,26 @@
+.home-date-picker { min-width: 0; padding: 4px 16px 16px; color: var(--home-text); overflow-y: auto; overscroll-behavior: contain; }
+.home-month-heading { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: 4px; margin-bottom: 8px; }
+.home-month-heading h4 { min-width: 0; font-size: 16px; font-weight: 600; text-align: center; }
+.home-month-heading h4::first-letter { text-transform: uppercase; }
+.home-month-heading button, .home-calendar-footer button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; border-radius: var(--home-radius-control); color: var(--home-text); background: var(--home-control); }
+.home-month-heading button:hover:not(:disabled), .home-calendar-footer button:hover { background: var(--home-hover); }
+.home-month-heading button:disabled { opacity: .4; cursor: default; }
+.home-month-grid { min-width: 308px; }
+.home-month-row { display: grid; grid-template-columns: repeat(7, minmax(44px, 1fr)); }
+.home-month-weekdays > span { display: grid; place-items: center; min-height: 28px; font-size: 12px; color: var(--home-muted); }
+.home-month-row [role="gridcell"] { min-width: 0; }
+.home-month-row button { display: grid; place-items: center; width: 100%; min-width: 44px; min-height: 44px; border: 1px solid transparent; border-radius: var(--home-radius-control); font-size: 15px; font-weight: 500; color: var(--home-text); }
+.home-month-row button[data-outside-month="true"] { color: var(--home-muted); }
+.home-month-row [aria-selected="false"] button:hover:not(:disabled) { background: var(--home-hover); }
+.home-month-row [aria-selected="false"] button[aria-current="date"] { border: 2px solid var(--home-muted); text-decoration: underline; text-underline-offset: 3px; }
+.home-month-row [aria-selected="true"] button { background: var(--fit-orange); color: var(--fit-on-orange); }
+.home-month-row button:disabled { opacity: .35; cursor: default; }
+.home-date-picker button:focus-visible { outline: 2px solid var(--home-text); outline-offset: -2px; }
+.home-calendar-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; border-top: 1px solid var(--home-line); padding-top: 8px; }
+.home-calendar-footer > span { color: var(--home-muted); font-size: 12px; }
+.home-calendar-footer button { padding-inline: 16px; font-size: 14px; font-weight: 600; }
+.home-calendar-blocked { margin-top: 8px; font-size: 13px; line-height: 1.4; }
+.home-variants .entry-desktop-modal:has(.home-date-picker) > div:first-child > button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+@media (max-width: 359px) {
+  .home-date-picker { padding-inline: 4px; }
+}

@@ -1,0 +1,2250 @@
+[
+  {
+    "width": 320,
+    "mode": "dark",
+    "tab": "Coach",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      28,
+      31
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "dark",
+    "tab": "Datos",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "dark",
+    "tab": "Inicio",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      32,
+      39,
+      39
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "dark",
+    "tab": "Perfil",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "light",
+    "tab": "Coach",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "light",
+    "tab": "Datos",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "light",
+    "tab": "Inicio",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      32,
+      32
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "light",
+    "tab": "Perfil",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "system-dark",
+    "tab": "Coach",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      28,
+      31
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "system-dark",
+    "tab": "Datos",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "system-dark",
+    "tab": "Inicio",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      32,
+      39,
+      39
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "system-dark",
+    "tab": "Perfil",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "system-light",
+    "tab": "Coach",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "system-light",
+    "tab": "Datos",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "system-light",
+    "tab": "Inicio",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      32,
+      32
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 320,
+    "mode": "system-light",
+    "tab": "Perfil",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 320,
+    "mainWidth": 320,
+    "mainScrollWidth": 320,
+    "minNavHeight": 64,
+    "minNavWidth": 76,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 375,
+    "mode": "dark",
+    "tab": "Coach",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      28,
+      31
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "375-dark-coach.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "dark",
+    "tab": "Datos",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "375-dark-datos.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "dark",
+    "tab": "Inicio",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      32,
+      39,
+      39
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0,
+    "image": "375-dark-inicio.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "dark",
+    "tab": "Perfil",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "375-dark-perfil.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "light",
+    "tab": "Coach",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "375-light-coach.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "light",
+    "tab": "Datos",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "375-light-datos.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "light",
+    "tab": "Inicio",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      32,
+      32
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0,
+    "image": "375-light-inicio.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "light",
+    "tab": "Perfil",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "375-light-perfil.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "system-dark",
+    "tab": "Coach",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      28,
+      31
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "375-system-dark-coach.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "system-dark",
+    "tab": "Datos",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "375-system-dark-datos.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "system-dark",
+    "tab": "Inicio",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      32,
+      39,
+      39
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0,
+    "image": "375-system-dark-inicio.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "system-dark",
+    "tab": "Perfil",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "375-system-dark-perfil.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "system-light",
+    "tab": "Coach",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "375-system-light-coach.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "system-light",
+    "tab": "Datos",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "375-system-light-datos.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "system-light",
+    "tab": "Inicio",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      32,
+      32
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0,
+    "image": "375-system-light-inicio.jpg"
+  },
+  {
+    "width": 375,
+    "mode": "system-light",
+    "tab": "Perfil",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 375,
+    "mainWidth": 375,
+    "mainScrollWidth": 375,
+    "minNavHeight": 64,
+    "minNavWidth": 90,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "375-system-light-perfil.jpg"
+  },
+  {
+    "width": 393,
+    "mode": "dark",
+    "tab": "Coach",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      28,
+      31
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "dark",
+    "tab": "Datos",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "dark",
+    "tab": "Inicio",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      32,
+      39,
+      39
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "dark",
+    "tab": "Perfil",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "light",
+    "tab": "Coach",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "light",
+    "tab": "Datos",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "light",
+    "tab": "Inicio",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      32,
+      32
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "light",
+    "tab": "Perfil",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "system-dark",
+    "tab": "Coach",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      28,
+      31
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "system-dark",
+    "tab": "Datos",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "system-dark",
+    "tab": "Inicio",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      32,
+      39,
+      39
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "system-dark",
+    "tab": "Perfil",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "system-light",
+    "tab": "Coach",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "system-light",
+    "tab": "Datos",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "system-light",
+    "tab": "Inicio",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      32,
+      32
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 393,
+    "mode": "system-light",
+    "tab": "Perfil",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 393,
+    "mainWidth": 393,
+    "mainScrollWidth": 393,
+    "minNavHeight": 64,
+    "minNavWidth": 94,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "dark",
+    "tab": "Coach",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      28,
+      31
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "dark",
+    "tab": "Datos",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "dark",
+    "tab": "Inicio",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      32,
+      39,
+      39
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "dark",
+    "tab": "Perfil",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "light",
+    "tab": "Coach",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "light",
+    "tab": "Datos",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "light",
+    "tab": "Inicio",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      32,
+      32
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "light",
+    "tab": "Perfil",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "system-dark",
+    "tab": "Coach",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      28,
+      31
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "system-dark",
+    "tab": "Datos",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "system-dark",
+    "tab": "Inicio",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      32,
+      39,
+      39
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "system-dark",
+    "tab": "Perfil",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "system-light",
+    "tab": "Coach",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "system-light",
+    "tab": "Datos",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Cómo se calculan"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "system-light",
+    "tab": "Inicio",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      32,
+      32
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 440,
+    "mode": "system-light",
+    "tab": "Perfil",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 440,
+    "mainWidth": 440,
+    "mainScrollWidth": 440,
+    "minNavHeight": 64,
+    "minNavWidth": 106,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "dark",
+    "tab": "Coach",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      28,
+      31
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "dark",
+    "tab": "Datos",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "dark",
+    "tab": "Inicio",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      32,
+      39,
+      39
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "dark",
+    "tab": "Perfil",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "light",
+    "tab": "Coach",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "light",
+    "tab": "Datos",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "light",
+    "tab": "Inicio",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      32,
+      32
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "light",
+    "tab": "Perfil",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "system-dark",
+    "tab": "Coach",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      28,
+      31
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "system-dark",
+    "tab": "Datos",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "system-dark",
+    "tab": "Inicio",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      32,
+      39,
+      39
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "system-dark",
+    "tab": "Perfil",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "system-light",
+    "tab": "Coach",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "system-light",
+    "tab": "Datos",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "system-light",
+    "tab": "Inicio",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      32,
+      32
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 768,
+    "mode": "system-light",
+    "tab": "Perfil",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 768,
+    "mainWidth": 512,
+    "mainScrollWidth": 502,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0
+  },
+  {
+    "width": 1440,
+    "mode": "dark",
+    "tab": "Coach",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      28,
+      31
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-dark-coach.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "dark",
+    "tab": "Datos",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-dark-datos.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "dark",
+    "tab": "Inicio",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      32,
+      39,
+      39
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-dark-inicio.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "dark",
+    "tab": "Perfil",
+    "dark": true,
+    "preference": "dark",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-dark-perfil.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "light",
+    "tab": "Coach",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-light-coach.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "light",
+    "tab": "Datos",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-light-datos.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "light",
+    "tab": "Inicio",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      32,
+      32
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-light-inicio.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "light",
+    "tab": "Perfil",
+    "dark": false,
+    "preference": "light",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-light-perfil.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "system-dark",
+    "tab": "Coach",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      28,
+      31
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-system-dark-coach.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "system-dark",
+    "tab": "Datos",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-system-dark-datos.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "system-dark",
+    "tab": "Inicio",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      32,
+      39,
+      39
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-system-dark-inicio.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "system-dark",
+    "tab": "Perfil",
+    "dark": true,
+    "preference": "system",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      30,
+      33,
+      36
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-system-dark-perfil.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "system-light",
+    "tab": "Coach",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-system-light-coach.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "system-light",
+    "tab": "Datos",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-system-light-datos.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "system-light",
+    "tab": "Inicio",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [],
+    "surfaceRgb": [
+      25,
+      32,
+      32
+    ],
+    "historyDeficitFill": "rgb(21, 128, 61)",
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-system-light-inicio.jpg"
+  },
+  {
+    "width": 1440,
+    "mode": "system-light",
+    "tab": "Perfil",
+    "dark": false,
+    "preference": "system",
+    "bodyWidth": 1440,
+    "mainWidth": 1184,
+    "mainScrollWidth": 1174,
+    "minNavHeight": 48,
+    "minNavWidth": 207,
+    "composerCovered": false,
+    "xOffenders": [],
+    "below24": [
+      "Elegir foto de perfil"
+    ],
+    "surfaceRgb": [
+      255,
+      255,
+      255
+    ],
+    "ai": 0,
+    "remote": 0,
+    "image": "1440-system-light-perfil.jpg"
+  }
+]

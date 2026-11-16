@@ -16,14 +16,14 @@ export default {
           muted: '#8b949e',
         },
         heatmap: {
-          'deficit-high': '#15803d',
-          'deficit-medium': '#22c55e',
-          'deficit-low': '#86efac',
-          'neutral': '#6b7280',
-          'surplus-low': '#fca5a5',
-          'surplus-medium': '#ef4444',
-          'surplus-high': '#991b1b',
-          'empty': '#21262d',
+          'deficit-high': 'var(--fit-balance-deficit-high)',
+          'deficit-medium': 'var(--fit-balance-deficit-medium)',
+          'deficit-low': 'var(--fit-balance-deficit-low)',
+          'neutral': 'var(--fit-balance-neutral)',
+          'surplus-low': 'var(--fit-balance-surplus-low)',
+          'surplus-medium': 'var(--fit-balance-surplus-medium)',
+          'surplus-high': 'var(--fit-balance-surplus-high)',
+          'empty': 'var(--fit-balance-empty)',
         }
       }
     },

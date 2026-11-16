@@ -6,7 +6,7 @@ import { JSDOM } from 'jsdom';
 
 // CSS contracts only. JSDOM has no layout/container-query engine: these fixtures
 // explicitly select a container width. Browser geometry is verified separately.
-const files = ['DesktopExperience.css', 'components/HomeVariants.css', 'components/PremiumViews.css', 'components/ActivityHistory.css', 'components/ActivityHistoryMotion.css'];
+const files = ['DesktopExperience.css', 'components/HomeVariants.css', 'components/HomeMobile.css', 'FitnessSystem.css', 'components/CoachFitness.css', 'components/FitnessCharts.css', 'components/FitnessProfile.css', 'components/ActivityHistory.css', 'components/ActivityHistoryMotion.css'];
 const source = (await Promise.all(files.map(file => readFile(new URL('../src/' + file, import.meta.url), 'utf8')))).join('\n');
 function stylesAt(width, height = 900, containerWidth = width) {
   const css = postcss.parse(source);
@@ -27,7 +27,9 @@ function view(t, width, height = 900, containerWidth = width) {
     '<div class="app-main"><div class="app-content">' +
     '<section class="assistant-view"><header class="chat-heading"></header><div class="chat-messages">' +
     '<div class="chat-message chat-message-bot chat-message-structured"><div class="chat-bubble">Text</div></div></div><form class="chat-composer"></form></section>' +
-    '<div class="home-variants"><div class="daily-summary"><div class="energy-card"></div><div class="daily-habits"><div class="habit-card"><div class="habit-controls"><button>+</button></div></div></div></div>' +
+    '<div class="home-variants"><div class="daily-panel" data-period="day"><div class="daily-summary"><div class="energy-card"><div class="energy-headline"><div>Balance energético</div><div class="energy-number">-600 kcal</div><div class="energy-status bg-heatmap-deficit-high">Déficit Alto</div></div><div class="energy-footer"><p class="energy-coverage">1 comida · 0 ejercicios<span>Según tus registros</span></p><details class="energy-breakdown"><summary>Ver desglose</summary></details></div></div></div>' +
+    '<div class="daily-journal"><div class="daily-quick-actions"><button>Comida</button><button>Ejercicio</button></div><div class="daily-logs"><ul class="daily-records"><li><button class="daily-record-open"><span class="daily-record-title">Comida</span><span class="daily-record-meta">12:00 · Almuerzo</span></button></li></ul></div></div>' +
+    '<section class="daily-habits-block"><div class="daily-habits"><div class="habit-card"><div class="habit-header">Agua</div><div class="habit-metric"><button class="habit-value">1.500</button><span>ml</span></div><div class="habit-controls"><button>+</button></div></div></div></section></div>' +
     '<section class="activity-history-v2"><header class="ah-header"><div><h2>Tu actividad</h2></div><div class="ah-view-switch"><button aria-pressed="true">Mes</button></div></header>' +
     '<div class="ah-layout"><div class="ah-calendar"><div class="ah-navigation"><h3>Noviembre 2026</h3><div class="ah-nav-actions"><button>←</button><button>Hoy</button><button>→</button></div></div>' +
     '<div class="ah-compact-week"><p>Semana 2 de 5</p><div><button>←</button><button>→</button></div></div>' +
@@ -78,6 +80,41 @@ test('dashboard row follows its tallest content and analysis/settings share spac
   assert.equal(style('.charts-panel').padding, style('.profile-panel').padding);
   assert.equal(style('.charts-summary').alignSelf, 'stretch');
   assert.equal(style('.charts-summary').height, '');
+});
+
+test('daily energy categories share neutral presentation instead of rewarding a large recorded deficit', t => {
+  const { document, style } = view(t, 393);
+  const pill = document.querySelector('.energy-status');
+  for (const dark of [false, true]) {
+    document.documentElement.classList.toggle('dark', dark);
+    for (const category of ['deficit-high', 'deficit-medium', 'deficit-low', 'surplus-high', 'surplus-low', 'neutral']) {
+      pill.className = `energy-status bg-heatmap-${category}`;
+      assert.equal(style('.energy-status').background, 'var(--home-control)', `${dark}:${category}`);
+      assert.equal(style('.energy-status').color, 'var(--home-muted)', `${dark}:${category}`);
+    }
+  }
+});
+
+test('mobile daily actions and compact complementary controls retain comfortable targets with a single page scroll', t => {
+  for (const width of [320, 375, 393, 440, 768]) {
+    const { style } = view(t, width);
+    assert.ok(parseInt(style('.daily-quick-actions button').minHeight) >= 44);
+    assert.ok(parseInt(style('.habit-controls button').minHeight) >= 44);
+    assert.ok(parseInt(style('.energy-breakdown summary').minHeight) >= 44);
+    assert.equal(style('.habit-controls').gridTemplateColumns, 'repeat(2, minmax(44px, 1fr))');
+    assert.equal(style('.daily-habits .habit-card').borderTopWidth, '0px');
+    assert.equal(style('.daily-habits').alignItems, 'stretch');
+    assert.equal(style('.daily-habits .habit-card').gridTemplateRows, 'auto minmax(58px, 1fr) auto');
+    assert.equal(style('.habit-metric').display, 'grid');
+    assert.equal(style('.habit-metric').gridTemplateRows, '44px 14px');
+    assert.equal(style('.habit-metric > :first-child').gridRow, '1');
+    assert.equal(style('.habit-metric > span:nth-child(2)').gridRow, '2');
+    assert.equal(style('.daily-records').gap, '8px');
+    assert.equal(style('.daily-record-open').padding, '10px 12px');
+    assert.equal(style('.daily-record-meta').flexWrap, 'wrap');
+    assert.equal(style('.daily-logs').maxHeight, '');
+    assert.equal(style('.daily-logs').overflowY, '');
+  }
 });
 
 test('numbered history retains seven columns and accessible target sizes across all required widths', t => {
@@ -145,8 +182,8 @@ test('the optional history explanation reuses the existing accessible light-card
   const tokens = {};
   let explanationColor;
   postcss.parse(source).walkRules(rule => {
-    if (rule.selector === 'html:not(.dark) .home-variants') {
-      for (const node of rule.nodes) if (['--home-muted', '--home-card'].includes(node.prop)) tokens[node.prop] = node.value;
+    if (rule.selector === ':root') {
+      for (const node of rule.nodes) if (['--fit-quiet', '--fit-surface'].includes(node.prop)) tokens[node.prop] = node.value;
     }
     if (rule.selector === '.ah-energy') {
       const color = rule.nodes.find(node => node.prop === 'color');
@@ -160,6 +197,6 @@ test('the optional history explanation reuses the existing accessible light-card
       .map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
     return .2126 * channels[0] + .7152 * channels[1] + .0722 * channels[2];
   };
-  const foreground = luminance(tokens['--home-muted']), background = luminance(tokens['--home-card']);
+  const foreground = luminance(tokens['--fit-quiet']), background = luminance(tokens['--fit-surface']);
   assert.ok((Math.max(foreground, background) + .05) / (Math.min(foreground, background) + .05) >= 4.5);
 });
