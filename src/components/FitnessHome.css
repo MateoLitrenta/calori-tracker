@@ -1,46 +1,3 @@
-@font-face {
-  font-family: 'Barlow Condensed';
-  src: url('/fonts/barlow-condensed/bold-latin.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Barlow Condensed';
-  src: url('/fonts/barlow-condensed/bold-italic-latin.woff2') format('woff2');
-  font-style: italic;
-  font-weight: 700;
-  font-display: swap;
-}
-
-.app-shell-fitness, .fitness-home, .fitness-entry-portal {
-  --fit-face: 'Barlow Condensed', 'Bahnschrift Condensed', 'Arial Narrow', sans-serif;
-  --fit-page: #f4f3ee;
-  --fit-ink: #171b1c;
-  --fit-quiet: #505a5a;
-  --fit-rule: #caccc5;
-  --fit-board: #192020;
-  --fit-board-ink: #f7f6ed;
-  --fit-board-muted: #bec8c4;
-  --fit-orange: #ff9a53;
-  --fit-track: #3a4341;
-  --fit-focus: #924316;
-}
-html.dark :is(.app-shell-fitness, .fitness-home, .fitness-entry-portal) {
-  --fit-page: #101515;
-  --fit-ink: #f5f4ee;
-  --fit-quiet: #b6bfb9;
-  --fit-rule: #3b4340;
-  --fit-board: #202727;
-  --fit-board-muted: #c8d0cb;
-  --fit-track: #424c49;
-  --fit-focus: #ffc28d;
-}
-
-.app-shell.app-shell-fitness .app-main, html .home-variants.fitness-home {
-  background-color: var(--fit-page);
-  color: var(--fit-ink);
-}
 .home-variants.fitness-home { padding: 0; gap: 0; max-width: 64rem; }
 .fitness-home .home-history { padding: 18px 0; margin-top: 8px; border-top: 1px solid var(--fit-rule); }
 .app-shell-fitness .fitness-records-link {
@@ -62,7 +19,7 @@ html.dark :is(.app-shell-fitness, .fitness-home, .fitness-entry-portal) {
   transform: translateY(-2px) rotate(45deg);
 }
 .fitness-records-link:hover { text-decoration: underline; }
-.app-shell-fitness .fitness-records-link:focus-visible { outline: 2px solid #ffe2b9; outline-offset: -2px; }
+.app-shell-fitness .fitness-records-link:focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -2px; }
 .fitness-home .daily-logs-heading h4:focus-visible { outline-color: var(--fit-focus); }
 
 :is(.fitness-entry-portal, .fitness-home) .home-date-picker {
@@ -76,7 +33,7 @@ html.dark :is(.app-shell-fitness, .fitness-home, .fitness-entry-portal) {
 }
 :is(.fitness-entry-portal, .fitness-home) .home-month-row button { border-radius: 5px; }
 :is(.fitness-entry-portal, .fitness-home) .home-month-row [aria-selected="true"] button {
-  background: var(--fit-orange); color: #201b16; font-weight: 700;
+  background: var(--fit-orange); color: var(--fit-on-orange); font-weight: 700;
 }
 :is(.fitness-entry-portal, .fitness-home) .home-month-weekdays > span,
 :is(.fitness-entry-portal, .fitness-home) .home-calendar-footer > span { color: var(--fit-quiet); }
@@ -100,11 +57,4 @@ html.dark :is(.app-shell-fitness, .fitness-home, .fitness-entry-portal) {
   .app-shell-fitness .home-header > div { gap: 6px; }
   .app-shell-fitness .home-header h1 { font-size: 23px; font-weight: 750; letter-spacing: -.055em; }
   .fitness-home .home-history { margin-inline: 16px; }
-  .app-shell.app-shell-fitness .app-bottom-nav { background: var(--fit-page); border-color: var(--fit-rule); }
-  .app-shell-fitness .app-bottom-nav .bottom-nav-item { color: var(--fit-quiet); }
-  .app-shell-fitness .app-bottom-nav .bottom-nav-item[aria-current="page"] { color: var(--fit-ink); }
-  .app-shell-fitness .bottom-nav-item[aria-current="page"]::before {
-    content: ''; position: absolute; inset: 0 auto auto; width: 24px; height: 3px; background: var(--fit-orange);
-  }
-  .app-shell-fitness .bottom-nav-track .bottom-nav-indicator { display: none; }
 }

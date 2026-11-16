@@ -84,13 +84,20 @@ test('DailyPanel displays equilibrium and surplus states', () => {
   }
 });
 
-test('incomplete-day context precedes the provisional balance without changing its value', () => {
+test('activity without meals keeps the exact provisional balance inside the closed breakdown', () => {
   const record = { ...base, steps: 7000 };
   const html = renderToStaticMarkup(React.createElement(DailyPanel, { profile, record, dateStr, records: {}, onUpdateRecord() {} }));
   assert.match(html, /data-provisional="true"/);
   assert.match(html, /data-energy-state="partial"/);
-  const text = html.replace(/<[^>]+>/g, '');
-  assert.ok(text.indexOf('Sin comidas registradas') < text.indexOf('-1.898 kcal'));
+  const dom = new JSDOM(html);
+  try {
+    const doc = dom.window.document;
+    assert.equal(doc.querySelector('.energy-number').textContent, 'Sin comidas registradas');
+    assert.doesNotMatch(doc.querySelector('.fitness-readout').textContent, /kcal|déficit/i);
+    const details = doc.querySelector('.fitness-breakdown');
+    assert.equal(details.open, false);
+    assert.match(details.textContent, /Saldo calculado con la ingesta registrada: -1\.898 kcal/);
+  } finally { dom.window.close(); }
   assert.match(html, /Sin comidas registradas/);
   assert.equal((html.match(/Sin comidas registradas/g) || []).length, 1);
   assert.ok(render(record).includes('-1.898 kcal'));

@@ -5,7 +5,6 @@
   background: var(--home-control);
   color: var(--home-muted);
 }
-html:not(.dark) .home-variants .daily-panel .energy-card .energy-headline .energy-status { color: #58667a; }
 .home-variants .daily-panel .energy-footer {
   display: flex;
   align-items: center;
@@ -152,7 +151,6 @@ html:not(.dark) .home-variants .daily-panel .energy-card .energy-headline .energ
   .app-shell .home-variants .daily-panel .daily-habits { flex: 1; }
   .app-shell .home-variants .daily-panel .daily-habits > .habit-card { padding: 16px 10px; }
 }
-html:not(.dark) .home-variants .daily-panel .energy-card { box-shadow: none; }
 
 /* Weight keeps the established record modal and exposes its selected day. */
 .home-variants .entry-weight-form { display: flex; flex-direction: column; gap: 0; }
@@ -163,7 +161,7 @@ html:not(.dark) .home-variants .daily-panel .energy-card { box-shadow: none; }
 .home-variants .entry-weight-form .entry-field-label { position: static; width: auto; height: auto; overflow: visible; clip-path: none; white-space: normal; color: var(--home-text); font-size: 14px; }
 .home-variants .entry-weight-form .entry-form-content input { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid var(--home-line); border-radius: var(--radius-control); background: var(--home-control); color: var(--home-text); font-size: 20px; line-height: 1.4; }
 .home-variants .entry-weight-form .entry-form-footer { display: block; padding: 16px; border-top: 1px solid var(--home-line); }
-.home-variants .entry-weight-form .entry-weight-save { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; border-radius: var(--radius-control); background: var(--home-orange); color: #3b2418; font-size: 16px; font-weight: 600; }
+.home-variants .entry-weight-form .entry-weight-save { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; border-radius: var(--radius-control); background: var(--fit-orange); color: var(--fit-on-orange); font-size: 16px; font-weight: 600; }
 .home-variants .entry-desktop-modal:has(.entry-weight-form) > div:first-child > button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
 
 /* Record details share the entry shell's keyboard and viewport behavior. */
@@ -174,5 +172,3 @@ html:not(.dark) .home-variants .daily-panel .energy-card { box-shadow: none; }
 .home-variants .record-detail-modal .record-detail-actions { flex: none; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: var(--home-control); }
 .home-variants .record-detail-modal .record-detail-actions button { min-height: 44px; }
 .home-variants .entry-desktop-modal:has(.record-detail-modal) > div:first-child > button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
-html:not(.dark) .home-variants .record-detail-modal .record-detail-content { background: var(--home-card); }
-html:not(.dark) .home-variants .record-detail-modal :is(.record-detail-secondary, .text-slate-500) { color: #58667a; }

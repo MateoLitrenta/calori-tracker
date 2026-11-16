@@ -147,7 +147,7 @@ export default function HomeView({ activeProfile, updateRecord, habitDrafts, vie
   }, [state, historyExpanded]);
 
   return (
-    <div ref={rootRef} className="home-variants fitness-home dark flex flex-col w-full max-w-4xl mx-auto">
+    <div ref={rootRef} className="home-variants fitness-home flex flex-col w-full max-w-4xl mx-auto">
       <WeeklyDateNav selectedDateStr={selectedDateStr} today={today} onSelectDate={date => selectDay(date)} onOpenCalendar={openCalendar} />
       {openDayBlocked && <div className="home-date-blocked" role="alert">
         <p>Guardá o cerrá el registro en edición antes de cambiar de día. Tu borrador se conserva.</p>

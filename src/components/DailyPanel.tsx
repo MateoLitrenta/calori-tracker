@@ -509,9 +509,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
           data-provisional={provisionalBalance} data-energy-state={isGroup ? 'period' : noDailyEnergy ? 'empty' : provisionalBalance ? 'partial' : 'recorded'}>
           <div className="fitness-readout">
             <h4>{isGroup ? 'Balance acumulado' : provisionalBalance ? 'Balance provisional' : 'Balance energético'}</h4>
-            {provisionalBalance && <p className="energy-qualifier">Sin comidas registradas</p>}
             <div className="energy-number">
-              {noDailyEnergy ? 'Sin datos de energía' : balance === null ? 'Sin datos' : <>{balance > 0 ? '+' : ''}{balance.toLocaleString('es-AR')}<small> kcal</small></>}
+              {noDailyEnergy ? 'Sin datos de energía' : provisionalBalance ? 'Sin comidas registradas' : balance === null ? 'Sin datos' : <>{balance > 0 ? '+' : ''}{balance.toLocaleString('es-AR')}<small> kcal</small></>}
             </div>
             {isGroup && classifiedBalance !== null && <p>Promedio diario: {classifiedBalance > 0 ? '+' : ''}{classifiedBalance.toLocaleString('es-AR')} kcal/día</p>}
           </div>
@@ -534,6 +533,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               <div>TMB: {calculateBMR(profile).toLocaleString('es-AR')} kcal</div>
               <div>Pasos: {getStepCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
               <div>Ejercicio: {getWorkoutCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
+              {provisionalBalance && balance !== null && <p>Saldo calculado con la ingesta registrada: <strong>{balance.toLocaleString('es-AR')} kcal</strong>. Falta registrar comidas para interpretar el balance del día.</p>}
               {noDailyEnergy && balance !== null && <div>Balance estimado: {balance > 0 ? '+' : ''}{balance.toLocaleString('es-AR')} kcal</div>}
               {!noDailyEnergy && !provisionalBalance && <p className="fitness-balance-category">{balanceLabel}</p>}
             </div>
@@ -1028,7 +1028,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   if (item._type === 'meal') startEditMeal(item as MealEntry);
                   else startEditWorkout(item as WorkoutEntry);
                 }}
-                className="record-detail-edit flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:bg-slate-200 dark:hover:bg-gray-800/50 text-white py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                className="record-detail-edit flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:bg-slate-200 dark:hover:bg-gray-800/50 text-slate-900 dark:text-white py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <PencilSimple size={18} /> Editar
               </button>

@@ -1,5 +1,5 @@
 .activity-history-v2 {
-  --ah-accent-text: var(--home-orange);
+  --ah-accent-text: var(--fit-accent);
   min-width: 0;
   width: 100%;
   container-type: inline-size;
@@ -13,7 +13,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 .activity-history-v2 :is(button, summary):focus-visible {
-  outline: 2px solid var(--home-text);
+  outline: 2px solid var(--fit-focus);
   outline-offset: 3px;
 }
 .activity-history-v2 button:disabled {
@@ -38,8 +38,7 @@
 }
 .ah-header h2 {
   margin: 0;
-  font-size: 22px;
-  font-weight: 600;
+  font: 700 26px/1.2 var(--fit-face);
   letter-spacing: -0.035em;
   line-height: 1.3;
 }
@@ -617,10 +616,6 @@
 
 /* History 2.1: the established heatmap palette carries the balance, while
    dates and values keep the theme's readable foreground. Selection stays orange. */
-html:not(.dark) .activity-history-v2 {
-  --ah-accent-text: #9a4d1f;
-  --home-muted: #475569;
-}
 .ah-day {
   isolation: isolate;
   min-height: 64px;

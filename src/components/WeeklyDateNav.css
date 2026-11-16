@@ -46,10 +46,10 @@
 }
 .home-week-days button > span { color: var(--fit-board-muted); font-size: 10px; font-weight: 650; letter-spacing: .025em; text-transform: uppercase; }
 .home-week-days button strong { font-family: var(--fit-face); font-size: 22px; font-weight: 700; line-height: 1; }
-.home-week-days button[aria-pressed="true"] { background: var(--fit-orange); color: #192020; }
-.home-week-days button[aria-pressed="true"] > span { color: #362215; }
+.home-week-days button[aria-pressed="true"] { background: var(--fit-orange); color: var(--fit-on-orange); }
+.home-week-days button[aria-pressed="true"] > span { color: var(--fit-on-orange); }
 .home-week-days button[aria-current="date"]:not([aria-pressed="true"]) strong { text-decoration: underline; text-underline-offset: 3px; }
-.fitness-home .home-date-nav :is(button, .home-week-scroll):focus-visible { outline: 2px solid #ffe2b9; outline-offset: -2px; }
+.fitness-home .home-date-nav :is(button, .home-week-scroll):focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -2px; }
 .home-history { min-width: 0; }
 .home-date-blocked { padding: 12px; border: 1px solid var(--fit-rule); background: var(--fit-page); color: var(--fit-ink); font-size: 13px; }
 .home-date-blocked button { min-height: 44px; margin-top: 4px; text-decoration: underline; font-weight: 650; }

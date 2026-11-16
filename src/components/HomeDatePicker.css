@@ -13,7 +13,7 @@
 .home-month-row button[data-outside-month="true"] { color: var(--home-muted); }
 .home-month-row [aria-selected="false"] button:hover:not(:disabled) { background: var(--home-hover); }
 .home-month-row [aria-selected="false"] button[aria-current="date"] { border: 2px solid var(--home-muted); text-decoration: underline; text-underline-offset: 3px; }
-.home-month-row [aria-selected="true"] button { background: var(--home-orange); color: #3b2418; }
+.home-month-row [aria-selected="true"] button { background: var(--fit-orange); color: var(--fit-on-orange); }
 .home-month-row button:disabled { opacity: .35; cursor: default; }
 .home-date-picker button:focus-visible { outline: 2px solid var(--home-text); outline-offset: -2px; }
 .home-calendar-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; border-top: 1px solid var(--home-line); padding-top: 8px; }

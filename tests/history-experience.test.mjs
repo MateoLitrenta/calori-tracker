@@ -207,6 +207,7 @@ test('activity without food stays visibly partial and neutral despite its negati
     assert.equal(detailBalance.dataset.balance, 'empty');
     assert.equal(!!detailBalance.querySelector('.ah-balance-fill'), false);
     assert.match(detailBalance.textContent, /parcial|provisional|sin comidas/i);
+    assert.doesNotMatch(detailBalance.textContent, /kcal|déficit/i);
   }
   await view.scale('Año');
   const month = document.querySelector('.ah-month[data-month="2026-11"]');
