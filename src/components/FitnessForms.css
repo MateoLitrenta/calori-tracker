@@ -78,7 +78,7 @@
   clip-path: none;
   white-space: normal;
   color: var(--fit-ink);
-  font-size: 13px;
+  font-size: var(--fit-caption);
   line-height: 1.35;
   font-weight: 600;
 }
@@ -149,7 +149,7 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
   border-radius: 6px;
   background: transparent;
   color: var(--fit-ink);
-  font-size: 13px;
+  font-size: var(--fit-caption);
   font-weight: 600;
 }
 :is(.fitness-home, .fitness-entry-portal) .entry-ai-icon { display: inline-block; }
@@ -189,7 +189,7 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
 .fitness-entry-portal .entry-form .entry-form-footer { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer button {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-  min-height: 48px; border-radius: 6px; padding: 9px 18px; color: var(--fit-on-orange); background: var(--fit-orange); font-size: 15px; font-weight: 700;
+  min-height: 48px; border-radius: 6px; padding: 9px 18px; color: var(--fit-on-orange); background: var(--fit-orange); font-size: var(--fit-body); font-weight: 700;
 }
 .fitness-entry-portal .entry-form .entry-form-footer button { width: 100%; }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer button:hover:not(:disabled) { background: #f4a56d; color: var(--fit-on-orange); }

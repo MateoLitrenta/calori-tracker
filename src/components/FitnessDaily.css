@@ -27,7 +27,7 @@
 .home-variants.fitness-home .daily-panel .fitness-score:is([data-energy-state='empty'],[data-energy-state='partial']) .energy-number {
   font-size: clamp(34px,9vw,50px); line-height: 1.1;
 }
-.home-variants.fitness-home .daily-panel .fitness-score .energy-qualifier { margin: -2px 0 5px; font-size: 13px; color: var(--fit-board-muted); }
+.home-variants.fitness-home .daily-panel .fitness-score .energy-qualifier { margin: -2px 0 5px; font-size: var(--fit-caption); color: var(--fit-board-muted); }
 .home-variants.fitness-home .daily-panel .fitness-comparison { display: grid; grid-template-columns: minmax(0,1fr); width: 100%; max-width: none; margin: 3px 0 0; padding: 0; gap: 8px; }
 .home-variants.fitness-home .daily-panel .fitness-comparison > .fitness-channel { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(55px,.88fr); align-items: center; gap: 8px; }
 .fitness-channel dt { color: var(--fit-board-muted); font-size: 12px; line-height: 1.3; }
@@ -45,7 +45,7 @@
 .fitness-home .fitness-breakdown[open] > summary svg { transform: rotate(90deg); }
 .home-variants.fitness-home .daily-panel .fitness-breakdown > .fitness-breakdown-body {
   grid-column: 1/-1; margin: 0; padding: 10px 0 0; border-top: 1px solid var(--fit-control-line); color: var(--fit-board-muted);
-  background: transparent; text-align: left; font-size: 13px; line-height: 1.45;
+  background: transparent; text-align: left; font-size: var(--fit-caption); line-height: 1.45;
 }
 .fitness-home .fitness-breakdown-body > p { margin: 0 0 8px; }
 .home-variants.fitness-home .daily-panel .energy-coverage { display: block; color: var(--fit-board-muted); }
@@ -54,7 +54,7 @@
 .fitness-home .fitness-breakdown-values > div { display: flex; justify-content: space-between; max-width: 380px; gap: 12px; }
 .fitness-home .fitness-breakdown-values dd { font-weight: 600; }
 .fitness-home .fitness-breakdown-body .fitness-balance-category { display: inline-block; margin: 8px 0 0; padding: 2px 7px; border: 1px solid var(--fit-control-line); border-radius: 4px; color: var(--fit-board-muted); }
-.fitness-home .fitness-period-days { color: var(--fit-board-muted); font-size: 13px; }
+.fitness-home .fitness-period-days { color: var(--fit-board-muted); font-size: var(--fit-caption); }
 .fitness-home .fitness-breakdown > summary:focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -2px; }
 
 /* The journal follows the same reading and tab order as B: actions, habits, entries. */
@@ -66,7 +66,7 @@
 .home-variants.fitness-home .daily-panel .daily-quick-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin: 0; }
 .home-variants.fitness-home .daily-panel .daily-quick-actions button {
   min-height: 50px; margin: 0; padding: 8px; border-radius: 6px; border: 1px solid var(--fit-ink);
-  background: transparent; color: var(--fit-ink); font-size: 15px; font-weight: 700;
+  background: transparent; color: var(--fit-ink); font-size: var(--fit-body); font-weight: 700;
 }
 .home-variants.fitness-home .daily-panel .daily-quick-actions button:first-child { background: var(--fit-orange); border-color: var(--fit-orange); color: var(--fit-on-orange); }
 .fitness-home .daily-quick-actions button:hover { text-decoration: underline; text-underline-offset: 3px; }
@@ -106,7 +106,7 @@
 .home-variants.fitness-home .daily-panel .habit-metric input { min-width: 0; width: 100%; max-width: 90px; min-height: 44px; font-size: 16px; }
 .home-variants.fitness-home .daily-panel .daily-habits .habit-controls { display: grid; grid-template-columns: repeat(2,minmax(44px,1fr)); gap: 0; width: 100%; max-width: 110px; }
 .home-variants.fitness-home .daily-panel .daily-habits :is(.habit-controls button,.habit-edit) {
-  min-height: 44px; min-width: 44px; padding: 4px 2px; border: 1px solid var(--fit-rule); background: transparent; color: var(--fit-ink); border-radius: 4px; font-size: 13px;
+  min-height: 44px; min-width: 44px; padding: 4px 2px; border: 1px solid var(--fit-rule); background: transparent; color: var(--fit-ink); border-radius: 4px; font-size: var(--fit-caption);
 }
 .home-variants.fitness-home .daily-panel .habit-controls button:first-child { border-radius: 4px 0 0 4px; }
 .home-variants.fitness-home .daily-panel .habit-controls button:last-child { border-radius: 0 4px 4px 0; border-left: 0; }
