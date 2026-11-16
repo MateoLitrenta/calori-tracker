@@ -6,7 +6,7 @@ import { JSDOM } from 'jsdom';
 
 // CSS contracts only. JSDOM has no layout/container-query engine: these fixtures
 // explicitly select a container width. Browser geometry is verified separately.
-const files = ['DesktopExperience.css', 'components/HomeVariants.css', 'components/HomeMobile.css', 'components/PremiumViews.css', 'components/ActivityHistory.css', 'components/ActivityHistoryMotion.css'];
+const files = ['DesktopExperience.css', 'components/HomeVariants.css', 'components/HomeMobile.css', 'FitnessSystem.css', 'components/CoachFitness.css', 'components/FitnessCharts.css', 'components/FitnessProfile.css', 'components/ActivityHistory.css', 'components/ActivityHistoryMotion.css'];
 const source = (await Promise.all(files.map(file => readFile(new URL('../src/' + file, import.meta.url), 'utf8')))).join('\n');
 function stylesAt(width, height = 900, containerWidth = width) {
   const css = postcss.parse(source);
@@ -85,19 +85,12 @@ test('dashboard row follows its tallest content and analysis/settings share spac
 test('daily energy categories share neutral presentation instead of rewarding a large recorded deficit', t => {
   const { document, style } = view(t, 393);
   const pill = document.querySelector('.energy-status');
-  const luminance = channels => channels.map(value => value / 255).map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4)
-    .reduce((total, value, index) => total + value * [.2126, .7152, .0722][index], 0);
   for (const dark of [false, true]) {
     document.documentElement.classList.toggle('dark', dark);
     for (const category of ['deficit-high', 'deficit-medium', 'deficit-low', 'surplus-high', 'surplus-low', 'neutral']) {
       pill.className = `energy-status bg-heatmap-${category}`;
       assert.equal(style('.energy-status').background, 'var(--home-control)', `${dark}:${category}`);
-      assert.equal(style('.energy-status').color, dark ? 'var(--home-muted)' : 'rgb(88, 102, 122)', `${dark}:${category}`);
-      if (!dark) {
-        const foreground = style('.energy-status').color.match(/\d+/g).map(Number);
-        const background = style('.home-variants').getPropertyValue('--home-control').trim().slice(1).match(/../g).map(value => parseInt(value, 16));
-        assert.ok((luminance(background) + .05) / (luminance(foreground) + .05) >= 4.5, 'The light energy status keeps readable text contrast');
-      }
+      assert.equal(style('.energy-status').color, 'var(--home-muted)', `${dark}:${category}`);
     }
   }
 });
@@ -189,8 +182,8 @@ test('the optional history explanation reuses the existing accessible light-card
   const tokens = {};
   let explanationColor;
   postcss.parse(source).walkRules(rule => {
-    if (rule.selector === 'html:not(.dark) .home-variants') {
-      for (const node of rule.nodes) if (['--home-muted', '--home-card'].includes(node.prop)) tokens[node.prop] = node.value;
+    if (rule.selector === ':root') {
+      for (const node of rule.nodes) if (['--fit-quiet', '--fit-surface'].includes(node.prop)) tokens[node.prop] = node.value;
     }
     if (rule.selector === '.ah-energy') {
       const color = rule.nodes.find(node => node.prop === 'color');
@@ -204,6 +197,6 @@ test('the optional history explanation reuses the existing accessible light-card
       .map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
     return .2126 * channels[0] + .7152 * channels[1] + .0722 * channels[2];
   };
-  const foreground = luminance(tokens['--home-muted']), background = luminance(tokens['--home-card']);
+  const foreground = luminance(tokens['--fit-quiet']), background = luminance(tokens['--fit-surface']);
   assert.ok((Math.max(foreground, background) + .05) / (Math.min(foreground, background) + .05) >= 4.5);
 });

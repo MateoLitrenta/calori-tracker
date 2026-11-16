@@ -85,7 +85,7 @@ test('numbered monthly selection is a preview; only the explicit open action cha
 
 test('history and existing Coach/period controls use scoped, touch-friendly and motion-safe styles', async () => {
   const selectorCSS = await readFile(new URL('../src/components/PeriodSelector.css', import.meta.url), 'utf8');
-  const premiumCSS = await readFile(new URL('../src/components/PremiumViews.css', import.meta.url), 'utf8');
+  const coachCSS = await readFile(new URL('../src/components/CoachFitness.css', import.meta.url), 'utf8');
   const charts = await readFile(new URL('../src/components/ChartsView.tsx', import.meta.url), 'utf8');
   const historyCSS = await readFile(new URL('../src/components/ActivityHistory.css', import.meta.url), 'utf8');
   assert.match(rawSource, /ActivityHistory\.css/);
@@ -101,7 +101,7 @@ test('history and existing Coach/period controls use scoped, touch-friendly and 
   assert.match(historyCSS, /prefers-reduced-motion:\s*reduce/);
   assert.match(historyCSS, /var\(--home-/);
   assert.match(css, /daily-quick-actions[^}]+repeat\(2, minmax\(0, 1fr\)\)/);
-  assert.match(premiumCSS, /chat-composer :is\([^}]+border-radius: var\(--radius-control\)/);
-  assert.match(premiumCSS, /chat-suggestion[^}]+min-height: 44px/);
+  assert.match(coachCSS, /chat-composer-form:focus-within[^}]+--fit-focus/);
+  assert.match(coachCSS, /chat-suggestion[^}]+min-height: 44px/);
   assert.match(css, /overflow-wrap: anywhere/);
 });
