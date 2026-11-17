@@ -803,3 +803,5 @@
     font-size: 18px;
   }
 }
+
+.ah-period-boundary { margin-top: 3px; color: var(--fit-quiet); font-size: var(--fit-caption); line-height: 1.4; }

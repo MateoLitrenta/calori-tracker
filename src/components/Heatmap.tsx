@@ -58,6 +58,12 @@ const averageLabel = (info: ReturnType<typeof getHistoryPeriod>) => info.provisi
   ? 'Promedio provisional' : info.category.startsWith('deficit-') ? 'Déficit promedio'
     : info.category.startsWith('surplus-') ? 'Superávit promedio'
       : info.category === 'neutral' ? 'Equilibrio promedio' : 'Balance del período';
+const averageBasis = (info: ReturnType<typeof getHistoryPeriod>) => {
+  if (!info.summary.days) return 'Todavía no hay días con datos energéticos para calcular un promedio.';
+  if (!info.provisional) return 'El promedio usa los días con comidas registradas. Pueden faltar otras comidas de esos días.';
+  const missing = countLabel(info.energyWithoutMeals, 'día sin comidas', 'días sin comidas');
+  return `Historial incluye ${missing} con pasos o ejercicio. Datos usa sólo días con comidas para su balance.`;
+};
 const sportsLabel = (sports: HistorySports) =>
   [
     sports.football ? 'Fútbol: ' + sports.football : '',
@@ -474,9 +480,10 @@ export default function Heatmap({
       <div className="ah-layout">
         <div className="ah-calendar">
           <div className="ah-navigation">
-            <h3 aria-live="polite" aria-atomic="true">
-              {heading}
-            </h3>
+            <div>
+              <h3 aria-live="polite" aria-atomic="true">{heading}</h3>
+              {state.view === 'week' && <p className="ah-period-boundary">Domingo a sábado</p>}
+            </div>
             <div className="ah-nav-actions">
               <button
                 type="button"
@@ -728,9 +735,7 @@ export default function Heatmap({
                     {periodInfo.foodDays}/{periodInfo.elapsedDays} días con comidas · Base:{' '}
                     {summary.days} días con datos energéticos
                   </p>
-                  {periodInfo.provisional && (
-                    <p>Incluye actividad sin comidas. El balance es provisional.</p>
-                  )}
+                  <p className="ah-average-basis">{averageBasis(periodInfo)}</p>
                   {periodInfo.sports.total > 0 && (
                     <p className="ah-period-sports">
                       {countLabel(periodInfo.sports.total, 'entrenamiento', 'entrenamientos')} ·{' '}
@@ -894,9 +899,10 @@ export default function Heatmap({
             {summary.days === 1 ? 'día con datos energéticos' : 'días con datos energéticos'}. Los días
             sin datos y futuros no se completan.
           </p>
+          <p className="ah-average-basis">{averageBasis(periodInfo)}</p>
           <dl>
             <div>
-              <dt>{periodInfo.provisional ? 'Balance promedio provisional' : 'Balance promedio'}</dt>
+              <dt>{periodInfo.provisional ? 'Balance promedio provisional' : 'Balance promedio'} · días con datos energéticos</dt>
               <dd>
                 {summary.averageBalance === null
                   ? 'Sin datos'

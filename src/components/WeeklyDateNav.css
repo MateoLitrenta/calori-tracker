@@ -13,7 +13,8 @@
 .home-date-context { flex: 1; min-width: 0; }
 .home-date-context h2 { margin: 0; font-size: 14px; font-weight: 650; line-height: 1.2; }
 .home-date-context h2::first-letter { text-transform: uppercase; }
-.home-date-compact-label, .home-date-mobile-week { display: none; }
+.home-date-compact-label { display: none; }
+.home-date-mobile-week { display: block; margin-top: 3px; color: var(--fit-board-muted); font-size: 12px; line-height: 1.4; }
 .home-date-nav button, .home-history-toggle { touch-action: manipulation; }
 .home-date-heading button {
   flex: none;
@@ -58,7 +59,6 @@
 @media (min-width: 768px) {
   .home-date-nav { border-radius: 12px 12px 0 0; padding: 12px 18px 4px; }
   .home-date-heading h2 { font-size: 17px; }
-  .home-date-mobile-week { display: block; color: var(--fit-board-muted); font-size: 12px; }
 }
 @media (min-width: 1280px) {
   .home-date-nav { display: grid; grid-template-columns: minmax(270px, .95fr) minmax(320px, 1.35fr); align-items: center; gap: 28px; padding: 14px 22px; }
