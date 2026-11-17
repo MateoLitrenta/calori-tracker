@@ -204,7 +204,15 @@ test('leaving Inicio cannot silently discard an active entry draft', async t => 
   assert.equal(state.document.querySelector('#add-meal-description')?.value, 'Borrador que debe conservarse');
   assert.equal(state.document.querySelector('.charts-insights'), null, 'Finish or close the draft before changing sections');
   assert.equal(state.logWrites, 0);
-  await click(state, '+ Comida'); // Explicitly close the entry, then navigation is available again.
+  window.confirm = () => false;
+  await click(state, 'Cancelar');
+  assert.equal(state.document.querySelector('#add-meal-description')?.value, 'Borrador que debe conservarse');
+  window.confirm = message => {
+    assert.match(message, /Descartar los cambios/);
+    return true;
+  };
+  await click(state, 'Cancelar');
+  assert.equal(state.document.querySelector('#add-meal-description'), null);
   await click(state, 'Datos');
   assert.ok(state.document.querySelector('.charts-insights'));
   assert.equal(state.logWrites, 0);

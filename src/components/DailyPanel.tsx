@@ -963,7 +963,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Detail Modal */}
       {detailModalItem && (
-        <EntryFormShell fitness dateContext={entryDate} title="Detalle del registro" restoreFocusTo={recordOpener.current} desktopModal closeLabel="Cerrar detalle" onClose={() => setDetailModalItem(null)}>
+        <EntryFormShell fitness dateContext={entryDate} title="Detalle del registro" restoreFocusTo={recordOpener} desktopModal closeLabel="Cerrar detalle" onClose={() => setDetailModalItem(null)}>
           <div className="record-detail-modal flex min-h-0 flex-col">
             <div className="record-detail-content entry-form-content p-6 flex flex-col gap-4">
 
@@ -1071,7 +1071,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Edit Modal para Comidas */}
       {editingMealId && (
-        <EntryFormShell fitness dateContext={entryDate} title="Editar comida" restoreFocusTo={recordOpener.current} onClose={closeEntry} desktopModal>
+        <EntryFormShell fitness dateContext={entryDate} title="Editar comida" restoreFocusTo={recordOpener} onClose={closeEntry} desktopModal>
           <form onChangeCapture={markEntryChanged} onSubmit={handleAddMeal} aria-busy={savingMeal || photoProcessing} className="entry-form p-4 flex flex-col gap-4">
             <div className="entry-form-content entry-fields-grid entry-meal-fields entry-edit-fields">
 
@@ -1160,7 +1160,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Edit Modal para Entrenamiento */}
       {editingWorkoutId && (
-        <EntryFormShell fitness dateContext={entryDate} title="Editar ejercicio" restoreFocusTo={recordOpener.current} onClose={closeEntry} desktopModal>
+        <EntryFormShell fitness dateContext={entryDate} title="Editar ejercicio" restoreFocusTo={recordOpener} onClose={closeEntry} desktopModal>
           <form onChangeCapture={markEntryChanged} onSubmit={handleAddWorkout} aria-busy={savingWorkout} className="entry-form p-4 flex flex-col gap-4">
             <div className="entry-form-content entry-fields-grid entry-workout-fields entry-edit-fields">
 

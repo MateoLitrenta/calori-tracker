@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from '@phosphor-icons/react';
 
@@ -10,7 +10,7 @@ interface EntryFormShellProps {
   closeLabel?: string;
   fitness?: boolean;
   dateContext?: ReactNode;
-  restoreFocusTo?: HTMLElement | null;
+  restoreFocusTo?: RefObject<HTMLElement | null>;
 }
 
 // A tall textarea cannot fit in the viewport. Follow its caret rather than its bottom edge.
@@ -58,7 +58,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
   useEffect(() => {
     if ((!mobile && !desktopModal) || !dialogRef.current) return;
     const dialog = dialogRef.current;
-    openerRef.current ??= restoreFocusTo ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    openerRef.current ??= restoreFocusTo?.current ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
     const main = document.querySelector<HTMLElement>('.app-main');
     const previousOverflow = main?.style.overflowY;
     const bodyOverflow = document.body.style.overflow;
