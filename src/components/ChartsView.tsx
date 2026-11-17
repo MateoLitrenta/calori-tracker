@@ -40,6 +40,7 @@ export default function ChartsView() {
       annualWindow.current = null;
       return;
     }
+    if (typeof ResizeObserver === 'undefined') return;
     if (!annualScope) annualWindow.current = null;
     else if (annualWindow.current?.plot !== plot || annualWindow.current.scope !== annualScope) {
       annualWindow.current = { plot, scope: annualScope, width: 0, overflow: false, left: null };
