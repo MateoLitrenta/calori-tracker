@@ -29,7 +29,7 @@ El [índice de evidencia](evidence/ux-stage1/README.md) vincula reproducción, c
 
 La CI Linux del PR debe corresponder al HEAD final publicado. Su artefacto conserva el manifiesto completo, resultados, versiones de PostgreSQL y PostgREST locales, TypeScript de frontend y API, lint y build. El enlace al run definitivo y la Preview figuran en el PR.
 
-La comparación de Datos verifica 18 combinaciones: seis contextos (incluida una segunda cuenta) por tres períodos. Compara tanto el resultado completo de `buildChartStats` como los importes de resumen, comparación y detalle que muestra la interfaz anterior y nueva. Se conserva la paridad numérica en los seis contextos; los nuevos rótulos de fecha y cobertura se verifican por separado.
+La comparación de Datos verifica 18 combinaciones: seis contextos (incluida una segunda cuenta) por tres períodos. Compara tanto los campos canónicos preexistentes de `buildChartStats` como los importes de resumen, comparación y detalle que muestra la interfaz anterior y nueva. Se conserva la paridad numérica en los seis contextos; los nuevos metadatos y rótulos de fecha y cobertura se verifican por separado.
 
 La revisión estática confirma que no hay modificaciones en API, servidor, Supabase, hooks de persistencia, workflows ni `vercel.json`. El único cambio en la utilidad de estadísticas expone las fechas y el resumen anterior que la función ya calculaba. Los servicios del navegador son simulados; las pruebas Linux ejercitan PostgreSQL y PostgREST locales desechables.
 
