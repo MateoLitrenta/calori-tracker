@@ -11,6 +11,7 @@ import Onboarding from './components/Onboarding';
 import { resolveEntryRoute } from './utils/entryRoute';
 import type { EntryRoute } from './utils/entryRoute';
 import type { HomeViewState } from './components/HomeView';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import './DesktopExperience.css';
 import './FitnessSystem.css';
 
@@ -236,6 +237,7 @@ function App() {
       {isAuthOpen && (
         <AuthModal onClose={() => setIsAuthOpen(false)} />
       )}
+      <SpeedInsights />
     </div>
   );
 }
