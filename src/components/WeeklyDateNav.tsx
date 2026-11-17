@@ -56,7 +56,7 @@ export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, on
       <div className="home-date-context" data-date-context={selectedDateStr === today ? 'today' : 'past'} aria-live="polite" aria-atomic="true">
         <span className="home-date-kicker sr-only">{selectedDateStr === today ? 'Hoy' : 'Fecha anterior'}</span>
         <h2 id={titleId}><time dateTime={selectedDateStr} aria-label={label}><span className="home-date-long-label">{label}</span><span className="home-date-compact-label">{compactLabel}</span></time></h2>
-        <span className="home-date-mobile-week">{compactWeek}</span>
+        <span className="home-date-mobile-week">{compactWeek} · dom–sáb</span>
       </div>
       <button type="button" className="home-date-today" onClick={() => onSelectDate(today)} disabled={selectedDateStr === today}>Hoy</button>
       <button type="button" className="home-date-calendar" aria-label="Abrir calendario mensual" onClick={onOpenCalendar}>

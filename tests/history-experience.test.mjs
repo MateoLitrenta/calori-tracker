@@ -283,6 +283,9 @@ test('week and annual month averages preserve the official mixed-period denomina
   assert.match(period.textContent, /provisional/i);
   assert.ok(period.textContent.includes(expected.averageBalance.toLocaleString('es-AR')));
   assert.match(period.textContent, /kcal\/día/);
+  assert.match(document.querySelector('.ah-period-boundary').textContent, /Domingo a sábado/);
+  assert.match(document.querySelector('.ah-period-summary .ah-average-basis').textContent,
+    /Historial incluye 1 día sin comidas con pasos o ejercicio\. Datos usa sólo días con comidas/);
   await view.scale('Año');
   const month = document.querySelector('.ah-month[data-month="2026-11"]');
   assert.equal(month.dataset.balance, 'empty');

@@ -8,13 +8,13 @@ import ts from 'typescript';
 const stub = code => `data:text/javascript,${encodeURIComponent(code)}`;
 globalThis.__chartsHarness = { profile: null, period: 'Semana' };
 const imports = {
-  react: stub(`import { useMemo } from ${JSON.stringify(import.meta.resolve('react'))};
+  react: stub(`import { useMemo, useRef, useLayoutEffect } from ${JSON.stringify(import.meta.resolve('react'))};
     export const useState = initial => {
-      const field = initial === null ? 'selectedBucket' : 'period';
+      const field = initial === null ? 'selectedBucket' : initial === false ? 'plotOverflows' : 'period';
       const harness = globalThis.__chartsHarness;
       return [harness[field] ?? initial, next => { harness[field] = typeof next === 'function' ? next(harness[field]) : next; }];
     };
-    export { useMemo };`),
+    export { useMemo, useRef, useLayoutEffect };`),
   '../hooks/useAppStore': stub(`export const useAppStore = () => ({
     activeProfile: globalThis.__chartsHarness.profile,
     user: { id: 'test-user' }, avatarRevision: 0, signOut() {}
@@ -52,11 +52,11 @@ const workout = calories => ({ id: 'workout-a', activity: 'Correr', duration: 30
 const record = (dateStr, options = {}) => ({ dateStr, date: new NativeDate(`${dateStr}T12:00:00`),
   meals: [], workouts: [], steps: 0, water: 0, ...options });
 
-function render(records = {}, period = 'Semana', selectedBucket = null) {
+function render(records = {}, period = 'Semana', selectedBucket = null, referenceDay = today) {
   globalThis.__chartsHarness = { profile: { ...profile, records }, period, selectedBucket };
   globalThis.Date = class extends NativeDate {
-    constructor(...args) { super(...(args.length ? args : [`${today}T12:00:00`])); }
-    static now() { return new NativeDate(`${today}T12:00:00`).getTime(); }
+    constructor(...args) { super(...(args.length ? args : [`${referenceDay}T12:00:00`])); }
+    static now() { return new NativeDate(`${referenceDay}T12:00:00`).getTime(); }
   };
   let tree;
   function Capture() { tree = ChartsView(); return tree; }
@@ -169,7 +169,7 @@ test('workout-only data show expenditure without invented consumption or balance
 test('empty periods expose an honest accessible empty state without fake calorie values', () => {
   const { tree, html: markup } = render({ '2026-09-30': record('2026-09-30', { water: 500, weight: 80 }) });
   assert.deepEqual(kpis(tree).slice(0, 3).map(item => item.value), ['Sin datos', 'Sin datos', 'Sin datos']);
-  assert.match(markup, /Todavía no hay comidas ni actividad registradas en este período\./);
+  assert.match(markup, /Todavía no hay comidas, pasos ni ejercicio registrados en este período\./);
   assert.match(markup, /Registrá comidas y actividad para ver tu evolución\./);
   assert.equal(nodes(tree, element => element.props.role === 'status').length, 1);
   assert.equal(nodes(tree, element => element.props.role === 'listitem').length, 0);
@@ -353,7 +353,7 @@ test('activity metrics and previous comparison stay visible only for real record
 
 for (const [period, intro, subtitle, count] of [
   ['Semana', 'Esta semana', 'Valores diarios.', 7],
-  ['Mes', 'Este mes', 'Promedios diarios por semana.', 5],
+  ['Mes', 'Este mes', 'Promedios diarios en grupos del mes.', 5],
   ['Año', 'Este año', 'Promedios diarios por mes.', 12],
 ]) {
   test(`${period} insight describes the actual average and keeps its chart buckets`, () => {
@@ -431,4 +431,85 @@ test('desktop and mobile navigation use Datos and Coach while preserving destina
     assert.deepEqual(destinations, ['chat', 'charts']);
     assert.doesNotMatch(renderToStaticMarkup(tree), /Asistente|Gráficos/);
   }
+});
+
+
+test('the visible summary explains unequal samples and changes its explanation with actual coverage', () => {
+  const summary = tree => nodes(tree, element => element.props.className === 'charts-panel charts-summary')[0];
+  const note = tree => nodes(summary(tree), element => element.props.className === 'charts-summary-note')[0];
+  const mixed = render(weeklyRecords);
+  assert.match(html(note(mixed.tree)), /balance usa sólo días con comidas/);
+  assert.match(html(note(mixed.tree)), /gasto también incluye días de actividad sin comidas/);
+  assert.match(html(note(mixed.tree)), /resta de estas dos medias puede diferir del balance/);
+  assert.equal(nodes(nodes(summary(mixed.tree), element => element.type === 'details')[0],
+    element => element.props.className === 'charts-summary-note').length, 0);
+  const withMeals = render({ '2026-09-28': weeklyRecords['2026-09-28'], '2026-09-30': weeklyRecords['2026-09-30'] });
+  assert.match(html(note(withMeals.tree)), /los mismos 2 días con comidas/);
+  assert.match(html(note(withMeals.tree)), /tener registros no implica que estén completos/);
+  assert.doesNotMatch(html(note(withMeals.tree)), /días de actividad sin comidas/);
+  const activity = render({ '2026-09-29': weeklyRecords['2026-09-29'] });
+  assert.match(html(note(activity.tree)), /1 día con gasto estimado y ninguno con comidas/);
+  assert.doesNotMatch(html(note(render({}).tree)), /0 kcal|días de actividad sin comidas/);
+});
+
+test('monthly labels identify the exact statistical groups including the clipped last interval', () => {
+  const view = render(weeklyRecords, 'Mes');
+  const labels = nodes(view.tree, element => element.props.className === 'charts-bucket-label');
+  assert.deepEqual(labels.map(element => element.props.children), ['1–7 sep','8–14 sep','15–21 sep','22–28 sep','29–30 sep']);
+  assert.doesNotMatch(view.html, /Sem [1-5]|Promedios diarios por semana/);
+  const last = nodes(view.tree, element => element.props.className === 'charts-bucket').at(-1);
+  assert.match(last.props['aria-label'], /29 sep 2026 – 30 sep 2026/);
+  last.props.onClick();
+  const selected = render(weeklyRecords, 'Mes', globalThis.__chartsHarness.selectedBucket);
+  const detail = nodes(selected.tree, element => element.props.id === 'charts-bucket-detail')[0];
+  assert.equal(nodes(detail, element => element.type === 'h4')[0].props.children, '29 sep 2026 – 30 sep 2026');
+});
+
+test('the annual overview names late-year activity and keeps access to all twelve months', () => {
+  const records = Object.fromEntries(['08','09','10','11'].map(month => {
+    const date = '2026-' + month + '-01';
+    return [date,record(date,{meals:[meal(1800)]})];
+  }));
+  const view = render(records, 'Año', null, '2026-11-17');
+  assert.equal(nodes(view.tree, element => element.props.role === 'listitem').length, 12);
+  assert.match(view.html, /Con datos de energía · ago, sep, oct, nov/);
+  assert.equal(nodes(view.tree, element => element.props['data-has-energy'] === true).length, 4);
+  assert.ok(nodes(view.tree, element => element.props['aria-label'] === 'Ver meses anteriores')[0]);
+  assert.ok(nodes(view.tree, element => element.props['aria-label'] === 'Ver meses siguientes')[0]);
+  assert.doesNotMatch(render({}, 'Año', null, '2026-11-17').html, /Con datos de energía ·|12 meses ·/);
+});
+
+test('zero consumption gets a visible marker while absent consumption stays absent', () => {
+  const view = render({ '2026-09-28':record('2026-09-28',{meals:[meal(0)]}), '2026-09-29':weeklyRecords['2026-09-29'] });
+  const buckets = nodes(view.tree, element => element.props.className === 'charts-bucket');
+  const zero = nodes(buckets[0], element => element.props['data-zero'] === true);
+  assert.equal(zero.length, 1);
+  assert.equal(zero[0].props.style.height, '0%');
+  assert.equal(zero[0].props.children.props.children, '0');
+  assert.match(buckets[0].props['aria-label'], /Consumidas: 0 kcal/);
+  assert.equal(nodes(buckets[1], element => element.props['data-zero'] === true).length, 0);
+  assert.equal(nodes(buckets[1], element => element.props.className === 'charts-bar charts-bar-consumed').length, 0);
+  assert.match(buckets[1].props['aria-label'], /Sin comidas registradas/);
+});
+
+test('comparison discloses current cutoff, full previous interval and each actual coverage', () => {
+  const records = {
+    '2026-01-01':record('2026-01-01',{meals:[meal(2000)]}),
+    '2026-01-02':record('2026-01-02',{meals:[meal(2000)]}),
+    '2026-01-03':record('2026-01-03',{steps:1000}),
+    '2025-12-01':record('2025-12-01',{meals:[meal(1800)]}),
+    '2025-12-31':record('2025-12-31',{meals:[meal(1800)]}),
+  };
+  const view = render(records, 'Mes', null, '2026-01-03');
+  const section = nodes(view.tree, element => element.props.className === 'charts-panel charts-comparison')[0];
+  const periods = nodes(section, element => element.props.className === 'charts-comparison-periods')[0];
+  const current = periods.props.children[0], previous = periods.props.children[1];
+  assert.match(html(current), /1 ene 2026 – 3 ene 2026/);
+  assert.match(html(current), /2 días con comidas · 3 días con gasto estimado/);
+  assert.match(html(previous), /1 dic 2025 – 31 dic 2025/);
+  assert.match(html(previous), /2 días con comidas · 2 días con gasto estimado/);
+  assert.match(html(section), /Actual menos anterior/);
+  assert.match(html(section), /período actual está en curso/);
+  assert.match(html(section), /anterior abarca el calendario completo/);
+  assert.doesNotMatch(html(section), /mejor|peor/i);
 });

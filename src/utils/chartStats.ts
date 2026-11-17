@@ -113,5 +113,6 @@ export function buildChartStats(profile: UserProfile, period: ChartPeriod, today
   const periodRecords = Object.fromEntries(dates.filter(date => date <= today && profile.records[date])
     .map(date => [date, profile.records[date]]));
   return { start: dateStr(start), end: dateStr(end), buckets, summary, comparison,
+    previousStart: dateStr(previousRange.start), previousEnd: dateStr(previousRange.end), previousSummary: previous,
     currentStreak: calculateMealStats(periodRecords, today).currentStreak };
 }

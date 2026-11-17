@@ -1,0 +1,3322 @@
+[
+  {
+    "scenario": "main",
+    "width": 375,
+    "theme": "light",
+    "source": "http://127.0.0.1:5195",
+    "status": "passed",
+    "daily": {
+      "values": {
+        "date": "2026-11-17",
+        "today": "2026-11-17",
+        "dates": [
+          "2026-11-15",
+          "2026-11-16",
+          "2026-11-17",
+          "2026-11-18",
+          "2026-11-19",
+          "2026-11-20",
+          "2026-11-21"
+        ],
+        "daily": {
+          "consumed": 1500,
+          "expenditure": 2379,
+          "balance": -879,
+          "energy": true,
+          "meals": 1
+        },
+        "week": {
+          "summary": {
+            "consumed": 3700,
+            "days": 3,
+            "expenditure": 5981,
+            "target": 5981,
+            "balance": -2281,
+            "averageBalance": -760
+          },
+          "elapsedDays": 3,
+          "foodDays": 2,
+          "activityDays": 3,
+          "partialDays": 1,
+          "energyWithoutMeals": 1,
+          "provisional": true,
+          "canColorBalance": false,
+          "category": "empty",
+          "label": "Promedio provisional",
+          "sports": {
+            "total": 1,
+            "football": 0,
+            "gym": 1,
+            "other": 0
+          }
+        }
+      },
+      "metrics": [
+        "1.500 kcal",
+        "2.379 kcal"
+      ]
+    },
+    "history": {
+      "dates": [
+        "2026-11-15",
+        "2026-11-16",
+        "2026-11-17",
+        "2026-11-18",
+        "2026-11-19",
+        "2026-11-20",
+        "2026-11-21"
+      ],
+      "week": {
+        "summary": {
+          "consumed": 3700,
+          "days": 3,
+          "expenditure": 5981,
+          "target": 5981,
+          "balance": -2281,
+          "averageBalance": -760
+        },
+        "elapsedDays": 3,
+        "foodDays": 2,
+        "activityDays": 3,
+        "partialDays": 1,
+        "energyWithoutMeals": 1,
+        "provisional": true,
+        "canColorBalance": false,
+        "category": "empty",
+        "label": "Promedio provisional",
+        "sports": {
+          "total": 1,
+          "football": 0,
+          "gym": 1,
+          "other": 0
+        }
+      },
+      "displayed": "-760 kcal/día"
+    },
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 375,
+    "theme": "light",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "daily": {
+      "values": {
+        "date": "2026-11-17",
+        "today": "2026-11-17",
+        "dates": [
+          "2026-11-15",
+          "2026-11-16",
+          "2026-11-17",
+          "2026-11-18",
+          "2026-11-19",
+          "2026-11-20",
+          "2026-11-21"
+        ],
+        "daily": {
+          "consumed": 1500,
+          "expenditure": 2379,
+          "balance": -879,
+          "energy": true,
+          "meals": 1
+        },
+        "week": {
+          "summary": {
+            "consumed": 3700,
+            "days": 3,
+            "expenditure": 5981,
+            "target": 5981,
+            "balance": -2281,
+            "averageBalance": -760
+          },
+          "elapsedDays": 3,
+          "foodDays": 2,
+          "activityDays": 3,
+          "partialDays": 1,
+          "energyWithoutMeals": 1,
+          "provisional": true,
+          "canColorBalance": false,
+          "category": "empty",
+          "label": "Promedio provisional",
+          "sports": {
+            "total": 1,
+            "football": 0,
+            "gym": 1,
+            "other": 0
+          }
+        }
+      },
+      "metrics": [
+        "1.500 kcal",
+        "2.379 kcal"
+      ]
+    },
+    "history": {
+      "dates": [
+        "2026-11-15",
+        "2026-11-16",
+        "2026-11-17",
+        "2026-11-18",
+        "2026-11-19",
+        "2026-11-20",
+        "2026-11-21"
+      ],
+      "week": {
+        "summary": {
+          "consumed": 3700,
+          "days": 3,
+          "expenditure": 5981,
+          "target": 5981,
+          "balance": -2281,
+          "averageBalance": -760
+        },
+        "elapsedDays": 3,
+        "foodDays": 2,
+        "activityDays": 3,
+        "partialDays": 1,
+        "energyWithoutMeals": 1,
+        "provisional": true,
+        "canColorBalance": false,
+        "category": "empty",
+        "label": "Promedio provisional",
+        "sports": {
+          "total": 1,
+          "football": 0,
+          "gym": 1,
+          "other": 0
+        }
+      },
+      "displayed": "-760 kcal/día"
+    },
+    "parity": "exact",
+    "images": [
+      "main-375-light-daily.jpg",
+      "main-375-light-history.jpg"
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 375,
+    "theme": "dark",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "daily": {
+      "values": {
+        "date": "2026-11-17",
+        "today": "2026-11-17",
+        "dates": [
+          "2026-11-15",
+          "2026-11-16",
+          "2026-11-17",
+          "2026-11-18",
+          "2026-11-19",
+          "2026-11-20",
+          "2026-11-21"
+        ],
+        "daily": {
+          "consumed": 1500,
+          "expenditure": 2379,
+          "balance": -879,
+          "energy": true,
+          "meals": 1
+        },
+        "week": {
+          "summary": {
+            "consumed": 3700,
+            "days": 3,
+            "expenditure": 5981,
+            "target": 5981,
+            "balance": -2281,
+            "averageBalance": -760
+          },
+          "elapsedDays": 3,
+          "foodDays": 2,
+          "activityDays": 3,
+          "partialDays": 1,
+          "energyWithoutMeals": 1,
+          "provisional": true,
+          "canColorBalance": false,
+          "category": "empty",
+          "label": "Promedio provisional",
+          "sports": {
+            "total": 1,
+            "football": 0,
+            "gym": 1,
+            "other": 0
+          }
+        }
+      },
+      "metrics": [
+        "1.500 kcal",
+        "2.379 kcal"
+      ]
+    },
+    "history": {
+      "dates": [
+        "2026-11-15",
+        "2026-11-16",
+        "2026-11-17",
+        "2026-11-18",
+        "2026-11-19",
+        "2026-11-20",
+        "2026-11-21"
+      ],
+      "week": {
+        "summary": {
+          "consumed": 3700,
+          "days": 3,
+          "expenditure": 5981,
+          "target": 5981,
+          "balance": -2281,
+          "averageBalance": -760
+        },
+        "elapsedDays": 3,
+        "foodDays": 2,
+        "activityDays": 3,
+        "partialDays": 1,
+        "energyWithoutMeals": 1,
+        "provisional": true,
+        "canColorBalance": false,
+        "category": "empty",
+        "label": "Promedio provisional",
+        "sports": {
+          "total": 1,
+          "football": 0,
+          "gym": 1,
+          "other": 0
+        }
+      },
+      "displayed": "-760 kcal/día"
+    },
+    "parity": "exact",
+    "images": [
+      "main-375-dark-daily.jpg",
+      "main-375-dark-history.jpg"
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "zeros",
+    "width": 375,
+    "theme": "light",
+    "source": "http://127.0.0.1:5195",
+    "status": "passed",
+    "daily": {
+      "values": {
+        "date": "2026-11-17",
+        "today": "2026-11-17",
+        "dates": [
+          "2026-11-15",
+          "2026-11-16",
+          "2026-11-17",
+          "2026-11-18",
+          "2026-11-19",
+          "2026-11-20",
+          "2026-11-21"
+        ],
+        "daily": {
+          "consumed": 0,
+          "expenditure": 1679,
+          "balance": -1679,
+          "energy": true,
+          "meals": 1
+        },
+        "week": {
+          "summary": {
+            "consumed": 0,
+            "days": 1,
+            "expenditure": 1679,
+            "target": 1679,
+            "balance": -1679,
+            "averageBalance": -1679
+          },
+          "elapsedDays": 3,
+          "foodDays": 1,
+          "activityDays": 1,
+          "partialDays": 0,
+          "energyWithoutMeals": 0,
+          "provisional": false,
+          "canColorBalance": true,
+          "category": "deficit-high",
+          "label": "Déficit Alto",
+          "sports": {
+            "total": 1,
+            "football": 0,
+            "gym": 1,
+            "other": 0
+          }
+        }
+      },
+      "metrics": [
+        "0 kcal",
+        "1.679 kcal"
+      ]
+    },
+    "history": {
+      "dates": [
+        "2026-11-15",
+        "2026-11-16",
+        "2026-11-17",
+        "2026-11-18",
+        "2026-11-19",
+        "2026-11-20",
+        "2026-11-21"
+      ],
+      "week": {
+        "summary": {
+          "consumed": 0,
+          "days": 1,
+          "expenditure": 1679,
+          "target": 1679,
+          "balance": -1679,
+          "averageBalance": -1679
+        },
+        "elapsedDays": 3,
+        "foodDays": 1,
+        "activityDays": 1,
+        "partialDays": 0,
+        "energyWithoutMeals": 0,
+        "provisional": false,
+        "canColorBalance": true,
+        "category": "deficit-high",
+        "label": "Déficit Alto",
+        "sports": {
+          "total": 1,
+          "football": 0,
+          "gym": 1,
+          "other": 0
+        }
+      },
+      "displayed": "-1.679 kcal/día"
+    },
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "zeros",
+    "width": 375,
+    "theme": "light",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "daily": {
+      "values": {
+        "date": "2026-11-17",
+        "today": "2026-11-17",
+        "dates": [
+          "2026-11-15",
+          "2026-11-16",
+          "2026-11-17",
+          "2026-11-18",
+          "2026-11-19",
+          "2026-11-20",
+          "2026-11-21"
+        ],
+        "daily": {
+          "consumed": 0,
+          "expenditure": 1679,
+          "balance": -1679,
+          "energy": true,
+          "meals": 1
+        },
+        "week": {
+          "summary": {
+            "consumed": 0,
+            "days": 1,
+            "expenditure": 1679,
+            "target": 1679,
+            "balance": -1679,
+            "averageBalance": -1679
+          },
+          "elapsedDays": 3,
+          "foodDays": 1,
+          "activityDays": 1,
+          "partialDays": 0,
+          "energyWithoutMeals": 0,
+          "provisional": false,
+          "canColorBalance": true,
+          "category": "deficit-high",
+          "label": "Déficit Alto",
+          "sports": {
+            "total": 1,
+            "football": 0,
+            "gym": 1,
+            "other": 0
+          }
+        }
+      },
+      "metrics": [
+        "0 kcal",
+        "1.679 kcal"
+      ]
+    },
+    "history": {
+      "dates": [
+        "2026-11-15",
+        "2026-11-16",
+        "2026-11-17",
+        "2026-11-18",
+        "2026-11-19",
+        "2026-11-20",
+        "2026-11-21"
+      ],
+      "week": {
+        "summary": {
+          "consumed": 0,
+          "days": 1,
+          "expenditure": 1679,
+          "target": 1679,
+          "balance": -1679,
+          "averageBalance": -1679
+        },
+        "elapsedDays": 3,
+        "foodDays": 1,
+        "activityDays": 1,
+        "partialDays": 0,
+        "energyWithoutMeals": 0,
+        "provisional": false,
+        "canColorBalance": true,
+        "category": "deficit-high",
+        "label": "Déficit Alto",
+        "sports": {
+          "total": 1,
+          "football": 0,
+          "gym": 1,
+          "other": 0
+        }
+      },
+      "displayed": "-1.679 kcal/día"
+    },
+    "parity": "exact",
+    "images": [
+      "zeros-375-light-daily.jpg",
+      "zeros-375-light-history.jpg"
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "zeros",
+    "width": 375,
+    "theme": "dark",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "daily": {
+      "values": {
+        "date": "2026-11-17",
+        "today": "2026-11-17",
+        "dates": [
+          "2026-11-15",
+          "2026-11-16",
+          "2026-11-17",
+          "2026-11-18",
+          "2026-11-19",
+          "2026-11-20",
+          "2026-11-21"
+        ],
+        "daily": {
+          "consumed": 0,
+          "expenditure": 1679,
+          "balance": -1679,
+          "energy": true,
+          "meals": 1
+        },
+        "week": {
+          "summary": {
+            "consumed": 0,
+            "days": 1,
+            "expenditure": 1679,
+            "target": 1679,
+            "balance": -1679,
+            "averageBalance": -1679
+          },
+          "elapsedDays": 3,
+          "foodDays": 1,
+          "activityDays": 1,
+          "partialDays": 0,
+          "energyWithoutMeals": 0,
+          "provisional": false,
+          "canColorBalance": true,
+          "category": "deficit-high",
+          "label": "Déficit Alto",
+          "sports": {
+            "total": 1,
+            "football": 0,
+            "gym": 1,
+            "other": 0
+          }
+        }
+      },
+      "metrics": [
+        "0 kcal",
+        "1.679 kcal"
+      ]
+    },
+    "history": {
+      "dates": [
+        "2026-11-15",
+        "2026-11-16",
+        "2026-11-17",
+        "2026-11-18",
+        "2026-11-19",
+        "2026-11-20",
+        "2026-11-21"
+      ],
+      "week": {
+        "summary": {
+          "consumed": 0,
+          "days": 1,
+          "expenditure": 1679,
+          "target": 1679,
+          "balance": -1679,
+          "averageBalance": -1679
+        },
+        "elapsedDays": 3,
+        "foodDays": 1,
+        "activityDays": 1,
+        "partialDays": 0,
+        "energyWithoutMeals": 0,
+        "provisional": false,
+        "canColorBalance": true,
+        "category": "deficit-high",
+        "label": "Déficit Alto",
+        "sports": {
+          "total": 1,
+          "football": 0,
+          "gym": 1,
+          "other": 0
+        }
+      },
+      "displayed": "-1.679 kcal/día"
+    },
+    "parity": "exact",
+    "images": [
+      "zeros-375-dark-daily.jpg",
+      "zeros-375-dark-history.jpg"
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "empty",
+    "width": 375,
+    "theme": "light",
+    "source": "http://127.0.0.1:5195",
+    "status": "passed",
+    "daily": {
+      "values": {
+        "date": "2026-11-17",
+        "today": "2026-11-17",
+        "dates": [
+          "2026-11-15",
+          "2026-11-16",
+          "2026-11-17",
+          "2026-11-18",
+          "2026-11-19",
+          "2026-11-20",
+          "2026-11-21"
+        ],
+        "daily": {
+          "consumed": 0,
+          "expenditure": 1679,
+          "balance": null,
+          "energy": false,
+          "meals": 0
+        },
+        "week": {
+          "summary": {
+            "consumed": 0,
+            "days": 0,
+            "expenditure": 0,
+            "target": 0,
+            "balance": null,
+            "averageBalance": null
+          },
+          "elapsedDays": 3,
+          "foodDays": 0,
+          "activityDays": 0,
+          "partialDays": 0,
+          "energyWithoutMeals": 0,
+          "provisional": false,
+          "canColorBalance": false,
+          "category": "empty",
+          "label": "Sin datos energéticos",
+          "sports": {
+            "total": 0,
+            "football": 0,
+            "gym": 0,
+            "other": 0
+          }
+        }
+      },
+      "metrics": [
+        "—",
+        "—"
+      ]
+    },
+    "history": {
+      "dates": [
+        "2026-11-15",
+        "2026-11-16",
+        "2026-11-17",
+        "2026-11-18",
+        "2026-11-19",
+        "2026-11-20",
+        "2026-11-21"
+      ],
+      "week": {
+        "summary": {
+          "consumed": 0,
+          "days": 0,
+          "expenditure": 0,
+          "target": 0,
+          "balance": null,
+          "averageBalance": null
+        },
+        "elapsedDays": 3,
+        "foodDays": 0,
+        "activityDays": 0,
+        "partialDays": 0,
+        "energyWithoutMeals": 0,
+        "provisional": false,
+        "canColorBalance": false,
+        "category": "empty",
+        "label": "Sin datos energéticos",
+        "sports": {
+          "total": 0,
+          "football": 0,
+          "gym": 0,
+          "other": 0
+        }
+      },
+      "displayed": "Sin datos energéticos"
+    },
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "empty",
+    "width": 375,
+    "theme": "light",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "daily": {
+      "values": {
+        "date": "2026-11-17",
+        "today": "2026-11-17",
+        "dates": [
+          "2026-11-15",
+          "2026-11-16",
+          "2026-11-17",
+          "2026-11-18",
+          "2026-11-19",
+          "2026-11-20",
+          "2026-11-21"
+        ],
+        "daily": {
+          "consumed": 0,
+          "expenditure": 1679,
+          "balance": null,
+          "energy": false,
+          "meals": 0
+        },
+        "week": {
+          "summary": {
+            "consumed": 0,
+            "days": 0,
+            "expenditure": 0,
+            "target": 0,
+            "balance": null,
+            "averageBalance": null
+          },
+          "elapsedDays": 3,
+          "foodDays": 0,
+          "activityDays": 0,
+          "partialDays": 0,
+          "energyWithoutMeals": 0,
+          "provisional": false,
+          "canColorBalance": false,
+          "category": "empty",
+          "label": "Sin datos energéticos",
+          "sports": {
+            "total": 0,
+            "football": 0,
+            "gym": 0,
+            "other": 0
+          }
+        }
+      },
+      "metrics": [
+        "—",
+        "—"
+      ]
+    },
+    "history": {
+      "dates": [
+        "2026-11-15",
+        "2026-11-16",
+        "2026-11-17",
+        "2026-11-18",
+        "2026-11-19",
+        "2026-11-20",
+        "2026-11-21"
+      ],
+      "week": {
+        "summary": {
+          "consumed": 0,
+          "days": 0,
+          "expenditure": 0,
+          "target": 0,
+          "balance": null,
+          "averageBalance": null
+        },
+        "elapsedDays": 3,
+        "foodDays": 0,
+        "activityDays": 0,
+        "partialDays": 0,
+        "energyWithoutMeals": 0,
+        "provisional": false,
+        "canColorBalance": false,
+        "category": "empty",
+        "label": "Sin datos energéticos",
+        "sports": {
+          "total": 0,
+          "football": 0,
+          "gym": 0,
+          "other": 0
+        }
+      },
+      "displayed": "Sin datos energéticos"
+    },
+    "parity": "exact",
+    "images": [
+      "empty-375-light-daily.jpg",
+      "empty-375-light-history.jpg"
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "empty",
+    "width": 375,
+    "theme": "dark",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "daily": {
+      "values": {
+        "date": "2026-11-17",
+        "today": "2026-11-17",
+        "dates": [
+          "2026-11-15",
+          "2026-11-16",
+          "2026-11-17",
+          "2026-11-18",
+          "2026-11-19",
+          "2026-11-20",
+          "2026-11-21"
+        ],
+        "daily": {
+          "consumed": 0,
+          "expenditure": 1679,
+          "balance": null,
+          "energy": false,
+          "meals": 0
+        },
+        "week": {
+          "summary": {
+            "consumed": 0,
+            "days": 0,
+            "expenditure": 0,
+            "target": 0,
+            "balance": null,
+            "averageBalance": null
+          },
+          "elapsedDays": 3,
+          "foodDays": 0,
+          "activityDays": 0,
+          "partialDays": 0,
+          "energyWithoutMeals": 0,
+          "provisional": false,
+          "canColorBalance": false,
+          "category": "empty",
+          "label": "Sin datos energéticos",
+          "sports": {
+            "total": 0,
+            "football": 0,
+            "gym": 0,
+            "other": 0
+          }
+        }
+      },
+      "metrics": [
+        "—",
+        "—"
+      ]
+    },
+    "history": {
+      "dates": [
+        "2026-11-15",
+        "2026-11-16",
+        "2026-11-17",
+        "2026-11-18",
+        "2026-11-19",
+        "2026-11-20",
+        "2026-11-21"
+      ],
+      "week": {
+        "summary": {
+          "consumed": 0,
+          "days": 0,
+          "expenditure": 0,
+          "target": 0,
+          "balance": null,
+          "averageBalance": null
+        },
+        "elapsedDays": 3,
+        "foodDays": 0,
+        "activityDays": 0,
+        "partialDays": 0,
+        "energyWithoutMeals": 0,
+        "provisional": false,
+        "canColorBalance": false,
+        "category": "empty",
+        "label": "Sin datos energéticos",
+        "sports": {
+          "total": 0,
+          "football": 0,
+          "gym": 0,
+          "other": 0
+        }
+      },
+      "displayed": "Sin datos energéticos"
+    },
+    "parity": "exact",
+    "images": [
+      "empty-375-dark-daily.jpg",
+      "empty-375-dark-history.jpg"
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "yearBoundary",
+    "width": 375,
+    "theme": "light",
+    "source": "http://127.0.0.1:5195",
+    "status": "passed",
+    "daily": {
+      "values": {
+        "date": "2027-01-02",
+        "today": "2027-01-02",
+        "dates": [
+          "2026-12-27",
+          "2026-12-28",
+          "2026-12-29",
+          "2026-12-30",
+          "2026-12-31",
+          "2027-01-01",
+          "2027-01-02"
+        ],
+        "daily": {
+          "consumed": 0,
+          "expenditure": 1679,
+          "balance": null,
+          "energy": false,
+          "meals": 0
+        },
+        "week": {
+          "summary": {
+            "consumed": 5200,
+            "days": 4,
+            "expenditure": 7176,
+            "target": 7176,
+            "balance": -1976,
+            "averageBalance": -494
+          },
+          "elapsedDays": 7,
+          "foodDays": 3,
+          "activityDays": 4,
+          "partialDays": 1,
+          "energyWithoutMeals": 1,
+          "provisional": true,
+          "canColorBalance": false,
+          "category": "empty",
+          "label": "Promedio provisional",
+          "sports": {
+            "total": 0,
+            "football": 0,
+            "gym": 0,
+            "other": 0
+          }
+        }
+      },
+      "metrics": [
+        "—",
+        "—"
+      ]
+    },
+    "history": {
+      "dates": [
+        "2026-12-27",
+        "2026-12-28",
+        "2026-12-29",
+        "2026-12-30",
+        "2026-12-31",
+        "2027-01-01",
+        "2027-01-02"
+      ],
+      "week": {
+        "summary": {
+          "consumed": 5200,
+          "days": 4,
+          "expenditure": 7176,
+          "target": 7176,
+          "balance": -1976,
+          "averageBalance": -494
+        },
+        "elapsedDays": 7,
+        "foodDays": 3,
+        "activityDays": 4,
+        "partialDays": 1,
+        "energyWithoutMeals": 1,
+        "provisional": true,
+        "canColorBalance": false,
+        "category": "empty",
+        "label": "Promedio provisional",
+        "sports": {
+          "total": 0,
+          "football": 0,
+          "gym": 0,
+          "other": 0
+        }
+      },
+      "displayed": "-494 kcal/día"
+    },
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "yearBoundary",
+    "width": 375,
+    "theme": "light",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "daily": {
+      "values": {
+        "date": "2027-01-02",
+        "today": "2027-01-02",
+        "dates": [
+          "2026-12-27",
+          "2026-12-28",
+          "2026-12-29",
+          "2026-12-30",
+          "2026-12-31",
+          "2027-01-01",
+          "2027-01-02"
+        ],
+        "daily": {
+          "consumed": 0,
+          "expenditure": 1679,
+          "balance": null,
+          "energy": false,
+          "meals": 0
+        },
+        "week": {
+          "summary": {
+            "consumed": 5200,
+            "days": 4,
+            "expenditure": 7176,
+            "target": 7176,
+            "balance": -1976,
+            "averageBalance": -494
+          },
+          "elapsedDays": 7,
+          "foodDays": 3,
+          "activityDays": 4,
+          "partialDays": 1,
+          "energyWithoutMeals": 1,
+          "provisional": true,
+          "canColorBalance": false,
+          "category": "empty",
+          "label": "Promedio provisional",
+          "sports": {
+            "total": 0,
+            "football": 0,
+            "gym": 0,
+            "other": 0
+          }
+        }
+      },
+      "metrics": [
+        "—",
+        "—"
+      ]
+    },
+    "history": {
+      "dates": [
+        "2026-12-27",
+        "2026-12-28",
+        "2026-12-29",
+        "2026-12-30",
+        "2026-12-31",
+        "2027-01-01",
+        "2027-01-02"
+      ],
+      "week": {
+        "summary": {
+          "consumed": 5200,
+          "days": 4,
+          "expenditure": 7176,
+          "target": 7176,
+          "balance": -1976,
+          "averageBalance": -494
+        },
+        "elapsedDays": 7,
+        "foodDays": 3,
+        "activityDays": 4,
+        "partialDays": 1,
+        "energyWithoutMeals": 1,
+        "provisional": true,
+        "canColorBalance": false,
+        "category": "empty",
+        "label": "Promedio provisional",
+        "sports": {
+          "total": 0,
+          "football": 0,
+          "gym": 0,
+          "other": 0
+        }
+      },
+      "displayed": "-494 kcal/día"
+    },
+    "parity": "exact",
+    "images": [
+      "yearBoundary-375-light-daily.jpg",
+      "yearBoundary-375-light-history.jpg"
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "yearBoundary",
+    "width": 375,
+    "theme": "dark",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "daily": {
+      "values": {
+        "date": "2027-01-02",
+        "today": "2027-01-02",
+        "dates": [
+          "2026-12-27",
+          "2026-12-28",
+          "2026-12-29",
+          "2026-12-30",
+          "2026-12-31",
+          "2027-01-01",
+          "2027-01-02"
+        ],
+        "daily": {
+          "consumed": 0,
+          "expenditure": 1679,
+          "balance": null,
+          "energy": false,
+          "meals": 0
+        },
+        "week": {
+          "summary": {
+            "consumed": 5200,
+            "days": 4,
+            "expenditure": 7176,
+            "target": 7176,
+            "balance": -1976,
+            "averageBalance": -494
+          },
+          "elapsedDays": 7,
+          "foodDays": 3,
+          "activityDays": 4,
+          "partialDays": 1,
+          "energyWithoutMeals": 1,
+          "provisional": true,
+          "canColorBalance": false,
+          "category": "empty",
+          "label": "Promedio provisional",
+          "sports": {
+            "total": 0,
+            "football": 0,
+            "gym": 0,
+            "other": 0
+          }
+        }
+      },
+      "metrics": [
+        "—",
+        "—"
+      ]
+    },
+    "history": {
+      "dates": [
+        "2026-12-27",
+        "2026-12-28",
+        "2026-12-29",
+        "2026-12-30",
+        "2026-12-31",
+        "2027-01-01",
+        "2027-01-02"
+      ],
+      "week": {
+        "summary": {
+          "consumed": 5200,
+          "days": 4,
+          "expenditure": 7176,
+          "target": 7176,
+          "balance": -1976,
+          "averageBalance": -494
+        },
+        "elapsedDays": 7,
+        "foodDays": 3,
+        "activityDays": 4,
+        "partialDays": 1,
+        "energyWithoutMeals": 1,
+        "provisional": true,
+        "canColorBalance": false,
+        "category": "empty",
+        "label": "Promedio provisional",
+        "sports": {
+          "total": 0,
+          "football": 0,
+          "gym": 0,
+          "other": 0
+        }
+      },
+      "displayed": "-494 kcal/día"
+    },
+    "parity": "exact",
+    "images": [
+      "yearBoundary-375-dark-daily.jpg",
+      "yearBoundary-375-dark-history.jpg"
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 375,
+    "theme": "system",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "keyboard": {
+      "keys": [
+        "ArrowLeft",
+        "Home",
+        "End",
+        "PageUp",
+        "Escape"
+      ],
+      "historyExplorationKeepsWriter": true,
+      "focus": {
+        "day": "2026-11-16",
+        "outline": "2px"
+      }
+    },
+    "systemChanges": [
+      "dark",
+      "light"
+    ],
+    "partialBalance": "-1.783 kcal appears in user-opened breakdown only",
+    "images": [
+      "main-375-partial-disclosure.jpg"
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 320,
+    "theme": "light",
+    "source": "http://127.0.0.1:5195",
+    "status": "passed",
+    "recordedAt": "2026-11-17T18:32:58.413Z",
+    "text200": {
+      "method": "Computed font-size and line-height x2 once per main descendant; viewport, transform and page zoom unchanged",
+      "elements": 284
+    },
+    "normalCalendar": [
+      {
+        "day": "2026-11-15",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-16",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-17",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-18",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-19",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-20",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-21",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-15",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-16",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-17",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-18",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-19",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-20",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-21",
+        "width": 44,
+        "height": 64
+      }
+    ],
+    "textGeometry": {
+      "overflow": [
+        {
+          "text": "Calorías consumidas",
+          "className": "",
+          "textWidth": 125.515625,
+          "boxWidth": 93.1875,
+          "inScope": true
+        },
+        {
+          "text": "Gasto estimado",
+          "className": "",
+          "textWidth": 97.765625,
+          "boxWidth": 93.1875,
+          "inScope": true
+        },
+        {
+          "text": "+250",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 48,
+          "inScope": false
+        },
+        {
+          "text": "+500",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 45.5,
+          "inScope": false
+        },
+        {
+          "text": "Semana",
+          "className": "",
+          "textWidth": 93.3125,
+          "boxWidth": 80,
+          "inScope": true
+        },
+        {
+          "text": "Dom",
+          "className": "",
+          "textWidth": 47.265625,
+          "boxWidth": 44,
+          "inScope": true
+        }
+      ],
+      "overlapping": [],
+      "calendarText": [
+        {
+          "day": "2026-11-15",
+          "text": "dom",
+          "width": 50.5625,
+          "cellWidth": 44
+        },
+        {
+          "day": "2026-11-17",
+          "text": "mar",
+          "width": 47.765625,
+          "cellWidth": 44
+        },
+        {
+          "day": "2026-11-15",
+          "text": "+381",
+          "width": 46.03125,
+          "cellWidth": 44
+        },
+        {
+          "day": "2026-11-16",
+          "text": "Parcial",
+          "width": 51.078125,
+          "cellWidth": 44
+        }
+      ]
+    },
+    "images": [
+      "320-light-text200-before-habits.jpg",
+      "320-light-text200-before-calendar.jpg"
+    ],
+    "inheritedIssues": [
+      {
+        "text": "+250",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 48,
+        "inScope": false
+      },
+      {
+        "text": "+500",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 45.5,
+        "inScope": false
+      }
+    ],
+    "geometry": {
+      "width": 320,
+      "bodyWidth": 320,
+      "mainWidth": 320,
+      "mainScrollWidth": 320,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 320,
+    "theme": "light",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "recordedAt": "2026-11-17T18:33:10.387Z",
+    "text200": {
+      "method": "Computed font-size and line-height x2 once per main descendant; viewport, transform and page zoom unchanged",
+      "elements": 289
+    },
+    "normalCalendar": [
+      {
+        "day": "2026-11-15",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-16",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-17",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-18",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-19",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-20",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-21",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-15",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-16",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-17",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-18",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-19",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-20",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-21",
+        "width": 44,
+        "height": 64
+      }
+    ],
+    "textGeometry": {
+      "overflow": [
+        {
+          "text": "+250",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 48,
+          "inScope": false
+        },
+        {
+          "text": "+500",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 45.5,
+          "inScope": false
+        }
+      ],
+      "overlapping": [],
+      "calendarText": []
+    },
+    "images": [
+      "320-light-text200-daily.jpg",
+      "320-light-text200-history.jpg",
+      "320-light-text200-calendar.jpg",
+      "320-light-text200-week-strip.jpg",
+      "320-light-text200-after-habits.jpg"
+    ],
+    "inheritedIssues": [
+      {
+        "text": "+250",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 48,
+        "inScope": false
+      },
+      {
+        "text": "+500",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 45.5,
+        "inScope": false
+      }
+    ],
+    "geometry": {
+      "width": 320,
+      "bodyWidth": 320,
+      "mainWidth": 320,
+      "mainScrollWidth": 320,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 320,
+    "theme": "dark",
+    "source": "http://127.0.0.1:5195",
+    "status": "passed",
+    "recordedAt": "2026-11-17T18:33:23.270Z",
+    "text200": {
+      "method": "Computed font-size and line-height x2 once per main descendant; viewport, transform and page zoom unchanged",
+      "elements": 284
+    },
+    "normalCalendar": [
+      {
+        "day": "2026-11-15",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-16",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-17",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-18",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-19",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-20",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-21",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-15",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-16",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-17",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-18",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-19",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-20",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-21",
+        "width": 44,
+        "height": 64
+      }
+    ],
+    "textGeometry": {
+      "overflow": [
+        {
+          "text": "Calorías consumidas",
+          "className": "",
+          "textWidth": 125.515625,
+          "boxWidth": 93.1875,
+          "inScope": true
+        },
+        {
+          "text": "Gasto estimado",
+          "className": "",
+          "textWidth": 97.765625,
+          "boxWidth": 93.1875,
+          "inScope": true
+        },
+        {
+          "text": "+250",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 48,
+          "inScope": false
+        },
+        {
+          "text": "+500",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 45.5,
+          "inScope": false
+        },
+        {
+          "text": "Semana",
+          "className": "",
+          "textWidth": 93.3125,
+          "boxWidth": 80,
+          "inScope": true
+        },
+        {
+          "text": "Dom",
+          "className": "",
+          "textWidth": 47.265625,
+          "boxWidth": 44,
+          "inScope": true
+        }
+      ],
+      "overlapping": [],
+      "calendarText": [
+        {
+          "day": "2026-11-15",
+          "text": "dom",
+          "width": 50.5625,
+          "cellWidth": 44
+        },
+        {
+          "day": "2026-11-17",
+          "text": "mar",
+          "width": 47.765625,
+          "cellWidth": 44
+        },
+        {
+          "day": "2026-11-15",
+          "text": "+381",
+          "width": 46.03125,
+          "cellWidth": 44
+        },
+        {
+          "day": "2026-11-16",
+          "text": "Parcial",
+          "width": 51.078125,
+          "cellWidth": 44
+        }
+      ]
+    },
+    "images": [
+      "320-dark-text200-before-habits.jpg"
+    ],
+    "inheritedIssues": [
+      {
+        "text": "+250",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 48,
+        "inScope": false
+      },
+      {
+        "text": "+500",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 45.5,
+        "inScope": false
+      }
+    ],
+    "geometry": {
+      "width": 320,
+      "bodyWidth": 320,
+      "mainWidth": 320,
+      "mainScrollWidth": 320,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 320,
+    "theme": "dark",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "recordedAt": "2026-11-17T18:33:31.354Z",
+    "text200": {
+      "method": "Computed font-size and line-height x2 once per main descendant; viewport, transform and page zoom unchanged",
+      "elements": 289
+    },
+    "normalCalendar": [
+      {
+        "day": "2026-11-15",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-16",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-17",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-18",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-19",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-20",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-21",
+        "width": 44,
+        "height": 48
+      },
+      {
+        "day": "2026-11-15",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-16",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-17",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-18",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-19",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-20",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "day": "2026-11-21",
+        "width": 44,
+        "height": 64
+      }
+    ],
+    "textGeometry": {
+      "overflow": [
+        {
+          "text": "+250",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 48,
+          "inScope": false
+        },
+        {
+          "text": "+500",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 45.5,
+          "inScope": false
+        }
+      ],
+      "overlapping": [],
+      "calendarText": []
+    },
+    "images": [
+      "320-dark-text200-daily.jpg",
+      "320-dark-text200-history.jpg",
+      "320-dark-text200-calendar.jpg",
+      "320-dark-text200-week-strip.jpg",
+      "320-dark-text200-after-habits.jpg"
+    ],
+    "inheritedIssues": [
+      {
+        "text": "+250",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 48,
+        "inScope": false
+      },
+      {
+        "text": "+500",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 45.5,
+        "inScope": false
+      }
+    ],
+    "geometry": {
+      "width": 320,
+      "bodyWidth": 320,
+      "mainWidth": 320,
+      "mainScrollWidth": 320,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 375,
+    "theme": "light",
+    "source": "http://127.0.0.1:5195",
+    "status": "passed",
+    "recordedAt": "2026-11-17T18:33:39.038Z",
+    "text200": {
+      "method": "Computed font-size and line-height x2 once per main descendant; viewport, transform and page zoom unchanged",
+      "elements": 284
+    },
+    "normalCalendar": [
+      {
+        "day": "2026-11-15",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-16",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-17",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-18",
+        "width": 49.296875,
+        "height": 48
+      },
+      {
+        "day": "2026-11-19",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-20",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-21",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-15",
+        "width": 44.703125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-16",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-17",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-18",
+        "width": 44.703125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-19",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-20",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-21",
+        "width": 44.71875,
+        "height": 64
+      }
+    ],
+    "textGeometry": {
+      "overflow": [
+        {
+          "text": "Calorías consumidas",
+          "className": "",
+          "textWidth": 125.515625,
+          "boxWidth": 115,
+          "inScope": true
+        },
+        {
+          "text": "+250",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 54.171875,
+          "inScope": false
+        },
+        {
+          "text": "+500",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 50.671875,
+          "inScope": false
+        },
+        {
+          "text": "Dom",
+          "className": "",
+          "textWidth": 47.265625,
+          "boxWidth": 44.703125,
+          "inScope": true
+        }
+      ],
+      "overlapping": [],
+      "calendarText": [
+        {
+          "day": "2026-11-15",
+          "text": "dom",
+          "width": 50.5625,
+          "cellWidth": 49.28125
+        },
+        {
+          "day": "2026-11-17",
+          "text": "mar",
+          "width": 47.765625,
+          "cellWidth": 49.28125
+        },
+        {
+          "day": "2026-11-15",
+          "text": "+381",
+          "width": 46.03125,
+          "cellWidth": 44.703125
+        },
+        {
+          "day": "2026-11-16",
+          "text": "Parcial",
+          "width": 51.078125,
+          "cellWidth": 44.71875
+        }
+      ]
+    },
+    "images": [
+      "375-light-text200-before-habits.jpg",
+      "375-light-text200-before-calendar.jpg"
+    ],
+    "inheritedIssues": [
+      {
+        "text": "+250",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 54.171875,
+        "inScope": false
+      },
+      {
+        "text": "+500",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 50.671875,
+        "inScope": false
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 375,
+    "theme": "light",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "recordedAt": "2026-11-17T18:33:46.722Z",
+    "text200": {
+      "method": "Computed font-size and line-height x2 once per main descendant; viewport, transform and page zoom unchanged",
+      "elements": 289
+    },
+    "normalCalendar": [
+      {
+        "day": "2026-11-15",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-16",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-17",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-18",
+        "width": 49.296875,
+        "height": 48
+      },
+      {
+        "day": "2026-11-19",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-20",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-21",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-15",
+        "width": 44.703125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-16",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-17",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-18",
+        "width": 44.703125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-19",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-20",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-21",
+        "width": 44.71875,
+        "height": 64
+      }
+    ],
+    "textGeometry": {
+      "overflow": [
+        {
+          "text": "+250",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 54.171875,
+          "inScope": false
+        },
+        {
+          "text": "+500",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 50.671875,
+          "inScope": false
+        }
+      ],
+      "overlapping": [],
+      "calendarText": []
+    },
+    "images": [
+      "375-light-text200-daily.jpg",
+      "375-light-text200-history.jpg",
+      "375-light-text200-calendar.jpg",
+      "375-light-text200-week-strip.jpg",
+      "375-light-text200-after-habits.jpg"
+    ],
+    "inheritedIssues": [
+      {
+        "text": "+250",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 54.171875,
+        "inScope": false
+      },
+      {
+        "text": "+500",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 50.671875,
+        "inScope": false
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 375,
+    "theme": "dark",
+    "source": "http://127.0.0.1:5195",
+    "status": "passed",
+    "recordedAt": "2026-11-17T18:33:57.273Z",
+    "text200": {
+      "method": "Computed font-size and line-height x2 once per main descendant; viewport, transform and page zoom unchanged",
+      "elements": 284
+    },
+    "normalCalendar": [
+      {
+        "day": "2026-11-15",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-16",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-17",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-18",
+        "width": 49.296875,
+        "height": 48
+      },
+      {
+        "day": "2026-11-19",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-20",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-21",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-15",
+        "width": 44.703125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-16",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-17",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-18",
+        "width": 44.703125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-19",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-20",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-21",
+        "width": 44.71875,
+        "height": 64
+      }
+    ],
+    "textGeometry": {
+      "overflow": [
+        {
+          "text": "Calorías consumidas",
+          "className": "",
+          "textWidth": 125.515625,
+          "boxWidth": 115,
+          "inScope": true
+        },
+        {
+          "text": "+250",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 54.171875,
+          "inScope": false
+        },
+        {
+          "text": "+500",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 50.671875,
+          "inScope": false
+        },
+        {
+          "text": "Dom",
+          "className": "",
+          "textWidth": 47.265625,
+          "boxWidth": 44.703125,
+          "inScope": true
+        }
+      ],
+      "overlapping": [],
+      "calendarText": [
+        {
+          "day": "2026-11-15",
+          "text": "dom",
+          "width": 50.5625,
+          "cellWidth": 49.28125
+        },
+        {
+          "day": "2026-11-17",
+          "text": "mar",
+          "width": 47.765625,
+          "cellWidth": 49.28125
+        },
+        {
+          "day": "2026-11-15",
+          "text": "+381",
+          "width": 46.03125,
+          "cellWidth": 44.703125
+        },
+        {
+          "day": "2026-11-16",
+          "text": "Parcial",
+          "width": 51.078125,
+          "cellWidth": 44.71875
+        }
+      ]
+    },
+    "images": [
+      "375-dark-text200-before-habits.jpg"
+    ],
+    "inheritedIssues": [
+      {
+        "text": "+250",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 54.171875,
+        "inScope": false
+      },
+      {
+        "text": "+500",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 50.671875,
+        "inScope": false
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 375,
+    "theme": "dark",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "recordedAt": "2026-11-17T18:34:07.691Z",
+    "text200": {
+      "method": "Computed font-size and line-height x2 once per main descendant; viewport, transform and page zoom unchanged",
+      "elements": 289
+    },
+    "normalCalendar": [
+      {
+        "day": "2026-11-15",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-16",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-17",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-18",
+        "width": 49.296875,
+        "height": 48
+      },
+      {
+        "day": "2026-11-19",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-20",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-21",
+        "width": 49.28125,
+        "height": 48
+      },
+      {
+        "day": "2026-11-15",
+        "width": 44.703125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-16",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-17",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-18",
+        "width": 44.703125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-19",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-20",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-21",
+        "width": 44.71875,
+        "height": 64
+      }
+    ],
+    "textGeometry": {
+      "overflow": [
+        {
+          "text": "+250",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 54.171875,
+          "inScope": false
+        },
+        {
+          "text": "+500",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 50.671875,
+          "inScope": false
+        }
+      ],
+      "overlapping": [],
+      "calendarText": []
+    },
+    "images": [
+      "375-dark-text200-daily.jpg",
+      "375-dark-text200-history.jpg",
+      "375-dark-text200-calendar.jpg",
+      "375-dark-text200-week-strip.jpg",
+      "375-dark-text200-after-habits.jpg"
+    ],
+    "inheritedIssues": [
+      {
+        "text": "+250",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 54.171875,
+        "inScope": false
+      },
+      {
+        "text": "+500",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 50.671875,
+        "inScope": false
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 1440,
+    "theme": "light",
+    "source": "http://127.0.0.1:5195",
+    "status": "passed",
+    "recordedAt": "2026-11-17T18:34:15.525Z",
+    "text200": {
+      "method": "Computed font-size and line-height x2 once per main descendant; viewport, transform and page zoom unchanged",
+      "elements": 284
+    },
+    "normalCalendar": [
+      {
+        "day": "2026-11-15",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-16",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-17",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-18",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-19",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-20",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-21",
+        "width": 78.984375,
+        "height": 52
+      },
+      {
+        "day": "2026-11-15",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-16",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-17",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-18",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-19",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-20",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-21",
+        "width": 67.796875,
+        "height": 64
+      }
+    ],
+    "textGeometry": {
+      "overflow": [
+        {
+          "text": "+250",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 55,
+          "inScope": false
+        },
+        {
+          "text": "+500",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 55,
+          "inScope": false
+        }
+      ],
+      "overlapping": [],
+      "calendarText": []
+    },
+    "images": [
+      "1440-light-text200-before-habits.jpg"
+    ],
+    "inheritedIssues": [
+      {
+        "text": "+250",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 55,
+        "inScope": false
+      },
+      {
+        "text": "+500",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 55,
+        "inScope": false
+      }
+    ],
+    "geometry": {
+      "width": 1440,
+      "bodyWidth": 1440,
+      "mainWidth": 1174,
+      "mainScrollWidth": 1174,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 1440,
+    "theme": "light",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "recordedAt": "2026-11-17T18:34:23.076Z",
+    "text200": {
+      "method": "Computed font-size and line-height x2 once per main descendant; viewport, transform and page zoom unchanged",
+      "elements": 289
+    },
+    "normalCalendar": [
+      {
+        "day": "2026-11-15",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-16",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-17",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-18",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-19",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-20",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-21",
+        "width": 78.984375,
+        "height": 52
+      },
+      {
+        "day": "2026-11-15",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-16",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-17",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-18",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-19",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-20",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-21",
+        "width": 67.796875,
+        "height": 64
+      }
+    ],
+    "textGeometry": {
+      "overflow": [
+        {
+          "text": "+250",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 55,
+          "inScope": false
+        },
+        {
+          "text": "+500",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 55,
+          "inScope": false
+        }
+      ],
+      "overlapping": [],
+      "calendarText": []
+    },
+    "images": [
+      "1440-light-text200-daily.jpg",
+      "1440-light-text200-history.jpg",
+      "1440-light-text200-calendar.jpg",
+      "1440-light-text200-week-strip.jpg",
+      "1440-light-text200-after-habits.jpg"
+    ],
+    "inheritedIssues": [
+      {
+        "text": "+250",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 55,
+        "inScope": false
+      },
+      {
+        "text": "+500",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 55,
+        "inScope": false
+      }
+    ],
+    "geometry": {
+      "width": 1440,
+      "bodyWidth": 1440,
+      "mainWidth": 1174,
+      "mainScrollWidth": 1174,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 1440,
+    "theme": "dark",
+    "source": "http://127.0.0.1:5195",
+    "status": "passed",
+    "recordedAt": "2026-11-17T18:34:34.027Z",
+    "text200": {
+      "method": "Computed font-size and line-height x2 once per main descendant; viewport, transform and page zoom unchanged",
+      "elements": 284
+    },
+    "normalCalendar": [
+      {
+        "day": "2026-11-15",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-16",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-17",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-18",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-19",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-20",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-21",
+        "width": 78.984375,
+        "height": 52
+      },
+      {
+        "day": "2026-11-15",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-16",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-17",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-18",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-19",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-20",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-21",
+        "width": 67.796875,
+        "height": 64
+      }
+    ],
+    "textGeometry": {
+      "overflow": [
+        {
+          "text": "+250",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 55,
+          "inScope": false
+        },
+        {
+          "text": "+500",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 55,
+          "inScope": false
+        }
+      ],
+      "overlapping": [],
+      "calendarText": []
+    },
+    "images": [
+      "1440-dark-text200-before-habits.jpg"
+    ],
+    "inheritedIssues": [
+      {
+        "text": "+250",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 55,
+        "inScope": false
+      },
+      {
+        "text": "+500",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 55,
+        "inScope": false
+      }
+    ],
+    "geometry": {
+      "width": 1440,
+      "bodyWidth": 1440,
+      "mainWidth": 1174,
+      "mainScrollWidth": 1174,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  },
+  {
+    "scenario": "main",
+    "width": 1440,
+    "theme": "dark",
+    "source": "http://127.0.0.1:5196",
+    "status": "passed",
+    "recordedAt": "2026-11-17T18:34:43.844Z",
+    "text200": {
+      "method": "Computed font-size and line-height x2 once per main descendant; viewport, transform and page zoom unchanged",
+      "elements": 289
+    },
+    "normalCalendar": [
+      {
+        "day": "2026-11-15",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-16",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-17",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-18",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-19",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-20",
+        "width": 78.96875,
+        "height": 52
+      },
+      {
+        "day": "2026-11-21",
+        "width": 78.984375,
+        "height": 52
+      },
+      {
+        "day": "2026-11-15",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-16",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-17",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-18",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-19",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "day": "2026-11-20",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "day": "2026-11-21",
+        "width": 67.796875,
+        "height": 64
+      }
+    ],
+    "textGeometry": {
+      "overflow": [
+        {
+          "text": "+250",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 55,
+          "inScope": false
+        },
+        {
+          "text": "+500",
+          "className": "",
+          "textWidth": 61.359375,
+          "boxWidth": 55,
+          "inScope": false
+        }
+      ],
+      "overlapping": [],
+      "calendarText": []
+    },
+    "images": [
+      "1440-dark-text200-daily.jpg",
+      "1440-dark-text200-history.jpg",
+      "1440-dark-text200-calendar.jpg",
+      "1440-dark-text200-week-strip.jpg",
+      "1440-dark-text200-after-habits.jpg"
+    ],
+    "inheritedIssues": [
+      {
+        "text": "+250",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 55,
+        "inScope": false
+      },
+      {
+        "text": "+500",
+        "className": "",
+        "textWidth": 61.359375,
+        "boxWidth": 55,
+        "inScope": false
+      }
+    ],
+    "geometry": {
+      "width": 1440,
+      "bodyWidth": 1440,
+      "mainWidth": 1174,
+      "mainScrollWidth": 1174,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "errors": []
+  }
+]

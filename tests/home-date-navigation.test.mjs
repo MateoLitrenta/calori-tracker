@@ -314,7 +314,7 @@ test('calendar access with an active draft announces and focuses recovery withou
 
 test('mobile week ranges spell out both months when they cross a month boundary', async t => {
   const view = await mount(t, { initialNow: '2026-12-03T12:00:00', stored: { [homePresentationKey('A')]: JSON.stringify({ version: 1, dailyDateStr: '2026-11-30' }) } });
-  assert.equal(view.selected(), '2026-11-30'); assert.equal(document.querySelector('.home-date-mobile-week').textContent, '29 nov–5 dic');
+  assert.equal(view.selected(), '2026-11-30'); assert.equal(document.querySelector('.home-date-mobile-week').textContent, '29 nov–5 dic · dom–sáb');
 });
 
 test('a local midnight refresh changes Hoy to a past date without changing a draft or its writer date', async t => {

@@ -512,6 +512,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
             <div className="energy-number">
               {noDailyEnergy ? 'Sin datos de energía' : provisionalBalance ? 'Sin comidas registradas' : balance === null ? 'Sin datos' : <>{balance > 0 ? '+' : ''}{balance.toLocaleString('es-AR')}<small> kcal</small></>}
             </div>
+            {!noDailyEnergy && !provisionalBalance && <p className="energy-qualifier">{isGroup ? 'Según los registros disponibles del período.' : 'Según tus registros. El día puede estar incompleto.'}</p>}
             {isGroup && classifiedBalance !== null && <p>Promedio diario: {classifiedBalance > 0 ? '+' : ''}{classifiedBalance.toLocaleString('es-AR')} kcal/día</p>}
           </div>
           <dl className="energy-metrics fitness-comparison" aria-label="Consumo registrado y gasto estimado a la misma escala">
@@ -520,6 +521,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               <dd className="fitness-track" aria-hidden="true">{known && <span style={{ width: `${100 * Math.max(0, value) / scaleMax}%` }} />}</dd>
             </div>)}
           </dl>
+          <p className="fitness-scale-note">Comparación en kcal · misma escala</p>
           {!isGroup && <details className="energy-breakdown fitness-breakdown">
             <summary>Ver desglose <CaretRight size={14} aria-hidden="true" /></summary>
             <div className="fitness-breakdown-body">
