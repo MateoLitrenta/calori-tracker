@@ -32,7 +32,7 @@
 .home-week-scroll { min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; }
 .home-week-days {
   display: grid;
-  grid-template-columns: repeat(7, minmax(44px, 1fr));
+  grid-template-columns: repeat(7, minmax(max(44px, 2.75em), 1fr));
   gap: 1px;
 }
 .home-week-days button {

@@ -59,6 +59,7 @@
   color: var(--home-muted);
   font-size: 13px;
   font-weight: 500;
+  overflow-wrap: anywhere;
 }
 .ah-view-switch button[aria-pressed='true'] {
   color: var(--ah-accent-text);
@@ -129,7 +130,8 @@
 .ah-weekdays,
 .ah-week {
   display: grid;
-  grid-template-columns: repeat(7, minmax(44px, 1fr));
+  /* Keep each reading inside its day when text grows; the surface can scroll. */
+  grid-template-columns: repeat(7, minmax(max(44px, 2.75em), 1fr));
   gap: 4px;
   min-width: 332px;
 }
@@ -141,6 +143,7 @@
   color: var(--home-muted);
   font-size: 11px;
   line-height: 24px;
+  overflow-wrap: anywhere;
 }
 .ah-week + .ah-week {
   margin-top: 4px;

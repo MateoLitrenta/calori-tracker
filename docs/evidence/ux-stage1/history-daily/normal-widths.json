@@ -1,0 +1,1228 @@
+[
+  {
+    "width": 320,
+    "theme": "light",
+    "status": "passed",
+    "focus": {
+      "date": "2026-11-17",
+      "outline": "2px"
+    },
+    "touch": [
+      {
+        "name": "Semana",
+        "width": 80,
+        "height": 44
+      },
+      {
+        "name": "Mes",
+        "width": 80,
+        "height": 44
+      },
+      {
+        "name": "Año",
+        "width": 80,
+        "height": 44
+      },
+      {
+        "name": "Semana anterior",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Hoy",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Semana siguiente",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "domingo 15 de noviembre de 2026 · 1 comida · 0 entrenamientos · 3.500 pasos · Superávit Moderado · +381 kcal",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "lunes 16 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 2.600 pasos · 750 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.783 kcal provisional",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "martes 17 de noviembre de 2026 · Hoy · 1 comida · 1 entrenamiento · 5.000 pasos · 1.750 ml de agua · Déficit Alto · -879 kcal · Gimnasio: 1",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "miércoles 18 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "jueves 19 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "viernes 20 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "sábado 21 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "Abrir registros del día",
+        "width": 254,
+        "height": 46
+      },
+      {
+        "name": "Ver resumen energético",
+        "width": 254,
+        "height": 44
+      }
+    ],
+    "geometry": {
+      "width": 320,
+      "bodyWidth": 320,
+      "mainWidth": 320,
+      "mainScrollWidth": 320,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "status": "passed",
+    "focus": {
+      "date": "2026-11-17",
+      "outline": "2px"
+    },
+    "touch": [
+      {
+        "name": "Semana",
+        "width": 80,
+        "height": 44
+      },
+      {
+        "name": "Mes",
+        "width": 80,
+        "height": 44
+      },
+      {
+        "name": "Año",
+        "width": 80,
+        "height": 44
+      },
+      {
+        "name": "Semana anterior",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Hoy",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Semana siguiente",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "domingo 15 de noviembre de 2026 · 1 comida · 0 entrenamientos · 3.500 pasos · Superávit Moderado · +381 kcal",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "lunes 16 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 2.600 pasos · 750 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.783 kcal provisional",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "martes 17 de noviembre de 2026 · Hoy · 1 comida · 1 entrenamiento · 5.000 pasos · 1.750 ml de agua · Déficit Alto · -879 kcal · Gimnasio: 1",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "miércoles 18 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "jueves 19 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "viernes 20 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "sábado 21 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44,
+        "height": 64
+      },
+      {
+        "name": "Abrir registros del día",
+        "width": 254,
+        "height": 46
+      },
+      {
+        "name": "Ver resumen energético",
+        "width": 254,
+        "height": 44
+      }
+    ],
+    "geometry": {
+      "width": 320,
+      "bodyWidth": 320,
+      "mainWidth": 320,
+      "mainScrollWidth": 320,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  },
+  {
+    "width": 375,
+    "theme": "light",
+    "status": "passed",
+    "focus": {
+      "date": "2026-11-17",
+      "outline": "2px"
+    },
+    "touch": [
+      {
+        "name": "Semana",
+        "width": 98.328125,
+        "height": 44
+      },
+      {
+        "name": "Mes",
+        "width": 98.328125,
+        "height": 44
+      },
+      {
+        "name": "Año",
+        "width": 98.34375,
+        "height": 44
+      },
+      {
+        "name": "Semana anterior",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Hoy",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Semana siguiente",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "domingo 15 de noviembre de 2026 · 1 comida · 0 entrenamientos · 3.500 pasos · Superávit Moderado · +381 kcal",
+        "width": 44.703125,
+        "height": 64
+      },
+      {
+        "name": "lunes 16 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 2.600 pasos · 750 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.783 kcal provisional",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "name": "martes 17 de noviembre de 2026 · Hoy · 1 comida · 1 entrenamiento · 5.000 pasos · 1.750 ml de agua · Déficit Alto · -879 kcal · Gimnasio: 1",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "name": "miércoles 18 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44.703125,
+        "height": 64
+      },
+      {
+        "name": "jueves 19 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "name": "viernes 20 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "name": "sábado 21 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "name": "Abrir registros del día",
+        "width": 309,
+        "height": 46
+      },
+      {
+        "name": "Ver resumen energético",
+        "width": 309,
+        "height": 44
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "image": "normal-375-light-history.jpg"
+  },
+  {
+    "width": 375,
+    "theme": "dark",
+    "status": "passed",
+    "focus": {
+      "date": "2026-11-17",
+      "outline": "2px"
+    },
+    "touch": [
+      {
+        "name": "Semana",
+        "width": 98.328125,
+        "height": 44
+      },
+      {
+        "name": "Mes",
+        "width": 98.328125,
+        "height": 44
+      },
+      {
+        "name": "Año",
+        "width": 98.34375,
+        "height": 44
+      },
+      {
+        "name": "Semana anterior",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Hoy",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Semana siguiente",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "domingo 15 de noviembre de 2026 · 1 comida · 0 entrenamientos · 3.500 pasos · Superávit Moderado · +381 kcal",
+        "width": 44.703125,
+        "height": 64
+      },
+      {
+        "name": "lunes 16 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 2.600 pasos · 750 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.783 kcal provisional",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "name": "martes 17 de noviembre de 2026 · Hoy · 1 comida · 1 entrenamiento · 5.000 pasos · 1.750 ml de agua · Déficit Alto · -879 kcal · Gimnasio: 1",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "name": "miércoles 18 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44.703125,
+        "height": 64
+      },
+      {
+        "name": "jueves 19 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "name": "viernes 20 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "name": "sábado 21 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 44.71875,
+        "height": 64
+      },
+      {
+        "name": "Abrir registros del día",
+        "width": 309,
+        "height": 46
+      },
+      {
+        "name": "Ver resumen energético",
+        "width": 309,
+        "height": 44
+      }
+    ],
+    "geometry": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    },
+    "image": "normal-375-dark-history.jpg"
+  },
+  {
+    "width": 393,
+    "theme": "light",
+    "status": "passed",
+    "focus": {
+      "date": "2026-11-17",
+      "outline": "2px"
+    },
+    "touch": [
+      {
+        "name": "Semana",
+        "width": 104.328125,
+        "height": 44
+      },
+      {
+        "name": "Mes",
+        "width": 104.328125,
+        "height": 44
+      },
+      {
+        "name": "Año",
+        "width": 104.34375,
+        "height": 44
+      },
+      {
+        "name": "Semana anterior",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Hoy",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Semana siguiente",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "domingo 15 de noviembre de 2026 · 1 comida · 0 entrenamientos · 3.500 pasos · Superávit Moderado · +381 kcal",
+        "width": 47.28125,
+        "height": 64
+      },
+      {
+        "name": "lunes 16 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 2.600 pasos · 750 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.783 kcal provisional",
+        "width": 47.28125,
+        "height": 64
+      },
+      {
+        "name": "martes 17 de noviembre de 2026 · Hoy · 1 comida · 1 entrenamiento · 5.000 pasos · 1.750 ml de agua · Déficit Alto · -879 kcal · Gimnasio: 1",
+        "width": 47.28125,
+        "height": 64
+      },
+      {
+        "name": "miércoles 18 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.296875,
+        "height": 64
+      },
+      {
+        "name": "jueves 19 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.28125,
+        "height": 64
+      },
+      {
+        "name": "viernes 20 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.28125,
+        "height": 64
+      },
+      {
+        "name": "sábado 21 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.28125,
+        "height": 64
+      },
+      {
+        "name": "Abrir registros del día",
+        "width": 327,
+        "height": 46
+      },
+      {
+        "name": "Ver resumen energético",
+        "width": 327,
+        "height": 44
+      }
+    ],
+    "geometry": {
+      "width": 393,
+      "bodyWidth": 393,
+      "mainWidth": 393,
+      "mainScrollWidth": 393,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  },
+  {
+    "width": 393,
+    "theme": "dark",
+    "status": "passed",
+    "focus": {
+      "date": "2026-11-17",
+      "outline": "2px"
+    },
+    "touch": [
+      {
+        "name": "Semana",
+        "width": 104.328125,
+        "height": 44
+      },
+      {
+        "name": "Mes",
+        "width": 104.328125,
+        "height": 44
+      },
+      {
+        "name": "Año",
+        "width": 104.34375,
+        "height": 44
+      },
+      {
+        "name": "Semana anterior",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Hoy",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Semana siguiente",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "domingo 15 de noviembre de 2026 · 1 comida · 0 entrenamientos · 3.500 pasos · Superávit Moderado · +381 kcal",
+        "width": 47.28125,
+        "height": 64
+      },
+      {
+        "name": "lunes 16 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 2.600 pasos · 750 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.783 kcal provisional",
+        "width": 47.28125,
+        "height": 64
+      },
+      {
+        "name": "martes 17 de noviembre de 2026 · Hoy · 1 comida · 1 entrenamiento · 5.000 pasos · 1.750 ml de agua · Déficit Alto · -879 kcal · Gimnasio: 1",
+        "width": 47.28125,
+        "height": 64
+      },
+      {
+        "name": "miércoles 18 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.296875,
+        "height": 64
+      },
+      {
+        "name": "jueves 19 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.28125,
+        "height": 64
+      },
+      {
+        "name": "viernes 20 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.28125,
+        "height": 64
+      },
+      {
+        "name": "sábado 21 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.28125,
+        "height": 64
+      },
+      {
+        "name": "Abrir registros del día",
+        "width": 327,
+        "height": 46
+      },
+      {
+        "name": "Ver resumen energético",
+        "width": 327,
+        "height": 44
+      }
+    ],
+    "geometry": {
+      "width": 393,
+      "bodyWidth": 393,
+      "mainWidth": 393,
+      "mainScrollWidth": 393,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  },
+  {
+    "width": 440,
+    "theme": "light",
+    "status": "passed",
+    "focus": {
+      "date": "2026-11-17",
+      "outline": "2px"
+    },
+    "touch": [
+      {
+        "name": "Semana",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Mes",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Año",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Semana anterior",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Hoy",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Semana siguiente",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "domingo 15 de noviembre de 2026 · 1 comida · 0 entrenamientos · 3.500 pasos · Superávit Moderado · +381 kcal",
+        "width": 47.703125,
+        "height": 64
+      },
+      {
+        "name": "lunes 16 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 2.600 pasos · 750 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.783 kcal provisional",
+        "width": 47.71875,
+        "height": 64
+      },
+      {
+        "name": "martes 17 de noviembre de 2026 · Hoy · 1 comida · 1 entrenamiento · 5.000 pasos · 1.750 ml de agua · Déficit Alto · -879 kcal · Gimnasio: 1",
+        "width": 47.71875,
+        "height": 64
+      },
+      {
+        "name": "miércoles 18 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.703125,
+        "height": 64
+      },
+      {
+        "name": "jueves 19 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.71875,
+        "height": 64
+      },
+      {
+        "name": "viernes 20 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.71875,
+        "height": 64
+      },
+      {
+        "name": "sábado 21 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.71875,
+        "height": 64
+      },
+      {
+        "name": "Abrir registros del día",
+        "width": 366,
+        "height": 46
+      },
+      {
+        "name": "Ver resumen energético",
+        "width": 366,
+        "height": 44
+      }
+    ],
+    "geometry": {
+      "width": 440,
+      "bodyWidth": 440,
+      "mainWidth": 440,
+      "mainScrollWidth": 440,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  },
+  {
+    "width": 440,
+    "theme": "dark",
+    "status": "passed",
+    "focus": {
+      "date": "2026-11-17",
+      "outline": "2px"
+    },
+    "touch": [
+      {
+        "name": "Semana",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Mes",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Año",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Semana anterior",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Hoy",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Semana siguiente",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "domingo 15 de noviembre de 2026 · 1 comida · 0 entrenamientos · 3.500 pasos · Superávit Moderado · +381 kcal",
+        "width": 47.703125,
+        "height": 64
+      },
+      {
+        "name": "lunes 16 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 2.600 pasos · 750 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.783 kcal provisional",
+        "width": 47.71875,
+        "height": 64
+      },
+      {
+        "name": "martes 17 de noviembre de 2026 · Hoy · 1 comida · 1 entrenamiento · 5.000 pasos · 1.750 ml de agua · Déficit Alto · -879 kcal · Gimnasio: 1",
+        "width": 47.71875,
+        "height": 64
+      },
+      {
+        "name": "miércoles 18 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.703125,
+        "height": 64
+      },
+      {
+        "name": "jueves 19 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.71875,
+        "height": 64
+      },
+      {
+        "name": "viernes 20 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.71875,
+        "height": 64
+      },
+      {
+        "name": "sábado 21 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 47.71875,
+        "height": 64
+      },
+      {
+        "name": "Abrir registros del día",
+        "width": 366,
+        "height": 46
+      },
+      {
+        "name": "Ver resumen energético",
+        "width": 366,
+        "height": 44
+      }
+    ],
+    "geometry": {
+      "width": 440,
+      "bodyWidth": 440,
+      "mainWidth": 440,
+      "mainScrollWidth": 440,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "status": "passed",
+    "focus": {
+      "date": "2026-11-17",
+      "outline": "2px"
+    },
+    "touch": [
+      {
+        "name": "Semana",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Mes",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Año",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Semana anterior",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Hoy",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Semana siguiente",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "domingo 15 de noviembre de 2026 · 1 comida · 0 entrenamientos · 3.500 pasos · Superávit Moderado · +381 kcal",
+        "width": 54.28125,
+        "height": 64
+      },
+      {
+        "name": "lunes 16 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 2.600 pasos · 750 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.783 kcal provisional",
+        "width": 54.28125,
+        "height": 64
+      },
+      {
+        "name": "martes 17 de noviembre de 2026 · Hoy · 1 comida · 1 entrenamiento · 5.000 pasos · 1.750 ml de agua · Déficit Alto · -879 kcal · Gimnasio: 1",
+        "width": 54.28125,
+        "height": 64
+      },
+      {
+        "name": "miércoles 18 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 54.296875,
+        "height": 64
+      },
+      {
+        "name": "jueves 19 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 54.28125,
+        "height": 64
+      },
+      {
+        "name": "viernes 20 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 54.28125,
+        "height": 64
+      },
+      {
+        "name": "sábado 21 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 54.28125,
+        "height": 64
+      },
+      {
+        "name": "Abrir registros del día",
+        "width": 412,
+        "height": 46
+      },
+      {
+        "name": "Ver resumen energético",
+        "width": 412,
+        "height": 44
+      }
+    ],
+    "geometry": {
+      "width": 768,
+      "bodyWidth": 768,
+      "mainWidth": 502,
+      "mainScrollWidth": 502,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "status": "passed",
+    "focus": {
+      "date": "2026-11-17",
+      "outline": "2px"
+    },
+    "touch": [
+      {
+        "name": "Semana",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Mes",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Año",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Semana anterior",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Hoy",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Semana siguiente",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "domingo 15 de noviembre de 2026 · 1 comida · 0 entrenamientos · 3.500 pasos · Superávit Moderado · +381 kcal",
+        "width": 54.28125,
+        "height": 64
+      },
+      {
+        "name": "lunes 16 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 2.600 pasos · 750 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.783 kcal provisional",
+        "width": 54.28125,
+        "height": 64
+      },
+      {
+        "name": "martes 17 de noviembre de 2026 · Hoy · 1 comida · 1 entrenamiento · 5.000 pasos · 1.750 ml de agua · Déficit Alto · -879 kcal · Gimnasio: 1",
+        "width": 54.28125,
+        "height": 64
+      },
+      {
+        "name": "miércoles 18 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 54.296875,
+        "height": 64
+      },
+      {
+        "name": "jueves 19 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 54.28125,
+        "height": 64
+      },
+      {
+        "name": "viernes 20 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 54.28125,
+        "height": 64
+      },
+      {
+        "name": "sábado 21 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 54.28125,
+        "height": 64
+      },
+      {
+        "name": "Abrir registros del día",
+        "width": 412,
+        "height": 46
+      },
+      {
+        "name": "Ver resumen energético",
+        "width": 412,
+        "height": 44
+      }
+    ],
+    "geometry": {
+      "width": 768,
+      "bodyWidth": 768,
+      "mainWidth": 502,
+      "mainScrollWidth": 502,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "status": "passed",
+    "focus": {
+      "date": "2026-11-17",
+      "outline": "2px"
+    },
+    "touch": [
+      {
+        "name": "Semana",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Mes",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Año",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Semana anterior",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Hoy",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Semana siguiente",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "domingo 15 de noviembre de 2026 · 1 comida · 0 entrenamientos · 3.500 pasos · Superávit Moderado · +381 kcal",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "name": "lunes 16 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 2.600 pasos · 750 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.783 kcal provisional",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "name": "martes 17 de noviembre de 2026 · Hoy · 1 comida · 1 entrenamiento · 5.000 pasos · 1.750 ml de agua · Déficit Alto · -879 kcal · Gimnasio: 1",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "name": "miércoles 18 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "name": "jueves 19 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "name": "viernes 20 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "name": "sábado 21 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "name": "Abrir registros del día",
+        "width": 434.34375,
+        "height": 46
+      },
+      {
+        "name": "Ver resumen energético",
+        "width": 982,
+        "height": 44
+      }
+    ],
+    "geometry": {
+      "width": 1440,
+      "bodyWidth": 1440,
+      "mainWidth": 1174,
+      "mainScrollWidth": 1174,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "status": "passed",
+    "focus": {
+      "date": "2026-11-17",
+      "outline": "2px"
+    },
+    "touch": [
+      {
+        "name": "Semana",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Mes",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Año",
+        "width": 70.65625,
+        "height": 44
+      },
+      {
+        "name": "Semana anterior",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Hoy",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "Semana siguiente",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "name": "domingo 15 de noviembre de 2026 · 1 comida · 0 entrenamientos · 3.500 pasos · Superávit Moderado · +381 kcal",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "name": "lunes 16 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 2.600 pasos · 750 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.783 kcal provisional",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "name": "martes 17 de noviembre de 2026 · Hoy · 1 comida · 1 entrenamiento · 5.000 pasos · 1.750 ml de agua · Déficit Alto · -879 kcal · Gimnasio: 1",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "name": "miércoles 18 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "name": "jueves 19 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "name": "viernes 20 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 67.8125,
+        "height": 64
+      },
+      {
+        "name": "sábado 21 de noviembre de 2026 · Fecha futura · No disponible",
+        "width": 67.796875,
+        "height": 64
+      },
+      {
+        "name": "Abrir registros del día",
+        "width": 434.34375,
+        "height": 46
+      },
+      {
+        "name": "Ver resumen energético",
+        "width": 982,
+        "height": 44
+      }
+    ],
+    "geometry": {
+      "width": 1440,
+      "bodyWidth": 1440,
+      "mainWidth": 1174,
+      "mainScrollWidth": 1174,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": null,
+      "buckets": [],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  }
+]
