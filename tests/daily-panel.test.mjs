@@ -156,6 +156,9 @@ test('energy bars use the same daily maximum, including days with intake above e
         assert.ok(Math.abs(parseFloat(bars[index].firstElementChild.style.width) - 100 * value / scale) < 0.001);
       }
       assert.match(document.querySelector('.energy-breakdown').textContent, /misma escala/);
+      assert.match(document.querySelector('.energy-qualifier').textContent, /día puede estar incompleto/);
+      assert.match(document.querySelector('.fitness-scale-note').textContent, /Comparación en kcal.*misma escala/);
+      assert.equal(document.querySelector('[role="progressbar"]'), null);
     } finally { dom.window.close(); }
   }
 });
