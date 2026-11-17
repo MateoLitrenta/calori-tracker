@@ -232,12 +232,12 @@ test('a deleted edit target stays a draft after conflict review instead of being
 test('weight save keeps the modal and entered value until persistence returns true', async t => {
   const pending = deferred(); let attempts = 0;
   const view = await mount(t, { save: () => ++attempts === 1 ? pending.promise : true });
-  await view.click(document.querySelector('[title="Registrar peso"]'));
+  await view.click(document.querySelector('.habit-edit'));
   const input = document.querySelector('input[inputmode="decimal"]'); assert.ok(input);
   await act(() => { Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, '73.5'); input.dispatchEvent(new window.InputEvent('input', { bubbles: true })); });
   const save = () => {
     const button = document.querySelector('[role="dialog"] form button[type="submit"]');
-    assert.equal(button?.textContent.trim(), 'Guardar');
+    assert.equal(button?.textContent.trim(), 'Guardar peso');
     return button;
   };
   await view.click(save()); assert.equal(input.isConnected, true); assert.equal(input.value, '73.5');
@@ -248,7 +248,7 @@ test('weight save keeps the modal and entered value until persistence returns tr
 test('weight form submission retains a failed draft and requires review before saving it over refreshed data', async t => {
   let attempts = 0; const initial = { ...emptyRecord(), version: '1', generation: 'generation-one' };
   const view = await mount(t, { record: initial, profile: { recordGeneration: 'generation-one' }, save: () => ++attempts > 1 });
-  await view.click(document.querySelector('[title="Registrar peso"]'));
+  await view.click(document.querySelector('.habit-edit'));
   const input = document.querySelector('input[inputmode="decimal"]');
   await act(() => { Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, '73.5'); input.dispatchEvent(new window.InputEvent('input', { bubbles: true })); });
   const submitWeight = () => act(async () => {

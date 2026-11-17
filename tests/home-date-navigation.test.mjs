@@ -235,10 +235,10 @@ test('blurred step edits save their selected day before navigation and weight co
   await act(async () => new Promise(resolve => setTimeout(resolve, 450)));
   assert.equal(view.saves.length, 1); assert.equal(view.saves[0].date, yesterday); assert.equal(view.saves[0].record.steps, 9200);
   assert.match(view.button('Editar total de pasos').textContent, /1[.\s]?000/);
-  await view.click(view.day(yesterday)); await view.click(document.querySelector('[title="Registrar peso"]'));
+  await view.click(view.day(yesterday)); await view.click(document.querySelector('.habit-edit'));
   const weight = document.querySelector('input[inputmode="decimal"]'); await fill(weight, '72.5');
   await view.click(view.button('Hoy')); assert.equal(view.selected(), yesterday); assert.equal(weight.value, '72.5');
-  await view.click(view.button('Guardar'));
+  await view.click(view.button('Guardar peso'));
   assert.equal(view.saves.length, 2); assert.equal(view.saves[1].date, yesterday); assert.equal(view.saves[1].record.weight, 72.5);
   assert.equal(view.saves[1].record.steps, 9200); assert.equal(view.saves[1].record.meals[0].name, 'Comida de ayer');
 });

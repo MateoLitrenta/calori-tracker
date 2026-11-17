@@ -808,3 +808,30 @@
 }
 
 .ah-period-boundary { margin-top: 3px; color: var(--fit-quiet); font-size: var(--fit-caption); line-height: 1.4; }
+
+.ah-key-disclosure { margin: 8px 16px 0; color: var(--fit-quiet); }
+.ah-key-disclosure summary {
+  min-height: 44px;
+  padding-block: 10px;
+  cursor: pointer;
+}
+.ah-key-disclosure .ah-key { margin-inline: 0; }
+.ah-detail-jump {
+  min-height: 44px;
+  margin: 8px 16px 0;
+  padding-inline: 12px;
+  border: 1px solid var(--fit-rule);
+  border-radius: 6px;
+  color: var(--fit-accent);
+  font-weight: 650;
+}
+.ah-detail:focus-visible, .ah-detail-jump:focus-visible, .ah-key-disclosure summary:focus-visible {
+  outline: 2px solid var(--fit-focus);
+  outline-offset: -2px;
+}
+@container (min-width: 720px) {
+  .ah-detail-jump { display: none; }
+}
+@container (max-width: 719px) {
+  .ah-day:has(.ah-day-balance) .ah-day-marks { display: none; }
+}

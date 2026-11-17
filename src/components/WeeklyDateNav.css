@@ -80,3 +80,5 @@
   .home-date-mobile-week { display: block; color: var(--fit-board-muted); font-size: 11px; }
   .home-week-days { gap: 0; }
 }
+
+.home-entry-date-label { margin: 0 0 3px; color: var(--fit-board-muted); font-size: 12px; line-height: 1.3; }

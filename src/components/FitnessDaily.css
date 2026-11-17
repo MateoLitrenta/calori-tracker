@@ -105,13 +105,13 @@
 .home-variants.fitness-home .daily-panel .daily-habits .habit-value { min-width: 44px; max-width: 100%; min-height: 44px; text-align: left; color: var(--fit-ink); font: inherit; overflow-wrap: anywhere; }
 .home-variants.fitness-home .daily-panel .daily-habits .habit-metric > span:nth-child(2) { color: var(--fit-quiet); font-size: 12px; margin: 0; }
 .home-variants.fitness-home .daily-panel .habit-metric input { min-width: 0; width: 100%; max-width: 90px; min-height: 44px; font-size: 16px; }
-.home-variants.fitness-home .daily-panel .daily-habits .habit-controls { display: grid; grid-template-columns: repeat(2,minmax(44px,1fr)); gap: 0; width: 100%; max-width: 110px; }
+.home-variants.fitness-home .daily-panel .daily-habits .habit-controls { display: flex; flex-wrap: wrap; gap: 3px; width: 100%; max-width: 128px; }
 .home-variants.fitness-home .daily-panel .daily-habits :is(.habit-controls button,.habit-edit) {
   min-height: 44px; min-width: 44px; padding: 4px 2px; border: 1px solid var(--fit-rule); background: transparent; color: var(--fit-ink); border-radius: 4px; font-size: var(--fit-caption);
 }
 .home-variants.fitness-home .daily-panel .habit-controls button:first-child { border-radius: 4px 0 0 4px; }
 .home-variants.fitness-home .daily-panel .habit-controls button:last-child { border-radius: 0 4px 4px 0; border-left: 0; }
-.home-variants.fitness-home .daily-panel .habit-edit { width: 100%; max-width: 106px; }
+.home-variants.fitness-home .daily-panel .habit-edit { width: 100%; max-width: 112px; overflow-wrap: anywhere; }
 .home-variants.fitness-home .daily-panel .daily-records {
   display: grid; grid-template-columns: minmax(0,1fr); align-items: stretch; gap: 0; border-top: 1px solid var(--fit-rule);
 }
@@ -148,4 +148,8 @@
   .fitness-home .daily-entry { grid-column: 1; grid-row: 1; }
   .fitness-home .daily-habits-block { grid-column: 1; grid-row: 2; }
   .fitness-home .daily-logs { grid-column: 2; grid-row: 1/span 2; }
+}.home-variants.fitness-home .daily-panel .daily-habits .habit-controls button {
+  flex: 1 1 auto;
+  min-width: 44px;
+  padding-inline: 4px;
 }

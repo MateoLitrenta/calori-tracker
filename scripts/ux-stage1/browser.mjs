@@ -10,7 +10,7 @@ const pw=process.env.PLAYWRIGHT_MODULE||path.resolve(repo,'../qa-tools/node_modu
 const {chromium}=await import(pathToFileURL(pw));
 export const start=()=>chromium.launch({channel:process.env.QA_BROWSER_CHANNEL||'chrome',headless:true});
 export async function open(browser,width,theme='light',scenario='main',system='light',url=origin){
-  assert.ok(['http://127.0.0.1:5195','http://127.0.0.1:5196'].includes(url));
+  assert.ok(/^http:\/\/127\.0\.0\.1:519[5-8]$/.test(url));
   const context=await browser.newContext({viewport:{width,height:heights[width]},colorScheme:system,timezoneId:'America/Buenos_Aires',locale:'es-AR',reducedMotion:'reduce'});
   const errors=[];
   await context.route('**/*',route=>{
