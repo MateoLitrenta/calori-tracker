@@ -120,7 +120,11 @@ test('mobile daily actions and compact complementary controls retain comfortable
 test('numbered history retains seven columns and accessible target sizes across all required widths', t => {
   for (const width of [320, 375, 393, 430, 768, 1440]) {
     const { style } = view(t, width);
-    assert.equal(style('.ah-week').gridTemplateColumns, 'repeat(7, minmax(44px, 1fr))');
+    // Keep the 44px floor while text enlargement can grow both aligned grids;
+    // the existing local scroller carries their width instead of clipping values.
+    const columns = 'repeat(7, minmax(max(44px, 2.75em), 1fr))';
+    assert.equal(style('.ah-week').gridTemplateColumns, columns);
+    assert.equal(style('.ah-weekdays').gridTemplateColumns, columns);
     assert.ok(parseInt(style('.ah-day').minWidth) >= 44);
     assert.ok(parseInt(style('.ah-day').minHeight) >= 44);
     assert.ok(parseInt(style('.ah-day-number').fontSize) >= 14);
