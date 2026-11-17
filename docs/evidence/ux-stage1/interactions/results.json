@@ -1,0 +1,402 @@
+[
+  {
+    "name": "Annual activity, keyboard, local scroll and live System",
+    "width": 375,
+    "status": "passed",
+    "services": "synthetic",
+    "measurements": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": true,
+      "colorScheme": "dark",
+      "scroll": {
+        "left": 293,
+        "width": 279,
+        "total": 572
+      },
+      "buckets": [
+        {
+          "name": "Enero. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Ene",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Febrero. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Feb",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Marzo. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Mar",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Abril. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Abr",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Mayo. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "May",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Junio. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Jun",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Julio. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Jul",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Agosto. Consumidas promedio: 2.100 kcal/día. Gasto promedio: 1.859 kcal/día. Balance promedio: +241 kcal/día. Superávit Leve.",
+          "label": "Ago",
+          "visible": true,
+          "width": 44,
+          "height": 162.5,
+          "energy": true
+        },
+        {
+          "name": "Septiembre. Consumidas promedio: 1.900 kcal/día. Gasto promedio: 1.899 kcal/día. Balance promedio: +1 kcal/día. Superávit Leve.",
+          "label": "Sep",
+          "visible": true,
+          "width": 44,
+          "height": 162.5,
+          "energy": true
+        },
+        {
+          "name": "Octubre. Consumidas promedio: 2.050 kcal/día. Gasto promedio: 1.807 kcal/día. Balance promedio: +199 kcal/día. Superávit Leve.",
+          "label": "Oct",
+          "visible": true,
+          "width": 44,
+          "height": 162.5,
+          "energy": true
+        },
+        {
+          "name": "Noviembre. Consumidas promedio: 1.875 kcal/día. Gasto promedio: 1.900 kcal/día. Balance promedio: -77 kcal/día. Déficit Leve.",
+          "label": "Nov",
+          "visible": true,
+          "width": 44,
+          "height": 162.5,
+          "energy": true
+        },
+        {
+          "name": "Diciembre. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Dic",
+          "visible": true,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        }
+      ],
+      "scrollHints": [
+        "12 meses · Deslizá o usá las flechas."
+      ],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  },
+  {
+    "name": "Zero intake is distinct from missing records",
+    "width": 393,
+    "status": "passed",
+    "services": "synthetic",
+    "measurements": {
+      "width": 393,
+      "bodyWidth": 393,
+      "mainWidth": 393,
+      "mainScrollWidth": 393,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": {
+        "left": 0,
+        "width": 333,
+        "total": 333
+      },
+      "buckets": [
+        {
+          "name": "Lunes. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+          "label": "Lun",
+          "visible": true,
+          "width": 47.609375,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Martes. Consumidas: 0 kcal. Gasto estimado: 1.679 kcal. Balance: -1.679 kcal. Déficit Alto.",
+          "label": "Mar",
+          "visible": true,
+          "width": 47.609375,
+          "height": 162.5,
+          "energy": true
+        },
+        {
+          "name": "Miércoles. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+          "label": "Mié",
+          "visible": true,
+          "width": 47.609375,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Jueves. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+          "label": "Jue",
+          "visible": true,
+          "width": 47.609375,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Viernes. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+          "label": "Vie",
+          "visible": true,
+          "width": 47.609375,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Sábado. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+          "label": "Sáb",
+          "visible": true,
+          "width": 47.609375,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Domingo. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+          "label": "Dom",
+          "visible": true,
+          "width": 47.609375,
+          "height": 162.5,
+          "energy": false
+        }
+      ],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  },
+  {
+    "name": "Weekly seven days, comparison eligibility and exact month dates",
+    "width": 393,
+    "status": "passed",
+    "services": "synthetic",
+    "measurements": {
+      "width": 393,
+      "bodyWidth": 393,
+      "mainWidth": 393,
+      "mainScrollWidth": 393,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": {
+        "left": 0,
+        "width": 297,
+        "total": 297
+      },
+      "buckets": [
+        {
+          "name": "1 nov 2026 – 7 nov 2026. Consumidas promedio: 1.800 kcal/día. Gasto promedio: 1.851 kcal/día. Balance promedio: -51 kcal/día. Déficit Leve.",
+          "label": "1–7 nov",
+          "visible": true,
+          "width": 56.25,
+          "height": 178.09375,
+          "energy": true
+        },
+        {
+          "name": "8 nov 2026 – 14 nov 2026. Consumidas promedio: 2.000 kcal/día. Gasto promedio: 1.783 kcal/día. Balance promedio: +241 kcal/día. Superávit Leve.",
+          "label": "8–14 nov",
+          "visible": true,
+          "width": 56.265625,
+          "height": 178.09375,
+          "energy": true
+        },
+        {
+          "name": "15 nov 2026 – 21 nov 2026. Consumidas promedio: 1.850 kcal/día. Gasto promedio: 1.994 kcal/día. Balance promedio: -249 kcal/día. Déficit Leve.",
+          "label": "15–21 nov",
+          "visible": true,
+          "width": 56.25,
+          "height": 178.09375,
+          "energy": true
+        },
+        {
+          "name": "22 nov 2026 – 28 nov 2026. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "22–28 nov",
+          "visible": true,
+          "width": 56.25,
+          "height": 178.09375,
+          "energy": false
+        },
+        {
+          "name": "29 nov 2026 – 30 nov 2026. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "29–30 nov",
+          "visible": true,
+          "width": 56.25,
+          "height": 178.09375,
+          "energy": false
+        }
+      ],
+      "scrollHints": [],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  },
+  {
+    "name": "Annual plot recreated after empty records on the same synthetic account",
+    "width": 375,
+    "status": "passed",
+    "services": "synthetic",
+    "measurements": {
+      "width": 375,
+      "bodyWidth": 375,
+      "mainWidth": 375,
+      "mainScrollWidth": 375,
+      "offenders": [],
+      "small": [],
+      "dark": false,
+      "colorScheme": "light",
+      "scroll": {
+        "left": 293,
+        "width": 279,
+        "total": 572
+      },
+      "buckets": [
+        {
+          "name": "Enero. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Ene",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Febrero. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Feb",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Marzo. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Mar",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Abril. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Abr",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Mayo. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "May",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Junio. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Jun",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Julio. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Jul",
+          "visible": false,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        },
+        {
+          "name": "Agosto. Consumidas promedio: 2.100 kcal/día. Gasto promedio: 1.859 kcal/día. Balance promedio: +241 kcal/día. Superávit Leve.",
+          "label": "Ago",
+          "visible": true,
+          "width": 44,
+          "height": 162.5,
+          "energy": true
+        },
+        {
+          "name": "Septiembre. Consumidas promedio: 1.900 kcal/día. Gasto promedio: 1.899 kcal/día. Balance promedio: +1 kcal/día. Superávit Leve.",
+          "label": "Sep",
+          "visible": true,
+          "width": 44,
+          "height": 162.5,
+          "energy": true
+        },
+        {
+          "name": "Octubre. Consumidas promedio: 2.050 kcal/día. Gasto promedio: 1.807 kcal/día. Balance promedio: +199 kcal/día. Superávit Leve.",
+          "label": "Oct",
+          "visible": true,
+          "width": 44,
+          "height": 162.5,
+          "energy": true
+        },
+        {
+          "name": "Noviembre. Consumidas promedio: 1.875 kcal/día. Gasto promedio: 1.900 kcal/día. Balance promedio: -77 kcal/día. Déficit Leve.",
+          "label": "Nov",
+          "visible": true,
+          "width": 44,
+          "height": 162.5,
+          "energy": true
+        },
+        {
+          "name": "Diciembre. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+          "label": "Dic",
+          "visible": true,
+          "width": 44,
+          "height": 162.5,
+          "energy": false
+        }
+      ],
+      "scrollHints": [
+        "12 meses · Deslizá o usá las flechas."
+      ],
+      "ai": 0,
+      "writes": 0,
+      "external": 0
+    }
+  }
+]

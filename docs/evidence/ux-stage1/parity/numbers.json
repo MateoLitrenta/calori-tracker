@@ -1,0 +1,4126 @@
+[
+  {
+    "scenario": "main",
+    "account": "A",
+    "status": "passed",
+    "periods": [
+      {
+        "period": "Semana",
+        "raw": {
+          "start": "2026-11-16",
+          "end": "2026-11-22",
+          "summary": {
+            "consumed": 1500,
+            "expenditure": 2081,
+            "balance": -879,
+            "mealDays": 1,
+            "energyDays": 2,
+            "stepDays": 2,
+            "steps": 3800,
+            "workoutCalories": 500,
+            "workoutCount": 1
+          },
+          "buckets": [
+            {
+              "label": "Lun",
+              "title": "Lunes",
+              "start": "2026-11-16",
+              "end": "2026-11-16",
+              "summary": {
+                "consumed": null,
+                "expenditure": 1783,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 1,
+                "stepDays": 1,
+                "steps": 2600,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mar",
+              "title": "Martes",
+              "start": "2026-11-17",
+              "end": "2026-11-17",
+              "summary": {
+                "consumed": 1500,
+                "expenditure": 2379,
+                "balance": -879,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 1,
+                "steps": 5000,
+                "workoutCalories": 500,
+                "workoutCount": 1
+              }
+            },
+            {
+              "label": "Mié",
+              "title": "Miércoles",
+              "start": "2026-11-18",
+              "end": "2026-11-18",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jue",
+              "title": "Jueves",
+              "start": "2026-11-19",
+              "end": "2026-11-19",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Vie",
+              "title": "Viernes",
+              "start": "2026-11-20",
+              "end": "2026-11-20",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sáb",
+              "title": "Sábado",
+              "start": "2026-11-21",
+              "end": "2026-11-21",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Dom",
+              "title": "Domingo",
+              "start": "2026-11-22",
+              "end": "2026-11-22",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 1
+        },
+        "display": {
+          "balance": "-879",
+          "means": [
+            "1.500",
+            "2.081"
+          ],
+          "comparison": []
+        },
+        "detail": [
+          {
+            "index": 0,
+            "values": [
+              null,
+              "1.783",
+              null
+            ],
+            "empty": false,
+            "foodDays": 0,
+            "energyDays": 1
+          },
+          {
+            "index": 1,
+            "values": [
+              "1.500",
+              "2.379",
+              "-879"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 2,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 3,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 4,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 5,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 6,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          }
+        ]
+      },
+      {
+        "period": "Mes",
+        "raw": {
+          "start": "2026-11-01",
+          "end": "2026-11-30",
+          "summary": {
+            "consumed": 1875,
+            "expenditure": 1900,
+            "balance": -77,
+            "mealDays": 4,
+            "energyDays": 6,
+            "stepDays": 6,
+            "steps": 3433,
+            "workoutCalories": 500,
+            "workoutCount": 1
+          },
+          "buckets": [
+            {
+              "label": "Sem 1",
+              "title": "Semana 1 · 1–7",
+              "start": "2026-11-01",
+              "end": "2026-11-07",
+              "summary": {
+                "consumed": 1800,
+                "expenditure": 1851,
+                "balance": -51,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 1,
+                "steps": 4300,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 2",
+              "title": "Semana 2 · 8–14",
+              "start": "2026-11-08",
+              "end": "2026-11-14",
+              "summary": {
+                "consumed": 2000,
+                "expenditure": 1783,
+                "balance": 241,
+                "mealDays": 1,
+                "energyDays": 2,
+                "stepDays": 2,
+                "steps": 2600,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 3",
+              "title": "Semana 3 · 15–21",
+              "start": "2026-11-15",
+              "end": "2026-11-21",
+              "summary": {
+                "consumed": 1850,
+                "expenditure": 1994,
+                "balance": -249,
+                "mealDays": 2,
+                "energyDays": 3,
+                "stepDays": 3,
+                "steps": 3700,
+                "workoutCalories": 500,
+                "workoutCount": 1
+              }
+            },
+            {
+              "label": "Sem 4",
+              "title": "Semana 4 · 22–28",
+              "start": "2026-11-22",
+              "end": "2026-11-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 5",
+              "title": "Semana 5 · 29–30",
+              "start": "2026-11-29",
+              "end": "2026-11-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": {
+            "consumed": -175,
+            "expenditure": 93,
+            "balance": -276
+          },
+          "currentStreak": 1
+        },
+        "display": {
+          "balance": "-77",
+          "means": [
+            "1.875",
+            "1.900"
+          ],
+          "comparison": [
+            "-175",
+            "+93",
+            "-276"
+          ]
+        },
+        "detail": [
+          {
+            "index": 0,
+            "values": [
+              "1.800",
+              "1.851",
+              "-51"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 1,
+            "values": [
+              "2.000",
+              "1.783",
+              "+241"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 2
+          },
+          {
+            "index": 2,
+            "values": [
+              "1.850",
+              "1.994",
+              "-249"
+            ],
+            "empty": false,
+            "foodDays": 2,
+            "energyDays": 3
+          },
+          {
+            "index": 3,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 4,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          }
+        ]
+      },
+      {
+        "period": "Año",
+        "raw": {
+          "start": "2026-01-01",
+          "end": "2026-12-31",
+          "summary": {
+            "consumed": 1950,
+            "expenditure": 1871,
+            "balance": 42,
+            "mealDays": 8,
+            "energyDays": 11,
+            "stepDays": 10,
+            "steps": 3470,
+            "workoutCalories": 720,
+            "workoutCount": 2
+          },
+          "buckets": [
+            {
+              "label": "Ene",
+              "title": "Enero",
+              "start": "2026-01-01",
+              "end": "2026-01-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Feb",
+              "title": "Febrero",
+              "start": "2026-02-01",
+              "end": "2026-02-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mar",
+              "title": "Marzo",
+              "start": "2026-03-01",
+              "end": "2026-03-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Abr",
+              "title": "Abril",
+              "start": "2026-04-01",
+              "end": "2026-04-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "May",
+              "title": "Mayo",
+              "start": "2026-05-01",
+              "end": "2026-05-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jun",
+              "title": "Junio",
+              "start": "2026-06-01",
+              "end": "2026-06-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jul",
+              "title": "Julio",
+              "start": "2026-07-01",
+              "end": "2026-07-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Ago",
+              "title": "Agosto",
+              "start": "2026-08-01",
+              "end": "2026-08-31",
+              "summary": {
+                "consumed": 2100,
+                "expenditure": 1859,
+                "balance": 241,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 1,
+                "steps": 4500,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sep",
+              "title": "Septiembre",
+              "start": "2026-09-01",
+              "end": "2026-09-30",
+              "summary": {
+                "consumed": 1900,
+                "expenditure": 1899,
+                "balance": 1,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": 220,
+                "workoutCount": 1
+              }
+            },
+            {
+              "label": "Oct",
+              "title": "Octubre",
+              "start": "2026-10-01",
+              "end": "2026-10-31",
+              "summary": {
+                "consumed": 2050,
+                "expenditure": 1807,
+                "balance": 199,
+                "mealDays": 2,
+                "energyDays": 3,
+                "stepDays": 3,
+                "steps": 3200,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Nov",
+              "title": "Noviembre",
+              "start": "2026-11-01",
+              "end": "2026-11-30",
+              "summary": {
+                "consumed": 1875,
+                "expenditure": 1900,
+                "balance": -77,
+                "mealDays": 4,
+                "energyDays": 6,
+                "stepDays": 6,
+                "steps": 3433,
+                "workoutCalories": 500,
+                "workoutCount": 1
+              }
+            },
+            {
+              "label": "Dic",
+              "title": "Diciembre",
+              "start": "2026-12-01",
+              "end": "2026-12-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 1
+        },
+        "display": {
+          "balance": "+42",
+          "means": [
+            "1.950",
+            "1.871"
+          ],
+          "comparison": []
+        },
+        "detail": [
+          {
+            "index": 0,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 1,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 2,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 3,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 4,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 5,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 6,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 7,
+            "values": [
+              "2.100",
+              "1.859",
+              "+241"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 8,
+            "values": [
+              "1.900",
+              "1.899",
+              "+1"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 9,
+            "values": [
+              "2.050",
+              "1.807",
+              "+199"
+            ],
+            "empty": false,
+            "foodDays": 2,
+            "energyDays": 3
+          },
+          {
+            "index": 10,
+            "values": [
+              "1.875",
+              "1.900",
+              "-77"
+            ],
+            "empty": false,
+            "foodDays": 4,
+            "energyDays": 6
+          },
+          {
+            "index": 11,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario": "main",
+    "account": "B",
+    "status": "passed",
+    "periods": [
+      {
+        "period": "Semana",
+        "raw": {
+          "start": "2026-11-16",
+          "end": "2026-11-22",
+          "summary": {
+            "consumed": null,
+            "expenditure": null,
+            "balance": null,
+            "mealDays": 0,
+            "energyDays": 0,
+            "stepDays": 0,
+            "steps": null,
+            "workoutCalories": null,
+            "workoutCount": 0
+          },
+          "buckets": [
+            {
+              "label": "Lun",
+              "title": "Lunes",
+              "start": "2026-11-16",
+              "end": "2026-11-16",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mar",
+              "title": "Martes",
+              "start": "2026-11-17",
+              "end": "2026-11-17",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mié",
+              "title": "Miércoles",
+              "start": "2026-11-18",
+              "end": "2026-11-18",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jue",
+              "title": "Jueves",
+              "start": "2026-11-19",
+              "end": "2026-11-19",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Vie",
+              "title": "Viernes",
+              "start": "2026-11-20",
+              "end": "2026-11-20",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sáb",
+              "title": "Sábado",
+              "start": "2026-11-21",
+              "end": "2026-11-21",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Dom",
+              "title": "Domingo",
+              "start": "2026-11-22",
+              "end": "2026-11-22",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 0
+        },
+        "display": {
+          "balance": "Sin datos",
+          "means": [
+            "Sin datos",
+            "Sin datos"
+          ],
+          "comparison": []
+        },
+        "detail": []
+      },
+      {
+        "period": "Mes",
+        "raw": {
+          "start": "2026-11-01",
+          "end": "2026-11-30",
+          "summary": {
+            "consumed": null,
+            "expenditure": null,
+            "balance": null,
+            "mealDays": 0,
+            "energyDays": 0,
+            "stepDays": 0,
+            "steps": null,
+            "workoutCalories": null,
+            "workoutCount": 0
+          },
+          "buckets": [
+            {
+              "label": "Sem 1",
+              "title": "Semana 1 · 1–7",
+              "start": "2026-11-01",
+              "end": "2026-11-07",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 2",
+              "title": "Semana 2 · 8–14",
+              "start": "2026-11-08",
+              "end": "2026-11-14",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 3",
+              "title": "Semana 3 · 15–21",
+              "start": "2026-11-15",
+              "end": "2026-11-21",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 4",
+              "title": "Semana 4 · 22–28",
+              "start": "2026-11-22",
+              "end": "2026-11-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 5",
+              "title": "Semana 5 · 29–30",
+              "start": "2026-11-29",
+              "end": "2026-11-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 0
+        },
+        "display": {
+          "balance": "Sin datos",
+          "means": [
+            "Sin datos",
+            "Sin datos"
+          ],
+          "comparison": []
+        },
+        "detail": []
+      },
+      {
+        "period": "Año",
+        "raw": {
+          "start": "2026-01-01",
+          "end": "2026-12-31",
+          "summary": {
+            "consumed": null,
+            "expenditure": null,
+            "balance": null,
+            "mealDays": 0,
+            "energyDays": 0,
+            "stepDays": 0,
+            "steps": null,
+            "workoutCalories": null,
+            "workoutCount": 0
+          },
+          "buckets": [
+            {
+              "label": "Ene",
+              "title": "Enero",
+              "start": "2026-01-01",
+              "end": "2026-01-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Feb",
+              "title": "Febrero",
+              "start": "2026-02-01",
+              "end": "2026-02-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mar",
+              "title": "Marzo",
+              "start": "2026-03-01",
+              "end": "2026-03-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Abr",
+              "title": "Abril",
+              "start": "2026-04-01",
+              "end": "2026-04-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "May",
+              "title": "Mayo",
+              "start": "2026-05-01",
+              "end": "2026-05-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jun",
+              "title": "Junio",
+              "start": "2026-06-01",
+              "end": "2026-06-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jul",
+              "title": "Julio",
+              "start": "2026-07-01",
+              "end": "2026-07-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Ago",
+              "title": "Agosto",
+              "start": "2026-08-01",
+              "end": "2026-08-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sep",
+              "title": "Septiembre",
+              "start": "2026-09-01",
+              "end": "2026-09-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Oct",
+              "title": "Octubre",
+              "start": "2026-10-01",
+              "end": "2026-10-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Nov",
+              "title": "Noviembre",
+              "start": "2026-11-01",
+              "end": "2026-11-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Dic",
+              "title": "Diciembre",
+              "start": "2026-12-01",
+              "end": "2026-12-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 0
+        },
+        "display": {
+          "balance": "Sin datos",
+          "means": [
+            "Sin datos",
+            "Sin datos"
+          ],
+          "comparison": []
+        },
+        "detail": []
+      }
+    ]
+  },
+  {
+    "scenario": "empty",
+    "account": "A",
+    "status": "passed",
+    "periods": [
+      {
+        "period": "Semana",
+        "raw": {
+          "start": "2026-11-16",
+          "end": "2026-11-22",
+          "summary": {
+            "consumed": null,
+            "expenditure": null,
+            "balance": null,
+            "mealDays": 0,
+            "energyDays": 0,
+            "stepDays": 0,
+            "steps": null,
+            "workoutCalories": null,
+            "workoutCount": 0
+          },
+          "buckets": [
+            {
+              "label": "Lun",
+              "title": "Lunes",
+              "start": "2026-11-16",
+              "end": "2026-11-16",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mar",
+              "title": "Martes",
+              "start": "2026-11-17",
+              "end": "2026-11-17",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mié",
+              "title": "Miércoles",
+              "start": "2026-11-18",
+              "end": "2026-11-18",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jue",
+              "title": "Jueves",
+              "start": "2026-11-19",
+              "end": "2026-11-19",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Vie",
+              "title": "Viernes",
+              "start": "2026-11-20",
+              "end": "2026-11-20",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sáb",
+              "title": "Sábado",
+              "start": "2026-11-21",
+              "end": "2026-11-21",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Dom",
+              "title": "Domingo",
+              "start": "2026-11-22",
+              "end": "2026-11-22",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 0
+        },
+        "display": {
+          "balance": "Sin datos",
+          "means": [
+            "Sin datos",
+            "Sin datos"
+          ],
+          "comparison": []
+        },
+        "detail": []
+      },
+      {
+        "period": "Mes",
+        "raw": {
+          "start": "2026-11-01",
+          "end": "2026-11-30",
+          "summary": {
+            "consumed": null,
+            "expenditure": null,
+            "balance": null,
+            "mealDays": 0,
+            "energyDays": 0,
+            "stepDays": 0,
+            "steps": null,
+            "workoutCalories": null,
+            "workoutCount": 0
+          },
+          "buckets": [
+            {
+              "label": "Sem 1",
+              "title": "Semana 1 · 1–7",
+              "start": "2026-11-01",
+              "end": "2026-11-07",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 2",
+              "title": "Semana 2 · 8–14",
+              "start": "2026-11-08",
+              "end": "2026-11-14",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 3",
+              "title": "Semana 3 · 15–21",
+              "start": "2026-11-15",
+              "end": "2026-11-21",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 4",
+              "title": "Semana 4 · 22–28",
+              "start": "2026-11-22",
+              "end": "2026-11-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 5",
+              "title": "Semana 5 · 29–30",
+              "start": "2026-11-29",
+              "end": "2026-11-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 0
+        },
+        "display": {
+          "balance": "Sin datos",
+          "means": [
+            "Sin datos",
+            "Sin datos"
+          ],
+          "comparison": []
+        },
+        "detail": []
+      },
+      {
+        "period": "Año",
+        "raw": {
+          "start": "2026-01-01",
+          "end": "2026-12-31",
+          "summary": {
+            "consumed": null,
+            "expenditure": null,
+            "balance": null,
+            "mealDays": 0,
+            "energyDays": 0,
+            "stepDays": 0,
+            "steps": null,
+            "workoutCalories": null,
+            "workoutCount": 0
+          },
+          "buckets": [
+            {
+              "label": "Ene",
+              "title": "Enero",
+              "start": "2026-01-01",
+              "end": "2026-01-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Feb",
+              "title": "Febrero",
+              "start": "2026-02-01",
+              "end": "2026-02-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mar",
+              "title": "Marzo",
+              "start": "2026-03-01",
+              "end": "2026-03-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Abr",
+              "title": "Abril",
+              "start": "2026-04-01",
+              "end": "2026-04-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "May",
+              "title": "Mayo",
+              "start": "2026-05-01",
+              "end": "2026-05-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jun",
+              "title": "Junio",
+              "start": "2026-06-01",
+              "end": "2026-06-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jul",
+              "title": "Julio",
+              "start": "2026-07-01",
+              "end": "2026-07-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Ago",
+              "title": "Agosto",
+              "start": "2026-08-01",
+              "end": "2026-08-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sep",
+              "title": "Septiembre",
+              "start": "2026-09-01",
+              "end": "2026-09-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Oct",
+              "title": "Octubre",
+              "start": "2026-10-01",
+              "end": "2026-10-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Nov",
+              "title": "Noviembre",
+              "start": "2026-11-01",
+              "end": "2026-11-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Dic",
+              "title": "Diciembre",
+              "start": "2026-12-01",
+              "end": "2026-12-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 0
+        },
+        "display": {
+          "balance": "Sin datos",
+          "means": [
+            "Sin datos",
+            "Sin datos"
+          ],
+          "comparison": []
+        },
+        "detail": []
+      }
+    ]
+  },
+  {
+    "scenario": "zeros",
+    "account": "A",
+    "status": "passed",
+    "periods": [
+      {
+        "period": "Semana",
+        "raw": {
+          "start": "2026-11-16",
+          "end": "2026-11-22",
+          "summary": {
+            "consumed": 0,
+            "expenditure": 1679,
+            "balance": -1679,
+            "mealDays": 1,
+            "energyDays": 1,
+            "stepDays": 0,
+            "steps": null,
+            "workoutCalories": 0,
+            "workoutCount": 1
+          },
+          "buckets": [
+            {
+              "label": "Lun",
+              "title": "Lunes",
+              "start": "2026-11-16",
+              "end": "2026-11-16",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mar",
+              "title": "Martes",
+              "start": "2026-11-17",
+              "end": "2026-11-17",
+              "summary": {
+                "consumed": 0,
+                "expenditure": 1679,
+                "balance": -1679,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": 0,
+                "workoutCount": 1
+              }
+            },
+            {
+              "label": "Mié",
+              "title": "Miércoles",
+              "start": "2026-11-18",
+              "end": "2026-11-18",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jue",
+              "title": "Jueves",
+              "start": "2026-11-19",
+              "end": "2026-11-19",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Vie",
+              "title": "Viernes",
+              "start": "2026-11-20",
+              "end": "2026-11-20",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sáb",
+              "title": "Sábado",
+              "start": "2026-11-21",
+              "end": "2026-11-21",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Dom",
+              "title": "Domingo",
+              "start": "2026-11-22",
+              "end": "2026-11-22",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 1
+        },
+        "display": {
+          "balance": "-1.679",
+          "means": [
+            "0",
+            "1.679"
+          ],
+          "comparison": []
+        },
+        "detail": [
+          {
+            "index": 0,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 1,
+            "values": [
+              "0",
+              "1.679",
+              "-1.679"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 2,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 3,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 4,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 5,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 6,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          }
+        ]
+      },
+      {
+        "period": "Mes",
+        "raw": {
+          "start": "2026-11-01",
+          "end": "2026-11-30",
+          "summary": {
+            "consumed": 0,
+            "expenditure": 1679,
+            "balance": -1679,
+            "mealDays": 1,
+            "energyDays": 1,
+            "stepDays": 0,
+            "steps": null,
+            "workoutCalories": 0,
+            "workoutCount": 1
+          },
+          "buckets": [
+            {
+              "label": "Sem 1",
+              "title": "Semana 1 · 1–7",
+              "start": "2026-11-01",
+              "end": "2026-11-07",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 2",
+              "title": "Semana 2 · 8–14",
+              "start": "2026-11-08",
+              "end": "2026-11-14",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 3",
+              "title": "Semana 3 · 15–21",
+              "start": "2026-11-15",
+              "end": "2026-11-21",
+              "summary": {
+                "consumed": 0,
+                "expenditure": 1679,
+                "balance": -1679,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": 0,
+                "workoutCount": 1
+              }
+            },
+            {
+              "label": "Sem 4",
+              "title": "Semana 4 · 22–28",
+              "start": "2026-11-22",
+              "end": "2026-11-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 5",
+              "title": "Semana 5 · 29–30",
+              "start": "2026-11-29",
+              "end": "2026-11-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 1
+        },
+        "display": {
+          "balance": "-1.679",
+          "means": [
+            "0",
+            "1.679"
+          ],
+          "comparison": []
+        },
+        "detail": [
+          {
+            "index": 0,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 1,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 2,
+            "values": [
+              "0",
+              "1.679",
+              "-1.679"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 3,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 4,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          }
+        ]
+      },
+      {
+        "period": "Año",
+        "raw": {
+          "start": "2026-01-01",
+          "end": "2026-12-31",
+          "summary": {
+            "consumed": 0,
+            "expenditure": 1679,
+            "balance": -1679,
+            "mealDays": 1,
+            "energyDays": 1,
+            "stepDays": 0,
+            "steps": null,
+            "workoutCalories": 0,
+            "workoutCount": 1
+          },
+          "buckets": [
+            {
+              "label": "Ene",
+              "title": "Enero",
+              "start": "2026-01-01",
+              "end": "2026-01-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Feb",
+              "title": "Febrero",
+              "start": "2026-02-01",
+              "end": "2026-02-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mar",
+              "title": "Marzo",
+              "start": "2026-03-01",
+              "end": "2026-03-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Abr",
+              "title": "Abril",
+              "start": "2026-04-01",
+              "end": "2026-04-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "May",
+              "title": "Mayo",
+              "start": "2026-05-01",
+              "end": "2026-05-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jun",
+              "title": "Junio",
+              "start": "2026-06-01",
+              "end": "2026-06-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jul",
+              "title": "Julio",
+              "start": "2026-07-01",
+              "end": "2026-07-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Ago",
+              "title": "Agosto",
+              "start": "2026-08-01",
+              "end": "2026-08-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sep",
+              "title": "Septiembre",
+              "start": "2026-09-01",
+              "end": "2026-09-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Oct",
+              "title": "Octubre",
+              "start": "2026-10-01",
+              "end": "2026-10-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Nov",
+              "title": "Noviembre",
+              "start": "2026-11-01",
+              "end": "2026-11-30",
+              "summary": {
+                "consumed": 0,
+                "expenditure": 1679,
+                "balance": -1679,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": 0,
+                "workoutCount": 1
+              }
+            },
+            {
+              "label": "Dic",
+              "title": "Diciembre",
+              "start": "2026-12-01",
+              "end": "2026-12-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 1
+        },
+        "display": {
+          "balance": "-1.679",
+          "means": [
+            "0",
+            "1.679"
+          ],
+          "comparison": []
+        },
+        "detail": [
+          {
+            "index": 0,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 1,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 2,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 3,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 4,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 5,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 6,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 7,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 8,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 9,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 10,
+            "values": [
+              "0",
+              "1.679",
+              "-1.679"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 11,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario": "yearBoundary",
+    "account": "A",
+    "status": "passed",
+    "periods": [
+      {
+        "period": "Semana",
+        "raw": {
+          "start": "2026-12-28",
+          "end": "2027-01-03",
+          "summary": {
+            "consumed": 1500,
+            "expenditure": 1779,
+            "balance": -289,
+            "mealDays": 2,
+            "energyDays": 3,
+            "stepDays": 2,
+            "steps": 3750,
+            "workoutCalories": null,
+            "workoutCount": 0
+          },
+          "buckets": [
+            {
+              "label": "Lun",
+              "title": "Lunes",
+              "start": "2026-12-28",
+              "end": "2026-12-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": 1759,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 1,
+                "stepDays": 1,
+                "steps": 2000,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mar",
+              "title": "Martes",
+              "start": "2026-12-29",
+              "end": "2026-12-29",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mié",
+              "title": "Miércoles",
+              "start": "2026-12-30",
+              "end": "2026-12-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jue",
+              "title": "Jueves",
+              "start": "2026-12-31",
+              "end": "2026-12-31",
+              "summary": {
+                "consumed": 1800,
+                "expenditure": 1679,
+                "balance": 121,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Vie",
+              "title": "Viernes",
+              "start": "2027-01-01",
+              "end": "2027-01-01",
+              "summary": {
+                "consumed": 1200,
+                "expenditure": 1899,
+                "balance": -699,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 1,
+                "steps": 5500,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sáb",
+              "title": "Sábado",
+              "start": "2027-01-02",
+              "end": "2027-01-02",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Dom",
+              "title": "Domingo",
+              "start": "2027-01-03",
+              "end": "2027-01-03",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 2
+        },
+        "display": {
+          "balance": "-289",
+          "means": [
+            "1.500",
+            "1.779"
+          ],
+          "comparison": []
+        },
+        "detail": [
+          {
+            "index": 0,
+            "values": [
+              null,
+              "1.759",
+              null
+            ],
+            "empty": false,
+            "foodDays": 0,
+            "energyDays": 1
+          },
+          {
+            "index": 1,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 2,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 3,
+            "values": [
+              "1.800",
+              "1.679",
+              "+121"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 4,
+            "values": [
+              "1.200",
+              "1.899",
+              "-699"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 5,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 6,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          }
+        ]
+      },
+      {
+        "period": "Mes",
+        "raw": {
+          "start": "2027-01-01",
+          "end": "2027-01-31",
+          "summary": {
+            "consumed": 1200,
+            "expenditure": 1899,
+            "balance": -699,
+            "mealDays": 1,
+            "energyDays": 1,
+            "stepDays": 1,
+            "steps": 5500,
+            "workoutCalories": null,
+            "workoutCount": 0
+          },
+          "buckets": [
+            {
+              "label": "Sem 1",
+              "title": "Semana 1 · 1–7",
+              "start": "2027-01-01",
+              "end": "2027-01-07",
+              "summary": {
+                "consumed": 1200,
+                "expenditure": 1899,
+                "balance": -699,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 1,
+                "steps": 5500,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 2",
+              "title": "Semana 2 · 8–14",
+              "start": "2027-01-08",
+              "end": "2027-01-14",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 3",
+              "title": "Semana 3 · 15–21",
+              "start": "2027-01-15",
+              "end": "2027-01-21",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 4",
+              "title": "Semana 4 · 22–28",
+              "start": "2027-01-22",
+              "end": "2027-01-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 5",
+              "title": "Semana 5 · 29–31",
+              "start": "2027-01-29",
+              "end": "2027-01-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 1
+        },
+        "display": {
+          "balance": "-699",
+          "means": [
+            "1.200",
+            "1.899"
+          ],
+          "comparison": []
+        },
+        "detail": [
+          {
+            "index": 0,
+            "values": [
+              "1.200",
+              "1.899",
+              "-699"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 1,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 2,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 3,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 4,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          }
+        ]
+      },
+      {
+        "period": "Año",
+        "raw": {
+          "start": "2027-01-01",
+          "end": "2027-12-31",
+          "summary": {
+            "consumed": 1200,
+            "expenditure": 1899,
+            "balance": -699,
+            "mealDays": 1,
+            "energyDays": 1,
+            "stepDays": 1,
+            "steps": 5500,
+            "workoutCalories": null,
+            "workoutCount": 0
+          },
+          "buckets": [
+            {
+              "label": "Ene",
+              "title": "Enero",
+              "start": "2027-01-01",
+              "end": "2027-01-31",
+              "summary": {
+                "consumed": 1200,
+                "expenditure": 1899,
+                "balance": -699,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 1,
+                "steps": 5500,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Feb",
+              "title": "Febrero",
+              "start": "2027-02-01",
+              "end": "2027-02-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mar",
+              "title": "Marzo",
+              "start": "2027-03-01",
+              "end": "2027-03-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Abr",
+              "title": "Abril",
+              "start": "2027-04-01",
+              "end": "2027-04-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "May",
+              "title": "Mayo",
+              "start": "2027-05-01",
+              "end": "2027-05-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jun",
+              "title": "Junio",
+              "start": "2027-06-01",
+              "end": "2027-06-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jul",
+              "title": "Julio",
+              "start": "2027-07-01",
+              "end": "2027-07-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Ago",
+              "title": "Agosto",
+              "start": "2027-08-01",
+              "end": "2027-08-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sep",
+              "title": "Septiembre",
+              "start": "2027-09-01",
+              "end": "2027-09-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Oct",
+              "title": "Octubre",
+              "start": "2027-10-01",
+              "end": "2027-10-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Nov",
+              "title": "Noviembre",
+              "start": "2027-11-01",
+              "end": "2027-11-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Dic",
+              "title": "Diciembre",
+              "start": "2027-12-01",
+              "end": "2027-12-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 1
+        },
+        "display": {
+          "balance": "-699",
+          "means": [
+            "1.200",
+            "1.899"
+          ],
+          "comparison": []
+        },
+        "detail": [
+          {
+            "index": 0,
+            "values": [
+              "1.200",
+              "1.899",
+              "-699"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 1,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 2,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 3,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 4,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 5,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 6,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 7,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 8,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 9,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 10,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 11,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario": "monthBoundary",
+    "account": "A",
+    "status": "passed",
+    "periods": [
+      {
+        "period": "Semana",
+        "raw": {
+          "start": "2026-10-26",
+          "end": "2026-11-01",
+          "summary": {
+            "consumed": 1950,
+            "expenditure": 1746,
+            "balance": 271,
+            "mealDays": 2,
+            "energyDays": 3,
+            "stepDays": 1,
+            "steps": 5000,
+            "workoutCalories": null,
+            "workoutCount": 0
+          },
+          "buckets": [
+            {
+              "label": "Lun",
+              "title": "Lunes",
+              "start": "2026-10-26",
+              "end": "2026-10-26",
+              "summary": {
+                "consumed": 2200,
+                "expenditure": 1679,
+                "balance": 521,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mar",
+              "title": "Martes",
+              "start": "2026-10-27",
+              "end": "2026-10-27",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mié",
+              "title": "Miércoles",
+              "start": "2026-10-28",
+              "end": "2026-10-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jue",
+              "title": "Jueves",
+              "start": "2026-10-29",
+              "end": "2026-10-29",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Vie",
+              "title": "Viernes",
+              "start": "2026-10-30",
+              "end": "2026-10-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sáb",
+              "title": "Sábado",
+              "start": "2026-10-31",
+              "end": "2026-10-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": 1879,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 1,
+                "stepDays": 1,
+                "steps": 5000,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Dom",
+              "title": "Domingo",
+              "start": "2026-11-01",
+              "end": "2026-11-01",
+              "summary": {
+                "consumed": 1700,
+                "expenditure": 1679,
+                "balance": 21,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 1
+        },
+        "display": {
+          "balance": "+271",
+          "means": [
+            "1.950",
+            "1.746"
+          ],
+          "comparison": []
+        },
+        "detail": [
+          {
+            "index": 0,
+            "values": [
+              "2.200",
+              "1.679",
+              "+521"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 1,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 2,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 3,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 4,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 5,
+            "values": [
+              null,
+              "1.879",
+              null
+            ],
+            "empty": false,
+            "foodDays": 0,
+            "energyDays": 1
+          },
+          {
+            "index": 6,
+            "values": [
+              "1.700",
+              "1.679",
+              "+21"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          }
+        ]
+      },
+      {
+        "period": "Mes",
+        "raw": {
+          "start": "2026-11-01",
+          "end": "2026-11-30",
+          "summary": {
+            "consumed": 1700,
+            "expenditure": 1679,
+            "balance": 21,
+            "mealDays": 1,
+            "energyDays": 1,
+            "stepDays": 0,
+            "steps": null,
+            "workoutCalories": null,
+            "workoutCount": 0
+          },
+          "buckets": [
+            {
+              "label": "Sem 1",
+              "title": "Semana 1 · 1–7",
+              "start": "2026-11-01",
+              "end": "2026-11-07",
+              "summary": {
+                "consumed": 1700,
+                "expenditure": 1679,
+                "balance": 21,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 2",
+              "title": "Semana 2 · 8–14",
+              "start": "2026-11-08",
+              "end": "2026-11-14",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 3",
+              "title": "Semana 3 · 15–21",
+              "start": "2026-11-15",
+              "end": "2026-11-21",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 4",
+              "title": "Semana 4 · 22–28",
+              "start": "2026-11-22",
+              "end": "2026-11-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sem 5",
+              "title": "Semana 5 · 29–30",
+              "start": "2026-11-29",
+              "end": "2026-11-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 1
+        },
+        "display": {
+          "balance": "+21",
+          "means": [
+            "1.700",
+            "1.679"
+          ],
+          "comparison": []
+        },
+        "detail": [
+          {
+            "index": 0,
+            "values": [
+              "1.700",
+              "1.679",
+              "+21"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 1,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 2,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 3,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 4,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          }
+        ]
+      },
+      {
+        "period": "Año",
+        "raw": {
+          "start": "2026-01-01",
+          "end": "2026-12-31",
+          "summary": {
+            "consumed": 1967,
+            "expenditure": 1729,
+            "balance": 288,
+            "mealDays": 3,
+            "energyDays": 4,
+            "stepDays": 1,
+            "steps": 5000,
+            "workoutCalories": null,
+            "workoutCount": 0
+          },
+          "buckets": [
+            {
+              "label": "Ene",
+              "title": "Enero",
+              "start": "2026-01-01",
+              "end": "2026-01-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Feb",
+              "title": "Febrero",
+              "start": "2026-02-01",
+              "end": "2026-02-28",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Mar",
+              "title": "Marzo",
+              "start": "2026-03-01",
+              "end": "2026-03-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Abr",
+              "title": "Abril",
+              "start": "2026-04-01",
+              "end": "2026-04-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "May",
+              "title": "Mayo",
+              "start": "2026-05-01",
+              "end": "2026-05-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jun",
+              "title": "Junio",
+              "start": "2026-06-01",
+              "end": "2026-06-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Jul",
+              "title": "Julio",
+              "start": "2026-07-01",
+              "end": "2026-07-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Ago",
+              "title": "Agosto",
+              "start": "2026-08-01",
+              "end": "2026-08-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Sep",
+              "title": "Septiembre",
+              "start": "2026-09-01",
+              "end": "2026-09-30",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Oct",
+              "title": "Octubre",
+              "start": "2026-10-01",
+              "end": "2026-10-31",
+              "summary": {
+                "consumed": 2100,
+                "expenditure": 1746,
+                "balance": 421,
+                "mealDays": 2,
+                "energyDays": 3,
+                "stepDays": 1,
+                "steps": 5000,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Nov",
+              "title": "Noviembre",
+              "start": "2026-11-01",
+              "end": "2026-11-30",
+              "summary": {
+                "consumed": 1700,
+                "expenditure": 1679,
+                "balance": 21,
+                "mealDays": 1,
+                "energyDays": 1,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            },
+            {
+              "label": "Dic",
+              "title": "Diciembre",
+              "start": "2026-12-01",
+              "end": "2026-12-31",
+              "summary": {
+                "consumed": null,
+                "expenditure": null,
+                "balance": null,
+                "mealDays": 0,
+                "energyDays": 0,
+                "stepDays": 0,
+                "steps": null,
+                "workoutCalories": null,
+                "workoutCount": 0
+              }
+            }
+          ],
+          "comparison": null,
+          "currentStreak": 1
+        },
+        "display": {
+          "balance": "+288",
+          "means": [
+            "1.967",
+            "1.729"
+          ],
+          "comparison": []
+        },
+        "detail": [
+          {
+            "index": 0,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 1,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 2,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 3,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 4,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 5,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 6,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 7,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 8,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          },
+          {
+            "index": 9,
+            "values": [
+              "2.100",
+              "1.746",
+              "+421"
+            ],
+            "empty": false,
+            "foodDays": 2,
+            "energyDays": 3
+          },
+          {
+            "index": 10,
+            "values": [
+              "1.700",
+              "1.679",
+              "+21"
+            ],
+            "empty": false,
+            "foodDays": 1,
+            "energyDays": 1
+          },
+          {
+            "index": 11,
+            "values": [
+              null,
+              null,
+              null
+            ],
+            "empty": true,
+            "foodDays": 0,
+            "energyDays": 0
+          }
+        ]
+      }
+    ]
+  }
+]
