@@ -236,7 +236,8 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
 }
 :is(.fitness-home, .fitness-entry-portal) .entry-time-row { flex-wrap: wrap; }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-content .entry-time-row input {
-  flex: 1 1 7.5rem;
+  /* Give the native hour, day period and picker space before wrapping Ahora. */
+  flex: 1 1 10em;
 }
 :is(.fitness-home, .fitness-entry-portal) .entry-form button {
   overflow-wrap: anywhere;

@@ -841,6 +841,8 @@ test('no global outside-click handler dismisses an active form', t => {
 
 test('all four entry modes associate labels, retain mobile CTAs and use accessible time actions', t => {
   mobileEnvironment(t);
+  t.mock.timers.enable({ apis: ['Date'], now: new Date(2026, 10, 17, 19, 54) });
+  t.mock.method(Date.prototype, 'toLocaleTimeString', () => '07:54 p. m.');
   const meal = { id: 'm1', name: 'Pizza', type: 'Cena', calories: 600, details: 'Dos porciones', time: '20:00' };
   const workout = { id: 'w1', activity: 'Correr', duration: 40, calories: 300, details: 'Suave', distance: 5, pace: '8:00', time: '18:00' };
   for (const [action, record, title, cta] of [
@@ -866,7 +868,10 @@ test('all four entry modes associate labels, retain mobile CTAs and use accessib
     }
     const footer = node(form, e => e.props.className?.includes('entry-form-footer'));
     assert.ok(renderToStaticMarkup(footer).includes(cta));
-    assert.ok(node(form, e => e.props['aria-label'] === 'Usar hora actual'));
+    const now = node(form, e => e.props['aria-label'] === 'Usar hora actual');
+    assert.equal(now.props.children, 'Ahora');
+    now.props.onClick();
+    assert.equal(node(view(), e => e.type === 'input' && e.props.type === 'time').props.value, '19:54');
     assert.equal(node(form, e => e.props.id?.endsWith('-notes')).type, 'textarea');
     assert.equal(node(tree, e => e.props.className === 'entry-sheet-handle').props['aria-hidden'], 'true');
     const ids = controls.map(e => e.props.id);

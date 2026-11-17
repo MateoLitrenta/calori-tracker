@@ -1119,7 +1119,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                     />
                     <button
                       type="button" aria-label="Usar hora actual"
-                      onClick={() => { markEntryChanged(); setMealTime(new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })); }}
+                      onClick={() => { markEntryChanged(); setMealTime(format(new Date(), 'HH:mm')); }}
                       className="entry-time-now p-2 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md hover:bg-slate-200 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-white transition-colors"
                       title="Hora actual"
                     >
@@ -1207,7 +1207,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   />
                   <button
                     type="button" aria-label="Usar hora actual"
-                    onClick={() => { markEntryChanged(); setWorkTime(new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })); }}
+                    onClick={() => { markEntryChanged(); setWorkTime(format(new Date(), 'HH:mm')); }}
                     className="entry-time-now p-2 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md hover:bg-slate-200 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-white transition-colors"
                     title="Hora actual"
                   >

@@ -1,5 +1,7 @@
 # Etapa 2 · Registro diario e Historial
 
+[Ajuste del campo Hora · prueba de regresión y capturas](entry-time/README.md)
+
 Referencia de la auditoría del 17 de noviembre. La línea base es el merge del PR #81, `c2c62c94a25c44559ab926f8d954305e32a36317`. Las capturas usan datos sintéticos del 17 de noviembre de 2026 en America/Buenos_Aires. Se conserva Fitness Moderno.
 
 | Hallazgo | Cambio | Prueba y resultado |
