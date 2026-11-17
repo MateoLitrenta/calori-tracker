@@ -10,7 +10,7 @@ globalThis.__chartsHarness = { profile: null, period: 'Semana' };
 const imports = {
   react: stub(`import { useMemo, useRef, useLayoutEffect } from ${JSON.stringify(import.meta.resolve('react'))};
     export const useState = initial => {
-      const field = initial === null ? 'selectedBucket' : 'period';
+      const field = initial === null ? 'selectedBucket' : initial === false ? 'plotOverflows' : 'period';
       const harness = globalThis.__chartsHarness;
       return [harness[field] ?? initial, next => { harness[field] = typeof next === 'function' ? next(harness[field]) : next; }];
     };

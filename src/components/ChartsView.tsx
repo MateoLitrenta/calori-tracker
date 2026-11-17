@@ -26,6 +26,7 @@ export default function ChartsView() {
   const { activeProfile } = useAppStore();
   const [period, setPeriod] = useState<ChartPeriod>('Semana');
   const [selectedBucket, setSelectedBucket] = useState<string | null>(null);
+  const [plotOverflows, setPlotOverflows] = useState(false);
   const plotRef = useRef<HTMLDivElement>(null);
   const exploredYear = useRef('');
   const today = formatDateStr(new Date());
@@ -47,6 +48,17 @@ export default function ChartsView() {
     plot.scrollLeft += first.getBoundingClientRect().left - plot.getBoundingClientRect().left;
     exploredYear.current = scope;
   }, [activeProfile?.id, activeProfile?.user_id, data, period]);
+  useLayoutEffect(() => {
+    const plot = plotRef.current;
+    if (!plot || typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(() => {
+      setPlotOverflows(plot.scrollWidth > plot.clientWidth + 1);
+    });
+    observer.observe(plot);
+    // Text enlargement can grow the columns without resizing their viewport.
+    if (plot.firstElementChild) observer.observe(plot.firstElementChild);
+    return () => observer.disconnect();
+  }, [data, period]);
   if (!data) return null;
 
   const { summary, buckets, comparison } = data;
@@ -180,7 +192,7 @@ export default function ChartsView() {
                 </div>
               </div>
             </div>
-            {period === 'Año' && <div className="charts-year-navigation">
+            {period === 'Año' && <div className="charts-year-navigation" data-overflow={plotOverflows}>
               <p className="charts-scroll-hint">12 meses · Deslizá o usá las flechas.</p>
               <div>
                 <button type="button" aria-label="Ver meses anteriores" onClick={() => {
@@ -193,7 +205,9 @@ export default function ChartsView() {
                 }}><CaretRight size={18} aria-hidden="true" /></button>
               </div>
             </div>}
-            {period === 'Semana' && <p className="charts-scroll-hint charts-week-hint">Deslizá para ver todos los días.</p>}
+            {period !== 'Año' && <p className="charts-scroll-hint" data-overflow={plotOverflows}>
+              {period === 'Semana' ? 'Deslizá para ver todos los días.' : 'Deslizá para ver todos los grupos del mes.'}
+            </p>}
             <div className="charts-legend" aria-label="Leyenda">
               <span><i className="charts-key-consumed" aria-hidden="true" />Consumidas</span>
               <span><i className="charts-key-expenditure" aria-hidden="true" />Gasto<span className="charts-desktop-only"> estimado</span></span>
