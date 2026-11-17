@@ -1,7 +1,7 @@
 import './PeriodSelector.css';
 import './FitnessCharts.css';
-import { useMemo, useState, type CSSProperties } from 'react';
-import { ChartBar, Footprints, Barbell, CalendarBlank, X } from '@phosphor-icons/react';
+import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { ChartBar, Footprints, Barbell, CalendarBlank, CaretLeft, CaretRight, X } from '@phosphor-icons/react';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useAppStore } from '../hooks/useAppStore';
@@ -13,6 +13,10 @@ const number = (value: number) => value.toLocaleString('es-AR');
 const signed = (value: number) => `${value > 0 ? '+' : ''}${number(value)}`;
 const days = (value: number) => `${value} ${value === 1 ? 'día' : 'días'}`;
 const kcal = (value: number | null, balance = false, average = false) => value === null ? 'Sin datos' : `${balance ? signed(value) : number(value)} ${average ? 'kcal/día' : 'kcal'}`;
+const dateLabel = (date: string, pattern = 'd MMM yyyy') => format(parseISO(date), pattern, { locale: es });
+const dateRange = (start: string, end: string) => `${dateLabel(start)} – ${dateLabel(end)}`;
+const monthGroup = (start: string, end: string) => start === end
+  ? dateLabel(start, 'd MMM') : `${dateLabel(start, 'd')}–${dateLabel(end, 'd MMM')}`;
 const balanceTone = (value: number | null) => {
   const category = getBalanceCategory(value);
   return category.startsWith('deficit') ? 'charts-deficit' : category.startsWith('surplus') ? 'charts-surplus' : 'charts-neutral';
@@ -22,9 +26,27 @@ export default function ChartsView() {
   const { activeProfile } = useAppStore();
   const [period, setPeriod] = useState<ChartPeriod>('Semana');
   const [selectedBucket, setSelectedBucket] = useState<string | null>(null);
+  const plotRef = useRef<HTMLDivElement>(null);
+  const exploredYear = useRef('');
   const today = formatDateStr(new Date());
   const data = useMemo(() => activeProfile ? buildChartStats(activeProfile, period, today) : null,
     [activeProfile, period, today]);
+  // Initialize once per visible annual period. Selection, theme and new records
+  // must not take the scroll position away from someone exploring the chart.
+  useLayoutEffect(() => {
+    if (period !== 'Año') {
+      exploredYear.current = '';
+      return;
+    }
+    const plot = plotRef.current;
+    if (!plot || !data) return;
+    const scope = `${activeProfile?.user_id}/${activeProfile?.id}/${data.start}`;
+    if (exploredYear.current === scope) return;
+    const first = plot.querySelector<HTMLElement>('[data-has-energy="true"]');
+    if (!first) return;
+    plot.scrollLeft += first.getBoundingClientRect().left - plot.getBoundingClientRect().left;
+    exploredYear.current = scope;
+  }, [activeProfile?.id, activeProfile?.user_id, data, period]);
   if (!data) return null;
 
   const { summary, buckets, comparison } = data;
@@ -39,6 +61,14 @@ export default function ChartsView() {
     ? 'Todavía no hay comidas registradas para calcular el balance de este período.'
     : `${periodIntro} tu balance promedio fue de ${signed(summary.balance)} kcal/día · ${getBalanceLabel(summary.balance)}.`;
   const range = `${format(parseISO(data.start), 'd MMM', { locale: es })} – ${format(parseISO(data.end), 'd MMM yyyy', { locale: es })}`;
+  const summaryNote = summary.mealDays === 0
+    ? summary.energyDays === 0
+      ? 'Las medias aparecerán cuando registres comidas, pasos o ejercicio.'
+      : `Hay ${days(summary.energyDays)} con gasto estimado y ninguno con comidas. Falta ingesta para calcular el balance.`
+    : summary.energyDays > summary.mealDays
+      ? 'El balance usa sólo días con comidas. El gasto también incluye días de actividad sin comidas; por eso la resta de estas dos medias puede diferir del balance.'
+      : `El balance promedia los saldos diarios. Las tres medias usan los mismos ${mealDays}; tener registros no implica que estén completos.`;
+  const recordedMonths = buckets.filter(bucket => bucket.summary.energyDays > 0).map(bucket => bucket.label.toLowerCase());
 
   return (
     <div className="charts-view charts-insights">
@@ -85,11 +115,13 @@ export default function ChartsView() {
             </div>
           </div>
         </div>
+        <p className="charts-summary-note">{summaryNote}</p>
         <details className="charts-method">
           <summary>Cómo se calculan</summary>
           <p className="charts-coverage">{energyDays} · {mealDays}</p>
           <p className="charts-insight">{insight}</p>
           <p>Balance y consumidas usan días con comidas. Gasto usa días con cualquier registro energético (comidas, pasos o ejercicio). Incluye TMB, pasos y ejercicio registrado. Se excluyen días sin datos y fechas futuras.</p>
+          <p>El redondeo de cada media también puede producir pequeñas diferencias al restarlas, incluso si usan los mismos días.</p>
         </details>
       </section>
 
@@ -101,27 +133,30 @@ export default function ChartsView() {
           }
         }}>
         <h3 id="charts-energy-heading">Consumidas vs gasto</h3>
-        {summary.energyDays > 0 && <p className="charts-secondary" id="charts-energy-reading">{averages ? `Promedios diarios por ${period === 'Mes' ? 'semana' : 'mes'}.` : 'Valores diarios.'} <span className="charts-plot-unit">{averages ? 'kcal/día' : 'kcal'} · Elegí una barra para ver el detalle.</span></p>}
+        {summary.energyDays > 0 && <p className="charts-secondary" id="charts-energy-reading">{period === 'Mes' ? 'Promedios diarios en grupos del mes.' : period === 'Año' ? 'Promedios diarios por mes.' : 'Valores diarios.'} <span className="charts-plot-unit">{averages ? 'kcal/día' : 'kcal'} · Elegí una barra para ver el detalle.</span></p>}
+        {period === 'Año' && summary.energyDays > 0 && <p className="charts-activity-months">Con datos de energía · {recordedMonths.join(', ')}</p>}
         {summary.energyDays === 0 ? (
           <div className="charts-empty" role="status">
             <ChartBar size={32} aria-hidden="true" />
-            <p>Todavía no hay comidas ni actividad registradas en este período.</p>
+            <p>Todavía no hay comidas, pasos ni ejercicio registrados en este período.</p>
             <span>Registrá comidas y actividad para ver tu evolución.</span>
           </div>
         ) : (
           <>
-            <div className="charts-plot">
+            <div className="charts-plot" data-period={period}>
               <div className="charts-scale" aria-hidden="true">
                 <span>{number(maxCalories)}</span><span>{number(maxCalories / 2)}</span><span>0</span>
               </div>
-              <div key={`plot-${period}`} className="charts-plot-scroll">
+              <div key={`plot-${period}`} ref={plotRef} className="charts-plot-scroll">
                 <div className={`charts-bars ${period === 'Año' ? 'charts-bars-year' : ''}`} role="list" aria-label={`Evolución de ${period.toLowerCase()}`} aria-describedby="charts-energy-reading">
                   {buckets.map(bucket => {
                     const item = bucket.summary;
-                    const accessible = `${bucket.title}. ${averages ? 'Consumidas promedio' : 'Consumidas'}: ${item.consumed === null ? 'Sin comidas registradas' : kcal(item.consumed, false, averages)}. ${averages ? 'Gasto promedio' : 'Gasto estimado'}: ${kcal(item.expenditure, false, averages)}. ${averages ? 'Balance promedio' : 'Balance'}: ${kcal(item.balance, true, averages)}. ${getBalanceLabel(item.balance)}.`;
+                    const title = period === 'Mes' ? dateRange(bucket.start, bucket.end) : bucket.title;
+                    const accessible = `${title}. ${averages ? 'Consumidas promedio' : 'Consumidas'}: ${item.consumed === null ? 'Sin comidas registradas' : kcal(item.consumed, false, averages)}. ${averages ? 'Gasto promedio' : 'Gasto estimado'}: ${kcal(item.expenditure, false, averages)}. ${averages ? 'Balance promedio' : 'Balance'}: ${kcal(item.balance, true, averages)}. ${getBalanceLabel(item.balance)}.`;
                     return (
                       <div key={bucket.start} role="listitem">
                         <button type="button" className="charts-bucket" aria-label={accessible}
+                          data-has-energy={item.energyDays > 0}
                           aria-pressed={detail?.start === bucket.start}
                           aria-describedby={detail?.start === bucket.start ? 'charts-bucket-detail' : undefined}
                           onMouseEnter={() => setSelectedBucket(bucket.start)}
@@ -130,13 +165,13 @@ export default function ChartsView() {
                           <span className="charts-bar-pair" aria-hidden="true">
                             {item.energyDays === 0 && <span className="charts-bar-empty">—</span>}
                             <span className="charts-bar-track">
-                              {item.consumed !== null && <span className="charts-bar charts-bar-consumed" style={{ height: `${item.consumed / maxCalories * 100}%` }} />}
+                              {item.consumed !== null && <span className="charts-bar charts-bar-consumed" data-zero={item.consumed === 0} style={{ height: `${item.consumed / maxCalories * 100}%` }}>{item.consumed === 0 && <span>0</span>}</span>}
                             </span>
                             <span className="charts-bar-track">
-                              {item.expenditure !== null && <span className="charts-bar charts-bar-expenditure" style={{ height: `${item.expenditure / maxCalories * 100}%` }} />}
+                              {item.expenditure !== null && <span className="charts-bar charts-bar-expenditure" data-zero={item.expenditure === 0} style={{ height: `${item.expenditure / maxCalories * 100}%` }}>{item.expenditure === 0 && <span>0</span>}</span>}
                             </span>
                           </span>
-                          <span className="charts-bucket-label" aria-hidden="true">{bucket.label}</span>
+                          <span className="charts-bucket-label" aria-hidden="true">{period === 'Mes' ? monthGroup(bucket.start, bucket.end) : bucket.label}</span>
                           <span className={`charts-bucket-balance ${balanceTone(item.balance)}`} aria-hidden="true">{item.balance === null ? '—' : signed(item.balance)}</span>
                         </button>
                       </div>
@@ -145,7 +180,19 @@ export default function ChartsView() {
                 </div>
               </div>
             </div>
-            {period === 'Año' && <p className="charts-scroll-hint charts-year-hint">Deslizá para ver todos los meses.</p>}
+            {period === 'Año' && <div className="charts-year-navigation">
+              <p className="charts-scroll-hint">12 meses · Deslizá o usá las flechas.</p>
+              <div>
+                <button type="button" aria-label="Ver meses anteriores" onClick={() => {
+                  const plot = plotRef.current;
+                  if (plot) plot.scrollBy({ left: -plot.clientWidth * .8 });
+                }}><CaretLeft size={18} aria-hidden="true" /></button>
+                <button type="button" aria-label="Ver meses siguientes" onClick={() => {
+                  const plot = plotRef.current;
+                  if (plot) plot.scrollBy({ left: plot.clientWidth * .8 });
+                }}><CaretRight size={18} aria-hidden="true" /></button>
+              </div>
+            </div>}
             {period === 'Semana' && <p className="charts-scroll-hint charts-week-hint">Deslizá para ver todos los días.</p>}
             <div className="charts-legend" aria-label="Leyenda">
               <span><i className="charts-key-consumed" aria-hidden="true" />Consumidas</span>
@@ -155,7 +202,7 @@ export default function ChartsView() {
             <div className="charts-detail" id="charts-bucket-detail" role="group" aria-label="Detalle del gráfico"
               data-selected={Boolean(detail)}>
               <div className="charts-detail-header">
-                <h4>{detail?.title ?? 'Detalle'}</h4>
+                <h4>{detail ? period === 'Mes' ? dateRange(detail.start, detail.end) : detail.title : 'Detalle'}</h4>
                 <button type="button" className="charts-detail-clear" disabled={!detail}
                   aria-label="Quitar selección del gráfico" title="Quitar selección" onClick={() => setSelectedBucket(null)}>
                   <X size={16} aria-hidden="true" /><span>Quitar selección</span>
@@ -200,13 +247,19 @@ export default function ChartsView() {
 
       {comparison && (
         <section key={`comparison-${period}`} className="charts-panel charts-comparison" aria-labelledby="charts-comparison-heading">
-          <h3 id="charts-comparison-heading"><span className="charts-desktop-only">Comparado con el período anterior</span><span className="charts-mobile-only">vs período anterior</span></h3>
+          <h3 id="charts-comparison-heading">Comparado con el período anterior</h3>
+          <div className="charts-comparison-periods">
+            <div><h4>Actual · {dateRange(data.start, data.end < today ? data.end : today)}</h4>
+              <p>{mealDays} · {days(summary.energyDays)} con gasto estimado</p></div>
+            <div><h4>Anterior · {dateRange(data.previousStart, data.previousEnd)}</h4>
+              <p>{days(data.previousSummary.mealDays)} con comidas · {days(data.previousSummary.energyDays)} con gasto estimado</p></div>
+          </div>
           <dl>
             <div><dt>Consumidas</dt><dd>{signed(comparison.consumed)} <span>kcal/día</span></dd></div>
             <div><dt>Gasto estimado</dt><dd>{signed(comparison.expenditure)} <span>kcal/día</span></dd></div>
             <div><dt>Balance</dt><dd>{signed(comparison.balance)} <span>kcal/día</span></dd></div>
           </dl>
-          <p className="charts-secondary charts-desktop-only">Diferencias entre promedios de {period === 'Semana' ? 'esta semana y la anterior' : period === 'Mes' ? 'este mes y el anterior' : 'este año y el anterior'}, según los días registrados.</p>
+          <p className="charts-secondary">Actual menos anterior. {data.end > today ? 'El período actual está en curso; el anterior abarca el calendario completo. ' : ''}Cada media usa sus días registrados. Las diferencias describen los registros disponibles.</p>
         </section>
       )}
     </div>

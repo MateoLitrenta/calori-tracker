@@ -42,8 +42,10 @@
 .charts-method { margin-top: 12px; border-top: 1px solid var(--fit-rule); }
 .charts-method summary { display: list-item; min-height: 44px; padding-block: 12px 8px; color: var(--fit-accent); font-weight: 650; cursor: pointer; }
 .charts-method p + p { margin-top: 6px; }
+.charts-summary-note { margin-top: 14px; max-width: 85ch; color: var(--fit-quiet); font-size: 13px; line-height: 1.55; }
 .charts-energy { container: energy / inline-size; }
 .charts-energy > .charts-secondary { margin-top: 5px; }
+.charts-activity-months { margin-top: 8px; color: var(--fit-accent); font-size: 13px; line-height: 1.4; }
 .charts-plot {
   --plot-height: clamp(112px, 25vw, 184px);
   display: grid;
@@ -52,7 +54,7 @@
   margin-top: 20px;
 }
 .charts-scale { display: flex; flex-direction: column; justify-content: space-between; height: calc(var(--plot-height) + 12px); margin-top: -2px; color: var(--fit-quiet); font-size: 10px; line-height: 12px; text-align: right; }
-.charts-plot-scroll { min-width: 0; overflow-x: auto; padding-bottom: 4px; }
+.charts-plot-scroll { min-width: 0; overflow-x: auto; padding-bottom: 4px; overscroll-behavior-x: contain; }
 .charts-bars { display: flex; justify-content: space-around; gap: 4px; width: 100%; min-width: max-content; }
 .charts-bars > div { flex: 1; min-width: 44px; }
 .charts-bucket { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 4px; padding-block: 4px; border-radius: var(--fit-control-radius); }
@@ -69,10 +71,13 @@
 }
 .charts-bar-track { display: flex; align-items: end; width: min(30%, 18px); }
 .charts-bar { width: 100%; border-radius: 3px 3px 0 0; }
+.charts-bar[data-zero=true] { position: relative; border-top: 2px solid var(--fit-accent); }
+.charts-bar[data-zero=true] > span { position: absolute; left: 50%; bottom: 3px; transform: translateX(-50%); font-size: 11px; color: var(--fit-quiet); }
 .charts-bar-consumed, .charts-key-consumed { background: var(--fit-orange); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fit-accent) 62%, transparent); }
 .charts-bar-expenditure, .charts-key-expenditure { background: repeating-linear-gradient(135deg, var(--fit-expenditure) 0 3px, color-mix(in srgb, var(--fit-expenditure) 68%, var(--fit-surface)) 3px 5px); }
 .charts-bar-empty { position: absolute; bottom: 4px; color: var(--fit-quiet); }
-.charts-bucket-label { text-transform: capitalize; font-size: 12px; font-weight: 650; }
+.charts-bucket-label { font-size: 12px; font-weight: 650; }
+.charts-plot[data-period='Mes'] .charts-bucket-label { max-width: 6ch; line-height: 1.4; text-align: center; }
 .charts-bucket-balance { font-size: 11px; color: var(--fit-quiet); }
 .charts-legend { display: flex; flex-wrap: wrap; gap: 5px 14px; margin: 10px 0 12px; color: var(--fit-quiet); font-size: 12px; }
 .charts-legend i { width: 12px; height: 10px; border-radius: 2px; }
@@ -98,9 +103,21 @@
 .charts-streak, .charts-comparison dl { padding-top: 12px; border-top: 1px solid var(--fit-rule); }
 .charts-comparison dl { margin-block: 12px 8px; }
 .charts-comparison dd span { display: block; font-weight: 400; font-size: 12px; color: var(--fit-quiet); }
+.charts-comparison-periods { display: grid; gap: 10px; margin-top: 16px; font-size: 13px; line-height: 1.5; }
+.charts-comparison-periods h4 { font-weight: 600; }
+.charts-comparison-periods p { color: var(--fit-quiet); }
 .charts-scroll-hint { display: none; }
-@container energy (max-width: 600px) { .charts-year-hint { display: block; margin-top: 4px; } }
-@container energy (max-width: 360px) { .charts-week-hint { display: block; margin-top: 4px; } }
+.charts-year-navigation { display: none; }
+@container energy (max-width: 630px) {
+  .charts-year-navigation { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; }
+  .charts-year-navigation .charts-scroll-hint { display: block; }
+  .charts-year-navigation > div { display: flex; flex: none; }
+  .charts-year-navigation button { display: grid; place-items: center; min-width: 44px; min-height: 44px; border: 1px solid var(--fit-rule); border-radius: var(--fit-control-radius); }
+  .charts-year-navigation button + button { margin-left: 4px; }
+  .charts-plot[data-period='Semana'] { margin-inline: calc(-1 * var(--fit-space)); gap: 2px; }
+  .charts-plot[data-period='Semana'] .charts-bars { gap: 0; }
+}
+@container energy (max-width: 300px) { .charts-week-hint { display: block; margin-top: 4px; } }
 .charts-mobile-only { display: none; }
 @media (max-width: 600px) {
   .charts-view .charts-desktop-only { display: none; }
