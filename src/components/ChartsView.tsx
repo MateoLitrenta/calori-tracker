@@ -40,7 +40,10 @@ export default function ChartsView() {
       return;
     }
     const plot = plotRef.current;
-    if (!plot || !data) return;
+    if (!plot || !data) {
+      exploredYear.current = '';
+      return;
+    }
     const scope = `${activeProfile?.user_id}/${activeProfile?.id}/${data.start}`;
     if (exploredYear.current === scope) return;
     const first = plot.querySelector<HTMLElement>('[data-has-energy="true"]');
