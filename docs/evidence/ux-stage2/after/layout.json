@@ -1,0 +1,614 @@
+[
+  {
+    "name": "Inicio, Historial y formulario",
+    "width": 320,
+    "theme": "light",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "formWidth": 318,
+    "text200": {
+      "width": 318,
+      "scrollWidth": 318,
+      "bodyWidth": 318,
+      "bodyScrollWidth": 318,
+      "footerVisible": true
+    },
+    "habitLabels": [
+      {
+        "label": "−250",
+        "button": 96,
+        "text": 61.359375
+      },
+      {
+        "label": "+250",
+        "button": 96,
+        "text": 61.359375
+      },
+      {
+        "label": "−500",
+        "button": 91,
+        "text": 61.359375
+      },
+      {
+        "label": "+500",
+        "button": 91,
+        "text": 61.359375
+      }
+    ]
+  },
+  {
+    "name": "Inicio, Historial y formulario",
+    "width": 320,
+    "theme": "dark",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "formWidth": 318,
+    "text200": {
+      "width": 318,
+      "scrollWidth": 318,
+      "bodyWidth": 318,
+      "bodyScrollWidth": 318,
+      "footerVisible": true
+    },
+    "habitLabels": [
+      {
+        "label": "−250",
+        "button": 96,
+        "text": 61.359375
+      },
+      {
+        "label": "+250",
+        "button": 96,
+        "text": 61.359375
+      },
+      {
+        "label": "−500",
+        "button": 91,
+        "text": 61.359375
+      },
+      {
+        "label": "+500",
+        "button": 91,
+        "text": 61.359375
+      }
+    ]
+  },
+  {
+    "name": "Inicio, Historial y formulario",
+    "width": 375,
+    "theme": "light",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "formWidth": 373,
+    "text200": {
+      "width": 373,
+      "scrollWidth": 373,
+      "bodyWidth": 373,
+      "bodyScrollWidth": 373,
+      "footerVisible": true
+    },
+    "habitLabels": [
+      {
+        "label": "−250",
+        "button": 108.328125,
+        "text": 61.359375
+      },
+      {
+        "label": "+250",
+        "button": 108.328125,
+        "text": 61.359375
+      },
+      {
+        "label": "−500",
+        "button": 101.328125,
+        "text": 61.359375
+      },
+      {
+        "label": "+500",
+        "button": 101.328125,
+        "text": 61.359375
+      }
+    ]
+  },
+  {
+    "name": "Inicio, Historial y formulario",
+    "width": 375,
+    "theme": "dark",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "formWidth": 373,
+    "text200": {
+      "width": 373,
+      "scrollWidth": 373,
+      "bodyWidth": 373,
+      "bodyScrollWidth": 373,
+      "footerVisible": true
+    },
+    "habitLabels": [
+      {
+        "label": "−250",
+        "button": 108.328125,
+        "text": 61.359375
+      },
+      {
+        "label": "+250",
+        "button": 108.328125,
+        "text": 61.359375
+      },
+      {
+        "label": "−500",
+        "button": 101.328125,
+        "text": 61.359375
+      },
+      {
+        "label": "+500",
+        "button": 101.328125,
+        "text": 61.359375
+      }
+    ]
+  },
+  {
+    "name": "Inicio, Historial y formulario",
+    "width": 393,
+    "theme": "light",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "formWidth": 391,
+    "text200": {
+      "width": 391,
+      "scrollWidth": 391,
+      "bodyWidth": 391,
+      "bodyScrollWidth": 391,
+      "footerVisible": true
+    },
+    "habitLabels": [
+      {
+        "label": "−250",
+        "button": 114.328125,
+        "text": 61.359375
+      },
+      {
+        "label": "+250",
+        "button": 114.328125,
+        "text": 61.359375
+      },
+      {
+        "label": "−500",
+        "button": 107.328125,
+        "text": 61.359375
+      },
+      {
+        "label": "+500",
+        "button": 107.328125,
+        "text": 61.359375
+      }
+    ]
+  },
+  {
+    "name": "Inicio, Historial y formulario",
+    "width": 393,
+    "theme": "dark",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "formWidth": 391,
+    "text200": {
+      "width": 391,
+      "scrollWidth": 391,
+      "bodyWidth": 391,
+      "bodyScrollWidth": 391,
+      "footerVisible": true
+    },
+    "habitLabels": [
+      {
+        "label": "−250",
+        "button": 114.328125,
+        "text": 61.359375
+      },
+      {
+        "label": "+250",
+        "button": 114.328125,
+        "text": 61.359375
+      },
+      {
+        "label": "−500",
+        "button": 107.328125,
+        "text": 61.359375
+      },
+      {
+        "label": "+500",
+        "button": 107.328125,
+        "text": 61.359375
+      }
+    ]
+  },
+  {
+    "name": "Inicio, Historial y formulario",
+    "width": 440,
+    "theme": "light",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "formWidth": 438,
+    "text200": {
+      "width": 438,
+      "scrollWidth": 438,
+      "bodyWidth": 438,
+      "bodyScrollWidth": 438,
+      "footerVisible": true
+    },
+    "habitLabels": [
+      {
+        "label": "−250",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "+250",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "−500",
+        "button": 123,
+        "text": 61.359375
+      },
+      {
+        "label": "+500",
+        "button": 123,
+        "text": 61.359375
+      }
+    ]
+  },
+  {
+    "name": "Inicio, Historial y formulario",
+    "width": 440,
+    "theme": "dark",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "formWidth": 438,
+    "text200": {
+      "width": 438,
+      "scrollWidth": 438,
+      "bodyWidth": 438,
+      "bodyScrollWidth": 438,
+      "footerVisible": true
+    },
+    "habitLabels": [
+      {
+        "label": "−250",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "+250",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "−500",
+        "button": 123,
+        "text": 61.359375
+      },
+      {
+        "label": "+500",
+        "button": 123,
+        "text": 61.359375
+      }
+    ]
+  },
+  {
+    "name": "Inicio, Historial y formulario",
+    "width": 768,
+    "theme": "light",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "formWidth": 590,
+    "text200": {
+      "width": 590,
+      "scrollWidth": 590,
+      "bodyWidth": 590,
+      "bodyScrollWidth": 590,
+      "footerVisible": true
+    },
+    "habitLabels": [
+      {
+        "label": "−250",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "+250",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "−500",
+        "button": 127.671875,
+        "text": 61.359375
+      },
+      {
+        "label": "+500",
+        "button": 127.671875,
+        "text": 61.359375
+      }
+    ]
+  },
+  {
+    "name": "Inicio, Historial y formulario",
+    "width": 768,
+    "theme": "dark",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "formWidth": 590,
+    "text200": {
+      "width": 590,
+      "scrollWidth": 590,
+      "bodyWidth": 590,
+      "bodyScrollWidth": 590,
+      "footerVisible": true
+    },
+    "habitLabels": [
+      {
+        "label": "−250",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "+250",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "−500",
+        "button": 127.671875,
+        "text": 61.359375
+      },
+      {
+        "label": "+500",
+        "button": 127.671875,
+        "text": 61.359375
+      }
+    ]
+  },
+  {
+    "name": "Inicio, Historial y formulario",
+    "width": 1440,
+    "theme": "light",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "formWidth": 590,
+    "text200": {
+      "width": 590,
+      "scrollWidth": 590,
+      "bodyWidth": 590,
+      "bodyScrollWidth": 590,
+      "footerVisible": true
+    },
+    "habitLabels": [
+      {
+        "label": "−250",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "+250",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "−500",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "+500",
+        "button": 128,
+        "text": 61.359375
+      }
+    ]
+  },
+  {
+    "name": "Inicio, Historial y formulario",
+    "width": 1440,
+    "theme": "dark",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "formWidth": 590,
+    "text200": {
+      "width": 590,
+      "scrollWidth": 590,
+      "bodyWidth": 590,
+      "bodyScrollWidth": 590,
+      "footerVisible": true
+    },
+    "habitLabels": [
+      {
+        "label": "−250",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "+250",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "−500",
+        "button": 128,
+        "text": 61.359375
+      },
+      {
+        "label": "+500",
+        "button": 128,
+        "text": 61.359375
+      }
+    ]
+  },
+  {
+    "name": "Año redimensionado a 320",
+    "width": 1440,
+    "theme": "light",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "activity": [
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov"
+    ],
+    "months": 12
+  },
+  {
+    "name": "Año redimensionado a 320",
+    "width": 1440,
+    "theme": "dark",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "activity": [
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov"
+    ],
+    "months": 12
+  },
+  {
+    "name": "Año redimensionado a 375",
+    "width": 1440,
+    "theme": "light",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "activity": [
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov"
+    ],
+    "months": 12
+  },
+  {
+    "name": "Año redimensionado a 375",
+    "width": 1440,
+    "theme": "dark",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "activity": [
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov"
+    ],
+    "months": 12
+  },
+  {
+    "name": "Año redimensionado a 393",
+    "width": 1440,
+    "theme": "light",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "activity": [
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov"
+    ],
+    "months": 12
+  },
+  {
+    "name": "Año redimensionado a 393",
+    "width": 1440,
+    "theme": "dark",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "activity": [
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov"
+    ],
+    "months": 12
+  },
+  {
+    "name": "Año vacío redimensionado",
+    "width": 1440,
+    "theme": "light",
+    "status": "passed",
+    "services": {
+      "writes": [],
+      "ai": 0,
+      "external": 0
+    },
+    "empty": true
+  }
+]

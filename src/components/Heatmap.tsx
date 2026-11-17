@@ -510,6 +510,10 @@ export default function Heatmap({
               </button>
             </div>
           </div>
+          <button type="button" className="ah-detail-jump" aria-controls={detailId} onClick={() => {
+            detailRef.current?.focus({ preventScroll: true });
+            detailRef.current?.scrollIntoView({ block: 'start' });
+          }}>Ver detalle del día</button>
           <div className="ah-motion-viewport">
             <div className="ah-motion-surface" ref={motionRef}>
               {state.view === 'year' ? (
@@ -722,10 +726,6 @@ export default function Heatmap({
                   </p>
                 </>
               )}
-              <button type="button" className="ah-detail-jump" aria-controls={detailId} onClick={() => {
-                detailRef.current?.focus({ preventScroll: true });
-                detailRef.current?.scrollIntoView({ block: 'start' });
-              }}>Ver detalle del día</button>
               {state.view !== 'year' && (
                 <div
                   className="ah-period-summary"

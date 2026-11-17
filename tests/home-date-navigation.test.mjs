@@ -303,13 +303,15 @@ test('calendar keyboard crosses months, keeps future/boundary days disabled and 
   assert.equal(view.saves.length, 0);
 });
 
-test('calendar access with an active draft announces and focuses recovery without losing the original date or text', async t => {
+test('calendar access preserves the original date, text and focus inside the active dialog', async t => {
   const view = await mount(t, { width: 1440 }); await view.click(document.querySelector('.daily-quick-actions button'));
   await fill('add-meal-description', 'Borrador ante calendario');
   const textarea = document.getElementById('add-meal-description'); await view.click(view.button('Abrir calendario mensual'));
   assert.equal(document.querySelector('.home-date-picker'), null); assert.equal(document.getElementById('add-meal-description'), textarea);
   assert.equal(view.selected(), today); assert.equal(textarea.value, 'Borrador ante calendario');
-  assert.equal(document.activeElement, view.button('Volver al registro en edición')); assert.equal(view.saves.length, 0);
+  assert.match(document.querySelector('.home-date-blocked').textContent, /Tu borrador se conserva/);
+  assert.equal(document.activeElement?.getAttribute('aria-label'), 'Cerrar formulario');
+  assert.equal(view.saves.length, 0);
 });
 
 test('mobile week ranges spell out both months when they cross a month boundary', async t => {

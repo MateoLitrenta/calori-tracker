@@ -9,6 +9,8 @@ const origin = 'http://127.0.0.1:' + (before ? '5197' : '5198');
 const directory = path.join(repo, 'docs/evidence/ux-stage2', before ? 'before' : 'after');
 const evidence = [];
 mkdirSync(directory, { recursive: true });
+const report = path.join(directory, mode + '.json');
+const saveEvidence = () => writeFileSync(report, JSON.stringify(evidence, null, 2) + '\n');
 const browser = await start();
 const meal = page => page.getByRole('button', { name: '+ Comida', exact: true });
 const dialog = page => page.getByRole('dialog');
@@ -35,6 +37,7 @@ async function check(name, width, theme, inspect, scenario = 'main') {
     console.error(name, width, theme, error.message);
   } finally {
     await context.close();
+    saveEvidence();
   }
 }
 async function enlarge(page) {
@@ -49,13 +52,34 @@ async function enlarge(page) {
   });
   await settled(page);
 }
+async function habitLabelsAt200(page) {
+  return page.locator('.habit-controls button').evaluateAll(buttons => {
+    const originals = buttons.map(button => [button, button.style.fontSize, parseFloat(getComputedStyle(button).fontSize)]);
+    for (const [button, , size] of originals) button.style.fontSize = size * 2 + 'px';
+    try {
+      return buttons.map(button => {
+        const range = document.createRange();
+        range.selectNodeContents(button);
+        return { label: button.textContent.trim(), button: button.getBoundingClientRect().width,
+          text: range.getBoundingClientRect().width };
+      });
+    } finally {
+      for (const [button, style] of originals) button.style.fontSize = style;
+    }
+  });
+}
 async function layout(page, width, theme) {
+  const habitLabels = await habitLabelsAt200(page);
+  if (!before) assert.ok(habitLabels.every(e => e.button >= 44 && e.text <= e.button), JSON.stringify(habitLabels));
   const datedHistory = await history(page);
   await datedHistory.locator('.ah-navigation').scrollIntoViewIfNeeded();
   if (width === 375 || width === 1440) await capture(page, width + '-' + theme + '-historial');
   if (!before && width < 768) {
-    await datedHistory.getByRole('button', { name: 'Ver detalle del día' }).click();
+    const jump = datedHistory.getByRole('button', { name: 'Ver detalle del día' });
+    await jump.focus();
+    await page.keyboard.press('Enter');
     assert.equal(await page.evaluate(() => document.activeElement?.getAttribute('aria-label')), 'Detalle del día');
+    if (width === 375) await capture(page, width + '-' + theme + '-detalle');
   }
   const main = page.locator('.app-main');
   await main.evaluate(e => { e.scrollTop = 0; });
@@ -67,9 +91,14 @@ async function layout(page, width, theme) {
   const box = await form.boundingBox();
   if (!before) {
     await dialog(page).getByRole('button', { name: 'Elegir de galería' }).waitFor();
-    await dialog(page).getByRole('button', { name: 'Usar hora actual' }).waitFor();
+    const time = page.locator('#add-meal-time');
+    await time.fill('07:15');
+    await dialog(page).getByRole('button', { name: 'Usar hora actual' }).click();
+    assert.equal(await time.inputValue(), '12:00');
     assert.ok(box.width >= Math.min(width - 36, 550));
   }
+  await form.locator('.fitness-extras > summary').click();
+  await page.locator('#add-meal-notes').fill('Notas opcionales sintéticas. '.repeat(10));
   await page.locator('#add-meal-description').fill('Descripción extensa para comprobar el formulario y su pie. '.repeat(12));
   await enlarge(page);
   const geometry = await form.evaluate(element => {
@@ -83,7 +112,7 @@ async function layout(page, width, theme) {
     assert.ok(geometry.bodyScrollWidth <= geometry.bodyWidth + 1, JSON.stringify(geometry));
   }
   if (width === 375 || width === 1440) await capture(page, width + '-' + theme + '-comida-texto200');
-  return { formWidth: box.width, text200: geometry };
+  return { formWidth: box.width, text200: geometry, habitLabels };
 }
 
 async function entries(page) {
@@ -149,11 +178,27 @@ async function habitsAndPhoto(page) {
     const day = qa.store.activeProfile.records[qa.today];
     return day.water === 2500 && day.steps === 6500;
   });
+  await page.getByRole('button', { name: 'Restar 250 ml de agua' }).click();
+  await page.getByRole('button', { name: 'Restar 500 pasos' }).click();
+  await page.waitForFunction(() => {
+    const qa = window.__homeQA;
+    const day = qa.store.activeProfile.records[qa.today];
+    return day.water === 2250 && day.steps === 6000;
+  });
   await page.getByRole('button', { name: 'Registrar peso' }).click();
   await dialog(page).getByLabel('Peso (kg)').fill('73,2');
   await dialog(page).getByRole('button', { name: 'Guardar peso' }).click();
   await page.getByRole('button', { name: 'Editar peso' }).waitFor();
   await meal(page).click();
+  await page.evaluate(() => {
+    Object.defineProperty(navigator.mediaDevices, 'getUserMedia', { value: () => new Promise(() => {}) });
+  });
+  const camera = dialog(page).getByRole('button', { name: 'Tomar foto' });
+  await camera.click();
+  await dialog(page).getByRole('button', { name: 'Cerrar cámara' }).waitFor();
+  await page.keyboard.press('Escape');
+  await dialog(page).getByRole('button', { name: 'Cerrar cámara' }).waitFor({ state: 'hidden' });
+  await page.waitForFunction(() => document.activeElement?.textContent.includes('Tomar foto'));
   await dialog(page).locator('input[type=file]').setInputFiles({
     name: 'synthetic.png', mimeType: 'image/png',
     buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jPioAAAAASUVORK5CYII=', 'base64'),
@@ -168,7 +213,7 @@ async function habitsAndPhoto(page) {
 async function annual(page, width, empty = false) {
   await go(page, 'Datos');
   await period(page, 'Año');
-  if (!empty && !before) await page.locator('.charts-bucket').nth(9).click();
+  if (!empty) await page.locator('.charts-bucket').nth(9).click();
   await page.setViewportSize({ width, height: heights[width] });
   await settled(page);
   const data = await metrics(page);
@@ -215,7 +260,7 @@ try {
   }
 } finally {
   await browser.close();
-  writeFileSync(path.join(directory, mode + '.json'), JSON.stringify(evidence, null, 2) + '\n');
+  saveEvidence();
 }
 assert.ok(evidence.every(row => row.status === 'passed'), 'See recorded scenario failures');
 console.log(mode, evidence.length, 'passed');
