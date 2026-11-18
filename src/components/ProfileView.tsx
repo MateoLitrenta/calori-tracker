@@ -1,6 +1,5 @@
-import './PeriodSelector.css';
 import './FitnessProfile.css';
-import { useState, useEffect, useRef, type CSSProperties } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
 import { useTheme } from './ThemeProvider';
 import type { UserProfile, UserSex } from '../types';
@@ -9,18 +8,29 @@ import { supabase } from '../lib/supabase';
 import { prepareAvatar } from '../lib/avatar';
 import UserAvatar from './UserAvatar';
 import ViewSkeleton from './ViewSkeleton';
+import DiscardDraftDialog from './DiscardDraftDialog';
 import toast from 'react-hot-toast';
 
-export default function ProfileView() {
+type Personal = Pick<UserProfile, 'name' | 'sex' | 'age' | 'weight' | 'height'>;
+type LeaveGuard = (leave: () => void) => void;
+
+export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<LeaveGuard | null> }) {
   const { user, activeProfile, avatarRevision, updateProfile, updateAvatarPath, resetData, signOut } = useAppStore();
   const { theme, setTheme } = useTheme();
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(activeProfile?.name ?? '');
-  const [sex, setSex] = useState<UserSex | null>(activeProfile?.sex ?? null);
-  const [age, setAge] = useState<number | null>(activeProfile?.age ?? null);
-  const [weight, setWeight] = useState<number | null>(activeProfile?.weight ?? null);
-  const [height, setHeight] = useState<number | null>(activeProfile?.height ?? null);
+  const [base, setBase] = useState<Personal | null>(null);
+  const [changes, setChanges] = useState<Partial<Personal>>({});
+  const [saving, setSaving] = useState(false);
+  const saveLock = useRef(false);
+  const mounted = useRef(true);
+  const restoreEditFocus = useRef(false);
+  const editButton = useRef<HTMLButtonElement>(null);
+  const nameInput = useRef<HTMLInputElement>(null);
+  const [discard, setDiscard] = useState<(() => void) | null>(null);
+  const isEditing = base !== null;
+  const dirty = Object.keys(changes).length > 0;
+  const [resetError, setResetError] = useState('');
+  const resetLock = useRef(false);
   const [isResetting, setIsResetting] = useState(false);
   const [isResetConfirm, setIsResetConfirm] = useState(false);
   const photoInputRef = useRef<HTMLInputElement>(null);
@@ -39,74 +49,87 @@ export default function ProfileView() {
     if (draftAvatar) URL.revokeObjectURL(draftAvatar.url);
   }, [draftAvatar]);
 
-  const initFromProfile = () => {
-    if (activeProfile) {
-      setName(activeProfile.name);
-      setSex(activeProfile.sex);
-      setAge(activeProfile.age);
-      setWeight(activeProfile.weight);
-      setHeight(activeProfile.height);
-    } else if (user) {
-      setName(user.email?.split('@')[0] || 'Usuario');
+  useLayoutEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
+  useLayoutEffect(() => {
+    if (!beforeLeave) return;
+    beforeLeave.current = leave => {
+      if (saveLock.current || photoBusy || passwordBusy || isResetting || isSigningOut) {
+        toast.error('Esperá a que termine la operación antes de cambiar de sección.');
+      } else if (dirty || draftAvatar || newPassword || repeatPassword) {
+        setDiscard(() => leave);
+      } else leave();
+    };
+    return () => { beforeLeave.current = null; };
+  }, [beforeLeave, dirty, draftAvatar, photoBusy, passwordBusy, isResetting, isSigningOut, newPassword, repeatPassword]);
+
+  useLayoutEffect(() => {
+    if (isEditing) nameInput.current?.focus({ preventScroll: true });
+    else if (restoreEditFocus.current) {
+      editButton.current?.focus({ preventScroll: true });
+      restoreEditFocus.current = false;
     }
-  };
+  }, [isEditing]);
 
-  useEffect(() => {
-    initFromProfile();
-  }, [activeProfile, user]);
+  if (!user || !activeProfile || activeProfile.user_id !== user.id) return <ViewSkeleton view="profile" />;
+  const { name, sex, age, weight, height } = { ...(base ?? activeProfile), ...changes };
+  if (sex == null || age == null || weight == null || height == null) return <ViewSkeleton view="profile" />;
 
-  const cancelEdit = () => {
-    initFromProfile();
-    setIsEditing(false);
-  };
-
-  if (!user || !activeProfile || activeProfile.user_id !== user.id || sex === null || age === null || weight === null || height === null) {
-    return <ViewSkeleton view="profile" />;
+  function change<K extends keyof Personal>(key: K, value: Personal[K]) {
+    setChanges(previous => {
+      const next = { ...previous, [key]: value };
+      if (base?.[key] === value) delete next[key];
+      return next;
+    });
   }
 
-  const previewProfile: UserProfile = {
-    id: activeProfile?.id || 'temp',
-    user_id: user?.id || 'temp',
-    avatar_path: activeProfile.avatar_path,
-    name,
-    sex,
-    age,
-    weight,
-    height,
-    activity: activeProfile?.activity,
-    goal: activeProfile?.goal || 'Mantenimiento',
-    created_at: activeProfile?.created_at || new Date().toISOString(),
-    records: activeProfile?.records || {}
+  const finishEdit = () => {
+    setBase(null);
+    setChanges({});
+    restoreEditFocus.current = true;
   };
-  
+  const cancelEdit = () => {
+    if (dirty) setDiscard(() => finishEdit);
+    else finishEdit();
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
-    
+    if (saveLock.current || photoBusy) return;
+    saveLock.current = true;
+    setSaving(true);
     try {
-      await updateProfile({
-        ...previewProfile,
-        id: activeProfile?.id || '', 
-        user_id: user.id 
-      });
-      setIsEditing(false);
-      toast.success('¡Ajustes guardados correctamente!', { style: { background: 'var(--app-toast-bg)', color: 'var(--app-toast-text)' } });
-    } catch (err) {
-      toast.error('Error al actualizar', { style: { background: 'var(--app-toast-bg)', color: 'var(--app-toast-text)' } });
+      await updateProfile({ ...activeProfile, ...changes });
+      if (mounted.current) {
+        finishEdit();
+        toast.success('Datos personales guardados.');
+      }
+    } catch {
+      if (mounted.current) toast.error('No se pudieron guardar los datos. Tu borrador se conserva.');
+    } finally {
+      saveLock.current = false;
+      if (mounted.current) setSaving(false);
     }
   };
 
   const handleReset = async () => {
-    if (isResetting) return;
+    if (resetLock.current) return;
+    resetLock.current = true;
     setIsResetting(true);
+    setResetError('');
     try {
       await resetData();
-      setIsResetConfirm(false);
-      toast.success('Registros eliminados', { style: { background: 'var(--app-toast-bg)', color: 'var(--app-toast-text)' } });
+      if (mounted.current) {
+        setIsResetConfirm(false);
+        toast.success('Registros eliminados');
+      }
     } catch {
-      toast.error('No se pudieron borrar los registros. Intentá nuevamente.', { style: { background: 'var(--app-toast-bg)', color: 'var(--app-toast-text)' } });
+      if (mounted.current) setResetError('No se pudieron borrar los registros. Intentá nuevamente.');
     } finally {
-      setIsResetting(false);
+      resetLock.current = false;
+      if (mounted.current) setIsResetting(false);
     }
   };
 
@@ -200,7 +223,7 @@ export default function ProfileView() {
       signOutDialogRef.current?.close();
     } catch {
       signOutDialogRef.current?.close();
-      toast.error('No pudimos cerrar la sesión. Intentá nuevamente.', { style: { background: 'var(--app-toast-bg)', color: 'var(--app-toast-text)' } });
+      toast.error('No pudimos cerrar la sesión. Intentá nuevamente.');
     } finally {
       setIsSigningOut(false);
     }
@@ -229,22 +252,22 @@ export default function ProfileView() {
           }} />
         <div className="profile-actions profile-photo-actions">
           {!draftAvatar ? (
-            <button type="button" disabled={photoBusy} onClick={() => photoInputRef.current?.click()}
+            <button type="button" disabled={photoBusy || saving} onClick={() => photoInputRef.current?.click()}
               className="profile-button profile-button-neutral">
               <Camera size={17} aria-hidden="true" />{photoBusy ? 'Preparando…' : 'Cambiar foto'}
             </button>
           ) : (
             <>
-              <button type="button" disabled={photoBusy} onClick={handleSavePhoto}
+              <button type="button" disabled={photoBusy || saving} onClick={handleSavePhoto}
                 className="profile-button profile-button-primary">
-                {photoBusy ? 'Guardando…' : 'Guardar'}
+                {photoBusy ? 'Guardando…' : 'Guardar foto'}
               </button>
-              <button type="button" disabled={photoBusy} onClick={() => setDraftAvatar(null)}
-                className="profile-button profile-button-neutral">Cancelar</button>
+              <button type="button" disabled={photoBusy || saving} onClick={() => setDraftAvatar(null)}
+                className="profile-button profile-button-neutral">Cancelar foto</button>
             </>
           )}
           {!draftAvatar && activeProfile.avatar_path && (
-            <button type="button" disabled={photoBusy} onClick={handleRemovePhoto}
+            <button type="button" disabled={photoBusy || saving} onClick={handleRemovePhoto}
               className="profile-button profile-button-quiet">Eliminar foto</button>
           )}
         </div>
@@ -253,45 +276,47 @@ export default function ProfileView() {
           <div className="profile-personal">
             <div className="profile-personal-heading">
               <h3 className="profile-subheading">Datos personales</h3>
-              <button type="button" onClick={() => { initFromProfile(); setIsEditing(true); }}
+              <button type="button" ref={editButton} disabled={isResetting} onClick={() => setBase({ name, sex, age, weight, height })}
                 className="profile-button profile-button-quiet">
                 <PencilSimple size={16} aria-hidden="true" /> Editar perfil
               </button>
             </div>
             <dl className="profile-facts">
               <div><dt>Edad</dt><dd>{age} <span>años</span></dd></div>
-              <div><dt>Peso</dt><dd>{weight} <span>kg</span></dd></div>
+              <div><dt>Peso de perfil</dt><dd>{weight} <span>kg</span></dd></div>
               <div><dt>Altura</dt><dd>{height} <span>cm</span></dd></div>
               <div><dt>Sexo</dt><dd>{sex}</dd></div>
             </dl>
+            <p className="profile-muted profile-weight-note">Este peso se usa para estimar tu gasto. Las mediciones diarias se registran en Inicio.</p>
           </div>
         ) : (
           <form onSubmit={handleSave} className="profile-form profile-personal">
             <h3 className="profile-subheading">Editar datos personales</h3>
-            <div className="profile-field-grid">
+            <fieldset disabled={saving} className="profile-field-grid">
               <label className="profile-field sm:col-span-2">Nombre
-                <input required type="text" value={name} onChange={e => setName(e.target.value)} />
+                <input ref={nameInput} required type="text" value={name} onChange={e => change('name', e.target.value)} />
               </label>
               <label className="profile-field">Sexo
-                <select value={sex} onChange={e => setSex(e.target.value as UserSex)}>
+                <select value={sex} onChange={e => change('sex', e.target.value as UserSex)}>
                   <option value="Masculino">Masculino</option>
                   <option value="Femenino">Femenino</option>
                 </select>
               </label>
               <label className="profile-field">Edad
-                <input required type="number" min="1" max="120" value={age} onChange={e => setAge(Number(e.target.value))} />
+                <input required type="number" min="1" max="120" value={age} onChange={e => change('age', Number(e.target.value))} />
               </label>
-              <label className="profile-field">Peso (kg)
-                <input required type="number" min="20" max="300" step="0.1" value={weight} onChange={e => setWeight(Number(e.target.value))} />
+              <label className="profile-field">Peso de perfil (kg)
+                <input required type="number" min="20" max="300" aria-describedby="profile-weight-help" step="0.1" value={weight} onChange={e => change('weight', Number(e.target.value))} />
               </label>
               <label className="profile-field">Altura (cm)
-                <input required type="number" min="50" max="250" value={height} onChange={e => setHeight(Number(e.target.value))} />
+                <input required type="number" min="50" max="250" value={height} onChange={e => change('height', Number(e.target.value))} />
               </label>
-            </div>
+            </fieldset>
+            <p id="profile-weight-help" className="profile-muted profile-weight-note">Editar este peso actualiza tus estimaciones. Las mediciones diarias se registran en Inicio.</p>
             <div className="profile-actions profile-form-actions">
-              <button type="button" onClick={cancelEdit} className="profile-button profile-button-neutral">Cancelar</button>
-              <button type="submit" className="profile-button profile-button-primary">
-                <Check size={18} aria-hidden="true" /> Guardar cambios
+              <button type="button" disabled={saving} onClick={cancelEdit} className="profile-button profile-button-neutral">Cancelar</button>
+              <button type="submit" disabled={saving || photoBusy} aria-busy={saving} className="profile-button profile-button-primary">
+                <Check size={18} aria-hidden="true" /> {saving ? 'Guardando…' : 'Guardar cambios'}
               </button>
             </div>
           </form>
@@ -299,15 +324,10 @@ export default function ProfileView() {
       </section>
 
       <section className="profile-information" aria-labelledby="profile-information-heading">
-        <h2 id="profile-information-heading" className="profile-section-title"><SlidersHorizontal size={20} aria-hidden="true" /> Preferencias e información</h2>
+        <h2 id="profile-information-heading" className="profile-section-title"><SlidersHorizontal size={20} aria-hidden="true" /> Apariencia</h2>
         <div className="profile-appearance-row">
-          <div>
-            <h3 className="profile-setting-value">Apariencia</h3>
-            <p className="profile-muted profile-appearance-copy">Elegí cómo querés ver Calori.</p>
-          </div>
-          <div className="profile-theme-control period-selector" role="group" aria-label="Apariencia"
-            style={{ '--active-index': (['system', 'light', 'dark'] as const).indexOf(theme) } as CSSProperties}>
-            <span className="profile-theme-indicator" aria-hidden="true" />
+          <p className="profile-muted profile-appearance-copy">Elegí cómo querés ver Calori.</p>
+          <div className="profile-theme-control" role="group" aria-label="Apariencia">
             {([
               { value: 'system', label: 'Sistema' },
               { value: 'light', label: 'Claro' },
@@ -375,7 +395,7 @@ export default function ProfileView() {
         <button type="button" onClick={() => {
           signOutDialogRef.current?.showModal();
           signOutCancelRef.current?.focus();
-        }} disabled={isSigningOut} aria-busy={isSigningOut}
+        }} disabled={isSigningOut || saving || photoBusy || isResetting} aria-busy={isSigningOut}
           className="profile-button profile-button-neutral profile-signout">
           <SignOut size={20} aria-hidden="true" />
           {isSigningOut ? 'Cerrando sesión…' : 'Cerrar sesión'}
@@ -383,26 +403,29 @@ export default function ProfileView() {
       </section>
 
       {!isEditing && (
-        <div className="profile-danger profile-v2-danger">
-          <h2 className="profile-section-title"><Trash size={18} aria-hidden="true" /> Zona de peligro</h2>
-          <p>Se eliminará tu historial de peso, comidas y entrenamientos de forma permanente.</p>
+        <details className="profile-panel profile-management" onToggle={event => { if (!event.currentTarget.open) setIsResetConfirm(false); }}>
+          <summary className="profile-section-title" onClick={event => { if (isResetting) event.preventDefault(); }}><Trash size={18} aria-hidden="true" /> Gestión de datos <CaretDown size={18} aria-hidden="true" /></summary>
+          <p>Podés borrar de forma permanente las comidas, ejercicios, pasos, agua y mediciones de peso de todos los días de esta cuenta.</p>
+          {isResetConfirm && <p><strong>¿Borrar todos tus registros diarios?</strong></p>}
+          {isResetConfirm && resetError && <p role="alert" className="profile-reset-error">{resetError}</p>}
           {!isResetConfirm ? (
-            <button onClick={() => setIsResetConfirm(true)} type="button" className="profile-button profile-button-danger w-full">
+            <button onClick={() => { setResetError(''); setIsResetConfirm(true); }} type="button" className="profile-button profile-button-danger w-full">
               Borrar todos los registros
             </button>
           ) : (
             <div className="profile-actions">
-              <button disabled={isResetting} onClick={handleReset} type="button" className="profile-button profile-button-danger flex-1">
-                {isResetting ? 'Borrando…' : 'Confirmar'}
-              </button>
               <button disabled={isResetting} onClick={() => setIsResetConfirm(false)} type="button" className="profile-button profile-button-neutral flex-1">
                 Cancelar
               </button>
+              <button disabled={isResetting} onClick={handleReset} type="button" className="profile-button profile-button-danger flex-1">
+                {isResetting ? 'Borrando…' : 'Borrar registros'}
+              </button>
             </div>
           )}
-        </div>
+        </details>
       )}
 
+      {discard && <DiscardDraftDialog onKeep={() => setDiscard(null)} onDiscard={() => { setDiscard(null); discard(); }} />}
       <dialog ref={signOutDialogRef} role="dialog" aria-modal="true" aria-labelledby="signout-title" aria-describedby="signout-description"
         onCancel={event => { if (isSigningOut) event.preventDefault(); }}
         onClick={event => {
@@ -411,7 +434,7 @@ export default function ProfileView() {
         className="profile-dialog">
         <div className="profile-dialog-body">
           <h2 id="signout-title" className="profile-section-title">¿Cerrar sesión?</h2>
-          <p id="signout-description" className="profile-muted">Vas a salir de tu cuenta en este dispositivo.</p>
+          <p id="signout-description" className="profile-muted">Vas a salir de tu cuenta en este dispositivo.{(dirty || draftAvatar || newPassword || repeatPassword) && ' Se perderán los cambios sin guardar.'}</p>
           <div className="profile-actions profile-form-actions">
             <button ref={signOutCancelRef} type="button" disabled={isSigningOut} onClick={() => signOutDialogRef.current?.close()}
               className="profile-button profile-button-neutral">

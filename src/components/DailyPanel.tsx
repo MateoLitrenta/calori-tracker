@@ -10,6 +10,7 @@ import { AIRequestError } from '../services/aiTransport';
 import { supabase } from '../lib/supabase';
 import { changedEntryDayMessage, ensureMealPhotoUploaded, reviewEntryBase, snapshotEntryRecord, type MealPhotoUploadIntent } from '../lib/entrySubmission';
 import { MealPhotoPicker, MealThumbnail } from './MealPhoto';
+import DiscardDraftDialog from './DiscardDraftDialog';
 import EntryFormShell from './EntryFormShell';
 import AutoResizeTextarea from './AutoResizeTextarea';
 import EntryEstimateResult from './EntryEstimateResult';
@@ -169,6 +170,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   };
 
   // --- Forms State ---
+  const [discard, setDiscard] = useState<(() => void) | null>(null);
   const entryChanged = useRef(false);
   const markEntryChanged = () => { entryChanged.current = true; };
   const [editingMealId, setEditingMealId] = useState<string | null>(null);
@@ -283,20 +285,25 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     else workoutDraftRef.current = { id: generateUUID(), base };
   };
 
-  const canDiscardEntry = () => !entryChanged.current ||
-    window.confirm('¿Descartar los cambios de este borrador?');
+  const requestClose = (close: () => void) => {
+    if (entryChanged.current) setDiscard(() => close);
+    else close();
+  };
   const closeWeight = () => {
-    if (savingWeightRef.current || !canDiscardEntry()) return;
-    setIsEditingWeight(false);
-    weightDraftBaseRef.current = null;
-    entryChanged.current = false;
+    if (savingWeightRef.current) return;
+    requestClose(() => {
+      setIsEditingWeight(false);
+      weightDraftBaseRef.current = null;
+      entryChanged.current = false;
+    });
   };
   const closeEntry = () => {
-    if (savingMealRef.current || savingWorkoutRef.current || photoProcessing || !canDiscardEntry()) return;
-    resetForms();
-    setActiveTab(null);
+    if (savingMealRef.current || savingWorkoutRef.current || photoProcessing) return;
+    requestClose(() => {
+      resetForms();
+      setActiveTab(null);
+    });
   };
-
   const [, setHabitRevision] = useState(0);
   const [habitReview, setHabitReview] = useState<DailyRecord | null>(null);
   const [localHabitDrafts] = useState(() => new HabitDraftController(day => habitRecord(props, day), props.onUpdateRecord));
@@ -492,6 +499,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
   return (
     <div className="daily-panel flex flex-col gap-6 w-full" data-period={isGroup ? 'group' : 'day'}>
+      {discard && <DiscardDraftDialog onKeep={() => setDiscard(null)} onDiscard={() => { setDiscard(null); discard(); }} />}
       <div className="daily-heading flex justify-between items-end border-b border-slate-200 dark:border-gray-800 pb-2">
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{panelTitle}</h3>
         <span className="text-slate-500 dark:text-gray-400">{isGroup ? panelSubtitle : <time dateTime={dateStr}>{panelSubtitle}</time>}</span>

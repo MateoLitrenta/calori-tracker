@@ -25,6 +25,7 @@ const imports = {
   '../lib/supabase': stub('export const supabase = { auth: globalThis.__entryHarness.auth };'),
   '../lib/db': stub('export const completeOnboarding = (...args) => globalThis.__entryHarness.db.completeOnboarding(...args);'),
   'react-hot-toast': stub('export default globalThis.__entryHarness.toast; export const Toaster = () => null;'),
+  './DiscardDraftDialog': stub('export default function DiscardDraftDialog() { return null; }'),
   './ThemeToggle': stub('export default function ThemeToggle() { return null; }'),
   './ThemeProvider': stub("export const useTheme = () => globalThis.__entryHarness.themeStore ?? { theme: 'dark', setTheme() {} };"),
   '../hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
@@ -142,7 +143,7 @@ test('profile appearance reflects the shared preference and delegates all three 
     const view = mount(ProfileView, {});
     const initial = view.render();
     const section = node(initial, element => element.props['aria-labelledby'] === 'profile-information-heading');
-    assert.match(markup(section), /Preferencias e información/);
+    assert.match(markup(section), /Apariencia/);
     assert.match(markup(section), /Elegí cómo querés ver Calori\./);
     assert.ok(markup(section).indexOf('Apariencia') < markup(section).indexOf('Cómo calculamos tu gasto'));
     const buttons = () => nodes(node(view.render(), element => element.props.role === 'group' &&
@@ -480,7 +481,7 @@ test('profile confirmation signs out once and disables actions and dismissal whi
   const view = mount(ProfileView, {});
   const confirmation = profileDialog(view);
   const initial = view.render();
-  assert.ok(markup(initial).indexOf('Cuenta y seguridad') < markup(initial).indexOf('Zona de peligro'));
+  assert.ok(markup(initial).indexOf('Cuenta y seguridad') < markup(initial).indexOf('Gestión de datos'));
   confirmation.open();
   assert.equal(calls, 0);
   const pending = confirmation.buttons()[1].props.onClick();
@@ -540,6 +541,11 @@ test('profile v2 keeps edit fields, validation, cancel and save within the perso
   assert.equal(fields()[3].props.step, '0.1');
   fields()[0].props.onChange({ target: { value: 'Draft name' } });
   node(node(view.render(), element => element.type === 'form'), element => element.type === 'button' && element.props.children === 'Cancelar').props.onClick();
+  const confirmation = () => node(view.render(), element => typeof element.props.onDiscard === 'function');
+  confirmation().props.onKeep();
+  assert.equal(fields()[0].props.value, 'Draft name');
+  node(node(view.render(), element => element.type === 'form'), element => element.props.children === 'Cancelar').props.onClick();
+  confirmation().props.onDiscard();
   assert.equal(nodes(view.render(), element => element.type === 'form').length, 0);
   assert.equal(saved.length, 0);
   edit();
@@ -555,6 +561,32 @@ test('profile v2 keeps edit fields, validation, cancel and save within the perso
   assert.equal(saved[0].avatar_path, profile.avatar_path);
   assert.equal(saved[0].records, profile.records);
   assert.equal(nodes(view.render(), element => element.type === 'form').length, 0);
+});
+
+test('a pending personal save accepts one submit and preserves refreshed fields the user did not edit', async () => {
+  let complete;
+  const writes = [];
+  const store = {
+    user: { id: 'user-a' }, activeProfile: profile,
+    updateProfile(value) { writes.push(value); return new Promise(resolve => { complete = resolve; }); },
+  };
+  globalThis.__entryHarness.profileStore = store;
+  const view = mount(ProfileView, {});
+  node(view.render(), el => el.type === 'button' && markup(el).includes('Editar perfil')).props.onClick();
+  node(view.render(), el => el.type === 'input' && el.props.type === 'text').props.onChange({ target: { value: 'Ana nueva' } });
+  store.activeProfile = { ...profile, age: profile.age + 1, avatar_path: 'nueva.jpg' };
+  const form = node(view.render(), el => el.type === 'form');
+  const event = { preventDefault() {} };
+  const pending = form.props.onSubmit(event);
+  await form.props.onSubmit(event);
+  assert.equal(writes.length, 1);
+  assert.deepEqual(writes[0], { ...store.activeProfile, name: 'Ana nueva' });
+  const busy = node(view.render(), el => el.type === 'button' && el.props.type === 'submit');
+  assert.equal(busy.props.disabled, true);
+  assert.match(markup(busy), /Guardando…/);
+  complete();
+  await pending;
+  assert.equal(nodes(view.render(), el => el.type === 'form').length, 0);
 });
 
 test('profile save failure retains entered fields and only confirms after a successful explicit retry', async () => {
@@ -639,14 +671,14 @@ test('profile v2 expands energy information and preserves the record deletion co
   toggle().props.onClick();
   assert.equal(toggle().props['aria-expanded'], false);
   assert.equal(nodes(view.render(), element => element.props.id === 'profile-energy-details').length, 0);
-  const danger = () => node(view.render(), element => element.props.className === 'profile-danger profile-v2-danger');
+  const danger = () => node(view.render(), element => element.type === 'details' && element.props.className.includes('profile-management'));
   const deleteButton = () => node(danger(), element => element.type === 'button' && element.props.children === 'Borrar todos los registros');
   deleteButton().props.onClick();
   assert.equal(calls, 0);
   node(danger(), element => element.type === 'button' && element.props.children === 'Cancelar').props.onClick();
   assert.equal(calls, 0);
   deleteButton().props.onClick();
-  const pending = node(danger(), element => element.type === 'button' && element.props.children === 'Confirmar').props.onClick();
+  const pending = node(danger(), element => element.type === 'button' && element.props.children === 'Borrar registros').props.onClick();
   assert.ok(nodes(danger(), element => element.type === 'button').every(button => button.props.disabled));
   assert.equal(calls, 1);
   finish();

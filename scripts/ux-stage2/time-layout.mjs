@@ -4,7 +4,7 @@ import path from 'node:path';
 import { open, repo, settled, start } from '../ux-stage1/browser.mjs';
 
 const before = process.argv.includes('--before');
-const directory = path.join(repo, 'docs/evidence/ux-stage2/entry-time', before ? 'before' : 'after');
+const directory = process.env.CALORI_QA_OUTPUT || path.join(repo, 'docs/evidence/ux-stage2/entry-time', before ? 'before' : 'after');
 mkdirSync(directory, { recursive: true });
 const results = [];
 const browser = await start(['--enable-blink-features=LangAttributeAwareFormControlUI']);
@@ -97,8 +97,9 @@ try {
           await now.click();
           const nowValue = await input.inputValue();
           if (!before) assert.equal(nowValue, '12:00');
-          page.once('dialog', prompt => prompt.accept());
+          if (before) page.once('dialog', prompt => prompt.accept());
           await form.getByRole('button', { name: 'Cancelar' }).click();
+          if (!before) await page.getByRole('button', { name: 'Descartar cambios' }).click();
           await form.waitFor({ state: 'hidden' });
           results.push({ width, theme, mode, inputWidth: box.width, ...native, nowValue, footerVisible: true });
         }

@@ -6,7 +6,7 @@ import { go, heights, metrics, open, period, repo, settled, start } from '../ux-
 const before = process.argv.includes('--before');
 const mode = process.argv.includes('--flows') ? 'flows' : 'layout';
 const origin = 'http://127.0.0.1:' + (before ? '5197' : '5198');
-const directory = path.join(repo, 'docs/evidence/ux-stage2', before ? 'before' : 'after');
+const directory = process.env.CALORI_QA_OUTPUT || path.join(repo, 'docs/evidence/ux-stage2', before ? 'before' : 'after');
 const evidence = [];
 mkdirSync(directory, { recursive: true });
 const report = path.join(directory, mode + '.json');
@@ -130,8 +130,8 @@ async function entries(page) {
   await page.emulateMedia({ colorScheme: 'dark' });
   await settled(page);
   assert.ok(await page.locator('html').evaluate(e => e.classList.contains('dark')));
-  page.once('dialog', prompt => prompt.dismiss());
   await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: 'Seguir editando' }).click();
   assert.equal(await field.inputValue(), 'Almuerzo sintético · prueba de borrador');
   await page.evaluate(() => { window.__homeQA.failed = true; });
   await dialog(page).getByRole('button', { name: 'Guardar comida' }).click();
@@ -149,8 +149,8 @@ async function entries(page) {
   assert.ok(await page.getByRole('button', { name: /Comida sintética editada/ }).isVisible());
   await meal(page).click();
   await field.fill('Borrador que se descarta');
-  page.once('dialog', prompt => prompt.accept());
   await dialog(page).getByRole('button', { name: 'Cancelar' }).click();
+  await page.getByRole('button', { name: 'Descartar cambios' }).click();
   await dialog(page).waitFor({ state: 'hidden' });
   assert.equal(await page.evaluate(() => document.activeElement?.textContent?.trim()), '+ Comida');
   const { writes, ai } = await counters(page);

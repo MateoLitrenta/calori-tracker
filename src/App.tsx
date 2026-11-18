@@ -44,6 +44,7 @@ function App() {
   const appShellRef = useRef<HTMLDivElement>(null);
   const previousUserIdRef = useRef<string | null>(null);
   const scrollPositionsRef = useRef({ home: 0, charts: 0, profile: 0 });
+  const profileBeforeLeave = useRef<((leave: () => void) => void) | null>(null);
   const coachReadingPositions = useRef(new Map<string, number>());
   const userId = user?.id ?? null;
   const profileReady = !!user && activeProfile?.user_id === user.id;
@@ -74,17 +75,19 @@ function App() {
       toast.error('Guardá o cerrá el registro en edición antes de cambiar de sección. Tu borrador se conserva.', { id: 'entry-navigation-blocked' });
       return;
     }
-    if (activeTab !== 'chat') {
-      scrollPositionsRef.current[activeTab] = mainRef.current?.scrollTop ?? 0;
-    }
-    setActiveTab(next);
+    const leave = () => {
+      if (activeTab !== 'chat') scrollPositionsRef.current[activeTab] = mainRef.current?.scrollTop ?? 0;
+      setActiveTab(next);
+    };
+    if (activeTab === 'profile' && profileBeforeLeave.current) profileBeforeLeave.current(leave);
+    else leave();
   };
 
   const restoreTabScroll = useCallback(() => {
     if (activeTab === 'chat' || !mainRef.current) return;
     const main = mainRef.current;
     const top = previousUserIdRef.current === userId ? scrollPositionsRef.current[activeTab] : 0;
-    const selector = { home: '.home-variants', charts: '.charts-insights', profile: '.profile-v2' }[activeTab];
+    const selector = { home: '.home-variants', charts: '.charts-insights', profile: '.profile-view' }[activeTab];
     const restore = () => {
       if (!main.querySelector(selector)) return false;
       main.scrollTop = top;
@@ -223,7 +226,7 @@ function App() {
               onEntryActiveChange={reportEntryActivity} />}
             {activeTab === 'chat' && <ChatView scrollContainer={mainRef} readingPositions={coachReadingPositions} />}
             {activeTab === 'charts' && <ChartsView />}
-            {activeTab === 'profile' && <ProfileView />}
+            {activeTab === 'profile' && <ProfileView key={user.id} beforeLeave={profileBeforeLeave} />}
             </RestoreTabScroll>
             </Suspense>
           </div>
