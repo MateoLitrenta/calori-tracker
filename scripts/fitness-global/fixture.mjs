@@ -58,6 +58,7 @@ export function installGlobalFixture() {
         :{reply:'Respuesta sintética de QA',actions:[],presentation:'none'});
     }
     if(url.pathname==='/api/coach/goals') {
+      if(init?.method!=='POST' && qa.goalsGate) await qa.goalsGate;
       if(qa.goalError) return respond({},qa.goalError);
       const goals=qa.goals[owner]||[];
       if(init?.method!=='POST') return respond({goals,hasMore:false});

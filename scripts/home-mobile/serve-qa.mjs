@@ -9,22 +9,23 @@ import { globalSupabase, installGlobalFixture } from '../fitness-global/fixture.
 // App, HomeView, DailyPanel, Heatmap, ChartsView and CSS are product sources.
 // Auth, record writer, Storage and AI are isolated synthetic boundaries.
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const stage3 = process.argv.includes('--stage3');
 const stage2 = process.argv.includes('--stage2');
 const stage1 = stage2 || process.argv.includes('--stage1');
 const stage1Cases = stage1 ? (await import('../ux-stage1/fixture.mjs')).cases : null;
 const beforeGlobal = process.argv.includes('--before-global');
-const globalQA = stage1 || beforeGlobal || process.argv.includes('--global');
+const globalQA = stage3 || stage1 || beforeGlobal || process.argv.includes('--global');
 const beforeFitness = process.argv.includes('--before-fitness');
 const fitness = beforeFitness || process.argv.includes('--fitness');
 const beforeRefinement = process.argv.includes('--before-refinement');
 const refinement = beforeRefinement || process.argv.includes('--refinement');
 const before = process.argv.includes('--before') || beforeRefinement || beforeFitness || beforeGlobal;
-const base = stage2 ? 'c2c62c94a25c44559ab926f8d954305e32a36317' : stage1 ? 'c365e1e6f236ab76d17b46cbd8fe1ec9eace8831' : globalQA ? '10117215cf7071dc754e175294588f4a30a959b9' : fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
+const base = stage3 ? 'a2021b32c22ea985d33f5ed681d3c507cef1f0b8' : stage2 ? 'c2c62c94a25c44559ab926f8d954305e32a36317' : stage1 ? 'c365e1e6f236ab76d17b46cbd8fe1ec9eace8831' : globalQA ? '10117215cf7071dc754e175294588f4a30a959b9' : fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
   : refinement ? 'fe01ecb86e0933c5260c2630fe4d7a6e82ebccdd' : '5a74e7279c77a7d1dc25fb5604d5fa0d657d6bf5';
-const phase = stage2 ? (before ? 'stage2-before' : 'stage2-after') : stage1 ? (before ? 'stage1-before' : 'stage1-after') : beforeGlobal ? 'before-global' : globalQA ? 'global' : beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
+const phase = stage3 ? (before ? 'stage3-before' : 'stage3-after') : stage2 ? (before ? 'stage2-before' : 'stage2-after') : stage1 ? (before ? 'stage1-before' : 'stage1-after') : beforeGlobal ? 'before-global' : globalQA ? 'global' : beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
 let root = repo;
 if (before) {
-  root = path.resolve(repo, stage1 ? '../stage1-baseline-' + base.slice(0,7) : beforeGlobal ? '../global-baseline-' + base.slice(0,7) : beforeFitness ? '../home-fitness-baseline-' + base.slice(0,7) : beforeRefinement ? '../home-v10-1-1-refinement-baseline' : '../home-v10-1-1-baseline');
+  root = path.resolve(repo, stage3 ? '../stage3-baseline-' + base.slice(0,7) : stage1 ? '../stage1-baseline-' + base.slice(0,7) : beforeGlobal ? '../global-baseline-' + base.slice(0,7) : beforeFitness ? '../home-fitness-baseline-' + base.slice(0,7) : beforeRefinement ? '../home-v10-1-1-refinement-baseline' : '../home-v10-1-1-baseline');
   mkdirSync(root, { recursive: true });
   if (!existsSync(path.join(root, 'src'))) {
     const archive = path.join(root, 'baseline.tar');
