@@ -149,7 +149,7 @@ async function mount(t, initial = fixtures(), { width: initialWidth = 1440, cont
       window.dispatchEvent(new window.Event('resize'));
       for (const observer of resizeObservers) if (!observer.disconnected) observer.callback([], observer); }),
     selectDay: async date => click(day(date)),
-    open: async () => click(button('Abrir registros del día')),
+    open: async () => click(document.querySelector('[data-history-open]')),
     heading: () => document.querySelector('.daily-heading time').dateTime,
     detail: () => document.querySelector('.ah-detail'),
   };
@@ -438,7 +438,7 @@ test('history defaults to a numbered month with three periods, today and an imme
   assert.equal(view.detail().getAttribute('role'), 'region');
   assert.equal(view.detail().getAttribute('aria-label'), 'Detalle del día');
   assert.ok(view.button('Hoy'));
-  assert.ok(view.button('Abrir registros del día'));
+  assert.ok(document.querySelector('[data-history-open]'));
   assert.equal(view.saves.length, 0);
 });
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from '@phosphor-icons/react';
 
@@ -10,6 +10,7 @@ interface EntryFormShellProps {
   closeLabel?: string;
   fitness?: boolean;
   dateContext?: ReactNode;
+  restoreFocusTo?: RefObject<HTMLElement | null>;
 }
 
 // A tall textarea cannot fit in the viewport. Follow its caret rather than its bottom edge.
@@ -40,10 +41,11 @@ function focusedBounds(field: HTMLElement) {
   return { top, bottom: top + height };
 }
 
-export default function EntryFormShell({ title, onClose, children, desktopModal = false, closeLabel = 'Cerrar formulario', fitness = false, dateContext }: EntryFormShellProps) {
+export default function EntryFormShell({ title, onClose, children, desktopModal = false, closeLabel = 'Cerrar formulario', fitness = false, dateContext, restoreFocusTo }: EntryFormShellProps) {
   const [mobile, setMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
   const titleId = desktopModal ? 'entry-edit-title' : 'entry-add-title';
 
   useEffect(() => {
@@ -56,7 +58,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
   useEffect(() => {
     if ((!mobile && !desktopModal) || !dialogRef.current) return;
     const dialog = dialogRef.current;
-    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    openerRef.current ??= restoreFocusTo?.current ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
     const main = document.querySelector<HTMLElement>('.app-main');
     const previousOverflow = main?.style.overflowY;
     const bodyOverflow = document.body.style.overflow;
@@ -75,7 +77,11 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
       'button:not(:disabled), input:not(:disabled):not([type="hidden"]):not([type="file"]), select:not(:disabled), textarea:not(:disabled), summary, [tabindex="0"]'
     )).filter(element => element.getClientRects().length > 0);
     const keyboard = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') { event.preventDefault(); closeRef.current?.click(); }
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        const closeCamera = dialog.querySelector<HTMLButtonElement>('[data-entry-camera-close]');
+        (closeCamera ?? closeRef.current)?.click();
+      }
       if (event.key !== 'Tab') return;
       const controls = focusable();
       const first = controls[0];
@@ -137,9 +143,9 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
       background.forEach((element, index) => { element.inert = previousInert[index]; });
       if (main) main.style.overflowY = previousOverflow ?? '';
       document.body.style.overflow = bodyOverflow;
-      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
+      if (openerRef.current?.isConnected) openerRef.current.focus({ preventScroll: true });
     };
-  }, [mobile, desktopModal]);
+  }, [mobile, desktopModal, restoreFocusTo]);
 
   const heading = fitness ? <div className="entry-sheet-heading">
     <h3 id={titleId}>{title}</h3>
@@ -154,7 +160,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
 
   if (mobile) return createPortal(
     <div className={`home-variants entry-sheet-root${fitness ? ' fitness-entry-portal' : ''}`}>
-      <div className="entry-sheet-backdrop" onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
+      <div className="entry-sheet-backdrop">
         <div ref={dialogRef} className="entry-bottom-sheet" role="dialog" aria-labelledby={titleId} aria-modal="true">
           <span className="entry-sheet-handle" aria-hidden="true" />
           {header}

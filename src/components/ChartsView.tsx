@@ -28,40 +28,55 @@ export default function ChartsView() {
   const [selectedBucket, setSelectedBucket] = useState<string | null>(null);
   const [plotOverflows, setPlotOverflows] = useState(false);
   const plotRef = useRef<HTMLDivElement>(null);
-  const exploredYear = useRef('');
+  const annualWindow = useRef<{ plot: HTMLDivElement; scope: string; width: number; overflow: boolean; left: number | null } | null>(null);
   const today = formatDateStr(new Date());
   const data = useMemo(() => activeProfile ? buildChartStats(activeProfile, period, today) : null,
     [activeProfile, period, today]);
-  // Initialize once per visible annual period. Selection, theme and new records
-  // must not take the scroll position away from someone exploring the chart.
-  useLayoutEffect(() => {
-    if (period !== 'Año') {
-      exploredYear.current = '';
-      return;
-    }
-    const plot = plotRef.current;
-    if (!plot || !data) {
-      exploredYear.current = '';
-      return;
-    }
-    const scope = `${activeProfile?.user_id}/${activeProfile?.id}/${data.start}`;
-    if (exploredYear.current === scope) return;
-    const first = plot.querySelector<HTMLElement>('[data-has-energy="true"]');
-    if (!first) return;
-    plot.scrollLeft += first.getBoundingClientRect().left - plot.getBoundingClientRect().left;
-    exploredYear.current = scope;
-  }, [activeProfile?.id, activeProfile?.user_id, data, period]);
+  const annualScope = period === 'Año' && data ? `${activeProfile?.user_id}/${activeProfile?.id}/${data.start}` : null;
+  const hasPlot = !!data?.summary.energyDays;
   useLayoutEffect(() => {
     const plot = plotRef.current;
-    if (!plot || typeof ResizeObserver === 'undefined') return;
-    const observer = new ResizeObserver(() => {
-      setPlotOverflows(plot.scrollWidth > plot.clientWidth + 1);
-    });
+    if (!plot || !hasPlot) {
+      annualWindow.current = null;
+      return;
+    }
+    if (typeof ResizeObserver === 'undefined') return;
+    if (!annualScope) annualWindow.current = null;
+    else if (annualWindow.current?.plot !== plot || annualWindow.current.scope !== annualScope) {
+      annualWindow.current = { plot, scope: annualScope, width: 0, overflow: false, left: null };
+    }
+
+    const update = () => {
+      const width = plot.clientWidth;
+      const overflow = plot.scrollWidth > width + 1;
+      const annual = annualWindow.current;
+      if (annual && overflow && !annual.overflow) {
+        const first = plot.querySelector<HTMLElement>('[data-has-energy="true"]');
+        plot.scrollLeft = annual.left ?? (first
+          ? plot.scrollLeft + first.getBoundingClientRect().left - plot.getBoundingClientRect().left
+          : 0);
+        annual.left = plot.scrollLeft;
+      }
+      if (annual) {
+        annual.width = width;
+        annual.overflow = overflow;
+      }
+      setPlotOverflows(overflow);
+    };
+    const rememberScroll = () => {
+      const annual = annualWindow.current;
+      // Resizing to a fully visible chart clamps scroll to zero.
+      if (annual?.overflow && annual.width === plot.clientWidth) annual.left = plot.scrollLeft;
+    };
+    plot.addEventListener('scroll', rememberScroll);
+    const observer = new ResizeObserver(update);
     observer.observe(plot);
-    // Text enlargement can grow the columns without resizing their viewport.
     if (plot.firstElementChild) observer.observe(plot.firstElementChild);
-    return () => observer.disconnect();
-  }, [data, period]);
+    return () => {
+      observer.disconnect();
+      plot.removeEventListener('scroll', rememberScroll);
+    };
+  }, [annualScope, hasPlot, period]);
   if (!data) return null;
 
   const { summary, buckets, comparison } = data;

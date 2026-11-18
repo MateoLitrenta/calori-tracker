@@ -56,6 +56,8 @@ export function MealPhotoPicker({ blob, path, onChange, onRemove, onBusyChange }
 }) {
   const input = useRef<HTMLInputElement>(null);
   const video = useRef<HTMLVideoElement>(null);
+  const cameraOpener = useRef<HTMLButtonElement>(null);
+  const cameraCloser = useRef<HTMLButtonElement>(null);
   const stream = useRef<MediaStream | null>(null);
   const cameraRequest = useRef(0);
   const [camera, setCamera] = useState(false);
@@ -73,6 +75,7 @@ export function MealPhotoPicker({ blob, path, onChange, onRemove, onBusyChange }
     stream.current = null;
     if (video.current) video.current.srcObject = null;
     setCamera(false);
+    requestAnimationFrame(() => cameraOpener.current?.focus());
   };
   useEffect(() => () => { cameraRequest.current += 1; stream.current?.getTracks().forEach(track => track.stop()); }, []);
   const select = async (file?: Blob, filename = '') => {
@@ -101,6 +104,7 @@ export function MealPhotoPicker({ blob, path, onChange, onRemove, onBusyChange }
       else { media.getTracks().forEach(track => track.stop()); }
     } catch { stopCamera(); toast.error('No pude acceder a la cámara. Revisá los permisos.'); }
   };
+  useEffect(() => { if (camera) cameraCloser.current?.focus(); }, [camera]);
   const capture = async () => {
     const source = video.current;
     if (!source?.videoWidth || !source.videoHeight) return;
@@ -119,11 +123,11 @@ export function MealPhotoPicker({ blob, path, onChange, onRemove, onBusyChange }
     <div className="flex flex-wrap gap-2">
       <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={event => { const file = event.target.files?.[0]; if (file) void select(file, file.name); event.target.value = ''; }} />
       <button type="button" disabled={busy} onClick={() => input.current?.click()} className="min-h-11 px-3 rounded-[var(--radius-control)] border border-slate-300 dark:border-white/10 text-slate-700 dark:text-gray-200 flex items-center gap-2"><ImageSquare size={18} /> Elegir de galería</button>
-      <button type="button" disabled={busy} onClick={() => void openCamera()} className="min-h-11 px-3 rounded-[var(--radius-control)] border border-slate-300 dark:border-white/10 text-slate-700 dark:text-gray-200 flex items-center gap-2"><Camera size={18} /> Tomar foto</button>
+      <button ref={cameraOpener} type="button" disabled={busy} onClick={() => void openCamera()} className="min-h-11 px-3 rounded-[var(--radius-control)] border border-slate-300 dark:border-white/10 text-slate-700 dark:text-gray-200 flex items-center gap-2"><Camera size={18} /> Tomar foto</button>
     </div>
     {busy && <span className="text-xs text-slate-500 dark:text-gray-400">Procesando foto…</span>}
     {camera && <div className="fixed inset-0 z-[80] bg-black/90 flex flex-col items-center justify-center gap-4 p-4">
-      <button type="button" onClick={stopCamera} className="self-end text-white p-3" aria-label="Cerrar cámara"><X size={24} /></button>
+      <button ref={cameraCloser} data-entry-camera-close type="button" onClick={stopCamera} className="self-end text-white p-3" aria-label="Cerrar cámara"><X size={24} /></button>
       <video ref={video} playsInline muted autoPlay className="max-h-[70vh] max-w-full rounded-[var(--radius-widget)]" />
       <button type="button" onClick={() => void capture()} className="min-h-11 px-6 bg-[#f5a064] text-[#151719] rounded-[var(--radius-control)] font-semibold">Capturar</button>
     </div>}

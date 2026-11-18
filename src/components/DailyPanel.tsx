@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useId } from 'react';
-import { ForkKnife, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, CaretRight, Clock, Sparkle } from '@phosphor-icons/react';
+import { ForkKnife, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, CaretRight, Sparkle } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
@@ -61,7 +61,6 @@ const habitRecord = (props: DailyPanelProps, day: string) => snapshotEntryRecord
 const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const { record, dateStr, onUpdateRecord, profile, selectedGroup, records, habitDrafts, onRecordsHeadingReady, onEntryActiveChange } = props;
   const [activeTab, setActiveTab] = useState<'comida' | 'entrenamiento' | null>(null);
-  const tabContainerRef = useRef<HTMLDivElement>(null);
   const dayContextId = useId();
 
   // Default empty record if none exists for this day
@@ -140,18 +139,24 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   };
 
   const handleSetWeight = async (weight: number) => {
+    if (savingWeightRef.current) return false;
+    savingWeightRef.current = true;
+    setSavingWeight(true);
     try {
       const previous = weightDraftBaseRef.current ?? snapshotEntryRecord(currentRecord, profile.recordGeneration);
       const base = reviewEntryBase(previous, currentRecord, profile.recordGeneration, () => window.confirm(changedEntryDayMessage));
       if (!base) return false;
       weightDraftBaseRef.current = base;
-      if (!await onUpdateRecord(dateStr, { ...base, weight: Math.max(0, weight) })) return false;
+      if (!await onUpdateRecord(dateStr, { ...base, weight: Math.max(0, weight) })) throw new Error('Guardado no confirmado');
       weightDraftBaseRef.current = null;
       setIsEditingWeight(false);
       return true;
     } catch {
       toast.error('No se pudo confirmar el peso. Tu valor se conserva para reintentar.');
       return false;
+    } finally {
+      savingWeightRef.current = false;
+      setSavingWeight(false);
     }
   };
 
@@ -164,6 +169,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   };
 
   // --- Forms State ---
+  const entryChanged = useRef(false);
+  const markEntryChanged = () => { entryChanged.current = true; };
   const [editingMealId, setEditingMealId] = useState<string | null>(null);
   const [mealName, setMealName] = useState('');
   const [isEditingWater, setIsEditingWater] = useState(false);
@@ -171,6 +178,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
   const [isEditingWeight, setIsEditingWeight] = useState(false);
   const [editWeightVal, setEditWeightVal] = useState('');
+  const savingWeightRef = useRef(false);
+  const [savingWeight, setSavingWeight] = useState(false);
   const weightDraftBaseRef = useRef<DailyRecord | null>(null);
 
   const [isEditingSteps, setIsEditingSteps] = useState(false);
@@ -193,6 +202,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const [estimateVersions, setEstimateVersions] = useState({ workInput: 0, workCalories: 0, mealInput: 0, mealCalories: 0 });
   const estimateContextKey = profile.id + ':' + dateStr;
   const reviseEstimate = (kind: keyof typeof estimateVersions) => {
+    markEntryChanged();
     const reference = { workInput: workInputVersion, workCalories: workCalorieVersion, mealInput: mealInputVersion, mealCalories: mealCalorieVersion }[kind];
     const next = ++reference.current;
     setEstimateVersions(previous => ({ ...previous, [kind]: next }));
@@ -239,6 +249,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   };
 
   const resetForms = () => {
+    entryChanged.current = false;
+    setMealType('Almuerzo');
     mealDraftRef.current = null;
     workoutDraftRef.current = null;
     clearEstimates();
@@ -262,53 +274,29 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     setWorkTime('');
   };
 
-  const handleTabToggle = (tab: 'comida' | 'entrenamiento') => {
-    if (savingMealRef.current || savingWorkoutRef.current) return;
-    if (activeTab === tab) {
-      setActiveTab(null);
-      resetForms();
-    } else {
-      setActiveTab(tab);
-      resetForms();
-      if (tab === 'comida') mealDraftRef.current = { id: generateUUID(), base: snapshotEntryRecord(currentRecord, profile.recordGeneration), upload: null };
-      else workoutDraftRef.current = { id: generateUUID(), base: snapshotEntryRecord(currentRecord, profile.recordGeneration) };
-    }
+  const openEntry = (tab: 'comida' | 'entrenamiento') => {
+    if (entryActive || savingMealRef.current || savingWorkoutRef.current) return;
+    resetForms();
+    setActiveTab(tab);
+    const base = snapshotEntryRecord(currentRecord, profile.recordGeneration);
+    if (tab === 'comida') mealDraftRef.current = { id: generateUUID(), base, upload: null };
+    else workoutDraftRef.current = { id: generateUUID(), base };
   };
 
+  const canDiscardEntry = () => !entryChanged.current ||
+    window.confirm('¿Descartar los cambios de este borrador?');
+  const closeWeight = () => {
+    if (savingWeightRef.current || !canDiscardEntry()) return;
+    setIsEditingWeight(false);
+    weightDraftBaseRef.current = null;
+    entryChanged.current = false;
+  };
   const closeEntry = () => {
-    if (savingMealRef.current || savingWorkoutRef.current) return;
+    if (savingMealRef.current || savingWorkoutRef.current || photoProcessing || !canDiscardEntry()) return;
     resetForms();
     setActiveTab(null);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (savingMealRef.current || savingWorkoutRef.current) return;
-      if ((activeTab === 'comida' || activeTab === 'entrenamiento') && window.matchMedia('(max-width: 767px)').matches) return;
-      // Ignore clicks on elements that have been removed from the DOM (like the modal buttons)
-      if (!document.contains(event.target as Node)) return;
-
-      // Also ignore clicks inside any modal (which we give a special class or check by closest)
-      // Actually, checking if it's inside the tabContainer is enough, BUT if they click inside the modal
-      // and it's NOT removed from the DOM, we also want to ignore it!
-      const target = event.target as Element;
-      if (target.closest('.fixed.inset-0')) return; // Ignore clicks inside modals
-      // The navigation guard keeps an active entry in place. A rejected tab
-      // change must not also be interpreted as dismissing its form.
-      if (target.closest('.app-bottom-nav, .app-sidebar nav, .home-date-nav')) return;
-
-      if (tabContainerRef.current && !tabContainerRef.current.contains(event.target as Node)) {
-        setActiveTab(null);
-        resetForms();
-      }
-    };
-    if (activeTab) {
-      document.addEventListener('click', handleClickOutside as EventListener);
-    }
-    return () => {
-      document.removeEventListener('click', handleClickOutside as EventListener);
-    };
-  }, [activeTab]);
   const [, setHabitRevision] = useState(0);
   const [habitReview, setHabitReview] = useState<DailyRecord | null>(null);
   const [localHabitDrafts] = useState(() => new HabitDraftController(day => habitRecord(props, day), props.onUpdateRecord));
@@ -347,6 +335,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       }) } : undefined;
       const result = await estimateMeal({ name: mealName, details: mealDetails, type: mealType, attachment });
       if (session !== estimateSessionRef.current) return;
+        markEntryChanged();
       setMealEstimate({ calories: result.calories, assumptions: result.assumptions, context, inputVersion, calorieVersion, contextKey: estimateContextKey });
       if (inputVersion === mealInputVersion.current && calorieVersion === mealCalorieVersion.current) {
         setMealCals(result.calories);
@@ -373,6 +362,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       const result = await estimateWorkout({ activity: workActivity, duration: Number(workDuration), details,
         profile: { sex: profile.sex, age: profile.age, weight: profile.weight, height: profile.height } });
       if (session !== estimateSessionRef.current) return;
+        markEntryChanged();
       setWorkEstimate({ calories: result.calories, assumptions: result.assumptions, context, inputVersion, calorieVersion, contextKey: estimateContextKey });
       if (inputVersion === workInputVersion.current && calorieVersion === workCalorieVersion.current) setWorkCals(result.calories);
     } catch (error) {
@@ -412,6 +402,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   };
 
   const startEditMeal = (m: MealEntry) => {
+    entryChanged.current = false;
     mealDraftRef.current = { id: m.id, base: snapshotEntryRecord(currentRecord, profile.recordGeneration), upload: null };
     clearEstimates();
     setActiveTab(null);
@@ -438,10 +429,10 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       if (editingWorkoutId && !previous) { toast.error('El ejercicio ya no está en este día. Tu borrador se conserva; revisá los registros antes de crear otro.'); return; }
       const workout: WorkoutEntry = { ...previous, id: draft.id, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: previous?.muscles ?? [], details: workDetails, distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined, time: workTime || (draft.fallbackTime ??= format(new Date(), 'HH:mm')) };
       const workouts = previous ? base.workouts.map(w => w.id === draft.id ? workout : w) : [...base.workouts, workout];
-      if (!await onUpdateRecord(dateStr, { ...base, workouts })) return;
+      if (!await onUpdateRecord(dateStr, { ...base, workouts })) throw new Error('Guardado no confirmado');
       resetForms(); setActiveTab(null);
     } catch {
-      toast.error('No se pudo guardar el ejercicio. Intentá nuevamente.');
+      toast.error('No se pudo confirmar el ejercicio. Tu borrador se conserva para reintentar.');
     } finally {
       savingWorkoutRef.current = false;
       setSavingWorkout(false);
@@ -449,6 +440,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   };
 
   const startEditWorkout = (w: WorkoutEntry) => {
+    entryChanged.current = false;
     workoutDraftRef.current = { id: w.id, base: snapshotEntryRecord(currentRecord, profile.recordGeneration) };
     clearEstimates();
     setWorkCategory(exactWorkoutCategory(w.activity));
@@ -463,6 +455,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     setWorkTime(w.time || format(new Date(), 'HH:mm'));
   };
 
+  const recordOpener = useRef<HTMLButtonElement>(null);
   const [detailModalItem, setDetailModalItem] = useState<(MealEntry & { _type: 'meal' }) | (WorkoutEntry & { _type: 'workout' }) | null>(null);
   const entryDate = <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>;
   const mealPhotoPath = mealPhotoRemoved ? null : currentRecord.meals.find(m => m.id === editingMealId)?.photo_path;
@@ -569,11 +562,11 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {!isGroup && (
         <div className="daily-journal contents" data-record-count={totalEntries}>
-        <div ref={tabContainerRef} className="daily-entry flex flex-col gap-4">
+        <div className="daily-entry flex flex-col gap-4">
           {/* Action Buttons */}
           <div className="daily-quick-actions flex gap-2 mt-2">
             <button 
-              onClick={() => handleTabToggle('comida')}
+              onClick={() => openEntry('comida')}
               aria-describedby={dayContextId}
               aria-pressed={activeTab === 'comida'}
               className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'comida' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-white dark:bg-[#161b22] border-slate-200 dark:border-gray-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-[#0f141c]'}`}
@@ -581,7 +574,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               + Comida
             </button>
             <button 
-              onClick={() => handleTabToggle('entrenamiento')}
+              onClick={() => openEntry('entrenamiento')}
               aria-describedby={dayContextId}
               aria-pressed={activeTab === 'entrenamiento'}
               className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'entrenamiento' ? 'bg-orange-600 border-orange-500 text-white' : 'bg-white dark:bg-[#161b22] border-slate-200 dark:border-gray-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-[#0f141c]'}`}
@@ -593,11 +586,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
           {/* Forms Area */}
         {activeTab === 'comida' && (
-            <EntryFormShell fitness dateContext={entryDate} title="Agregar comida" onClose={closeEntry}>
-              <form onSubmit={handleAddMeal} aria-busy={savingMeal || photoProcessing} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+            <EntryFormShell fitness desktopModal dateContext={entryDate} title="Agregar comida" onClose={closeEntry}>
+              <form onChangeCapture={markEntryChanged} onSubmit={handleAddMeal} aria-busy={savingMeal || photoProcessing} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
                 <div className="entry-form-content entry-fields-grid entry-meal-fields">
-                  <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Comida</h4>
-                  {entryDate}
                   <div className="entry-field entry-description">
                     <label className="entry-field-label" htmlFor="add-meal-description">Descripción</label>
                     <AutoResizeTextarea id="add-meal-description"
@@ -644,24 +635,22 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                         <button
                           type="button" aria-label="Usar hora actual"
                           title="Hora actual"
-                          onClick={() => setMealTime(format(new Date(), 'HH:mm'))}
+                          onClick={() => { markEntryChanged(); setMealTime(format(new Date(), 'HH:mm')); }}
                           className="entry-time-now bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 p-2 rounded-md hover:text-blue-400 text-slate-500 dark:text-gray-400 transition-colors flex-shrink-0"
                         >
-                          <Clock size={18} />
+                          Ahora
                         </button>
                       </div>
                     </div>
                   </div>
+                  <div className="entry-photo-section">
+                    <p className="entry-photo-hint">Foto opcional · podés usarla para estimar con IA</p>
+                    {mealPhotoControls}
+                  </div>
                   {mealEstimateControls}
                   <details className="fitness-extras">
-                    <summary>Foto y notas <span>Opcionales</span></summary>
+                    <summary>Notas <span>Opcionales</span></summary>
                     <div className="fitness-extra-fields">
-                      <div className="entry-photo-section">
-                        <div className="entry-photo-heading">
-                          <span className="entry-field-label">Foto de la comida</span>
-                          <span className="entry-photo-hint">Opcional · ayuda a estimar mejor</span></div><span className="entry-desktop-photo-label text-xs text-slate-500 dark:text-gray-400">Foto opcional</span>
-                        {mealPhotoControls}
-                      </div>
                       <div className="entry-field entry-notes">
                         <label className="entry-field-label" htmlFor="add-meal-notes">Notas <span>· Opcional</span></label>
                         <AutoResizeTextarea id="add-meal-notes"
@@ -675,6 +664,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   </details>
                 </div>
                 <div className="entry-form-footer">
+                  <button type="button" className="entry-cancel" disabled={savingMeal || photoProcessing} onClick={closeEntry}>Cancelar</button>
                   <button type="submit" disabled={savingMeal || photoProcessing} className="disabled:opacity-50">
                     <Check weight="bold" /> {savingMeal ? 'Guardando…' : photoProcessing ? 'Preparando foto…' : 'Guardar comida'}
                   </button>
@@ -684,11 +674,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         )}
 
         {activeTab === 'entrenamiento' && (
-            <EntryFormShell fitness dateContext={entryDate} title="Agregar ejercicio" onClose={closeEntry}>
-              <form onSubmit={handleAddWorkout} aria-busy={savingWorkout} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+            <EntryFormShell fitness desktopModal dateContext={entryDate} title="Agregar ejercicio" onClose={closeEntry}>
+              <form onChangeCapture={markEntryChanged} onSubmit={handleAddWorkout} aria-busy={savingWorkout} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
                 <div className="entry-form-content entry-fields-grid entry-workout-fields">
-                  <h4 className="entry-form-title font-bold text-slate-900 dark:text-white">Agregar Entrenamiento</h4>
-                  {entryDate}
                   <div className="entry-field entry-description entry-activity">
                     <label className="entry-field-label" htmlFor="add-workout-activity">Actividad</label>
                     <AutoResizeTextarea id="add-workout-activity"
@@ -735,10 +723,10 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                       <button
                         type="button" aria-label="Usar hora actual"
                         title="Hora actual"
-                        onClick={() => setWorkTime(format(new Date(), 'HH:mm'))}
+                        onClick={() => { markEntryChanged(); setWorkTime(format(new Date(), 'HH:mm')); }}
                         className="entry-time-now bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 p-2 rounded-md hover:text-orange-400 text-slate-500 dark:text-gray-400 transition-colors flex-shrink-0"
                       >
-                        <Clock size={18} />
+                        Ahora
                       </button>
                     </div>
                   </div>
@@ -773,8 +761,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
                 </div>
                 <div className="entry-form-footer flex justify-end">
+                  <button type="button" className="entry-cancel" disabled={savingWorkout} onClick={closeEntry}>Cancelar</button>
                   <button type="submit" disabled={savingWorkout} className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2 disabled:opacity-50">
-                    <Check weight="bold" /> {savingWorkout ? 'Guardando…' : <><span className="entry-desktop-copy">Guardar</span><span className="entry-mobile-copy">Guardar ejercicio</span></>}
+                    <Check weight="bold" /> {savingWorkout ? 'Guardando…' : 'Guardar ejercicio'}
                   </button>
                 </div>
               </form>
@@ -830,7 +819,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 <span className="text-[10px] font-normal text-slate-500 dark:text-gray-400 mt-0.5">ml</span>
               </div>
               <div className="habit-controls">
-                <button type="button" onClick={() => handleAddWater(-250)} aria-label="Restar 250 ml de agua">−</button>
+                <button type="button" onClick={() => handleAddWater(-250)} aria-label="Restar 250 ml de agua">−250</button>
                 <button type="button" onClick={() => handleAddWater(250)} aria-label="Sumar 250 ml de agua">+250</button>
               </div>
             </div>
@@ -879,7 +868,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 )}
               </div>
               <div className="habit-controls">
-                <button type="button" onClick={() => handleAddSteps(-500)} aria-label="Restar 500 pasos">−</button>
+                <button type="button" onClick={() => handleAddSteps(-500)} aria-label="Restar 500 pasos">−500</button>
                 <button type="button" onClick={() => handleAddSteps(500)} aria-label="Sumar 500 pasos">+500</button>
               </div>
             </div>
@@ -897,10 +886,11 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               </div>
               <button type="button" className="habit-edit"
                 onClick={() => {
+                  entryChanged.current = false;
                   setEditWeightVal(currentRecord.weight ? String(currentRecord.weight) : '');
                   weightDraftBaseRef.current = snapshotEntryRecord(currentRecord, profile.recordGeneration);
                   setIsEditingWeight(true);
-                }} title="Registrar peso" aria-label="Editar peso">Editar</button>
+                }} aria-label={currentRecord.weight ? "Editar peso" : undefined}>{currentRecord.weight ? "Editar" : "Registrar peso"}</button>
             </div>
           </div>
             {habit.status && <div className="habit-feedback flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-gray-300"
@@ -950,7 +940,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               const meal = item._type === 'meal';
               return (
                 <li key={`${item._type}-${item.id}`}>
-                  <button type="button" className="daily-record-open" onClick={() => setDetailModalItem(item)}>
+                  <button type="button" className="daily-record-open" onClick={event => { recordOpener.current = event.currentTarget; setDetailModalItem(item); }}>
                     <span className="fitness-record-mark">
                       {meal && item.photo_path ? <MealThumbnail path={item.photo_path} /> : meal
                         ? <ForkKnife size={17} aria-hidden="true" /> : <Barbell size={17} aria-hidden="true" />}
@@ -973,7 +963,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Detail Modal */}
       {detailModalItem && (
-        <EntryFormShell fitness dateContext={entryDate} title="Detalle del Registro" desktopModal closeLabel="Cerrar detalle" onClose={() => setDetailModalItem(null)}>
+        <EntryFormShell fitness dateContext={entryDate} title="Detalle del registro" restoreFocusTo={recordOpener} desktopModal closeLabel="Cerrar detalle" onClose={() => setDetailModalItem(null)}>
           <div className="record-detail-modal flex min-h-0 flex-col">
             <div className="record-detail-content entry-form-content p-6 flex flex-col gap-4">
 
@@ -1053,8 +1043,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Weight uses the same accessible shell and selected-day context as other records. */}
       {isEditingWeight && (
-        <EntryFormShell fitness dateContext={entryDate} title="Registrar Peso" desktopModal onClose={() => { setIsEditingWeight(false); weightDraftBaseRef.current = null; }}>
-          <form className="entry-form entry-weight-form" onSubmit={async event => {
+        <EntryFormShell fitness dateContext={entryDate} title={currentRecord.weight ? "Editar peso" : "Registrar peso"} desktopModal onClose={closeWeight}>
+          <form className="entry-form entry-weight-form" aria-busy={savingWeight} onChangeCapture={markEntryChanged} onSubmit={async event => {
             event.preventDefault();
             await handleSetWeight(parseFloat(editWeightVal) || 0);
           }}>
@@ -1072,7 +1062,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               </div>
             </div>
             <div className="entry-form-footer">
-              <button type="submit" className="entry-weight-save"><Check size={18} weight="bold" aria-hidden="true" /> Guardar</button>
+              <button type="button" className="entry-cancel" disabled={savingWeight} onClick={closeWeight}>Cancelar</button>
+              <button type="submit" className="entry-weight-save" disabled={savingWeight}><Check size={18} weight="bold" aria-hidden="true" /> {savingWeight ? "Guardando…" : "Guardar peso"}</button>
             </div>
           </form>
         </EntryFormShell>
@@ -1080,8 +1071,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Edit Modal para Comidas */}
       {editingMealId && (
-        <EntryFormShell fitness dateContext={entryDate} title="Editar comida" onClose={closeEntry} desktopModal>
-          <form onSubmit={handleAddMeal} aria-busy={savingMeal || photoProcessing} className="entry-form p-4 flex flex-col gap-4">
+        <EntryFormShell fitness dateContext={entryDate} title="Editar comida" restoreFocusTo={recordOpener} onClose={closeEntry} desktopModal>
+          <form onChangeCapture={markEntryChanged} onSubmit={handleAddMeal} aria-busy={savingMeal || photoProcessing} className="entry-form p-4 flex flex-col gap-4">
             <div className="entry-form-content entry-fields-grid entry-meal-fields entry-edit-fields">
 
               <div className="entry-field entry-description">
@@ -1128,25 +1119,23 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                     />
                     <button
                       type="button" aria-label="Usar hora actual"
-                      onClick={() => setMealTime(new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }))}
+                      onClick={() => { markEntryChanged(); setMealTime(format(new Date(), 'HH:mm')); }}
                       className="entry-time-now p-2 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md hover:bg-slate-200 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-white transition-colors"
                       title="Hora actual"
                     >
-                      <Clock size={16} />
+                      Ahora
                     </button>
                   </div>
                 </div>
               </div>
+              <div className="entry-photo-section">
+                <p className="entry-photo-hint">Foto opcional · podés usarla para estimar con IA</p>
+                {mealPhotoControls}
+              </div>
               {mealEstimateControls}
-              <details className="fitness-extras" open={Boolean(mealDetails || mealPhoto || mealPhotoPath) || undefined}>
-                <summary>Foto y notas <span>Opcionales</span></summary>
+              <details className="fitness-extras">
+                <summary>Notas <span>Opcionales</span></summary>
                 <div className="fitness-extra-fields">
-                  <div className="entry-photo-section">
-                    <div className="entry-photo-heading">
-                      <span className="entry-field-label">Foto de la comida</span>
-                      <span className="entry-photo-hint">Opcional · ayuda a estimar mejor</span></div>
-                    {mealPhotoControls}
-                  </div>
                   <div className="entry-field entry-notes">
                     <label className="entry-field-label" htmlFor="edit-meal-notes">Notas <span>· Opcional</span></label>
                     <AutoResizeTextarea id="edit-meal-notes"
@@ -1160,8 +1149,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
             </div>
             <div className="entry-form-footer flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
+              <button type="button" className="entry-cancel" disabled={savingMeal || photoProcessing} onClick={closeEntry}>Cancelar</button>
               <button type="submit" disabled={savingMeal || photoProcessing} className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
-                <Check weight="bold" /> {savingMeal ? 'Guardando…' : photoProcessing ? 'Preparando foto…' : <><span className="entry-desktop-copy">Guardar Cambios</span><span className="entry-mobile-copy">Guardar cambios</span></>}
+                <Check weight="bold" /> {savingMeal ? 'Guardando…' : photoProcessing ? 'Preparando foto…' : 'Guardar cambios'}
               </button>
             </div>
           </form>
@@ -1170,8 +1160,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Edit Modal para Entrenamiento */}
       {editingWorkoutId && (
-        <EntryFormShell fitness dateContext={entryDate} title="Editar ejercicio" onClose={closeEntry} desktopModal>
-          <form onSubmit={handleAddWorkout} aria-busy={savingWorkout} className="entry-form p-4 flex flex-col gap-4">
+        <EntryFormShell fitness dateContext={entryDate} title="Editar ejercicio" restoreFocusTo={recordOpener} onClose={closeEntry} desktopModal>
+          <form onChangeCapture={markEntryChanged} onSubmit={handleAddWorkout} aria-busy={savingWorkout} className="entry-form p-4 flex flex-col gap-4">
             <div className="entry-form-content entry-fields-grid entry-workout-fields entry-edit-fields">
 
               <div className="entry-field entry-description entry-activity">
@@ -1217,11 +1207,11 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   />
                   <button
                     type="button" aria-label="Usar hora actual"
-                    onClick={() => setWorkTime(new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }))}
+                    onClick={() => { markEntryChanged(); setWorkTime(format(new Date(), 'HH:mm')); }}
                     className="entry-time-now p-2 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md hover:bg-slate-200 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-white transition-colors"
                     title="Hora actual"
                   >
-                    <Clock size={16} />
+                    Ahora
                   </button>
                 </div>
               </div>
@@ -1255,8 +1245,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
             </div>
             <div className="entry-form-footer flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
+              <button type="button" className="entry-cancel" disabled={savingWorkout} onClick={closeEntry}>Cancelar</button>
               <button type="submit" disabled={savingWorkout} className="w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
-                <Check weight="bold" /> {savingWorkout ? 'Guardando…' : <><span className="entry-desktop-copy">Guardar Cambios</span><span className="entry-mobile-copy">Guardar cambios</span></>}
+                <Check weight="bold" /> {savingWorkout ? 'Guardando…' : 'Guardar cambios'}
               </button>
             </div>
           </form>

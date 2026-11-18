@@ -8,10 +8,10 @@ export const origin='http://127.0.0.1:'+(before?'5195':'5196');
 export const heights={320:568,375:812,393:852,440:956,768:1024,1440:900};
 const pw=process.env.PLAYWRIGHT_MODULE||path.resolve(repo,'../qa-tools/node_modules/playwright/index.mjs');
 const {chromium}=await import(pathToFileURL(pw));
-export const start=()=>chromium.launch({channel:process.env.QA_BROWSER_CHANNEL||'chrome',headless:true});
-export async function open(browser,width,theme='light',scenario='main',system='light',url=origin){
-  assert.ok(['http://127.0.0.1:5195','http://127.0.0.1:5196'].includes(url));
-  const context=await browser.newContext({viewport:{width,height:heights[width]},colorScheme:system,timezoneId:'America/Buenos_Aires',locale:'es-AR',reducedMotion:'reduce'});
+export const start=(args=[])=>chromium.launch({channel:process.env.QA_BROWSER_CHANNEL||'chrome',headless:true,args});
+export async function open(browser,width,theme='light',scenario='main',system='light',url=origin,locale='es-AR'){
+  assert.ok(/^http:\/\/127\.0\.0\.1:519[5-8]$/.test(url));
+  const context=await browser.newContext({viewport:{width,height:heights[width]},colorScheme:system,timezoneId:'America/Buenos_Aires',locale,reducedMotion:'reduce'});
   const errors=[];
   await context.route('**/*',route=>{
     if(new URL(route.request().url()).origin===url)return route.continue();

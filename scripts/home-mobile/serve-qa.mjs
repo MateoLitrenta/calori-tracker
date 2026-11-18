@@ -9,7 +9,8 @@ import { globalSupabase, installGlobalFixture } from '../fitness-global/fixture.
 // App, HomeView, DailyPanel, Heatmap, ChartsView and CSS are product sources.
 // Auth, record writer, Storage and AI are isolated synthetic boundaries.
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const stage1 = process.argv.includes('--stage1');
+const stage2 = process.argv.includes('--stage2');
+const stage1 = stage2 || process.argv.includes('--stage1');
 const stage1Cases = stage1 ? (await import('../ux-stage1/fixture.mjs')).cases : null;
 const beforeGlobal = process.argv.includes('--before-global');
 const globalQA = stage1 || beforeGlobal || process.argv.includes('--global');
@@ -18,9 +19,9 @@ const fitness = beforeFitness || process.argv.includes('--fitness');
 const beforeRefinement = process.argv.includes('--before-refinement');
 const refinement = beforeRefinement || process.argv.includes('--refinement');
 const before = process.argv.includes('--before') || beforeRefinement || beforeFitness || beforeGlobal;
-const base = stage1 ? 'c365e1e6f236ab76d17b46cbd8fe1ec9eace8831' : globalQA ? '10117215cf7071dc754e175294588f4a30a959b9' : fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
+const base = stage2 ? 'c2c62c94a25c44559ab926f8d954305e32a36317' : stage1 ? 'c365e1e6f236ab76d17b46cbd8fe1ec9eace8831' : globalQA ? '10117215cf7071dc754e175294588f4a30a959b9' : fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
   : refinement ? 'fe01ecb86e0933c5260c2630fe4d7a6e82ebccdd' : '5a74e7279c77a7d1dc25fb5604d5fa0d657d6bf5';
-const phase = stage1 ? (before ? 'stage1-before' : 'stage1-after') : beforeGlobal ? 'before-global' : globalQA ? 'global' : beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
+const phase = stage2 ? (before ? 'stage2-before' : 'stage2-after') : stage1 ? (before ? 'stage1-before' : 'stage1-after') : beforeGlobal ? 'before-global' : globalQA ? 'global' : beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
 let root = repo;
 if (before) {
   root = path.resolve(repo, stage1 ? '../stage1-baseline-' + base.slice(0,7) : beforeGlobal ? '../global-baseline-' + base.slice(0,7) : beforeFitness ? '../home-fitness-baseline-' + base.slice(0,7) : beforeRefinement ? '../home-v10-1-1-refinement-baseline' : '../home-v10-1-1-baseline');
@@ -98,7 +99,7 @@ function Controls(){const q=window.__homeQA;useSyncExternalStore(fn=>{q.listener
 createRoot(document.getElementById('root')).render(<ThemeProvider><App/><Controls/></ThemeProvider>);`;
 const entryCode = ts.transpileModule(entry, { compilerOptions: { module: ts.ModuleKind.ESNext,
   jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText;
-const port=Number(process.argv.find(value=>value.startsWith('--port='))?.split('=')[1] || (stage1?(before?5195:5196):beforeGlobal?5193:globalQA?5194:beforeFitness?5191:fitness?5192:beforeRefinement?5183:refinement?5184:before?5181:5182));
+const port=Number(process.argv.find(value=>value.startsWith('--port='))?.split('=')[1] || (stage2?(before?5197:5198):stage1?(before?5195:5196):beforeGlobal?5193:globalQA?5194:beforeFitness?5191:fitness?5192:beforeRefinement?5183:refinement?5184:before?5181:5182));
 // The baseline links the same installed dependencies, but each source tree must
 // own its optimizer cache. Sharing node_modules/.vite can invalidate the other
 // server's dependency URLs and return 504s instead of mounting the real App.

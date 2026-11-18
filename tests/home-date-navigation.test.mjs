@@ -235,10 +235,10 @@ test('blurred step edits save their selected day before navigation and weight co
   await act(async () => new Promise(resolve => setTimeout(resolve, 450)));
   assert.equal(view.saves.length, 1); assert.equal(view.saves[0].date, yesterday); assert.equal(view.saves[0].record.steps, 9200);
   assert.match(view.button('Editar total de pasos').textContent, /1[.\s]?000/);
-  await view.click(view.day(yesterday)); await view.click(document.querySelector('[title="Registrar peso"]'));
+  await view.click(view.day(yesterday)); await view.click(document.querySelector('.habit-edit'));
   const weight = document.querySelector('input[inputmode="decimal"]'); await fill(weight, '72.5');
   await view.click(view.button('Hoy')); assert.equal(view.selected(), yesterday); assert.equal(weight.value, '72.5');
-  await view.click(view.button('Guardar'));
+  await view.click(view.button('Guardar peso'));
   assert.equal(view.saves.length, 2); assert.equal(view.saves[1].date, yesterday); assert.equal(view.saves[1].record.weight, 72.5);
   assert.equal(view.saves[1].record.steps, 9200); assert.equal(view.saves[1].record.meals[0].name, 'Comida de ayer');
 });
@@ -303,13 +303,15 @@ test('calendar keyboard crosses months, keeps future/boundary days disabled and 
   assert.equal(view.saves.length, 0);
 });
 
-test('calendar access with an active draft announces and focuses recovery without losing the original date or text', async t => {
+test('calendar access preserves the original date, text and focus inside the active dialog', async t => {
   const view = await mount(t, { width: 1440 }); await view.click(document.querySelector('.daily-quick-actions button'));
   await fill('add-meal-description', 'Borrador ante calendario');
   const textarea = document.getElementById('add-meal-description'); await view.click(view.button('Abrir calendario mensual'));
   assert.equal(document.querySelector('.home-date-picker'), null); assert.equal(document.getElementById('add-meal-description'), textarea);
   assert.equal(view.selected(), today); assert.equal(textarea.value, 'Borrador ante calendario');
-  assert.equal(document.activeElement, view.button('Volver al registro en edición')); assert.equal(view.saves.length, 0);
+  assert.match(document.querySelector('.home-date-blocked').textContent, /Tu borrador se conserva/);
+  assert.equal(document.activeElement?.getAttribute('aria-label'), 'Cerrar formulario');
+  assert.equal(view.saves.length, 0);
 });
 
 test('mobile week ranges spell out both months when they cross a month boundary', async t => {

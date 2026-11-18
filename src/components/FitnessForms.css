@@ -6,7 +6,7 @@
 }
 .fitness-entry-portal .entry-bottom-sheet { border-radius: 13px 13px 0 0; }
 .entry-desktop-modal[data-fitness] { border-radius: 12px; }
-.entry-desktop-modal[data-fitness]:has(.entry-fields-grid) { max-width: 34rem; }
+.entry-desktop-modal[data-fitness]:has(.entry-fields-grid) { max-width: 37rem; }
 .fitness-entry-portal .entry-sheet-handle { display: none; }
 
 :is(.fitness-entry-portal, .entry-desktop-modal[data-fitness]) .entry-sheet-header {
@@ -119,8 +119,10 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
   display: grid;
   place-items: center;
   flex: none;
-  width: 44px;
-  height: 48px;
+  min-width: 44px;
+  min-height: 48px;
+  width: auto;
+  padding-inline: 8px;
   border: 1px solid var(--fit-control-line);
   border-radius: 6px;
   background: var(--fit-surface);
@@ -181,7 +183,7 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
 }
 :is(.fitness-home, .fitness-entry-portal) .fitness-extra-fields > * { grid-area: auto; }
 :is(.fitness-home, .fitness-entry-portal) .fitness-extras .entry-photo-heading { display: block; }
-:is(.fitness-home, .fitness-entry-portal) .fitness-extras .entry-photo-hint { display: block; margin-top: 2px; font-size: 12px; color: var(--fit-quiet); }
+:is(.fitness-home, .fitness-entry-portal) .entry-photo-hint { display: block; margin-top: 2px; font-size: 12px; color: var(--fit-quiet); }
 :is(.fitness-home, .fitness-entry-portal) .fitness-extras .entry-desktop-photo-label { display: none; }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer {
   display: flex; justify-content: flex-end; margin: 0; padding: 12px 18px; border-top: 1px solid var(--fit-rule);
@@ -198,10 +200,50 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
 :is(.fitness-home, .fitness-entry-portal) .record-detail-modal :is(.record-detail-content,.record-detail-actions) { background: var(--fit-page); border-color: var(--fit-rule); }
 :is(.fitness-home, .fitness-entry-portal) .record-detail-content .record-detail-main { color: var(--fit-ink); font: 700 24px/1.15 var(--fit-face); }
 :is(.fitness-home, .fitness-entry-portal) .record-detail-actions button { min-height: 44px; border-radius: 6px; }
-@media (min-width: 1024px) {
-  .fitness-home .entry-form .entry-meal-fields:not(.entry-edit-fields) > :is(.entry-description,.entry-type) { grid-column: auto; }
-}
 @media (max-width: 350px) {
   .fitness-entry-portal.home-variants .entry-form .entry-fields-grid { padding-inline: 12px; }
   .fitness-entry-portal .fitness-meal-pair { grid-template-columns: minmax(0,.72fr) minmax(0,1.28fr); gap: 8px; }
 }
+
+/* Header and actions stay in place while the form fields scroll. */
+.entry-desktop-modal[data-fitness]:has(.entry-form) { overflow: hidden; }
+.entry-desktop-modal[data-fitness] .entry-form {
+  min-height: 0;
+  padding: 0;
+  gap: 0;
+  border: 0;
+}
+.entry-desktop-modal[data-fitness] .entry-form-content {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.fitness-entry-portal .entry-form .entry-form-footer button { flex: 1 1 auto; width: auto; }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer .entry-cancel {
+  color: var(--fit-ink);
+  background: var(--fit-surface);
+  border: 1px solid var(--fit-rule);
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer .entry-cancel:hover {
+  background: var(--fit-soft);
+  color: var(--fit-ink);
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-time-row { flex-wrap: wrap; }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-content .entry-time-row input {
+  /* Give the native hour, day period and picker space before wrapping Ahora. */
+  flex: 1 1 10em;
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-form button {
+  overflow-wrap: anywhere;
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-form button:focus-visible {
+  outline: 2px solid var(--fit-focus);
+  outline-offset: -2px;
+}
+.entry-photo-section .entry-photo-hint { margin-bottom: 6px; }

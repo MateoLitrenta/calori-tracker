@@ -77,7 +77,7 @@ test('numbered monthly selection is a preview; only the explicit open action cha
     assert.equal(opens, 0);
     assert.equal(document.documentElement.scrollTop, 123);
   }
-  const open = [...document.querySelectorAll('button')].find(button => button.textContent.trim() === 'Abrir registros del día');
+  const open = document.querySelector('[data-history-open]');
   await act(() => open.click());
   assert.equal(opens, 1);
   assert.equal(openedDate, today);

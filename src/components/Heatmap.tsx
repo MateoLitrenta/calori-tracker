@@ -510,6 +510,10 @@ export default function Heatmap({
               </button>
             </div>
           </div>
+          <button type="button" className="ah-detail-jump" aria-controls={detailId} onClick={() => {
+            detailRef.current?.focus({ preventScroll: true });
+            detailRef.current?.scrollIntoView({ block: 'start' });
+          }}>Ver detalle del día</button>
           <div className="ah-motion-viewport">
             <div className="ah-motion-surface" ref={motionRef}>
               {state.view === 'year' ? (
@@ -691,7 +695,9 @@ export default function Heatmap({
                       <div className="ah-week">{weekDates.map(renderDay)}</div>
                     )}
                   </div>
-                  <div className="ah-key" aria-label="Indicadores del calendario">
+                  <details className="ah-key-disclosure">
+                    <summary>Indicadores del calendario</summary>
+                    <div className="ah-key">
                     <span>
                       <ForkKnife aria-hidden="true" />
                       Comida
@@ -712,7 +718,8 @@ export default function Heatmap({
                       <i aria-hidden="true" />
                       Sin comidas
                     </span>
-                  </div>
+                    </div>
+                  </details>
                   <p id={helpId} className="sr-only">
                     Flechas para cambiar de fecha; Inicio y Fin para los extremos de la semana; RePág y
                     AvPág para cambiar de mes. Seleccionar no abre ni modifica el registro diario.
@@ -779,10 +786,11 @@ export default function Heatmap({
           ref={detailRef}
           id={detailId}
           role="region"
+          tabIndex={-1}
           aria-label="Detalle del día"
         >
           <div className="ah-detail-heading" aria-live="polite" aria-atomic="true">
-            <p className="ah-eyebrow">{selected === today ? 'Hoy' : 'Día seleccionado'}</p>
+            <p className="ah-eyebrow">{selected === today ? 'Explorando · Hoy' : 'Explorando'}</p>
             <h3>{dateLabel(selected)}</h3>
             <p className="ah-day-status" data-empty={!hasData} data-incomplete={incomplete}>
               {!hasData
@@ -883,11 +891,11 @@ export default function Heatmap({
             disabled={openDayBlocked}
             onClick={() => onSelectDate(selected)}
           >
-            Abrir registros del día
+            Ver y editar el {format(parseISO(selected), "d 'de' MMMM", { locale: es })}
             <ArrowUpRight aria-hidden="true" />
           </button>
           <p className="ah-open-hint">
-            Abrir cambia el día de Inicio. Explorar el calendario no cambia tus formularios.
+            Esta acción cambia el día de registro en Inicio.
           </p>
         </div>
       </div>

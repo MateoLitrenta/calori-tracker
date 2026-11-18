@@ -365,14 +365,16 @@ test('habit taps during an outstanding save wait instead of dispatching a stale 
   await Promise.resolve();
 });
 
-test('quick actions toggle existing forms and values retain inline editing', () => {
+test('quick actions open forms and values retain inline editing', () => {
   const view = mount({ profile, record: base, dateStr, records: {}, onUpdateRecord: async () => true });
-  for (const [label, content] of [['+ Comida', 'Agregar Comida'], ['+ Ejercicio', 'Agregar Entrenamiento']]) {
+  for (const [label, content] of [['+ Comida', 'Agregar comida'], ['+ Ejercicio', 'Agregar ejercicio']]) {
     const button = () => node(view(), e => e.type === 'button' && e.props.children?.trim?.() === label);
     button().props.onClick();
     assert.ok(renderToStaticMarkup(view()).includes(content));
     assert.equal(button().props['aria-pressed'], true);
     button().props.onClick();
+    assert.equal(button().props['aria-pressed'], true);
+    shell(view).props.onClose();
     assert.equal(button().props['aria-pressed'], false);
   }
   node(view(), e => e.props.title === 'Editar cantidad').props.onClick();
@@ -381,8 +383,9 @@ test('quick actions toggle existing forms and values retain inline editing', () 
   node(view(), e => e.props.title === 'Editar pasos').props.onClick();
   assert.equal(nodes(view(), e => e.type === 'input' && e.props.autoFocus).length, 2);
   assert.equal(node(view(), e => e.type === 'input' && e.props['aria-label'] === 'Total de pasos').props.inputMode, 'numeric');
-  node(view(), e => e.props.title === 'Registrar peso').props.onClick();
-  assert.match(renderToStaticMarkup(view()), /Registrar Peso/);
+  const weight = node(view(), e => e.props.className === 'habit-edit');
+  weight.props.onClick();
+  assert.equal(shell(view).props.title, base.weight ? 'Editar peso' : 'Registrar peso');
 });
 
 test('registration actions and both entry forms expose the selected date, including historical days', () => {
@@ -393,8 +396,9 @@ test('registration actions and both entry forms expose the selected date, includ
     const label = node(view(), e => e.props.id === button.props['aria-describedby']);
     assert.equal(label.type, 'time'); assert.equal(label.props.dateTime, selected);
     button.props.onClick();
-    const context = node(view(), e => e.props.className === 'entry-date-context');
+    const context = shell(view).props.dateContext;
     assert.equal(node(context, e => e.type === 'time').props.dateTime, selected);
+    shell(view).props.onClose();
   }
 });
 
@@ -425,46 +429,45 @@ test('mobile meal and workout actions open a named modal dialog; steps and water
     assert.equal(node(dialog, element => element.props.id === dialog.props['aria-labelledby']).props.children, title);
     assert.equal(nodes(dialog, element => element.type === 'form').length, 1);
     assert.ok(node(dialog, element => element.props.className?.includes('entry-form-footer')));
+    shell(view).props.onClose();
   }
-  shell(view).props.onClose();
   node(view(), e => e.props.title === 'Editar pasos').props.onClick();
   assert.equal(nodes(view(), element => element.type.name === 'EntryFormShell').length, 0);
   assert.ok(node(view(), element => element.type === 'input' && element.props.autoFocus));
 });
 
-test('close and backdrop reset drafts and temporary photos; sheet contents do not dismiss it', t => {
+test('explicit close asks before discarding text and a temporary photo', t => {
   mobileEnvironment(t);
   const view = entryView();
-  for (const method of ['close', 'backdrop']) {
-    open(view, '+ Comida');
-    fill(view, 'Ej. pollo con arroz y verduras', 'Borrador');
-    node(view(), element => element.type.name === 'MealPhotoPicker').props.onChange(new Blob(['photo']));
-    const tree = sheet(view);
-    if (method === 'close') node(tree, element => element.props['aria-label'] === 'Cerrar formulario').props.onClick();
-    else {
-      const backdrop = node(tree, element => element.props.className === 'entry-sheet-backdrop');
-      backdrop.props.onClick({ target: {}, currentTarget: backdrop });
-      assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, 'Borrador');
-      backdrop.props.onClick({ target: backdrop, currentTarget: backdrop });
-    }
-    assert.equal(nodes(view(), element => element.type === 'form').length, 0);
-    open(view, '+ Comida');
-    assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, '');
-    assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.blob, null);
-    shell(view).props.onClose();
-  }
+  open(view, '+ Comida');
+  fill(view, 'Ej. pollo con arroz y verduras', 'Borrador');
+  const photo = new Blob(['photo']);
+  node(view(), element => element.type.name === 'MealPhotoPicker').props.onChange(photo);
+  const tree = sheet(view);
+  const close = node(tree, element => element.props['aria-label'] === 'Cerrar formulario').props.onClick;
+  assert.equal(node(tree, element => element.props.className === 'entry-sheet-backdrop').props.onClick, undefined);
+  window.confirm = () => false;
+  close();
+  assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, 'Borrador');
+  assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.blob, photo);
+  window.confirm = () => true;
+  close();
+  assert.equal(nodes(view(), element => element.type === 'form').length, 0);
+  open(view, '+ Comida');
+  assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, '');
+  assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.blob, null);
 });
 
-test('desktop actions keep the same single inline forms and steps-water panel', t => {
+test('desktop actions use one named dialog while water editing stays inline', t => {
   mobileEnvironment(t, false);
   const view = entryView();
   for (const action of ['+ Comida', '+ Ejercicio']) {
     open(view, action);
-    const inline = sheet(view);
-    assert.equal(inline.type, 'form');
-    assert.equal(nodes(inline, element => element.props.role === 'dialog').length, 0);
+    const dialog = node(sheet(view), element => element.props.role === 'dialog');
+    assert.equal(dialog.props['aria-modal'], 'true');
+    assert.equal(nodes(dialog, element => element.type === 'form').length, 1);
+    shell(view).props.onClose();
   }
-  shell(view).props.onClose();
   node(view(), e => e.props.title === 'Editar cantidad').props.onClick();
   assert.equal(nodes(view(), element => element.type === 'form').length, 0);
 });
@@ -598,7 +601,7 @@ test('editing closes the record detail and opens the same responsive shell with 
   const workout = { id: 'w1', activity: 'Correr', duration: 40, calories: 300, details: 'Suave', distance: 5, pace: '8:00', time: '18:00' };
   for (const [record, expected] of [[{ ...base, meals: [meal] }, 'Pizza'], [{ ...base, workouts: [workout] }, 'Correr']]) {
     const view = entryView(undefined, record);
-    node(view(), element => element.props.className?.split(' ').includes('daily-record-open')).props.onClick();
+    node(view(), element => element.props.className?.split(' ').includes('daily-record-open')).props.onClick({ currentTarget: null });
     node(view(), element => element.props.className?.includes('record-detail-edit')).props.onClick({ stopPropagation() {} });
     assert.equal(nodes(view(), element => element.props.className?.includes('record-detail-modal')).length, 0);
     assert.ok(node(sheet(view), element => element.props.role === 'dialog'));
@@ -623,7 +626,7 @@ for (const kind of ['meal', 'workout']) {
     const set = (view, id, value) => node(view(), e => e.props.id === id).props.onChange({ target: { value } });
     const edit = record => {
       const view = entryView(persist, record);
-      node(view(), e => e.props.className?.split(' ').includes('daily-record-open')).props.onClick();
+      node(view(), e => e.props.className?.split(' ').includes('daily-record-open')).props.onClick({ currentTarget: null });
       node(view(), e => e.props.className?.includes('record-detail-edit')).props.onClick({ stopPropagation() {} });
       return view;
     };
@@ -822,34 +825,24 @@ test('photo upload failures keep the meal draft and image available for retry', 
   assert.ok(shell(view));
 });
 
-test('global outside-click behavior leaves mobile sheets to their backdrop and still closes desktop inline forms', t => {
-  mobileEnvironment(t);
+test('no global outside-click handler dismisses an active form', t => {
+  mobileEnvironment(t, false);
   const handlers = new Map();
-  globalThis.document.contains = () => true;
-  globalThis.document.addEventListener = (type, handler) => handlers.set(type, handler);
-  globalThis.document.removeEventListener = type => handlers.delete(type);
-  globalThis.window.matchMedia = () => ({ matches: true });
+  document.addEventListener = (type, handler) => handlers.set(type, handler);
+  document.removeEventListener = type => handlers.delete(type);
   const view = mount({ profile, record: base, dateStr, records: {}, onUpdateRecord: async () => true }, InteractiveDailyPanel, true);
-  let tree = view();
-  node(tree, element => element.props.ref && element.props.className?.split(' ').includes('daily-entry')).props.ref.current = { contains: () => false };
-  view.flushEffects();
+  view(); view.flushEffects();
   open(view, '+ Comida');
-  tree = view();
-  view.flushEffects();
-  const event = { target: { closest: () => null } };
-  handlers.get('click')(event);
+  view(); view.flushEffects();
+  assert.equal(handlers.has('click'), false);
   assert.ok(shell(view));
-  globalThis.window.matchMedia = () => ({ matches: false });
-  handlers.get('click')({ target: { closest: selector => selector.includes('.home-date-nav') ? {} : null } });
-  assert.ok(nodes(view(), element => element.type === 'form').length, 'The guarded date selector cannot dismiss an active desktop entry');
-  handlers.get('click')(event);
-  assert.equal(nodes(view(), element => element.type === 'form').length, 0);
   view.unmount();
 });
 
-
 test('all four entry modes associate labels, retain mobile CTAs and use accessible time actions', t => {
   mobileEnvironment(t);
+  t.mock.timers.enable({ apis: ['Date'], now: new Date(2026, 10, 17, 19, 54) });
+  t.mock.method(Date.prototype, 'toLocaleTimeString', () => '07:54 p. m.');
   const meal = { id: 'm1', name: 'Pizza', type: 'Cena', calories: 600, details: 'Dos porciones', time: '20:00' };
   const workout = { id: 'w1', activity: 'Correr', duration: 40, calories: 300, details: 'Suave', distance: 5, pace: '8:00', time: '18:00' };
   for (const [action, record, title, cta] of [
@@ -861,7 +854,7 @@ test('all four entry modes associate labels, retain mobile CTAs and use accessib
     const view = entryView(undefined, record);
     if (action) open(view, action);
     else {
-      node(view(), e => e.props.className?.split(' ').includes('daily-record-open')).props.onClick();
+      node(view(), e => e.props.className?.split(' ').includes('daily-record-open')).props.onClick({ currentTarget: null });
       node(view(), e => e.props.className?.includes('record-detail-edit')).props.onClick({ stopPropagation() {} });
     }
     const tree = sheet(view);
@@ -875,7 +868,10 @@ test('all four entry modes associate labels, retain mobile CTAs and use accessib
     }
     const footer = node(form, e => e.props.className?.includes('entry-form-footer'));
     assert.ok(renderToStaticMarkup(footer).includes(cta));
-    assert.ok(node(form, e => e.props['aria-label'] === 'Usar hora actual'));
+    const now = node(form, e => e.props['aria-label'] === 'Usar hora actual');
+    assert.equal(now.props.children, 'Ahora');
+    now.props.onClick();
+    assert.equal(node(view(), e => e.type === 'input' && e.props.type === 'time').props.value, '19:54');
     assert.equal(node(form, e => e.props.id?.endsWith('-notes')).type, 'textarea');
     assert.equal(node(tree, e => e.props.className === 'entry-sheet-handle').props['aria-hidden'], 'true');
     const ids = controls.map(e => e.props.id);
@@ -1103,7 +1099,7 @@ for (const mobile of [false, true]) test(`record details preserve date, keyboard
     await act(() => trigger.click());
     let dialog = document.querySelector('[role="dialog"]');
     assert.equal(dialog.getAttribute('aria-modal'), 'true');
-    assert.equal(document.getElementById(dialog.getAttribute('aria-labelledby')).textContent, 'Detalle del Registro');
+    assert.equal(document.getElementById(dialog.getAttribute('aria-labelledby')).textContent, 'Detalle del registro');
     assert.equal(dialog.querySelector('time').dateTime, day);
     assert.equal(dialog.querySelector('.record-detail-main').textContent.trim(), `${index ? 'Ejercicio' : 'Comida'} ${index}`);
     const close = dialog.querySelector('[aria-label="Cerrar detalle"]');
@@ -1138,12 +1134,12 @@ for (const mobile of [false, true]) test(`weight dialog names its historical day
   const view = await journalDOM(t, { dateStr: day, record, records: { [day]: record } });
   window.HTMLElement.prototype.getClientRects = () => [{ width: 100, height: 44 }];
   await view.resize(mobile);
-  const trigger = document.querySelector('[title="Registrar peso"]');
+  const trigger = document.querySelector('[aria-label="Editar peso"]');
   trigger.focus();
   await act(() => trigger.click());
   let dialog = document.querySelector('[role="dialog"]');
   assert.equal(dialog.getAttribute('aria-modal'), 'true');
-  assert.equal(document.getElementById(dialog.getAttribute('aria-labelledby')).textContent, 'Registrar Peso');
+  assert.equal(document.getElementById(dialog.getAttribute('aria-labelledby')).textContent, 'Editar peso');
   assert.equal(dialog.querySelector('time').dateTime, day);
   assert.match(dialog.querySelector('.entry-date-context').textContent, /Día del registro.*11 nov 2026/);
   const input = dialog.querySelector('input[name="weight"]');
@@ -1196,7 +1192,7 @@ test('workout deletion reports success only after persistence confirms it', asyn
     const gate = new Promise(done => { resolve = done; });
     const view = mount({ profile, record: { ...base, workouts: [{ id: 'delete-test', activity: 'Correr', duration: 30, calories: 300 }] }, dateStr, records: {},
       onUpdateRecord: async () => { await gate; if (outcome === 'reject') throw Error('offline'); return outcome; } });
-    node(view(), e => e.props.className === 'daily-record-open').props.onClick();
+    node(view(), e => e.props.className === 'daily-record-open').props.onClick({ currentTarget: null });
     node(view(), e => e.type === 'button' && e.props.children?.some?.(part => typeof part === 'string' && part.includes('Eliminar'))).props.onClick({ stopPropagation() {} });
     const count = successes.length;
     assert.equal(count, outcome === false ? 0 : outcome === true ? 0 : 1);
