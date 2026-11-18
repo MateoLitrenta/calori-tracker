@@ -143,7 +143,23 @@ function blobToBase64(blob: Blob): Promise<string> {
   });
 }
 
-export default function ChatView({ scrollContainer }: { scrollContainer: RefObject<HTMLElement | null> }) {
+function suggestionLabel(prompt: string) {
+  if (prompt.includes('objetivo confirmado')) return 'Mi próximo paso';
+  if (prompt.includes('antes de comparar')) return 'Revisar mis datos';
+  if (prompt.includes('entrenamiento')) return 'Mis entrenamientos';
+  if (prompt.includes('pasos')) return 'Mis pasos';
+  if (prompt.includes('completar mi registro')) return 'Completar mi registro';
+  if (prompt.includes('mi actividad')) return 'Datos para mi actividad';
+  if (prompt.includes('Cómo funciona Calori')) return 'Cómo funciona Calori';
+  if (prompt.includes('días con comidas registradas')) return 'Mis registros de comida';
+  if (prompt.includes('registrar mis comidas') || prompt.includes('registrar una comida')) return 'Registrar comidas';
+  return prompt;
+}
+
+export default function ChatView({ scrollContainer, readingPositions }: {
+  scrollContainer: RefObject<HTMLElement | null>;
+  readingPositions?: RefObject<Map<string, number>>;
+}) {
   const { user, activeProfile, avatarRevision, updateRecord } = useAppStore();
   const [today, setToday] = useState(() => formatDateStr(new Date()));
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -173,22 +189,23 @@ export default function ChatView({ scrollContainer }: { scrollContainer: RefObje
   if (!user) return null;
   const dateStr = selectedDate ?? today;
   return <UserChat key={`${user.id}:${today}:${dateStr}`} userId={user.id} activeProfile={activeProfile} avatarRevision={avatarRevision}
-    updateRecord={updateRecord} dateStr={dateStr} today={today} onSelectDate={setSelectedDate} scrollContainer={scrollContainer} goals={goals} />;
+    updateRecord={updateRecord} dateStr={dateStr} today={today} onSelectDate={setSelectedDate} scrollContainer={scrollContainer} readingPositions={readingPositions} goals={goals} />;
 }
 
-function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr, today, onSelectDate, scrollContainer, goals }: {
+function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr, today, onSelectDate, scrollContainer, readingPositions, goals }: {
   userId: string; activeProfile: UserProfile | null;
   avatarRevision: number;
   updateRecord: RecordWriter;
   dateStr: string; today: string; onSelectDate: (date: string) => void;
   scrollContainer: RefObject<HTMLElement | null>;
+  readingPositions?: RefObject<Map<string, number>>;
   goals: CoachGoalsResource;
 }) {
   const storageKey = `calori:assistant:messages:${userId}:${dateStr}`;
   const [messages, setMessages] = useState<Message[]>(() => readDailyHistory(userId, dateStr, today));
   const hasMessages = messages.length > 0;
   const [initialMessageIds] = useState(() => new Set(messages.map(message => message.id)));
-  const [proactiveExpanded, setProactiveExpanded] = useState(true);
+  const [proactiveExpanded, setProactiveExpanded] = useState(!hasMessages);
   const proactiveReference = useRef<string | undefined>(undefined);
   const isPastConversation = dateStr !== today;
   const [showHistory, setShowHistory] = useState(false);
@@ -230,6 +247,10 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   }, [scrollContainer]);
   const didScroll = useRef(false);
   const cardScrollDecision = useRef<{ id: string; nearEnd: boolean } | null>(null);
+  const rememberReplyAnchor = (id: string) => {
+    const log = messagesScrollRef.current ?? scrollContainer.current;
+    cardScrollDecision.current = { id, nearEnd: !log || log.scrollHeight - log.clientHeight - log.scrollTop <= 24 };
+  };
   const mounted = useRef(true);
   const busy = useRef(false);
   const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[]; registerAgain: number[] } | null>(null);
@@ -425,7 +446,10 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   };
 
   const appendReply = (text: string, recordedActions: RecordedCoachAction[] = []) => {
-    if (mounted.current) setMessages(prev => [...prev, { id: generateUUID(), role: 'bot', text,
+    if (!mounted.current) return;
+    const id = generateUUID();
+    rememberReplyAnchor(id);
+    setMessages(prev => [...prev, { id, role: 'bot', text,
       ...(recordedActions.length ? { recordedActions } : {}) }]);
   };
 
@@ -605,14 +629,27 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
 
   const currentContext = useMemo(() => activeProfile?.user_id === userId ? buildCoachContext(activeProfile, today) : null,
     [activeProfile, userId, today]);
-  const proactiveInsight = useMemo(() => buildProactiveInsight(currentContext,
-    goals.status === 'ready' && goals.ownerId === userId ? goals.goals : []), [currentContext, goals.status, goals.ownerId, goals.goals, userId]);
+  // The observation waits for the first result and retains its last evidence during refresh.
+  const [previousGoals, setPreviousGoals] = useState<Pick<CoachGoalsResource, 'ownerId' | 'status' | 'goals'> | null>(null);
+  const { ownerId: goalOwner, status: goalStatus, goals: goalItems } = goals;
+  if (goalStatus !== 'loading' && (previousGoals?.ownerId !== goalOwner ||
+      previousGoals?.status !== goalStatus || previousGoals?.goals !== goalItems)) {
+    setPreviousGoals({ ownerId: goalOwner, status: goalStatus, goals: goalItems });
+  }
+  const observationSource = goalStatus === 'loading' ? previousGoals : goals;
+  const observationStatus = observationSource?.status;
+  const observationGoals = observationSource?.ownerId === userId ? observationSource.goals : undefined;
+  const proactiveInsight = useMemo(() => observationStatus
+    ? buildProactiveInsight(currentContext, observationStatus === 'ready' ? observationGoals : undefined)
+    : null, [currentContext, observationStatus, observationGoals]);
   const suggestions = proactiveInsight?.suggestions ?? [];
 
   const startConversation = () => {
     if (busy.current || audioBusy.current || imageBusy.current || isCameraOpen || isPastConversation) return;
     try {
       localStorage.removeItem(storageKey);
+      readingPositions?.current.delete(storageKey);
+      didScroll.current = false;
       setMessages([]);
       setInputValue('');
       setProactiveExpanded(true);
@@ -632,11 +669,14 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     if (!messages.length && !isTyping && !hasPending) return;
     if (cardScrollDecision.current && cardScrollDecision.current.id === messages.at(-1)?.id && !cardScrollDecision.current.nearEnd) return;
     const frame = requestAnimationFrame(() => {
-      scrollToEnd(didScroll.current ? 'smooth' : 'instant');
+      const saved = didScroll.current ? undefined : readingPositions?.current.get(storageKey);
+      const container = messagesScrollRef.current;
+      if (container && saved !== undefined) container.scrollTop = saved;
+      else scrollToEnd('instant');
       didScroll.current = true;
     });
     return () => cancelAnimationFrame(frame);
-  }, [messages, isTyping, hasPending, isEditingProposal, scrollToEnd]);
+  }, [messages, isTyping, hasPending, isEditingProposal, readingPositions, scrollToEnd, storageKey]);
 
   const handleSend = async (text: string, attachment?: MediaAttachment, proactiveInsightId?: string) => {
     if ((!text.trim() && !attachment) || (audioBusy.current && !attachment) || busy.current || pending || !activeProfile || isPastConversation || dateStr !== formatDateStr(new Date())) return;
@@ -707,8 +747,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
           ? buildCoachCard(response.presentation, coachContext) : undefined
       };
       if (botMsg.goalProgress) void goals.reload();
-      const container = messagesScrollRef.current ?? scrollContainer.current;
-      cardScrollDecision.current = { id: botMsg.id, nearEnd: !container || container.scrollHeight - container.clientHeight - container.scrollTop <= 24 };
+      rememberReplyAnchor(botMsg.id);
       setMessages(prev => [...prev, botMsg]);
       if (response.goalProposal && !requestedActions) setPendingGoal(response.goalProposal);
       if (direct.length) await applyActions(direct, todayStr);
@@ -729,8 +768,10 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         : 'Ha ocurrido un error al intentar conectarme al servidor de IA.';
 
       toast.error(errorMessage);
+      const id = new Date().getTime().toString();
+      rememberReplyAnchor(id);
       setMessages(prev => [...prev, {
-        id: Date.now().toString(),
+        id,
         role: 'bot',
         text: `❌ ${errorMessage}`
       }]);
@@ -917,19 +958,21 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         </div>
       )}
 
-      {!isPastConversation && proactiveInsight && (
-        <aside className="chat-proactive" aria-label="Una observación para vos" data-insight-kind={proactiveInsight.kind}>
-          <details open={proactiveExpanded} onToggle={event => setProactiveExpanded(event.currentTarget.open)}>
+      {!isPastConversation && currentContext && (
+        <aside className="chat-proactive" aria-label="Una observación para vos" data-insight-kind={proactiveInsight?.kind}
+          data-conversation={hasMessages ? 'active' : 'empty'}>
+          {proactiveInsight ? <details open={proactiveExpanded} onToggle={event => setProactiveExpanded(event.currentTarget.open)}>
             <summary className="chat-proactive-heading">
-              <span className="chat-proactive-eyebrow"><ChartLineUp size={17} weight="bold" aria-hidden="true" />Tus registros</span>
-              <span className="chat-proactive-title">{proactiveInsight.title}</span>
+              <span className="chat-proactive-eyebrow"><ChartLineUp size={17} weight="bold" aria-hidden="true" />{hasMessages ? 'Observación del Coach' : 'Tus registros'}</span>
+              {!hasMessages && <span className="chat-proactive-title">{proactiveInsight.title}</span>}
               <CaretDown className="chat-proactive-toggle" size={18} weight="bold" aria-hidden="true" />
             </summary>
             <div className="chat-proactive-body">
+              {hasMessages && <h3 className="chat-proactive-title">{proactiveInsight.title}</h3>}
               <p className="chat-proactive-observation">{proactiveInsight.observation}</p>
               <button type="button" className="chat-proactive-action"
                 onClick={() => handleSend(proactiveInsight.prompt, undefined, proactiveInsight.id)}
-                disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !currentContext}>
+                disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !currentContext || goalStatus === 'loading'}>
                 {proactiveInsight.actionLabel}<ArrowRight size={16} weight="bold" aria-hidden="true" />
               </button>
               <details className="chat-proactive-evidence">
@@ -937,15 +980,31 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 <p>{new Date(`${proactiveInsight.period.startDate}T12:00:00`).toLocaleDateString('es-AR')} – {new Date(`${proactiveInsight.period.endDate}T12:00:00`).toLocaleDateString('es-AR')} · Hoy sigue en curso.</p>
                 <ul>{proactiveInsight.evidence.map(item => <li key={item}>{item}</li>)}</ul>
                 <p>{proactiveInsight.limitation}</p>
-                {goals.status === 'error' && <p>No pude consultar tus objetivos confirmados. Esta observación usa tus registros disponibles.</p>}
               </details>
+              {goalStatus === 'loading' && observationStatus !== 'error' &&
+                <p role="status" className="chat-observation-feedback">Actualizando tus objetivos…</p>}
+              {observationStatus === 'error' && <div className="chat-observation-feedback">
+                <p role="status">{goalStatus === 'loading' ? 'Consultando tus objetivos…' : 'No pude consultar tus objetivos. Esta observación usa tus registros.'}</p>
+                <button type="button" className="chat-secondary" disabled={goalStatus === 'loading'}
+                  onClick={event => {
+                    event.currentTarget.closest('.chat-proactive')?.querySelector('summary')?.focus({ preventScroll: true });
+                    void goals.reload();
+                  }}>Reintentar consulta de objetivos</button>
+              </div>}
             </div>
-          </details>
+          </details> : <p role="status" className="chat-observation-loading">Consultando tus objetivos…</p>}
         </aside>
       )}
 
       {/* Messages Area */}
       <section ref={messagesScrollRef} className="chat-messages"
+        onScroll={event => {
+          const positions = readingPositions?.current;
+          if (!positions || !didScroll.current) return;
+          const log = event.currentTarget;
+          if (log.scrollHeight - log.clientHeight - log.scrollTop <= 24) positions.delete(storageKey);
+          else positions.set(storageKey, log.scrollTop);
+        }}
         role="log" aria-label="Conversación con Coach" aria-live="polite" aria-relevant="additions text">
         <div ref={messagesContentRef} className="chat-message-list">
         {pendingGoal && <CoachGoalConfirmation proposal={pendingGoal} busy={isTyping}
@@ -1029,13 +1088,13 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         )}
         {messages.length === 0 && (
           <div className="chat-empty">
-            <p className="chat-empty-label">{isPastConversation ? 'No hay mensajes en esta conversación.' : currentContext ? 'También podés empezar por acá' : 'Cargando tus registros…'}</p>
-            {!isPastConversation && currentContext && <div className="chat-empty-suggestions">
+            <p className="chat-empty-label">{isPastConversation ? 'No hay mensajes en esta conversación.' : suggestions.length ? 'También podés empezar por acá' : !currentContext ? 'Cargando tus registros…' : null}</p>
+            {!isPastConversation && suggestions.length > 0 && <div className="chat-empty-suggestions">
               {suggestions.slice(0, 3).map(suggestion => (
                 <button key={suggestion} type="button" onClick={() => handleSend(suggestion)}
-                  disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !activeProfile}
-                  className="chat-suggestion">
-                  {suggestion}<ArrowRight size={16} aria-hidden="true" />
+                  disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !activeProfile || goalStatus === 'loading'}
+                  className="chat-suggestion" title={suggestion} aria-description={suggestion}>
+                  {suggestionLabel(suggestion)}<ArrowRight size={16} aria-hidden="true" />
                 </button>
               ))}
             </div>}
@@ -1092,18 +1151,25 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       {/* Input Area */}
       {!isPastConversation && <footer ref={composerRef} className={`chat-composer ${isRecording ? 'chat-composer-recording' : ''}`}>
         {/* Quick Suggestions */}
-        {messages.length > 0 && <div className="chat-composer-suggestions">
-          {suggestions.map(suggestion => (
-            <button
-              key={suggestion}
-              onClick={() => handleSend(suggestion)}
-              disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !activeProfile}
-              className="chat-suggestion"
-            >
-              {suggestion}
-            </button>
-          ))}
-        </div>}
+        {hasMessages && currentContext && <details className="chat-composer-suggestions">
+          <summary>Sugerencias <CaretDown size={16} aria-hidden="true" /></summary>
+          <div className="chat-suggestion-list">
+            {!suggestions.length && <p className="chat-empty-label">Buscando sugerencias para tus registros…</p>}
+            {suggestions.map(suggestion => (
+              <button type="button" key={suggestion} title={suggestion} aria-description={suggestion}
+                onClick={event => {
+                  const disclosure = event.currentTarget.closest('details');
+                  disclosure?.querySelector('summary')?.focus({ preventScroll: true });
+                  if (disclosure) disclosure.open = false;
+                  void handleSend(suggestion);
+                }}
+                disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !activeProfile || goalStatus === 'loading'}
+                className="chat-suggestion">
+                {suggestionLabel(suggestion)}
+              </button>
+            ))}
+          </div>
+        </details>}
 
         {pendingImage && (
           <div className="chat-image-preview mb-3 flex items-center gap-3 rounded-xl p-2">
@@ -1145,7 +1211,6 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 void sendComposer();
               }
             }}
-            onFocus={() => { if (hasMessages) scrollToEnd('smooth'); }}
             disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || !!pending || !activeProfile}
             placeholder="Tu mensaje…"
             className="chat-textarea"

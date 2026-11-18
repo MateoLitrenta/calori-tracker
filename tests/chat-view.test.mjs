@@ -73,7 +73,7 @@ function mount(component, props) {
   return {
     updateProps(next) { props = { ...props, ...next }; },
     render() { cursor = 0; effects = []; globalThis.__chatViewHarness.hooks = hooks; return component(props); },
-    flushAnchor() { effects.find(effect => effect.deps?.length === 5 && Array.isArray(effect.deps[0]))?.callback(); },
+    flushAnchor() { effects.find(effect => Array.isArray(effect.deps?.[0]) && typeof effect.deps.at(-1) === 'string')?.callback(); },
     flushPersistence() { effects.find(effect => typeof effect.deps?.[1] === 'string' && effect.deps[1].startsWith('calori:assistant:messages:'))?.callback(); },
   };
 }
@@ -110,10 +110,31 @@ test('Coach empty state contains at most three suggestions and disappears with s
     { id: 'coach-message', role: 'bot', text: 'Revisemos tus registros de hoy.' },
   ]);
   assert.equal(nodes(conversation, element => hasClass(element, 'chat-empty')).length, 0);
+  const observation = nodes(conversation, element => hasClass(element, 'chat-proactive'))[0];
+  assert.equal(nodes(observation, element => element.type === 'details')[0].props.open, false);
+  const shortcuts = nodes(conversation, element => hasClass(element, 'chat-composer-suggestions'))[0];
+  assert.equal(shortcuts.type, 'details');
   const markup = renderToStaticMarkup(conversation);
   assert.match(markup, /¿Cómo estuvo mi día\?/);
   assert.match(markup, /Revisemos tus registros de hoy\./);
   assert.equal(nodes(conversation, element => hasClass(element, 'chat-message-new')).length, 0);
+});
+
+test('a short suggestion label sends its original question unchanged', async t => {
+  const previous = globalThis.__chatViewHarness.generateAIResponse;
+  t.after(() => { globalThis.__chatViewHarness.generateAIResponse = previous; });
+  const calls = [];
+  globalThis.__chatViewHarness.generateAIResponse = async history => {
+    calls.push(history);
+    return { reply: 'Respuesta sintética.', actions: [], presentation: 'none' };
+  };
+  const view = conversation();
+  const suggestion = nodes(view.render(), e => hasClass(e, 'chat-suggestion'))[0];
+  const question = '¿Cómo puedo empezar a registrar mis comidas sin complicarme?';
+  assert.equal(suggestion.props.children[0], 'Registrar comidas');
+  assert.equal(suggestion.props['aria-description'], question);
+  await suggestion.props.onClick();
+  assert.equal(calls[0].at(-1).text, question);
 });
 
 test('opening Coach is deterministic; only an explicit observation click sends its reference and relevant evidence', async t => {

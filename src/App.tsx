@@ -44,6 +44,7 @@ function App() {
   const appShellRef = useRef<HTMLDivElement>(null);
   const previousUserIdRef = useRef<string | null>(null);
   const scrollPositionsRef = useRef({ home: 0, charts: 0, profile: 0 });
+  const coachReadingPositions = useRef(new Map<string, number>());
   const userId = user?.id ?? null;
   const profileReady = !!user && activeProfile?.user_id === user.id;
   const route = resolveEntryRoute(path, !!user, activeProfile?.onboarding_completed);
@@ -59,6 +60,7 @@ function App() {
   };
 
   useEffect(() => {
+    if (userId !== previousUserIdRef.current) coachReadingPositions.current.clear();
     if (userId && userId !== previousUserIdRef.current) {
       scrollPositionsRef.current = { home: 0, charts: 0, profile: 0 };
       setActiveTab('home');
@@ -219,7 +221,7 @@ function App() {
               viewState={homeContext?.ownerId === user.id ? homeContext.value : undefined}
               onViewStateChange={value => setHomeContext({ ownerId: user.id, value })}
               onEntryActiveChange={reportEntryActivity} />}
-            {activeTab === 'chat' && <ChatView scrollContainer={mainRef} />}
+            {activeTab === 'chat' && <ChatView scrollContainer={mainRef} readingPositions={coachReadingPositions} />}
             {activeTab === 'charts' && <ChartsView />}
             {activeTab === 'profile' && <ProfileView />}
             </RestoreTabScroll>
