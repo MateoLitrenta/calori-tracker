@@ -1,0 +1,134 @@
+[
+  {
+    "width": 375,
+    "theme": "light",
+    "top": 200,
+    "restored": 200,
+    "afterRefresh": "Alex borrador",
+    "guarded": true,
+    "submits": 1,
+    "busy": 1,
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "theme": "dark",
+    "top": 200,
+    "restored": 200,
+    "afterRefresh": "Alex borrador",
+    "guarded": true,
+    "submits": 1,
+    "busy": 1,
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "top": 200,
+    "restored": 200,
+    "afterRefresh": "Alex borrador",
+    "guarded": true,
+    "submits": 1,
+    "busy": 1,
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "top": 200,
+    "restored": 200,
+    "afterRefresh": "Alex borrador",
+    "guarded": true,
+    "submits": 1,
+    "busy": 1,
+    "overflow": false
+  },
+  {
+    "width": 393,
+    "theme": "light",
+    "top": 200,
+    "restored": 200,
+    "afterRefresh": "Alex borrador",
+    "guarded": true,
+    "submits": 1,
+    "busy": 1,
+    "overflow": false
+  },
+  {
+    "width": 393,
+    "theme": "dark",
+    "top": 200,
+    "restored": 200,
+    "afterRefresh": "Alex borrador",
+    "guarded": true,
+    "submits": 1,
+    "busy": 1,
+    "overflow": false
+  },
+  {
+    "width": 440,
+    "theme": "light",
+    "top": 200,
+    "restored": 200,
+    "afterRefresh": "Alex borrador",
+    "guarded": true,
+    "submits": 1,
+    "busy": 1,
+    "overflow": false
+  },
+  {
+    "width": 440,
+    "theme": "dark",
+    "top": 200,
+    "restored": 200,
+    "afterRefresh": "Alex borrador",
+    "guarded": true,
+    "submits": 1,
+    "busy": 1,
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "top": 12,
+    "restored": 12,
+    "afterRefresh": "Alex borrador",
+    "guarded": true,
+    "submits": 1,
+    "busy": 1,
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "top": 12,
+    "restored": 12,
+    "afterRefresh": "Alex borrador",
+    "guarded": true,
+    "submits": 1,
+    "busy": 1,
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "top": 0,
+    "restored": 0,
+    "afterRefresh": "Alex borrador",
+    "guarded": true,
+    "submits": 1,
+    "busy": 1,
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "top": 0,
+    "restored": 0,
+    "afterRefresh": "Alex borrador",
+    "guarded": true,
+    "submits": 1,
+    "busy": 1,
+    "overflow": false
+  }
+]

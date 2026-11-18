@@ -49,6 +49,7 @@ await test('Apariencia en vivo, formularios, diálogo y recarga',async page=>{
   assert.equal(await page.getByLabel('Nombre',{exact:true}).inputValue(),'Borrador QA');
   await shot(page,'formulario-perfil-sistema-oscuro');
   await page.getByRole('button',{name:'Cancelar',exact:true}).click();
+  await page.getByRole('button',{name:'Descartar cambios',exact:true}).click();
   const session=page.locator('main').getByRole('button',{name:/cerrar sesi[oó]n/i}).first();
   await session.click();
   const dialog=page.getByRole('dialog');
@@ -81,7 +82,7 @@ await test('Perfil, guardado local recuperable y fallo visible',async page=>{
   await page.evaluate(()=>{window.__homeQA.profileError=true;});
   await page.getByRole('button',{name:'Guardar cambios'}).click();
   assert.equal(await page.getByLabel('Nombre',{exact:true}).inputValue(),'Alex QA');
-  await page.getByText('Error al actualizar',{exact:true}).waitFor(timing);
+  await page.getByText('No se pudieron guardar los datos. Tu borrador se conserva.',{exact:true}).waitFor(timing);
   await page.evaluate(()=>{window.__homeQA.profileError=false;});
   await page.getByRole('button',{name:'Guardar cambios'}).click();
   await page.getByRole('heading',{name:'Alex QA',exact:true}).waitFor();

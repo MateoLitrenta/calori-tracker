@@ -1,0 +1,222 @@
+[
+  {
+    "width": 320,
+    "profile": "passed",
+    "entry": "passed",
+    "colors": [
+      {
+        "scheme": "light",
+        "ratios": [
+          {
+            "fg": "ink",
+            "bg": "surface",
+            "ratio": 15.562884883961738
+          },
+          {
+            "fg": "quiet",
+            "bg": "surface",
+            "ratio": 6.84959794627725
+          },
+          {
+            "fg": "accent",
+            "bg": "surface",
+            "ratio": 6.967945025573771
+          },
+          {
+            "fg": "on-orange",
+            "bg": "orange",
+            "ratio": 8.051568211479097
+          },
+          {
+            "fg": "danger",
+            "bg": "danger-soft",
+            "ratio": 6.1119833361226625
+          }
+        ]
+      },
+      {
+        "scheme": "dark",
+        "ratios": [
+          {
+            "fg": "ink",
+            "bg": "surface",
+            "ratio": 14.874041949131207
+          },
+          {
+            "fg": "quiet",
+            "bg": "surface",
+            "ratio": 9.146231413495515
+          },
+          {
+            "fg": "accent",
+            "bg": "surface",
+            "ratio": 8.89442606086649
+          },
+          {
+            "fg": "on-orange",
+            "bg": "orange",
+            "ratio": 8.051568211479097
+          },
+          {
+            "fg": "danger",
+            "bg": "danger-soft",
+            "ratio": 7.794113902866391
+          }
+        ]
+      }
+    ],
+    "cssText200": "passed",
+    "counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "width": 375,
+    "profile": "passed",
+    "entry": "passed",
+    "colors": [
+      {
+        "scheme": "light",
+        "ratios": [
+          {
+            "fg": "ink",
+            "bg": "surface",
+            "ratio": 15.562884883961738
+          },
+          {
+            "fg": "quiet",
+            "bg": "surface",
+            "ratio": 6.84959794627725
+          },
+          {
+            "fg": "accent",
+            "bg": "surface",
+            "ratio": 6.967945025573771
+          },
+          {
+            "fg": "on-orange",
+            "bg": "orange",
+            "ratio": 8.051568211479097
+          },
+          {
+            "fg": "danger",
+            "bg": "danger-soft",
+            "ratio": 6.1119833361226625
+          }
+        ]
+      },
+      {
+        "scheme": "dark",
+        "ratios": [
+          {
+            "fg": "ink",
+            "bg": "surface",
+            "ratio": 14.874041949131207
+          },
+          {
+            "fg": "quiet",
+            "bg": "surface",
+            "ratio": 9.146231413495515
+          },
+          {
+            "fg": "accent",
+            "bg": "surface",
+            "ratio": 8.89442606086649
+          },
+          {
+            "fg": "on-orange",
+            "bg": "orange",
+            "ratio": 8.051568211479097
+          },
+          {
+            "fg": "danger",
+            "bg": "danger-soft",
+            "ratio": 7.794113902866391
+          }
+        ]
+      }
+    ],
+    "cssText200": "passed",
+    "counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "width": 1440,
+    "previousStages": "annual narrowing and Coach reading passed",
+    "profile": "passed",
+    "entry": "passed",
+    "colors": [
+      {
+        "scheme": "light",
+        "ratios": [
+          {
+            "fg": "ink",
+            "bg": "surface",
+            "ratio": 15.562884883961738
+          },
+          {
+            "fg": "quiet",
+            "bg": "surface",
+            "ratio": 6.84959794627725
+          },
+          {
+            "fg": "accent",
+            "bg": "surface",
+            "ratio": 6.967945025573771
+          },
+          {
+            "fg": "on-orange",
+            "bg": "orange",
+            "ratio": 8.051568211479097
+          },
+          {
+            "fg": "danger",
+            "bg": "danger-soft",
+            "ratio": 6.1119833361226625
+          }
+        ]
+      },
+      {
+        "scheme": "dark",
+        "ratios": [
+          {
+            "fg": "ink",
+            "bg": "surface",
+            "ratio": 14.874041949131207
+          },
+          {
+            "fg": "quiet",
+            "bg": "surface",
+            "ratio": 9.146231413495515
+          },
+          {
+            "fg": "accent",
+            "bg": "surface",
+            "ratio": 8.89442606086649
+          },
+          {
+            "fg": "on-orange",
+            "bg": "orange",
+            "ratio": 8.051568211479097
+          },
+          {
+            "fg": "danger",
+            "bg": "danger-soft",
+            "ratio": 7.794113902866391
+          }
+        ]
+      }
+    ],
+    "cssText200": "passed",
+    "counts": [
+      0,
+      0,
+      0
+    ]
+  }
+]

@@ -56,10 +56,11 @@ async function charts(page, theme) {
 async function profile(page, theme) {
   await go(page, 'Perfil');
   const original = await page.evaluate(() => JSON.stringify(window.__homeQA.store.activeProfile.records));
-  const danger = page.locator('.profile-danger');
+  const danger = page.locator('.profile-management');
+  await danger.locator('summary').click();
   await danger.getByRole('button', { name: 'Borrar todos los registros' }).click();
   await danger.getByRole('button', { name: 'Cancelar' }).click();
-  assert.equal(await danger.getByRole('button', { name: 'Confirmar' }).count(), 0);
+  assert.equal(await danger.getByRole('button', { name: 'Borrar registros' }).count(), 0);
 
   const panel = page.locator('.profile-account-panel');
   await panel.getByRole('button', { name: 'Cambiar contraseña' }).click();
@@ -91,10 +92,10 @@ async function profile(page, theme) {
   const photo = page.locator('.profile-photo-actions');
   await upload.setInputFiles(file);
   await page.getByAltText('Vista previa de la foto de perfil').waitFor();
-  await photo.getByRole('button', { name: 'Cancelar' }).click();
+  await photo.getByRole('button', { name: 'Cancelar foto' }).click();
   assert.equal(await page.evaluate(() => window.__homeQA.files.size), 0);
   await upload.setInputFiles(file);
-  await photo.getByRole('button', { name: 'Guardar', exact: true }).click();
+  await photo.getByRole('button', { name: 'Guardar foto', exact: true }).click();
   const avatar = page.locator('.profile-identity img[alt="Foto de perfil"]');
   await avatar.waitFor();
   await avatar.evaluate(img => img.decode());

@@ -43,6 +43,7 @@ const imports = {
   '../lib/habitDraft': new URL('../src/lib/habitDraft.ts', import.meta.url).href,
   'react-hot-toast': stub('export default globalThis.__entryServices.toast;'),
   './MealPhoto': stub('export function MealPhotoPicker() { return null; } export const MealThumbnail = () => null;'),
+  './DiscardDraftDialog': stub('export default function DiscardDraftDialog() { return null; }'),
   './EntryFormShell': shellUrl,
   './AutoResizeTextarea': textareaUrl,
   './EntryEstimateResult': estimateResultUrl,
@@ -446,12 +447,13 @@ test('explicit close asks before discarding text and a temporary photo', t => {
   const tree = sheet(view);
   const close = node(tree, element => element.props['aria-label'] === 'Cerrar formulario').props.onClick;
   assert.equal(node(tree, element => element.props.className === 'entry-sheet-backdrop').props.onClick, undefined);
-  window.confirm = () => false;
+  const confirmation = () => node(view(), element => typeof element.props.onDiscard === 'function');
   close();
+  confirmation().props.onKeep();
   assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, 'Borrador');
   assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.blob, photo);
-  window.confirm = () => true;
   close();
+  confirmation().props.onDiscard();
   assert.equal(nodes(view(), element => element.type === 'form').length, 0);
   open(view, '+ Comida');
   assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, '');
@@ -696,7 +698,7 @@ test('mobile shell locks background scroll, contains focus, handles Escape and r
   globalThis.window = { innerHeight: 844, visualViewport: viewport, addEventListener() {}, removeEventListener() {},
     matchMedia: () => ({ matches: true, addEventListener() {}, removeEventListener() {} }) };
   globalThis.document = { body: { style: { overflow: 'auto' } }, activeElement: trigger,
-    querySelector: () => main, querySelectorAll: () => [main, nav],
+    querySelector: selector => selector === '.app-main' ? main : null, querySelectorAll: () => [main, nav],
     addEventListener: (type, handler) => listeners.set(type, handler),
     removeEventListener: type => listeners.delete(type) };
   t.after(() => { globalThis.window = previous.window; globalThis.document = previous.document; globalThis.HTMLElement = previous.HTMLElement; });

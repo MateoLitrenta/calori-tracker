@@ -77,6 +77,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
       'button:not(:disabled), input:not(:disabled):not([type="hidden"]):not([type="file"]), select:not(:disabled), textarea:not(:disabled), summary, [tabindex="0"]'
     )).filter(element => element.getClientRects().length > 0);
     const keyboard = (event: KeyboardEvent) => {
+      if (document.querySelector('dialog[data-discard-draft][open]')) return;
       if (event.key === 'Escape') {
         event.preventDefault();
         const closeCamera = dialog.querySelector<HTMLButtonElement>('[data-entry-camera-close]');
@@ -94,6 +95,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
       }
     };
     const containFocus = (event: FocusEvent) => {
+      if (document.querySelector('dialog[data-discard-draft][open]')) return;
       if (!focusScope().contains(event.target as Node)) (focusable()[0] ?? closeRef.current)?.focus({ preventScroll: true });
     };
     document.addEventListener('keydown', keyboard);

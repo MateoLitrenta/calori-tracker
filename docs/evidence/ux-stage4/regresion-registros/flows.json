@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Alta, error, edición, cancelar, foco y Sistema",
+    "width": 375,
+    "theme": "system",
+    "status": "passed",
+    "services": {
+      "writes": [
+        {
+          "day": "2026-11-15",
+          "status": "failed"
+        },
+        {
+          "day": "2026-11-15",
+          "status": "confirmed"
+        },
+        {
+          "day": "2026-11-15",
+          "status": "confirmed"
+        }
+      ],
+      "ai": 0,
+      "external": 0
+    }
+  },
+  {
+    "name": "Alta, error, edición, cancelar, foco y Sistema",
+    "width": 1440,
+    "theme": "system",
+    "status": "passed",
+    "services": {
+      "writes": [
+        {
+          "day": "2026-11-15",
+          "status": "failed"
+        },
+        {
+          "day": "2026-11-15",
+          "status": "confirmed"
+        },
+        {
+          "day": "2026-11-15",
+          "status": "confirmed"
+        }
+      ],
+      "ai": 0,
+      "external": 0
+    }
+  },
+  {
+    "name": "Hábitos rápidos, peso y foto con IA explícita",
+    "width": 320,
+    "theme": "dark",
+    "status": "passed",
+    "services": {
+      "writes": [
+        {
+          "day": "2026-11-17",
+          "status": "confirmed"
+        },
+        {
+          "day": "2026-11-17",
+          "status": "confirmed"
+        },
+        {
+          "day": "2026-11-17",
+          "status": "confirmed"
+        }
+      ],
+      "ai": 1,
+      "external": 0
+    }
+  }
+]

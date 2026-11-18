@@ -61,6 +61,9 @@ async function mount(t, options = {}) {
   globalThis.HTMLElement = dom.window.HTMLElement; globalThis.getComputedStyle = dom.window.getComputedStyle;
   globalThis.IS_REACT_ACT_ENVIRONMENT = true;
   window.matchMedia = () => ({ matches: !!options.mobile, addEventListener() {}, removeEventListener() {} });
+  // JSDOM provides the element but not the browser top-layer implementation.
+  window.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
+  window.HTMLDialogElement.prototype.close = function () { this.open = false; };
   // Scroll geometry is intentionally not simulated in this integration suite.
   const errors = [], toasts = [], successes = [], requests = [], saves = [];
   globalThis.__workoutEntryServices = {
@@ -449,11 +452,9 @@ test('changing the workout while estimating does not apply an obsolete response 
 test('closing and reopening the form isolates pending estimates from the next workout', async t => {
   const pending = deferred(); const view = await mount(t, { mobile: true, estimateWorkout: () => pending.promise });
   await view.open(); await view.fill('add-workout-activity', longActivity); await view.fill('add-workout-duration', '50'); await view.estimate();
-  window.confirm = message => {
-    assert.match(message, /Descartar los cambios/);
-    return true;
-  };
   await view.click(document.querySelector('[aria-label="Cerrar formulario"]'));
+  assert.equal(document.activeElement.textContent, 'Seguir editando');
+  await view.click([...document.querySelectorAll('dialog button')].find(button => button.textContent === 'Descartar cambios'));
   assert.equal(document.querySelector('.entry-form'), null);
   await view.open(); await view.fill('add-workout-activity', 'Nuevo borrador'); await view.fill('add-workout-duration', '10');
   await view.fill('add-workout-calories', '100');
