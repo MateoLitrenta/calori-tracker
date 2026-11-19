@@ -9,7 +9,6 @@
   font-variant-numeric: tabular-nums;
 }
 .charts-header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
-.charts-heading h1 { font: italic 700 var(--fit-display)/1 var(--fit-face); text-transform: uppercase; }
 .charts-range, .charts-legend > span { display: flex; align-items: center; gap: 6px; }
 .charts-range { margin-top: 6px; color: var(--fit-quiet); font-size: var(--fit-caption); }
 .charts-period { border-radius: var(--fit-control-radius); border: 1px solid var(--fit-rule); background: var(--fit-soft); }

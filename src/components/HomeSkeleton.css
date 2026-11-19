@@ -1,0 +1,62 @@
+/* Reserve the board and journal while the account's first day is loading. */
+.view-skeleton.view-skeleton-home {
+  --placeholder: var(--fit-soft);
+  width: 100%; max-width: 64rem; gap: 0;
+}
+.view-skeleton-home i {
+  display: block; height: .7rem; max-width: 100%;
+  border-radius: 3px; background: var(--placeholder);
+}
+.home-placeholder-date, .home-placeholder-balance {
+  --placeholder: color-mix(in srgb, var(--fit-board-ink) 14%, var(--fit-board));
+  background: var(--fit-board);
+}
+.home-placeholder-date { padding: 4px 12px 0; }
+.placeholder-date-heading { display: grid; align-content: center; gap: 6px; height: 55px; padding-inline: 44px; }
+.placeholder-date-heading i:first-child { width: 62px; height: 6px; }
+.placeholder-date-heading i:nth-child(2) { width: 150px; }
+.placeholder-date-heading i:last-child { width: 100px; height: 7px; }
+.placeholder-week { display: grid; height: 48px; grid-template-columns: repeat(7,minmax(0,1fr)); place-items: center; }
+.placeholder-week i { width: 20px; height: 27px; }
+.home-placeholder-balance { display: grid; align-content: start; gap: 18px; min-height: calc(235px + clamp(29px, 8vw, 40px)); padding: 22px 20px; }
+.placeholder-readout { display: grid; gap: 16px; }
+.placeholder-readout i:first-child { width: 120px; }
+.placeholder-readout i:nth-child(2) { width: 146px; height: 39px; }
+.placeholder-readout i:last-child { width: 80%; height: 8px; }
+.placeholder-channels, .home-placeholder-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+.placeholder-channels > div { display: grid; gap: 9px; padding-block: 6px; border-bottom: 5px solid var(--placeholder); }
+.placeholder-channels i:first-child { width: 70%; }
+.placeholder-channels i:last-child { width: 45%; height: 22px; }
+.placeholder-footnote { width: 10rem; }
+.home-placeholder-journal { display: grid; gap: 18px; padding: 14px 16px 0; }
+.home-placeholder-actions { gap: 8px; }
+.home-placeholder-actions i { height: 50px; border: 1px solid var(--fit-rule); border-radius: 6px; }
+.home-placeholder-actions i:first-child { background: color-mix(in srgb, var(--fit-orange) 25%, var(--fit-soft)); }
+.home-placeholder-habits { min-height: 157px; }
+.placeholder-label { width: 95px; margin-block: 6px 15px; }
+.placeholder-columns { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); padding-block: 8px; border-block: 1px solid var(--fit-rule); }
+.placeholder-columns > div { display: grid; gap: 12px; padding-inline: 8px; }
+.placeholder-columns > div + div { border-inline-start: 1px solid var(--fit-rule); }
+.placeholder-columns i:first-child { width: 40%; }
+.placeholder-columns i:nth-child(2) { width: 60%; height: 20px; }
+.placeholder-columns i:last-child { width: 80%; height: 36px; }
+.placeholder-record { display: grid; grid-template-columns: 30px minmax(0,1fr) 40px; align-items: center; gap: 10px; min-height: 63px; border-top: 1px solid var(--fit-rule); }
+.placeholder-record i:first-child { height: 30px; }
+.placeholder-record i:nth-child(2) { width: 70%; }
+@media (max-width: 359px) {
+  .home-placeholder-journal { padding-inline: 10px; }
+  .home-placeholder-balance { padding-inline: 13px; }
+}
+@media (min-width: 768px) {
+  .home-placeholder-date { border-radius: 12px 12px 0 0; padding: 12px 18px 4px; }
+}
+@media (min-width: 1024px) {
+  .home-placeholder-balance { grid-template-columns: minmax(0,1fr) minmax(0,1.25fr); column-gap: 36px; min-height: 204px; padding-inline: 26px; border-radius: 0 0 10px 10px; }
+  .placeholder-channels { align-self: end; }
+  .placeholder-footnote { grid-column: 1 / -1; }
+  .home-placeholder-journal { grid-template-columns: minmax(0,.88fr) minmax(0,1.12fr); align-items: start; gap: 18px 28px; padding: 20px 0 0; }
+  .home-placeholder-records { grid-column: 2; grid-row: 1 / span 2; }
+}
+@media (min-width: 1280px) {
+  .home-placeholder-date { display: grid; grid-template-columns: minmax(270px,.95fr) minmax(320px,1.35fr); align-items: center; gap: 28px; padding: 14px 22px; min-height: 87px; }
+}

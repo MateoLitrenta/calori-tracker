@@ -231,7 +231,7 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
 
   return (
     <div data-editing={isEditing} className="profile-view">
-      <h1 className="profile-page-title">Perfil</h1>
+      <h1 className="screen-title profile-page-title">Perfil</h1>
 
       <section className="profile-panel profile-personal-panel" aria-labelledby="profile-name">
         <div className="profile-identity">

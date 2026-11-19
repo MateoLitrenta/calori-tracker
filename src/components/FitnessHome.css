@@ -1,25 +1,5 @@
 .home-variants.fitness-home { padding: 0; gap: 0; max-width: 64rem; }
 .fitness-home .home-history { padding: 18px 0; margin-top: 8px; border-top: 1px solid var(--fit-rule); }
-.app-shell-fitness .fitness-records-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding-inline: 4px;
-  color: var(--fit-board-muted);
-  font-size: 13px;
-  font-weight: 600;
-}
-.fitness-records-link::after {
-  content: '';
-  width: 7px;
-  height: 7px;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
-  transform: translateY(-2px) rotate(45deg);
-}
-.fitness-records-link:hover { text-decoration: underline; }
-.app-shell-fitness .fitness-records-link:focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -2px; }
 .fitness-home .daily-logs-heading h4:focus-visible { outline-color: var(--fit-focus); }
 
 :is(.fitness-entry-portal, .fitness-home) .home-date-picker {
@@ -40,21 +20,5 @@
 :is(.fitness-entry-portal, .fitness-home) .home-date-picker button:focus-visible { outline-color: var(--fit-focus); }
 
 @media (max-width: 767px) {
-  .app-shell.app-shell-fitness .app-content { padding: 0; }
-  .app-shell.app-shell-fitness .home-header {
-    position: relative;
-    justify-content: space-between;
-    height: calc(58px + env(safe-area-inset-top));
-    padding: calc(4px + env(safe-area-inset-top)) 16px 4px;
-    color: var(--fit-board-ink);
-    background: var(--fit-board);
-  }
-  .app-shell-fitness .home-header::after {
-    content: '';
-    position: absolute; inset: auto 18px 0;
-    border-bottom: 1px solid var(--fit-track);
-  }
-  .app-shell-fitness .home-header > div { gap: 6px; }
-  .app-shell-fitness .home-header h1 { font-size: 23px; font-weight: 750; letter-spacing: -.055em; }
   .fitness-home .home-history { margin-inline: 16px; }
 }

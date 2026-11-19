@@ -49,7 +49,7 @@ function App() {
   const userId = user?.id ?? null;
   const profileReady = !!user && activeProfile?.user_id === user.id;
   const route = resolveEntryRoute(path, !!user, activeProfile?.onboarding_completed);
-  const isCoachLayout = activeTab === 'chat' && route === '/app' && profileReady;
+  const isCoachLayout = activeTab === 'chat' && route === '/app' && (profileReady || (loading && !!user));
   const reportEntryActivity = useCallback((active: boolean) => {
     setHomeEntry(current => current.ownerId === userId && current.active === active ? current : { ownerId: userId, active });
   }, [userId]);
@@ -155,14 +155,7 @@ function App() {
     };
   }, [isCoachLayout]);
 
-  if (loading) {
-    if (user) {
-      return <div className="app-shell h-screen flex flex-col overflow-hidden">
-        <main className="app-main flex-1 overflow-hidden p-4 md:p-8 md:ml-64" aria-busy="true">
-          <ViewSkeleton view="home" />
-        </main>
-      </div>;
-    }
+  if (loading && !user) {
     return <main className="auth-entry min-h-dvh flex items-center justify-center p-4"><p role="status" className="auth-secondary text-sm">Cargando sesión…</p></main>;
   }
 
@@ -175,7 +168,7 @@ function App() {
     </>;
   }
 
-  if (!profileReady || !activeProfile) {
+  if (!loading && (!profileReady || !activeProfile)) {
     return <main className="auth-entry min-h-dvh flex items-center justify-center p-4">
       <div className="auth-entry-card w-full max-w-sm text-center">
         <p role="alert">No pudimos cargar tu perfil.</p>
@@ -189,7 +182,7 @@ function App() {
     </main>;
   }
 
-  if (route === '/onboarding') {
+  if (!loading && profileReady && activeProfile && route === '/onboarding') {
     return <><Toaster position="bottom-right" containerStyle={{ bottom: 'var(--feedback-offset)' }} toastOptions={{ style: { maxWidth: 'min(24rem, calc(100vw - 2rem))' } }} /><Onboarding key={user.id} profile={activeProfile} onComplete={completeOnboarding} onSignOut={signOut} /></>;
   }
 
@@ -206,29 +199,32 @@ function App() {
 
       <div className="app-stage flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Main Content Area */}
-        <main ref={mainRef} className="app-main flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8 w-full">
-          {/* Mobile Header */}
+        <main ref={mainRef} aria-busy={loading ? 'true' : undefined} className="app-main flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8 w-full">
           {activeTab === 'home' && route === '/app' && (
-            <header className="home-header md:hidden flex-shrink-0 flex items-center justify-start">
-              <div className="flex items-center gap-3">
+            <header className="home-header">
+              <div className="home-heading-brand">
                 <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol" />
-                <h1 className="text-lg font-bold">Calori</h1>
+                <h1 className="screen-title">Calori</h1>
               </div>
               <a href="#fitness-daily-entries" className="fitness-records-link">Ver registros</a>
             </header>
           )}
           <div className="app-content p-4 md:p-0">
-            <Suspense fallback={<ViewSkeleton view={activeTab} />}>
-            <RestoreTabScroll key={`${userId}:${activeTab}`} onReady={restoreTabScroll}>
-            {activeTab === 'home' && <HomeView key={user.id} activeProfile={activeProfile} updateRecord={updateRecord} habitDrafts={habitDrafts}
-              viewState={homeContext?.ownerId === user.id ? homeContext.value : undefined}
-              onViewStateChange={value => setHomeContext({ ownerId: user.id, value })}
-              onEntryActiveChange={reportEntryActivity} />}
-            {activeTab === 'chat' && <ChatView scrollContainer={mainRef} readingPositions={coachReadingPositions} />}
-            {activeTab === 'charts' && <ChartsView />}
-            {activeTab === 'profile' && <ProfileView key={user.id} beforeLeave={profileBeforeLeave} />}
-            </RestoreTabScroll>
-            </Suspense>
+            {loading || !profileReady || !activeProfile ? (
+              <ViewSkeleton view={activeTab} />
+            ) : (
+              <Suspense fallback={<ViewSkeleton view={activeTab} />}>
+                <RestoreTabScroll key={`${userId}:${activeTab}`} onReady={restoreTabScroll}>
+                  {activeTab === 'home' && <HomeView key={user.id} activeProfile={activeProfile} updateRecord={updateRecord} habitDrafts={habitDrafts}
+                    viewState={homeContext?.ownerId === user.id ? homeContext.value : undefined}
+                    onViewStateChange={value => setHomeContext({ ownerId: user.id, value })}
+                    onEntryActiveChange={reportEntryActivity} />}
+                  {activeTab === 'chat' && <ChatView scrollContainer={mainRef} readingPositions={coachReadingPositions} />}
+                  {activeTab === 'charts' && <ChartsView />}
+                  {activeTab === 'profile' && <ProfileView key={user.id} beforeLeave={profileBeforeLeave} />}
+                </RestoreTabScroll>
+              </Suspense>
+            )}
           </div>
         </main>
       </div>

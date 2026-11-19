@@ -1,0 +1,932 @@
+[
+  {
+    "width": 375,
+    "theme": "light",
+    "titles": {
+      "Inicio": [
+        "ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+        "normal",
+        "750",
+        "23px",
+        "28px",
+        "-1.265px",
+        "none",
+        "0px"
+      ],
+      "Coach": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "29px",
+        "30.16px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Datos": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Perfil": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ]
+    },
+    "borders": [
+      {
+        "count": 0,
+        "expanded": false,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 620.65625,
+        "w": 343
+      },
+      {
+        "count": 0,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 209.65625,
+        "w": 343
+      },
+      {
+        "count": 1,
+        "expanded": false,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 620.75,
+        "w": 343
+      },
+      {
+        "count": 1,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 209.75,
+        "w": 343
+      },
+      {
+        "count": 3,
+        "expanded": false,
+        "history": 1,
+        "last": 1,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 620.75,
+        "w": 343
+      },
+      {
+        "count": 3,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 209.75,
+        "w": 343
+      }
+    ],
+    "loadingChrome": [
+      null,
+      null
+    ],
+    "loading": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "ready": [
+      [
+        0,
+        58,
+        375,
+        107
+      ],
+      [
+        0,
+        165,
+        375,
+        268
+      ],
+      [
+        16,
+        448,
+        343,
+        50
+      ],
+      [
+        16,
+        516,
+        343,
+        157
+      ],
+      [
+        16,
+        690,
+        343,
+        356
+      ]
+    ],
+    "readyChrome": [
+      [
+        0,
+        0,
+        375,
+        58
+      ],
+      [
+        0,
+        747,
+        375,
+        65
+      ]
+    ]
+  },
+  {
+    "width": 375,
+    "theme": "dark",
+    "titles": {
+      "Inicio": [
+        "ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+        "normal",
+        "750",
+        "23px",
+        "28px",
+        "-1.265px",
+        "none",
+        "0px"
+      ],
+      "Coach": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "29px",
+        "30.16px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Datos": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Perfil": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ]
+    },
+    "borders": [
+      {
+        "count": 0,
+        "expanded": false,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 620.65625,
+        "w": 343
+      },
+      {
+        "count": 0,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 209.65625,
+        "w": 343
+      },
+      {
+        "count": 1,
+        "expanded": false,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 620.75,
+        "w": 343
+      },
+      {
+        "count": 1,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 209.75,
+        "w": 343
+      },
+      {
+        "count": 3,
+        "expanded": false,
+        "history": 1,
+        "last": 1,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 620.75,
+        "w": 343
+      },
+      {
+        "count": 3,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 209.75,
+        "w": 343
+      }
+    ],
+    "loadingChrome": [
+      null,
+      null
+    ],
+    "loading": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "ready": [
+      [
+        0,
+        58,
+        375,
+        107
+      ],
+      [
+        0,
+        165,
+        375,
+        268
+      ],
+      [
+        16,
+        448,
+        343,
+        50
+      ],
+      [
+        16,
+        516,
+        343,
+        157
+      ],
+      [
+        16,
+        690,
+        343,
+        356
+      ]
+    ],
+    "readyChrome": [
+      [
+        0,
+        0,
+        375,
+        58
+      ],
+      [
+        0,
+        747,
+        375,
+        65
+      ]
+    ]
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "titles": {
+      "Inicio": [
+        "ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+        "normal",
+        "750",
+        "23px",
+        "28px",
+        "-1.265px",
+        "none",
+        "0px"
+      ],
+      "Coach": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "29px",
+        "30.16px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Datos": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Perfil": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ]
+    },
+    "borders": [
+      {
+        "count": 0,
+        "expanded": false,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 376.25,
+        "w": 288
+      },
+      {
+        "count": 0,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 210.25,
+        "w": 288
+      },
+      {
+        "count": 1,
+        "expanded": false,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 376.65625,
+        "w": 288
+      },
+      {
+        "count": 1,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 209.65625,
+        "w": 288
+      },
+      {
+        "count": 3,
+        "expanded": false,
+        "history": 1,
+        "last": 1,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 376.65625,
+        "w": 288
+      },
+      {
+        "count": 3,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 209.65625,
+        "w": 288
+      }
+    ],
+    "loadingChrome": [
+      null,
+      null
+    ],
+    "loading": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "ready": [
+      [
+        0,
+        58,
+        320,
+        106
+      ],
+      [
+        0,
+        164,
+        320,
+        264
+      ],
+      [
+        10,
+        441,
+        300,
+        50
+      ],
+      [
+        10,
+        509,
+        300,
+        157
+      ],
+      [
+        10,
+        684,
+        300,
+        356
+      ]
+    ],
+    "readyChrome": [
+      [
+        0,
+        0,
+        320,
+        58
+      ],
+      [
+        0,
+        503,
+        320,
+        65
+      ]
+    ]
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "titles": {
+      "Inicio": [
+        "ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+        "normal",
+        "750",
+        "23px",
+        "28px",
+        "-1.265px",
+        "none",
+        "0px"
+      ],
+      "Coach": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "29px",
+        "30.16px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Datos": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Perfil": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ]
+    },
+    "borders": [
+      {
+        "count": 0,
+        "expanded": false,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 376.25,
+        "w": 288
+      },
+      {
+        "count": 0,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 210.25,
+        "w": 288
+      },
+      {
+        "count": 1,
+        "expanded": false,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 376.65625,
+        "w": 288
+      },
+      {
+        "count": 1,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 16,
+        "y": 209.65625,
+        "w": 288
+      },
+      {
+        "count": 3,
+        "expanded": false,
+        "history": 1,
+        "last": 1,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 376.65625,
+        "w": 288
+      },
+      {
+        "count": 3,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 209.65625,
+        "w": 288
+      }
+    ],
+    "loadingChrome": [
+      null,
+      null
+    ],
+    "loading": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "ready": [
+      [
+        0,
+        58,
+        320,
+        106
+      ],
+      [
+        0,
+        164,
+        320,
+        264
+      ],
+      [
+        10,
+        441,
+        300,
+        50
+      ],
+      [
+        10,
+        509,
+        300,
+        157
+      ],
+      [
+        10,
+        684,
+        300,
+        356
+      ]
+    ],
+    "readyChrome": [
+      [
+        0,
+        0,
+        320,
+        58
+      ],
+      [
+        0,
+        503,
+        320,
+        65
+      ]
+    ]
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "titles": {
+      "Coach": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "43px",
+        "44.72px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Datos": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "54px",
+        "54px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Perfil": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "54px",
+        "54px",
+        "normal",
+        "uppercase",
+        "0px"
+      ]
+    },
+    "borders": [
+      {
+        "count": 0,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 331,
+        "y": 210.15625,
+        "w": 1024
+      },
+      {
+        "count": 1,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 331,
+        "y": 210.109375,
+        "w": 1024
+      },
+      {
+        "count": 3,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 331,
+        "y": 210.109375,
+        "w": 1024
+      }
+    ],
+    "loadingChrome": [
+      null,
+      null
+    ],
+    "loading": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "ready": [
+      [
+        331,
+        24,
+        1024,
+        87
+      ],
+      [
+        331,
+        111,
+        1024,
+        204
+      ],
+      [
+        331,
+        335,
+        438,
+        50
+      ],
+      [
+        331,
+        403,
+        438,
+        157
+      ],
+      [
+        797,
+        335,
+        558,
+        336
+      ]
+    ],
+    "readyChrome": [
+      null,
+      [
+        24,
+        112,
+        207,
+        216
+      ]
+    ]
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "titles": {
+      "Coach": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "43px",
+        "44.72px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Datos": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "54px",
+        "54px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Perfil": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "54px",
+        "54px",
+        "normal",
+        "uppercase",
+        "0px"
+      ]
+    },
+    "borders": [
+      {
+        "count": 0,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 331,
+        "y": 210.15625,
+        "w": 1024
+      },
+      {
+        "count": 1,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [],
+        "x": 331,
+        "y": 210.109375,
+        "w": 1024
+      },
+      {
+        "count": 3,
+        "expanded": true,
+        "history": 1,
+        "last": 1,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 331,
+        "y": 210.109375,
+        "w": 1024
+      }
+    ],
+    "loadingChrome": [
+      null,
+      null
+    ],
+    "loading": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "ready": [
+      [
+        331,
+        24,
+        1024,
+        87
+      ],
+      [
+        331,
+        111,
+        1024,
+        204
+      ],
+      [
+        331,
+        335,
+        438,
+        50
+      ],
+      [
+        331,
+        403,
+        438,
+        157
+      ],
+      [
+        797,
+        335,
+        558,
+        336
+      ]
+    ],
+    "readyChrome": [
+      null,
+      [
+        24,
+        112,
+        207,
+        216
+      ]
+    ]
+  }
+]

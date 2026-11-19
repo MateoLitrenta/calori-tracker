@@ -124,9 +124,6 @@
   .home-variants .daily-panel .daily-habits :is(.habit-controls button, .habit-edit) { min-height: 44px; padding: 6px 2px; font-size: 14px; }
 }
 @media (max-width: 767px) {
-  .app-shell .app-content:has(> .home-variants) { padding: 12px; }
-  .app-shell .home-header { height: calc(48px + env(safe-area-inset-top)); padding: calc(4px + env(safe-area-inset-top)) 12px 4px; border-bottom: 0; }
-  .app-shell .home-header .brand-symbol { width: 28px; height: 28px; }
   .home-variants { padding: 0; border-radius: 0; }
   .home-variants .daily-panel[data-period='day'] > .daily-heading { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 }

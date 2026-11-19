@@ -8,7 +8,6 @@
   gap: var(--fit-space);
   color: var(--fit-ink);
 }
-.profile-page-title { font: italic 700 var(--fit-display)/1 var(--fit-face); text-transform: uppercase; }
 .profile-panel, .profile-information {
   min-width: 0;
   padding: var(--fit-space);
