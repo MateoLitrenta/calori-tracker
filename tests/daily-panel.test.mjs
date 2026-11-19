@@ -609,7 +609,7 @@ test('editing closes the record detail and opens the same responsive shell with 
     assert.ok(node(sheet(view), element => element.props.role === 'dialog'));
     assert.ok(nodes(view(), element => element.props.value === expected).length);
     if (expected === 'Pizza') assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.path, 'existing.jpg');
-    else for (const value of [40, 300, 5, '8:00']) assert.ok(nodes(view(), element => element.type === 'input').some(input => input.props.value === value));
+    else for (const value of [40, 300, '5', '8:00']) assert.ok(nodes(view(), element => element.type === 'input').some(input => input.props.value === value));
   }
 });
 
@@ -759,7 +759,8 @@ test('workout estimation fills the proposal without saving or removing secondary
   fill(view, 'Kcal', '300');
   assert.match(renderToStaticMarkup(view()), /<h5[^>]*>Valor ajustado<\/h5>/);
   assert.doesNotMatch(renderToStaticMarkup(view()), /<h5[^>]*>Estimación con IA<\/h5>/);
-  assert.ok(field(view, 'Distancia (km) opc.'));
+  assert.equal(node(view(), e => e.props.id === 'add-workout-distance').props.inputMode, 'decimal');
+  assert.match(renderToStaticMarkup(node(view(), e => e.props.htmlFor === 'add-workout-distance')), /Distancia.*\(km\)/);
   assert.ok(field(view, 'Ritmo (ej: 5:30) opc.'));
 });
 

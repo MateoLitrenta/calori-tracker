@@ -824,12 +824,15 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   {workEstimateControls}
                   {selectedWorkCategory !== null && ['Correr', 'Natación', 'Caminata'].includes(selectedWorkCategory) && (<div className="entry-workout-metrics flex gap-4">
                     <div className="entry-field entry-distance">
-                      <label className="entry-field-label" htmlFor="add-workout-distance">Distancia (km)</label>
-                      <input id="add-workout-distance"
-                        type="number" step="any" min="0" inputMode="decimal" placeholder="Opcional"
-                        value={workDistance} onChange={e => setWorkDistance(e.target.value)}
-                        className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
-                      />
+                      <label className="entry-field-label" htmlFor="add-workout-distance">Distancia <span className="sr-only">(km)</span></label>
+                      <div className="entry-unit-control">
+                        <input id="add-workout-distance"
+                          type="number" step="any" min="0" inputMode="decimal" placeholder="Opcional"
+                          value={workDistance} onChange={e => setWorkDistance(e.target.value)}
+                          className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
+                        />
+                        <span className="entry-unit" aria-hidden="true">km</span>
+                      </div>
                     </div>
                     <div className="entry-field entry-pace">
                       <label className="entry-field-label" htmlFor="add-workout-pace">Ritmo</label>
@@ -1311,12 +1314,15 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               {workEstimateControls}
               <div className="entry-workout-metrics flex gap-4">
                 <div className="entry-field entry-distance">
-                  <label className="entry-field-label" htmlFor="edit-workout-distance">Distancia (km)</label>
-                  <input id="edit-workout-distance"
-                    type="number" step="any" min="0" inputMode="decimal" placeholder="Opcional"
-                    value={workDistance} onChange={e => setWorkDistance(e.target.value)}
-                    className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                  />
+                  <label className="entry-field-label" htmlFor="edit-workout-distance">Distancia <span className="sr-only">(km)</span></label>
+                  <div className="entry-unit-control">
+                    <input id="edit-workout-distance"
+                      type="number" step="any" min="0" inputMode="decimal" placeholder="Opcional"
+                      value={workDistance} onChange={e => setWorkDistance(e.target.value)}
+                      className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                    />
+                    <span className="entry-unit" aria-hidden="true">km</span>
+                  </div>
                 </div>
                 <div className="entry-field entry-pace">
                   <label className="entry-field-label" htmlFor="edit-workout-pace">Ritmo</label>
