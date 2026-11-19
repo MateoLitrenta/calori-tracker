@@ -1241,3 +1241,25 @@ test('a confirmed meal receipt focuses its stable row among namesakes only on re
   assert.deepEqual(scrolls, [target]);
   assert.equal(document.querySelector('.meal-saved'), null);
 });
+
+test('exercise receipt opens the correct typed record even with shared names and a meal ID collision', async t => {
+  const day = '2026-11-12';
+  const record = journalRecord(8, day);
+  for (const workout of record.workouts) workout.activity = 'Caminata';
+  const id = record.meals[0].id;
+  record.workouts[1].id = id;
+  const view = await journalDOM(t, { record, dateStr: day });
+  const target = view.list().querySelector('[data-entry-kind="workout"][data-entry-id="' + id + '"]');
+  window.HTMLElement.prototype.scrollIntoView = () => {};
+  await act(() => target.click());
+  await act(() => document.querySelector('.record-detail-edit').click());
+  await act(() => document.querySelector('form.entry-form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })));
+  await view.render({ record: view.saves.at(-1).record });
+  assert.equal(view.saves.at(-1).record.workouts.length, record.workouts.length);
+  assert.match(document.querySelector('.meal-saved').textContent, /Ejercicio guardado.*Caminata.*30 min.*kcal.*12 nov 2026/);
+  await act(() => document.querySelector('.meal-saved-open').click());
+  assert.equal(document.activeElement, target);
+  await act(() => target.click());
+  await act(() => document.querySelector('.record-detail-edit').click());
+  assert.equal(document.getElementById('edit-workout-activity').value, 'Caminata');
+});

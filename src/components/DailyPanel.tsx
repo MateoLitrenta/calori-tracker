@@ -22,23 +22,23 @@ type WorkoutCategory = typeof workoutCategories[number];
 const exactWorkoutCategory = (activity: string) => workoutCategories.find(category => category.toLowerCase() === activity.trim().toLowerCase()) ?? null;
 type EntryEstimate = { calories: number; assumptions: string[]; context: string; inputVersion: number; calorieVersion: number; contextKey: string };
 
-type MealReceipt = {
-  id: string; date: string; name: string; calories: number; estimated: boolean; replacedPhoto: boolean;
-};
+type EntryReceipt = {
+  id: string; date: string; name: string; calories: number; estimated: boolean;
+} & ({ kind: 'meal'; replacedPhoto: boolean } | { kind: 'workout'; duration: number });
 
 // Only disclosure and explicit row navigation belong here. A date/profile change remounts this small
 // presentation component without touching entry forms or pending habit saves.
 function DailyRecords({ count, children, receipt, onDismiss }: {
-  count: number; children: React.ReactNode; receipt: MealReceipt | null; onDismiss: () => void;
+  count: number; children: React.ReactNode; receipt: EntryReceipt | null; onDismiss: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const listId = useId();
   const list = useRef<HTMLUListElement>(null);
-  const [destination, setDestination] = useState<MealReceipt | null>(null);
+  const [destination, setDestination] = useState<EntryReceipt | null>(null);
   useEffect(() => {
     if (!destination) return;
-    const row = Array.from(list.current?.querySelectorAll<HTMLButtonElement>('[data-meal-id]') ?? [])
-      .find(button => button.dataset.mealId === destination.id);
+    const row = Array.from(list.current?.querySelectorAll<HTMLButtonElement>('[data-entry-id]') ?? [])
+      .find(button => button.dataset.entryId === destination.id && button.dataset.entryKind === destination.kind);
     if (!row) return;
     row.focus({ preventScroll: true });
     row.scrollIntoView({ block: 'center', behavior: 'instant' });
@@ -47,12 +47,12 @@ function DailyRecords({ count, children, receipt, onDismiss }: {
     return () => { window.clearTimeout(timer); delete row.dataset.justSaved; };
   }, [destination]);
   return <>
-    {receipt && <aside className="meal-saved" aria-label="Confirmación de comida">
+    {receipt && <aside className="meal-saved" aria-label={receipt.kind === 'meal' ? 'Confirmación de comida' : 'Confirmación de ejercicio'}>
       <div role="status">
-        <span className="meal-saved-label"><Check size={16} aria-hidden="true" /> Comida guardada</span>
+        <span className="meal-saved-label"><Check size={16} aria-hidden="true" /> {receipt.kind === 'meal' ? 'Comida guardada' : 'Ejercicio guardado'}</span>
         <strong>{receipt.name}</strong>
-        <span>{receipt.calories.toLocaleString('es-AR')} kcal{receipt.estimated && ' · Estimación con IA'} · {format(new Date(receipt.date + 'T12:00:00'), 'd MMM yyyy', { locale: es })}</span>
-        {receipt.replacedPhoto && <span>La limpieza de la foto anterior queda pendiente.</span>}
+        <span>{receipt.kind === 'workout' && receipt.duration + ' min · '}{receipt.calories.toLocaleString('es-AR')} kcal{receipt.estimated && ' · Estimación con IA'} · {format(new Date(receipt.date + 'T12:00:00'), 'd MMM yyyy', { locale: es })}</span>
+        {receipt.kind === 'meal' && receipt.replacedPhoto && <span>La limpieza de la foto anterior queda pendiente.</span>}
       </div>
       <button type="button" className="meal-saved-open" onClick={() => {
         setExpanded(true);
@@ -207,7 +207,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const entryChanged = useRef(false);
   const markEntryChanged = () => { entryChanged.current = true; };
   const [mealError, setMealError] = useState('');
-  const [mealReceipt, setMealReceipt] = useState<MealReceipt | null>(null);
+  const [entryReceipt, setEntryReceipt] = useState<EntryReceipt | null>(null);
   const [editingMealId, setEditingMealId] = useState<string | null>(null);
   const [mealName, setMealName] = useState('');
   const [isEditingWater, setIsEditingWater] = useState(false);
@@ -311,7 +311,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   };
 
   const resetForms = () => {
-    setMealReceipt(null);
+    setEntryReceipt(null);
     setMealError('');
     entryChanged.current = false;
     setMealType('Almuerzo');
@@ -468,7 +468,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         feedback: 'contextual', onFailure: failure => { failureMessage = failure.message; },
       })) throw new Error('No se pudo guardar la comida.');
       resetForms(); setActiveTab(null);
-      setMealReceipt({ id: meal.id, date: dateStr, name: meal.name, calories: meal.calories,
+      setEntryReceipt({ kind: 'meal', id: meal.id, date: dateStr, name: meal.name, calories: meal.calories,
         replacedPhoto: !!oldMeal?.photo_path && oldMeal.photo_path !== meal.photo_path,
         estimated: mealEstimate?.contextKey === estimateContextKey && mealEstimate.calories === meal.calories
           && mealEstimate.inputVersion === mealInputVersion.current && mealEstimate.calorieVersion === mealCalorieVersion.current });
@@ -485,7 +485,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     clearEstimates();
     setActiveTab(null);
     setMealError('');
-    setMealReceipt(null);
+    setEntryReceipt(null);
     setEditingMealId(m.id);
     setMealName(m.name);
     setMealType(m.type);
@@ -509,8 +509,12 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       if (editingWorkoutId && !previous) { toast.error('El ejercicio ya no está en este día. Tu borrador se conserva; revisá los registros antes de crear otro.'); return; }
       const workout: WorkoutEntry = { ...previous, id: draft.id, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: previous?.muscles ?? [], details: workDetails, distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined, time: workTime || (draft.fallbackTime ??= format(new Date(), 'HH:mm')) };
       const workouts = previous ? base.workouts.map(w => w.id === draft.id ? workout : w) : [...base.workouts, workout];
-      if (!await onUpdateRecord(dateStr, { ...base, workouts })) throw new Error('Guardado no confirmado');
+      if (!await onUpdateRecord(dateStr, { ...base, workouts }, { feedback: 'contextual' })) throw new Error('Guardado no confirmado');
       resetForms(); setActiveTab(null);
+      setEntryReceipt({ kind: 'workout', id: workout.id, date: dateStr, name: workout.activity,
+        duration: workout.duration, calories: workout.calories,
+        estimated: workEstimate?.contextKey === estimateContextKey && workEstimate.calories === workout.calories
+          && workEstimate.inputVersion === workInputVersion.current && workEstimate.calorieVersion === workCalorieVersion.current });
     } catch {
       toast.error('No se pudo confirmar el ejercicio. Tu borrador se conserva para reintentar.');
     } finally {
@@ -1012,8 +1016,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
           )}
 
         <DailyRecords key={`${profile.id}:${dateStr}:${selectedGroup?.type || 'day'}`}
-          receipt={!entryActive && !detailModalItem && mealReceipt?.date === dateStr && currentRecord.meals.some(meal => meal.id === mealReceipt.id) ? mealReceipt : null}
-          onDismiss={() => setMealReceipt(null)} count={currentRecord.meals.length + currentRecord.workouts.length}>
+          receipt={!entryActive && !detailModalItem && entryReceipt?.date === dateStr && (entryReceipt.kind === 'meal' ? currentRecord.meals : currentRecord.workouts).some(entry => entry.id === entryReceipt.id) ? entryReceipt : null}
+          onDismiss={() => setEntryReceipt(null)} count={currentRecord.meals.length + currentRecord.workouts.length}>
           {
             [
               ...currentRecord.meals.map(m => ({ ...m, _type: 'meal' as const })),
@@ -1028,7 +1032,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               const meal = item._type === 'meal';
               return (
                 <li key={`${item._type}-${item.id}`}>
-                  <button type="button" data-meal-id={meal ? item.id : undefined} className="daily-record-open" onClick={event => { recordOpener.current = event.currentTarget; setDetailModalItem(item); }}>
+                  <button type="button" data-entry-kind={item._type} data-entry-id={item.id} data-meal-id={meal ? item.id : undefined} className="daily-record-open" onClick={event => { recordOpener.current = event.currentTarget; setDetailModalItem(item); }}>
                     <span className="fitness-record-mark">
                       {meal && item.photo_path ? <MealThumbnail path={item.photo_path} /> : meal
                         ? <ForkKnife size={17} aria-hidden="true" /> : <Barbell size={17} aria-hidden="true" />}
