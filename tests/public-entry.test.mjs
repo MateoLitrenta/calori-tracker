@@ -754,7 +754,13 @@ test('App distinguishes public loading, authenticated skeleton, ready views, onb
     assert.match(loading.props.className, /app-shell/);
     assert.equal(node(loading, element => element.type === 'main').props['aria-busy'], 'true');
     assert.ok(node(loading, element => element.props.view === 'home'));
-    assert.equal(nodes(loading, element => !!element.props.onTabChange || element.type === 'header' || element.type === 'button').length, 0);
+    assert.equal(nodes(loading, element => !!element.props.onTabChange).length, 2);
+    assert.equal(nodes(loading, element => element.type === 'header').length, 1);
+    assert.equal(nodes(loading, element => !!element.props.updateRecord).length, 0);
+    const navigation = node(loading, element => !!element.props.onTabChange);
+    navigation.props.onTabChange('charts');
+    assert.ok(node(view.render(), element => element.props.view === 'charts'), 'Navigation selects a placeholder until the profile is ready');
+    node(view.render(), element => !!element.props.onTabChange).props.onTabChange('home');
     assert.doesNotMatch(markup(loading), /Cargando perfil|Cargando sesión|No pudimos cargar/);
     store.loading = false;
     const error = view.render();

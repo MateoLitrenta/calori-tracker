@@ -104,7 +104,7 @@ export default function ChartsView() {
     <div className="charts-view charts-insights">
       <header className="charts-header">
         <div className="charts-heading">
-          <h1>Datos</h1>
+          <h1 className="screen-title">Datos</h1>
           <p className="charts-range"><CalendarBlank size={16} aria-hidden="true" />{range}</p>
         </div>
         <div className="charts-period period-selector" role="group" aria-label="Período"

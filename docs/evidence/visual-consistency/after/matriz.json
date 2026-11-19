@@ -1,0 +1,1172 @@
+[
+  {
+    "width": 375,
+    "theme": "light",
+    "titles": {
+      "Inicio": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Coach": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Datos": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Perfil": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ]
+    },
+    "borders": [
+      {
+        "count": 0,
+        "expanded": false,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 620.65625,
+        "w": 343
+      },
+      {
+        "count": 0,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 209.65625,
+        "w": 343
+      },
+      {
+        "count": 1,
+        "expanded": false,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 620.75,
+        "w": 343
+      },
+      {
+        "count": 1,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 209.75,
+        "w": 343
+      },
+      {
+        "count": 3,
+        "expanded": false,
+        "history": 1,
+        "last": 0,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 620.75,
+        "w": 343
+      },
+      {
+        "count": 3,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 209.75,
+        "w": 343
+      }
+    ],
+    "loadingChrome": [
+      [
+        0,
+        0,
+        375,
+        62
+      ],
+      [
+        0,
+        747,
+        375,
+        65
+      ]
+    ],
+    "loading": [
+      [
+        0,
+        62,
+        375,
+        107
+      ],
+      [
+        0,
+        169,
+        375,
+        265
+      ],
+      [
+        16,
+        448,
+        343,
+        50
+      ],
+      [
+        16,
+        516,
+        343,
+        157
+      ],
+      [
+        16,
+        691,
+        343,
+        158
+      ]
+    ],
+    "ready": [
+      [
+        0,
+        62,
+        375,
+        107
+      ],
+      [
+        0,
+        169,
+        375,
+        268
+      ],
+      [
+        16,
+        452,
+        343,
+        50
+      ],
+      [
+        16,
+        520,
+        343,
+        157
+      ],
+      [
+        16,
+        694,
+        343,
+        355
+      ]
+    ],
+    "readyChrome": [
+      [
+        0,
+        0,
+        375,
+        62
+      ],
+      [
+        0,
+        747,
+        375,
+        65
+      ]
+    ]
+  },
+  {
+    "width": 375,
+    "theme": "dark",
+    "titles": {
+      "Inicio": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Coach": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Datos": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Perfil": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ]
+    },
+    "borders": [
+      {
+        "count": 0,
+        "expanded": false,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 620.65625,
+        "w": 343
+      },
+      {
+        "count": 0,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 209.65625,
+        "w": 343
+      },
+      {
+        "count": 1,
+        "expanded": false,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 620.75,
+        "w": 343
+      },
+      {
+        "count": 1,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 209.75,
+        "w": 343
+      },
+      {
+        "count": 3,
+        "expanded": false,
+        "history": 1,
+        "last": 0,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 620.75,
+        "w": 343
+      },
+      {
+        "count": 3,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 209.75,
+        "w": 343
+      }
+    ],
+    "loadingChrome": [
+      [
+        0,
+        0,
+        375,
+        62
+      ],
+      [
+        0,
+        747,
+        375,
+        65
+      ]
+    ],
+    "loading": [
+      [
+        0,
+        62,
+        375,
+        107
+      ],
+      [
+        0,
+        169,
+        375,
+        265
+      ],
+      [
+        16,
+        448,
+        343,
+        50
+      ],
+      [
+        16,
+        516,
+        343,
+        157
+      ],
+      [
+        16,
+        691,
+        343,
+        158
+      ]
+    ],
+    "ready": [
+      [
+        0,
+        62,
+        375,
+        107
+      ],
+      [
+        0,
+        169,
+        375,
+        268
+      ],
+      [
+        16,
+        452,
+        343,
+        50
+      ],
+      [
+        16,
+        520,
+        343,
+        157
+      ],
+      [
+        16,
+        694,
+        343,
+        355
+      ]
+    ],
+    "readyChrome": [
+      [
+        0,
+        0,
+        375,
+        62
+      ],
+      [
+        0,
+        747,
+        375,
+        65
+      ]
+    ]
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "titles": {
+      "Inicio": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Coach": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Datos": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Perfil": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ]
+    },
+    "borders": [
+      {
+        "count": 0,
+        "expanded": false,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 376.25,
+        "w": 288
+      },
+      {
+        "count": 0,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 210.25,
+        "w": 288
+      },
+      {
+        "count": 1,
+        "expanded": false,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 376.65625,
+        "w": 288
+      },
+      {
+        "count": 1,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 209.65625,
+        "w": 288
+      },
+      {
+        "count": 3,
+        "expanded": false,
+        "history": 1,
+        "last": 0,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 376.65625,
+        "w": 288
+      },
+      {
+        "count": 3,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 209.65625,
+        "w": 288
+      }
+    ],
+    "loadingChrome": [
+      [
+        0,
+        0,
+        320,
+        62
+      ],
+      [
+        0,
+        503,
+        320,
+        65
+      ]
+    ],
+    "loading": [
+      [
+        0,
+        62,
+        320,
+        107
+      ],
+      [
+        0,
+        169,
+        320,
+        264
+      ],
+      [
+        10,
+        447,
+        300,
+        50
+      ],
+      [
+        10,
+        515,
+        300,
+        157
+      ],
+      [
+        10,
+        690,
+        300,
+        158
+      ]
+    ],
+    "ready": [
+      [
+        0,
+        62,
+        320,
+        106
+      ],
+      [
+        0,
+        168,
+        320,
+        264
+      ],
+      [
+        10,
+        445,
+        300,
+        50
+      ],
+      [
+        10,
+        513,
+        300,
+        157
+      ],
+      [
+        10,
+        688,
+        300,
+        355
+      ]
+    ],
+    "readyChrome": [
+      [
+        0,
+        0,
+        320,
+        62
+      ],
+      [
+        0,
+        503,
+        320,
+        65
+      ]
+    ]
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "titles": {
+      "Inicio": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Coach": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Datos": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Perfil": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "36px",
+        "36px",
+        "normal",
+        "uppercase",
+        "0px"
+      ]
+    },
+    "borders": [
+      {
+        "count": 0,
+        "expanded": false,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 376.25,
+        "w": 288
+      },
+      {
+        "count": 0,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 210.25,
+        "w": 288
+      },
+      {
+        "count": 1,
+        "expanded": false,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 376.65625,
+        "w": 288
+      },
+      {
+        "count": 1,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 16,
+        "y": 209.65625,
+        "w": 288
+      },
+      {
+        "count": 3,
+        "expanded": false,
+        "history": 1,
+        "last": 0,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 376.65625,
+        "w": 288
+      },
+      {
+        "count": 3,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 16,
+        "y": 209.65625,
+        "w": 288
+      }
+    ],
+    "loadingChrome": [
+      [
+        0,
+        0,
+        320,
+        62
+      ],
+      [
+        0,
+        503,
+        320,
+        65
+      ]
+    ],
+    "loading": [
+      [
+        0,
+        62,
+        320,
+        107
+      ],
+      [
+        0,
+        169,
+        320,
+        264
+      ],
+      [
+        10,
+        447,
+        300,
+        50
+      ],
+      [
+        10,
+        515,
+        300,
+        157
+      ],
+      [
+        10,
+        690,
+        300,
+        158
+      ]
+    ],
+    "ready": [
+      [
+        0,
+        62,
+        320,
+        106
+      ],
+      [
+        0,
+        168,
+        320,
+        264
+      ],
+      [
+        10,
+        445,
+        300,
+        50
+      ],
+      [
+        10,
+        513,
+        300,
+        157
+      ],
+      [
+        10,
+        688,
+        300,
+        355
+      ]
+    ],
+    "readyChrome": [
+      [
+        0,
+        0,
+        320,
+        62
+      ],
+      [
+        0,
+        503,
+        320,
+        65
+      ]
+    ]
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "titles": {
+      "Inicio": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "54px",
+        "54px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Coach": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "54px",
+        "54px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Datos": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "54px",
+        "54px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Perfil": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "54px",
+        "54px",
+        "normal",
+        "uppercase",
+        "0px"
+      ]
+    },
+    "borders": [
+      {
+        "count": 0,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 331,
+        "y": 210.15625,
+        "w": 1024
+      },
+      {
+        "count": 1,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 331,
+        "y": 210.109375,
+        "w": 1024
+      },
+      {
+        "count": 3,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 331,
+        "y": 210.109375,
+        "w": 1024
+      }
+    ],
+    "loadingChrome": [
+      [
+        331,
+        24,
+        1024,
+        78
+      ],
+      [
+        24,
+        112,
+        207,
+        216
+      ]
+    ],
+    "loading": [
+      [
+        331,
+        102,
+        1024,
+        87
+      ],
+      [
+        331,
+        189,
+        1024,
+        204
+      ],
+      [
+        331,
+        413,
+        438,
+        50
+      ],
+      [
+        331,
+        481,
+        438,
+        157
+      ],
+      [
+        797,
+        413,
+        558,
+        158
+      ]
+    ],
+    "ready": [
+      [
+        331,
+        102,
+        1024,
+        87
+      ],
+      [
+        331,
+        189,
+        1024,
+        204
+      ],
+      [
+        331,
+        413,
+        438,
+        50
+      ],
+      [
+        331,
+        481,
+        438,
+        157
+      ],
+      [
+        797,
+        413,
+        558,
+        335
+      ]
+    ],
+    "readyChrome": [
+      [
+        331,
+        24,
+        1024,
+        78
+      ],
+      [
+        24,
+        112,
+        207,
+        216
+      ]
+    ]
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "titles": {
+      "Inicio": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "54px",
+        "54px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Coach": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "54px",
+        "54px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Datos": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "54px",
+        "54px",
+        "normal",
+        "uppercase",
+        "0px"
+      ],
+      "Perfil": [
+        "\"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+        "italic",
+        "700",
+        "54px",
+        "54px",
+        "normal",
+        "uppercase",
+        "0px"
+      ]
+    },
+    "borders": [
+      {
+        "count": 0,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 331,
+        "y": 210.15625,
+        "w": 1024
+      },
+      {
+        "count": 1,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [],
+        "x": 331,
+        "y": 210.109375,
+        "w": 1024
+      },
+      {
+        "count": 3,
+        "expanded": true,
+        "history": 1,
+        "last": 0,
+        "interior": [
+          1,
+          1
+        ],
+        "x": 331,
+        "y": 210.109375,
+        "w": 1024
+      }
+    ],
+    "loadingChrome": [
+      [
+        331,
+        24,
+        1024,
+        78
+      ],
+      [
+        24,
+        112,
+        207,
+        216
+      ]
+    ],
+    "loading": [
+      [
+        331,
+        102,
+        1024,
+        87
+      ],
+      [
+        331,
+        189,
+        1024,
+        204
+      ],
+      [
+        331,
+        413,
+        438,
+        50
+      ],
+      [
+        331,
+        481,
+        438,
+        157
+      ],
+      [
+        797,
+        413,
+        558,
+        158
+      ]
+    ],
+    "ready": [
+      [
+        331,
+        102,
+        1024,
+        87
+      ],
+      [
+        331,
+        189,
+        1024,
+        204
+      ],
+      [
+        331,
+        413,
+        438,
+        50
+      ],
+      [
+        331,
+        481,
+        438,
+        157
+      ],
+      [
+        797,
+        413,
+        558,
+        335
+      ]
+    ],
+    "readyChrome": [
+      [
+        331,
+        24,
+        1024,
+        78
+      ],
+      [
+        24,
+        112,
+        207,
+        216
+      ]
+    ]
+  }
+]

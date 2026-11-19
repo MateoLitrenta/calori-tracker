@@ -102,3 +102,47 @@ html.dark {
 :where(.app-shell, .fitness-entry-portal) :is(button, a, summary, input, textarea, select):focus-visible {
   outline: 2px solid var(--fit-focus); outline-offset: 2px;
 }
+
+/* Load the authenticated frame before any lazy view stylesheet. */
+.screen-title {
+  margin: 0;
+  font: italic 700 var(--fit-display)/1 var(--fit-face);
+  letter-spacing: normal;
+  text-transform: uppercase;
+}
+.home-header, .home-heading-brand { display: flex; align-items: center; }
+.home-header {
+  flex: none; justify-content: space-between; gap: 12px;
+  width: 100%; max-width: 64rem; margin-inline: auto; padding-bottom: var(--fit-space);
+}
+.home-heading-brand { gap: 8px; }
+.home-heading-brand .brand-symbol { width: 44px; height: 44px; object-fit: contain; }
+@media (max-width: 767px) {
+  .app-shell.app-shell-fitness .app-content { padding: 0; }
+  .home-header {
+    position: relative; padding: calc(12px + env(safe-area-inset-top)) 16px 6px;
+    color: var(--fit-board-ink); background: var(--fit-board);
+  }
+  .home-header::after { content: ''; position: absolute; inset: auto 16px 0; border-bottom: 1px solid var(--fit-track); }
+  .home-heading-brand .brand-symbol { width: 32px; height: 32px; }
+}
+.app-shell-fitness .fitness-records-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding-inline: 4px;
+  color: var(--fit-quiet);
+  font-size: 13px;
+  font-weight: 600;
+}
+.fitness-records-link::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+.fitness-records-link:hover { text-decoration: underline; }
+.app-shell-fitness .fitness-records-link:focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -2px; }

@@ -918,7 +918,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       <header className="chat-heading">
         <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-assistant" />
         <div className="chat-heading-title">
-          <h2>Coach</h2>
+          <h1 className="screen-title">Coach</h1>
           <p>Nutrición y entrenamiento</p>
         </div>
         <div className="chat-heading-actions">

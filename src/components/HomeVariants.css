@@ -180,18 +180,6 @@
 .home-variants .daily-record-title { font-size: 14px; font-weight: 500; line-height: 1.5; }
 .home-variants .daily-record-meta { opacity: 1; font-size: 11px; }
 .home-variants .daily-logs li .font-semibold { color: var(--home-text); font-weight: 500; font-variant-numeric: tabular-nums; }
-.home-header {
-  margin: 0;
-  height: calc(56px + env(safe-area-inset-top));
-  border: 0;
-  border-bottom: 1px solid #ffffff0d;
-  border-radius: 0;
-  padding: calc(5px + env(safe-area-inset-top)) 16px 5px;
-  background: var(--fit-page);
-}
-.home-header .brand-symbol { width: 30px; height: 30px; border-radius: var(--radius-control); }
-.home-header h1 { font-size: 18px; letter-spacing: -.02em; }
-.home-header button { border-radius: var(--radius-control); }
 .home-variants :is(.daily-habits button, .daily-quick-actions button, .habit-adjustments button) {
   transition: transform var(--motion-fast) var(--motion-ease-control), background-color var(--motion-control) var(--motion-ease-control), border-color var(--motion-control) var(--motion-ease-control), color var(--motion-control) var(--motion-ease-control);
 }

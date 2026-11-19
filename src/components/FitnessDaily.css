@@ -116,8 +116,10 @@
   display: grid; grid-template-columns: minmax(0,1fr); align-items: stretch; gap: 0; border-top: 1px solid var(--fit-rule);
 }
 .home-variants.fitness-home .daily-panel .daily-records li {
-  min-width: 0; padding: 0; margin: 0; border: 0; border-bottom: 1px solid var(--fit-rule); border-radius: 0; background: transparent;
+  min-width: 0; padding: 0; margin: 0; border: 0; border-radius: 0; background: transparent;
 }
+.home-variants.fitness-home .daily-panel .daily-records li + li { border-top: 1px solid var(--fit-rule); }
+.home-variants.fitness-home .daily-panel .daily-records:empty { display: none; }
 .home-variants.fitness-home .daily-panel .daily-record-open {
   display: grid; grid-template-columns: 31px minmax(0,1fr) auto 13px; align-items: center; width: 100%; min-height: 63px;
   padding: 8px 0; gap: 8px; border-radius: 0; text-align: left; color: var(--fit-ink);

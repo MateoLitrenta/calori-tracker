@@ -28,11 +28,10 @@
 }
 .chat-heading .brand-symbol-assistant { width: 32px; height: 32px; object-fit: contain; }
 .chat-heading-title { min-width: 0; }
-.chat-heading h2, .chat-proactive-title, .coach-insight-card h4,
+.chat-proactive-title, .coach-insight-card h4,
 .chat-proposal-heading h3, .chat-camera-panel h3 {
   font-family: var(--fit-face); font-weight: 700; line-height: 1.04;
 }
-.chat-heading h2 { font-size: clamp(29px, 3vw, 43px); font-style: italic; text-transform: uppercase; }
 .chat-heading-title p { color: var(--fit-quiet); font-size: 13px; }
 .chat-heading-actions { flex: none; gap: 2px; margin-left: auto; }
 .chat-heading-actions button {
