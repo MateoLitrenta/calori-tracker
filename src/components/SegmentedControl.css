@@ -1,0 +1,42 @@
+.segmented-control {
+  --segment-gap: 4px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--option-count), minmax(0, 1fr));
+  min-width: 0;
+  max-width: 100%;
+  gap: var(--segment-gap);
+  padding: var(--segment-gap);
+  border: 1px solid var(--fit-rule);
+  border-radius: var(--fit-control-radius);
+  background: var(--fit-soft);
+}
+.segmented-control-indicator {
+  position: absolute;
+  pointer-events: none;
+  inset: var(--segment-gap) auto var(--segment-gap) var(--segment-gap);
+  /* With equal gaps and edge padding, each track plus a gap is one such fraction. */
+  width: calc((100% - var(--segment-gap)) / var(--option-count) - var(--segment-gap));
+  transform: translateX(calc(var(--active-index) * (100% + var(--segment-gap))));
+  transition: transform var(--motion-control) var(--motion-ease-enter);
+  border-radius: var(--fit-control-radius);
+  background: var(--fit-orange);
+}
+.segmented-control > button {
+  position: relative;
+  min-width: 0;
+  min-height: 44px;
+  padding: 4px 16px;
+  color: var(--fit-quiet);
+  font-weight: 650;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.segmented-control > button[aria-pressed=true] { color: var(--fit-on-orange); }
+.segmented-control > button:focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -2px; }
+@media (max-width: 400px) {
+  .segmented-control > button { padding-inline: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .segmented-control-indicator { transition: none; }
+}

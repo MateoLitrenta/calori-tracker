@@ -23,7 +23,7 @@ const imports = {
   './UserAvatar': stub('export default () => null;'),
 };
 
-async function loadModule(path) {
+async function moduleURL(path) {
   const source = (await readFile(new URL(path, import.meta.url), 'utf8'))
     .replace(/import ['"][^'"]+\.css['"];?/g, '')
     .replace(/import\s+\{([^}]+)\}\s+from ['"]@phosphor-icons\/react['"];?/g, (_, names) =>
@@ -36,8 +36,11 @@ async function loadModule(path) {
       : import.meta.resolve(specifier));
     return `from ${JSON.stringify(target)}`;
   });
-  return import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
+  return `data:text/javascript;base64,${Buffer.from(code).toString('base64')}`;
 }
+const loadModule = async path => import(await moduleURL(path));
+imports['./SegmentedControl'] = await moduleURL('../src/components/SegmentedControl.tsx');
+const { default: SegmentedControl } = await import(imports['./SegmentedControl']);
 
 const { default: ChartsView } = await loadModule('../src/components/ChartsView.tsx');
 const { default: Sidebar } = await loadModule('../src/components/Sidebar.tsx');
@@ -67,6 +70,7 @@ function render(records = {}, period = 'Semana', selectedBucket = null, referenc
 function nodes(tree, predicate) {
   if (Array.isArray(tree)) return tree.flatMap(child => nodes(child, predicate));
   if (!React.isValidElement(tree)) return [];
+  if (tree.type === SegmentedControl) return nodes(SegmentedControl(tree.props), predicate);
   return [...(predicate(tree) ? [tree] : []), ...nodes(tree.props.children, predicate)];
 }
 
@@ -217,7 +221,7 @@ test('keyboard focus and pointer selection expose exact expenditure and balance 
   const year = render(weeklyRecords, globalThis.__chartsHarness.period);
   const selector = nodes(year.tree, element => element.props['aria-label'] === 'Período')[0];
   assert.equal(selector.props.style['--active-index'], 2);
-  assert.equal(nodes(selector, element => element.props.className === 'charts-period-indicator').length, 1);
+  assert.equal(nodes(selector, element => element.props.className === 'segmented-control-indicator').length, 1);
   const active = nodes(selector, element => element.props['aria-pressed'] === true);
   assert.equal(active.length, 1);
   assert.equal(active[0].props.children, 'Año');

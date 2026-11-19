@@ -11,6 +11,7 @@ import { globalSupabase, installGlobalFixture } from '../fitness-global/fixture.
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const safariForms = process.argv.includes('--safari-forms');
 const mealFlow = safariForms || process.argv.includes('--meal-flow');
+const homeControls = process.argv.includes('--home-controls');
 const visual = process.argv.includes('--visual');
 const stage4 = process.argv.includes('--stage4');
 const stage3 = process.argv.includes('--stage3');
@@ -18,18 +19,18 @@ const stage2 = process.argv.includes('--stage2');
 const stage1 = stage2 || process.argv.includes('--stage1');
 const stage1Cases = stage1 ? (await import('../ux-stage1/fixture.mjs')).cases : null;
 const beforeGlobal = process.argv.includes('--before-global');
-const globalQA = mealFlow || visual || stage4 || stage3 || stage1 || beforeGlobal || process.argv.includes('--global');
+const globalQA = homeControls || mealFlow || visual || stage4 || stage3 || stage1 || beforeGlobal || process.argv.includes('--global');
 const beforeFitness = process.argv.includes('--before-fitness');
 const fitness = beforeFitness || process.argv.includes('--fitness');
 const beforeRefinement = process.argv.includes('--before-refinement');
 const refinement = beforeRefinement || process.argv.includes('--refinement');
 const before = process.argv.includes('--before') || beforeRefinement || beforeFitness || beforeGlobal;
-const base = process.argv.includes('--pan') ? 'e4dd0b2f0af1fd341318fc31b381ad8facefe412' : safariForms ? 'b9f030a92f0e60cfd7f761792742f8c3415755ad' : mealFlow ? '7dce90cb72119a5c5d6bd560bb2a9710b7d94dd1' : visual ? '51f7daa2d248c186c4a3d1c8700cf6bd13997eae' : stage4 ? 'a740e1b1897b83dfea35ffa4d85373c3afbf51ed' : stage3 ? 'a2021b32c22ea985d33f5ed681d3c507cef1f0b8' : stage2 ? 'c2c62c94a25c44559ab926f8d954305e32a36317' : stage1 ? 'c365e1e6f236ab76d17b46cbd8fe1ec9eace8831' : globalQA ? '10117215cf7071dc754e175294588f4a30a959b9' : fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
+const base = homeControls ? '297982fef0da8ca1cb59677c25496051c9a54457' : process.argv.includes('--pan') ? 'e4dd0b2f0af1fd341318fc31b381ad8facefe412' : safariForms ? 'b9f030a92f0e60cfd7f761792742f8c3415755ad' : mealFlow ? '7dce90cb72119a5c5d6bd560bb2a9710b7d94dd1' : visual ? '51f7daa2d248c186c4a3d1c8700cf6bd13997eae' : stage4 ? 'a740e1b1897b83dfea35ffa4d85373c3afbf51ed' : stage3 ? 'a2021b32c22ea985d33f5ed681d3c507cef1f0b8' : stage2 ? 'c2c62c94a25c44559ab926f8d954305e32a36317' : stage1 ? 'c365e1e6f236ab76d17b46cbd8fe1ec9eace8831' : globalQA ? '10117215cf7071dc754e175294588f4a30a959b9' : fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
   : refinement ? 'fe01ecb86e0933c5260c2630fe4d7a6e82ebccdd' : '5a74e7279c77a7d1dc25fb5604d5fa0d657d6bf5';
-const phase = safariForms ? (before ? 'safari-before' : 'safari-after') : mealFlow ? (before ? 'meal-flow-before' : 'meal-flow-after') : visual ? (before ? 'visual-before' : 'visual-after') : stage4 ? (before ? 'stage4-before' : 'stage4-after') : stage3 ? (before ? 'stage3-before' : 'stage3-after') : stage2 ? (before ? 'stage2-before' : 'stage2-after') : stage1 ? (before ? 'stage1-before' : 'stage1-after') : beforeGlobal ? 'before-global' : globalQA ? 'global' : beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
+const phase = homeControls ? (before ? 'controls-before' : 'controls-after') : safariForms ? (before ? 'safari-before' : 'safari-after') : mealFlow ? (before ? 'meal-flow-before' : 'meal-flow-after') : visual ? (before ? 'visual-before' : 'visual-after') : stage4 ? (before ? 'stage4-before' : 'stage4-after') : stage3 ? (before ? 'stage3-before' : 'stage3-after') : stage2 ? (before ? 'stage2-before' : 'stage2-after') : stage1 ? (before ? 'stage1-before' : 'stage1-after') : beforeGlobal ? 'before-global' : globalQA ? 'global' : beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
 let root = repo;
 if (before) {
-  root = path.resolve(repo, mealFlow ? '../meal-flow-baseline-' + base.slice(0,7) : visual ? '../visual-baseline-' + base.slice(0,7) : stage4 ? '../stage4-baseline-' + base.slice(0,7) : stage3 ? '../stage3-baseline-' + base.slice(0,7) : stage1 ? '../stage1-baseline-' + base.slice(0,7) : beforeGlobal ? '../global-baseline-' + base.slice(0,7) : beforeFitness ? '../home-fitness-baseline-' + base.slice(0,7) : beforeRefinement ? '../home-v10-1-1-refinement-baseline' : '../home-v10-1-1-baseline');
+  root = path.resolve(repo, homeControls ? '../controls-baseline-' + base.slice(0,7) : mealFlow ? '../meal-flow-baseline-' + base.slice(0,7) : visual ? '../visual-baseline-' + base.slice(0,7) : stage4 ? '../stage4-baseline-' + base.slice(0,7) : stage3 ? '../stage3-baseline-' + base.slice(0,7) : stage1 ? '../stage1-baseline-' + base.slice(0,7) : beforeGlobal ? '../global-baseline-' + base.slice(0,7) : beforeFitness ? '../home-fitness-baseline-' + base.slice(0,7) : beforeRefinement ? '../home-v10-1-1-refinement-baseline' : '../home-v10-1-1-baseline');
   mkdirSync(root, { recursive: true });
   if (!existsSync(path.join(root, 'src'))) {
     const archive = path.join(root, 'baseline.tar');
@@ -57,6 +58,10 @@ const recordsA = {
   '2026-11-01': record('2026-11-01', { meals: [food('a-november', 'Comida de noviembre', 1950)], workouts: [exercise('a-gym-boundary', 'Gimnasio', 40, 220, '10:00')], water: 1500, steps: 5000 }),
   '2026-10-31': record('2026-10-31', { meals: [food('a-october', 'Comida de octubre', 2300)], workouts: [exercise('a-football-boundary', 'Fútbol', 50, 350, '12:00')], water: 2000, steps: 7600 }),
 };
+if (homeControls) {
+  recordsA['2026-11-10'] = record('2026-11-10', { meals: [food('a-even', 'Comidas registradas', 1679)] });
+  recordsA['2026-11-12'].meals[0].calories = 3100;
+}
 const profile = (owner, name, records) => ({ id: owner, user_id: owner, name, age: 30, sex: 'Masculino', height: 175, weight: 73, activity: 'Moderado', goal: 'Mantenimiento', onboarding_completed: true, avatar_path: null, recordProtocol: 'atomic', recordGeneration: generation, records });
 const profiles = { A: profile('synthetic-home-a', 'Alex', recordsA), B: profile('synthetic-home-b', 'Sol', { [TODAY]: record(TODAY, { water: 250, steps: 800 }) }) };
 const boot = `(() => {
@@ -87,7 +92,7 @@ const boot = `(() => {
   // No credential/session/storage/API request may escape the local QA origin.
   const fetchLocal=window.fetch.bind(window);window.fetch=(input,init)=>{const url=new URL(typeof input==='string'?input:input.url,location.href);if(url.origin!==location.origin){qa.externalRequests++;return Promise.reject(Error('Remote requests blocked in local synthetic QA'));}return fetchLocal(input,init);};
 })();` + (globalQA ? '(' + installGlobalFixture.toString() + ')();' : '')
-  + (visual ? "if(new URLSearchParams(location.search).has('loading')){window.__homeQA.setLoading(true);window.__homeQA.store.activeProfile=null;}" : '');
+  + (visual || homeControls ? "if(new URLSearchParams(location.search).has('loading')){window.__homeQA.setLoading(true);window.__homeQA.store.activeProfile=null;}" : '');
 const external = {
   '/hooks/useAppStore.ts': `import{useSyncExternalStore}from'react';export function useAppStore(){return useSyncExternalStore(fn=>{window.__homeQA.listeners.add(fn);return()=>window.__homeQA.listeners.delete(fn)},()=>window.__homeQA.store);}`,
   '/lib/supabase.ts': `export const supabase={auth:{getSession:async()=>({data:{session:null}})},storage:{from:()=>({createSignedUrl:async()=>({data:null,error:null}),upload:async()=>({error:Error('Storage disabled in QA')})})}};`,

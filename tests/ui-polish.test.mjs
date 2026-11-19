@@ -70,10 +70,14 @@ test('numbered monthly selection is a preview; only the explicit open action cha
   assert.equal(document.documentElement.scrollTop, 123);
   const selector = document.querySelector('[aria-label="Período del historial"]');
   assert.deepEqual([...selector.querySelectorAll('button')].map(button => button.textContent.trim()), ['Semana', 'Mes', 'Año']);
-  for (const label of ['Semana', 'Mes', 'Año', 'Mes']) {
+  const indicator = selector.querySelector('.segmented-control-indicator');
+  assert.ok(indicator);
+  for (const label of ['Semana', 'Año', 'Semana', 'Mes', 'Año', 'Mes']) {
     const button = [...selector.querySelectorAll('button')].find(button => button.textContent.trim() === label);
     await act(() => button.click());
     assert.equal(selector.querySelectorAll('[aria-pressed="true"]').length, 1);
+    assert.equal(selector.querySelector('.segmented-control-indicator'), indicator);
+    assert.equal(selector.style.getPropertyValue('--active-index'), String(['Semana', 'Mes', 'Año'].indexOf(label)));
     assert.equal(opens, 0);
     assert.equal(document.documentElement.scrollTop, 123);
   }
@@ -84,12 +88,12 @@ test('numbered monthly selection is a preview; only the explicit open action cha
 });
 
 test('history and existing Coach/period controls use scoped, touch-friendly and motion-safe styles', async () => {
-  const selectorCSS = await readFile(new URL('../src/components/PeriodSelector.css', import.meta.url), 'utf8');
+  const selectorCSS = await readFile(new URL('../src/components/SegmentedControl.css', import.meta.url), 'utf8');
   const coachCSS = await readFile(new URL('../src/components/CoachFitness.css', import.meta.url), 'utf8');
   const charts = await readFile(new URL('../src/components/ChartsView.tsx', import.meta.url), 'utf8');
   const historyCSS = await readFile(new URL('../src/components/ActivityHistory.css', import.meta.url), 'utf8');
   assert.match(rawSource, /ActivityHistory\.css/);
-  assert.match(charts, /PeriodSelector\.css/);
+  assert.match(charts, /<SegmentedControl /);
   assert.match(selectorCSS, /prefers-reduced-motion: reduce/);
   assert.match(selectorCSS, /transition: none/);
   assert.match(selectorCSS, /transform: translateX/);

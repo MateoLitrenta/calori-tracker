@@ -1,5 +1,13 @@
 .activity-history-v2 {
   --ah-accent-text: var(--fit-accent);
+  /* Day cells, signed readings and their legend share the same local scale. */
+  --fit-balance-deficit-low: #d2edd9;
+  --fit-balance-deficit-medium: #bae5c7;
+  --fit-balance-deficit-high: #9fd9b2;
+  --fit-balance-neutral: #e3e5e4;
+  --fit-balance-surplus-low: #f4d9d6;
+  --fit-balance-surplus-medium: #edc3bd;
+  --fit-balance-surplus-high: #e8ada8;
   min-width: 0;
   width: 100%;
   container-type: inline-size;
@@ -8,6 +16,15 @@
   border-radius: var(--radius-panel);
   background: var(--home-card);
   color: var(--home-text);
+}
+html.dark .activity-history-v2 {
+  --fit-balance-deficit-low: #294a3a;
+  --fit-balance-deficit-medium: #305944;
+  --fit-balance-deficit-high: #39684e;
+  --fit-balance-neutral: #363b39;
+  --fit-balance-surplus-low: #4e3234;
+  --fit-balance-surplus-medium: #613d40;
+  --fit-balance-surplus-high: #73464a;
 }
 .activity-history-v2 :is(button, summary) {
   -webkit-tap-highlight-color: transparent;
@@ -41,29 +58,6 @@
   font: 700 26px/1.2 var(--fit-face);
   letter-spacing: -0.035em;
   line-height: 1.3;
-}
-.ah-view-switch {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 3px;
-  padding: 3px;
-  border: 1px solid var(--home-line);
-  border-radius: var(--radius-control);
-  background: var(--home-control);
-}
-.ah-view-switch button {
-  min-width: 56px;
-  min-height: 44px;
-  padding: 8px 12px;
-  border-radius: calc(var(--radius-control) - 3px);
-  color: var(--home-muted);
-  font-size: 13px;
-  font-weight: 500;
-  overflow-wrap: anywhere;
-}
-.ah-view-switch button[aria-pressed='true'] {
-  color: var(--ah-accent-text);
-  background: var(--home-hover);
 }
 .ah-layout {
   display: grid;
@@ -171,6 +165,9 @@
 }
 .ah-day[data-outside='true'] {
   color: var(--home-muted);
+}
+.ah-day[data-outside='true'][data-completeness='with-meals'] {
+  color: color-mix(in srgb, var(--home-text) 65%, var(--home-muted));
 }
 .ah-day[data-activity='true'] {
   background: var(--home-control);
@@ -541,9 +538,6 @@
   .ah-view-switch {
     width: 100%;
   }
-  .ah-view-switch button {
-    min-width: 0;
-  }
   .ah-calendar {
     padding: 12px 0 16px;
   }
@@ -627,12 +621,14 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  opacity: 0.2;
   pointer-events: none;
   z-index: -1;
 }
-.ah-day-fill {
-  border-bottom: 3px solid transparent;
+.ah-day[aria-pressed='true'] .ah-day-fill {
+  inset: 1px;
+}
+.ah-day[data-completeness='with-meals'] :is(.ah-day-marks, .ah-sports) {
+  color: var(--home-text);
 }
 .ah-day > :not(.ah-day-fill) {
   position: relative;
@@ -729,6 +725,7 @@
 .ah-balance-key i {
   width: 9px;
   height: 9px;
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
   border-radius: 2px;
   flex: none;
 }

@@ -436,7 +436,7 @@ html:not(.dark) .home-variants .activity-history { --heatmap-selected: #2563eb; 
 /* Desktop has three real rows: summary, journal and annual activity. Normal
    content grows with the page; only the calendar can scroll horizontally. */
 @media (min-width: 1280px) {
-  .app-shell .home-variants { --home-radius-cell: var(--radius-micro); --home-panel-padding: var(--space-inset); --home-section-gap: var(--space-inset); --home-inset: var(--space-compact); max-width: var(--content-max); padding: 0; gap: var(--home-section-gap); border-radius: var(--home-radius-panel); }
+  .app-shell .home-variants { --home-radius-cell: var(--radius-micro); --home-panel-padding: var(--space-inset); --home-section-gap: var(--space-inset); --home-inset: var(--space-compact); padding: 0; gap: var(--home-section-gap); border-radius: var(--home-radius-panel); }
   .app-shell .home-variants .daily-panel { gap: var(--home-section-gap); }
   .app-shell .home-variants .daily-summary { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--home-section-gap); align-items: stretch; }
   .app-shell .home-variants .energy-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, .9fr); padding: var(--home-panel-padding); gap: var(--home-inset); align-items: center; border-radius: var(--home-radius-panel); }

@@ -1,3 +1,4 @@
+import SegmentedControl from './SegmentedControl';
 import './FitnessProfile.css';
 import { useState, useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
 import { useAppStore } from '../hooks/useAppStore';
@@ -10,6 +11,12 @@ import UserAvatar from './UserAvatar';
 import ViewSkeleton from './ViewSkeleton';
 import DiscardDraftDialog from './DiscardDraftDialog';
 import toast from 'react-hot-toast';
+
+const themeOptions = [
+  { value: 'system', label: 'Sistema' },
+  { value: 'light', label: 'Claro' },
+  { value: 'dark', label: 'Oscuro' },
+] as const;
 
 type Personal = Pick<UserProfile, 'name' | 'sex' | 'age' | 'weight' | 'height'>;
 type LeaveGuard = (leave: () => void) => void;
@@ -329,17 +336,8 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
         <h2 id="profile-information-heading" className="profile-section-title"><SlidersHorizontal size={20} aria-hidden="true" /> Apariencia</h2>
         <div className="profile-appearance-row">
           <p className="profile-muted profile-appearance-copy">Elegí cómo querés ver Calori.</p>
-          <div className="profile-theme-control" role="group" aria-label="Apariencia">
-            {([
-              { value: 'system', label: 'Sistema' },
-              { value: 'light', label: 'Claro' },
-              { value: 'dark', label: 'Oscuro' },
-            ] as const).map(({ value, label }) => (
-              <button key={value} type="button" aria-pressed={theme === value} onClick={() => setTheme(value)}>
-                {label}
-              </button>
-            ))}
-          </div>
+          <SegmentedControl className="profile-theme-control" label="Apariencia" options={themeOptions}
+            value={theme} onChange={setTheme} />
         </div>
         <button type="button" className="profile-info-toggle" aria-expanded={showEnergyInfo} aria-controls="profile-energy-details"
           onClick={() => setShowEnergyInfo(value => !value)}>
