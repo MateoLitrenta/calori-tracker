@@ -45,7 +45,7 @@
 :is(.profile-view, .profile-dialog) :is(button, input, select, summary):focus-visible { outline: 2px solid var(--fit-focus); outline-offset: 2px; }
 .profile-view button:disabled { opacity: .6; cursor: wait; }
 @media (hover:hover) {
-  .profile-button:not(:disabled):hover, .profile-theme-control button:not([aria-pressed=true]):hover { text-decoration: underline; text-underline-offset: 3px; }
+  .profile-button:not(:disabled):hover { text-decoration: underline; text-underline-offset: 3px; }
 }
 .profile-personal { margin-top: 15px; padding-top: 12px; border-top: 1px solid var(--fit-rule); }
 .profile-personal-heading { justify-content: space-between; gap: 3px 12px; }
@@ -64,9 +64,6 @@
 .profile-setting-value { font-size: var(--fit-body); font-weight: 650; overflow-wrap: anywhere; }
 .profile-signout { margin-top: 14px; }
 .profile-appearance-row { display: grid; gap: 12px; padding-block: 16px; }
-.profile-theme-control { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border: 1px solid var(--fit-rule); border-radius: var(--fit-control-radius); background: var(--fit-soft); }
-.profile-theme-control button { flex: 1 1 max-content; padding-inline: 6px; border-radius: var(--fit-control-radius); min-height: 44px; font-size: 14px; color: var(--fit-quiet); font-weight: 650; }
-.profile-theme-control button[aria-pressed=true] { color: var(--fit-on-orange); background: var(--fit-orange); }
 .profile-info-toggle { display: flex; align-items: center; text-align: left; gap: 10px; width: 100%; min-height: 44px; padding: 14px 2px 0; border-top: 1px solid var(--fit-rule); font-size: 14px; font-weight: 650; }
 .profile-info-toggle > svg { color: var(--fit-accent); }
 .profile-info-toggle .profile-muted { margin-top: 2px; font-weight: 400; }

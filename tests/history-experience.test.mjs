@@ -220,6 +220,29 @@ test('activity without food stays visibly partial and neutral despite its negati
   assert.equal(view.saves.length, 0);
 });
 
+test('week and month use the legend scale only for days with a meal-backed balance', async t => {
+  const initial = { [mealDay]: energyRecord(mealDay, -300), [yesterday]: energyRecord(yesterday, 300),
+    [today]: energyRecord(today, 0), [workoutDay]: record(workoutDay, { workouts: [workout] }) };
+  const view = await mount(t, initial);
+  for (const period of ['Semana', 'Mes']) {
+    await view.scale(period);
+    const legend = [...document.querySelectorAll('.ah-balance-key span')];
+    for (const [date, label] of [[mealDay, 'Déficit (−)'], [yesterday, 'Superávit (+)'], [today, 'Equilibrio (0)']]) {
+      const swatch = legend.find(item => item.textContent.trim() === label).querySelector('i');
+      await view.selectDay(date);
+      const cell = view.day(date);
+      assert.equal(cell.getAttribute('aria-pressed'), 'true');
+      assert.ok(cell.querySelector('.ah-day-fill').classList.contains(swatch.className));
+      assert.ok(view.detail().querySelector('.ah-balance-fill').classList.contains(swatch.className));
+    }
+    assert.equal(view.day(today).getAttribute('aria-current'), 'date');
+    assert.match(view.day(workoutDay).textContent, /Parcial/);
+    assert.equal(view.day(workoutDay).querySelector('.ah-day-fill'), null);
+    assert.equal(view.day('2026-11-13').disabled, true);
+    assert.equal(view.day('2026-11-13').querySelector('.ah-day-fill'), null);
+  }
+});
+
 test('empty and future dates have separate neutral states with no invented balance values', async t => {
   const future = '2026-11-13';
   const view = await mount(t, { [future]: energyRecord(future, -600) });

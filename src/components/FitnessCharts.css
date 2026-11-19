@@ -11,10 +11,6 @@
 .charts-header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
 .charts-range, .charts-legend > span { display: flex; align-items: center; gap: 6px; }
 .charts-range { margin-top: 6px; color: var(--fit-quiet); font-size: var(--fit-caption); }
-.charts-period { border-radius: var(--fit-control-radius); border: 1px solid var(--fit-rule); background: var(--fit-soft); }
-.charts-period-indicator { background: var(--fit-orange); border-radius: var(--fit-control-radius); }
-.charts-period button { min-height: 44px; padding: 4px 16px; color: var(--fit-quiet); font-weight: 650; font-size: 14px; overflow-wrap: anywhere; }
-.charts-period button[aria-pressed=true] { color: var(--fit-on-orange); }
 .charts-view :is(button, summary):focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -2px; }
 .charts-panel {
   min-width: 0;

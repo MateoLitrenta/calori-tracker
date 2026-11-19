@@ -1,4 +1,4 @@
-.home-variants.fitness-home { padding: 0; gap: 0; max-width: 64rem; }
+.home-variants.fitness-home { padding: 0; gap: 0; width: 100%; max-width: var(--content-max); }
 .fitness-home .home-history { padding: 18px 0; margin-top: 8px; border-top: 1px solid var(--fit-rule); }
 .fitness-home .daily-logs-heading h4:focus-visible { outline-color: var(--fit-focus); }
 

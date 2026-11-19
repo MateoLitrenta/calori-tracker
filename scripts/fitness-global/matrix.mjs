@@ -75,7 +75,7 @@ async function capture(width, preference, system) {
       assert.equal(measurements.preference,preference);
       assert.equal(measurements.ai,0);
       assert.equal(measurements.remote,0);
-      if(!before&&tab==='Inicio') assert.equal(measurements.historyDeficitFill,measurements.dark?'rgb(154, 189, 225)':'rgb(55, 86, 120)');
+      if(!before&&tab==='Inicio') assert.equal(measurements.historyDeficitFill,measurements.dark?'rgb(57, 104, 78)':'rgb(159, 217, 178)');
     }
     assert.deepEqual(errors,[]);
   } finally { await context.close(); }

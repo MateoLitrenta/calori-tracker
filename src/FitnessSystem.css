@@ -113,7 +113,7 @@ html.dark {
 .home-header, .home-heading-brand { display: flex; align-items: center; }
 .home-header {
   flex: none; justify-content: space-between; gap: 12px;
-  width: 100%; max-width: 64rem; margin-inline: auto; padding-bottom: var(--fit-space);
+  width: 100%; max-width: var(--content-max); margin-inline: auto; padding-bottom: var(--fit-space);
 }
 .home-heading-brand { gap: 8px; }
 .home-heading-brand .brand-symbol { width: 44px; height: 44px; object-fit: contain; }

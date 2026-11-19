@@ -6,7 +6,7 @@ import { JSDOM } from 'jsdom';
 
 // CSS contracts only. JSDOM has no layout/container-query engine: these fixtures
 // explicitly select a container width. Browser geometry is verified separately.
-const files = ['DesktopExperience.css', 'components/HomeVariants.css', 'components/HomeMobile.css', 'FitnessSystem.css', 'components/CoachFitness.css', 'components/FitnessCharts.css', 'components/FitnessProfile.css', 'components/ActivityHistory.css', 'components/ActivityHistoryMotion.css'];
+const files = ['index.css', 'DesktopExperience.css', 'components/HomeVariants.css', 'components/HomeMobile.css', 'components/FitnessHome.css', 'components/HomeSkeleton.css', 'FitnessSystem.css', 'components/CoachFitness.css', 'components/FitnessCharts.css', 'components/FitnessProfile.css', 'components/SegmentedControl.css', 'components/ActivityHistory.css', 'components/ActivityHistoryMotion.css'];
 const source = (await Promise.all(files.map(file => readFile(new URL('../src/' + file, import.meta.url), 'utf8')))).join('\n');
 function stylesAt(width, height = 900, containerWidth = width) {
   const css = postcss.parse(source);
@@ -30,7 +30,7 @@ function view(t, width, height = 900, containerWidth = width) {
     '<div class="home-variants"><div class="daily-panel" data-period="day"><div class="daily-summary"><div class="energy-card"><div class="energy-headline"><div>Balance energético</div><div class="energy-number">-600 kcal</div><div class="energy-status bg-heatmap-deficit-high">Déficit Alto</div></div><div class="energy-footer"><p class="energy-coverage">1 comida · 0 ejercicios<span>Según tus registros</span></p><details class="energy-breakdown"><summary>Ver desglose</summary></details></div></div></div>' +
     '<div class="daily-journal"><div class="daily-quick-actions"><button>Comida</button><button>Ejercicio</button></div><div class="daily-logs"><ul class="daily-records"><li><button class="daily-record-open"><span class="daily-record-title">Comida</span><span class="daily-record-meta">12:00 · Almuerzo</span></button></li></ul></div></div>' +
     '<section class="daily-habits-block"><div class="daily-habits"><div class="habit-card"><div class="habit-header">Agua</div><div class="habit-metric"><button class="habit-value">1.500</button><span>ml</span></div><div class="habit-controls"><button>+</button></div></div></div></section></div>' +
-    '<section class="activity-history-v2"><header class="ah-header"><div><h2>Tu actividad</h2></div><div class="ah-view-switch"><button aria-pressed="true">Mes</button></div></header>' +
+    '<section class="activity-history-v2"><header class="ah-header"><div><h2>Tu actividad</h2></div><div class="ah-view-switch segmented-control"><button aria-pressed="true">Mes</button></div></header>' +
     '<div class="ah-layout"><div class="ah-calendar"><div class="ah-navigation"><h3>Noviembre 2026</h3><div class="ah-nav-actions"><button>←</button><button>Hoy</button><button>→</button></div></div>' +
     '<div class="ah-compact-week"><p>Semana 2 de 5</p><div><button>←</button><button>→</button></div></div>' +
     '<div class="ah-calendar-surface ah-calendar-surface--month"><div class="ah-weekdays"><span>Dom</span></div><div class="ah-week" data-active="true"><button class="ah-day" aria-pressed="true"><span class="ah-day-number">12</span></button></div><div class="ah-week" data-active="false"><button class="ah-day"><span class="ah-day-number">19</span></button></div></div>' +
@@ -53,11 +53,18 @@ function view(t, width, height = 900, containerWidth = width) {
 
 test('desktop frames share their width cap, while Coach preserves readable prose and transcript-only scrolling', t => {
   for (const width of [1280, 1440, 1920]) {
-    const { style } = view(t, width);
+    const { style, document } = view(t, width);
+    document.querySelector('.home-variants').classList.add('fitness-home');
+    document.querySelector('.app-main').insertAdjacentHTML('afterbegin', '<header class="home-header"></header>');
+    for (const tab of ['home', 'charts', 'profile', 'chat']) {
+      document.querySelector('.app-content').insertAdjacentHTML('beforeend', `<div class="view-skeleton view-skeleton-${tab}"></div>`);
+    }
     const cap = style('.assistant-view').maxWidth;
-    assert.equal(cap, style('.home-variants').maxWidth);
-    assert.equal(cap, style('.charts-view').maxWidth);
-    assert.equal(cap, style('.profile-view').maxWidth);
+    for (const selector of ['.fitness-home', '.home-header', '.charts-view', '.profile-view',
+      '.view-skeleton-home', '.view-skeleton-charts', '.view-skeleton-profile', '.view-skeleton-chat']) {
+      assert.equal(style(selector).width, '100%', selector);
+      assert.equal(style(selector).maxWidth, cap, selector);
+    }
     assert.equal(cap, 'var(--content-max)', 'No screen may introduce its own narrower frame');
     assert.equal(style('.app-main').overflow, 'hidden');
     assert.equal(style('.app-content').overflow, 'hidden');

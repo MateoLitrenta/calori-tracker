@@ -46,7 +46,7 @@ const imports = {
     .map(name => [`./components/${name}`, stub(`export default function ${name}() { return null; }`)])),
 };
 
-async function loadModule(path) {
+async function moduleURL(path) {
   const source = (await readFile(new URL(path, import.meta.url), 'utf8'))
     .replace(/import ['"][^'"]+\.css['"];?/g, '')
     .replace(/import\s+\{([^}]+)\}\s+from ['"]@phosphor-icons\/react['"];?/g, (_, names) =>
@@ -55,8 +55,11 @@ async function loadModule(path) {
     module: ts.ModuleKind.ESNext, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023,
   } }).outputText.replace(/from ["']([^"']+)["']/g,
     (_, specifier) => `from ${JSON.stringify(imports[specifier] || import.meta.resolve(specifier))}`);
-  return import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
+  return `data:text/javascript;base64,${Buffer.from(code).toString('base64')}`;
 }
+const loadModule = async path => import(await moduleURL(path));
+imports['./SegmentedControl'] = await moduleURL('../src/components/SegmentedControl.tsx');
+const { default: SegmentedControl } = await import(imports['./SegmentedControl']);
 
 const { resolveEntryRoute } = await loadModule('../src/utils/entryRoute.ts');
 const { default: AuthModal } = await loadModule('../src/components/AuthModal.tsx');
@@ -113,6 +116,7 @@ function mount(component, props, initial = [], runEffects = false) {
 function nodes(tree, predicate) {
   if (Array.isArray(tree)) return tree.flatMap(child => nodes(child, predicate));
   if (!React.isValidElement(tree)) return [];
+  if (tree.type === SegmentedControl) return nodes(SegmentedControl(tree.props), predicate);
   return [...(predicate(tree) ? [tree] : []), ...nodes(tree.props.children, predicate)];
 }
 function node(tree, predicate) {

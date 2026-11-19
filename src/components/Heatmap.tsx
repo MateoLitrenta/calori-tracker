@@ -22,6 +22,7 @@ import {
   type HistorySports,
 } from '../utils/historyPresentation';
 import { useHistoryMotion, type HistoryMotionSnapshot } from '../hooks/useHistoryMotion';
+import SegmentedControl from './SegmentedControl';
 import './ActivityHistory.css';
 import './ActivityHistoryMotion.css';
 
@@ -42,9 +43,9 @@ interface HeatmapProps {
   onReturnToDraft?: () => void;
 }
 const views = [
-  { key: 'week', label: 'Semana' },
-  { key: 'month', label: 'Mes' },
-  { key: 'year', label: 'Año' },
+  { value: 'week', label: 'Semana' },
+  { value: 'month', label: 'Mes' },
+  { value: 'year', label: 'Año' },
 ] as const;
 const weekdays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 const hasActivity = hasHistoryActivity;
@@ -448,7 +449,7 @@ export default function Heatmap({
         : format(weekStart, 'd MMM', { locale: es }) +
           ' – ' +
           format(addDays(weekStart, 6), 'd MMM yyyy', { locale: es });
-  const viewLabel = views.find((view) => view.key === state.view)!.label;
+  const viewLabel = views.find((view) => view.value === state.view)!.label;
 
   return (
     <section
@@ -464,18 +465,8 @@ export default function Heatmap({
           <p className="ah-eyebrow">Historial</p>
           <h2>Tu actividad</h2>
         </div>
-        <div className="ah-view-switch" role="group" aria-label="Período del historial">
-          {views.map((view) => (
-            <button
-              key={view.key}
-              type="button"
-              aria-pressed={state.view === view.key}
-              onClick={() => change({ view: view.key, anchor: selected })}
-            >
-              {view.label}
-            </button>
-          ))}
-        </div>
+        <SegmentedControl className="ah-view-switch" label="Período del historial" options={views}
+          value={state.view} onChange={view => change({ view, anchor: selected })} />
       </header>
       <div className="ah-layout">
         <div className="ah-calendar">

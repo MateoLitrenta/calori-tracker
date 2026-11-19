@@ -1,6 +1,6 @@
-import './PeriodSelector.css';
+import SegmentedControl from './SegmentedControl';
 import './FitnessCharts.css';
-import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ChartBar, Footprints, Barbell, CalendarBlank, CaretLeft, CaretRight, X } from '@phosphor-icons/react';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -9,6 +9,8 @@ import { buildChartStats } from '../utils/chartStats';
 import type { ChartPeriod } from '../utils/chartStats';
 import { formatDateStr, getBalanceCategory, getBalanceLabel } from '../utils/helpers';
 
+const periods = ['Semana', 'Mes', 'Año'] as const;
+const periodOptions = periods.map(value => ({ value, label: value }));
 const number = (value: number) => value.toLocaleString('es-AR');
 const signed = (value: number) => `${value > 0 ? '+' : ''}${number(value)}`;
 const days = (value: number) => `${value} ${value === 1 ? 'día' : 'días'}`;
@@ -107,16 +109,8 @@ export default function ChartsView() {
           <h1 className="screen-title">Datos</h1>
           <p className="charts-range"><CalendarBlank size={16} aria-hidden="true" />{range}</p>
         </div>
-        <div className="charts-period period-selector" role="group" aria-label="Período"
-          style={{ '--active-index': (['Semana', 'Mes', 'Año'] as ChartPeriod[]).indexOf(period) } as CSSProperties}>
-          <span className="charts-period-indicator" aria-hidden="true" />
-          {(['Semana', 'Mes', 'Año'] as ChartPeriod[]).map(value => (
-            <button key={value} type="button" aria-pressed={period === value} onClick={() => {
-              setPeriod(value);
-              setSelectedBucket(null);
-            }}>{value}</button>
-          ))}
-        </div>
+        <SegmentedControl className="charts-period" label="Período" options={periodOptions}
+          value={period} onChange={value => { setPeriod(value); setSelectedBucket(null); }} />
       </header>
 
       <section className="charts-panel charts-summary" aria-label={`Resumen de ${period.toLowerCase()}`}>

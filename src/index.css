@@ -67,7 +67,7 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
 .app-bottom-nav .bottom-nav-item:active { transform: scale(.97); }
 .bottom-nav-item:focus-visible { outline: 2px solid var(--fit-accent); outline-offset: -3px; }
 
-.view-skeleton { --skeleton-surface: var(--fit-surface); --skeleton-fill: var(--fit-soft); --skeleton-line: var(--fit-rule); display: flex; flex-direction: column; gap: 18px; width: 100%; max-width: 896px; min-width: 0; margin-inline: auto; animation: calori-fade var(--motion-fast) var(--motion-ease-enter) 140ms both; }
+.view-skeleton { --skeleton-surface: var(--fit-surface); --skeleton-fill: var(--fit-soft); --skeleton-line: var(--fit-rule); display: flex; flex-direction: column; gap: 18px; width: 100%; max-width: var(--content-max); min-width: 0; margin-inline: auto; animation: calori-fade var(--motion-fast) var(--motion-ease-enter) 140ms both; }
 .skeleton-heading { display: flex; align-items: center; gap: 12px; min-height: 32px; }
 .skeleton-block { display: block; background: var(--skeleton-fill); border-radius: var(--radius-control); animation: calori-skeleton 1600ms ease-in-out infinite; }
 .skeleton-title { width: 140px; height: 22px; }
