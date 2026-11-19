@@ -106,12 +106,20 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
     const updateViewport = () => {
       if (!mobile) return;
       const height = viewport?.height ?? window.innerHeight;
-      // Safari can resize innerHeight independently of the fixed backdrop.
-      // Both rectangles below are in layout viewport coordinates.
-      const backdropTop = dialog.parentElement?.getBoundingClientRect().top ?? 0;
-      const visibleBottom = (viewport?.offsetTop ?? 0) + height - backdropTop;
       dialog.style.setProperty('--entry-viewport-height', `${height}px`);
-      dialog.style.setProperty('--entry-visible-bottom', `${visibleBottom}px`);
+      if (editor) {
+        // The backdrop is anchored to the document, so use document coordinates
+        // even while Safari pans the layout and visual viewports independently.
+        const pageTop = viewport?.pageTop ?? window.scrollY + (viewport?.offsetTop ?? 0);
+        dialog.parentElement?.style.setProperty('--entry-page-top', `${pageTop}px`);
+      } else {
+        const backdropTop = dialog.parentElement?.getBoundingClientRect().top ?? 0;
+        const bottom = (viewport?.offsetTop ?? 0) + height - backdropTop;
+        dialog.style.setProperty('--entry-visible-bottom', `${bottom}px`);
+      }
+    };
+    const revealField = () => {
+      if (!mobile) return;
       const content = dialog.querySelector<HTMLElement>('.entry-form-content');
       const field = document.activeElement;
       if (!content || !(field instanceof HTMLElement) || !content.contains(field)) return;
@@ -126,32 +134,38 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
       if (bounds.bottom > readingBottom) content.scrollTop += bounds.bottom - readingBottom + 12;
       else if (bounds.top < visible.top) content.scrollTop -= visible.top - bounds.top + 12;
     };
-    let scrollFrame: number | undefined;
-    const followCaret = () => {
-      if (document.activeElement?.tagName !== 'TEXTAREA' || !dialog.contains(document.activeElement)) return;
-      if (scrollFrame !== undefined) window.cancelAnimationFrame(scrollFrame);
-      // React commits the new value and textarea height before the next frame.
-      scrollFrame = window.requestAnimationFrame(() => { scrollFrame = undefined; updateViewport(); });
+    let frame: number | undefined;
+    const scheduleReveal = () => {
+      if (frame !== undefined) return;
+      frame = window.requestAnimationFrame(() => { frame = undefined; revealField(); });
     };
-    updateViewport();
-    viewport?.addEventListener('resize', updateViewport);
-    viewport?.addEventListener('scroll', updateViewport);
-    window.addEventListener('resize', updateViewport);
-    window.addEventListener('scroll', updateViewport);
-    dialog.addEventListener('focusin', updateViewport);
-    dialog.addEventListener('input', followCaret);
-    dialog.addEventListener('select', followCaret);
-    document.addEventListener('selectionchange', followCaret);
+    const viewportChanged = () => {
+      updateViewport();
+      if (editor) scheduleReveal();
+      else revealField();
+    };
+    const followSelection = () => {
+      if (document.activeElement?.tagName === 'TEXTAREA' && dialog.contains(document.activeElement)) scheduleReveal();
+    };
+    viewportChanged();
+    viewport?.addEventListener('resize', viewportChanged);
+    viewport?.addEventListener('scroll', viewportChanged);
+    window.addEventListener('resize', viewportChanged);
+    window.addEventListener('scroll', viewportChanged);
+    dialog.addEventListener('focusin', revealField);
+    dialog.addEventListener('input', scheduleReveal);
+    dialog.addEventListener('select', followSelection);
+    document.addEventListener('selectionchange', followSelection);
     return () => {
-      if (scrollFrame !== undefined) window.cancelAnimationFrame(scrollFrame);
-      viewport?.removeEventListener('resize', updateViewport);
-      viewport?.removeEventListener('scroll', updateViewport);
-      window.removeEventListener('resize', updateViewport);
-      window.removeEventListener('scroll', updateViewport);
-      dialog.removeEventListener('focusin', updateViewport);
-      dialog.removeEventListener('input', followCaret);
-      dialog.removeEventListener('select', followCaret);
-      document.removeEventListener('selectionchange', followCaret);
+      if (frame !== undefined) window.cancelAnimationFrame(frame);
+      viewport?.removeEventListener('resize', viewportChanged);
+      viewport?.removeEventListener('scroll', viewportChanged);
+      window.removeEventListener('resize', viewportChanged);
+      window.removeEventListener('scroll', viewportChanged);
+      dialog.removeEventListener('focusin', revealField);
+      dialog.removeEventListener('input', scheduleReveal);
+      dialog.removeEventListener('select', followSelection);
+      document.removeEventListener('selectionchange', followSelection);
       document.removeEventListener('keydown', keyboard);
       document.removeEventListener('focusin', containFocus);
       background.forEach((element, index) => { element.inert = previousInert[index]; });

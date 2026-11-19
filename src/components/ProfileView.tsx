@@ -428,7 +428,12 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
       )}
 
       {typeof __CALORI_PREVIEW_COMMIT__ !== 'undefined' && __CALORI_PREVIEW_COMMIT__ && (
-        <p className="profile-muted text-xs">Versión de Preview · <code>{__CALORI_PREVIEW_COMMIT__.slice(0, 8)}</code></p>
+        <details className="profile-muted text-xs">
+          <summary>Versión de Preview · <code>{__CALORI_PREVIEW_COMMIT__.slice(0, 8)}</code></summary>
+          {new URLSearchParams(location.search).get('diagnostico') === 'teclado'
+            ? <><button type="button" onClick={() => window.dispatchEvent(new Event('calori-export-geometry'))}>Descargar geometría del teclado</button> · <a href="?">Finalizar diagnóstico</a></>
+            : <a href="?diagnostico=teclado">Activar diagnóstico local del teclado</a>}
+        </details>
       )}
 
       {discard && <DiscardDraftDialog onKeep={() => setDiscard(null)} onDiscard={() => { setDiscard(null); discard(); }} />}

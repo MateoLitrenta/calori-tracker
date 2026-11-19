@@ -177,7 +177,7 @@ test('mobile form scrolls to the caret after paste, selection and keyboard resiz
   await act(() => viewport.dispatchEvent(new window.Event('resize')));
   const dialog = document.querySelector('[role="dialog"]');
   assert.equal(dialog.style.getPropertyValue('--entry-viewport-height'), '360px');
-  assert.equal(dialog.style.getPropertyValue('--entry-visible-bottom'), '360px');
+  assert.equal(dialog.parentElement.style.getPropertyValue('--entry-page-top'), '0px');
   const text = Array.from({ length: 31 }, (_, i) => `Línea ${i}`).join('\n');
   await act(() => {
     Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(field, text);
@@ -191,12 +191,13 @@ test('mobile form scrolls to the caret after paste, selection and keyboard resiz
   const atEnd = content.scrollTop;
   // Opening/resizing the keyboard with the cursor at the beginning must not jump to line 31.
   field.setSelectionRange(0, 0);
-  viewport.height = 320; viewport.offsetTop = 10;
+  viewport.height = 320; viewport.offsetTop = 10; viewport.pageTop = 835;
   await act(() => viewport.dispatchEvent(new window.Event('resize')));
+  await env.flushFrames();
   assert.ok(content.scrollTop < atEnd);
   assert.equal(field.selectionStart, 0); assert.equal(document.activeElement, field);
   assertCaretVisible();
-  assert.equal(dialog.style.getPropertyValue('--entry-visible-bottom'), '330px');
+  assert.equal(dialog.parentElement.style.getPropertyValue('--entry-page-top'), '835px');
   field.setSelectionRange(text.length, text.length);
   await act(() => field.dispatchEvent(new window.Event('select', { bubbles: true })));
   await env.flushFrames(); assert.ok(content.scrollTop > atEnd);

@@ -256,9 +256,15 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
 /* Keep mobile editors away from Safari's floating bottom controls. The
    backdrop paints through the keyboard transition, including below the sheet. */
 body:has(> .fitness-entry-portal form.entry-form) :is(.app-main, .app-bottom-nav)[inert] { opacity: 0; }
-.fitness-entry-portal .entry-sheet-backdrop:has(form.entry-form) { background: var(--fit-page); }
+.fitness-entry-portal .entry-sheet-backdrop:has(form.entry-form) {
+  position: absolute;
+  top: var(--entry-page-top, 0px);
+  bottom: auto;
+  background: var(--fit-page);
+}
 .fitness-entry-portal .entry-bottom-sheet:has(> form.entry-form) {
-  top: calc(var(--entry-visible-bottom, 100dvh) - var(--entry-viewport-height, 100dvh));
+  position: relative;
+  top: auto;
   bottom: auto;
   height: var(--entry-viewport-height, 100dvh);
   max-height: none;
