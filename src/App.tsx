@@ -31,6 +31,8 @@ function RestoreTabScroll({ children, onReady }: {
   return children;
 }
 
+declare const __CALORI_PREVIEW_COMMIT__: string;
+
 function App() {
   const { user, loading, activeProfile, updateRecord, habitDrafts, completeOnboarding, signOut } = useAppStore();
   const [activeTab, setActiveTab] = useState<Tab>('home');
@@ -61,7 +63,12 @@ function App() {
   };
 
   useEffect(() => {
-    if (userId !== previousUserIdRef.current) coachReadingPositions.current.clear();
+    if (userId !== previousUserIdRef.current) {
+      coachReadingPositions.current.clear();
+      if (typeof __CALORI_PREVIEW_COMMIT__ !== 'undefined' && __CALORI_PREVIEW_COMMIT__) {
+        window.dispatchEvent(new Event('calori-reset-geometry'));
+      }
+    }
     if (userId && userId !== previousUserIdRef.current) {
       scrollPositionsRef.current = { home: 0, charts: 0, profile: 0 };
       setActiveTab('home');

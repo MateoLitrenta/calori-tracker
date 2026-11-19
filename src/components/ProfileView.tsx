@@ -430,7 +430,7 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
       {typeof __CALORI_PREVIEW_COMMIT__ !== 'undefined' && __CALORI_PREVIEW_COMMIT__ && (
         <details className="profile-muted text-xs">
           <summary>Versión de Preview · <code>{__CALORI_PREVIEW_COMMIT__.slice(0, 8)}</code></summary>
-          {new URLSearchParams(location.search).get('diagnostico') === 'teclado'
+          {document.documentElement.dataset.keyboardDiagnostics === 'active'
             ? <><button type="button" onClick={() => window.dispatchEvent(new Event('calori-export-geometry'))}>Descargar geometría del teclado</button> · <a href="?">Finalizar diagnóstico</a></>
             : <a href="?diagnostico=teclado">Activar diagnóstico local del teclado</a>}
         </details>

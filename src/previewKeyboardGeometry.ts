@@ -16,7 +16,7 @@ export function captureKeyboardGeometry(version: string) {
     samples.push({
       t: Math.round(performance.now()), event: event.type, source: event.currentTarget === vv ? 'viewport' : event.currentTarget === window ? 'window' : 'document',
       field: /^(add|edit)-(meal|workout)-(description|calories|activity|notes|time|duration|distance|pace|type)$/.test(fieldId) ? fieldId : field?.tagName,
-      windowY: window.scrollY, layout: [innerWidth, innerHeight],
+      windowY: window.scrollY, layout: [window.innerWidth, window.innerHeight],
       visual: vv && { height: vv.height, width: vv.width, pageTop: vv.pageTop, offsetTop: vv.offsetTop, scale: vv.scale },
       backdrop: rect(sheet.parentElement), sheet: rect(sheet), actions: rect(sheet.querySelector('.entry-form-footer')),
       body: rect(body), control: rect(field), internalScroll: body?.scrollTop,
@@ -28,6 +28,7 @@ export function captureKeyboardGeometry(version: string) {
     window.addEventListener(type, capture);
     window.visualViewport?.addEventListener(type, capture);
   }
+  window.addEventListener('calori-reset-geometry', () => { samples.length = 0; });
   window.addEventListener('calori-export-geometry', () => {
     const url = URL.createObjectURL(new Blob([JSON.stringify({ version, samples }, null, 2)], { type: 'application/json' }));
     const link = document.createElement('a');
