@@ -281,7 +281,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const [workDuration, setWorkDuration] = useState<number | ''>('');
   const [workCals, setWorkCals] = useState<number | ''>('');
   const [workDetails, setWorkDetails] = useState('');
-  const [workDistance, setWorkDistance] = useState<number | ''>('');
+  const [workDistance, setWorkDistance] = useState('');
   const [workPace, setWorkPace] = useState('');
   const [workTime, setWorkTime] = useState('');
   const [savingWorkout, setSavingWorkout] = useState(false);
@@ -534,7 +534,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     setWorkDuration(w.duration);
     setWorkCals(w.calories);
     setWorkDetails(w.details || '');
-    setWorkDistance(w.distance || '');
+    setWorkDistance(w.distance?.toString() ?? '');
     setWorkPace(w.pace || '');
     setWorkTime(w.time || format(new Date(), 'HH:mm'));
   };
@@ -824,10 +824,10 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   {workEstimateControls}
                   {selectedWorkCategory !== null && ['Correr', 'Natación', 'Caminata'].includes(selectedWorkCategory) && (<div className="entry-workout-metrics flex gap-4">
                     <div className="entry-field entry-distance">
-                      <label className="entry-field-label" htmlFor="add-workout-distance">Distancia</label>
+                      <label className="entry-field-label" htmlFor="add-workout-distance">Distancia (km)</label>
                       <input id="add-workout-distance"
-                        type="number" step="0.01" min="0" placeholder="Distancia (km) opc."
-                        value={workDistance} onChange={e => setWorkDistance(e.target.value === '' ? '' : Number(e.target.value))}
+                        type="number" step="any" min="0" inputMode="decimal" placeholder="Opcional"
+                        value={workDistance} onChange={e => setWorkDistance(e.target.value)}
                         className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
                       />
                     </div>
@@ -1311,10 +1311,10 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               {workEstimateControls}
               <div className="entry-workout-metrics flex gap-4">
                 <div className="entry-field entry-distance">
-                  <label className="entry-field-label" htmlFor="edit-workout-distance">Distancia</label>
+                  <label className="entry-field-label" htmlFor="edit-workout-distance">Distancia (km)</label>
                   <input id="edit-workout-distance"
-                    type="number" step="0.1" inputMode="decimal" placeholder="Distancia (km) opcional"
-                    value={workDistance} onChange={e => setWorkDistance(Number(e.target.value))}
+                    type="number" step="any" min="0" inputMode="decimal" placeholder="Opcional"
+                    value={workDistance} onChange={e => setWorkDistance(e.target.value)}
                     className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
                   />
                 </div>
