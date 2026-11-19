@@ -240,7 +240,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     }), Math.max(0, deadline - Date.now()));
     return () => clearTimeout(timer);
   }, [deadline, estimateModality]);
-  const estimationBlocked = deadline > Date.now() || estimateFailure?.status === 401
+  const estimationBlocked = !!deadline || estimateFailure?.status === 401
     || (estimateFailure?.status === 429 && !estimateFailure.retryAfterSeconds);
   const estimationFailed = (error: unknown) => {
     if (error instanceof AIRequestError) {
@@ -547,8 +547,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     path={mealPhotoPath}
     onChange={blob => { reviseEstimate('mealInput'); setMealPhoto(blob); setMealPhotoRemoved(false); }}
     onRemove={() => { reviseEstimate('mealInput'); setMealPhoto(null); setMealPhotoRemoved(true); }} onBusyChange={setPhotoProcessing} />;
-  const estimateNotice = (estimateFailure || deadline > Date.now()) && <p role="status" className="text-sm">
-    {estimateFailure?.message} {deadline > Date.now() && 'Podés reintentar a las ' + new Date(deadline).toLocaleTimeString('es-AR') + '.'} Podés ingresar las calorías manualmente.
+  const estimateNotice = (estimateFailure || !!deadline) && <p role="status" className="text-sm">
+    {estimateFailure?.message} {!!deadline && 'Podés reintentar a las ' + new Date(deadline).toLocaleTimeString('es-AR') + '.'} Podés ingresar las calorías manualmente.
   </p>;
   const mealEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
     <button type="button" disabled={estimating || estimationBlocked} onClick={() => void handleEstimateMeal()}
