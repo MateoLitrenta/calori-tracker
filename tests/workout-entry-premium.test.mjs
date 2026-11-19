@@ -478,12 +478,17 @@ test('session, quota and provider errors retain drafts, preserve public error co
     const view = await mount(t, { estimateWorkout: async () => { throw error; } });
     await view.open(); await view.fill('add-workout-activity', longActivity); await view.fill('add-workout-duration', '50');
     await view.fill('add-workout-calories', '450'); await view.estimate();
-    assert.equal(view.requests.length, 1); assert.equal(view.saves.length, 0); assert.equal(view.errors.length, 1);
-    if (error instanceof AIRequestError) assert.equal(view.errors[0], error.message);
-    else assert.equal(view.errors[0].includes('private-provider-token-or-content'), false);
+    assert.equal(view.requests.length, 1); assert.equal(view.saves.length, 0); assert.deepEqual(view.errors, []);
+    const controls = document.querySelector('form .entry-ai-controls');
+    const notice = controls.querySelector('[role="status"]').textContent;
+    if (error instanceof AIRequestError) assert.ok(notice.includes(error.message));
+    assert.match(notice, /Podés ingresar las calorías manualmente/);
+    assert.doesNotMatch(notice, /private-provider-token-or-content/);
     assert.equal(document.getElementById('add-workout-activity').value, longActivity);
     assert.equal(document.getElementById('add-workout-calories').value, '450');
-    assert.equal([...document.querySelectorAll('button')].find(node => node.textContent.includes('Estimar con IA')).disabled, false);
+    const blocked = [401, 429].includes(error.status);
+    assert.equal(controls.querySelector('button').disabled, blocked);
+    if (!blocked) assert.match(controls.querySelector('button').textContent, /Reintentar estimación/);
     await view.click(document.querySelector('[aria-label="Cerrar formulario"]') || view.button('+ Ejercicio'));
     await view.dispose();
   }
