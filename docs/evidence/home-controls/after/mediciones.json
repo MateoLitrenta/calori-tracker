@@ -1,0 +1,666 @@
+{
+  "layout": [
+    {
+      "width": 375,
+      "measurements": {
+        "Inicio": {
+          "carga": [
+            0,
+            375
+          ],
+          "contenido": [
+            0,
+            375
+          ],
+          "encabezado": [
+            0,
+            375
+          ]
+        },
+        "Datos": {
+          "carga": [
+            16,
+            359
+          ],
+          "contenido": [
+            16,
+            359
+          ]
+        },
+        "Perfil": {
+          "carga": [
+            16,
+            359
+          ],
+          "contenido": [
+            16,
+            359
+          ]
+        },
+        "Coach": {
+          "carga": [
+            0,
+            375
+          ],
+          "contenido": [
+            0,
+            375
+          ]
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "measurements": {
+        "Inicio": {
+          "carga": [
+            280,
+            1406
+          ],
+          "contenido": [
+            280,
+            1406
+          ],
+          "encabezado": [
+            280,
+            1406
+          ]
+        },
+        "Datos": {
+          "carga": [
+            280,
+            1406
+          ],
+          "contenido": [
+            280,
+            1406
+          ]
+        },
+        "Perfil": {
+          "carga": [
+            280,
+            1406
+          ],
+          "contenido": [
+            280,
+            1406
+          ]
+        },
+        "Coach": {
+          "carga": [
+            280,
+            1406
+          ],
+          "contenido": [
+            280,
+            1406
+          ]
+        }
+      },
+      "controls": {
+        "Datos": {
+          "group": [
+            "rgb(235, 236, 228)",
+            "1px solid rgb(203, 206, 196)",
+            "6px",
+            "4px",
+            "4px"
+          ],
+          "active": [
+            "ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "14px",
+            "650",
+            "21px",
+            "4px 16px",
+            "rgb(36, 27, 20)"
+          ],
+          "indicator": [
+            "rgb(255, 154, 83)",
+            "6px"
+          ]
+        },
+        "Inicio": {
+          "group": [
+            "rgb(235, 236, 228)",
+            "1px solid rgb(203, 206, 196)",
+            "6px",
+            "4px",
+            "4px"
+          ],
+          "active": [
+            "ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "14px",
+            "650",
+            "21px",
+            "4px 16px",
+            "rgb(36, 27, 20)"
+          ],
+          "indicator": [
+            "rgb(255, 154, 83)",
+            "6px"
+          ]
+        },
+        "Perfil": {
+          "group": [
+            "rgb(235, 236, 228)",
+            "1px solid rgb(203, 206, 196)",
+            "6px",
+            "4px",
+            "4px"
+          ],
+          "active": [
+            "ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "14px",
+            "650",
+            "21px",
+            "4px 16px",
+            "rgb(36, 27, 20)"
+          ],
+          "indicator": [
+            "rgb(255, 154, 83)",
+            "6px"
+          ]
+        }
+      }
+    },
+    {
+      "width": 1920,
+      "measurements": {
+        "Inicio": {
+          "carga": [
+            363,
+            1803
+          ],
+          "contenido": [
+            363,
+            1803
+          ],
+          "encabezado": [
+            363,
+            1803
+          ]
+        },
+        "Datos": {
+          "carga": [
+            363,
+            1803
+          ],
+          "contenido": [
+            363,
+            1803
+          ]
+        },
+        "Perfil": {
+          "carga": [
+            363,
+            1803
+          ],
+          "contenido": [
+            363,
+            1803
+          ]
+        },
+        "Coach": {
+          "carga": [
+            363,
+            1803
+          ],
+          "contenido": [
+            363,
+            1803
+          ]
+        }
+      }
+    }
+  ],
+  "calendar": [
+    {
+      "theme": "light",
+      "period": "Semana",
+      "cases": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "color": "rgb(159, 217, 178)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "color": "rgb(227, 229, 228)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "color": "rgb(232, 173, 168)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "color": "rgb(159, 217, 178)",
+          "disabled": false,
+          "today": "date"
+        },
+        {
+          "date": "2026-11-14",
+          "state": "future",
+          "balance": "empty",
+          "label": "sábado 14 de noviembre de 2026 · Fecha futura · No disponible",
+          "color": null,
+          "disabled": true,
+          "today": null
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "period": "Mes",
+      "cases": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "color": "rgb(159, 217, 178)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "color": "rgb(227, 229, 228)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "color": "rgb(232, 173, 168)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "color": "rgb(159, 217, 178)",
+          "disabled": false,
+          "today": "date"
+        },
+        {
+          "date": "2026-11-14",
+          "state": "future",
+          "balance": "empty",
+          "label": "sábado 14 de noviembre de 2026 · Fecha futura · No disponible",
+          "color": null,
+          "disabled": true,
+          "today": null
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "period": "Semana",
+      "cases": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "color": "rgb(57, 104, 78)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "color": "rgb(54, 59, 57)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "color": "rgb(115, 70, 74)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "color": "rgb(57, 104, 78)",
+          "disabled": false,
+          "today": "date"
+        },
+        {
+          "date": "2026-11-14",
+          "state": "future",
+          "balance": "empty",
+          "label": "sábado 14 de noviembre de 2026 · Fecha futura · No disponible",
+          "color": null,
+          "disabled": true,
+          "today": null
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "period": "Mes",
+      "cases": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "color": "rgb(57, 104, 78)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "color": "rgb(54, 59, 57)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "color": "rgb(115, 70, 74)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "color": "rgb(57, 104, 78)",
+          "disabled": false,
+          "today": "date"
+        },
+        {
+          "date": "2026-11-14",
+          "state": "future",
+          "balance": "empty",
+          "label": "sábado 14 de noviembre de 2026 · Fecha futura · No disponible",
+          "color": null,
+          "disabled": true,
+          "today": null
+        }
+      ]
+    }
+  ],
+  "motion": [
+    {
+      "theme": "light",
+      "tab": "Datos",
+      "duration": "0.2s",
+      "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "reduced": "0s"
+    },
+    {
+      "theme": "light",
+      "tab": "Inicio",
+      "duration": "0.2s",
+      "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "reduced": "0s"
+    },
+    {
+      "theme": "light",
+      "tab": "Perfil",
+      "duration": "0.2s",
+      "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "reduced": "0s"
+    },
+    {
+      "theme": "dark",
+      "tab": "Datos",
+      "duration": "0.2s",
+      "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "reduced": "0s"
+    },
+    {
+      "theme": "dark",
+      "tab": "Inicio",
+      "duration": "0.2s",
+      "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "reduced": "0s"
+    },
+    {
+      "theme": "dark",
+      "tab": "Perfil",
+      "duration": "0.2s",
+      "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "reduced": "0s"
+    }
+  ],
+  "mobileLabels": [
+    {
+      "width": 320,
+      "tab": "Datos",
+      "labels": [
+        {
+          "label": "Semana",
+          "lines": 1,
+          "fits": true
+        },
+        {
+          "label": "Mes",
+          "lines": 1,
+          "fits": true
+        },
+        {
+          "label": "Año",
+          "lines": 1,
+          "fits": true
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "tab": "Inicio",
+      "labels": [
+        {
+          "label": "Semana",
+          "lines": 1,
+          "fits": true
+        },
+        {
+          "label": "Mes",
+          "lines": 1,
+          "fits": true
+        },
+        {
+          "label": "Año",
+          "lines": 1,
+          "fits": true
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "tab": "Perfil",
+      "labels": [
+        {
+          "label": "Sistema",
+          "lines": 1,
+          "fits": true
+        },
+        {
+          "label": "Claro",
+          "lines": 1,
+          "fits": true
+        },
+        {
+          "label": "Oscuro",
+          "lines": 1,
+          "fits": true
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "tab": "Datos",
+      "labels": [
+        {
+          "label": "Semana",
+          "lines": 1,
+          "fits": true
+        },
+        {
+          "label": "Mes",
+          "lines": 1,
+          "fits": true
+        },
+        {
+          "label": "Año",
+          "lines": 1,
+          "fits": true
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "tab": "Inicio",
+      "labels": [
+        {
+          "label": "Semana",
+          "lines": 1,
+          "fits": true
+        },
+        {
+          "label": "Mes",
+          "lines": 1,
+          "fits": true
+        },
+        {
+          "label": "Año",
+          "lines": 1,
+          "fits": true
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "tab": "Perfil",
+      "labels": [
+        {
+          "label": "Sistema",
+          "lines": 1,
+          "fits": true
+        },
+        {
+          "label": "Claro",
+          "lines": 1,
+          "fits": true
+        },
+        {
+          "label": "Oscuro",
+          "lines": 1,
+          "fits": true
+        }
+      ]
+    }
+  ]
+}

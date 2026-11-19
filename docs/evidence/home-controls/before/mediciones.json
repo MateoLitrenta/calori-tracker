@@ -1,0 +1,431 @@
+{
+  "layout": [
+    {
+      "width": 375,
+      "measurements": {
+        "Inicio": {
+          "carga": [
+            0,
+            375
+          ],
+          "contenido": [
+            0,
+            375
+          ],
+          "encabezado": [
+            0,
+            375
+          ]
+        },
+        "Datos": {
+          "carga": [
+            16,
+            359
+          ],
+          "contenido": [
+            16,
+            359
+          ]
+        },
+        "Perfil": {
+          "carga": [
+            16,
+            359
+          ],
+          "contenido": [
+            16,
+            359
+          ]
+        },
+        "Coach": {
+          "carga": [
+            0,
+            375
+          ],
+          "contenido": [
+            0,
+            375
+          ]
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "measurements": {
+        "Inicio": {
+          "carga": [
+            331,
+            1355
+          ],
+          "contenido": [
+            331,
+            1355
+          ],
+          "encabezado": [
+            331,
+            1355
+          ]
+        },
+        "Datos": {
+          "carga": [
+            395,
+            1291
+          ],
+          "contenido": [
+            280,
+            1406
+          ]
+        },
+        "Perfil": {
+          "carga": [
+            395,
+            1291
+          ],
+          "contenido": [
+            280,
+            1406
+          ]
+        },
+        "Coach": {
+          "carga": [
+            280,
+            1406
+          ],
+          "contenido": [
+            280,
+            1406
+          ]
+        }
+      }
+    },
+    {
+      "width": 1920,
+      "measurements": {
+        "Inicio": {
+          "carga": [
+            571,
+            1595
+          ],
+          "contenido": [
+            571,
+            1595
+          ],
+          "encabezado": [
+            571,
+            1595
+          ]
+        },
+        "Datos": {
+          "carga": [
+            635,
+            1531
+          ],
+          "contenido": [
+            363,
+            1803
+          ]
+        },
+        "Perfil": {
+          "carga": [
+            635,
+            1531
+          ],
+          "contenido": [
+            363,
+            1803
+          ]
+        },
+        "Coach": {
+          "carga": [
+            363,
+            1803
+          ],
+          "contenido": [
+            363,
+            1803
+          ]
+        }
+      }
+    }
+  ],
+  "calendar": [
+    {
+      "theme": "light",
+      "period": "Semana",
+      "cases": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "color": "rgb(55, 86, 120)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "color": "rgb(116, 123, 119)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "color": "rgb(128, 81, 47)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "color": "rgb(55, 86, 120)",
+          "disabled": false,
+          "today": "date"
+        },
+        {
+          "date": "2026-11-14",
+          "state": "future",
+          "balance": "empty",
+          "label": "sábado 14 de noviembre de 2026 · Fecha futura · No disponible",
+          "color": null,
+          "disabled": true,
+          "today": null
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "period": "Mes",
+      "cases": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "color": "rgb(55, 86, 120)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "color": "rgb(116, 123, 119)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "color": "rgb(128, 81, 47)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "color": "rgb(55, 86, 120)",
+          "disabled": false,
+          "today": "date"
+        },
+        {
+          "date": "2026-11-14",
+          "state": "future",
+          "balance": "empty",
+          "label": "sábado 14 de noviembre de 2026 · Fecha futura · No disponible",
+          "color": null,
+          "disabled": true,
+          "today": null
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "period": "Semana",
+      "cases": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "color": "rgb(154, 189, 225)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "color": "rgb(140, 150, 144)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "color": "rgb(221, 174, 124)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "color": "rgb(154, 189, 225)",
+          "disabled": false,
+          "today": "date"
+        },
+        {
+          "date": "2026-11-14",
+          "state": "future",
+          "balance": "empty",
+          "label": "sábado 14 de noviembre de 2026 · Fecha futura · No disponible",
+          "color": null,
+          "disabled": true,
+          "today": null
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "period": "Mes",
+      "cases": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "color": "rgb(154, 189, 225)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "color": "rgb(140, 150, 144)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "color": null,
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "color": "rgb(221, 174, 124)",
+          "disabled": false,
+          "today": null
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "color": "rgb(154, 189, 225)",
+          "disabled": false,
+          "today": "date"
+        },
+        {
+          "date": "2026-11-14",
+          "state": "future",
+          "balance": "empty",
+          "label": "sábado 14 de noviembre de 2026 · Fecha futura · No disponible",
+          "color": null,
+          "disabled": true,
+          "today": null
+        }
+      ]
+    }
+  ],
+  "motion": [],
+  "mobileLabels": []
+}
