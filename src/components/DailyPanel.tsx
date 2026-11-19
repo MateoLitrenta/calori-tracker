@@ -22,6 +22,12 @@ type WorkoutCategory = typeof workoutCategories[number];
 const exactWorkoutCategory = (activity: string) => workoutCategories.find(category => category.toLowerCase() === activity.trim().toLowerCase()) ?? null;
 type EntryEstimate = { calories: number; assumptions: string[]; context: string; inputVersion: number; calorieVersion: number; contextKey: string };
 
+function estimateRecovery(error: unknown) {
+  if (!(error instanceof AIRequestError)) return { message: 'No pudimos estimar las calorías.' };
+  const retryAt = error.retryAfterSeconds ? Date.now() + error.retryAfterSeconds * 1000 : undefined;
+  return { message: error.message, status: error.status, retryAt };
+}
+
 type EntryReceipt = {
   id: string; date: string; name: string; calories: number; estimated: boolean;
 } & ({ kind: 'meal'; replacedPhoto: boolean } | { kind: 'workout'; duration: number });
@@ -227,7 +233,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const [mealTime, setMealTime] = useState('');
   const [mealPhoto, setMealPhoto] = useState<Blob | null>(null);
   const [mealPhotoRemoved, setMealPhotoRemoved] = useState(false);
-  const [estimateFailure, setEstimateFailure] = useState<{ message: string; status?: number; retryAfterSeconds?: number } | null>(null);
+  const [estimateFailure, setEstimateFailure] = useState<ReturnType<typeof estimateRecovery> | null>(null);
   const [retryDeadlines, setRetryDeadlines] = useState<Record<string, number>>({});
   const estimateModality = profile.id + (mealPhoto && (activeTab === 'comida' || editingMealId) ? ':image' : ':text');
   const deadline = retryDeadlines[estimateModality] ?? 0;
@@ -241,15 +247,12 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     return () => clearTimeout(timer);
   }, [deadline, estimateModality]);
   const estimationBlocked = !!deadline || estimateFailure?.status === 401
-    || (estimateFailure?.status === 429 && !estimateFailure.retryAfterSeconds);
+    || (estimateFailure?.status === 429 && !estimateFailure.retryAt);
   const estimationFailed = (error: unknown) => {
-    if (error instanceof AIRequestError) {
-      setEstimateFailure({ message: error.message, status: error.status, retryAfterSeconds: error.retryAfterSeconds });
-      if (error.retryAfterSeconds) {
-        const until = Date.now() + error.retryAfterSeconds * 1000;
-        setRetryDeadlines(previous => ({ ...previous, [estimateModality]: until }));
-      }
-    } else setEstimateFailure({ message: 'No pudimos estimar las calorías.' });
+    const failure = estimateRecovery(error);
+    setEstimateFailure(failure);
+    const until = failure.retryAt;
+    if (until) setRetryDeadlines(previous => ({ ...previous, [estimateModality]: until }));
   };
   const [workEstimate, setWorkEstimate] = useState<EntryEstimate | null>(null);
   const [mealEstimate, setMealEstimate] = useState<EntryEstimate | null>(null);
