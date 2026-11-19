@@ -822,6 +822,33 @@ test('AI estimation forms show session/quota/service errors and retain drafts wi
   }
 });
 
+test('Retry-After expires without sending a request until the user retries', async t => {
+  mobileEnvironment(t);
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'], now: new Date('2026-11-13T12:00:00Z') });
+  let calls = 0;
+  t.mock.method(globalThis.__entryServices, 'estimateMeal', async () => {
+    calls++;
+    if (calls === 1) throw new AIRequestError('Servicio temporalmente ocupado.', 503, 'service_unavailable', 60);
+    return { calories: 321, assumptions: [] };
+  });
+  const view = mount({ profile, record: base, dateStr, records: {}, onUpdateRecord: () => assert.fail('unexpected save') }, InteractiveDailyPanel, true);
+  const render = () => { const tree = view(); view.flushEffects(); return tree; };
+  const estimate = () => node(render(), e => e.props.className?.startsWith('entry-ai-action'));
+  open(view, '+ Comida'); fill(view, 'Ej. pollo con arroz y verduras', 'Arroz');
+  estimate().props.onClick(); await new Promise(setImmediate);
+  assert.equal(estimate().props.disabled, true);
+  t.mock.timers.tick(59999);
+  estimate().props.onClick(); assert.equal(calls, 1);
+  t.mock.timers.tick(1);
+  const retry = estimate();
+  assert.equal(retry.props.disabled, false);
+  assert.ok(retry.props.children.includes('Reintentar estimación'));
+  assert.equal(calls, 1);
+  retry.props.onClick(); await new Promise(setImmediate);
+  assert.equal(calls, 2); assert.equal(field(view, 'Kcal').props.value, 321);
+  view.unmount();
+});
+
 test('photo upload failures keep the meal draft and image available for retry', async t => {
   mobileEnvironment(t);
   const uploads = [];
