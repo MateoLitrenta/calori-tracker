@@ -150,7 +150,7 @@ test('mobile form scrolls to the caret after paste, selection and keyboard resiz
   let saves = 0;
   function Form() {
     const [value, setValue] = useState('');
-    return React.createElement(EntryFormShell, { title: 'Agregar comida', onClose() {} },
+    return React.createElement(EntryFormShell, { title: 'Agregar comida', fitness: true, onClose() {} },
       React.createElement('form', { className: 'entry-form', onSubmit: event => { event.preventDefault(); saves++; } },
         React.createElement('div', { className: 'entry-form-content' },
           React.createElement('div', { className: 'entry-field' }, React.createElement(AutoResizeTextarea,
@@ -169,14 +169,15 @@ test('mobile form scrolls to the caret after paste, selection and keyboard resiz
     const top = field.getBoundingClientRect().top + 8 + row * 20;
     const visible = content.getBoundingClientRect();
     assert.ok(top >= visible.top, `Caret top ${top} must stay below scrollport top ${visible.top}`);
-    assert.ok(top + 20 <= visible.bottom, `Caret bottom ${top + 20} must stay above scrollport bottom ${visible.bottom}`);
+    const readingEnd = (visible.top + visible.bottom) / 2;
+    assert.ok(top + 20 <= readingEnd, `Caret bottom ${top + 20} must stay above reading limit ${readingEnd}`);
   };
   field.focus();
   viewport.height = 360;
   await act(() => viewport.dispatchEvent(new window.Event('resize')));
   const dialog = document.querySelector('[role="dialog"]');
   assert.equal(dialog.style.getPropertyValue('--entry-viewport-height'), '360px');
-  assert.equal(dialog.style.getPropertyValue('--entry-keyboard-offset'), `${window.innerHeight - 360}px`);
+  assert.equal(dialog.parentElement.style.getPropertyValue('--entry-page-top'), '0px');
   const text = Array.from({ length: 31 }, (_, i) => `Línea ${i}`).join('\n');
   await act(() => {
     Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(field, text);
@@ -190,12 +191,13 @@ test('mobile form scrolls to the caret after paste, selection and keyboard resiz
   const atEnd = content.scrollTop;
   // Opening/resizing the keyboard with the cursor at the beginning must not jump to line 31.
   field.setSelectionRange(0, 0);
-  viewport.height = 320; viewport.offsetTop = 10;
+  viewport.height = 320; viewport.offsetTop = 10; viewport.pageTop = 835;
   await act(() => viewport.dispatchEvent(new window.Event('resize')));
+  await env.flushFrames();
   assert.ok(content.scrollTop < atEnd);
   assert.equal(field.selectionStart, 0); assert.equal(document.activeElement, field);
   assertCaretVisible();
-  assert.equal(dialog.style.getPropertyValue('--entry-keyboard-offset'), `${window.innerHeight - 330}px`);
+  assert.equal(dialog.parentElement.style.getPropertyValue('--entry-page-top'), '835px');
   field.setSelectionRange(text.length, text.length);
   await act(() => field.dispatchEvent(new window.Event('select', { bubbles: true })));
   await env.flushFrames(); assert.ok(content.scrollTop > atEnd);

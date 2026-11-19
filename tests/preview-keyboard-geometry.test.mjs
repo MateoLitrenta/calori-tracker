@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { JSDOM } from 'jsdom';
+import { captureKeyboardGeometry } from '../src/previewKeyboardGeometry.ts';
+
+test('opted-in geometry export contains only event and geometry data, bounded to the latest 800 samples', async t => {
+  const dom = new JSDOM('<div><section class="entry-bottom-sheet"><form class="entry-form"><div class="entry-form-content"><textarea id="add-workout-notes"></textarea></div><footer class="entry-form-footer"></footer></form></section></div>');
+  t.after(() => dom.window.close());
+  t.mock.method(URL, 'createObjectURL', blob => { download = blob; return 'blob:fixture'; });
+  const previousWindow = globalThis.window, previousDocument = globalThis.document;
+  globalThis.window = dom.window;
+  globalThis.document = dom.window.document;
+  t.after(() => { globalThis.window = previousWindow; globalThis.document = previousDocument; });
+  const field = document.querySelector('textarea');
+  field.value = 'texto-privado-sintetico';
+  field.focus();
+  t.mock.method(window.HTMLAnchorElement.prototype, 'click', function () { filename = this.download; });
+  let download, filename;
+  captureKeyboardGeometry('1234567890abcdef');
+  for (let i = 0; i < 805; i++) field.dispatchEvent(new window.Event('input', { bubbles: true }));
+  window.dispatchEvent(new window.Event('calori-export-geometry'));
+  assert.equal(filename, 'calori-teclado-12345678.json');
+  const json = await download.text();
+  assert.ok(!json.includes(field.value));
+  const { samples } = JSON.parse(json);
+  assert.equal(samples.length, 800);
+  assert.equal(samples.at(-1).field, 'add-workout-notes');
+  for (const key of ['backdrop', 'sheet', 'body', 'actions', 'control']) assert.equal(samples.at(-1)[key].length, 4);
+  window.dispatchEvent(new window.Event('calori-reset-geometry'));
+  window.dispatchEvent(new window.Event('calori-export-geometry'));
+  assert.deepEqual(JSON.parse(await download.text()).samples, []);
+});

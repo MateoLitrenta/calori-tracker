@@ -1,0 +1,6632 @@
+[
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "alta-descripcion",
+    "field": "add-meal-description",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 220,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      254.40000000000003,
+      274.8
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      92,
+      447
+    ],
+    "windowScroll": 657,
+    "mainScroll": 0,
+    "bodyScroll": 30,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 418,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "alta-calorias",
+    "field": "add-meal-calories",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 363,
+      "w": 138.96875,
+      "h": 48
+    },
+    "lineRange": [
+      366,
+      408
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      471
+    ],
+    "windowScroll": 884,
+    "mainScroll": 0,
+    "bodyScroll": 198,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 443,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "edicion-descripcion",
+    "field": "edit-meal-description",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 220,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      344,
+      364.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      92,
+      447
+    ],
+    "windowScroll": 657,
+    "mainScroll": 495,
+    "bodyScroll": 30,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 418,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "ejercicio-actividad",
+    "field": "add-workout-activity",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 285,
+      "w": 339,
+      "h": 48
+    },
+    "lineRange": [
+      297,
+      317.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      447
+    ],
+    "windowScroll": 884,
+    "mainScroll": 448,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 453,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "ejercicio-duracion",
+    "field": "add-workout-duration",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 284,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      287,
+      329
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      48,
+      471
+    ],
+    "windowScroll": 318,
+    "mainScroll": 448,
+    "bodyScroll": 114,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 364,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "ejercicio-calorias",
+    "field": "add-workout-calories",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 193.5,
+      "y": 328,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      331,
+      373
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      92,
+      471
+    ],
+    "windowScroll": 657,
+    "mainScroll": 448,
+    "bodyScroll": 114,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 408,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "ejercicio-notas",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 255,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      379,
+      399.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      447
+    ],
+    "windowScroll": 884,
+    "mainScroll": 448,
+    "bodyScroll": 532,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 453,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "ejercicio-notas-A",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 176,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      300,
+      320.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      48,
+      447
+    ],
+    "windowScroll": 318,
+    "mainScroll": 448,
+    "bodyScroll": 532,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 374,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "ejercicio-notas-B",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 220,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      344,
+      364.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      92,
+      447
+    ],
+    "windowScroll": 657,
+    "mainScroll": 448,
+    "bodyScroll": 532,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 418,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "ejercicio-notas-C",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 255,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      379,
+      399.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      447
+    ],
+    "windowScroll": 884,
+    "mainScroll": 448,
+    "bodyScroll": 532,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 453,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "ejercicio-notas-final",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 176,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      300,
+      320.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      48,
+      447
+    ],
+    "windowScroll": 318,
+    "mainScroll": 448,
+    "bodyScroll": 532,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 374,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "distancia-0",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 224,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      227,
+      269
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      92,
+      471
+    ],
+    "windowScroll": 657,
+    "mainScroll": 448,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 408,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "distancia-1",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 259,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      262,
+      304
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      471
+    ],
+    "windowScroll": 884,
+    "mainScroll": 448,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 443,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "distancia-2",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 180,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      183,
+      225
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      48,
+      471
+    ],
+    "windowScroll": 318,
+    "mainScroll": 448,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 364,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "distancia-3",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 224,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      227,
+      269
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      92,
+      471
+    ],
+    "windowScroll": 657,
+    "mainScroll": 448,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 408,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "ejercicio-distancia-final",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 265,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      268,
+      310
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      471
+    ],
+    "windowScroll": 884,
+    "mainScroll": 448,
+    "bodyScroll": 438,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 443,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "step": "peso",
+    "field": "_r_2_-weight",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 16,
+      "y": 285,
+      "w": 343,
+      "h": 48
+    },
+    "lineRange": [
+      288,
+      330
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      471
+    ],
+    "windowScroll": 884,
+    "mainScroll": 448,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 443,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "alta-descripcion",
+    "field": "add-meal-description",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 220,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      254.40000000000003,
+      274.8
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      92,
+      447
+    ],
+    "windowScroll": 657,
+    "mainScroll": 0,
+    "bodyScroll": 30,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 418,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "alta-calorias",
+    "field": "add-meal-calories",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 363,
+      "w": 138.96875,
+      "h": 48
+    },
+    "lineRange": [
+      366,
+      408
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      471
+    ],
+    "windowScroll": 884,
+    "mainScroll": 0,
+    "bodyScroll": 198,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 443,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "edicion-descripcion",
+    "field": "edit-meal-description",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 220,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      344,
+      364.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      92,
+      447
+    ],
+    "windowScroll": 657,
+    "mainScroll": 495,
+    "bodyScroll": 30,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 418,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "ejercicio-actividad",
+    "field": "add-workout-activity",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 285,
+      "w": 339,
+      "h": 48
+    },
+    "lineRange": [
+      297,
+      317.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      447
+    ],
+    "windowScroll": 884,
+    "mainScroll": 448,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 453,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "ejercicio-duracion",
+    "field": "add-workout-duration",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 284,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      287,
+      329
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      48,
+      471
+    ],
+    "windowScroll": 318,
+    "mainScroll": 448,
+    "bodyScroll": 114,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 364,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "ejercicio-calorias",
+    "field": "add-workout-calories",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 193.5,
+      "y": 328,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      331,
+      373
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      92,
+      471
+    ],
+    "windowScroll": 657,
+    "mainScroll": 448,
+    "bodyScroll": 114,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 408,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "ejercicio-notas",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 255,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      379,
+      399.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      447
+    ],
+    "windowScroll": 884,
+    "mainScroll": 448,
+    "bodyScroll": 532,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 453,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "ejercicio-notas-A",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 176,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      300,
+      320.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      48,
+      447
+    ],
+    "windowScroll": 318,
+    "mainScroll": 448,
+    "bodyScroll": 532,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 374,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "ejercicio-notas-B",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 220,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      344,
+      364.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      92,
+      447
+    ],
+    "windowScroll": 657,
+    "mainScroll": 448,
+    "bodyScroll": 532,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 418,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "ejercicio-notas-C",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 255,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      379,
+      399.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      447
+    ],
+    "windowScroll": 884,
+    "mainScroll": 448,
+    "bodyScroll": 532,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 453,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "ejercicio-notas-final",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 176,
+      "w": 339,
+      "h": 154
+    },
+    "lineRange": [
+      300,
+      320.4
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      48,
+      447
+    ],
+    "windowScroll": 318,
+    "mainScroll": 448,
+    "bodyScroll": 532,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 447
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 375,
+      "h": 327
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 374,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "distancia-0",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 224,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      227,
+      269
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      92,
+      471
+    ],
+    "windowScroll": 657,
+    "mainScroll": 448,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 408,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "distancia-1",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 259,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      262,
+      304
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      471
+    ],
+    "windowScroll": 884,
+    "mainScroll": 448,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 443,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "distancia-2",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 180,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      183,
+      225
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      48,
+      471
+    ],
+    "windowScroll": 318,
+    "mainScroll": 448,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 364,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "distancia-3",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 224,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      227,
+      269
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      92,
+      471
+    ],
+    "windowScroll": 657,
+    "mainScroll": 448,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 408,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "ejercicio-distancia-final",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 18,
+      "y": 265,
+      "w": 163.5,
+      "h": 48
+    },
+    "lineRange": [
+      268,
+      310
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      471
+    ],
+    "windowScroll": 884,
+    "mainScroll": 448,
+    "bodyScroll": 438,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 443,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "step": "peso",
+    "field": "_r_2_-weight",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 16,
+      "y": 285,
+      "w": 343,
+      "h": 48
+    },
+    "lineRange": [
+      288,
+      330
+    ],
+    "layout": [
+      375,
+      812
+    ],
+    "visual": [
+      127,
+      471
+    ],
+    "windowScroll": 884,
+    "mainScroll": 448,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 812
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 471
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 375,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 375,
+      "h": 351
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 375,
+      "h": 57
+    },
+    "obstructionTop": 443,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "alta-descripcion",
+    "field": "add-meal-description",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 190,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      224.4,
+      244.79999999999998
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      92,
+      312
+    ],
+    "windowScroll": 657,
+    "mainScroll": 0,
+    "bodyScroll": 60,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 320,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "alta-calorias",
+    "field": "add-meal-calories",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 292,
+      "w": 103.671875,
+      "h": 48
+    },
+    "lineRange": [
+      295,
+      337
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      329
+    ],
+    "windowScroll": 884,
+    "mainScroll": 0,
+    "bodyScroll": 269,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 347,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "edicion-descripcion",
+    "field": "edit-meal-description",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 152,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      276,
+      296.4
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      92,
+      312
+    ],
+    "windowScroll": 657,
+    "mainScroll": 684,
+    "bodyScroll": 98,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 320,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "ejercicio-actividad",
+    "field": "add-workout-activity",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 285,
+      "w": 296,
+      "h": 48
+    },
+    "lineRange": [
+      297,
+      317.4
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      312
+    ],
+    "windowScroll": 884,
+    "mainScroll": 199,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 355,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "ejercicio-duracion",
+    "field": "add-workout-duration",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 213,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      216,
+      258
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      48,
+      329
+    ],
+    "windowScroll": 318,
+    "mainScroll": 199,
+    "bodyScroll": 185,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 268,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "ejercicio-calorias",
+    "field": "add-workout-calories",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 166,
+      "y": 257,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      260,
+      302
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      92,
+      329
+    ],
+    "windowScroll": 657,
+    "mainScroll": 199,
+    "bodyScroll": 185,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 312,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "ejercicio-notas",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 187,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      311,
+      331.4
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      312
+    ],
+    "windowScroll": 884,
+    "mainScroll": 199,
+    "bodyScroll": 600,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 355,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "ejercicio-notas-A",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 108,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      232,
+      252.39999999999998
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      48,
+      312
+    ],
+    "windowScroll": 318,
+    "mainScroll": 199,
+    "bodyScroll": 600,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 276,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "ejercicio-notas-B",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 152,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      276,
+      296.4
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      92,
+      312
+    ],
+    "windowScroll": 657,
+    "mainScroll": 199,
+    "bodyScroll": 600,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 320,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "ejercicio-notas-C",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 187,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      311,
+      331.4
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      312
+    ],
+    "windowScroll": 884,
+    "mainScroll": 199,
+    "bodyScroll": 600,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 355,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "ejercicio-notas-final",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 108,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      232,
+      252.39999999999998
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      48,
+      312
+    ],
+    "windowScroll": 318,
+    "mainScroll": 199,
+    "bodyScroll": 600,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 276,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "distancia-0",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 224,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      227,
+      269
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      92,
+      329
+    ],
+    "windowScroll": 657,
+    "mainScroll": 199,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 312,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "distancia-1",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 259,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      262,
+      304
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      329
+    ],
+    "windowScroll": 884,
+    "mainScroll": 199,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 347,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "distancia-2",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 180,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      183,
+      225
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      48,
+      329
+    ],
+    "windowScroll": 318,
+    "mainScroll": 199,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 268,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "distancia-3",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 224,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      227,
+      269
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      92,
+      329
+    ],
+    "windowScroll": 657,
+    "mainScroll": 199,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 312,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "ejercicio-distancia-final",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 259,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      262,
+      304
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      329
+    ],
+    "windowScroll": 884,
+    "mainScroll": 199,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 347,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "dark",
+    "step": "peso",
+    "field": "_r_2_-weight",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 16,
+      "y": 289,
+      "w": 288,
+      "h": 48
+    },
+    "lineRange": [
+      292,
+      334
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      329
+    ],
+    "windowScroll": 884,
+    "mainScroll": 199,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 347,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "alta-descripcion",
+    "field": "add-meal-description",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 190,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      224.4,
+      244.79999999999998
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      92,
+      312
+    ],
+    "windowScroll": 657,
+    "mainScroll": 0,
+    "bodyScroll": 60,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 320,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "alta-calorias",
+    "field": "add-meal-calories",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 292,
+      "w": 103.671875,
+      "h": 48
+    },
+    "lineRange": [
+      295,
+      337
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      329
+    ],
+    "windowScroll": 884,
+    "mainScroll": 0,
+    "bodyScroll": 269,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 347,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "edicion-descripcion",
+    "field": "edit-meal-description",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 152,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      276,
+      296.4
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      92,
+      312
+    ],
+    "windowScroll": 657,
+    "mainScroll": 684,
+    "bodyScroll": 98,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 320,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "ejercicio-actividad",
+    "field": "add-workout-activity",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 285,
+      "w": 296,
+      "h": 48
+    },
+    "lineRange": [
+      297,
+      317.4
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      312
+    ],
+    "windowScroll": 884,
+    "mainScroll": 199,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 355,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "ejercicio-duracion",
+    "field": "add-workout-duration",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 213,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      216,
+      258
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      48,
+      329
+    ],
+    "windowScroll": 318,
+    "mainScroll": 199,
+    "bodyScroll": 185,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 268,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "ejercicio-calorias",
+    "field": "add-workout-calories",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 166,
+      "y": 257,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      260,
+      302
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      92,
+      329
+    ],
+    "windowScroll": 657,
+    "mainScroll": 199,
+    "bodyScroll": 185,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 312,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "ejercicio-notas",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 187,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      311,
+      331.4
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      312
+    ],
+    "windowScroll": 884,
+    "mainScroll": 199,
+    "bodyScroll": 600,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 355,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "ejercicio-notas-A",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 108,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      232,
+      252.39999999999998
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      48,
+      312
+    ],
+    "windowScroll": 318,
+    "mainScroll": 199,
+    "bodyScroll": 600,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 276,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "ejercicio-notas-B",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 152,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      276,
+      296.4
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      92,
+      312
+    ],
+    "windowScroll": 657,
+    "mainScroll": 199,
+    "bodyScroll": 600,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 320,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "ejercicio-notas-C",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 187,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      311,
+      331.4
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      312
+    ],
+    "windowScroll": 884,
+    "mainScroll": 199,
+    "bodyScroll": 600,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 355,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "ejercicio-notas-final",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 108,
+      "w": 296,
+      "h": 154
+    },
+    "lineRange": [
+      232,
+      252.39999999999998
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      48,
+      312
+    ],
+    "windowScroll": 318,
+    "mainScroll": 199,
+    "bodyScroll": 600,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 312
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 320,
+      "h": 192
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 276,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "distancia-0",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 224,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      227,
+      269
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      92,
+      329
+    ],
+    "windowScroll": 657,
+    "mainScroll": 199,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 312,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "distancia-1",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 259,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      262,
+      304
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      329
+    ],
+    "windowScroll": 884,
+    "mainScroll": 199,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 347,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "distancia-2",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 180,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      183,
+      225
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      48,
+      329
+    ],
+    "windowScroll": 318,
+    "mainScroll": 199,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 48,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 168,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 111,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 268,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "distancia-3",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 224,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      227,
+      269
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      92,
+      329
+    ],
+    "windowScroll": 657,
+    "mainScroll": 199,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 92,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 212,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 155,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 312,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "ejercicio-distancia-final",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 12,
+      "y": 259,
+      "w": 142,
+      "h": 48
+    },
+    "lineRange": [
+      262,
+      304
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      329
+    ],
+    "windowScroll": 884,
+    "mainScroll": 199,
+    "bodyScroll": 444,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 347,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "theme": "light",
+    "step": "peso",
+    "field": "_r_2_-weight",
+    "focusRetained": true,
+    "backgroundOpacity": "0",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 16,
+      "y": 285,
+      "w": 288,
+      "h": 48
+    },
+    "lineRange": [
+      288,
+      330
+    ],
+    "layout": [
+      320,
+      568
+    ],
+    "visual": [
+      127,
+      329
+    ],
+    "windowScroll": 884,
+    "mainScroll": 199,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 320,
+      "h": 568
+    },
+    "sheet": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 329
+    },
+    "heading": {
+      "x": 0,
+      "y": 127,
+      "w": 320,
+      "h": 63
+    },
+    "body": {
+      "x": 0,
+      "y": 247,
+      "w": 320,
+      "h": 209
+    },
+    "actions": {
+      "x": 0,
+      "y": 190,
+      "w": 320,
+      "h": 57
+    },
+    "obstructionTop": 347,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": true
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "alta-descripcion",
+    "field": "add-meal-description",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 186.5,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      220.9,
+      241.29999999999998
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 0,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 70.5,
+      "w": 592,
+      "h": 759
+    },
+    "heading": {
+      "x": 425,
+      "y": 71.5,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 146.5,
+      "w": 590,
+      "h": 609
+    },
+    "actions": {
+      "x": 425,
+      "y": 755.5,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "alta-calorias",
+    "field": "add-meal-calories",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 466.5,
+      "w": 230.34375,
+      "h": 48
+    },
+    "lineRange": [
+      469.5,
+      511.5
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 0,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 70.5,
+      "w": 592,
+      "h": 759
+    },
+    "heading": {
+      "x": 425,
+      "y": 71.5,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 146.5,
+      "w": 590,
+      "h": 609
+    },
+    "actions": {
+      "x": 425,
+      "y": 755.5,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "edicion-descripcion",
+    "field": "edit-meal-description",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 158.5,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      282.5,
+      302.9
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 42.5,
+      "w": 592,
+      "h": 815
+    },
+    "heading": {
+      "x": 425,
+      "y": 43.5,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 118.5,
+      "w": 590,
+      "h": 609
+    },
+    "actions": {
+      "x": 425,
+      "y": 727.5,
+      "w": 590,
+      "h": 129
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "ejercicio-actividad",
+    "field": "add-workout-activity",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 206,
+      "w": 554,
+      "h": 48
+    },
+    "lineRange": [
+      218,
+      238.39999999999998
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 90,
+      "w": 592,
+      "h": 720
+    },
+    "heading": {
+      "x": 425,
+      "y": 91,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 166,
+      "w": 590,
+      "h": 570
+    },
+    "actions": {
+      "x": 425,
+      "y": 736,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "ejercicio-duracion",
+    "field": "add-workout-duration",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 352,
+      "w": 271,
+      "h": 48
+    },
+    "lineRange": [
+      355,
+      397
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 90,
+      "w": 592,
+      "h": 720
+    },
+    "heading": {
+      "x": 425,
+      "y": 91,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 166,
+      "w": 590,
+      "h": 570
+    },
+    "actions": {
+      "x": 425,
+      "y": 736,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "ejercicio-calorias",
+    "field": "add-workout-calories",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 726,
+      "y": 352,
+      "w": 271,
+      "h": 48
+    },
+    "lineRange": [
+      355,
+      397
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 90,
+      "w": 592,
+      "h": 720
+    },
+    "heading": {
+      "x": 425,
+      "y": 91,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 166,
+      "w": 590,
+      "h": 570
+    },
+    "actions": {
+      "x": 425,
+      "y": 736,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "ejercicio-notas",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 617,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      741,
+      761.4000000000001
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "ejercicio-notas-A",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 617,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      741,
+      761.4000000000001
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "ejercicio-notas-B",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 617,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      741,
+      761.4000000000001
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "ejercicio-notas-C",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 617,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      741,
+      761.4000000000001
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "ejercicio-notas-final",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 617,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      741,
+      761.4000000000001
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "distancia-0",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 531,
+      "w": 269,
+      "h": 48
+    },
+    "lineRange": [
+      534,
+      576
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "distancia-1",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 531,
+      "w": 269,
+      "h": 48
+    },
+    "lineRange": [
+      534,
+      576
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "distancia-2",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 531,
+      "w": 269,
+      "h": 48
+    },
+    "lineRange": [
+      534,
+      576
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "distancia-3",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 531,
+      "w": 269,
+      "h": 48
+    },
+    "lineRange": [
+      534,
+      576
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "ejercicio-distancia-final",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 531,
+      "w": 269,
+      "h": 48
+    },
+    "lineRange": [
+      534,
+      576
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "step": "peso",
+    "field": "_r_2_-weight",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 545,
+      "y": 410,
+      "w": 350,
+      "h": 48
+    },
+    "lineRange": [
+      413,
+      455
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 528,
+      "y": 296,
+      "w": 384,
+      "h": 308
+    },
+    "heading": {
+      "x": 529,
+      "y": 297,
+      "w": 382,
+      "h": 75
+    },
+    "body": {
+      "x": 529,
+      "y": 372,
+      "w": 382,
+      "h": 102
+    },
+    "actions": {
+      "x": 529,
+      "y": 474,
+      "w": 382,
+      "h": 129
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "alta-descripcion",
+    "field": "add-meal-description",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 186.5,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      220.9,
+      241.29999999999998
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 0,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 70.5,
+      "w": 592,
+      "h": 759
+    },
+    "heading": {
+      "x": 425,
+      "y": 71.5,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 146.5,
+      "w": 590,
+      "h": 609
+    },
+    "actions": {
+      "x": 425,
+      "y": 755.5,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "alta-calorias",
+    "field": "add-meal-calories",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 466.5,
+      "w": 230.34375,
+      "h": 48
+    },
+    "lineRange": [
+      469.5,
+      511.5
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 0,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 70.5,
+      "w": 592,
+      "h": 759
+    },
+    "heading": {
+      "x": 425,
+      "y": 71.5,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 146.5,
+      "w": 590,
+      "h": 609
+    },
+    "actions": {
+      "x": 425,
+      "y": 755.5,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "edicion-descripcion",
+    "field": "edit-meal-description",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 158.5,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      282.5,
+      302.9
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 42.5,
+      "w": 592,
+      "h": 815
+    },
+    "heading": {
+      "x": 425,
+      "y": 43.5,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 118.5,
+      "w": 590,
+      "h": 609
+    },
+    "actions": {
+      "x": 425,
+      "y": 727.5,
+      "w": 590,
+      "h": 129
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "ejercicio-actividad",
+    "field": "add-workout-activity",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 206,
+      "w": 554,
+      "h": 48
+    },
+    "lineRange": [
+      218,
+      238.39999999999998
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 90,
+      "w": 592,
+      "h": 720
+    },
+    "heading": {
+      "x": 425,
+      "y": 91,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 166,
+      "w": 590,
+      "h": 570
+    },
+    "actions": {
+      "x": 425,
+      "y": 736,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "ejercicio-duracion",
+    "field": "add-workout-duration",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 352,
+      "w": 271,
+      "h": 48
+    },
+    "lineRange": [
+      355,
+      397
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 90,
+      "w": 592,
+      "h": 720
+    },
+    "heading": {
+      "x": 425,
+      "y": 91,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 166,
+      "w": 590,
+      "h": 570
+    },
+    "actions": {
+      "x": 425,
+      "y": 736,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "ejercicio-calorias",
+    "field": "add-workout-calories",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 726,
+      "y": 352,
+      "w": 271,
+      "h": 48
+    },
+    "lineRange": [
+      355,
+      397
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 90,
+      "w": 592,
+      "h": 720
+    },
+    "heading": {
+      "x": 425,
+      "y": 91,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 166,
+      "w": 590,
+      "h": 570
+    },
+    "actions": {
+      "x": 425,
+      "y": 736,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "ejercicio-notas",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 617,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      741,
+      761.4000000000001
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "ejercicio-notas-A",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 617,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      741,
+      761.4000000000001
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "ejercicio-notas-B",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 617,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      741,
+      761.4000000000001
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "ejercicio-notas-C",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 617,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      741,
+      761.4000000000001
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "ejercicio-notas-final",
+    "field": "add-workout-notes",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 617,
+      "w": 554,
+      "h": 154
+    },
+    "lineRange": [
+      741,
+      761.4000000000001
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "distancia-0",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 531,
+      "w": 269,
+      "h": 48
+    },
+    "lineRange": [
+      534,
+      576
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "distancia-1",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 531,
+      "w": 269,
+      "h": 48
+    },
+    "lineRange": [
+      534,
+      576
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "distancia-2",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 531,
+      "w": 269,
+      "h": 48
+    },
+    "lineRange": [
+      534,
+      576
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "distancia-3",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 531,
+      "w": 269,
+      "h": 48
+    },
+    "lineRange": [
+      534,
+      576
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "ejercicio-distancia-final",
+    "field": "add-workout-distance",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 443,
+      "y": 531,
+      "w": 269,
+      "h": 48
+    },
+    "lineRange": [
+      534,
+      576
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 424,
+      "y": 37,
+      "w": 592,
+      "h": 826
+    },
+    "heading": {
+      "x": 425,
+      "y": 38,
+      "w": 590,
+      "h": 75
+    },
+    "body": {
+      "x": 425,
+      "y": 113,
+      "w": 590,
+      "h": 676
+    },
+    "actions": {
+      "x": 425,
+      "y": 789,
+      "w": 590,
+      "h": 73
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "step": "peso",
+    "field": "_r_2_-weight",
+    "focusRetained": true,
+    "backgroundOpacity": "1",
+    "safeAreaPadding": "0px",
+    "fieldBox": {
+      "x": 545,
+      "y": 410,
+      "w": 350,
+      "h": 48
+    },
+    "lineRange": [
+      413,
+      455
+    ],
+    "layout": [
+      1440,
+      900
+    ],
+    "visual": [
+      0,
+      900
+    ],
+    "windowScroll": 0,
+    "mainScroll": 394,
+    "bodyScroll": 0,
+    "backdrop": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "sheet": {
+      "x": 528,
+      "y": 296,
+      "w": 384,
+      "h": 308
+    },
+    "heading": {
+      "x": 529,
+      "y": 297,
+      "w": 382,
+      "h": 75
+    },
+    "body": {
+      "x": 529,
+      "y": 372,
+      "w": 382,
+      "h": 102
+    },
+    "actions": {
+      "x": 529,
+      "y": 474,
+      "w": 382,
+      "h": 129
+    },
+    "obstructionTop": null,
+    "fieldHit": true,
+    "actionHits": true,
+    "inert": false
+  }
+]

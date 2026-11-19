@@ -609,7 +609,7 @@ test('editing closes the record detail and opens the same responsive shell with 
     assert.ok(node(sheet(view), element => element.props.role === 'dialog'));
     assert.ok(nodes(view(), element => element.props.value === expected).length);
     if (expected === 'Pizza') assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.path, 'existing.jpg');
-    else for (const value of [40, 300, 5, '8:00']) assert.ok(nodes(view(), element => element.type === 'input').some(input => input.props.value === value));
+    else for (const value of [40, 300, '5', '8:00']) assert.ok(nodes(view(), element => element.type === 'input').some(input => input.props.value === value));
   }
 });
 
@@ -721,9 +721,14 @@ test('mobile shell locks background scroll, contains focus, handles Escape and r
   viewport.height = 450;
   last.focus();
   viewportListeners.get('resize')();
-  assert.equal(dialog.style['--entry-keyboard-offset'], '394px');
+  assert.equal(dialog.style['--entry-visible-bottom'], '450px');
+  globalThis.window.innerHeight = 780;
+  viewport.offsetTop = 23;
+  dialog.parentElement = { getBoundingClientRect: () => ({ top: 9 }) };
+  viewportListeners.get('scroll')();
+  assert.equal(dialog.style['--entry-visible-bottom'], '464px');
   assert.equal(dialog.style['--entry-viewport-height'], '450px');
-  assert.equal(content.scrollTop, 62);
+  assert.equal(content.scrollTop, 124);
   assert.equal(main.scrollTop, 850);
   listeners.get('keydown')({ key: 'Escape', preventDefault() {} });
   assert.equal(closed, 1);
@@ -754,7 +759,8 @@ test('workout estimation fills the proposal without saving or removing secondary
   fill(view, 'Kcal', '300');
   assert.match(renderToStaticMarkup(view()), /<h5[^>]*>Valor ajustado<\/h5>/);
   assert.doesNotMatch(renderToStaticMarkup(view()), /<h5[^>]*>Estimación con IA<\/h5>/);
-  assert.ok(field(view, 'Distancia (km) opc.'));
+  assert.equal(node(view(), e => e.props.id === 'add-workout-distance').props.inputMode, 'decimal');
+  assert.match(renderToStaticMarkup(node(view(), e => e.props.htmlFor === 'add-workout-distance')), /Distancia.*\(km\)/);
   assert.ok(field(view, 'Ritmo (ej: 5:30) opc.'));
 });
 
@@ -793,8 +799,18 @@ test('AI estimation forms show session/quota/service errors and retain drafts wi
       node(view(), element => element.type === 'button' && element.props.children?.includes?.('Estimar con IA')).props.onClick();
       await new Promise(setImmediate);
       assert.equal(requests.length, before + 1);
-      if (error instanceof AIRequestError) assert.equal(errors.at(-1), error.message);
-      else assert.ok(!errors.at(-1).includes('private_provider_detail'));
+      const notice = node(view(), e => e.type === 'p' && e.props.role === 'status');
+      const message = notice.props.children.join(' ');
+      assert.match(message, /calorías manualmente/);
+      if (error instanceof AIRequestError) assert.ok(message.includes(error.message));
+      assert.ok(!message.includes('private_provider_detail'));
+      assert.deepEqual(errors, []);
+      const retryable = ![401, 429].includes(error.status);
+      const action = node(view(), e => e.type === 'button' && e.props.children?.includes?.(retryable ? 'Reintentar estimación' : 'Estimar con IA'));
+      assert.equal(action.props.disabled, !retryable);
+      action.props.onClick();
+      await new Promise(setImmediate);
+      assert.equal(requests.length, before + (retryable ? 2 : 1));
       assert.equal(field(view, description).props.value, name);
       assert.equal(field(view, 'Kcal').props.value, '');
       if (meal) {
@@ -806,11 +822,36 @@ test('AI estimation forms show session/quota/service errors and retain drafts wi
   }
 });
 
+test('Retry-After expires without sending a request until the user retries', async t => {
+  mobileEnvironment(t);
+  t.mock.timers.enable({ apis: ['setTimeout', 'Date'], now: new Date('2026-11-13T12:00:00Z') });
+  let calls = 0;
+  t.mock.method(globalThis.__entryServices, 'estimateMeal', async () => {
+    calls++;
+    if (calls === 1) throw new AIRequestError('Servicio temporalmente ocupado.', 503, 'service_unavailable', 60);
+    return { calories: 321, assumptions: [] };
+  });
+  const view = mount({ profile, record: base, dateStr, records: {}, onUpdateRecord: () => assert.fail('unexpected save') }, InteractiveDailyPanel, true);
+  const render = () => { const tree = view(); view.flushEffects(); return tree; };
+  const estimate = () => node(render(), e => e.props.className?.startsWith('entry-ai-action'));
+  open(view, '+ Comida'); fill(view, 'Ej. pollo con arroz y verduras', 'Arroz');
+  estimate().props.onClick(); await new Promise(setImmediate);
+  assert.equal(estimate().props.disabled, true);
+  t.mock.timers.tick(59999);
+  estimate().props.onClick(); assert.equal(calls, 1);
+  t.mock.timers.tick(1);
+  const retry = estimate();
+  assert.equal(retry.props.disabled, false);
+  assert.ok(retry.props.children.includes('Reintentar estimación'));
+  assert.equal(calls, 1);
+  retry.props.onClick(); await new Promise(setImmediate);
+  assert.equal(calls, 2); assert.equal(field(view, 'Kcal').props.value, 321);
+  view.unmount();
+});
+
 test('photo upload failures keep the meal draft and image available for retry', async t => {
   mobileEnvironment(t);
-  const errors = [];
   const uploads = [];
-  globalThis.__entryServices.toast.error = message => errors.push(message);
   globalThis.__entryServices.storage = { upload: async (...args) => { uploads.push(args); return { error: new Error('Offline') }; }, remove: async () => ({ error: null }) };
   const view = entryView(() => { assert.fail('A failed upload must not write the record'); });
   open(view, '+ Comida');
@@ -821,7 +862,7 @@ test('photo upload failures keep the meal draft and image available for retry', 
   await submit(view);
   assert.equal(uploads[0][1], image);
   assert.equal(uploads[0][2].contentType, 'image/jpeg');
-  assert.equal(errors.length, 1);
+  assert.match(node(view(), item => item.props.className === 'meal-write-error').props.children, /confirmar el guardado/);
   assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, 'Almuerzo');
   assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.blob, image);
   assert.ok(shell(view));
@@ -1202,4 +1243,51 @@ test('workout deletion reports success only after persistence confirms it', asyn
     assert.equal(successes.length, count + (outcome === true ? 1 : 0));
   }
   assert.equal(errors.length, 1);
+});
+
+test('a confirmed meal receipt focuses its stable row among namesakes only on request', async t => {
+  const day = '2026-11-12';
+  const record = journalRecord(8, day);
+  for (const meal of record.meals) meal.name = 'Arroz';
+  const view = await journalDOM(t, { record, dateStr: day });
+  const target = view.list().querySelectorAll('[data-meal-id]')[2];
+  const id = target.dataset.mealId;
+  const scrolls = [];
+  window.HTMLElement.prototype.scrollIntoView = function () { scrolls.push(this); };
+  await act(() => target.click());
+  await act(() => document.querySelector('.record-detail-edit').click());
+  const form = document.querySelector('[role="dialog"] form');
+  await act(() => form.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })));
+  await view.render({record:view.saves.at(-1).record});
+  const receipt = document.querySelector('.meal-saved');
+  assert.match(receipt.textContent, /Comida guardada.*Arroz.*kcal.*12 nov 2026/);
+  assert.deepEqual(scrolls, []);
+  await act(() => receipt.querySelector('.meal-saved-open').click());
+  assert.equal(view.list().dataset.expanded, 'true');
+  assert.equal(document.activeElement.dataset.mealId, id);
+  assert.equal(document.activeElement.dataset.justSaved, 'true');
+  assert.deepEqual(scrolls, [target]);
+  assert.equal(document.querySelector('.meal-saved'), null);
+});
+
+test('exercise receipt opens the correct typed record even with shared names and a meal ID collision', async t => {
+  const day = '2026-11-12';
+  const record = journalRecord(8, day);
+  for (const workout of record.workouts) workout.activity = 'Caminata';
+  const id = record.meals[0].id;
+  record.workouts[1].id = id;
+  const view = await journalDOM(t, { record, dateStr: day });
+  const target = view.list().querySelector('[data-entry-kind="workout"][data-entry-id="' + id + '"]');
+  window.HTMLElement.prototype.scrollIntoView = () => {};
+  await act(() => target.click());
+  await act(() => document.querySelector('.record-detail-edit').click());
+  await act(() => document.querySelector('form.entry-form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })));
+  await view.render({ record: view.saves.at(-1).record });
+  assert.equal(view.saves.at(-1).record.workouts.length, record.workouts.length);
+  assert.match(document.querySelector('.meal-saved').textContent, /Ejercicio guardado.*Caminata.*30 min.*kcal.*12 nov 2026/);
+  await act(() => document.querySelector('.meal-saved-open').click());
+  assert.equal(document.activeElement, target);
+  await act(() => target.click());
+  await act(() => document.querySelector('.record-detail-edit').click());
+  assert.equal(document.getElementById('edit-workout-activity').value, 'Caminata');
 });

@@ -14,6 +14,8 @@ import toast from 'react-hot-toast';
 type Personal = Pick<UserProfile, 'name' | 'sex' | 'age' | 'weight' | 'height'>;
 type LeaveGuard = (leave: () => void) => void;
 
+declare const __CALORI_PREVIEW_COMMIT__: string;
+
 export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<LeaveGuard | null> }) {
   const { user, activeProfile, avatarRevision, updateProfile, updateAvatarPath, resetData, signOut } = useAppStore();
   const { theme, setTheme } = useTheme();
@@ -422,6 +424,15 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
               </button>
             </div>
           )}
+        </details>
+      )}
+
+      {typeof __CALORI_PREVIEW_COMMIT__ !== 'undefined' && __CALORI_PREVIEW_COMMIT__ && (
+        <details className="profile-muted text-xs">
+          <summary>Versión de Preview · <code>{__CALORI_PREVIEW_COMMIT__.slice(0, 8)}</code></summary>
+          {document.documentElement.dataset.keyboardDiagnostics === 'active'
+            ? <><button type="button" onClick={() => window.dispatchEvent(new Event('calori-export-geometry'))}>Descargar geometría del teclado</button> · <a href="?">Finalizar diagnóstico</a></>
+            : <a href="?diagnostico=teclado">Activar diagnóstico local del teclado</a>}
         </details>
       )}
 

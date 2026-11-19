@@ -155,3 +155,22 @@
   min-width: 44px;
   padding-inline: 4px;
 }
+
+.meal-saved {
+  position: fixed; z-index: 45; inset-inline: 12px; bottom: var(--feedback-offset);
+  max-width: 28rem; max-height: 45dvh; overflow-y: auto; margin-inline: auto;
+  display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: start; gap: 4px 8px;
+  padding: 12px 12px 8px 16px; background: var(--fit-surface); color: var(--fit-ink);
+  border: 1px solid var(--fit-control-line); border-inline-start: 4px solid var(--fit-orange);
+  border-radius: 9px; box-shadow: 0 5px 24px #0003; text-align: start;
+}
+.meal-saved [role="status"] { display: grid; gap: 3px; overflow-wrap: anywhere; font-size: .85rem; }
+.meal-saved strong { font-size: 1rem; }
+.meal-saved-label { display: flex; align-items: center; gap: 6px; color: var(--fit-quiet); }
+.meal-saved button { min-height: 44px; }
+.meal-saved-open { justify-self: start; font-weight: 700; text-decoration: underline; }
+.meal-saved-close { grid-area: 1 / 2; min-width: 44px; font-size: 1.35rem; }
+.daily-record-open[data-just-saved] { outline: 2px solid var(--fit-focus); outline-offset: -2px; background: var(--fit-soft); }
+@media (min-width: 768px) {
+  .meal-saved { inset-inline: auto 24px; width: min(28rem, 90vw); }
+}

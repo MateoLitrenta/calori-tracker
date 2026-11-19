@@ -22,13 +22,52 @@ type WorkoutCategory = typeof workoutCategories[number];
 const exactWorkoutCategory = (activity: string) => workoutCategories.find(category => category.toLowerCase() === activity.trim().toLowerCase()) ?? null;
 type EntryEstimate = { calories: number; assumptions: string[]; context: string; inputVersion: number; calorieVersion: number; contextKey: string };
 
-// Only disclosure state belongs here. A date/profile change remounts this small
+function estimateRecovery(error: unknown) {
+  if (!(error instanceof AIRequestError)) return { message: 'No pudimos estimar las calorías.' };
+  const retryAt = error.retryAfterSeconds ? Date.now() + error.retryAfterSeconds * 1000 : undefined;
+  return { message: error.message, status: error.status, retryAt };
+}
+
+type EntryReceipt = {
+  id: string; date: string; name: string; calories: number; estimated: boolean;
+} & ({ kind: 'meal'; replacedPhoto: boolean } | { kind: 'workout'; duration: number });
+
+// Only disclosure and explicit row navigation belong here. A date/profile change remounts this small
 // presentation component without touching entry forms or pending habit saves.
-function DailyRecords({ count, children }: { count: number; children: React.ReactNode }) {
+function DailyRecords({ count, children, receipt, onDismiss }: {
+  count: number; children: React.ReactNode; receipt: EntryReceipt | null; onDismiss: () => void;
+}) {
   const [expanded, setExpanded] = useState(false);
   const listId = useId();
+  const list = useRef<HTMLUListElement>(null);
+  const [destination, setDestination] = useState<EntryReceipt | null>(null);
+  useEffect(() => {
+    if (!destination) return;
+    const row = Array.from(list.current?.querySelectorAll<HTMLButtonElement>('[data-entry-id]') ?? [])
+      .find(button => button.dataset.entryId === destination.id && button.dataset.entryKind === destination.kind);
+    if (!row) return;
+    row.focus({ preventScroll: true });
+    row.scrollIntoView({ block: 'center', behavior: 'instant' });
+    row.dataset.justSaved = 'true';
+    const timer = window.setTimeout(() => { delete row.dataset.justSaved; }, 3000);
+    return () => { window.clearTimeout(timer); delete row.dataset.justSaved; };
+  }, [destination]);
   return <>
-    <ul id={listId} data-expanded={expanded}
+    {receipt && <aside className="meal-saved" aria-label={receipt.kind === 'meal' ? 'Confirmación de comida' : 'Confirmación de ejercicio'}>
+      <div role="status">
+        <span className="meal-saved-label"><Check size={16} aria-hidden="true" /> {receipt.kind === 'meal' ? 'Comida guardada' : 'Ejercicio guardado'}</span>
+        <strong>{receipt.name}</strong>
+        <span>{receipt.kind === 'workout' && receipt.duration + ' min · '}{receipt.calories.toLocaleString('es-AR')} kcal{receipt.estimated && ' · Estimación con IA'} · {format(new Date(receipt.date + 'T12:00:00'), 'd MMM yyyy', { locale: es })}</span>
+        {receipt.kind === 'meal' && receipt.replacedPhoto && <span>La limpieza de la foto anterior queda pendiente.</span>}
+      </div>
+      <button type="button" className="meal-saved-open" onClick={() => {
+        setExpanded(true);
+        setDestination(receipt);
+        onDismiss();
+      }}>Ver registro</button>
+      <button type="button" className="meal-saved-close" aria-label="Cerrar confirmación" onClick={onDismiss}>×</button>
+    </aside>}
+    <ul ref={list} id={listId} data-expanded={expanded}
       className={`daily-records ${count >= 2 ? 'daily-records--columns' : ''} divide-y divide-slate-200 dark:divide-gray-800`}>
       {children}
     </ul>
@@ -173,6 +212,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const [discard, setDiscard] = useState<(() => void) | null>(null);
   const entryChanged = useRef(false);
   const markEntryChanged = () => { entryChanged.current = true; };
+  const [mealError, setMealError] = useState('');
+  const [entryReceipt, setEntryReceipt] = useState<EntryReceipt | null>(null);
   const [editingMealId, setEditingMealId] = useState<string | null>(null);
   const [mealName, setMealName] = useState('');
   const [isEditingWater, setIsEditingWater] = useState(false);
@@ -192,6 +233,27 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const [mealTime, setMealTime] = useState('');
   const [mealPhoto, setMealPhoto] = useState<Blob | null>(null);
   const [mealPhotoRemoved, setMealPhotoRemoved] = useState(false);
+  const [estimateFailure, setEstimateFailure] = useState<ReturnType<typeof estimateRecovery> | null>(null);
+  const [retryDeadlines, setRetryDeadlines] = useState<Record<string, number>>({});
+  const estimateModality = profile.id + (mealPhoto && (activeTab === 'comida' || editingMealId) ? ':image' : ':text');
+  const deadline = retryDeadlines[estimateModality] ?? 0;
+  useEffect(() => {
+    if (!deadline) return;
+    const timer = setTimeout(() => setRetryDeadlines(previous => {
+      const next = { ...previous };
+      if (next[estimateModality] === deadline) delete next[estimateModality];
+      return next;
+    }), Math.max(0, deadline - Date.now()));
+    return () => clearTimeout(timer);
+  }, [deadline, estimateModality]);
+  const estimationBlocked = !!deadline || estimateFailure?.status === 401
+    || (estimateFailure?.status === 429 && !estimateFailure.retryAt);
+  const estimationFailed = (error: unknown) => {
+    const failure = estimateRecovery(error);
+    setEstimateFailure(failure);
+    const until = failure.retryAt;
+    if (until) setRetryDeadlines(previous => ({ ...previous, [estimateModality]: until }));
+  };
   const [workEstimate, setWorkEstimate] = useState<EntryEstimate | null>(null);
   const [mealEstimate, setMealEstimate] = useState<EntryEstimate | null>(null);
   // One synchronous lock across the existing estimator controls; closing never starts a second call.
@@ -222,7 +284,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const [workDuration, setWorkDuration] = useState<number | ''>('');
   const [workCals, setWorkCals] = useState<number | ''>('');
   const [workDetails, setWorkDetails] = useState('');
-  const [workDistance, setWorkDistance] = useState<number | ''>('');
+  const [workDistance, setWorkDistance] = useState('');
   const [workPace, setWorkPace] = useState('');
   const [workTime, setWorkTime] = useState('');
   const [savingWorkout, setSavingWorkout] = useState(false);
@@ -234,6 +296,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
   const clearEstimates = () => {
     estimateSessionRef.current += 1;
+    setEstimateFailure(null);
     setWorkEstimate(null);
     setMealEstimate(null);
   };
@@ -251,6 +314,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   };
 
   const resetForms = () => {
+    setEntryReceipt(null);
+    setMealError('');
     entryChanged.current = false;
     setMealType('Almuerzo');
     mealDraftRef.current = null;
@@ -327,8 +392,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   }, [activeTab, editingMealId, editingWorkoutId]);
 
   const handleEstimateMeal = async () => {
-    if (estimateBusyRef.current) return;
-    if (!mealName.trim() && !mealPhoto) { toast.error('Describí la comida o agregá una foto.'); return; }
+    if (estimateBusyRef.current || estimationBlocked) return;
+    if (!mealName.trim() && !mealPhoto) { setEstimateFailure({ message: 'Describí la comida o agregá una foto.' }); return; }
+    setEstimateFailure(null);
     estimateBusyRef.current = true;
     const session = estimateSessionRef.current;
     const inputVersion = mealInputVersion.current;
@@ -349,14 +415,15 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         if (!mealName.trim()) setMealName(result.description);
       }
     } catch (error) {
-      if (session === estimateSessionRef.current) toast.error(error instanceof AIRequestError ? error.message : 'No pude estimar las calorías. Agregá más detalle o intentá nuevamente.');
+      if (session === estimateSessionRef.current) estimationFailed(error);
     } finally { estimateBusyRef.current = false; setEstimating(false); }
   };
 
   const handleEstimateWorkout = async () => {
-    if (estimateBusyRef.current) return;
-    if (!workActivity.trim()) { toast.error('Indicá qué ejercicio hiciste.'); return; }
-    if (!workDuration || workDuration <= 0) { toast.error('Indicá cuánto tiempo entrenaste.'); return; }
+    if (estimateBusyRef.current || estimationBlocked) return;
+    if (!workActivity.trim()) { setEstimateFailure({ message: 'Indicá qué ejercicio hiciste.' }); return; }
+    if (!workDuration || workDuration <= 0) { setEstimateFailure({ message: 'Indicá cuánto tiempo entrenaste.' }); return; }
+    setEstimateFailure(null);
     estimateBusyRef.current = true;
     const session = estimateSessionRef.current;
     const inputVersion = workInputVersion.current;
@@ -373,7 +440,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       setWorkEstimate({ calories: result.calories, assumptions: result.assumptions, context, inputVersion, calorieVersion, contextKey: estimateContextKey });
       if (inputVersion === workInputVersion.current && calorieVersion === workCalorieVersion.current) setWorkCals(result.calories);
     } catch (error) {
-      if (session === estimateSessionRef.current) toast.error(error instanceof AIRequestError ? error.message : 'No pude estimar el gasto. Revisá actividad y duración.');
+      if (session === estimateSessionRef.current) estimationFailed(error);
     } finally { estimateBusyRef.current = false; setEstimating(false); }
   };
 
@@ -381,6 +448,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     e.preventDefault();
     if (!mealName.trim() || !mealCals || savingMealRef.current || photoProcessing) return;
     savingMealRef.current = true; setSavingMeal(true);
+    setMealError('');
+    let failureMessage = '';
     try {
       const draft = mealDraftRef.current ??= { id: editingMealId || generateUUID(), base: snapshotEntryRecord(currentRecord, profile.recordGeneration), upload: null };
       const base = reviewEntryBase(draft.base, currentRecord, profile.recordGeneration, () => window.confirm(changedEntryDayMessage));
@@ -398,13 +467,18 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         time: mealTime || (draft.fallbackTime ??= format(new Date(), 'HH:mm')), details: mealDetails,
         photo_path: uploadedPath || (mealPhotoRemoved ? null : oldMeal?.photo_path ?? null) };
       const meals = oldMeal ? base.meals.map(m => m.id === draft.id ? meal : m) : [...base.meals, meal];
-      if (!await onUpdateRecord(dateStr, { ...base, meals })) throw new Error('No se pudo guardar la comida.');
-      if (oldMeal?.photo_path && oldMeal.photo_path !== meal.photo_path) toast('Comida guardada. La limpieza de la foto anterior queda pendiente.');
+      if (!await onUpdateRecord(dateStr, { ...base, meals }, {
+        feedback: 'contextual', onFailure: failure => { failureMessage = failure.message; },
+      })) throw new Error('No se pudo guardar la comida.');
       resetForms(); setActiveTab(null);
+      setEntryReceipt({ kind: 'meal', id: meal.id, date: dateStr, name: meal.name, calories: meal.calories,
+        replacedPhoto: !!oldMeal?.photo_path && oldMeal.photo_path !== meal.photo_path,
+        estimated: mealEstimate?.contextKey === estimateContextKey && mealEstimate.calories === meal.calories
+          && mealEstimate.inputVersion === mealInputVersion.current && mealEstimate.calorieVersion === mealCalorieVersion.current });
     } catch {
       // An ambiguous DB response may already reference the uploaded object.
       // Keep the same entry ID, payload, blob and path for explicit retry.
-      toast.error('No se pudo confirmar el guardado. Tu comida y su foto se conservan para reintentar.');
+      setMealError(failureMessage || 'No se pudo confirmar el guardado. Tu comida y su foto se conservan para reintentar.');
     } finally { savingMealRef.current = false; setSavingMeal(false); }
   };
 
@@ -413,6 +487,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     mealDraftRef.current = { id: m.id, base: snapshotEntryRecord(currentRecord, profile.recordGeneration), upload: null };
     clearEstimates();
     setActiveTab(null);
+    setMealError('');
+    setEntryReceipt(null);
     setEditingMealId(m.id);
     setMealName(m.name);
     setMealType(m.type);
@@ -436,8 +512,12 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       if (editingWorkoutId && !previous) { toast.error('El ejercicio ya no está en este día. Tu borrador se conserva; revisá los registros antes de crear otro.'); return; }
       const workout: WorkoutEntry = { ...previous, id: draft.id, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: previous?.muscles ?? [], details: workDetails, distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined, time: workTime || (draft.fallbackTime ??= format(new Date(), 'HH:mm')) };
       const workouts = previous ? base.workouts.map(w => w.id === draft.id ? workout : w) : [...base.workouts, workout];
-      if (!await onUpdateRecord(dateStr, { ...base, workouts })) throw new Error('Guardado no confirmado');
+      if (!await onUpdateRecord(dateStr, { ...base, workouts }, { feedback: 'contextual' })) throw new Error('Guardado no confirmado');
       resetForms(); setActiveTab(null);
+      setEntryReceipt({ kind: 'workout', id: workout.id, date: dateStr, name: workout.activity,
+        duration: workout.duration, calories: workout.calories,
+        estimated: workEstimate?.contextKey === estimateContextKey && workEstimate.calories === workout.calories
+          && workEstimate.inputVersion === workInputVersion.current && workEstimate.calorieVersion === workCalorieVersion.current });
     } catch {
       toast.error('No se pudo confirmar el ejercicio. Tu borrador se conserva para reintentar.');
     } finally {
@@ -457,7 +537,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     setWorkDuration(w.duration);
     setWorkCals(w.calories);
     setWorkDetails(w.details || '');
-    setWorkDistance(w.distance || '');
+    setWorkDistance(w.distance?.toString() ?? '');
     setWorkPace(w.pace || '');
     setWorkTime(w.time || format(new Date(), 'HH:mm'));
   };
@@ -470,21 +550,26 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     path={mealPhotoPath}
     onChange={blob => { reviseEstimate('mealInput'); setMealPhoto(blob); setMealPhotoRemoved(false); }}
     onRemove={() => { reviseEstimate('mealInput'); setMealPhoto(null); setMealPhotoRemoved(true); }} onBusyChange={setPhotoProcessing} />;
+  const estimateNotice = (estimateFailure || !!deadline) && <p role="status" className="text-sm">
+    {estimateFailure?.message} {!!deadline && 'Podés reintentar a las ' + new Date(deadline).toLocaleTimeString('es-AR') + '.'} Podés ingresar las calorías manualmente.
+  </p>;
   const mealEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
-    <button type="button" disabled={estimating} onClick={() => void handleEstimateMeal()}
+    <button type="button" disabled={estimating || estimationBlocked} onClick={() => void handleEstimateMeal()}
       className="entry-ai-action min-h-11 self-start px-4 rounded-[var(--radius-control)] border border-[#f5a064]/50 text-[#b85b22] dark:text-[#f5a064] disabled:opacity-50">
       <Sparkle className="entry-ai-icon" size={18} aria-hidden="true" />
-      {estimating ? 'Estimando…' : 'Estimar con IA'}
+      {estimating ? 'Estimando…' : estimateFailure && !estimationBlocked ? 'Reintentar estimación' : 'Estimar con IA'}
     </button>
+    {estimateNotice}
     {mealEstimate?.contextKey === estimateContextKey && <EntryEstimateResult estimate={mealEstimate} adjusted={mealEstimate.calorieVersion !== estimateVersions.mealCalories}
       outdated={mealEstimate.inputVersion !== estimateVersions.mealInput} />}
   </div>;
   const workEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
-    <button type="button" disabled={estimating} onClick={() => void handleEstimateWorkout()}
+    <button type="button" disabled={estimating || estimationBlocked} onClick={() => void handleEstimateWorkout()}
       className="entry-ai-action min-h-11 self-start px-4 rounded-[var(--radius-control)] border border-[#f5a064]/50 text-[#b85b22] dark:text-[#f5a064] disabled:opacity-50">
       <Sparkle className="entry-ai-icon" size={18} aria-hidden="true" />
-      {estimating ? 'Estimando gasto energético…' : 'Estimar con IA'}
+      {estimating ? 'Estimando gasto energético…' : estimateFailure && !estimationBlocked ? 'Reintentar estimación' : 'Estimar con IA'}
     </button>
+    {estimateNotice}
     {workEstimate?.contextKey === estimateContextKey && <EntryEstimateResult estimate={workEstimate} adjusted={workEstimate.calorieVersion !== estimateVersions.workCalories}
       outdated={workEstimate.inputVersion !== estimateVersions.workInput} />}
   </div>;
@@ -671,6 +756,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                     </div>
                   </details>
                 </div>
+                {mealError && <p className="meal-write-error" role="alert">{mealError}</p>}
                 <div className="entry-form-footer">
                   <button type="button" className="entry-cancel" disabled={savingMeal || photoProcessing} onClick={closeEntry}>Cancelar</button>
                   <button type="submit" disabled={savingMeal || photoProcessing} className="disabled:opacity-50">
@@ -741,12 +827,15 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   {workEstimateControls}
                   {selectedWorkCategory !== null && ['Correr', 'Natación', 'Caminata'].includes(selectedWorkCategory) && (<div className="entry-workout-metrics flex gap-4">
                     <div className="entry-field entry-distance">
-                      <label className="entry-field-label" htmlFor="add-workout-distance">Distancia</label>
-                      <input id="add-workout-distance"
-                        type="number" step="0.01" min="0" placeholder="Distancia (km) opc."
-                        value={workDistance} onChange={e => setWorkDistance(e.target.value === '' ? '' : Number(e.target.value))}
-                        className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
-                      />
+                      <label className="entry-field-label" htmlFor="add-workout-distance">Distancia <span className="sr-only">(km)</span></label>
+                      <div className="entry-unit-control">
+                        <input id="add-workout-distance"
+                          type="number" step="any" min="0" inputMode="decimal" placeholder="Opcional"
+                          value={workDistance} onChange={e => setWorkDistance(e.target.value)}
+                          className="flex-1 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500 min-w-0"
+                        />
+                        <span className="entry-unit" aria-hidden="true">km</span>
+                      </div>
                     </div>
                     <div className="entry-field entry-pace">
                       <label className="entry-field-label" htmlFor="add-workout-pace">Ritmo</label>
@@ -933,7 +1022,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
           )}
 
         <DailyRecords key={`${profile.id}:${dateStr}:${selectedGroup?.type || 'day'}`}
-          count={currentRecord.meals.length + currentRecord.workouts.length}>
+          receipt={!entryActive && !detailModalItem && entryReceipt?.date === dateStr && (entryReceipt.kind === 'meal' ? currentRecord.meals : currentRecord.workouts).some(entry => entry.id === entryReceipt.id) ? entryReceipt : null}
+          onDismiss={() => setEntryReceipt(null)} count={currentRecord.meals.length + currentRecord.workouts.length}>
           {
             [
               ...currentRecord.meals.map(m => ({ ...m, _type: 'meal' as const })),
@@ -948,7 +1038,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               const meal = item._type === 'meal';
               return (
                 <li key={`${item._type}-${item.id}`}>
-                  <button type="button" className="daily-record-open" onClick={event => { recordOpener.current = event.currentTarget; setDetailModalItem(item); }}>
+                  <button type="button" data-entry-kind={item._type} data-entry-id={item.id} data-meal-id={meal ? item.id : undefined} className="daily-record-open" onClick={event => { recordOpener.current = event.currentTarget; setDetailModalItem(item); }}>
                     <span className="fitness-record-mark">
                       {meal && item.photo_path ? <MealThumbnail path={item.photo_path} /> : meal
                         ? <ForkKnife size={17} aria-hidden="true" /> : <Barbell size={17} aria-hidden="true" />}
@@ -1156,6 +1246,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               </details>
 
             </div>
+            {mealError && <p className="meal-write-error" role="alert">{mealError}</p>}
             <div className="entry-form-footer flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
               <button type="button" className="entry-cancel" disabled={savingMeal || photoProcessing} onClick={closeEntry}>Cancelar</button>
               <button type="submit" disabled={savingMeal || photoProcessing} className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
@@ -1226,12 +1317,15 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               {workEstimateControls}
               <div className="entry-workout-metrics flex gap-4">
                 <div className="entry-field entry-distance">
-                  <label className="entry-field-label" htmlFor="edit-workout-distance">Distancia</label>
-                  <input id="edit-workout-distance"
-                    type="number" step="0.1" inputMode="decimal" placeholder="Distancia (km) opcional"
-                    value={workDistance} onChange={e => setWorkDistance(Number(e.target.value))}
-                    className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                  />
+                  <label className="entry-field-label" htmlFor="edit-workout-distance">Distancia <span className="sr-only">(km)</span></label>
+                  <div className="entry-unit-control">
+                    <input id="edit-workout-distance"
+                      type="number" step="any" min="0" inputMode="decimal" placeholder="Opcional"
+                      value={workDistance} onChange={e => setWorkDistance(e.target.value)}
+                      className="flex-1 max-md:min-w-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                    />
+                    <span className="entry-unit" aria-hidden="true">km</span>
+                  </div>
                 </div>
                 <div className="entry-field entry-pace">
                   <label className="entry-field-label" htmlFor="edit-workout-pace">Ritmo</label>
