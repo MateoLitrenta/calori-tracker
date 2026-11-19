@@ -721,9 +721,14 @@ test('mobile shell locks background scroll, contains focus, handles Escape and r
   viewport.height = 450;
   last.focus();
   viewportListeners.get('resize')();
-  assert.equal(dialog.style['--entry-keyboard-offset'], '394px');
+  assert.equal(dialog.style['--entry-visible-bottom'], '450px');
+  globalThis.window.innerHeight = 780;
+  viewport.offsetTop = 23;
+  dialog.parentElement = { getBoundingClientRect: () => ({ top: 9 }) };
+  viewportListeners.get('scroll')();
+  assert.equal(dialog.style['--entry-visible-bottom'], '464px');
   assert.equal(dialog.style['--entry-viewport-height'], '450px');
-  assert.equal(content.scrollTop, 62);
+  assert.equal(content.scrollTop, 124);
   assert.equal(main.scrollTop, 850);
   listeners.get('keydown')({ key: 'Escape', preventDefault() {} });
   assert.equal(closed, 1);
@@ -808,9 +813,7 @@ test('AI estimation forms show session/quota/service errors and retain drafts wi
 
 test('photo upload failures keep the meal draft and image available for retry', async t => {
   mobileEnvironment(t);
-  const errors = [];
   const uploads = [];
-  globalThis.__entryServices.toast.error = message => errors.push(message);
   globalThis.__entryServices.storage = { upload: async (...args) => { uploads.push(args); return { error: new Error('Offline') }; }, remove: async () => ({ error: null }) };
   const view = entryView(() => { assert.fail('A failed upload must not write the record'); });
   open(view, '+ Comida');
@@ -821,7 +824,7 @@ test('photo upload failures keep the meal draft and image available for retry', 
   await submit(view);
   assert.equal(uploads[0][1], image);
   assert.equal(uploads[0][2].contentType, 'image/jpeg');
-  assert.equal(errors.length, 1);
+  assert.match(node(view(), item => item.props.className === 'meal-write-error').props.children, /confirmar el guardado/);
   assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, 'Almuerzo');
   assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.blob, image);
   assert.ok(shell(view));
@@ -1202,4 +1205,29 @@ test('workout deletion reports success only after persistence confirms it', asyn
     assert.equal(successes.length, count + (outcome === true ? 1 : 0));
   }
   assert.equal(errors.length, 1);
+});
+
+test('a confirmed meal receipt focuses its stable row among namesakes only on request', async t => {
+  const day = '2026-11-12';
+  const record = journalRecord(8, day);
+  for (const meal of record.meals) meal.name = 'Arroz';
+  const view = await journalDOM(t, { record, dateStr: day });
+  const target = view.list().querySelectorAll('[data-meal-id]')[2];
+  const id = target.dataset.mealId;
+  const scrolls = [];
+  window.HTMLElement.prototype.scrollIntoView = function () { scrolls.push(this); };
+  await act(() => target.click());
+  await act(() => document.querySelector('.record-detail-edit').click());
+  const form = document.querySelector('[role="dialog"] form');
+  await act(() => form.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })));
+  await view.render({record:view.saves.at(-1).record});
+  const receipt = document.querySelector('.meal-saved');
+  assert.match(receipt.textContent, /Comida guardada.*Arroz.*kcal.*12 nov 2026/);
+  assert.deepEqual(scrolls, []);
+  await act(() => receipt.querySelector('.meal-saved-open').click());
+  assert.equal(view.list().dataset.expanded, 'true');
+  assert.equal(document.activeElement.dataset.mealId, id);
+  assert.equal(document.activeElement.dataset.justSaved, 'true');
+  assert.deepEqual(scrolls, [target]);
+  assert.equal(document.querySelector('.meal-saved'), null);
 });

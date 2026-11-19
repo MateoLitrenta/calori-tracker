@@ -1,0 +1,86 @@
+[
+  {
+    "width": 375,
+    "theme": "dark",
+    "geometry": {
+      "visibleEnd": 448,
+      "footer": 448,
+      "header": 62,
+      "content": 236.703125,
+      "backgroundInert": true
+    },
+    "retrySameIdentity": true,
+    "confirmed": "confirmed",
+    "editCalories": 482
+  },
+  {
+    "width": 375,
+    "theme": "light",
+    "geometry": {
+      "visibleEnd": 448,
+      "footer": 448,
+      "header": 62,
+      "content": 236.703125,
+      "backgroundInert": true
+    },
+    "retrySameIdentity": true,
+    "confirmed": "confirmed",
+    "editCalories": 482
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "geometry": {
+      "visibleEnd": 319,
+      "footer": 319,
+      "header": 49.109375,
+      "content": 120.59375,
+      "backgroundInert": true
+    },
+    "retrySameIdentity": true,
+    "confirmed": "confirmed",
+    "editCalories": 482
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "geometry": {
+      "visibleEnd": 319,
+      "footer": 319,
+      "header": 49.109375,
+      "content": 120.59375,
+      "backgroundInert": true
+    },
+    "retrySameIdentity": true,
+    "confirmed": "confirmed",
+    "editCalories": 482
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "geometry": {
+      "visibleEnd": 900,
+      "footer": 807.96875,
+      "header": 92.03125,
+      "content": 566.640625,
+      "backgroundInert": false
+    },
+    "retrySameIdentity": true,
+    "confirmed": "confirmed",
+    "editCalories": 482
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "geometry": {
+      "visibleEnd": 900,
+      "footer": 807.96875,
+      "header": 92.03125,
+      "content": 566.640625,
+      "backgroundInert": false
+    },
+    "retrySameIdentity": true,
+    "confirmed": "confirmed",
+    "editCalories": 482
+  }
+]

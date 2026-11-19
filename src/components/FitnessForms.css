@@ -247,3 +247,8 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
   outline-offset: -2px;
 }
 .entry-photo-section .entry-photo-hint { margin-bottom: 6px; }
+
+.meal-write-error {
+  flex: none; max-height: 4.5rem; overflow-y: auto; margin: 0; padding: 6px 16px;
+  border-inline-start: 3px solid var(--fit-orange); color: var(--fit-ink); font-size: .875rem;
+}

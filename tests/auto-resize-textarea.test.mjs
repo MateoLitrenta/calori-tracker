@@ -176,7 +176,7 @@ test('mobile form scrolls to the caret after paste, selection and keyboard resiz
   await act(() => viewport.dispatchEvent(new window.Event('resize')));
   const dialog = document.querySelector('[role="dialog"]');
   assert.equal(dialog.style.getPropertyValue('--entry-viewport-height'), '360px');
-  assert.equal(dialog.style.getPropertyValue('--entry-keyboard-offset'), `${window.innerHeight - 360}px`);
+  assert.equal(dialog.style.getPropertyValue('--entry-visible-bottom'), '360px');
   const text = Array.from({ length: 31 }, (_, i) => `Línea ${i}`).join('\n');
   await act(() => {
     Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(field, text);
@@ -195,7 +195,7 @@ test('mobile form scrolls to the caret after paste, selection and keyboard resiz
   assert.ok(content.scrollTop < atEnd);
   assert.equal(field.selectionStart, 0); assert.equal(document.activeElement, field);
   assertCaretVisible();
-  assert.equal(dialog.style.getPropertyValue('--entry-keyboard-offset'), `${window.innerHeight - 330}px`);
+  assert.equal(dialog.style.getPropertyValue('--entry-visible-bottom'), '330px');
   field.setSelectionRange(text.length, text.length);
   await act(() => field.dispatchEvent(new window.Event('select', { bubbles: true })));
   await env.flushFrames(); assert.ok(content.scrollTop > atEnd);

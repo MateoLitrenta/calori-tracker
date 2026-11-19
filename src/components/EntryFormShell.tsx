@@ -105,9 +105,12 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
     const updateViewport = () => {
       if (!mobile) return;
       const height = viewport?.height ?? window.innerHeight;
-      const offset = Math.max(0, window.innerHeight - height - (viewport?.offsetTop ?? 0));
+      // Safari can resize innerHeight independently of the fixed backdrop.
+      // Both rectangles below are in layout viewport coordinates.
+      const backdropTop = dialog.parentElement?.getBoundingClientRect().top ?? 0;
+      const visibleBottom = (viewport?.offsetTop ?? 0) + height - backdropTop;
       dialog.style.setProperty('--entry-viewport-height', `${height}px`);
-      dialog.style.setProperty('--entry-keyboard-offset', `${offset}px`);
+      dialog.style.setProperty('--entry-visible-bottom', `${visibleBottom}px`);
       const content = dialog.querySelector<HTMLElement>('.entry-form-content');
       const field = document.activeElement;
       if (!content || !(field instanceof HTMLElement) || !content.contains(field)) return;
