@@ -298,7 +298,10 @@ body:has(> .fitness-entry-portal form.entry-form) :is(.app-main, .app-bottom-nav
 }
 /* Extra scroll range lets the last field's caret move up without moving the
    background or changing the text selection. */
-.fitness-entry-portal .entry-form-content:focus-within::after {
+/* Safari does not focus a tapped button. Removing this range on field blur
+   can move the button between pointerdown and pointerup and cancel its click. */
+.fitness-entry-portal form.entry-form > .entry-form-content::after,
+.fitness-entry-portal .entry-weight-form .entry-form-content:focus-within::after {
   content: '';
   flex: 0 0 calc(var(--entry-viewport-height, 100dvh) / 2);
 }
