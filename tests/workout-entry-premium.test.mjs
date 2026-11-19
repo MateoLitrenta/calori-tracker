@@ -195,7 +195,9 @@ test('replacing a shared meal photo preserves its other reference and leaves Sto
   await view.editMeal(); await view.removePhoto(); await view.fill('edit-meal-notes', 'Notas editadas\nque se conservan'); await view.submit();
   assert.equal(view.record().meals[0].id, first.id); assert.equal(view.record().meals[0].photo_path, null);
   assert.equal(view.record().meals[1].photo_path, shared); assert.equal(removals.length, 0);
-  assert.ok(view.toasts.some(args => String(args[0]).includes('limpieza de la foto anterior queda pendiente')));
+  const receipt = document.querySelector('.meal-saved [role="status"]');
+  assert.ok(receipt);
+  assert.match(receipt.textContent, /Comida editada.*La limpieza de la foto anterior queda pendiente/);
 });
 
 test('a refreshed conflict keeps the draft frozen until explicit review, then rebases only that entry', async t => {
