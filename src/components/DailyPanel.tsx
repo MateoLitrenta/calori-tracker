@@ -227,6 +227,30 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const [mealTime, setMealTime] = useState('');
   const [mealPhoto, setMealPhoto] = useState<Blob | null>(null);
   const [mealPhotoRemoved, setMealPhotoRemoved] = useState(false);
+  const [estimateFailure, setEstimateFailure] = useState<{ message: string; status?: number; retryAfterSeconds?: number } | null>(null);
+  const [retryDeadlines, setRetryDeadlines] = useState<Record<string, number>>({});
+  const estimateModality = profile.id + (mealPhoto && (activeTab === 'comida' || editingMealId) ? ':image' : ':text');
+  const deadline = retryDeadlines[estimateModality] ?? 0;
+  useEffect(() => {
+    if (!deadline) return;
+    const timer = setTimeout(() => setRetryDeadlines(previous => {
+      const next = { ...previous };
+      if (next[estimateModality] === deadline) delete next[estimateModality];
+      return next;
+    }), Math.max(0, deadline - Date.now()));
+    return () => clearTimeout(timer);
+  }, [deadline, estimateModality]);
+  const estimationBlocked = deadline > Date.now() || estimateFailure?.status === 401
+    || (estimateFailure?.status === 429 && !estimateFailure.retryAfterSeconds);
+  const estimationFailed = (error: unknown) => {
+    if (error instanceof AIRequestError) {
+      setEstimateFailure({ message: error.message, status: error.status, retryAfterSeconds: error.retryAfterSeconds });
+      if (error.retryAfterSeconds) {
+        const until = Date.now() + error.retryAfterSeconds * 1000;
+        setRetryDeadlines(previous => ({ ...previous, [estimateModality]: until }));
+      }
+    } else setEstimateFailure({ message: 'No pudimos estimar las calorías.' });
+  };
   const [workEstimate, setWorkEstimate] = useState<EntryEstimate | null>(null);
   const [mealEstimate, setMealEstimate] = useState<EntryEstimate | null>(null);
   // One synchronous lock across the existing estimator controls; closing never starts a second call.
@@ -269,6 +293,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
   const clearEstimates = () => {
     estimateSessionRef.current += 1;
+    setEstimateFailure(null);
     setWorkEstimate(null);
     setMealEstimate(null);
   };
@@ -364,8 +389,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   }, [activeTab, editingMealId, editingWorkoutId]);
 
   const handleEstimateMeal = async () => {
-    if (estimateBusyRef.current) return;
-    if (!mealName.trim() && !mealPhoto) { toast.error('Describí la comida o agregá una foto.'); return; }
+    if (estimateBusyRef.current || estimationBlocked) return;
+    if (!mealName.trim() && !mealPhoto) { setEstimateFailure({ message: 'Describí la comida o agregá una foto.' }); return; }
+    setEstimateFailure(null);
     estimateBusyRef.current = true;
     const session = estimateSessionRef.current;
     const inputVersion = mealInputVersion.current;
@@ -386,14 +412,15 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         if (!mealName.trim()) setMealName(result.description);
       }
     } catch (error) {
-      if (session === estimateSessionRef.current) toast.error(error instanceof AIRequestError ? error.message : 'No pude estimar las calorías. Agregá más detalle o intentá nuevamente.');
+      if (session === estimateSessionRef.current) estimationFailed(error);
     } finally { estimateBusyRef.current = false; setEstimating(false); }
   };
 
   const handleEstimateWorkout = async () => {
-    if (estimateBusyRef.current) return;
-    if (!workActivity.trim()) { toast.error('Indicá qué ejercicio hiciste.'); return; }
-    if (!workDuration || workDuration <= 0) { toast.error('Indicá cuánto tiempo entrenaste.'); return; }
+    if (estimateBusyRef.current || estimationBlocked) return;
+    if (!workActivity.trim()) { setEstimateFailure({ message: 'Indicá qué ejercicio hiciste.' }); return; }
+    if (!workDuration || workDuration <= 0) { setEstimateFailure({ message: 'Indicá cuánto tiempo entrenaste.' }); return; }
+    setEstimateFailure(null);
     estimateBusyRef.current = true;
     const session = estimateSessionRef.current;
     const inputVersion = workInputVersion.current;
@@ -410,7 +437,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       setWorkEstimate({ calories: result.calories, assumptions: result.assumptions, context, inputVersion, calorieVersion, contextKey: estimateContextKey });
       if (inputVersion === workInputVersion.current && calorieVersion === workCalorieVersion.current) setWorkCals(result.calories);
     } catch (error) {
-      if (session === estimateSessionRef.current) toast.error(error instanceof AIRequestError ? error.message : 'No pude estimar el gasto. Revisá actividad y duración.');
+      if (session === estimateSessionRef.current) estimationFailed(error);
     } finally { estimateBusyRef.current = false; setEstimating(false); }
   };
 
@@ -516,21 +543,26 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     path={mealPhotoPath}
     onChange={blob => { reviseEstimate('mealInput'); setMealPhoto(blob); setMealPhotoRemoved(false); }}
     onRemove={() => { reviseEstimate('mealInput'); setMealPhoto(null); setMealPhotoRemoved(true); }} onBusyChange={setPhotoProcessing} />;
+  const estimateNotice = (estimateFailure || deadline > Date.now()) && <p role="status" className="text-sm">
+    {estimateFailure?.message} {deadline > Date.now() && 'Podés reintentar a las ' + new Date(deadline).toLocaleTimeString('es-AR') + '.'} Podés ingresar las calorías manualmente.
+  </p>;
   const mealEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
-    <button type="button" disabled={estimating} onClick={() => void handleEstimateMeal()}
+    <button type="button" disabled={estimating || estimationBlocked} onClick={() => void handleEstimateMeal()}
       className="entry-ai-action min-h-11 self-start px-4 rounded-[var(--radius-control)] border border-[#f5a064]/50 text-[#b85b22] dark:text-[#f5a064] disabled:opacity-50">
       <Sparkle className="entry-ai-icon" size={18} aria-hidden="true" />
-      {estimating ? 'Estimando…' : 'Estimar con IA'}
+      {estimating ? 'Estimando…' : estimateFailure && !estimationBlocked ? 'Reintentar estimación' : 'Estimar con IA'}
     </button>
+    {estimateNotice}
     {mealEstimate?.contextKey === estimateContextKey && <EntryEstimateResult estimate={mealEstimate} adjusted={mealEstimate.calorieVersion !== estimateVersions.mealCalories}
       outdated={mealEstimate.inputVersion !== estimateVersions.mealInput} />}
   </div>;
   const workEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
-    <button type="button" disabled={estimating} onClick={() => void handleEstimateWorkout()}
+    <button type="button" disabled={estimating || estimationBlocked} onClick={() => void handleEstimateWorkout()}
       className="entry-ai-action min-h-11 self-start px-4 rounded-[var(--radius-control)] border border-[#f5a064]/50 text-[#b85b22] dark:text-[#f5a064] disabled:opacity-50">
       <Sparkle className="entry-ai-icon" size={18} aria-hidden="true" />
-      {estimating ? 'Estimando gasto energético…' : 'Estimar con IA'}
+      {estimating ? 'Estimando gasto energético…' : estimateFailure && !estimationBlocked ? 'Reintentar estimación' : 'Estimar con IA'}
     </button>
+    {estimateNotice}
     {workEstimate?.contextKey === estimateContextKey && <EntryEstimateResult estimate={workEstimate} adjusted={workEstimate.calorieVersion !== estimateVersions.workCalories}
       outdated={workEstimate.inputVersion !== estimateVersions.workInput} />}
   </div>;

@@ -798,8 +798,18 @@ test('AI estimation forms show session/quota/service errors and retain drafts wi
       node(view(), element => element.type === 'button' && element.props.children?.includes?.('Estimar con IA')).props.onClick();
       await new Promise(setImmediate);
       assert.equal(requests.length, before + 1);
-      if (error instanceof AIRequestError) assert.equal(errors.at(-1), error.message);
-      else assert.ok(!errors.at(-1).includes('private_provider_detail'));
+      const notice = node(view(), e => e.type === 'p' && e.props.role === 'status');
+      const message = notice.props.children.join(' ');
+      assert.match(message, /calorías manualmente/);
+      if (error instanceof AIRequestError) assert.ok(message.includes(error.message));
+      assert.ok(!message.includes('private_provider_detail'));
+      assert.deepEqual(errors, []);
+      const retryable = ![401, 429].includes(error.status);
+      const action = node(view(), e => e.type === 'button' && e.props.children?.includes?.(retryable ? 'Reintentar estimación' : 'Estimar con IA'));
+      assert.equal(action.props.disabled, !retryable);
+      action.props.onClick();
+      await new Promise(setImmediate);
+      assert.equal(requests.length, before + (retryable ? 2 : 1));
       assert.equal(field(view, description).props.value, name);
       assert.equal(field(view, 'Kcal').props.value, '');
       if (meal) {
