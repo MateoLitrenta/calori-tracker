@@ -102,6 +102,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
     document.addEventListener('focusin', containFocus);
 
     const viewport = window.visualViewport;
+    const editor = mobile && fitness && !!dialog.querySelector('form.entry-form');
     const updateViewport = () => {
       if (!mobile) return;
       const height = viewport?.height ?? window.innerHeight;
@@ -114,9 +115,15 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
       const content = dialog.querySelector<HTMLElement>('.entry-form-content');
       const field = document.activeElement;
       if (!content || !(field instanceof HTMLElement) || !content.contains(field)) return;
+      // Moving a focused button between pointerdown and pointerup would
+      // cancel its activation. Only editors need caret tracking.
+      if (editor && !field.matches('input, textarea, select')) return;
       const visible = content.getBoundingClientRect();
       const bounds = focusedBounds(field);
-      if (bounds.bottom > visible.bottom) content.scrollTop += bounds.bottom - visible.bottom + 12;
+      // Keep the caret in the upper reading area. Safari's floating controls
+      // can cover the lower part even when it belongs to the visual viewport.
+      const readingBottom = editor ? visible.top + Math.max((visible.bottom - visible.top) / 2, bounds.bottom - bounds.top) : visible.bottom;
+      if (bounds.bottom > readingBottom) content.scrollTop += bounds.bottom - readingBottom + 12;
       else if (bounds.top < visible.top) content.scrollTop -= visible.top - bounds.top + 12;
     };
     let scrollFrame: number | undefined;
@@ -130,6 +137,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
     viewport?.addEventListener('resize', updateViewport);
     viewport?.addEventListener('scroll', updateViewport);
     window.addEventListener('resize', updateViewport);
+    window.addEventListener('scroll', updateViewport);
     dialog.addEventListener('focusin', updateViewport);
     dialog.addEventListener('input', followCaret);
     dialog.addEventListener('select', followCaret);
@@ -139,6 +147,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
       viewport?.removeEventListener('resize', updateViewport);
       viewport?.removeEventListener('scroll', updateViewport);
       window.removeEventListener('resize', updateViewport);
+      window.removeEventListener('scroll', updateViewport);
       dialog.removeEventListener('focusin', updateViewport);
       dialog.removeEventListener('input', followCaret);
       dialog.removeEventListener('select', followCaret);
@@ -150,7 +159,7 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
       document.body.style.overflow = bodyOverflow;
       if (openerRef.current?.isConnected) openerRef.current.focus({ preventScroll: true });
     };
-  }, [mobile, desktopModal, restoreFocusTo]);
+  }, [mobile, desktopModal, restoreFocusTo, fitness]);
 
   const heading = fitness ? <div className="entry-sheet-heading">
     <h3 id={titleId}>{title}</h3>

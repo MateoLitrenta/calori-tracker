@@ -150,7 +150,7 @@ test('mobile form scrolls to the caret after paste, selection and keyboard resiz
   let saves = 0;
   function Form() {
     const [value, setValue] = useState('');
-    return React.createElement(EntryFormShell, { title: 'Agregar comida', onClose() {} },
+    return React.createElement(EntryFormShell, { title: 'Agregar comida', fitness: true, onClose() {} },
       React.createElement('form', { className: 'entry-form', onSubmit: event => { event.preventDefault(); saves++; } },
         React.createElement('div', { className: 'entry-form-content' },
           React.createElement('div', { className: 'entry-field' }, React.createElement(AutoResizeTextarea,
@@ -169,7 +169,8 @@ test('mobile form scrolls to the caret after paste, selection and keyboard resiz
     const top = field.getBoundingClientRect().top + 8 + row * 20;
     const visible = content.getBoundingClientRect();
     assert.ok(top >= visible.top, `Caret top ${top} must stay below scrollport top ${visible.top}`);
-    assert.ok(top + 20 <= visible.bottom, `Caret bottom ${top + 20} must stay above scrollport bottom ${visible.bottom}`);
+    const readingEnd = (visible.top + visible.bottom) / 2;
+    assert.ok(top + 20 <= readingEnd, `Caret bottom ${top + 20} must stay above reading limit ${readingEnd}`);
   };
   field.focus();
   viewport.height = 360;

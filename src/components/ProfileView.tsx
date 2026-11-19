@@ -14,6 +14,8 @@ import toast from 'react-hot-toast';
 type Personal = Pick<UserProfile, 'name' | 'sex' | 'age' | 'weight' | 'height'>;
 type LeaveGuard = (leave: () => void) => void;
 
+declare const __CALORI_PREVIEW_COMMIT__: string;
+
 export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<LeaveGuard | null> }) {
   const { user, activeProfile, avatarRevision, updateProfile, updateAvatarPath, resetData, signOut } = useAppStore();
   const { theme, setTheme } = useTheme();
@@ -423,6 +425,10 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
             </div>
           )}
         </details>
+      )}
+
+      {typeof __CALORI_PREVIEW_COMMIT__ !== 'undefined' && __CALORI_PREVIEW_COMMIT__ && (
+        <p className="profile-muted text-xs">Versión de Preview · <code>{__CALORI_PREVIEW_COMMIT__.slice(0, 8)}</code></p>
       )}
 
       {discard && <DiscardDraftDialog onKeep={() => setDiscard(null)} onDiscard={() => { setDiscard(null); discard(); }} />}

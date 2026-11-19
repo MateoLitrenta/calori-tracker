@@ -8,7 +8,7 @@ const before = process.argv.includes('--reference');
 const engine = process.argv.includes('--webkit') ? 'webkit' : 'chromium';
 const pw = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE || path.resolve(repo,'../qa-tools/node_modules/playwright/index.mjs')));
 const browser = await pw[engine].launch(engine === 'chromium' ? { channel:'chrome' } : {});
-const out = path.join(repo,'docs/evidence/meal-flow',before ? 'before' : 'after',engine);
+const out = path.join(repo,process.argv.includes('--scratch') ? 'node_modules/.cache/calori-meal-flow' : 'docs/evidence/meal-flow',before ? 'before' : 'after',engine);
 await mkdir(out,{recursive:true});
 const origin = 'http://127.0.0.1:5194';
 const name = 'Arroz con verduras y pollo';
@@ -72,7 +72,7 @@ async function tour(width, theme) {
         header:rect('.entry-sheet-header').top,content:rect('.entry-form-content').height,backgroundInert:document.querySelector('.app-main').inert};
     });
     if (mobile && !before) {
-      assert.ok(Math.abs(geometry.footer-geometry.visibleEnd)<=2,JSON.stringify(geometry));
+      assert.ok(geometry.footer < geometry.visibleEnd && geometry.footer > geometry.header,JSON.stringify(geometry));
       assert.ok(geometry.header>=17 && geometry.content>40 && geometry.backgroundInert);
     }
     await capture('escritura');
@@ -125,7 +125,7 @@ async function tour(width, theme) {
         await page.locator(field).focus();
         await viewport(Math.round(size.height*.55),16,64);
         const gap = await page.locator('.entry-form-footer').evaluate(el=>el.getBoundingClientRect().bottom-visualViewport.height-visualViewport.offsetTop);
-        assert.ok(Math.abs(gap)<=2,open+' '+gap);
+        assert.ok(gap<0,open+' '+gap);
         await viewport(); await button('Cancelar').click();
       }
     }

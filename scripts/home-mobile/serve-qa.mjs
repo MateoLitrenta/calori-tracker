@@ -9,7 +9,8 @@ import { globalSupabase, installGlobalFixture } from '../fitness-global/fixture.
 // App, HomeView, DailyPanel, Heatmap, ChartsView and CSS are product sources.
 // Auth, record writer, Storage and AI are isolated synthetic boundaries.
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const mealFlow = process.argv.includes('--meal-flow');
+const safariForms = process.argv.includes('--safari-forms');
+const mealFlow = safariForms || process.argv.includes('--meal-flow');
 const visual = process.argv.includes('--visual');
 const stage4 = process.argv.includes('--stage4');
 const stage3 = process.argv.includes('--stage3');
@@ -23,9 +24,9 @@ const fitness = beforeFitness || process.argv.includes('--fitness');
 const beforeRefinement = process.argv.includes('--before-refinement');
 const refinement = beforeRefinement || process.argv.includes('--refinement');
 const before = process.argv.includes('--before') || beforeRefinement || beforeFitness || beforeGlobal;
-const base = mealFlow ? '7dce90cb72119a5c5d6bd560bb2a9710b7d94dd1' : visual ? '51f7daa2d248c186c4a3d1c8700cf6bd13997eae' : stage4 ? 'a740e1b1897b83dfea35ffa4d85373c3afbf51ed' : stage3 ? 'a2021b32c22ea985d33f5ed681d3c507cef1f0b8' : stage2 ? 'c2c62c94a25c44559ab926f8d954305e32a36317' : stage1 ? 'c365e1e6f236ab76d17b46cbd8fe1ec9eace8831' : globalQA ? '10117215cf7071dc754e175294588f4a30a959b9' : fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
+const base = safariForms ? 'b9f030a92f0e60cfd7f761792742f8c3415755ad' : mealFlow ? '7dce90cb72119a5c5d6bd560bb2a9710b7d94dd1' : visual ? '51f7daa2d248c186c4a3d1c8700cf6bd13997eae' : stage4 ? 'a740e1b1897b83dfea35ffa4d85373c3afbf51ed' : stage3 ? 'a2021b32c22ea985d33f5ed681d3c507cef1f0b8' : stage2 ? 'c2c62c94a25c44559ab926f8d954305e32a36317' : stage1 ? 'c365e1e6f236ab76d17b46cbd8fe1ec9eace8831' : globalQA ? '10117215cf7071dc754e175294588f4a30a959b9' : fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
   : refinement ? 'fe01ecb86e0933c5260c2630fe4d7a6e82ebccdd' : '5a74e7279c77a7d1dc25fb5604d5fa0d657d6bf5';
-const phase = mealFlow ? (before ? 'meal-flow-before' : 'meal-flow-after') : visual ? (before ? 'visual-before' : 'visual-after') : stage4 ? (before ? 'stage4-before' : 'stage4-after') : stage3 ? (before ? 'stage3-before' : 'stage3-after') : stage2 ? (before ? 'stage2-before' : 'stage2-after') : stage1 ? (before ? 'stage1-before' : 'stage1-after') : beforeGlobal ? 'before-global' : globalQA ? 'global' : beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
+const phase = safariForms ? (before ? 'safari-before' : 'safari-after') : mealFlow ? (before ? 'meal-flow-before' : 'meal-flow-after') : visual ? (before ? 'visual-before' : 'visual-after') : stage4 ? (before ? 'stage4-before' : 'stage4-after') : stage3 ? (before ? 'stage3-before' : 'stage3-after') : stage2 ? (before ? 'stage2-before' : 'stage2-after') : stage1 ? (before ? 'stage1-before' : 'stage1-after') : beforeGlobal ? 'before-global' : globalQA ? 'global' : beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
 let root = repo;
 if (before) {
   root = path.resolve(repo, mealFlow ? '../meal-flow-baseline-' + base.slice(0,7) : visual ? '../visual-baseline-' + base.slice(0,7) : stage4 ? '../stage4-baseline-' + base.slice(0,7) : stage3 ? '../stage3-baseline-' + base.slice(0,7) : stage1 ? '../stage1-baseline-' + base.slice(0,7) : beforeGlobal ? '../global-baseline-' + base.slice(0,7) : beforeFitness ? '../home-fitness-baseline-' + base.slice(0,7) : beforeRefinement ? '../home-v10-1-1-refinement-baseline' : '../home-v10-1-1-baseline');
