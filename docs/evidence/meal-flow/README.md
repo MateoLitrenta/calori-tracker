@@ -1,5 +1,7 @@
 # Registro móvil de comida
 
+**Nueva revisión del 19/11 a las 16:40.** [Campos inferiores, recuperaciones y recorrido físico pendiente](safari-pan/README.md).
+
 **Revisión posterior al ensayo físico:** [candidato de Safari, comparativas y recorrido en iPhone](safari/README.md). La evidencia de esta página corresponde a la primera revisión del PR #87.
 
 Referencia de código y capturas anteriores: `7dce90cb72119a5c5d6bd560bb2a9710b7d94dd1`, merge del PR #86. El video físico del 18 de noviembre motivó los dos recorridos. Las nuevas imágenes y grabaciones se obtuvieron con una cuenta y comidas sintéticas.

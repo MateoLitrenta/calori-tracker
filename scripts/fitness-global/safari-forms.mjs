@@ -5,26 +5,36 @@ import { pathToFileURL } from 'node:url';
 import { repo, heights } from './browser.mjs';
 
 const before = process.argv.includes('--reference');
+const pan = process.argv.includes('--pan');
 const engine = process.argv.includes('--webkit') ? 'webkit' : 'chromium';
 const pw = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE || path.resolve(repo,'../qa-tools/node_modules/playwright/index.mjs')));
 const browser = await pw[engine].launch(engine==='chromium'?{channel:'chrome'}:{});
-const dir = path.join(repo,'docs/evidence/meal-flow/safari',before?'before':'after',engine);
+const dir = path.join(repo,pan ? 'docs/evidence/meal-flow/safari-pan' : 'docs/evidence/meal-flow/safari',before?'before':'after',engine);
 await mkdir(dir,{recursive:true});
-const origin='http://127.0.0.1:5194';
+const origin='http://127.0.0.1:'+(before && pan ? 5199 : 5194);
 const results=[];
 
 // Paint an independent obstruction INSIDE the reported visual viewport. It
 // receives pointer hits like an obstruction, but never contains app controls.
-function setup() {
+function setup(pan) {
   const vv = new EventTarget();
   const full=innerHeight;
   Object.assign(vv,{height:full,offsetTop:0});
   Object.defineProperty(window,'visualViewport',{value:vv});
+  let phase = 0;
+  Object.defineProperty(vv, 'pageTop', { get: () => scrollY + vv.offsetTop });
   window.keyboardScenario = (kind) => {
     const open = !!kind;
     const decimal = kind==='number';
     vv.height = open ? Math.round(full * (decimal ? 0.58 : 0.55)) : full;
     vv.offsetTop=open?(decimal?17:9):0;
+    if (pan && document.querySelector('form.entry-form')) {
+      // Real document scroll, independent visual pan and a moving browser obstruction.
+      document.documentElement.style.overflowY='auto';
+      document.body.style.minHeight='350vh';
+      vv.offsetTop = open ? [48, 92, 127][phase % 3] : 0;
+      window.scrollTo(0,open ? [318, 657, 884][phase++ % 3] : 0);
+    } else if (pan) { window.scrollTo(0,0); }
     let mask=document.querySelector('#qa-obstruction');
     if (!mask) {
       mask=document.createElement('div');
@@ -43,7 +53,7 @@ async function run(width,theme) {
   const height=heights[width], mobile=width<768;
   const ctx=await browser.newContext({viewport:{width,height},locale:'es-AR',timezoneId:'America/Buenos_Aires',colorScheme:theme,reducedMotion:'reduce'});
   await ctx.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());
-  if (mobile) await ctx.addInitScript(setup);
+  if (mobile) await ctx.addInitScript(setup,pan);
   const page=await ctx.newPage();
   const errors=[];
   page.on('pageerror',e=>errors.push(e.message));
@@ -81,11 +91,15 @@ async function run(width,theme) {
         obstructionTop:mask&&!mask.hidden?mask.getBoundingClientRect().top:null,fieldHit,actionHits,inert:main.inert};
     },line);
     results.push({width,height,theme,step,...values});
-    if(width===375 && mobile && ['alta-calorias','edicion-descripcion','ejercicio-actividad','ejercicio-notas'].includes(step)) {
+    if(width===375 && mobile && (pan ? ['alta-calorias','ejercicio-notas-final','ejercicio-distancia-final'] : ['alta-calorias','edicion-descripcion','ejercicio-actividad','ejercicio-notas']).includes(step)) {
       await page.screenshot({path:path.join(dir,theme+'-'+step+'.jpg'),quality:85,animations:'disabled'});
     }
     if(!before) {
       assert.ok(values.actionHits && values.fieldHit,JSON.stringify(results.at(-1)));
+      if (pan && mobile && step !== 'peso') {
+        assert.ok(values.windowScroll >= 300);
+        assert.ok(Math.abs(values.sheet.y-values.visual[0]) <= 1, JSON.stringify(values));
+      }
       if(mobile) {assert.ok(values.inert && values.focusRetained);assert.equal(values.backgroundOpacity,'0');}
     }
   };
@@ -99,6 +113,17 @@ async function run(width,theme) {
     await page.keyboard.insertText('Otro');
     assert.equal(await field('add-meal-description').inputValue(),desc.replace('Dos','Otro'));
     await keyboard('text'); await observe('alta-descripcion',1);
+    if(pan) {
+      await keyboard(null);
+      await page.evaluate(()=>{window.__homeQA.aiError=503;});
+      const estimate=button('Estimar con IA');
+      await estimate.scrollIntoViewIfNeeded();
+      await estimate.click();
+      // The reviewed WebKit baseline may lose the click on textarea blur.
+      // Use keyboard activation there to compare the same failed request.
+      if (before && !await page.evaluate(()=>window.__homeQA.aiCalls.length)) await estimate.press('Enter');
+      if (!before) await page.getByText(/Podés ingresar las calorías manualmente/).waitFor();
+    }
     await input('add-meal-calories','482'); await keyboard('number'); await observe('alta-calorias');
     await keyboard(null);
     await field('add-meal-time').fill('20:45');
@@ -108,7 +133,9 @@ async function run(width,theme) {
     await keyboard(null); await button('Seguir editando').click();
     assert.equal(await field('add-meal-description').inputValue(),desc.replace('Dos','Otro'));
     await button('Guardar comida').click();
-    await page.locator('.meal-saved').waitFor(); await button('Cerrar confirmación').click();
+    await page.locator('.meal-saved').waitFor();
+    if (pan && width===375 && theme==='dark') await page.locator('.meal-saved').screenshot({path:path.join(dir,'comida-guardada.jpg')});
+    await button('Cerrar confirmación').click();
     await page.locator('.fitness-records-link').click();
     assert.equal(new URL(page.url()).hash,'#fitness-daily-entries');
     await page.locator('.daily-record-open').first().click();
@@ -126,12 +153,41 @@ async function run(width,theme) {
     await input('add-workout-calories','160'); await keyboard('number'); await observe('ejercicio-calorias');
     await keyboard(null);
     await input('add-workout-notes',desc); await keyboard('text'); await observe('ejercicio-notas',5);
+    if(pan) {
+      for(const part of [' A', ' B', ' C']) {
+        await page.keyboard.insertText(part); await keyboard('text'); await observe('ejercicio-notas-'+part.trim(),5);
+      }
+      await keyboard(null); await keyboard('text'); await observe('ejercicio-notas-final',5);
+      await field('add-workout-distance').focus();
+      for(const [i,key] of ['2','.','3','5'].entries()) {
+        await page.keyboard.press(key); await keyboard('number'); await observe('distancia-'+i);
+      }
+      assert.equal(await field('add-workout-distance').inputValue(),'2.35');
+      await keyboard(null); await field('add-workout-distance').focus(); await keyboard('number'); await observe('ejercicio-distancia-final');
+      await field('add-workout-notes').focus(); await keyboard('text');
+    }
     const sel=await field('add-workout-notes').evaluate(el=>[el.selectionStart,el.selectionEnd]);
     await page.locator('.entry-form-content').evaluate(el=>{el.scrollTop=Math.max(0,el.scrollTop-60);});
     await keyboard(null); await keyboard('text');
     assert.deepEqual(await field('add-workout-notes').evaluate(el=>[el.selectionStart,el.selectionEnd]),sel);
     if(before) await keyboard(null);
     await page.locator('.entry-form-footer button[type=submit]').click(); await keyboard(null);
+    if(pan && !before) {
+      const receipt=page.getByRole('complementary',{name:'Confirmación de ejercicio'});
+      await receipt.waitFor(); assert.match(await receipt.innerText(),/25 min.*160 kcal/);
+      if (width===375 && theme==='dark') await receipt.screenshot({path:path.join(dir,'ejercicio-guardado.jpg')});
+      await receipt.getByRole('button',{name:'Ver registro'}).click();
+      assert.equal(await page.evaluate(()=>document.activeElement.dataset.entryKind),'workout');
+      await page.keyboard.press('Enter'); await page.locator('.record-detail-edit').click();
+      const distance = field('edit-workout-distance');
+      assert.equal(await distance.inputValue(),'2.35');
+      await distance.focus(); await keyboard('number'); await observe('edicion-distancia');
+      await keyboard(null);
+      await field('edit-workout-notes').focus();
+      await field('edit-workout-notes').evaluate(el=>el.setSelectionRange(el.value.length,el.value.length));
+      await keyboard('text'); await observe('edicion-notas',5);
+      await keyboard(null); await button('Cancelar').click();
+    }
     await button('Editar peso').click(); const weight=page.locator('input[name=weight]'); await weight.focus();
     await keyboard('number'); await observe('peso');
     if(before) await keyboard(null);
