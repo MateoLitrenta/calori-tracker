@@ -31,11 +31,13 @@
 .home-date-heading button:disabled, .home-week-days button:disabled { opacity: .45; cursor: default; }
 .home-week-scroll { min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; }
 .home-week-days {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(7, minmax(max(44px, 2.75em), 1fr));
   gap: 1px;
 }
 .home-week-days button {
+  position: relative;
   display: grid;
   place-content: center;
   gap: 1px;
@@ -47,7 +49,8 @@
 }
 .home-week-days button > span { color: var(--fit-board-muted); font-size: 10px; font-weight: 650; letter-spacing: .025em; text-transform: uppercase; }
 .home-week-days button strong { font-family: var(--fit-face); font-size: 22px; font-weight: 700; line-height: 1; }
-.home-week-days button[aria-pressed="true"] { background: var(--fit-orange); color: var(--fit-on-orange); }
+.home-week-indicator { background: var(--fit-orange); border-radius: 4px; }
+.home-week-days button[aria-pressed="true"] { color: var(--fit-on-orange); }
 .home-week-days button[aria-pressed="true"] > span { color: var(--fit-on-orange); }
 .home-week-days button[aria-current="date"]:not([aria-pressed="true"]) strong { text-decoration: underline; text-underline-offset: 3px; }
 .fitness-home .home-date-nav :is(button, .home-week-scroll):focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -2px; }

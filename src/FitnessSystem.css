@@ -87,8 +87,11 @@ html.dark {
   background: var(--fit-surface); border-color: var(--fit-rule); color: var(--fit-ink);
 }
 .app-sidebar nav button, .bottom-nav-item, .appearance-picker button { color: var(--fit-quiet); }
-.app-sidebar nav button:hover, .appearance-picker button:hover { background: var(--fit-soft); color: var(--fit-ink); }
-.app-sidebar nav button[aria-current="page"], .appearance-picker [aria-pressed="true"] {
+.app-sidebar nav, .app-sidebar nav button { position: relative; }
+.sidebar-nav-indicator { background: var(--fit-board); border-radius: var(--fit-control-radius); }
+.app-sidebar nav button:hover:not([aria-current="page"]), .appearance-picker button:hover { background: var(--fit-soft); color: var(--fit-ink); }
+.app-sidebar nav button:focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -2px; }
+.appearance-picker [aria-pressed="true"] {
   background: var(--fit-board); color: var(--fit-accent);
 }
 .app-sidebar .sidebar-footer { border-color: var(--fit-rule); }
@@ -115,7 +118,7 @@ html.dark {
   flex: none; justify-content: space-between; gap: 12px;
   width: 100%; max-width: var(--content-max); margin-inline: auto; padding-bottom: var(--fit-space);
 }
-.home-heading-brand { gap: 8px; }
+.home-heading-brand { gap: 8px; min-height: 44px; }
 .home-heading-brand .brand-symbol { width: 44px; height: 44px; object-fit: contain; }
 @media (max-width: 767px) {
   .app-shell.app-shell-fitness .app-content { padding: 0; }
@@ -126,23 +129,29 @@ html.dark {
   .home-header::after { content: ''; position: absolute; inset: auto 16px 0; border-bottom: 1px solid var(--fit-track); }
   .home-heading-brand .brand-symbol { width: 32px; height: 32px; }
 }
-.app-shell-fitness .fitness-records-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding-inline: 4px;
-  color: var(--fit-quiet);
-  font-size: 13px;
-  font-weight: 600;
+@media (min-width: 768px) {
+  .home-heading-brand { align-items: flex-start; }
+  .home-heading-brand .brand-symbol { display: none; }
 }
-.fitness-records-link::after {
-  content: '';
-  width: 7px;
-  height: 7px;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
-  transform: translateY(-2px) rotate(45deg);
+
+/* Header geometry is available before the lazy view styles load. */
+.app-shell-coach { --chat-inset: clamp(14px, 2.1vw, 28px); }
+.chat-heading {
+  display: flex; align-items: center; flex: none; gap: 10px;
+  padding: 10px var(--chat-inset); border-bottom: 1px solid var(--fit-rule);
 }
-.fitness-records-link:hover { text-decoration: underline; }
-.app-shell-fitness .fitness-records-link:focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -2px; }
+.chat-heading .brand-symbol-assistant { width: 32px; height: 32px; object-fit: contain; }
+.chat-heading-title { display: flex; flex-direction: column; justify-content: center; min-height: 44px; min-width: 0; }
+.chat-heading-title p { color: var(--fit-quiet); font-size: 13px; }
+.charts-header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
+.charts-range { margin-top: 6px; color: var(--fit-quiet); font-size: var(--fit-caption); }
+@media (max-width: 600px) {
+  .charts-period { width: 100%; }
+}
+@media (max-width: 767px) {
+  .chat-heading-title p { display: none; }
+}
+@media (min-width: 768px) {
+  .chat-heading { padding: 0 0 14px; }
+  .chat-heading .brand-symbol-assistant { display: none; }
+}

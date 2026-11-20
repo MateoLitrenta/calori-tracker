@@ -39,6 +39,7 @@ async function moduleURL(path) {
   return `data:text/javascript;base64,${Buffer.from(code).toString('base64')}`;
 }
 const loadModule = async path => import(await moduleURL(path));
+imports['./SelectionIndicator'] = await moduleURL('../src/components/SelectionIndicator.tsx');
 imports['./SegmentedControl'] = await moduleURL('../src/components/SegmentedControl.tsx');
 const { default: SegmentedControl } = await import(imports['./SegmentedControl']);
 
@@ -433,6 +434,12 @@ test('desktop and mobile navigation use Datos and Coach while preserving destina
     assert.ok(dataButton);
     dataButton.props.onClick();
     assert.deepEqual(destinations, ['chat', 'charts']);
+    if (component === Sidebar) {
+      assert.equal(coachButton.props['aria-current'], 'page');
+      assert.equal(dataButton.props['aria-current'], undefined);
+      assert.equal(nodes(tree, element => element.props.className === 'sidebar-nav-indicator')[0].props.value, 'chat');
+      assert.match(renderToStaticMarkup(tree), /aria-hidden="true" class="navigation-indicator sidebar-nav-indicator"/);
+    }
     assert.doesNotMatch(renderToStaticMarkup(tree), /Asistente|Gráficos/);
   }
 });

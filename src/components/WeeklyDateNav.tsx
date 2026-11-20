@@ -4,6 +4,7 @@ import { addDays, format, parseISO, startOfWeek } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 import { formatDateStr } from '../utils/helpers';
 import { homeDateBounds, homeWeek, isHomeDate, moveHomeWeek } from '../utils/homeDateNavigation';
+import SelectionIndicator from './SelectionIndicator';
 import './WeeklyDateNav.css';
 
 export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, onOpenCalendar }: {
@@ -27,9 +28,27 @@ export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, on
     else if (left + button.offsetWidth > strip.scrollLeft + strip.clientWidth) strip.scrollLeft = left + button.offsetWidth - strip.clientWidth;
   };
   useLayoutEffect(() => {
-    const update = () => reveal(selectedDateStr);
-    update(); window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
+    const strip = stripRef.current;
+    const selected = strip?.querySelector<HTMLButtonElement>('button[aria-pressed="true"]');
+    if (!strip || !selected) return;
+    reveal(selectedDateStr);
+    let stripWidth = strip.clientWidth, cellWidth = selected.getBoundingClientRect().width;
+    const resize = () => {
+      const width = strip.clientWidth, cell = selected.getBoundingClientRect().width;
+      if (width === stripWidth && cell === cellWidth) return;
+      stripWidth = width;
+      cellWidth = cell;
+      const focused = strip.querySelector<HTMLButtonElement>('[data-day]:focus');
+      reveal(focused?.dataset.day ?? selectedDateStr);
+    };
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', resize);
+      return () => window.removeEventListener('resize', resize);
+    }
+    const observer = new ResizeObserver(resize);
+    observer.observe(strip);
+    observer.observe(selected);
+    return () => observer.disconnect();
   }, [selectedDateStr]);
   const moveFocus = (event: KeyboardEvent<HTMLButtonElement>, current: string) => {
     const index = days.indexOf(current);
@@ -69,6 +88,7 @@ export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, on
     </div>
     <div ref={stripRef} className="home-week-scroll" role="region" aria-label="Días de la semana; desplazamiento horizontal si es necesario" tabIndex={0}>
     <div className="home-week-days" role="group" aria-labelledby={titleId}>
+      <SelectionIndicator value={selectedDateStr} selector='button[aria-pressed="true"]' className="home-week-indicator" />
       {days.map(day => <button type="button" key={day} data-day={day}
         disabled={!isHomeDate(day, today)} aria-pressed={day === selectedDateStr}
         aria-current={day === today ? 'date' : undefined}

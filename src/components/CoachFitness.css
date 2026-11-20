@@ -6,7 +6,6 @@
 
 /* Header, observation, transcript and composer follow the same theme as the shell. */
 .assistant-view {
-  --chat-inset: clamp(14px, 2.1vw, 28px);
   display: flex;
   flex: 1 1 0;
   flex-direction: column;
@@ -19,20 +18,13 @@
   color: var(--fit-ink);
 }
 
-.chat-heading, .chat-heading-actions, .chat-heading-actions button,
+.chat-heading-actions, .chat-heading-actions button,
 .chat-proactive-eyebrow, .chat-proactive-action, .chat-suggestion,
 .chat-proactive-evidence summary, .chat-save-status { display: flex; align-items: center; }
-.chat-heading {
-  flex: none; gap: 10px; padding: 10px var(--chat-inset);
-  border-bottom: 1px solid var(--fit-rule);
-}
-.chat-heading .brand-symbol-assistant { width: 32px; height: 32px; object-fit: contain; }
-.chat-heading-title { min-width: 0; }
 .chat-proactive-title, .coach-insight-card h4,
 .chat-proposal-heading h3, .chat-camera-panel h3 {
   font-family: var(--fit-face); font-weight: 700; line-height: 1.04;
 }
-.chat-heading-title p { color: var(--fit-quiet); font-size: 13px; }
 .chat-heading-actions { flex: none; gap: 2px; margin-left: auto; }
 .chat-heading-actions button {
   justify-content: center; gap: 7px; min-width: 44px; min-height: 44px; padding-inline: 8px;
@@ -220,7 +212,7 @@
 .chat-proposal-actions button { flex: 1 1 auto; }
 
 @media (max-width: 1099px) {
-  .chat-heading-actions button span, .chat-heading-title p { display: none; }
+  .chat-heading-actions button span { display: none; }
 }
 @media (min-width: 1000px) {
   .chat-proactive-body { display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 0 16px; }
@@ -229,8 +221,6 @@
   .chat-empty-suggestions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (min-width: 768px) {
-  .chat-heading { padding: 0 0 14px; }
-  .chat-heading .brand-symbol-assistant { width: 44px; height: 44px; }
   .chat-proactive { margin-inline: 0; }
   .chat-proactive-heading, .chat-proactive-body { padding-inline-start: var(--chat-inset); }
   .chat-messages { padding-inline: 0; }
@@ -242,7 +232,7 @@
   .chat-proactive-heading { padding-top: 11px; padding-bottom: 7px; }
   .chat-proactive-body { padding-bottom: 4px; }
   .chat-proactive-observation { margin-bottom: 8px; }
-  .chat-heading-actions button span, .chat-heading-title p, .chat-message-avatar, .chat-desktop-title { display: none; }
+  .chat-message-avatar, .chat-desktop-title { display: none; }
   .chat-mobile-title { display: inline; }
   .chat-message { gap: 0; }
   .chat-message-bot { max-width: 100%; }

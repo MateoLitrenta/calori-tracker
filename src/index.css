@@ -57,6 +57,13 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
 
 .app-bottom-nav .bottom-nav-item { position: relative; isolation: isolate; border-radius: var(--radius-control); transition: color var(--motion-control) var(--motion-ease-control), transform var(--motion-fast) var(--motion-ease-control); }
 .bottom-nav-track { position: relative; }
+.navigation-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  transition: transform var(--motion-control) var(--motion-ease-enter);
+}
 
 .app-bottom-nav .bottom-nav-item[aria-current="page"],
 .app-sidebar nav button[aria-current="page"] { color: var(--fit-accent); }
@@ -68,9 +75,10 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
 .bottom-nav-item:focus-visible { outline: 2px solid var(--fit-accent); outline-offset: -3px; }
 
 .view-skeleton { --skeleton-surface: var(--fit-surface); --skeleton-fill: var(--fit-soft); --skeleton-line: var(--fit-rule); display: flex; flex-direction: column; gap: 18px; width: 100%; max-width: var(--content-max); min-width: 0; margin-inline: auto; animation: calori-fade var(--motion-fast) var(--motion-ease-enter) 140ms both; }
-.skeleton-heading { display: flex; align-items: center; gap: 12px; min-height: 32px; }
 .skeleton-block { display: block; background: var(--skeleton-fill); border-radius: var(--radius-control); animation: calori-skeleton 1600ms ease-in-out infinite; }
-.skeleton-title { width: 140px; height: 22px; }
+.skeleton-caption { width: 9em; height: 1lh; }
+.skeleton-period { height: 54px; }
+@media (min-width: 601px) { .skeleton-period { width: 12rem; } }
 .skeleton-line { width: 55%; height: 18px; }
 .skeleton-avatar { width: 80px; height: 80px; flex: none; border-radius: var(--radius-pill); }
 .skeleton-surface { padding: 20px; background: var(--skeleton-surface); border: 1px solid var(--skeleton-line); border-radius: var(--radius-panel); }
@@ -83,7 +91,6 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
 .skeleton-identity { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
 .view-skeleton-profile .skeleton-widgets { display: none; }
 .view-skeleton-chat { max-width: 768px; flex: 1; min-height: 0; }
-.view-skeleton-chat .skeleton-avatar { width: 36px; height: 36px; }
 .view-skeleton-chat .skeleton-primary { flex: 1; min-height: 0; }
 .view-skeleton-chat .skeleton-secondary { min-height: 64px; }
 @media (min-width: 640px) { .skeleton-profile .skeleton-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
@@ -94,7 +101,6 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
   .app-shell-coach .app-content { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; padding: 0; }
   .app-shell-coach > .app-bottom-nav { position: absolute; bottom: 0; }
   .app-shell-coach .view-skeleton-chat { max-width: none; gap: 12px; }
-  .app-shell-coach .view-skeleton-chat .skeleton-heading { min-height: 60px; padding: 8px 12px; }
   .app-shell-coach .view-skeleton-chat .skeleton-primary { border: 0; border-radius: 0; background: transparent; }
   .app-shell-coach .view-skeleton-chat .skeleton-secondary { border-radius: 0; }
 }

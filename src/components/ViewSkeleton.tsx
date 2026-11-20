@@ -31,10 +31,23 @@ export default function ViewSkeleton({ view }: { view: Tab }) {
     <div key={view} role="status" aria-live="polite" aria-label="Cargando"
       className={`view-skeleton view-skeleton-${view}`}>
       <span className="sr-only">Cargando…</span>
-      <div aria-hidden="true" className="skeleton-heading">
-        {view === 'chat' && <span className="skeleton-block skeleton-avatar" />}
-        <span className="skeleton-block skeleton-title" />
-      </div>
+      {view === 'chat' ? (
+        <header className="chat-heading">
+          <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-assistant" />
+          <div className="chat-heading-title">
+            <h1 className="screen-title">Coach</h1>
+            <p aria-hidden="true" className="skeleton-block skeleton-caption" />
+          </div>
+        </header>
+      ) : view === 'charts' ? (
+        <header className="charts-header">
+          <div className="charts-heading">
+            <h1 className="screen-title">Datos</h1>
+            <p aria-hidden="true" className="charts-range skeleton-block skeleton-caption" />
+          </div>
+          <span aria-hidden="true" className="charts-period skeleton-block skeleton-period" />
+        </header>
+      ) : <h1 className="screen-title">Perfil</h1>}
       {view === 'profile' ? (
         <div aria-hidden="true" className="skeleton-surface skeleton-profile">
           <div className="skeleton-identity"><span className="skeleton-block skeleton-avatar" /><span className="skeleton-block skeleton-line" /></div>

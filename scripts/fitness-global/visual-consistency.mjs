@@ -21,10 +21,32 @@ async function geometry(page, selectors) {
     return [x,y,width,height].map(Math.round);
   }), selectors);
 }
+async function verifyLoadingHeading(page, tab) {
+  const heading = page.getByRole('heading', {level: 1});
+  const measure = () => heading.evaluate(el => {
+    const {x, y, height} = el.getBoundingClientRect();
+    const frame = (el.closest('header') ?? el).getBoundingClientRect();
+    return [x, y, height, frame.x, frame.y, frame.width, frame.height];
+  });
+  const ready = await measure();
+  await page.evaluate(() => window.__homeQA.setLoading(true));
+  await page.locator('.view-skeleton').waitFor();
+  assert.equal(await heading.count(), 1, tab);
+  assert.deepEqual(await measure(), ready, tab);
+  await page.evaluate(() => window.__homeQA.setLoading(false));
+  await page.locator('.view-skeleton').waitFor({state: 'detached'});
+}
 async function verifyHeaderActions(page, tab) {
   if (tab === 'Inicio') {
-    await page.getByRole('link', {name:'Ver registros'}).click();
+    assert.equal(await page.locator('.home-header').getByRole('link').count(), 0);
+    const toggle = page.locator('.home-history-toggle');
+    const collapsed = await toggle.isVisible() && await toggle.getAttribute('aria-expanded') === 'false';
+    if (collapsed) await toggle.click();
+    await page.locator('[data-history-open]').click();
     assert.ok(await page.locator('#fitness-daily-entries').evaluate(el => el === document.activeElement));
+    await page.locator('.history-record-return').click();
+    assert.ok(await page.locator('[data-history-root]').evaluate(el => el === document.activeElement));
+    if (collapsed) await toggle.click();
     await page.locator('.app-main').evaluate(el => { el.scrollTop = 0; });
   } else if (tab === 'Coach') {
     const heading = page.locator('.chat-heading');
@@ -115,7 +137,10 @@ async function run(width, theme) {
         return [css.fontFamily, css.fontStyle, css.fontWeight, css.fontSize, css.lineHeight, css.letterSpacing, css.textTransform, css.marginBlock];
       });
       if (tab !== 'Inicio') await shot(tab.toLowerCase());
-      if (!before) await verifyHeaderActions(page, tab);
+      if (!before) {
+        await verifyLoadingHeading(page, tab);
+        await verifyHeaderActions(page, tab);
+      }
     }
     if (!before) {
       assert.equal(Object.keys(row.titles).length, 4);

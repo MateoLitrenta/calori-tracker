@@ -135,10 +135,18 @@ async function run(width,theme) {
     await button('Guardar comida').click();
     await page.locator('.meal-saved').waitFor();
     if (pan && width===375 && theme==='dark') await page.locator('.meal-saved').screenshot({path:path.join(dir,'comida-guardada.jpg')});
-    await button('Cerrar confirmación').click();
-    await page.locator('.fitness-records-link').click();
-    assert.equal(new URL(page.url()).hash,'#fitness-daily-entries');
-    await page.locator('.daily-record-open').first().click();
+    if (before) {
+      await button('Cerrar confirmación').click();
+      await page.getByRole('link', {name: 'Ver registros', exact: true}).click();
+      assert.equal(new URL(page.url()).hash, '#fitness-daily-entries');
+      await page.locator('.daily-record-open').first().click();
+    } else {
+      await button('Ver registro').click();
+      const saved = page.locator('.daily-record-open:focus');
+      assert.equal(await saved.getAttribute('data-entry-kind'), 'meal');
+      assert.equal(await saved.locator('.daily-record-title').textContent(), desc.replace('Dos','Otro'));
+      await saved.click();
+    }
     await page.locator('.record-detail-edit').click();
     await input('edit-meal-description',desc); await keyboard('text'); await observe('edicion-descripcion',5);
     if(before) await keyboard(null);

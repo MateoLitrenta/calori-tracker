@@ -234,6 +234,14 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
   background: var(--fit-soft);
   color: var(--fit-ink);
 }
+/* Desktop weight shares the form actions' natural widths, wrapping and 48px minimum. */
+@media (min-width: 768px) {
+  .fitness-home .entry-weight-form .entry-form-footer { gap: 12px; padding: 16px; }
+  .fitness-home .entry-weight-form .entry-form-footer .entry-cancel:hover:enabled {
+    background: var(--fit-soft);
+    color: var(--fit-ink);
+  }
+}
 :is(.fitness-home, .fitness-entry-portal) .entry-time-row { flex-wrap: wrap; }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-content .entry-time-row input {
   /* Give the native hour, day period and picker space before wrapping Ahora. */

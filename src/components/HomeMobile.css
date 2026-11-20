@@ -157,8 +157,8 @@
 .home-variants .entry-weight-form .entry-field { display: flex; flex-direction: column; gap: 8px; }
 .home-variants .entry-weight-form .entry-field-label { position: static; width: auto; height: auto; overflow: visible; clip-path: none; white-space: normal; color: var(--home-text); font-size: 14px; }
 .home-variants .entry-weight-form .entry-form-content input { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid var(--home-line); border-radius: var(--radius-control); background: var(--home-control); color: var(--home-text); font-size: 20px; line-height: 1.4; }
-.home-variants .entry-weight-form .entry-form-footer { display: block; padding: 16px; border-top: 1px solid var(--home-line); }
-.home-variants .entry-weight-form .entry-weight-save { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; border-radius: var(--radius-control); background: var(--fit-orange); color: var(--fit-on-orange); font-size: 16px; font-weight: 600; }
+.fitness-entry-portal .entry-weight-form .entry-form-footer { display: block; padding: 16px; border-top: 1px solid var(--home-line); }
+.fitness-entry-portal .entry-weight-form .entry-weight-save { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; border-radius: var(--radius-control); background: var(--fit-orange); color: var(--fit-on-orange); font-size: 16px; font-weight: 600; }
 .home-variants .entry-desktop-modal:has(.entry-weight-form) > div:first-child > button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
 
 /* Record details share the entry shell's keyboard and viewport behavior. */

@@ -58,6 +58,7 @@ async function moduleURL(path) {
   return `data:text/javascript;base64,${Buffer.from(code).toString('base64')}`;
 }
 const loadModule = async path => import(await moduleURL(path));
+imports['./SelectionIndicator'] = await moduleURL('../src/components/SelectionIndicator.tsx');
 imports['./SegmentedControl'] = await moduleURL('../src/components/SegmentedControl.tsx');
 const { default: SegmentedControl } = await import(imports['./SegmentedControl']);
 
@@ -212,7 +213,7 @@ test('the existing theme provider persists preferences across remounts and follo
   }
 });
 
-test('Home mobile header contains only the brand while desktop Sidebar retains its theme control', () => {
+test('Home has one responsive title, with desktop brand and theme control in the sidebar', () => {
   const previousWindow = globalThis.window;
   globalThis.window = { location: { pathname: '/app' } };
   globalThis.__entryHarness.profileStore = {
@@ -220,7 +221,10 @@ test('Home mobile header contains only the brand while desktop Sidebar retains i
   };
   try {
     const header = node(mount(App, {}).render(), element => element.type === 'header');
-    assert.match(markup(header), />Calori<\/h1>/);
+    const headings = nodes(header, element => element.type === 'h1');
+    assert.equal(headings.length, 1);
+    assert.deepEqual(nodes(headings[0], element => element.type === 'span').map(span => span.props.children), ['Calori', 'Inicio']);
+    assert.equal(nodes(header, element => element.type === 'a').length, 0);
     assert.equal(nodes(header, element => element.type === 'img').length, 1);
     assert.equal(nodes(header, element => element.type === 'button' || element.type.name === 'ThemeToggle').length, 0);
     const sidebar = mount(Sidebar, { activeTab: 'home', onTabChange() {}, onAuthOpen() {} }).render();
@@ -724,6 +728,9 @@ test('lazy view fallback is accessible, matches the selected tab and has no inte
       assert.equal(skeleton.props['aria-live'], 'polite');
       assert.equal(skeleton.props['aria-label'], 'Cargando');
       assert.equal(skeleton.key, tab);
+      const titles = nodes(skeleton, element => element.type === 'h1').map(heading => heading.props.children);
+      // Inicio keeps its heading mounted in App while the skeleton replaces the body.
+      assert.deepEqual(titles, {home: [], chat: ['Coach'], charts: ['Datos'], profile: ['Perfil']}[tab]);
       assert.equal(nodes(skeleton, element => ['button', 'input', 'select'].includes(element.type)).length, 0);
     }
     globalThis.__entryHarness.profileStore.activeProfile = null;
@@ -819,7 +826,7 @@ test('App preserves independent tab scroll before view paint, excludes Coach and
       assert.equal(view.slots[0], tab);
       const headers = nodes(tree, element => element.type === 'header' && element.props.className.includes('home-header'));
       assert.equal(headers.length, tab === 'home' ? 1 : 0);
-      if (headers.length) assert.match(markup(headers[0]), />Calori<\/h1>/);
+      if (headers.length) assert.equal(nodes(headers[0], element => element.type === 'h1').length, 1);
       const shell = node(tree, element => element.props.className?.startsWith('app-shell '));
       assert.equal(shell.props.className.includes('app-shell-coach'), tab === 'chat');
       main.scrollTop = visitedScroll;
