@@ -4,6 +4,7 @@ import path from 'node:path';
 import { go, heights, metrics, open, period, repo, settled, start } from '../ux-stage1/browser.mjs';
 
 const before = process.argv.includes('--before');
+const mealAction = before ? '+ Comida' : 'Agregar comida';
 const mode = process.argv.includes('--flows') ? 'flows' : 'layout';
 const origin = 'http://127.0.0.1:' + (before ? '5197' : '5198');
 const directory = process.env.CALORI_QA_OUTPUT || path.join(repo, 'docs/evidence/ux-stage2', before ? 'before' : 'after');
@@ -12,7 +13,7 @@ mkdirSync(directory, { recursive: true });
 const report = path.join(directory, mode + '.json');
 const saveEvidence = () => writeFileSync(report, JSON.stringify(evidence, null, 2) + '\n');
 const browser = await start();
-const meal = page => page.getByRole('button', { name: '+ Comida', exact: true });
+const meal = page => page.getByRole('button', { name: mealAction, exact: true });
 const dialog = page => page.getByRole('dialog');
 const history = async page => {
   const toggle = page.locator('.home-history-toggle');
@@ -152,7 +153,7 @@ async function entries(page) {
   await dialog(page).getByRole('button', { name: 'Cancelar' }).click();
   await page.getByRole('button', { name: 'Descartar cambios' }).click();
   await dialog(page).waitFor({ state: 'hidden' });
-  assert.equal(await page.evaluate(() => document.activeElement?.textContent?.trim()), '+ Comida');
+  assert.equal(await page.evaluate(() => document.activeElement?.textContent?.trim()), mealAction);
   const { writes, ai } = await counters(page);
   assert.equal(ai, 0);
   assert.deepEqual(writes.map(w => [w.day, w.status]), [
@@ -171,7 +172,7 @@ async function habitsAndPhoto(page) {
   assert.ok(controls.every(([control, label]) => control >= 44 && control >= label), JSON.stringify(controls));
   for (const [label, expected] of [['Sumar 250 ml de agua', '2.500'], ['Sumar 500 pasos', '6.500']]) {
     await page.getByRole('button', { name: label }).evaluate(button => { button.click(); button.click(); button.click(); });
-    await page.waitForFunction(value => [...document.querySelectorAll('.habit-value')].some(e => e.textContent.trim() === value), expected);
+    await page.waitForFunction(value => [...document.querySelectorAll('.habit-value')].some(e => e.textContent.trim().split(/\s+(?:ml|pasos)$/)[0] === value), expected);
   }
   await page.waitForFunction(() => {
     const qa = window.__homeQA;

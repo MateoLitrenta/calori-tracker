@@ -732,6 +732,12 @@ test('lazy view fallback is accessible, matches the selected tab and has no inte
       // Inicio keeps its heading mounted in App while the skeleton replaces the body.
       assert.deepEqual(titles, {home: [], chat: ['Coach'], charts: ['Datos'], profile: ['Perfil']}[tab]);
       assert.equal(nodes(skeleton, element => ['button', 'input', 'select'].includes(element.type)).length, 0);
+      if (tab === 'home') {
+        const regions = nodes(skeleton, element => element.props.className?.startsWith('home-placeholder-'))
+          .map(region => region.props.className);
+        assert.deepEqual(regions, ['home-placeholder-date', 'home-placeholder-balance', 'home-placeholder-journal',
+          'home-placeholder-actions', 'home-placeholder-records', 'home-placeholder-habits', 'home-placeholder-history']);
+      }
     }
     globalThis.__entryHarness.profileStore.activeProfile = null;
     const profileLoading = mount(ProfileView, {}).render();

@@ -123,7 +123,13 @@ async function run(width, theme) {
       row.loading.forEach((box,i) => {
         assert.ok(box, names[i]);
         const actual = row.ready[i];
-        assert.ok(Math.abs(actual[1]-box[1]) <= 8, JSON.stringify({width,region:names[i],box,actual}));
+        // The server cannot predict a fifth entry and its disclosure, or a multi-line name.
+        // In one column the habits section follows the actual list's natural height.
+        const records = names.indexOf('records');
+        const belowRecords = names[i] === 'habits' && width < 1280;
+        const loadedY = actual[1] - (belowRecords ? row.ready[records][3] : 0);
+        const loadingY = box[1] - (belowRecords ? row.loading[records][3] : 0);
+        assert.ok(Math.abs(loadedY - loadingY) <= 8, JSON.stringify({width,region:names[i],box,actual}));
         assert.ok(Math.abs(actual[2]-box[2]) <= 3, JSON.stringify({width,region:names[i],box,actual}));
       });
     }

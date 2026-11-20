@@ -6,16 +6,21 @@ import { JSDOM } from 'jsdom';
 
 // CSS contracts only. JSDOM has no layout/container-query engine: these fixtures
 // explicitly select a container width. Browser geometry is verified separately.
-const files = ['index.css', 'DesktopExperience.css', 'components/HomeVariants.css', 'components/HomeMobile.css', 'components/FitnessHome.css', 'components/HomeSkeleton.css', 'FitnessSystem.css', 'components/CoachFitness.css', 'components/FitnessCharts.css', 'components/FitnessProfile.css', 'components/SegmentedControl.css', 'components/ActivityHistory.css', 'components/ActivityHistoryMotion.css'];
+const files = ['index.css', 'DesktopExperience.css', 'components/HomeVariants.css', 'components/HomeMobile.css', 'components/FitnessHome.css', 'components/FitnessDaily.css', 'components/HomeSkeleton.css', 'FitnessSystem.css', 'components/CoachFitness.css', 'components/FitnessCharts.css', 'components/FitnessProfile.css', 'components/SegmentedControl.css', 'components/ActivityHistory.css', 'components/ActivityHistoryMotion.css'];
 const source = (await Promise.all(files.map(file => readFile(new URL('../src/' + file, import.meta.url), 'utf8')))).join('\n');
 function stylesAt(width, height = 900, containerWidth = width) {
   const css = postcss.parse(source);
   css.walkAtRules(rule => {
     if (!['media', 'container'].includes(rule.name)) return;
     const queryWidth = rule.name === 'container' ? containerWidth : width;
-    const min = /min-width:\s*(\d+)px/.exec(rule.params), max = /max-width:\s*(\d+)px/.exec(rule.params);
+    // The text-size fixture uses a 16px container font by default.
+    const widthLimit = kind => {
+      const match = new RegExp(kind + '-width:\\s*([\\d.]+)(px|em)').exec(rule.params);
+      return match ? Number(match[1]) * (match[2] === 'em' ? 16 : 1) : null;
+    };
+    const min = widthLimit('min'), max = widthLimit('max');
     const minHeight = /min-height:\s*(\d+)px/.exec(rule.params), maxHeight = /max-height:\s*(\d+)px/.exec(rule.params);
-    if ((min && queryWidth < Number(min[1])) || (max && queryWidth > Number(max[1])) ||
+    if ((min !== null && queryWidth < min) || (max !== null && queryWidth > max) ||
       (minHeight && height < Number(minHeight[1])) || (maxHeight && height > Number(maxHeight[1])) || /prefers-reduced-motion/.test(rule.params)) rule.remove();
     else rule.replaceWith(...rule.nodes);
   });
@@ -27,9 +32,13 @@ function view(t, width, height = 900, containerWidth = width) {
     '<div class="app-main"><div class="app-content">' +
     '<section class="assistant-view"><header class="chat-heading"></header><div class="chat-messages">' +
     '<div class="chat-message chat-message-bot chat-message-structured"><div class="chat-bubble">Text</div></div></div><form class="chat-composer"></form></section>' +
-    '<div class="home-variants"><div class="daily-panel" data-period="day"><div class="daily-summary"><div class="energy-card"><div class="energy-headline"><div>Balance energético</div><div class="energy-number">-600 kcal</div><div class="energy-status bg-heatmap-deficit-high">Déficit Alto</div></div><div class="energy-footer"><p class="energy-coverage">1 comida · 0 ejercicios<span>Según tus registros</span></p><details class="energy-breakdown"><summary>Ver desglose</summary></details></div></div></div>' +
-    '<div class="daily-journal"><div class="daily-quick-actions"><button>Comida</button><button>Ejercicio</button></div><div class="daily-logs"><ul class="daily-records"><li><button class="daily-record-open"><span class="daily-record-title">Comida</span><span class="daily-record-meta">12:00 · Almuerzo</span></button></li></ul></div></div>' +
-    '<section class="daily-habits-block"><div class="daily-habits"><div class="habit-card"><div class="habit-header">Agua</div><div class="habit-metric"><button class="habit-value">1.500</button><span>ml</span></div><div class="habit-controls"><button>+</button></div></div></div></section></div>' +
+    '<div class="home-variants fitness-home"><div class="daily-panel" data-period="day"><div class="daily-summary"><section class="energy-card fitness-score" data-energy-state="recorded"><div class="fitness-readout"><h4>Balance energético</h4><div class="energy-number"><span>-600</span><small> kcal</small></div></div><details class="energy-breakdown fitness-breakdown"><summary aria-label="Ver desglose"><span class="fitness-breakdown-label">Ver desglose</span></summary><div class="fitness-breakdown-body"><p class="fitness-balance-category">Déficit Alto</p></div></details></section></div>' +
+    '<div class="daily-journal"><div class="daily-entry"><div class="daily-quick-actions"><button>Agregar comida</button><button>Agregar ejercicio</button></div></div>' +
+    '<div class="daily-logs"><ul class="daily-records" data-expanded="false">' +
+    '<li><button class="daily-record-open"><span class="fitness-record-mark"></span><span class="fitness-record-copy"><span class="daily-record-title">Comida</span><span class="daily-record-meta">12:00 · Almuerzo</span></span><span class="fitness-record-kcal">+300 kcal</span></button></li>'.repeat(5) +
+    '</ul><button class="daily-records-toggle">Ver todos los registros (5)</button></div>' +
+    '<section class="daily-habits-block"><div class="daily-habits"><div class="habit-card"><div class="habit-reading"><div class="habit-header"><span class="habit-label">Agua</span></div>' +
+    '<div class="habit-metric"><button class="habit-value">1.500 <small class="habit-unit">ml</small></button></div></div><div class="habit-controls"><button>−250</button><button>+250</button></div></div></div></section></div></div>' +
     '<section class="activity-history-v2"><header class="ah-header"><div><h2>Tu actividad</h2></div><div class="ah-view-switch segmented-control"><button aria-pressed="true">Mes</button></div></header>' +
     '<div class="ah-layout"><div class="ah-calendar"><div class="ah-navigation"><h3>Noviembre 2026</h3><div class="ah-nav-actions"><button>←</button><button>Hoy</button><button>→</button></div></div>' +
     '<div class="ah-compact-week"><p>Semana 2 de 5</p><div><button>←</button><button>→</button></div></div>' +
@@ -54,7 +63,6 @@ function view(t, width, height = 900, containerWidth = width) {
 test('desktop frames share their width cap, while Coach preserves readable prose and transcript-only scrolling', t => {
   for (const width of [1280, 1440, 1920]) {
     const { style, document } = view(t, width);
-    document.querySelector('.home-variants').classList.add('fitness-home');
     document.querySelector('.app-main').insertAdjacentHTML('afterbegin', '<header class="home-header"></header>');
     for (const tab of ['home', 'charts', 'profile', 'chat']) {
       document.querySelector('.app-content').insertAdjacentHTML('beforeend', `<div class="view-skeleton view-skeleton-${tab}"></div>`);
@@ -79,8 +87,8 @@ test('desktop frames share their width cap, while Coach preserves readable prose
 
 test('dashboard row follows its tallest content and analysis/settings share spacing without fixed card heights', t => {
   const { style } = view(t, 1440);
-  assert.equal(style('.daily-summary').alignItems, 'stretch');
-  assert.equal(style('.daily-habits').alignItems, 'stretch');
+  assert.equal(style('.daily-journal').gridTemplateAreas, '"entry records" "habits records"');
+  assert.equal(style('.daily-journal').alignItems, 'start');
   assert.equal(style('.habit-card').height, 'auto');
   assert.ok(parseInt(style('.habit-controls button').minHeight) >= 44);
   assert.equal(style('.charts-view').gap, style('.profile-view').gap);
@@ -91,13 +99,14 @@ test('dashboard row follows its tallest content and analysis/settings share spac
 
 test('daily energy categories share neutral presentation instead of rewarding a large recorded deficit', t => {
   const { document, style } = view(t, 393);
-  const pill = document.querySelector('.energy-status');
+  const category = document.querySelector('.fitness-balance-category');
+  assert.equal(category.closest('details').open, false);
   for (const dark of [false, true]) {
     document.documentElement.classList.toggle('dark', dark);
-    for (const category of ['deficit-high', 'deficit-medium', 'deficit-low', 'surplus-high', 'surplus-low', 'neutral']) {
-      pill.className = `energy-status bg-heatmap-${category}`;
-      assert.equal(style('.energy-status').background, 'var(--home-control)', `${dark}:${category}`);
-      assert.equal(style('.energy-status').color, 'var(--home-muted)', `${dark}:${category}`);
+    for (const label of ['Déficit Alto', 'Déficit Leve', 'Superávit', 'Mantenimiento']) {
+      category.textContent = label;
+      assert.equal(style('.fitness-balance-category').color, 'var(--fit-board-muted)', label);
+      assert.equal(style('.fitness-balance-category').backgroundColor, 'rgba(0, 0, 0, 0)', label);
     }
   }
 });
@@ -107,18 +116,17 @@ test('mobile daily actions and compact complementary controls retain comfortable
     const { style } = view(t, width);
     assert.ok(parseInt(style('.daily-quick-actions button').minHeight) >= 44);
     assert.ok(parseInt(style('.habit-controls button').minHeight) >= 44);
-    assert.ok(parseInt(style('.energy-breakdown summary').minHeight) >= 44);
-    assert.equal(style('.habit-controls').gridTemplateColumns, 'repeat(2, minmax(44px, 1fr))');
+    assert.ok(parseInt(style('.fitness-breakdown summary').minHeight) >= 44);
+    assert.equal(style('.habit-controls').display, 'flex');
+    assert.equal(style('.habit-controls').flexWrap, 'wrap');
     assert.equal(style('.daily-habits .habit-card').borderTopWidth, '0px');
-    assert.equal(style('.daily-habits').alignItems, 'stretch');
-    assert.equal(style('.daily-habits .habit-card').gridTemplateRows, 'auto minmax(58px, 1fr) auto');
-    assert.equal(style('.habit-metric').display, 'grid');
-    assert.equal(style('.habit-metric').gridTemplateRows, '44px 14px');
-    assert.equal(style('.habit-metric > :first-child').gridRow, '1');
-    assert.equal(style('.habit-metric > span:nth-child(2)').gridRow, '2');
-    assert.equal(style('.daily-records').gap, '8px');
-    assert.equal(style('.daily-record-open').padding, '10px 12px');
-    assert.equal(style('.daily-record-meta').flexWrap, 'wrap');
+    assert.equal(style('.habit-card').flexWrap, 'wrap');
+    assert.equal(style('.habit-metric').alignItems, 'baseline');
+    assert.ok(parseInt(style('.habit-value').minHeight) >= 44);
+    assert.ok(parseInt(style('.daily-record-open').minHeight) >= 44);
+    assert.equal(style('.daily-record-title').overflowWrap, 'anywhere');
+    assert.equal(style('.daily-records li:nth-child(5)').display, 'none');
+    assert.equal(style('.daily-records-toggle').display, 'inline-flex');
     assert.equal(style('.daily-logs').maxHeight, '');
     assert.equal(style('.daily-logs').overflowY, '');
   }

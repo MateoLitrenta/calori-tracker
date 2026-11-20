@@ -7,7 +7,7 @@ import path from 'node:path';
 import { repo, start, tabs } from './browser.mjs';
 
 const origin = 'http://127.0.0.1:5194';
-const out = path.join(repo, 'docs/evidence/navigation-polish/after');
+const out = process.env.CALORI_QA_OUTPUT_DIR || path.join(repo, 'docs/evidence/navigation-polish/after');
 const sidebar = { root: '.app-sidebar nav', marker: '.sidebar-nav-indicator', active: '[aria-current="page"]', axis: 'y' };
 const week = { root: '.home-week-days', marker: '.home-week-indicator', active: '[aria-pressed="true"]', axis: 'x' };
 const date = day => '2026-11-' + String(day).padStart(2, '0');
@@ -249,7 +249,7 @@ async function states(page) {
 
   // The modal is the first user-facing barrier. Exercise the application guards
   // separately by delivering synthetic clicks to the background buttons.
-  await button(page, '+ Comida').click();
+  await button(page, 'Agregar comida').click();
   const draft = page.getByLabel('Descripción', { exact: true });
   await draft.fill('Borrador sintético');
   const sidebarBlocked = page.locator(sidebar.root + ' button').nth(2);

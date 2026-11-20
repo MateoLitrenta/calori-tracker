@@ -858,7 +858,7 @@ test('a boundary arrow cannot leave a stale focus request that steals focus on t
 
 test('meal drafts survive date, period and month exploration and submit once to their original day', async t => {
   const view = await mount(t);
-  await view.click(view.button('+ Comida'));
+  await view.click(view.button('Agregar comida'));
   await fill('add-meal-description', 'Borrador conservado al explorar');
   await fill('add-meal-calories', '400');
   const textarea = document.getElementById('add-meal-description');
@@ -879,7 +879,7 @@ test('meal drafts survive date, period and month exploration and submit once to 
 
 test('a pending meal form prevents explicit opening from silently retargeting or discarding its input', async t => {
   const view = await mount(t);
-  await view.click(view.button('+ Comida'));
+  await view.click(view.button('Agregar comida'));
   await fill('add-meal-description', 'No cambiar mi día');
   const form = document.querySelector('.entry-form');
   await view.selectDay(mealDay);
@@ -892,7 +892,7 @@ test('a pending meal form prevents explicit opening from silently retargeting or
 
 test('exercise drafts retain their fields and original date while browsing a different calendar day', async t => {
   const view = await mount(t);
-  await view.click(view.button('+ Ejercicio'));
+  await view.click(view.button('Agregar ejercicio'));
   const values = { 'add-workout-activity': 'Correr', 'add-workout-duration': '35', 'add-workout-calories': '280',
     'add-workout-notes': 'Borrador de ejercicio que debe seguir disponible' };
   for (const [id, value] of Object.entries(values)) await fill(id, value);
@@ -913,7 +913,7 @@ test('exercise drafts retain their fields and original date while browsing a dif
 
 test('resizing the activity surface preserves selected context, daily date and pending text', async t => {
   const view = await mount(t);
-  await view.click(view.button('+ Comida'));
+  await view.click(view.button('Agregar comida'));
   await fill('add-meal-description', 'Borrador durante cambio de ancho');
   const form = document.querySelector('.entry-form');
   await view.selectDay(yesterday);

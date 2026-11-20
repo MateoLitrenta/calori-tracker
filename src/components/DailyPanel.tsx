@@ -32,6 +32,11 @@ type EntryReceipt = {
   id: string; date: string; name: string; calories: number; estimated: boolean;
 } & ({ kind: 'meal'; replacedPhoto: boolean } | { kind: 'workout'; duration: number });
 
+function findReceiptRow(list: HTMLUListElement | null, receipt: EntryReceipt) {
+  return Array.from(list?.querySelectorAll<HTMLButtonElement>('[data-entry-id]') ?? [])
+    .find(button => button.dataset.entryId === receipt.id && button.dataset.entryKind === receipt.kind);
+}
+
 // Only disclosure and explicit row navigation belong here. A date/profile change remounts this small
 // presentation component without touching entry forms or pending habit saves.
 function DailyRecords({ count, children, receipt, onDismiss }: {
@@ -40,10 +45,11 @@ function DailyRecords({ count, children, receipt, onDismiss }: {
   const [expanded, setExpanded] = useState(false);
   const listId = useId();
   const list = useRef<HTMLUListElement>(null);
-  const [destination, setDestination] = useState<{ row: HTMLButtonElement } | null>(null);
+  const [destination, setDestination] = useState<EntryReceipt | null>(null);
   useEffect(() => {
-    const row = destination?.row;
-    if (!row || !list.current?.contains(row)) return;
+    if (!destination) return;
+    const row = findReceiptRow(list.current, destination);
+    if (!row) return;
     row.focus({ preventScroll: true });
     row.scrollIntoView({ block: 'center', behavior: 'instant' });
     row.dataset.justSaved = 'true';
@@ -59,11 +65,10 @@ function DailyRecords({ count, children, receipt, onDismiss }: {
         {receipt.kind === 'meal' && receipt.replacedPhoto && <span>La limpieza de la foto anterior queda pendiente.</span>}
       </div>
       <button type="button" className="meal-saved-open" onClick={() => {
-        const rows = Array.from(list.current?.querySelectorAll<HTMLButtonElement>('[data-entry-id]') ?? []);
-        const index = rows.findIndex(button => button.dataset.entryKind === receipt.kind && button.dataset.entryId === receipt.id);
-        if (index < 0) return;
-        if (index >= 4) setExpanded(true);
-        setDestination({ row: rows[index] });
+        const row = findReceiptRow(list.current, receipt);
+        if (!row) return;
+        if (row.closest('li:nth-child(n + 5)')) setExpanded(true);
+        setDestination(receipt);
         onDismiss();
       }}>Ver registro</button>
       <button type="button" className="meal-saved-close" aria-label="Cerrar confirmación" onClick={onDismiss}>×</button>
