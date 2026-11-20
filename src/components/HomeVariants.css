@@ -78,7 +78,10 @@
 .home-variants .daily-logs li { background: var(--home-control); border: 0; border-radius: var(--home-radius-widget); padding: 0; gap: 0; }
 .home-variants .daily-record-open { display: flex; flex-direction: column; align-items: stretch; width: 100%; padding: 12px 16px; gap: 8px; border-radius: inherit; text-align: left; }
 .home-variants .daily-logs li:hover { background: var(--home-hover); }
-.home-variants .daily-records-toggle { display: none; }
+.home-variants .daily-records[data-expanded="false"] > li:nth-child(n + 5) { display: none; }
+.home-variants .daily-records[data-expanded="true"] > li:nth-child(n + 5) { animation: calori-enter var(--motion-control) var(--motion-ease-enter); }
+.home-variants .daily-records-toggle { display: inline-flex; justify-content: center; align-items: center; justify-self: center; min-height: 44px; padding: 8px 16px; color: var(--home-muted); background: transparent; border: 1px solid var(--home-line); border-radius: var(--home-radius-control); font-size: 13px; }
+.home-variants .daily-records-toggle:hover { color: var(--home-text); background: var(--fit-soft); }
 .home-variants .record-detail-modal { border-radius: var(--radius-panel); }
 .home-variants .entry-form-content { display: contents; }
 .home-variants .entry-mobile-footer { display: none; }
@@ -466,11 +469,6 @@ html:not(.dark) .home-variants .activity-history { --heatmap-selected: #2563eb; 
   .app-shell .home-variants .daily-records { gap: 8px; }
   .app-shell .home-variants .daily-record-open { padding: 8px 12px; gap: 4px; }
   .app-shell .home-variants .daily-records:empty { display: none; }
-  .app-shell .home-variants .daily-records--columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
-  .app-shell .home-variants .daily-records[data-expanded="false"] > li:nth-child(n + 5) { display: none; }
-  .app-shell .home-variants .daily-records[data-expanded="true"] > li:nth-child(n + 5) { animation: calori-enter var(--motion-control) var(--motion-ease-enter); }
-  .app-shell .home-variants .daily-records-toggle { display: inline-flex; justify-content: center; align-items: center; justify-self: center; min-height: 44px; padding: 8px 16px; color: var(--home-muted); background: transparent; border: 1px solid var(--home-line); border-radius: var(--home-radius-control); font-size: 13px; }
-  .app-shell .home-variants .daily-records-toggle:hover { color: var(--home-text); background: var(--home-hover); }
   .app-shell .home-variants :is(.daily-records li, .daily-record-title, .daily-record-title > span, .daily-record-meta) { min-width: 0; overflow-wrap: anywhere; }
   .app-shell .home-variants .daily-record-title { line-height: 1.4; }
   .app-shell .home-variants .daily-record-meta { flex-wrap: wrap; gap: 6px; margin-top: 0; }

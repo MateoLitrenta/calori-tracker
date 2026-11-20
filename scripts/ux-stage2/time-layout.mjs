@@ -4,6 +4,8 @@ import path from 'node:path';
 import { open, repo, settled, start } from '../ux-stage1/browser.mjs';
 
 const before = process.argv.includes('--before');
+const mealAction = before ? '+ Comida' : 'Agregar comida';
+const workoutAction = before ? '+ Ejercicio' : 'Agregar ejercicio';
 const directory = process.env.CALORI_QA_OUTPUT || path.join(repo, 'docs/evidence/ux-stage2/entry-time', before ? 'before' : 'after');
 mkdirSync(directory, { recursive: true });
 const results = [];
@@ -59,7 +61,7 @@ try {
         for (const mode of ['add-meal', 'edit-meal', 'add-workout', 'edit-workout']) {
           const isMeal = mode.endsWith('meal');
           if (mode.startsWith('add')) {
-            await page.getByRole('button', { name: isMeal ? '+ Comida' : '+ Ejercicio', exact: true }).click();
+            await page.getByRole('button', { name: isMeal ? mealAction : workoutAction, exact: true }).click();
           } else {
             await page.locator('.daily-record-open').filter({ hasText: isMeal ? 'Comida sintética' : 'Gimnasio' }).first().click();
             await page.locator('.record-detail-edit').click();

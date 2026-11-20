@@ -7,6 +7,7 @@ interface EntryFormShellProps {
   onClose: () => void;
   children: ReactNode;
   desktopModal?: boolean;
+  dailyEditor?: boolean;
   closeLabel?: string;
   fitness?: boolean;
   dateContext?: ReactNode;
@@ -41,7 +42,7 @@ function focusedBounds(field: HTMLElement) {
   return { top, bottom: top + height };
 }
 
-export default function EntryFormShell({ title, onClose, children, desktopModal = false, closeLabel = 'Cerrar formulario', fitness = false, dateContext, restoreFocusTo }: EntryFormShellProps) {
+export default function EntryFormShell({ title, onClose, children, dailyEditor = false, desktopModal = dailyEditor, closeLabel = 'Cerrar formulario', fitness = false, dateContext, restoreFocusTo }: EntryFormShellProps) {
   const [mobile, setMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -55,17 +56,19 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
     return () => query.removeEventListener('change', change);
   }, []);
 
+  const modal = mobile || desktopModal;
+  const portalled = mobile || dailyEditor;
   useEffect(() => {
-    if ((!mobile && !desktopModal) || !dialogRef.current) return;
+    if (!modal || !dialogRef.current) return;
     const dialog = dialogRef.current;
     openerRef.current ??= restoreFocusTo?.current ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
     const main = document.querySelector<HTMLElement>('.app-main');
     const previousOverflow = main?.style.overflowY;
     const bodyOverflow = document.body.style.overflow;
-    // Mobile sheets are portalled; desktop dialogs can be inside .app-main.
+    // Daily editors and mobile sheets are portalled. Other dialogs can be inside .app-main.
     // Never make an ancestor inert, which would disable the dialog itself.
     const background = Array.from(document.querySelectorAll<HTMLElement>('.app-main, .app-bottom-nav, .app-shell > aside'))
-      .filter(element => mobile || !element.contains(dialog));
+      .filter(element => portalled || !element.contains(dialog));
     const previousInert = background.map(element => element.inert);
     background.forEach(element => { element.inert = true; });
     if (main) main.style.overflowY = 'hidden';
@@ -101,10 +104,22 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
     document.addEventListener('keydown', keyboard);
     document.addEventListener('focusin', containFocus);
 
+    return () => {
+      document.removeEventListener('keydown', keyboard);
+      document.removeEventListener('focusin', containFocus);
+      background.forEach((element, index) => { element.inert = previousInert[index]; });
+      if (main) main.style.overflowY = previousOverflow ?? '';
+      document.body.style.overflow = bodyOverflow;
+      if (openerRef.current?.isConnected) openerRef.current.focus({ preventScroll: true });
+    };
+  }, [modal, portalled, restoreFocusTo]);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!mobile || !dialog) return;
     const viewport = window.visualViewport;
-    const editor = mobile && fitness && !!dialog.querySelector('form.entry-form');
+    const editor = fitness && !!dialog.querySelector('form.entry-form');
     const updateViewport = () => {
-      if (!mobile) return;
       const height = viewport?.height ?? window.innerHeight;
       dialog.style.setProperty('--entry-viewport-height', `${height}px`);
       if (editor) {
@@ -119,7 +134,6 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
       }
     };
     const revealField = () => {
-      if (!mobile) return;
       const content = dialog.querySelector<HTMLElement>('.entry-form-content');
       const field = document.activeElement;
       if (!content || !(field instanceof HTMLElement) || !content.contains(field)) return;
@@ -166,14 +180,8 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
       dialog.removeEventListener('input', scheduleReveal);
       dialog.removeEventListener('select', followSelection);
       document.removeEventListener('selectionchange', followSelection);
-      document.removeEventListener('keydown', keyboard);
-      document.removeEventListener('focusin', containFocus);
-      background.forEach((element, index) => { element.inert = previousInert[index]; });
-      if (main) main.style.overflowY = previousOverflow ?? '';
-      document.body.style.overflow = bodyOverflow;
-      if (openerRef.current?.isConnected) openerRef.current.focus({ preventScroll: true });
     };
-  }, [mobile, desktopModal, restoreFocusTo, fitness]);
+  }, [mobile, fitness]);
 
   const heading = fitness ? <div className="entry-sheet-heading">
     <h3 id={titleId}>{title}</h3>
@@ -186,21 +194,15 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
     </button>
   </div>;
 
-  if (mobile) return createPortal(
-    <div className={`home-variants entry-sheet-root${fitness ? ' fitness-entry-portal' : ''}`}>
-      <div className="entry-sheet-backdrop">
-        <div ref={dialogRef} className="entry-bottom-sheet" role="dialog" aria-labelledby={titleId} aria-modal="true">
-          <span className="entry-sheet-handle" aria-hidden="true" />
-          {header}
-          {children}
-        </div>
-      </div>
-    </div>, document.body
-  );
+  if (!modal) return children;
 
-  if (desktopModal) return <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} data-fitness={fitness || undefined} className="entry-desktop-modal bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl shadow-xl flex flex-col animate-in zoom-in-95 duration-200">
-      {fitness ? header : <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
+  const desktopBackdrop = 'fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in';
+  const desktopPanel = 'entry-desktop-modal bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl shadow-xl flex flex-col animate-in zoom-in-95 duration-200';
+  const dialog = <div className={mobile ? 'entry-sheet-backdrop' : desktopBackdrop}>
+    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId}
+      data-fitness={(!mobile && fitness) || undefined} className={mobile ? 'entry-bottom-sheet' : desktopPanel}>
+      {mobile && <span className="entry-sheet-handle" aria-hidden="true" />}
+      {fitness || mobile ? header : <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
         <h3 id={titleId} className="font-bold text-lg text-slate-900 dark:text-white">{title}</h3>
         <button ref={closeRef} type="button" onClick={onClose} className="text-slate-500 dark:text-gray-400 hover:text-white transition-colors p-1" aria-label={closeLabel}><X size={20} /></button>
       </div>}
@@ -208,5 +210,11 @@ export default function EntryFormShell({ title, onClose, children, desktopModal 
     </div>
   </div>;
 
-  return children;
+  if (!portalled || typeof document === 'undefined') return dialog;
+  // One portal and one form subtree survive a change between sheet and desktop editor.
+  return createPortal(<div className={mobile
+    ? 'home-variants entry-sheet-root' + (fitness ? ' fitness-entry-portal' : '')
+    : 'home-variants fitness-home'} style={mobile ? undefined : { display: 'contents' }}>
+    {dialog}
+  </div>, document.body);
 }

@@ -1,0 +1,38 @@
+{
+  "editor": {
+    "widths": [
+      375,
+      768,
+      1440,
+      375
+    ],
+    "systemThemes": [
+      "light",
+      "dark",
+      "light",
+      "dark"
+    ],
+    "fieldIdentity": true,
+    "focus": true,
+    "photo": true,
+    "error": true,
+    "retrySingleWrite": true,
+    "editableDate": "2026-11-09",
+    "returnToRow": true,
+    "habitFailureRetriedOnSameDay": true
+  },
+  "journey": {
+    "rows": 6,
+    "visibleBefore": 4,
+    "visibleAfter": 6,
+    "sameName": 2,
+    "focusedOrdinal": 6,
+    "kind": "meal",
+    "scrollChangeOnSave": 0,
+    "waterBefore": 1750,
+    "waterAfter": 2000,
+    "expansionPreserved": true,
+    "interactionSeconds": 4.84
+  },
+  "browser": "158.0.8127.36"
+}

@@ -11,7 +11,9 @@ import { globalSupabase, installGlobalFixture } from '../fitness-global/fixture.
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const safariForms = process.argv.includes('--safari-forms');
 const mealFlow = safariForms || process.argv.includes('--meal-flow');
-const navigationPolish = process.argv.includes('--navigation-polish');
+const compactHabits = process.argv.includes('--compact-habits');
+const homeComposition = compactHabits || process.argv.includes('--home-composition');
+const navigationPolish = homeComposition || process.argv.includes('--navigation-polish');
 const homeControls = navigationPolish || process.argv.includes('--home-controls');
 const visual = process.argv.includes('--visual');
 const stage4 = process.argv.includes('--stage4');
@@ -26,9 +28,9 @@ const fitness = beforeFitness || process.argv.includes('--fitness');
 const beforeRefinement = process.argv.includes('--before-refinement');
 const refinement = beforeRefinement || process.argv.includes('--refinement');
 const before = process.argv.includes('--before') || beforeRefinement || beforeFitness || beforeGlobal;
-const base = navigationPolish ? '356ebe8bdc65c393633e5eb6f0abb8a0398da504' : homeControls ? '297982fef0da8ca1cb59677c25496051c9a54457' : process.argv.includes('--pan') ? 'e4dd0b2f0af1fd341318fc31b381ad8facefe412' : safariForms ? 'b9f030a92f0e60cfd7f761792742f8c3415755ad' : mealFlow ? '7dce90cb72119a5c5d6bd560bb2a9710b7d94dd1' : visual ? '51f7daa2d248c186c4a3d1c8700cf6bd13997eae' : stage4 ? 'a740e1b1897b83dfea35ffa4d85373c3afbf51ed' : stage3 ? 'a2021b32c22ea985d33f5ed681d3c507cef1f0b8' : stage2 ? 'c2c62c94a25c44559ab926f8d954305e32a36317' : stage1 ? 'c365e1e6f236ab76d17b46cbd8fe1ec9eace8831' : globalQA ? '10117215cf7071dc754e175294588f4a30a959b9' : fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
+const base = compactHabits ? '8bb158d46a703f321dddbb2aac608477c355cc96' : homeComposition ? '7621f70aaec4233aebd8deb16979b5f0da9d8f64' : navigationPolish ? '356ebe8bdc65c393633e5eb6f0abb8a0398da504' : homeControls ? '297982fef0da8ca1cb59677c25496051c9a54457' : process.argv.includes('--pan') ? 'e4dd0b2f0af1fd341318fc31b381ad8facefe412' : safariForms ? 'b9f030a92f0e60cfd7f761792742f8c3415755ad' : mealFlow ? '7dce90cb72119a5c5d6bd560bb2a9710b7d94dd1' : visual ? '51f7daa2d248c186c4a3d1c8700cf6bd13997eae' : stage4 ? 'a740e1b1897b83dfea35ffa4d85373c3afbf51ed' : stage3 ? 'a2021b32c22ea985d33f5ed681d3c507cef1f0b8' : stage2 ? 'c2c62c94a25c44559ab926f8d954305e32a36317' : stage1 ? 'c365e1e6f236ab76d17b46cbd8fe1ec9eace8831' : globalQA ? '10117215cf7071dc754e175294588f4a30a959b9' : fitness ? '1fafb3ef78876473143dc18c40ca27fdf65a40e0'
   : refinement ? 'fe01ecb86e0933c5260c2630fe4d7a6e82ebccdd' : '5a74e7279c77a7d1dc25fb5604d5fa0d657d6bf5';
-const phase = navigationPolish ? (before ? 'navigation-before' : 'navigation-after') : homeControls ? (before ? 'controls-before' : 'controls-after') : safariForms ? (before ? 'safari-before' : 'safari-after') : mealFlow ? (before ? 'meal-flow-before' : 'meal-flow-after') : visual ? (before ? 'visual-before' : 'visual-after') : stage4 ? (before ? 'stage4-before' : 'stage4-after') : stage3 ? (before ? 'stage3-before' : 'stage3-after') : stage2 ? (before ? 'stage2-before' : 'stage2-after') : stage1 ? (before ? 'stage1-before' : 'stage1-after') : beforeGlobal ? 'before-global' : globalQA ? 'global' : beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
+const phase = compactHabits ? (before ? 'compact-habits-before' : 'compact-habits-after') : homeComposition ? (before ? 'composition-before' : 'composition-after') : navigationPolish ? (before ? 'navigation-before' : 'navigation-after') : homeControls ? (before ? 'controls-before' : 'controls-after') : safariForms ? (before ? 'safari-before' : 'safari-after') : mealFlow ? (before ? 'meal-flow-before' : 'meal-flow-after') : visual ? (before ? 'visual-before' : 'visual-after') : stage4 ? (before ? 'stage4-before' : 'stage4-after') : stage3 ? (before ? 'stage3-before' : 'stage3-after') : stage2 ? (before ? 'stage2-before' : 'stage2-after') : stage1 ? (before ? 'stage1-before' : 'stage1-after') : beforeGlobal ? 'before-global' : globalQA ? 'global' : beforeFitness ? 'before-fitness' : fitness ? 'fitness' : beforeRefinement ? 'before-refinement' : refinement ? 'after-refinement' : before ? 'before' : 'after';
 let root = repo;
 if (before) {
   root = path.resolve(repo, homeControls ? '../controls-baseline-' + base.slice(0,7) : mealFlow ? '../meal-flow-baseline-' + base.slice(0,7) : visual ? '../visual-baseline-' + base.slice(0,7) : stage4 ? '../stage4-baseline-' + base.slice(0,7) : stage3 ? '../stage3-baseline-' + base.slice(0,7) : stage1 ? '../stage1-baseline-' + base.slice(0,7) : beforeGlobal ? '../global-baseline-' + base.slice(0,7) : beforeFitness ? '../home-fitness-baseline-' + base.slice(0,7) : beforeRefinement ? '../home-v10-1-1-refinement-baseline' : '../home-v10-1-1-baseline');
@@ -100,6 +102,28 @@ const external = {
   '/services/aiTransport.ts': `export class AIRequestError extends Error{};export async function requestAI(body){window.__homeQA.aiCalls.push(body);window.__homeQA.notify();return body.mode==='estimate'?{estimated:true,calories:body.estimateType==='workout'?220:450,assumptions:['Estimación sintética de QA'],description:'Comida sintética'}:{reply:'Respuesta sintética de QA',actions:[],presentation:'none'};}`,
   '/services/coachGoals.ts': `export class CoachGoalsError extends Error{};export async function fetchCoachGoals(){return{goals:[],hasMore:false}};export async function confirmCoachGoal(){throw Error('No goal writes in home QA')}`,
 };
+if (compactHabits) {
+  // Match the application lifetime: Home can unmount while the account's writer lives on.
+  external['/hooks/useAppStore.ts'] = `
+import {useEffect,useMemo,useSyncExternalStore} from 'react';
+import {HabitDraftController} from '/src/lib/habitDraft.ts';
+const qa=window.__homeQA;
+const subscribe=notify=>{qa.listeners.add(notify);return()=>qa.listeners.delete(notify)};
+export function useAppStore(){
+  const store=useSyncExternalStore(subscribe,()=>qa.store);
+  const owner=store.user.id;
+  const habitDrafts=useMemo(()=>new HabitDraftController(day=>{
+    const profile=qa.store.activeProfile;
+    return {...(profile.records[day]??{dateStr:day,date:day+'T12:00:00',steps:0,water:0,meals:[],workouts:[],version:null}),generation:profile.recordGeneration};
+  },async(day,record,options)=>{
+    if(qa.habitWriteGate) await qa.habitWriteGate;
+    if(qa.store.user.id!==owner)return false;
+    return qa.store.updateRecord(day,record,options);
+  }),[owner]);
+  useEffect(()=>{habitDrafts.connect();return()=>habitDrafts.dispose()},[habitDrafts]);
+  return {...store,habitDrafts};
+}`;
+}
 if (globalQA) {
   external['/lib/supabase.ts'] = globalSupabase;
   delete external['/services/aiTransport.ts'];

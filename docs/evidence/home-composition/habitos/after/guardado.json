@@ -1,0 +1,38 @@
+{
+  "states": [
+    {
+      "text": "",
+      "ms": 0,
+      "bandHeight": 166.734375,
+      "controlsTopFromHeading": 40.546875
+    },
+    {
+      "text": "Guardando…",
+      "ms": 615,
+      "bandHeight": 166.734375,
+      "controlsTopFromHeading": 40.546875
+    },
+    {
+      "text": "✓ Guardado",
+      "ms": 1368,
+      "bandHeight": 166.734375,
+      "controlsTopFromHeading": 40.546875
+    },
+    {
+      "text": "",
+      "ms": 4280,
+      "bandHeight": 166.734375,
+      "controlsTopFromHeading": 40.546875
+    }
+  ],
+  "receiptToExpiryMs": 3017,
+  "visibleSuccessMs": 2912,
+  "retainedFocus": true,
+  "secondPendingSurvivesFirstDeadline": true,
+  "secondSuccessKeepsOwnDeadline": true,
+  "failedWriteRetainsDraft": true,
+  "retryConfirmed": true,
+  "conflictSurvivesPreviousDeadline": true,
+  "dateScoped": true,
+  "expiredOnReturn": true
+}

@@ -9,6 +9,7 @@ import { JSDOM } from 'jsdom';
 import ts from 'typescript';
 import { formatDateStr } from '../src/utils/helpers.ts';
 import { AIRequestError } from '../src/services/aiTransport.ts';
+import { HabitDraftController } from '../src/lib/habitDraft.ts';
 
 
 const source = await readFile(new URL('../src/components/DailyPanel.tsx', import.meta.url), 'utf8');
@@ -69,7 +70,7 @@ test('DailyPanel renders dynamic expenditure after steps and workout add/edit/de
     [{ ...base, steps: 7000, workouts: [] }, '1.898']]) {
     const text = render(record);
     assert.ok(text.includes(`Gasto estimado${target} kcal`));
-    assert.ok(text.includes('Calorías consumidas0 kcal'));
+    assert.ok(text.includes('Calorías consumidasSin ingesta registrada'));
   }
 });
 
@@ -97,7 +98,10 @@ test('activity without meals keeps the exact provisional balance inside the clos
     assert.doesNotMatch(doc.querySelector('.fitness-readout').textContent, /kcal|déficit/i);
     const details = doc.querySelector('.fitness-breakdown');
     assert.equal(details.open, false);
-    assert.match(details.textContent, /Saldo calculado con la ingesta registrada: -1\.898 kcal/);
+    assert.equal(doc.querySelector('.fitness-comparison').textContent, 'Gasto estimado1.898 kcal');
+    assert.equal(doc.querySelector('.fitness-track'), null);
+    assert.equal(details.querySelector('.fitness-breakdown-values dd').textContent, 'Sin ingesta registrada');
+    assert.match(details.textContent, /Saldo provisional con los registros disponibles: -1\.898 kcal/);
   } finally { dom.window.close(); }
   assert.match(html, /Sin comidas registradas/);
   assert.equal((html.match(/Sin comidas registradas/g) || []).length, 1);
@@ -119,9 +123,11 @@ test('days without energy logs name the missing energy data and keep estimates i
       assert.equal(document.querySelector('.energy-status'), null);
       const breakdown = document.querySelector('.energy-breakdown');
       assert.equal(breakdown.open, false);
+      assert.equal(breakdown.querySelector('.fitness-breakdown-values dd').textContent, 'Sin ingesta registrada');
+      assert.match(breakdown.textContent, /Sin registros de ingesta o actividad, todavía no se puede interpretar el balance/);
       assert.match(breakdown.textContent, /El gasto incluye la estimación basal/);
       assert.match(breakdown.textContent, /TMB: 1\.618 kcal/);
-      assert.equal(document.querySelector('.energy-metrics').textContent, 'Calorías consumidas—Gasto estimado—');
+      assert.equal(document.querySelector('.energy-metrics'), null, 'An empty day has no measured intake or expenditure to compare');
       assert.equal(document.querySelectorAll('.fitness-track > span').length, 0);
       assert.match(breakdown.textContent, /Gasto estimado1\.618 kcal/);
       if (day === dateStr) assert.match(breakdown.textContent, /Balance estimado: -1\.618 kcal/);
@@ -150,6 +156,11 @@ test('energy bars use the same daily maximum, including days with intake above e
     try {
       const { document } = dom.window;
       const scale = Math.max(calories, 1618);
+      if (calories === 0) {
+        assert.equal(document.querySelector('.fitness-channel dd').textContent, '0 kcal');
+        assert.equal(document.querySelector('.fitness-breakdown-values dd').textContent, '0 kcal');
+      }
+      if (calories === 1618) assert.equal(document.querySelector('.energy-number').textContent, '0 kcal');
       const bars = [...document.querySelectorAll('.fitness-track')];
       assert.equal(bars.length, 2);
       assert.deepEqual(bars.map(bar => bar.getAttribute('aria-hidden')), ['true', 'true']);
@@ -170,12 +181,12 @@ test('only empty meal and workout lists use the compact records state', () => {
   }));
   assert.match(html(base), /daily-logs--empty/);
   assert.match(html(base), /Registros del día/);
-  assert.match(html(base), /Todavía no cargaste comidas ni entrenamientos\./);
+  assert.match(html(base), /Las comidas y los ejercicios que agregues para este día aparecerán acá\./);
   for (const record of [
     { ...base, meals: [{ id: 'm', name: 'Ensalada', type: 'Almuerzo', calories: 400 }] },
     { ...base, workouts: [{ id: 'w', activity: 'Gimnasio', calories: 300, duration: 45 }] },
   ]) {
-    assert.doesNotMatch(html(record), /daily-logs--empty|Todavía no cargaste/);
+    assert.doesNotMatch(html(record), /daily-logs--empty|aparecerán acá/);
     assert.match(html(record), /<li/);
     assert.match(html(record), /Registros del día/);
   }
@@ -193,13 +204,13 @@ test('journal keeps every record and its full description in chronological DOM o
     assert.equal((html.match(/<li\b/g) || []).length, count);
     assert.equal((html.match(/Registros del día/g) || []).length, 1);
     assert.match(html, new RegExp(`data-record-count="${count}"`));
-    assert.equal(html.includes('daily-records--columns'), count >= 2);
+    assert.equal(html.includes('class="daily-records-toggle"'), count > 4);
     for (let index = 0; index < count; index++) {
       assert.ok(html.includes(records[index].name), 'Long descriptions must remain complete');
       assert.ok(html.replace(/<[^>]+>/g, '').includes(`+${records[index].calories} kcal`));
       if (index) assert.ok(html.indexOf(records[index - 1].name) < html.indexOf(records[index].name));
     }
-    assert.ok(html.indexOf('+ Comida') < html.indexOf('Registros del día'), 'Keep the existing mobile reading order');
+    assert.ok(html.indexOf('Agregar comida') < html.indexOf('Registros del día'), 'Keep the existing mobile reading order');
   }
 });
 
@@ -211,7 +222,7 @@ test('habit controls keep accessible names and daily quick actions', () => {
   for (const name of ['Restar 250 ml de agua', 'Sumar 250 ml de agua', 'Restar 500 pasos', 'Sumar 500 pasos']) {
     assert.ok(html.includes(`aria-label="${name}"`));
   }
-  for (const label of ['2.500', '18.500', '105', '+ Comida', '+ Ejercicio', 'Editar']) {
+  for (const label of ['2.500', '18.500', '105', 'Agregar comida', 'Agregar ejercicio', 'Editar']) {
     assert.ok(html.includes(label));
   }
   assert.doesNotMatch(html,/Pasos\/Agua|habit-adjustments/);
@@ -228,7 +239,7 @@ test('daily reading order keeps actions, habits and chronological records togeth
   const document = dom.window.document;
   try {
     const inOrder = [...document.querySelectorAll('.energy-card, .daily-quick-actions, .daily-logs, .daily-habits-block')].map(node => node.className.split(' ')[0]);
-    assert.deepEqual(inOrder, ['energy-card', 'daily-quick-actions', 'daily-habits-block', 'daily-logs']);
+    assert.deepEqual(inOrder, ['energy-card', 'daily-quick-actions', 'daily-logs', 'daily-habits-block']);
     assert.equal(document.querySelectorAll('.daily-quick-actions').length, 1);
     assert.equal(document.querySelectorAll('.daily-habits').length, 1);
     assert.equal(document.querySelectorAll('.daily-record-open').length, 2);
@@ -335,7 +346,7 @@ test('rapid water and step taps update locally and save combined final values on
     node(tree, e => e.props['aria-label'] === 'Sumar 500 pasos').props.onClick();
   }
   const html = renderToStaticMarkup(view());
-  assert.match(html, />1\.500<\/button>/);
+  assert.match(html, />1\.500 <small class="habit-unit">ml<\/small><\/button>/);
   assert.match(html, />3\.000<\/button>/);
   assert.equal(saves.length, 0);
   t.mock.timers.tick(399);
@@ -368,7 +379,7 @@ test('habit taps during an outstanding save wait instead of dispatching a stale 
 
 test('quick actions open forms and values retain inline editing', () => {
   const view = mount({ profile, record: base, dateStr, records: {}, onUpdateRecord: async () => true });
-  for (const [label, content] of [['+ Comida', 'Agregar comida'], ['+ Ejercicio', 'Agregar ejercicio']]) {
+  for (const [label, content] of [['Agregar comida', 'Agregar comida'], ['Agregar ejercicio', 'Agregar ejercicio']]) {
     const button = () => node(view(), e => e.type === 'button' && e.props.children?.trim?.() === label);
     button().props.onClick();
     assert.ok(renderToStaticMarkup(view()).includes(content));
@@ -392,7 +403,7 @@ test('quick actions open forms and values retain inline editing', () => {
 test('registration actions and both entry forms expose the selected date, including historical days', () => {
   const selected = '2026-01-09';
   const view = mount({ profile, dateStr: selected, record: { ...base, dateStr: selected }, records: {}, onUpdateRecord: async () => false });
-  for (const action of ['+ Comida', '+ Ejercicio']) {
+  for (const action of ['Agregar comida', 'Agregar ejercicio']) {
     const button = node(view(), e => e.type === 'button' && e.props.children?.trim?.() === action);
     const label = node(view(), e => e.props.id === button.props['aria-describedby']);
     assert.equal(label.type, 'time'); assert.equal(label.props.dateTime, selected);
@@ -423,7 +434,7 @@ const submit = view => node(view(), element => element.type === 'form').props.on
 test('mobile meal and workout actions open a named modal dialog; steps and water stay inline', t => {
   mobileEnvironment(t);
   const view = entryView();
-  for (const [action, title] of [['+ Comida', 'Agregar comida'], ['+ Ejercicio', 'Agregar ejercicio']]) {
+  for (const [action, title] of [['Agregar comida', 'Agregar comida'], ['Agregar ejercicio', 'Agregar ejercicio']]) {
     open(view, action);
     const dialog = node(sheet(view), element => element.props.role === 'dialog');
     assert.equal(dialog.props['aria-modal'], 'true');
@@ -440,7 +451,7 @@ test('mobile meal and workout actions open a named modal dialog; steps and water
 test('explicit close asks before discarding text and a temporary photo', t => {
   mobileEnvironment(t);
   const view = entryView();
-  open(view, '+ Comida');
+  open(view, 'Agregar comida');
   fill(view, 'Ej. pollo con arroz y verduras', 'Borrador');
   const photo = new Blob(['photo']);
   node(view(), element => element.type.name === 'MealPhotoPicker').props.onChange(photo);
@@ -455,7 +466,7 @@ test('explicit close asks before discarding text and a temporary photo', t => {
   close();
   confirmation().props.onDiscard();
   assert.equal(nodes(view(), element => element.type === 'form').length, 0);
-  open(view, '+ Comida');
+  open(view, 'Agregar comida');
   assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, '');
   assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.blob, null);
 });
@@ -463,7 +474,7 @@ test('explicit close asks before discarding text and a temporary photo', t => {
 test('desktop actions use one named dialog while water editing stays inline', t => {
   mobileEnvironment(t, false);
   const view = entryView();
-  for (const action of ['+ Comida', '+ Ejercicio']) {
+  for (const action of ['Agregar comida', 'Agregar ejercicio']) {
     open(view, action);
     const dialog = node(sheet(view), element => element.props.role === 'dialog');
     assert.equal(dialog.props['aria-modal'], 'true');
@@ -533,8 +544,8 @@ test('steps conflicts use a named Calori dialog and keep the draft until explici
 });
 
 for (const [action, nameField, name, collection] of [
-  ['+ Comida', 'Ej. pollo con arroz y verduras', 'Ensalada', 'meals'],
-  ['+ Ejercicio', 'Ej. running, fútbol, gimnasio', 'Correr', 'workouts'],
+  ['Agregar comida', 'Ej. pollo con arroz y verduras', 'Ensalada', 'meals'],
+  ['Agregar ejercicio', 'Ej. running, fútbol, gimnasio', 'Correr', 'workouts'],
 ]) {
   test(`${action} closes only after successful persistence and keeps values after failure`, async t => {
     mobileEnvironment(t);
@@ -570,7 +581,7 @@ test('meal photo selection, replacement, removal and AI proposal stay in the exi
   const calls = [];
   const view = entryView(() => { assert.fail('AI must not save'); });
   globalThis.__entryServices.estimateMeal = async input => { calls.push(input); return { calories: 400, description: 'Ensalada', assumptions: [] }; };
-  open(view, '+ Comida');
+  open(view, 'Agregar comida');
   fill(view, 'Ej. pollo con arroz y verduras', 'Ensalada');
   const photo = () => node(view(), element => element.type.name === 'MealPhotoPicker').props;
   const first = new Blob(['first']);
@@ -633,7 +644,7 @@ for (const kind of ['meal', 'workout']) {
       return view;
     };
     const view = entryView(persist);
-    open(view, kind === 'meal' ? '+ Comida' : '+ Ejercicio');
+    open(view, kind === 'meal' ? 'Agregar comida' : 'Agregar ejercicio');
     set(view, `add-${prefix}-${nameId}`, name);
     set(view, `add-${prefix}-notes`, notes);
     fill(view, 'Kcal', '350');
@@ -748,7 +759,7 @@ test('workout estimation fills the proposal without saving or removing secondary
   const calls = [];
   globalThis.__entryServices.estimateWorkout = async input => { calls.push(input); return { calories: 280, assumptions: [] }; };
   const view = entryView(() => { assert.fail('AI must not save'); });
-  open(view, '+ Ejercicio');
+  open(view, 'Agregar ejercicio');
   fill(view, 'Ej. running, fútbol, gimnasio', 'Correr');
   fill(view, 'Minutos', '30');
   await node(view(), element => element.type === 'button' && element.props.children?.includes?.('Estimar con IA')).props.onClick();
@@ -790,7 +801,7 @@ test('AI estimation forms show session/quota/service errors and retain drafts wi
       const meal = kind === 'meal';
       const description = meal ? 'Ej. pollo con arroz y verduras' : 'Ej. running, fútbol, gimnasio';
       const name = meal ? 'Ensalada' : 'Correr';
-      open(view, meal ? '+ Comida' : '+ Ejercicio');
+      open(view, meal ? 'Agregar comida' : 'Agregar ejercicio');
       fill(view, description, name);
       const image = new Blob(['synthetic image'], { type: 'image/jpeg' });
       if (meal) node(view(), element => element.type.name === 'MealPhotoPicker').props.onChange(image);
@@ -834,7 +845,7 @@ test('Retry-After expires without sending a request until the user retries', asy
   const view = mount({ profile, record: base, dateStr, records: {}, onUpdateRecord: () => assert.fail('unexpected save') }, InteractiveDailyPanel, true);
   const render = () => { const tree = view(); view.flushEffects(); return tree; };
   const estimate = () => node(render(), e => e.props.className?.startsWith('entry-ai-action'));
-  open(view, '+ Comida'); fill(view, 'Ej. pollo con arroz y verduras', 'Arroz');
+  open(view, 'Agregar comida'); fill(view, 'Ej. pollo con arroz y verduras', 'Arroz');
   estimate().props.onClick(); await new Promise(setImmediate);
   assert.equal(estimate().props.disabled, true);
   t.mock.timers.tick(59999);
@@ -854,7 +865,7 @@ test('photo upload failures keep the meal draft and image available for retry', 
   const uploads = [];
   globalThis.__entryServices.storage = { upload: async (...args) => { uploads.push(args); return { error: new Error('Offline') }; }, remove: async () => ({ error: null }) };
   const view = entryView(() => { assert.fail('A failed upload must not write the record'); });
-  open(view, '+ Comida');
+  open(view, 'Agregar comida');
   fill(view, 'Ej. pollo con arroz y verduras', 'Almuerzo');
   fill(view, 'Kcal', '450');
   const image = new Blob(['jpeg'], { type: 'image/jpeg' });
@@ -875,7 +886,7 @@ test('no global outside-click handler dismisses an active form', t => {
   document.removeEventListener = type => handlers.delete(type);
   const view = mount({ profile, record: base, dateStr, records: {}, onUpdateRecord: async () => true }, InteractiveDailyPanel, true);
   view(); view.flushEffects();
-  open(view, '+ Comida');
+  open(view, 'Agregar comida');
   view(); view.flushEffects();
   assert.equal(handlers.has('click'), false);
   assert.ok(shell(view));
@@ -889,8 +900,8 @@ test('all four entry modes associate labels, retain mobile CTAs and use accessib
   const meal = { id: 'm1', name: 'Pizza', type: 'Cena', calories: 600, details: 'Dos porciones', time: '20:00' };
   const workout = { id: 'w1', activity: 'Correr', duration: 40, calories: 300, details: 'Suave', distance: 5, pace: '8:00', time: '18:00' };
   for (const [action, record, title, cta] of [
-    ['+ Comida', base, 'Agregar comida', 'Guardar comida'],
-    ['+ Ejercicio', base, 'Agregar ejercicio', 'Guardar ejercicio'],
+    ['Agregar comida', base, 'Agregar comida', 'Guardar comida'],
+    ['Agregar ejercicio', base, 'Agregar ejercicio', 'Guardar ejercicio'],
     [null, { ...base, meals: [meal] }, 'Editar comida', 'Guardar cambios'],
     [null, { ...base, workouts: [workout] }, 'Editar ejercicio', 'Guardar cambios'],
   ]) {
@@ -926,7 +937,7 @@ test('all four entry modes associate labels, retain mobile CTAs and use accessib
 test('gym notes retain contextual routine copy without changing running field detection', t => {
   mobileEnvironment(t);
   const view = entryView();
-  open(view, '+ Ejercicio');
+  open(view, 'Agregar ejercicio');
   fill(view, 'Ej. running, fútbol, gimnasio', 'Gimnasio');
   const label = node(view(), e => e.type === 'label' && e.props.htmlFor === 'add-workout-notes');
   assert.match(renderToStaticMarkup(label), /Detalle de la rutina/);
@@ -975,12 +986,130 @@ async function journalDOM(t, initial = {}) {
     for (const [name, value] of Object.entries(previous)) globalThis[name] = value;
   });
   await render();
-  return { saves, render, get props() { return props; },
+  return { saves, render, leave: () => act(() => root.render(null)), get props() { return props; },
     list: () => document.querySelector('.daily-records'),
     toggle: () => document.querySelector('.daily-records-toggle'),
     resize: async value => act(() => { mobile = value; mediaListeners.forEach(handler => handler()); window.dispatchEvent(new window.Event('resize')); }),
   };
 }
+
+async function mountHabitFeedback(t) {
+  t.mock.timers.enable({ apis: ['Date', 'setTimeout'], now: Date.now() });
+  let record = { ...base, version: '1', generation: 'sample' };
+  const writes = [];
+  const controller = new HabitDraftController(() => record, (day, candidate, options) =>
+    new Promise(resolve => writes.push({ day, candidate, options, resolve })));
+  t.after(() => controller.dispose());
+  const view = await journalDOM(t, { record, habitDrafts: controller });
+  const status = () => document.querySelector('.daily-habits-heading [role=status]');
+  const press = (label = 'Sumar 250 ml de agua') => act(() => {
+    const button = document.querySelector(`[aria-label="${label}"]`);
+    button.focus();
+    button.click();
+  });
+  const tick = ms => act(() => t.mock.timers.tick(ms));
+  const settle = async (kind = 'confirmed') => {
+    const write = writes.at(-1);
+    await act(async () => {
+      if (kind === 'confirmed') {
+        record = { ...write.candidate, version: String(Number(record.version) + 1) };
+        write.options.onConfirmed(record, record.generation);
+      } else {
+        write.options.onFailure({ kind, message: 'Respuesta sintética' });
+      }
+      write.resolve(kind === 'confirmed');
+    });
+    await view.render({ record });
+  };
+  return { controller, view, status, press, tick, settle, writes };
+}
+
+test('habit success lasts 3000 ms after the last acknowledgement, retains focus and never changes saved data', async t => {
+  const { controller, status, press, tick, settle, writes } = await mountHabitFeedback(t);
+  const region = status();
+  assert.equal(region.textContent, '');
+  await press();
+  assert.equal(region.textContent, 'Guardando…');
+  await tick(400);
+  await press('Sumar 500 pasos');
+  await settle();
+  assert.equal(region.textContent, 'Guardando…', 'The first acknowledgement still has queued changes');
+  assert.equal(controller.view(dateStr).confirmation, undefined);
+  await tick(400);
+  await settle();
+  const first = controller.view(dateStr).confirmation;
+  assert.equal(first.confirmedAt, Date.now());
+  assert.equal(region.textContent, '✓ Guardado');
+  await tick(1800);
+  await press();
+  assert.equal(region.textContent, 'Guardando…');
+  await tick(400);
+  await settle();
+  const second = controller.view(dateStr).confirmation;
+  assert.notEqual(second.id, first.id);
+  const focus = document.activeElement;
+  await tick(800); // First deadline.
+  assert.equal(region.textContent, '✓ Guardado');
+  await tick(2199);
+  assert.equal(region.textContent, '✓ Guardado');
+  await tick(1);
+  assert.equal(status(), region, 'Retain the live region when the content expires');
+  assert.equal(region.childElementCount, 0);
+  assert.equal(region.textContent, '');
+  assert.equal(document.activeElement, focus);
+  assert.equal(controller.view(dateStr).status, 'saved');
+  assert.deepEqual([controller.view(dateStr).water, controller.view(dateStr).steps], [500, 500]);
+  assert.equal(writes.length, 3);
+});
+
+for (const [failure, action] of [['ambiguous', 'Comprobar y reintentar'], ['conflict', 'Revisar borrador']]) {
+  test(`expiring an earlier habit success cannot hide a pending write or its ${failure} recovery`, async t => {
+    const { status, press, tick, settle, controller } = await mountHabitFeedback(t);
+    await press(); await tick(400); await settle();
+    assert.equal(status().textContent, '✓ Guardado');
+    await tick(2200); await press(); await tick(400);
+    if (failure === 'ambiguous') {
+      await tick(400);
+      assert.equal(status().textContent, 'Guardando…', 'The old deadline falls during this pending request');
+    }
+    await settle(failure);
+    const alert = document.querySelector('.habit-feedback[role=alert]');
+    await tick(3000);
+    assert.equal(document.querySelector('[role=alert]'), alert);
+    assert.equal(alert.querySelector('button').textContent, action);
+    assert.equal(status().textContent, '');
+    assert.equal(controller.view(dateStr).water, 500);
+  });
+}
+
+test('habit success follows its date and owner and uses the original deadline after leaving and returning', async t => {
+  const { controller, view, status, press, tick, settle } = await mountHabitFeedback(t);
+  await press('Editar cantidad de agua');
+  assert.equal(status().textContent, 'Editando');
+  await act(() => document.activeElement.blur());
+  assert.equal(status().textContent, '');
+  await press(); await tick(400); await settle();
+  assert.equal(status().textContent, '✓ Guardado');
+  await tick(1000);
+  await view.render({ dateStr: '2020-04-01' });
+  assert.equal(status().textContent, '');
+  await view.render({ dateStr });
+  assert.equal(status().textContent, '✓ Guardado');
+  await view.leave();
+  await tick(1500);
+  await view.render();
+  assert.equal(status().textContent, '✓ Guardado');
+  await tick(500);
+  assert.equal(status().textContent, '');
+  await view.leave(); await view.render();
+  assert.equal(status().textContent, '', 'An expired acknowledgement cannot restart on remount');
+  await press(); await tick(400); await settle();
+  assert.equal(status().textContent, '✓ Guardado');
+  await act(() => { controller.resetOwner(); controller.connect(); });
+  await view.render({ profile: { ...profile, id: 'other-synthetic-account' } });
+  assert.equal(status().textContent, '');
+  assert.equal(controller.view(dateStr).confirmation, undefined);
+});
 
 test('journal disclosure keeps complete mixed chronological records and accessible controls at 0/1/2/3/4/5/8 entries', async t => {
   const view = await journalDOM(t);
@@ -991,7 +1120,6 @@ test('journal disclosure keeps complete mixed chronological records and accessib
     const list = view.list();
     assert.equal(list.children.length, count);
     assert.equal(list.dataset.expanded, 'false');
-    assert.equal(list.classList.contains('daily-records--columns'), count >= 2);
     assert.deepEqual([...list.querySelectorAll('.daily-record-title')].map(element => element.textContent.trim()),
       Array.from({ length: count }, (_, index) => `${index % 2 ? 'Ejercicio' : 'Comida'} ${index}`));
     assert.deepEqual(record, snapshot, 'Sorting the combined list must not mutate source records');
@@ -1025,10 +1153,10 @@ test('journal refresh and mobile resizing retain all records while only date/pro
   assert.equal(view.list().children.length, 8);
   assert.equal(view.list().dataset.expanded, 'true');
   assert.ok([...view.list().children].every(item => !item.hidden && !item.hasAttribute('aria-hidden') && !item.style.display),
-    'Desktop disclosure must not set attributes or inline styles that also hide mobile records');
+    'An expanded list exposes every record after resizing');
   await view.resize(false);
   assert.equal(view.list().dataset.expanded, 'true');
-  const add = [...document.querySelectorAll('button')].find(button => button.textContent.trim() === '+ Comida');
+  const add = [...document.querySelectorAll('button')].find(button => button.textContent.trim() === 'Agregar comida');
   await act(() => add.click());
   const draft = document.getElementById('add-meal-description');
   await act(() => {
@@ -1054,7 +1182,7 @@ test('journal refresh and mobile resizing retain all records while only date/pro
 
 test('journal expansion and collapse preserve an open meal form and its draft through real bubbling clicks', async t => {
   const view = await journalDOM(t);
-  const add = [...document.querySelectorAll('button')].find(button => button.textContent.trim() === '+ Comida');
+  const add = [...document.querySelectorAll('button')].find(button => button.textContent.trim() === 'Agregar comida');
   await act(() => add.click());
   const draft = document.getElementById('add-meal-description');
   assert.ok(draft);
@@ -1275,7 +1403,7 @@ test('exercise receipt opens the correct typed record even with shared names and
   const record = journalRecord(8, day);
   for (const workout of record.workouts) workout.activity = 'Caminata';
   const id = record.meals[0].id;
-  record.workouts[1].id = id;
+  record.workouts.find(workout => workout.time === '09:00').id = id;
   const view = await journalDOM(t, { record, dateStr: day });
   const target = view.list().querySelector('[data-entry-kind="workout"][data-entry-id="' + id + '"]');
   window.HTMLElement.prototype.scrollIntoView = () => {};
@@ -1287,6 +1415,7 @@ test('exercise receipt opens the correct typed record even with shared names and
   assert.match(document.querySelector('.meal-saved').textContent, /Ejercicio guardado.*Caminata.*30 min.*kcal.*12 nov 2026/);
   await act(() => document.querySelector('.meal-saved-open').click());
   assert.equal(document.activeElement, target);
+  assert.equal(view.list().dataset.expanded, 'false', 'A receipt inside the first four rows leaves the compact list intact');
   await act(() => target.click());
   await act(() => document.querySelector('.record-detail-edit').click());
   assert.equal(document.getElementById('edit-workout-activity').value, 'Caminata');

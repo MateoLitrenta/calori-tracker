@@ -198,7 +198,7 @@ test('activity presentation context from one account is not passed to a differen
 
 test('leaving Inicio cannot silently discard an active entry draft', async t => {
   const state = await mountApp(t, []);
-  await click(state, '+ Comida');
+  await click(state, 'Agregar comida');
   await inputValue(state, '#add-meal-description', 'Borrador que debe conservarse');
   await click(state, 'Datos');
   assert.equal(state.document.querySelector('#add-meal-description')?.value, 'Borrador que debe conservarse');
@@ -315,7 +315,7 @@ test('steps and water drafts survive Home unmount and finish queued increments a
   await click(state, 'Inicio');
   assert.equal(displayedValue('Editar total de pasos'), 1000);
   assert.equal(displayedValue('Editar cantidad de agua'), 250);
-  assert.match(state.document.querySelector('.habit-feedback').textContent, /Guardado/);
+  assert.match(state.document.querySelector('.daily-habits-heading [role=status]').textContent, /Guardado/);
   assert.equal(state.mealWrites, 0); assert.equal(state.workoutWrites, 0); assert.equal(state.aiCalls, 0);
 });
 
@@ -343,7 +343,7 @@ test('a failed Coach save rolls back shared state and never claims success or du
   assert.match(messages, /No se pudo completar el guardado/);
   assert.ok(!messages.includes('Registrado hoy'));
   await click(state, 'Inicio');
-  assert.match(state.document.querySelector('.home-variants').textContent, /Calorías consumidas0 kcal/);
+  assert.equal(state.document.querySelector('.fitness-breakdown-values dd').textContent, 'Sin ingesta registrada');
   assert.equal(state.document.querySelectorAll('.daily-logs li').length, 0);
   assert.equal(state.mealWrites, 0); assert.equal(state.logWrites, 1);
 });
@@ -358,7 +358,7 @@ test('a pending Coach save cannot publish another account’s records after a se
   });
   await act(async () => { state.release(); await turn(); });
   await click(state, 'Inicio');
-  assert.match(state.document.querySelector('.home-variants').textContent, /Calorías consumidas0 kcal/);
+  assert.equal(state.document.querySelector('.fitness-breakdown-values dd').textContent, 'Sin ingesta registrada');
   assert.equal(state.historyRecords[today], undefined);
   assert.equal(state.persistedUser, profile.user_id);
   assert.equal(state.mealWrites, 1);
@@ -625,7 +625,7 @@ test('goals follow shared Home workout add/edit/delete and step changes across n
   state.ai = async () => { state.aiCalls++; return { reply: 'Texto del modelo: 999 sesiones.', actions: [], presentation: 'none' }; };
   await click(state, 'Coach'); await click(state, 'Mis objetivos');
   assert.equal(state.document.querySelectorAll('.coach-goal-card').length, 2); assert.equal(state.aiCalls, 0);
-  await click(state, 'Cerrar formulario'); await click(state, 'Inicio'); await click(state, '+ Ejercicio');
+  await click(state, 'Cerrar formulario'); await click(state, 'Inicio'); await click(state, 'Agregar ejercicio');
   await inputValue(state, '#add-workout-activity', 'Gimnasio');
   await inputValue(state, '#add-workout-duration', '30'); await inputValue(state, '#add-workout-calories', '200');
   await act(async () => { state.document.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })); await turn(); });

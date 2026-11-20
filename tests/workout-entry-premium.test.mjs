@@ -126,8 +126,8 @@ async function mount(t, options = {}) {
     await click(document.querySelector('.record-detail-edit'));
   };
   return { button, fill, click, submit, edit, dispose, requests, saves, errors, toasts, successes, record: () => record,
-    open: () => click(button('+ Ejercicio')),
-    openMeal: () => click(button('+ Comida')),
+    open: () => click(button('Agregar ejercicio')),
+    openMeal: () => click(button('Agregar comida')),
     choosePhoto: blob => act(() => globalThis.__workoutEntryServices.photoProps.onChange(blob)),
     removePhoto: () => act(() => globalThis.__workoutEntryServices.photoProps.onRemove()),
     editMeal: async () => { await click([...document.querySelectorAll('.daily-record-open')].find(node => node.textContent.includes(record.meals[0]?.name))); await click(document.querySelector('.record-detail-edit')); },
@@ -274,13 +274,14 @@ for (const kind of ['water', 'steps']) test(`${kind} conflict refresh retains th
   const addLabel = kind === 'water' ? 'Sumar 250 ml de agua' : 'Sumar 500 pasos';
   const editLabel = kind === 'water' ? 'Editar cantidad de agua' : 'Editar total de pasos';
   const desired = kind === 'water' ? 1750 : 7500;
+  const displayValue = value => value.toLocaleString('es-AR') + (kind === 'water' ? ' ml' : '');
   const editor = () => document.querySelector(`[aria-label="${editLabel}"]`);
   let nativePrompts = 0; window.confirm = () => { nativePrompts++; return false; };
   await view.click(document.querySelector(`[aria-label="${addLabel}"]`)); await waitForSave();
   assert.equal(view.saves.length, 1);
   const fresh = { ...initial, water: 999, steps: 8000, version: '2', generation: 'generation-two' };
   await view.refresh(fresh, 'generation-two');
-  assert.equal(editor().textContent.trim(), desired.toLocaleString('es-AR'));
+  assert.equal(editor().textContent.trim(), displayValue(desired));
   await view.click(view.button('Revisar borrador'));
   const dialog = document.querySelector('[role="dialog"]');
   assert.ok(dialog); assert.match(dialog.textContent, /Revisar cambios del día/);
@@ -288,7 +289,7 @@ for (const kind of ['water', 'steps']) test(`${kind} conflict refresh retains th
   assert.ok(dialog.textContent.includes(desired.toLocaleString('es-AR')));
   await view.click(view.button('Conservar borrador')); await waitForSave();
   assert.equal(document.querySelector('[role="dialog"]'), null); assert.equal(view.saves.length, 1);
-  assert.equal(editor().textContent.trim(), desired.toLocaleString('es-AR'));
+  assert.equal(editor().textContent.trim(), displayValue(desired));
   await view.click(view.button('Revisar borrador'));
   await view.click(view.button('Aplicar valores revisados')); await waitForSave();
   assert.equal(nativePrompts, 0); assert.equal(view.saves.length, 2);
@@ -296,7 +297,7 @@ for (const kind of ['water', 'steps']) test(`${kind} conflict refresh retains th
   assert.equal(view.record()[kind], desired);
   assert.equal(view.record()[kind === 'water' ? 'steps' : 'water'], fresh[kind === 'water' ? 'steps' : 'water']);
   await view.refresh({ ...fresh, water: 2222, steps: 10000, version: '3', generation: 'generation-three' }, 'generation-three');
-  assert.equal(editor().textContent.trim(), (kind === 'water' ? 2222 : 10000).toLocaleString('es-AR'), 'only a canonical acknowledgement releases the dirty draft');
+  assert.equal(editor().textContent.trim(), displayValue(kind === 'water' ? 2222 : 10000), 'only a canonical acknowledgement releases the dirty draft');
 });
 test('add workout uses the shared multiline textarea, preserves long activity/notes, saves once and reopens for editing', async t => {
   const view = await mount(t, { mobile: true });
@@ -489,7 +490,7 @@ test('session, quota and provider errors retain drafts, preserve public error co
     const blocked = [401, 429].includes(error.status);
     assert.equal(controls.querySelector('button').disabled, blocked);
     if (!blocked) assert.match(controls.querySelector('button').textContent, /Reintentar estimación/);
-    await view.click(document.querySelector('[aria-label="Cerrar formulario"]') || view.button('+ Ejercicio'));
+    await view.click(document.querySelector('[aria-label="Cerrar formulario"]') || view.button('Agregar ejercicio'));
     await view.dispose();
   }
 });
@@ -511,7 +512,7 @@ test('rapid workout submissions save one record and a failed save leaves the ful
 
 test('meal description and notes retain their shared textarea and exact multiline save behavior', async t => {
   const view = await mount(t);
-  await view.click(view.button('+ Comida'));
+  await view.click(view.button('Agregar comida'));
   const description = `Almuerzo con verduras\n${'detalle '.repeat(80)}`;
   const notes = 'Primera línea\nSegunda línea\nTercera línea';
   await view.fill('add-meal-description', description); await view.fill('add-meal-notes', notes);
@@ -527,7 +528,7 @@ test('meal description and notes retain their shared textarea and exact multilin
 test('meal estimates use the same integrated secondary explanation and preserve manual calories and stored notes', async t => {
   const assumption = 'Original service explanation. '.repeat(80);
   const pending = deferred(); const view = await mount(t, { estimateMeal: () => pending.promise });
-  await view.click(view.button('+ Comida'));
+  await view.click(view.button('Agregar comida'));
   await view.fill('add-meal-description', 'Pollo\nArroz y verduras');
   await view.fill('add-meal-notes', 'Porción mediana\nSin salsa');
   await view.estimate();
@@ -560,7 +561,7 @@ for (const editing of [false, true]) {
       await view.click(document.querySelector('.daily-record-open'));
       await view.click(document.querySelector('.record-detail-edit'));
     } else {
-      await view.click(view.button('+ Comida'));
+      await view.click(view.button('Agregar comida'));
       await view.fill('add-meal-description', 'Nueva comida'); await view.fill('add-meal-calories', '600');
     }
     await view.estimate();

@@ -88,7 +88,7 @@ async function profile(page) {
 async function entry(page) {
   await go(page, 'Inicio');
   const date = await page.locator('.home-date-context time').getAttribute('datetime');
-  await button(page, '+ Comida').click();
+  await button(page, 'Agregar comida').click();
   const field = page.locator('#add-meal-description');
   await field.fill('Texto sintético');
   await page.locator('#add-meal-time').fill('19:54');
@@ -123,7 +123,7 @@ async function entry(page) {
   await button(page, 'Descartar cambios').click();
   await field.waitFor({ state: 'hidden' });
   assert.equal(await page.locator('.home-date-context time').getAttribute('datetime'), date);
-  assert.ok(await button(page, '+ Comida').evaluate(el => el === document.activeElement));
+  assert.ok(await button(page, 'Agregar comida').evaluate(el => el === document.activeElement));
 }
 async function typography(page) {
   await go(page, 'Perfil');

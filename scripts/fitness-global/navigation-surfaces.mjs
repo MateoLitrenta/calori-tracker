@@ -3,7 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { before, go, open, repo, start } from './browser.mjs';
 
-const out = path.join(repo, 'docs/evidence/navigation-polish', before ? 'before' : 'after');
+const out = process.env.CALORI_QA_OUTPUT_DIR || path.join(repo, 'docs/evidence/navigation-polish', before ? 'before' : 'after');
 await mkdir(out, {recursive:true});
 const browser = await start();
 const results = [];
@@ -147,14 +147,10 @@ async function weight(page,width,theme) {
 async function recordsAndWeight(page) {
   const all = page.getByRole('button',{name:/Ver todos los registros/});
   const visibleRows=page.locator('[data-entry-id]:visible');
-  if (page.viewportSize().width >= 1280) {
-    assert.equal(await visibleRows.count(),4);
-    await all.click();
-    assert.equal(await visibleRows.count(),5);
-    await button(page,'Mostrar menos').click();
-  } else {
-    assert.equal(await visibleRows.count(),5);
-  }
+  assert.equal(await visibleRows.count(),4);
+  await all.click();
+  assert.equal(await visibleRows.count(),5);
+  await button(page,'Mostrar menos').click();
   const history = page.locator('.home-history-toggle');
   if (await history.isVisible() && await history.getAttribute('aria-expanded')==='false') await history.click();
   await page.locator('.ah-day[data-date="2026-11-09"]').click();
@@ -186,7 +182,7 @@ async function recordsAndWeight(page) {
   await input.fill('71,6');
   await button(page,'Guardar peso').click();
   await focus(page,'button[aria-label="Editar peso"]');
-  await button(page,'+ Comida').click();
+  await button(page,'Agregar comida').click();
   await page.locator('#add-meal-description').fill('Comida sintética de prueba');
   await page.locator('#add-meal-calories').fill('360');
   await button(page,'Guardar comida').click();

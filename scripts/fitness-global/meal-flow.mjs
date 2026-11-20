@@ -5,6 +5,8 @@ import { pathToFileURL } from 'node:url';
 import { repo, heights } from './browser.mjs';
 
 const before = process.argv.includes('--reference');
+const mealAction = before ? '+ Comida' : 'Agregar comida';
+const workoutAction = before ? '+ Ejercicio' : 'Agregar ejercicio';
 const engine = process.argv.includes('--webkit') ? 'webkit' : 'chromium';
 const pw = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE || path.resolve(repo,'../qa-tools/node_modules/playwright/index.mjs')));
 const browser = await pw[engine].launch(engine === 'chromium' ? { channel:'chrome' } : {});
@@ -60,7 +62,7 @@ async function tour(width, theme) {
   const submit = button('Guardar comida');
   try {
     await page.goto(origin+'/qa?controls=0&theme='+theme);
-    await button('+ Comida').click();
+    await button(mealAction).click();
     const desc = page.getByLabel('Descripción',{exact:true});
     await desc.fill((name+' con ensalada. ').repeat(6));
     if (mobile) await viewport(Math.round(size.height*.53),18,68);
@@ -120,7 +122,7 @@ async function tour(width, theme) {
     await capture('editar');
     await button('Cancelar').click();
     if (mobile && !before) {
-      for (const [open,field] of [['+ Ejercicio','#add-workout-duration'],['Editar peso','input[name=weight]']]) {
+      for (const [open,field] of [[workoutAction,'#add-workout-duration'],['Editar peso','input[name=weight]']]) {
         await page.getByRole('button',{name:new RegExp(open.replace('+','\\+'),'i')}).first().click();
         await page.locator(field).focus();
         await viewport(Math.round(size.height*.55),16,64);
@@ -147,7 +149,7 @@ async function verifyBoundaries() {
   try {
     await page.goto(origin+'/qa?controls=0&theme=light');
     await page.locator('.home-week-days button[aria-label*="12 de noviembre"]').click();
-    await btn('+ Comida').click();
+    await btn(mealAction).click();
     await page.locator('#add-meal-description').fill('Cena sintética de ayer');
     await btn('Estimar con IA').click();
     await page.locator('.entry-estimate-value').waitFor();
@@ -186,7 +188,7 @@ async function verifyBoundaries() {
       }};
       q.notify();
     });
-    await btn('+ Comida').click();
+    await btn(mealAction).click();
     await page.locator('#add-meal-description').fill('Respuesta diferida');
     await page.locator('#add-meal-calories').fill('255');
     await page.locator('#add-meal-calories').evaluate(el=>{el.form.requestSubmit();el.form.requestSubmit();});

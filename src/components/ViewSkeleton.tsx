@@ -12,19 +12,29 @@ export default function ViewSkeleton({ view }: { view: Tab }) {
       <div className="home-placeholder-balance" aria-hidden="true">
         <div className="placeholder-readout"><i /><i /><i /></div>
         <div className="placeholder-channels"><div><i /><i /></div><div><i /><i /></div></div>
-        <i className="placeholder-footnote" />
+        <div className="placeholder-footnote"><i /><i /></div>
       </div>
       <div className="home-placeholder-journal" aria-hidden="true">
         <div className="home-placeholder-actions"><i /><i /></div>
-        <div className="home-placeholder-habits">
-          <i className="placeholder-label" />
-          <div className="placeholder-columns">{[0, 1, 2].map(slot => <div key={slot}><i /><i /><i /></div>)}</div>
-        </div>
         <div id="fitness-daily-entries" className="home-placeholder-records">
           <i className="placeholder-label" />
-          {[0, 1].map(slot => <div className="placeholder-record" key={slot}><i /><i /><i /></div>)}
+          {[3, 6, 7, 1].map((fragments, row) => <div className="placeholder-record" key={row}>
+            <i className="placeholder-thumb" />
+            <div className="placeholder-copy">
+              <span>{Array.from({ length: fragments }, (_, part) => <i key={part} />)}</span>
+              <i className="placeholder-meta" />
+            </div>
+            <i className="placeholder-kcal" />
+          </div>)}
+        </div>
+        <div className="home-placeholder-habits">
+          <i className="placeholder-label" />
+          <div className="placeholder-habit-list">
+            {[0, 1, 2].map(slot => <div className="placeholder-habit" key={slot}><i /><i /><i /></div>)}
+          </div>
         </div>
       </div>
+      <div className="home-placeholder-history" aria-hidden="true"><i className="placeholder-label" /></div>
     </div>
   );
   return (

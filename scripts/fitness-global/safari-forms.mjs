@@ -5,11 +5,13 @@ import { pathToFileURL } from 'node:url';
 import { repo, heights } from './browser.mjs';
 
 const before = process.argv.includes('--reference');
+const mealAction = before ? '+ Comida' : 'Agregar comida';
+const workoutAction = before ? '+ Ejercicio' : 'Agregar ejercicio';
 const pan = process.argv.includes('--pan');
 const engine = process.argv.includes('--webkit') ? 'webkit' : 'chromium';
 const pw = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE || path.resolve(repo,'../qa-tools/node_modules/playwright/index.mjs')));
 const browser = await pw[engine].launch(engine==='chromium'?{channel:'chrome'}:{});
-const dir = path.join(repo,pan ? 'docs/evidence/meal-flow/safari-pan' : 'docs/evidence/meal-flow/safari',before?'before':'after',engine);
+const dir = process.env.CALORI_QA_OUTPUT_DIR || path.join(repo,pan ? 'docs/evidence/meal-flow/safari-pan' : 'docs/evidence/meal-flow/safari',before?'before':'after',engine);
 await mkdir(dir,{recursive:true});
 const origin='http://127.0.0.1:'+(before && pan ? 5199 : 5194);
 const results=[];
@@ -105,7 +107,7 @@ async function run(width,theme) {
   };
   try {
     await page.goto(origin+'/qa?controls=0&theme='+theme);
-    await button('+ Comida').click();
+    await button(mealAction).click();
     const desc='Uno\nDos\nTres\nCuatro\nCinco\nSeis';
     await input('add-meal-description',desc);
     await keyboard('text');
@@ -153,7 +155,7 @@ async function run(width,theme) {
     await button('Guardar cambios').click(); await keyboard(null);
     await button('Cerrar confirmación').click();
     await page.locator('.daily-quick-actions').scrollIntoViewIfNeeded();
-    await button('+ Ejercicio').click();
+    await button(workoutAction).click();
     await input('add-workout-activity','Caminata'); await keyboard('text'); await observe('ejercicio-actividad');
     await keyboard(null);
     await input('add-workout-duration','25'); await keyboard('number'); await observe('ejercicio-duracion');

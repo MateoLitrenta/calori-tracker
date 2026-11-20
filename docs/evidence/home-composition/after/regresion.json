@@ -1,0 +1,83 @@
+{
+  "navigation": {
+    "browser": "158.0.8127.36",
+    "tracks": 37,
+    "byMode": {
+      "stationary": 13,
+      "slide": 22,
+      "snap": 2
+    },
+    "sampledBothAxes": [
+      "y",
+      "x"
+    ]
+  },
+  "weightAndHeadings": [
+    {
+      "width": 1440,
+      "theme": "light"
+    },
+    {
+      "width": 1440,
+      "theme": "dark"
+    },
+    {
+      "width": 375,
+      "theme": "light"
+    },
+    {
+      "width": 375,
+      "theme": "dark"
+    }
+  ],
+  "keyboardWebKit": [
+    {
+      "width": 375,
+      "theme": "dark",
+      "measurements": 19,
+      "focused": true,
+      "visibleField": true,
+      "tappableActions": true
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "measurements": 19,
+      "focused": true,
+      "visibleField": true,
+      "tappableActions": true
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "measurements": 19,
+      "focused": true,
+      "visibleField": true,
+      "tappableActions": true
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "measurements": 19,
+      "focused": true,
+      "visibleField": true,
+      "tappableActions": true
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "measurements": 19,
+      "focused": true,
+      "visibleField": true,
+      "tappableActions": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "measurements": 19,
+      "focused": true,
+      "visibleField": true,
+      "tappableActions": true
+    }
+  ]
+}
