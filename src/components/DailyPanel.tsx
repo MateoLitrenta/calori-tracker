@@ -17,6 +17,9 @@ import EntryEstimateResult from './EntryEstimateResult';
 import { HabitDraftController } from '../lib/habitDraft';
 import type { RecordWriter } from '../lib/recordFeedback';
 
+// Allow one spare digit for the caret alongside the native stepper and field padding.
+const habitFieldWidth = (value: string) => `calc(${Math.max(4, value.length + 1)}ch + 16px + 1.25em)`;
+
 const workoutCategories = ['Gimnasio', 'Fútbol', 'Correr', 'Natación', 'Caminata'] as const;
 type WorkoutCategory = typeof workoutCategories[number];
 const exactWorkoutCategory = (activity: string) => workoutCategories.find(category => category.toLowerCase() === activity.trim().toLowerCase()) ?? null;
@@ -85,6 +88,17 @@ function DailyRecords({ count, children, receipt, onDismiss }: {
       {expanded ? 'Mostrar menos' : `Ver todos los registros (${count})`}
     </button>}
   </>;
+}
+
+function HabitSaveConfirmation({ confirmedAt }: { confirmedAt: number }) {
+  const expiresAt = confirmedAt + 3000;
+  const [visible, setVisible] = useState(() => Date.now() < expiresAt);
+  useEffect(() => {
+    if (!visible) return;
+    const timer = setTimeout(() => setVisible(false), Math.max(0, expiresAt - Date.now()));
+    return () => clearTimeout(timer);
+  }, [expiresAt, visible]);
+  return visible ? <span data-state="saved"><span aria-hidden="true">✓ </span>Guardado</span> : null;
 }
 
 interface DailyPanelProps {
@@ -380,6 +394,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const [localHabitDrafts] = useState(() => new HabitDraftController(day => habitRecord(props, day), props.onUpdateRecord));
   const habitController = habitDrafts ?? localHabitDrafts;
   const habit = habitController.view(dateStr, currentRecord);
+  const habitIsSaving = habit.status === 'saving' || (habit.status === 'editing' && habit.hasPendingChanges);
+  const habitIsEditing = habit.status === 'editing' || isEditingWater || isEditingSteps;
   const localWater = habit.water;
   const localSteps = habit.steps ? String(habit.steps) : '';
   useEffect(() => { localHabitDrafts.configure(day => habitRecord(props, day), props.onUpdateRecord); }, [localHabitDrafts, props]);
@@ -932,8 +948,18 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       </div>
 
           <section className="daily-habits-block" aria-label="Agua, pasos y peso">
-            <div className="daily-habits-heading"><h4>Hábitos</h4><time dateTime={dateStr}>{dateStr === formatDateStr(new Date()) ? 'Hoy' : panelSubtitle}</time></div>
-          <div className="daily-habits">
+            <div className="daily-habits-heading">
+              <h4>Hábitos</h4>
+              <span className="habit-status" role="status" aria-atomic="true">
+                {habitIsSaving ? <span data-state="saving">Guardando…</span>
+                  : habitIsEditing ? <span data-state="editing">Editando</span>
+                  : habit.status === 'saved' && habit.confirmation && <HabitSaveConfirmation
+                    key={`${profile.id}:${dateStr}:${habit.confirmation.id}`} confirmedAt={habit.confirmation.confirmedAt} />}
+              </span>
+              <time dateTime={dateStr}>{dateStr === formatDateStr(new Date()) ? 'Hoy' : panelSubtitle}</time>
+            </div>
+          <div className="daily-habits" data-needs-room={isEditingWater || isEditingSteps ||
+            Math.max(localWater, habit.steps, currentRecord.weight ?? 0) >= 1_000_000 || undefined}>
             <div className="habit-card">
               <div className="habit-reading">
                 <div className="habit-header">
@@ -950,6 +976,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                       min="0"
                       autoFocus
                       value={editWaterVal}
+                      style={{ width: habitFieldWidth(editWaterVal) }}
                       onChange={(e) => setEditWaterVal(e.target.value)}
                       onBlur={() => {
                         handleSetWater(Number(editWaterVal) || 0);
@@ -1003,6 +1030,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                       min="0"
                       autoFocus
                       value={editStepsVal}
+                      style={{ width: habitFieldWidth(editStepsVal) }}
                       onChange={(e) => setEditStepsVal(e.target.value)}
                       onBlur={() => {
                         handleUpdateSteps(Number(editStepsVal) || 0);
@@ -1061,15 +1089,14 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 }} aria-label={currentRecord.weight ? "Editar peso" : undefined}>{currentRecord.weight ? "Editar" : "Registrar peso"}</button>
             </div>
           </div>
-            {habit.status && <div className="habit-feedback flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-gray-300"
-              role={habit.status === 'conflict' || habit.status === 'unconfirmed' ? 'alert' : 'status'} aria-atomic="true">
-              <span>{habit.status === 'editing' ? 'Editando · Cambios pendientes' : habit.status === 'saving' ? 'Guardando… Podés seguir ajustando.' :
-                habit.status === 'saved' ? 'Guardado' : habit.status === 'conflict' ? 'Conflicto · Tu borrador se conserva.' : 'No confirmado · Tu borrador se conserva.'}</span>
+            {(habit.status === 'conflict' || habit.status === 'unconfirmed') && <div className="habit-feedback flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-gray-300"
+              role="alert" aria-atomic="true">
+              <span>{habit.status === 'conflict' ? 'Conflicto · Tu borrador se conserva.' : 'No confirmado · Tu borrador se conserva.'}</span>
               {habit.status === 'unconfirmed' && <button type="button" className="habit-feedback-action"
                 onClick={() => habitController.retry(dateStr)}>Comprobar y reintentar</button>}
               {habit.status === 'conflict' && <button type="button" className="habit-feedback-action"
                 onClick={() => setHabitReview(snapshotEntryRecord(currentRecord, profile.recordGeneration))}>Revisar borrador</button>}
-              {(habit.status === 'unconfirmed' || habit.status === 'conflict') && <p className="w-full">{habit.failure?.message}</p>}
+              <p className="w-full">{habit.failure?.message}</p>
             </div>}
           </section>
       </div>

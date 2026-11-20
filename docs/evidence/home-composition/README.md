@@ -1,6 +1,8 @@
 # Inicio · resumen, registros y hábitos
 
-Comparación de la rama con el merge del PR #89, `7621f70aaec4233aebd8deb16979b5f0da9d8f64`. La cuenta, las comidas, los entrenamientos, la foto y el día del 13 de noviembre de 2026 son sintéticos. Las vistas de Historial abren el 9 de noviembre.
+La [revisión de Hábitos](habitos/README.md) compara la banda compacta y la confirmación de tres segundos con el candidato que revisó Mateo.
+
+Las capturas y medidas de esta página corresponden a la primera iteración del PR #90, `8bb158d4`, comparada con el merge del PR #89, `7621f70aaec4233aebd8deb16979b5f0da9d8f64`. La cuenta, las comidas, los entrenamientos, la foto y el día del 13 de noviembre de 2026 son sintéticos. Las vistas de Historial abren el 9 de noviembre.
 
 ## Decisiones de composición
 

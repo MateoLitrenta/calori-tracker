@@ -9,6 +9,7 @@ import { JSDOM } from 'jsdom';
 import ts from 'typescript';
 import { formatDateStr } from '../src/utils/helpers.ts';
 import { AIRequestError } from '../src/services/aiTransport.ts';
+import { HabitDraftController } from '../src/lib/habitDraft.ts';
 
 
 const source = await readFile(new URL('../src/components/DailyPanel.tsx', import.meta.url), 'utf8');
@@ -985,12 +986,130 @@ async function journalDOM(t, initial = {}) {
     for (const [name, value] of Object.entries(previous)) globalThis[name] = value;
   });
   await render();
-  return { saves, render, get props() { return props; },
+  return { saves, render, leave: () => act(() => root.render(null)), get props() { return props; },
     list: () => document.querySelector('.daily-records'),
     toggle: () => document.querySelector('.daily-records-toggle'),
     resize: async value => act(() => { mobile = value; mediaListeners.forEach(handler => handler()); window.dispatchEvent(new window.Event('resize')); }),
   };
 }
+
+async function mountHabitFeedback(t) {
+  t.mock.timers.enable({ apis: ['Date', 'setTimeout'], now: Date.now() });
+  let record = { ...base, version: '1', generation: 'sample' };
+  const writes = [];
+  const controller = new HabitDraftController(() => record, (day, candidate, options) =>
+    new Promise(resolve => writes.push({ day, candidate, options, resolve })));
+  t.after(() => controller.dispose());
+  const view = await journalDOM(t, { record, habitDrafts: controller });
+  const status = () => document.querySelector('.daily-habits-heading [role=status]');
+  const press = (label = 'Sumar 250 ml de agua') => act(() => {
+    const button = document.querySelector(`[aria-label="${label}"]`);
+    button.focus();
+    button.click();
+  });
+  const tick = ms => act(() => t.mock.timers.tick(ms));
+  const settle = async (kind = 'confirmed') => {
+    const write = writes.at(-1);
+    await act(async () => {
+      if (kind === 'confirmed') {
+        record = { ...write.candidate, version: String(Number(record.version) + 1) };
+        write.options.onConfirmed(record, record.generation);
+      } else {
+        write.options.onFailure({ kind, message: 'Respuesta sintética' });
+      }
+      write.resolve(kind === 'confirmed');
+    });
+    await view.render({ record });
+  };
+  return { controller, view, status, press, tick, settle, writes };
+}
+
+test('habit success lasts 3000 ms after the last acknowledgement, retains focus and never changes saved data', async t => {
+  const { controller, status, press, tick, settle, writes } = await mountHabitFeedback(t);
+  const region = status();
+  assert.equal(region.textContent, '');
+  await press();
+  assert.equal(region.textContent, 'Guardando…');
+  await tick(400);
+  await press('Sumar 500 pasos');
+  await settle();
+  assert.equal(region.textContent, 'Guardando…', 'The first acknowledgement still has queued changes');
+  assert.equal(controller.view(dateStr).confirmation, undefined);
+  await tick(400);
+  await settle();
+  const first = controller.view(dateStr).confirmation;
+  assert.equal(first.confirmedAt, Date.now());
+  assert.equal(region.textContent, '✓ Guardado');
+  await tick(1800);
+  await press();
+  assert.equal(region.textContent, 'Guardando…');
+  await tick(400);
+  await settle();
+  const second = controller.view(dateStr).confirmation;
+  assert.notEqual(second.id, first.id);
+  const focus = document.activeElement;
+  await tick(800); // First deadline.
+  assert.equal(region.textContent, '✓ Guardado');
+  await tick(2199);
+  assert.equal(region.textContent, '✓ Guardado');
+  await tick(1);
+  assert.equal(status(), region, 'Retain the live region when the content expires');
+  assert.equal(region.childElementCount, 0);
+  assert.equal(region.textContent, '');
+  assert.equal(document.activeElement, focus);
+  assert.equal(controller.view(dateStr).status, 'saved');
+  assert.deepEqual([controller.view(dateStr).water, controller.view(dateStr).steps], [500, 500]);
+  assert.equal(writes.length, 3);
+});
+
+for (const [failure, action] of [['ambiguous', 'Comprobar y reintentar'], ['conflict', 'Revisar borrador']]) {
+  test(`expiring an earlier habit success cannot hide a pending write or its ${failure} recovery`, async t => {
+    const { status, press, tick, settle, controller } = await mountHabitFeedback(t);
+    await press(); await tick(400); await settle();
+    assert.equal(status().textContent, '✓ Guardado');
+    await tick(2200); await press(); await tick(400);
+    if (failure === 'ambiguous') {
+      await tick(400);
+      assert.equal(status().textContent, 'Guardando…', 'The old deadline falls during this pending request');
+    }
+    await settle(failure);
+    const alert = document.querySelector('.habit-feedback[role=alert]');
+    await tick(3000);
+    assert.equal(document.querySelector('[role=alert]'), alert);
+    assert.equal(alert.querySelector('button').textContent, action);
+    assert.equal(status().textContent, '');
+    assert.equal(controller.view(dateStr).water, 500);
+  });
+}
+
+test('habit success follows its date and owner and uses the original deadline after leaving and returning', async t => {
+  const { controller, view, status, press, tick, settle } = await mountHabitFeedback(t);
+  await press('Editar cantidad de agua');
+  assert.equal(status().textContent, 'Editando');
+  await act(() => document.activeElement.blur());
+  assert.equal(status().textContent, '');
+  await press(); await tick(400); await settle();
+  assert.equal(status().textContent, '✓ Guardado');
+  await tick(1000);
+  await view.render({ dateStr: '2020-04-01' });
+  assert.equal(status().textContent, '');
+  await view.render({ dateStr });
+  assert.equal(status().textContent, '✓ Guardado');
+  await view.leave();
+  await tick(1500);
+  await view.render();
+  assert.equal(status().textContent, '✓ Guardado');
+  await tick(500);
+  assert.equal(status().textContent, '');
+  await view.leave(); await view.render();
+  assert.equal(status().textContent, '', 'An expired acknowledgement cannot restart on remount');
+  await press(); await tick(400); await settle();
+  assert.equal(status().textContent, '✓ Guardado');
+  await act(() => { controller.resetOwner(); controller.connect(); });
+  await view.render({ profile: { ...profile, id: 'other-synthetic-account' } });
+  assert.equal(status().textContent, '');
+  assert.equal(controller.view(dateStr).confirmation, undefined);
+});
 
 test('journal disclosure keeps complete mixed chronological records and accessible controls at 0/1/2/3/4/5/8 entries', async t => {
   const view = await journalDOM(t);

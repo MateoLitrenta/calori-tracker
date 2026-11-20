@@ -36,7 +36,7 @@
 .home-placeholder-actions i:first-child { background: color-mix(in srgb, var(--fit-orange) 25%, var(--fit-soft)); }
 .placeholder-label { width: 95px; margin-block: 6px 22px; }
 .home-placeholder-records { container: placeholder-list / inline-size; }
-.placeholder-habit, .placeholder-record { display: grid; align-items: center; gap: 12px; min-width: 0; border-block-start: 1px solid var(--fit-rule); }
+.placeholder-record { display: grid; align-items: center; gap: 12px; min-width: 0; border-block-start: 1px solid var(--fit-rule); }
 .placeholder-record {
   grid-template-columns: 36px minmax(0,1fr) 4.5rem; min-height: 66px; padding-block: 10px;
 }
@@ -46,13 +46,22 @@
 .placeholder-copy > span i { width: 5.5rem; height: .65rem; margin-block: .33rem; }
 .placeholder-copy > span i:nth-child(even) { width: 4.5rem; }
 .placeholder-copy .placeholder-meta { width: 5.5rem; height: .5rem; margin-block: 5px; }
+.home-placeholder-habits { container: habit-band / inline-size; }
+.placeholder-habit-list {
+  display: grid; gap: 1px; border-radius: 8px; overflow: clip; background: var(--fit-rule);
+  --placeholder: var(--fit-soft);
+}
 .placeholder-habit {
-  grid-template-columns: minmax(0,1fr) minmax(5rem,7rem); grid-template-rows: auto auto;
-  align-content: center; gap: 4px 12px; min-height: 79px; padding-inline: 12px;
+  display: grid; grid-template-columns: 3rem minmax(0,1fr) minmax(0,5.875rem); align-items: center; gap: 8px;
+  min-width: 0; min-height: 60px; padding: 8px 7px; background: var(--fit-surface);
 }
 .placeholder-habit i:first-child { width: 3rem; }
-.placeholder-habit i:nth-child(2) { grid-column: 1; width: 40%; height: 20px; }
-.placeholder-habit i:last-child { grid-column: 2; grid-row: 1/span 2; height: 34px; }
+.placeholder-habit i:nth-child(2) { width: 3.75rem; height: 20px; }
+.placeholder-habit i:last-child { width: 5.875rem; height: 36px; }
+@container habit-band (min-width: 20.75em) {
+  .placeholder-habit-list { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .placeholder-habit { grid-template-columns: minmax(0,1fr); grid-template-rows: 1.14rem 44px 44px; gap: 2px; }
+}
 @container placeholder-list (max-width: 19em) {
   .placeholder-record {
     grid-template-columns: 36px minmax(0,1fr) 14px; grid-template-areas: "thumb copy ." "thumb kcal .";

@@ -315,7 +315,7 @@ test('steps and water drafts survive Home unmount and finish queued increments a
   await click(state, 'Inicio');
   assert.equal(displayedValue('Editar total de pasos'), 1000);
   assert.equal(displayedValue('Editar cantidad de agua'), 250);
-  assert.match(state.document.querySelector('.habit-feedback').textContent, /Guardado/);
+  assert.match(state.document.querySelector('.daily-habits-heading [role=status]').textContent, /Guardado/);
   assert.equal(state.mealWrites, 0); assert.equal(state.workoutWrites, 0); assert.equal(state.aiCalls, 0);
 });
 

@@ -29,7 +29,9 @@ export default function ViewSkeleton({ view }: { view: Tab }) {
         </div>
         <div className="home-placeholder-habits">
           <i className="placeholder-label" />
-          {[0, 1, 2].map(slot => <div className="placeholder-habit" key={slot}><i /><i /><i /></div>)}
+          <div className="placeholder-habit-list">
+            {[0, 1, 2].map(slot => <div className="placeholder-habit" key={slot}><i /><i /><i /></div>)}
+          </div>
         </div>
       </div>
       <div className="home-placeholder-history" aria-hidden="true"><i className="placeholder-label" /></div>

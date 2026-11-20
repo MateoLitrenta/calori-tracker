@@ -113,12 +113,19 @@ test('daily energy categories share neutral presentation instead of rewarding a 
 
 test('mobile daily actions and compact complementary controls retain comfortable targets with a single page scroll', t => {
   for (const width of [320, 375, 393, 440, 768]) {
-    const { style } = view(t, width);
+    const { style, document } = view(t, width, 900, width - 32);
+    const band = document.querySelector('.daily-habits');
+    const columns = () => style('.daily-habits').getPropertyValue('--habit-columns') || '1';
+    assert.equal(columns(), width < 375 ? '1' : '3');
+    band.setAttribute('data-needs-room', 'true');
+    assert.equal(columns(), width < 768 ? '1' : '3');
+    band.removeAttribute('data-needs-room');
     assert.ok(parseInt(style('.daily-quick-actions button').minHeight) >= 44);
     assert.ok(parseInt(style('.habit-controls button').minHeight) >= 44);
     assert.ok(parseInt(style('.fitness-breakdown summary').minHeight) >= 44);
     assert.equal(style('.habit-controls').display, 'flex');
-    assert.equal(style('.habit-controls').flexWrap, 'wrap');
+    assert.equal(style('.habit-controls').flexFlow, 'row nowrap');
+    assert.equal(style('.habit-controls').gap, '6px');
     assert.equal(style('.daily-habits .habit-card').borderTopWidth, '0px');
     assert.equal(style('.habit-card').flexWrap, 'wrap');
     assert.equal(style('.habit-metric').alignItems, 'baseline');

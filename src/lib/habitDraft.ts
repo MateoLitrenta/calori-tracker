@@ -12,6 +12,7 @@ interface Draft {
   lastEdit: number;
   retry: DailyRecord | null;
   failure?: RecordWriteFailure;
+  confirmation?: { id: number; confirmedAt: number };
 }
 export const sameHabitVersion = (a: DailyRecord, b: DailyRecord) =>
   a.dateStr === b.dateStr && a.generation === b.generation && (a.version ?? null) === (b.version ?? null);
@@ -27,6 +28,7 @@ export class HabitDraftController {
   private disposed = false;
   private listeners = new Set<() => void>();
   private epoch = 0;
+  private confirmationSequence = 0;
 
   constructor(read: (date: string) => DailyRecord, save: RecordWriter, changed: () => void = () => {}) {
     this.read = read; this.save = save;
@@ -40,7 +42,8 @@ export class HabitDraftController {
     const current = canonical ?? this.read(date), draft = this.drafts.get(date);
     return { steps: draft?.dirty.has('steps') ? draft.values.steps : current.steps,
       water: draft?.dirty.has('water') ? draft.values.water : current.water,
-      status: draft?.status, failure: draft?.failure };
+      status: draft?.status, hasPendingChanges: Boolean(draft?.dirty.size),
+      failure: draft?.failure, confirmation: draft?.confirmation };
   }
 
   begin(date: string) {
@@ -98,12 +101,15 @@ export class HabitDraftController {
       ...(draft.dirty.has('water') ? { water: draft.values.water } : {}) };
     this.running = true; draft.status = 'saving'; draft.failure = undefined;
     draft.retry = snapshotEntryRecord(candidate); this.changed();
-    const acknowledgement: { record: DailyRecord | null } = { record: null };
+    const acknowledgement: { record: DailyRecord | null; confirmedAt: number } = { record: null, confirmedAt: 0 };
     let failure: RecordWriteFailure | undefined;
     try {
       const saved = await this.save(date, candidate, { feedback: 'contextual',
         onFailure: value => { failure = value; },
-        onConfirmed: (record, generation) => { acknowledgement.record = snapshotEntryRecord(record, generation); } });
+        onConfirmed: (record, generation) => {
+          acknowledgement.record = snapshotEntryRecord(record, generation);
+          acknowledgement.confirmedAt = Date.now();
+        } });
       if (this.disposed || epoch !== this.epoch) return;
       const confirmed = acknowledgement.record;
       // Never derive a new version from a boolean or an optimistic UI value.
@@ -114,6 +120,9 @@ export class HabitDraftController {
           if (draft.values[field] === confirmed[field]) draft.dirty.delete(field);
         }
         draft.status = draft.dirty.size ? 'editing' : 'saved';
+        if (draft.status === 'saved') {
+          draft.confirmation = { id: ++this.confirmationSequence, confirmedAt: acknowledgement.confirmedAt };
+        }
       } else {
         draft.failure = failure ?? { kind: 'ambiguous', message: 'No pudimos confirmar el guardado. Tu borrador se conserva.' };
         draft.status = draft.failure.kind === 'conflict' ? 'conflict' : 'unconfirmed';
