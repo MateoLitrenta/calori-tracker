@@ -40,12 +40,10 @@ function DailyRecords({ count, children, receipt, onDismiss }: {
   const [expanded, setExpanded] = useState(false);
   const listId = useId();
   const list = useRef<HTMLUListElement>(null);
-  const [destination, setDestination] = useState<EntryReceipt | null>(null);
+  const [destination, setDestination] = useState<{ row: HTMLButtonElement } | null>(null);
   useEffect(() => {
-    if (!destination) return;
-    const row = Array.from(list.current?.querySelectorAll<HTMLButtonElement>('[data-entry-id]') ?? [])
-      .find(button => button.dataset.entryId === destination.id && button.dataset.entryKind === destination.kind);
-    if (!row) return;
+    const row = destination?.row;
+    if (!row || !list.current?.contains(row)) return;
     row.focus({ preventScroll: true });
     row.scrollIntoView({ block: 'center', behavior: 'instant' });
     row.dataset.justSaved = 'true';
@@ -61,14 +59,17 @@ function DailyRecords({ count, children, receipt, onDismiss }: {
         {receipt.kind === 'meal' && receipt.replacedPhoto && <span>La limpieza de la foto anterior queda pendiente.</span>}
       </div>
       <button type="button" className="meal-saved-open" onClick={() => {
-        setExpanded(true);
-        setDestination(receipt);
+        const rows = Array.from(list.current?.querySelectorAll<HTMLButtonElement>('[data-entry-id]') ?? []);
+        const index = rows.findIndex(button => button.dataset.entryKind === receipt.kind && button.dataset.entryId === receipt.id);
+        if (index < 0) return;
+        if (index >= 4) setExpanded(true);
+        setDestination({ row: rows[index] });
         onDismiss();
       }}>Ver registro</button>
       <button type="button" className="meal-saved-close" aria-label="Cerrar confirmación" onClick={onDismiss}>×</button>
     </aside>}
     <ul ref={list} id={listId} data-expanded={expanded}
-      className={`daily-records ${count >= 2 ? 'daily-records--columns' : ''} divide-y divide-slate-200 dark:divide-gray-800`}>
+      className="daily-records">
       {children}
     </ul>
     {count > 4 && <button type="button" className="daily-records-toggle"
@@ -596,36 +597,40 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
           <div className="fitness-readout">
             <h4>{isGroup ? 'Balance acumulado' : provisionalBalance ? 'Balance provisional' : 'Balance energético'}</h4>
             <div className="energy-number">
-              {noDailyEnergy ? 'Sin datos de energía' : provisionalBalance ? 'Sin comidas registradas' : balance === null ? 'Sin datos' : <>{balance > 0 ? '+' : ''}{balance.toLocaleString('es-AR')}<small> kcal</small></>}
+              {noDailyEnergy ? 'Sin datos de energía' : provisionalBalance ? 'Sin comidas registradas' : balance === null ? 'Sin datos' : <><span>{balance > 0 ? '+' : ''}{balance.toLocaleString('es-AR')}</span><small> kcal</small></>}
             </div>
             {!noDailyEnergy && !provisionalBalance && <p className="energy-qualifier">{isGroup ? 'Según los registros disponibles del período.' : 'Según tus registros. El día puede estar incompleto.'}</p>}
             {isGroup && classifiedBalance !== null && <p>Promedio diario: {classifiedBalance > 0 ? '+' : ''}{classifiedBalance.toLocaleString('es-AR')} kcal/día</p>}
           </div>
-          <dl className="energy-metrics fitness-comparison" aria-label="Consumo registrado y gasto estimado a la misma escala">
-            {energyRows.map(({ label, value, known }) => <div key={label} className="fitness-channel">
-              <dt>{label}</dt><dd>{known ? <>{value.toLocaleString('es-AR')} <small>kcal</small></> : <span aria-label="Sin registros">—</span>}</dd>
-              <dd className="fitness-track" aria-hidden="true">{known && <span style={{ width: `${100 * Math.max(0, value) / scaleMax}%` }} />}</dd>
+          {!noDailyEnergy && <dl className="energy-metrics fitness-comparison" aria-label={provisionalBalance ? 'Gasto estimado' : 'Consumo registrado y gasto estimado a la misma escala'}>
+            {energyRows.filter(row => row.known).map(({ label, value }) => <div key={label} className="fitness-channel">
+              <dt>{label}</dt>
+              <dd><span>{value.toLocaleString('es-AR')}</span> <small>kcal</small></dd>
+              {!provisionalBalance && <dd className="fitness-track" aria-hidden="true"><span style={{ width: `${100 * Math.max(0, value) / scaleMax}%` }} /></dd>}
             </div>)}
-          </dl>
-          <p className="fitness-scale-note">Comparación en kcal · misma escala</p>
+          </dl>}
           {!isGroup && <details className="energy-breakdown fitness-breakdown">
-            <summary>Ver desglose <CaretRight size={14} aria-hidden="true" /></summary>
+            <summary aria-label="Ver desglose">
+              {!noDailyEnergy && !provisionalBalance && <span className="fitness-scale-note" aria-hidden="true">Comparación en kcal · misma escala</span>}
+              <span className="fitness-breakdown-label">Ver desglose <CaretRight size={15} aria-hidden="true" /></span>
+            </summary>
             <div className="fitness-breakdown-body">
               <p className="energy-coverage">{currentRecord.meals.length} {currentRecord.meals.length === 1 ? 'comida' : 'comidas'} · {currentRecord.workouts.length} {currentRecord.workouts.length === 1 ? 'ejercicio' : 'ejercicios'}<span>Según tus registros</span></p>
-              {noDailyEnergy && <p>El gasto incluye la estimación basal. Todavía no hay registros de energía.</p>}
-              <p>Las dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.</p>
+              {noDailyEnergy && <p>El gasto incluye la estimación basal. Sin registros de ingesta o actividad, todavía no se puede interpretar el balance del día.</p>}
+              {!noDailyEnergy && !provisionalBalance && <p>Las dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.</p>}
               <dl className="fitness-breakdown-values">
-                <div><dt>Calorías consumidas</dt><dd>{ingested.toLocaleString('es-AR')} kcal</dd></div>
+                <div><dt>Calorías consumidas</dt><dd>{noDailyEnergy || provisionalBalance ? 'Sin ingesta registrada' : `${ingested.toLocaleString('es-AR')} kcal`}</dd></div>
                 <div><dt>Gasto estimado</dt><dd>{expenditure.toLocaleString('es-AR')} kcal</dd></div>
               </dl>
               <div>TMB: {calculateBMR(profile).toLocaleString('es-AR')} kcal</div>
               <div>Pasos: {getStepCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
               <div>Ejercicio: {getWorkoutCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
-              {provisionalBalance && balance !== null && <p>Saldo calculado con la ingesta registrada: <strong>{balance.toLocaleString('es-AR')} kcal</strong>. Falta registrar comidas para interpretar el balance del día.</p>}
-              {noDailyEnergy && balance !== null && <div>Balance estimado: {balance > 0 ? '+' : ''}{balance.toLocaleString('es-AR')} kcal</div>}
+              {provisionalBalance && balance !== null && <p>Saldo provisional con los registros disponibles: <strong>{balance.toLocaleString('es-AR')} kcal</strong>. Falta registrar comidas para interpretar el balance del día.</p>}
+              {noDailyEnergy && balance !== null && <div>Balance estimado: {balance > 0 ? '+' : ''}{balance.toLocaleString('es-AR')} kcal con los registros disponibles.</div>}
               {!noDailyEnergy && !provisionalBalance && <p className="fitness-balance-category">{balanceLabel}</p>}
             </div>
           </details>}
+          {isGroup && <p className="fitness-scale-note">Comparación en kcal · misma escala</p>}
           {isGroup && <p className="fitness-period-days">{summary.days} días con datos. {balanceLabel}</p>}
         </section>
       </div>
@@ -654,32 +659,32 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       </EntryFormShell>}
 
       {!isGroup && (
-        <div className="daily-journal contents" data-record-count={totalEntries}>
+        <div className="daily-journal" data-record-count={totalEntries}>
         <div className="daily-entry flex flex-col gap-4">
           {/* Action Buttons */}
-          <div className="daily-quick-actions flex gap-2 mt-2">
+          <div className="daily-quick-actions">
             <button 
               onClick={() => openEntry('comida')}
               aria-describedby={dayContextId}
               aria-pressed={activeTab === 'comida'}
-              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'comida' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-white dark:bg-[#161b22] border-slate-200 dark:border-gray-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-[#0f141c]'}`}
+              type="button"
             >
-              + Comida
+              Agregar comida
             </button>
             <button 
               onClick={() => openEntry('entrenamiento')}
               aria-describedby={dayContextId}
               aria-pressed={activeTab === 'entrenamiento'}
-              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors border ${activeTab === 'entrenamiento' ? 'bg-orange-600 border-orange-500 text-white' : 'bg-white dark:bg-[#161b22] border-slate-200 dark:border-gray-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-[#0f141c]'}`}
+              type="button"
             >
-              + Ejercicio
+              Agregar ejercicio
             </button>
 
           </div>
 
           {/* Forms Area */}
         {activeTab === 'comida' && (
-            <EntryFormShell fitness desktopModal dateContext={entryDate} title="Agregar comida" onClose={closeEntry}>
+            <EntryFormShell fitness dailyEditor dateContext={entryDate} title="Agregar comida" onClose={closeEntry}>
               <form onChangeCapture={markEntryChanged} onSubmit={handleAddMeal} aria-busy={savingMeal || photoProcessing} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
                 <div className="entry-form-content entry-fields-grid entry-meal-fields">
                   <div className="entry-field entry-description">
@@ -768,7 +773,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         )}
 
         {activeTab === 'entrenamiento' && (
-            <EntryFormShell fitness desktopModal dateContext={entryDate} title="Agregar ejercicio" onClose={closeEntry}>
+            <EntryFormShell fitness dailyEditor dateContext={entryDate} title="Agregar ejercicio" onClose={closeEntry}>
               <form onChangeCapture={markEntryChanged} onSubmit={handleAddWorkout} aria-busy={savingWorkout} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
                 <div className="entry-form-content entry-fields-grid entry-workout-fields">
                   <div className="entry-field entry-description entry-activity">
@@ -868,52 +873,108 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         )}
 
         </div>
+        {/* Registros en orden cronológico */}
+        <div className={`daily-logs ${totalEntries === 0 ? 'daily-logs--empty' : ''}`}>
+          <div className="daily-logs-heading">
+            <h4 id="fitness-daily-entries" ref={onRecordsHeadingReady} tabIndex={-1} aria-describedby={dayContextId} className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
+            <span className="fitness-entry-count">{totalEntries} {totalEntries === 1 ? 'registro' : 'registros'}</span>
+            <time id={dayContextId} dateTime={dateStr} className="daily-active-date">
+              {dateStr === formatDateStr(new Date()) ? 'Hoy · ' : ''}{panelSubtitle}
+            </time>
+            {props.onReturnToHistory && <button type="button" className="history-record-return" onClick={event => {
+              event.stopPropagation(); props.onReturnToHistory?.();
+            }}>← Volver a Tu actividad</button>}
+          </div>
+
+          {totalEntries === 0 && (
+            <p className="daily-logs-empty">Las comidas y los ejercicios que agregues para este día aparecerán acá.</p>
+          )}
+
+        <DailyRecords key={`${profile.id}:${dateStr}:${selectedGroup?.type || 'day'}`}
+          receipt={!entryActive && !detailModalItem && entryReceipt?.date === dateStr && (entryReceipt.kind === 'meal' ? currentRecord.meals : currentRecord.workouts).some(entry => entry.id === entryReceipt.id) ? entryReceipt : null}
+          onDismiss={() => setEntryReceipt(null)} count={totalEntries}>
+          {
+            [
+              ...currentRecord.meals.map(m => ({ ...m, _type: 'meal' as const })),
+              ...currentRecord.workouts.map(w => ({ ...w, _type: 'workout' as const }))
+            ]
+            .sort((a, b) => {
+              const timeA = a.time || '00:00';
+              const timeB = b.time || '00:00';
+              return timeA.localeCompare(timeB);
+            })
+            .map(item => {
+              const meal = item._type === 'meal';
+              return (
+                <li key={`${item._type}-${item.id}`}>
+                  <button type="button" data-entry-kind={item._type} data-entry-id={item.id} data-meal-id={meal ? item.id : undefined} className="daily-record-open" onClick={event => { recordOpener.current = event.currentTarget; setDetailModalItem(item); }}>
+                    <span className="fitness-record-mark" aria-hidden="true">
+                      {meal && item.photo_path ? <MealThumbnail path={item.photo_path} /> : meal
+                        ? <ForkKnife size={17} aria-hidden="true" /> : <Barbell size={17} aria-hidden="true" />}
+                    </span>
+                    <span className="fitness-record-copy">
+                      <span className="daily-record-title">{meal ? item.name : item.activity}</span>
+                      <span className="daily-record-meta">{item.time && `${item.time} · `}{meal ? item.type : `Ejercicio · ${item.duration} min`}</span>
+                    </span>
+                    <span className="fitness-record-kcal">{meal ? '+' : '-'}{item.calories} <small>kcal</small></span>
+                    <CaretRight size={14} aria-hidden="true" />
+                  </button>
+                </li>
+              );
+            })
+          }
+        </DailyRecords>
+      </div>
+
           <section className="daily-habits-block" aria-label="Agua, pasos y peso">
             <div className="daily-habits-heading"><h4>Hábitos</h4><time dateTime={dateStr}>{dateStr === formatDateStr(new Date()) ? 'Hoy' : panelSubtitle}</time></div>
-          <div className="daily-habits grid grid-cols-3 gap-2">
-            <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
-              <div className="habit-header flex flex-col items-center gap-1">
-                <Drop size={16} aria-hidden="true" />
-                <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Agua</span>
-              </div>
-              <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
-                {isEditingWater ? (
-                  <input
-                    type="number"
-                    aria-label="Cantidad de agua (ml)"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    min="0"
-                    autoFocus
-                    value={editWaterVal}
-                    onChange={(e) => setEditWaterVal(e.target.value)}
-                    onBlur={() => {
-                      handleSetWater(Number(editWaterVal) || 0);
-                      setIsEditingWater(false);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
+          <div className="daily-habits">
+            <div className="habit-card">
+              <div className="habit-reading">
+                <div className="habit-header">
+                  <Drop size={16} aria-hidden="true" />
+                  <span className="habit-label">Agua</span>
+                </div>
+                <div className="habit-metric">
+                  {isEditingWater ? (
+                    <input
+                      type="number"
+                      aria-label="Cantidad de agua (ml)"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      min="0"
+                      autoFocus
+                      value={editWaterVal}
+                      onChange={(e) => setEditWaterVal(e.target.value)}
+                      onBlur={() => {
                         handleSetWater(Number(editWaterVal) || 0);
                         setIsEditingWater(false);
-                      }
-                    }}
-                    className="w-16 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-cyan-500"
-                  />
-                ) : (
-                  <button type="button"
-                    className="habit-value cursor-pointer hover:text-cyan-400 transition-colors"
-                    onClick={() => {
-                      habitController.begin(dateStr);
-                      setEditWaterVal(localWater ? String(localWater) : '');
-                      setIsEditingWater(true);
-                    }}
-                    title="Editar cantidad"
-                    aria-label="Editar cantidad de agua"
-                  >
-                    {localWater.toLocaleString('es-AR')}
-                  </button>
-                )}
-                <span className="text-[10px] font-normal text-slate-500 dark:text-gray-400 mt-0.5">ml</span>
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleSetWater(Number(editWaterVal) || 0);
+                          setIsEditingWater(false);
+                        }
+                      }}
+                      className="w-16 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-cyan-500"
+                    />
+                  ) : (
+                    <button type="button"
+                      className="habit-value"
+                      onClick={() => {
+                        habitController.begin(dateStr);
+                        setEditWaterVal(localWater ? String(localWater) : '');
+                        setIsEditingWater(true);
+                      }}
+                      title="Editar cantidad"
+                      aria-label="Editar cantidad de agua"
+                      aria-description={`${localWater.toLocaleString('es-AR')} ml`}
+                    >
+                      {localWater.toLocaleString('es-AR')} <small className="habit-unit">ml</small>
+                    </button>
+                  )}
+                  {isEditingWater && <small className="habit-unit">ml</small>}
+                </div>
               </div>
               <div className="habit-controls">
                 <button type="button" onClick={() => handleAddWater(-250)} aria-label="Restar 250 ml de agua">−250</button>
@@ -921,48 +982,51 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               </div>
             </div>
 
-            <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
-              <div className="habit-header flex flex-col items-center gap-1">
-                <Sneaker size={16} aria-hidden="true" />
-                <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Pasos</span>
-              </div>
-              <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
-                {isEditingSteps ? (
-                  <input
-                    type="number"
-                    aria-label="Total de pasos"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    min="0"
-                    autoFocus
-                    value={editStepsVal}
-                    onChange={(e) => setEditStepsVal(e.target.value)}
-                    onBlur={() => {
-                      handleUpdateSteps(Number(editStepsVal) || 0);
-                      setIsEditingSteps(false);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
+            <div className="habit-card">
+              <div className="habit-reading">
+                <div className="habit-header">
+                  <Sneaker size={16} aria-hidden="true" />
+                  <span className="habit-label">Pasos</span>
+                </div>
+                <div className="habit-metric">
+                  {isEditingSteps ? (
+                    <input
+                      type="number"
+                      aria-label="Total de pasos"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      min="0"
+                      autoFocus
+                      value={editStepsVal}
+                      onChange={(e) => setEditStepsVal(e.target.value)}
+                      onBlur={() => {
                         handleUpdateSteps(Number(editStepsVal) || 0);
                         setIsEditingSteps(false);
-                      }
-                    }}
-                    className="w-16 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-green-500"
-                  />
-                ) : (
-                  <button type="button"
-                    className="habit-value cursor-pointer hover:text-green-400 transition-colors"
-                    onClick={() => {
-                      habitController.begin(dateStr);
-                      setEditStepsVal(localSteps);
-                      setIsEditingSteps(true);
-                    }}
-                    title="Editar pasos"
-                    aria-label="Editar total de pasos"
-                  >
-                    {Number(localSteps || 0).toLocaleString('es-AR')}
-                  </button>
-                )}
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleUpdateSteps(Number(editStepsVal) || 0);
+                          setIsEditingSteps(false);
+                        }
+                      }}
+                      className="w-16 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-1 py-0.5 text-center text-sm md:text-base focus:outline-none focus:border-green-500"
+                    />
+                  ) : (
+                    <button type="button"
+                      className="habit-value"
+                      onClick={() => {
+                        habitController.begin(dateStr);
+                        setEditStepsVal(localSteps);
+                        setIsEditingSteps(true);
+                      }}
+                      title="Editar pasos"
+                      aria-label="Editar total de pasos"
+                      aria-description={`${Number(localSteps || 0).toLocaleString('es-AR')} pasos`}
+                    >
+                      {Number(localSteps || 0).toLocaleString('es-AR')}
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="habit-controls">
                 <button type="button" onClick={() => handleAddSteps(-500)} aria-label="Restar 500 pasos">−500</button>
@@ -970,16 +1034,18 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               </div>
             </div>
 
-            <div className="habit-card bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-3 rounded-xl flex flex-col items-center text-center justify-between gap-2 h-full">
-              <div className="habit-header flex flex-col items-center gap-1">
-                <Scales size={16} aria-hidden="true" />
-                <span className="habit-label text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-gray-400">Peso</span>
-              </div>
-              <div className="habit-metric text-lg md:text-xl font-bold text-slate-900 dark:text-white flex flex-col items-center">
-                <span className="hover:text-pink-400 transition-colors">
-                  {currentRecord.weight ? currentRecord.weight.toLocaleString('es-AR') : '--'}
-                </span>
-                <span className="text-[10px] font-normal text-slate-500 dark:text-gray-400 mt-0.5">kg</span>
+            <div className="habit-card">
+              <div className="habit-reading">
+                <div className="habit-header">
+                  <Scales size={16} aria-hidden="true" />
+                  <span className="habit-label">Peso</span>
+                </div>
+                <div className="habit-metric">
+                  <span>
+                    {currentRecord.weight ? currentRecord.weight.toLocaleString('es-AR') : '—'}
+                  </span>
+                  <span className="habit-unit">kg</span>
+                </div>
               </div>
               <button type="button" className="habit-edit"
                 onClick={() => {
@@ -1001,61 +1067,6 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               {(habit.status === 'unconfirmed' || habit.status === 'conflict') && <p className="w-full">{habit.failure?.message}</p>}
             </div>}
           </section>
-
-        {/* Registros en orden cronológico */}
-        <div className={`daily-logs ${currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 ? 'daily-logs--empty' : ''} bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 rounded-xl mt-4 overflow-hidden`}>
-          <div className="daily-logs-heading bg-slate-100 dark:bg-[#0f141c] px-4 py-3 border-b border-slate-200 dark:border-gray-800">
-            <h4 id="fitness-daily-entries" ref={onRecordsHeadingReady} tabIndex={-1} aria-describedby={dayContextId} className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
-            <span className="fitness-entry-count">{totalEntries} {totalEntries === 1 ? 'registro' : 'registros'}</span>
-            <time id={dayContextId} dateTime={dateStr} className="daily-active-date">
-              {dateStr === formatDateStr(new Date()) ? 'Hoy · ' : ''}{panelSubtitle}
-            </time>
-            {props.onReturnToHistory && <button type="button" className="history-record-return" onClick={event => {
-              event.stopPropagation(); props.onReturnToHistory?.();
-            }}>← Volver a Tu actividad</button>}
-          </div>
-
-          {currentRecord.meals.length === 0 && currentRecord.workouts.length === 0 && (
-            <div className="daily-logs-empty p-8 text-center text-slate-500 dark:text-gray-400">
-              Todavía no cargaste comidas ni entrenamientos.
-            </div>
-          )}
-
-        <DailyRecords key={`${profile.id}:${dateStr}:${selectedGroup?.type || 'day'}`}
-          receipt={!entryActive && !detailModalItem && entryReceipt?.date === dateStr && (entryReceipt.kind === 'meal' ? currentRecord.meals : currentRecord.workouts).some(entry => entry.id === entryReceipt.id) ? entryReceipt : null}
-          onDismiss={() => setEntryReceipt(null)} count={currentRecord.meals.length + currentRecord.workouts.length}>
-          {
-            [
-              ...currentRecord.meals.map(m => ({ ...m, _type: 'meal' as const })),
-              ...currentRecord.workouts.map(w => ({ ...w, _type: 'workout' as const }))
-            ]
-            .sort((a, b) => {
-              const timeA = a.time || '00:00';
-              const timeB = b.time || '00:00';
-              return timeA.localeCompare(timeB);
-            })
-            .map(item => {
-              const meal = item._type === 'meal';
-              return (
-                <li key={`${item._type}-${item.id}`}>
-                  <button type="button" data-entry-kind={item._type} data-entry-id={item.id} data-meal-id={meal ? item.id : undefined} className="daily-record-open" onClick={event => { recordOpener.current = event.currentTarget; setDetailModalItem(item); }}>
-                    <span className="fitness-record-mark">
-                      {meal && item.photo_path ? <MealThumbnail path={item.photo_path} /> : meal
-                        ? <ForkKnife size={17} aria-hidden="true" /> : <Barbell size={17} aria-hidden="true" />}
-                    </span>
-                    <span className="fitness-record-copy">
-                      <span className="daily-record-title">{meal ? item.name : item.activity}</span>
-                      <span className="daily-record-meta">{item.time && `${item.time} hs • `}{meal ? item.type : `Ejercicio · ${item.duration} min`}</span>
-                    </span>
-                    <span className="fitness-record-kcal">{meal ? '+' : '-'}{item.calories} <small>kcal</small></span>
-                    <CaretRight size={14} aria-hidden="true" />
-                  </button>
-                </li>
-              );
-            })
-          }
-        </DailyRecords>
-      </div>
       </div>
       )}
 
@@ -1141,7 +1152,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Weight uses the same accessible shell and selected-day context as other records. */}
       {isEditingWeight && (
-        <EntryFormShell fitness dateContext={entryDate} title={currentRecord.weight ? "Editar peso" : "Registrar peso"} desktopModal onClose={closeWeight}>
+        <EntryFormShell fitness dateContext={entryDate} title={currentRecord.weight ? "Editar peso" : "Registrar peso"} dailyEditor onClose={closeWeight}>
           <form className="entry-form entry-weight-form" aria-busy={savingWeight} onChangeCapture={markEntryChanged} onSubmit={async event => {
             event.preventDefault();
             await handleSetWeight(parseFloat(editWeightVal) || 0);
@@ -1169,7 +1180,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Edit Modal para Comidas */}
       {editingMealId && (
-        <EntryFormShell fitness dateContext={entryDate} title="Editar comida" restoreFocusTo={recordOpener} onClose={closeEntry} desktopModal>
+        <EntryFormShell fitness dateContext={entryDate} title="Editar comida" restoreFocusTo={recordOpener} onClose={closeEntry} dailyEditor>
           <form onChangeCapture={markEntryChanged} onSubmit={handleAddMeal} aria-busy={savingMeal || photoProcessing} className="entry-form p-4 flex flex-col gap-4">
             <div className="entry-form-content entry-fields-grid entry-meal-fields entry-edit-fields">
 
@@ -1259,7 +1270,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Edit Modal para Entrenamiento */}
       {editingWorkoutId && (
-        <EntryFormShell fitness dateContext={entryDate} title="Editar ejercicio" restoreFocusTo={recordOpener} onClose={closeEntry} desktopModal>
+        <EntryFormShell fitness dateContext={entryDate} title="Editar ejercicio" restoreFocusTo={recordOpener} onClose={closeEntry} dailyEditor>
           <form onChangeCapture={markEntryChanged} onSubmit={handleAddWorkout} aria-busy={savingWorkout} className="entry-form p-4 flex flex-col gap-4">
             <div className="entry-form-content entry-fields-grid entry-workout-fields entry-edit-fields">
 
