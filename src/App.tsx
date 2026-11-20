@@ -211,9 +211,11 @@ function App() {
             <header className="home-header">
               <div className="home-heading-brand">
                 <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol" />
-                <h1 className="screen-title">Calori</h1>
+                <h1 className="screen-title">
+                  <span className="md:hidden">Calori</span>
+                  <span className="hidden md:inline">Inicio</span>
+                </h1>
               </div>
-              <a href="#fitness-daily-entries" className="fitness-records-link">Ver registros</a>
             </header>
           )}
           <div className="app-content p-4 md:p-0">

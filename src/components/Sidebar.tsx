@@ -2,6 +2,7 @@ import { House, ChatCircle, ChartBar, User, SignOut } from '@phosphor-icons/reac
 import ThemeToggle from './ThemeToggle';
 import { useAppStore } from '../hooks/useAppStore';
 import UserAvatar from './UserAvatar';
+import SelectionIndicator from './SelectionIndicator';
 import type { Tab } from './BottomNav';
 
 interface SidebarProps {
@@ -30,6 +31,7 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
 
         {user && (
           <nav aria-label="Navegación principal" className="flex flex-col gap-2">
+            <SelectionIndicator value={activeTab} selector='button[aria-current="page"]' className="sidebar-nav-indicator" />
             {navItems.map(({ id, label, icon: Icon }) => {
               const isActive = activeTab === id;
               return (

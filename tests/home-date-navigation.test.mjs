@@ -184,6 +184,68 @@ test('corrupt and future restored dates cannot select a future writer', async t 
   await view.reload(); assert.equal(view.selected(), today);
 });
 
+test('the same weekly marker measures accepted cells and stays put when keyboard focus or a blocked click moves', async t => {
+  const view = await mount(t);
+  const group = document.querySelector('.home-week-days');
+  const marker = group.querySelector('.home-week-indicator');
+  assert.equal(marker.getAttribute('aria-hidden'), 'true');
+  // Layout fixture: fractional cells extend beyond their viewport, which is already scrolled.
+  group.getBoundingClientRect = () => ({ left: -71, top: 60 });
+  view.day(yesterday).getBoundingClientRect = () => ({ left: 99.25, top: 60, width: 55.75, height: 52 });
+  view.day(today).getBoundingClientRect = () => ({ left: 156, top: 60, width: 55.75, height: 52 });
+  await view.click(view.day(yesterday));
+  assert.equal(marker.style.transform, 'translate(170.25px, 0px)');
+  assert.equal(marker.style.width, '55.75px');
+  await act(() => view.day(yesterday).dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })));
+  assert.equal(document.activeElement, view.day(today));
+  assert.equal(marker.style.transform, 'translate(170.25px, 0px)');
+  await view.click(view.day(today));
+  assert.equal(group.querySelector('.home-week-indicator'), marker);
+  assert.equal(marker.style.transform, 'translate(227px, 0px)');
+  await view.click(document.querySelector('.daily-quick-actions button'));
+  await view.click(view.day(yesterday));
+  assert.equal(view.day(today).getAttribute('aria-pressed'), 'true');
+  assert.equal(marker.style.transform, 'translate(227px, 0px)');
+});
+
+test('text enlargement reveals the selected day while resize respects keyboard exploration and manual scroll', async t => {
+  const view = await mount(t);
+  const strip = document.querySelector('.home-week-scroll');
+  let width = 280, cell = 40, left = 0, writes = 0, resize;
+  globalThis.ResizeObserver = class {
+    constructor(callback) { this.callback = callback; }
+    observe(element) { if (element === strip) resize = this.callback; }
+    disconnect() {}
+  };
+  Object.defineProperty(strip, 'clientWidth', { get: () => width });
+  Object.defineProperty(strip, 'scrollLeft', { get: () => left, set: value => { writes++; left = value; } });
+  strip.getBoundingClientRect = () => ({ left: 0 });
+  strip.querySelectorAll('[data-day]').forEach((button, index) => {
+    Object.defineProperty(button, 'offsetWidth', { get: () => cell });
+    button.getBoundingClientRect = () => ({ left: cell * index - left, top: 0, width: cell, height: 48 });
+  });
+  await view.click(view.day(yesterday)); // Wednesday in the fourth column.
+  resize();
+  assert.equal(writes, 0);
+  cell = 88;
+  resize();
+  assert.equal(left, 72);
+  resize();
+  assert.equal(writes, 1);
+  await act(() => view.day(yesterday).dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Home', bubbles: true })));
+  assert.equal(left, 0);
+  width = 250;
+  resize();
+  assert.equal(document.activeElement.dataset.day, '2026-11-08');
+  assert.equal(left, 0);
+  assert.equal(view.selected(), yesterday);
+  document.activeElement.blur();
+  strip.scrollLeft = 37;
+  resize();
+  assert.equal(left, 37);
+  assert.equal(writes, 3);
+});
+
 test('a desktop weekly click cannot retarget or dismiss a meal draft, and confirmation writes its original date once', async t => {
   const view = await mount(t, { width: 1440 });
   await view.click(document.querySelector('.daily-quick-actions button'));

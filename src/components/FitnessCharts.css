@@ -8,9 +8,7 @@
   color: var(--fit-ink);
   font-variant-numeric: tabular-nums;
 }
-.charts-header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
 .charts-range, .charts-legend > span { display: flex; align-items: center; gap: 6px; }
-.charts-range { margin-top: 6px; color: var(--fit-quiet); font-size: var(--fit-caption); }
 .charts-view :is(button, summary):focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -2px; }
 .charts-panel {
   min-width: 0;
@@ -120,7 +118,6 @@
 @media (max-width: 600px) {
   .charts-view .charts-desktop-only { display: none; }
   .charts-mobile-only { display: inline; }
-  .charts-period { width: 100%; }
   .charts-average-base { display: inline; }
   .charts-detail-clear span { display: none; }
 }
