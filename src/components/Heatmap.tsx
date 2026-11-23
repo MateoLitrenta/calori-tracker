@@ -3,6 +3,7 @@ import { addDays, addMonths, endOfMonth, format, parseISO, startOfMonth, startOf
 import { es } from 'date-fns/locale/es';
 import {
   ArrowUpRight,
+  ArrowDown,
   CaretLeft,
   CaretRight,
   Barbell,
@@ -12,7 +13,7 @@ import {
   Pulse,
 } from '@phosphor-icons/react';
 import type { DailyRecordsMap, UserProfile } from '../types';
-import { formatDateStr, getHeatmapColor } from '../utils/helpers';
+import { calculateDailyExpenditure, formatDateStr, getCaloriesIngested, getHeatmapColor } from '../utils/helpers';
 import { buildHistoryPeriods } from '../utils/historyPeriods';
 import {
   getHistoryDay,
@@ -461,10 +462,7 @@ export default function Heatmap({
       onClick={(event) => event.stopPropagation()}
     >
       <header className="ah-header">
-        <div>
-          <p className="ah-eyebrow">Historial</p>
-          <h2>Tu actividad</h2>
-        </div>
+        <h2>Tu actividad</h2>
         <SegmentedControl className="ah-view-switch" label="Período del historial" options={views}
           value={state.view} onChange={view => change({ view, anchor: selected })} />
       </header>
@@ -473,7 +471,13 @@ export default function Heatmap({
           <div className="ah-navigation">
             <div>
               <h3 aria-live="polite" aria-atomic="true">{heading}</h3>
-              {state.view === 'week' && <p className="ah-period-boundary">Domingo a sábado</p>}
+              <p className="ah-period-note">
+                {state.view === 'week' && <span className="ah-period-boundary">Domingo a sábado</span>}
+                <span>{registeredDays
+                  ? countLabel(registeredDays, 'día con registros', 'días con registros')
+                  : 'Sin registros en este período'}</span>
+                {state.view === 'year' && <span>Elegí un mes para explorar</span>}
+              </p>
             </div>
             <div className="ah-nav-actions">
               <button
@@ -501,10 +505,6 @@ export default function Heatmap({
               </button>
             </div>
           </div>
-          <button type="button" className="ah-detail-jump" aria-controls={detailId} onClick={() => {
-            detailRef.current?.focus({ preventScroll: true });
-            detailRef.current?.scrollIntoView({ block: 'start' });
-          }}>Ver detalle del día</button>
           <div className="ah-motion-viewport">
             <div className="ah-motion-surface" ref={motionRef}>
               {state.view === 'year' ? (
@@ -686,37 +686,44 @@ export default function Heatmap({
                       <div className="ah-week">{weekDates.map(renderDay)}</div>
                     )}
                   </div>
-                  <details className="ah-key-disclosure">
-                    <summary>Indicadores del calendario</summary>
-                    <div className="ah-key">
-                    <span>
-                      <ForkKnife aria-hidden="true" />
-                      Comida
-                    </span>
-                    <span>
-                      <SoccerBall aria-hidden="true" />
-                      Fútbol
-                    </span>
-                    <span>
-                      <Barbell aria-hidden="true" />
-                      Gimnasio
-                    </span>
-                    <span>
-                      <Pulse aria-hidden="true" />
-                      Otros
-                    </span>
-                    <span>
-                      <i aria-hidden="true" />
-                      Sin comidas
-                    </span>
-                    </div>
-                  </details>
                   <p id={helpId} className="sr-only">
                     Flechas para cambiar de fecha; Inicio y Fin para los extremos de la semana; RePág y
                     AvPág para cambiar de mes. Seleccionar no abre ni modifica el registro diario.
                   </p>
                 </>
               )}
+              <div className="ah-calendar-tools">
+                <details className="ah-key-disclosure">
+                  <summary>Indicadores del calendario</summary>
+                  <p className="ah-balance-key" aria-label="Lectura del balance">
+                    <span>
+                      <i className={getHeatmapColor(-300)} aria-hidden="true" />
+                      Déficit (−)
+                    </span>
+                    <span>
+                      <i className={getHeatmapColor(0)} aria-hidden="true" />
+                      Equilibrio (0)
+                    </span>
+                    <span>
+                      <i className={getHeatmapColor(300)} aria-hidden="true" />
+                      Superávit (+)
+                    </span>
+                    <span><i className="ah-key-partial" aria-hidden="true" />Parcial</span>
+                  </p>
+                  {state.view !== 'year' && <div className="ah-key">
+                    <span><i className="ah-key-selection" aria-hidden="true" />Día consultado</span>
+                    <span><i className="ah-key-today" aria-hidden="true" />Hoy</span>
+                    <span><ForkKnife aria-hidden="true" />Comida</span>
+                    <span><SoccerBall aria-hidden="true" />Fútbol</span>
+                    <span><Barbell aria-hidden="true" />Gimnasio</span>
+                    <span><Pulse aria-hidden="true" />Otros</span>
+                  </div>}
+                </details>
+                <button type="button" className="ah-detail-jump" aria-controls={detailId} onClick={() => {
+                  detailRef.current?.focus({ preventScroll: true });
+                  detailRef.current?.scrollIntoView({ block: 'start' });
+                }}>Ver detalle del día <ArrowDown aria-hidden="true" /></button>
+              </div>
               {state.view !== 'year' && (
                 <div
                   className="ah-period-summary"
@@ -742,33 +749,6 @@ export default function Heatmap({
                   )}
                 </div>
               )}
-              <p className="ah-balance-key" aria-label="Lectura del balance">
-                <span>
-                  <i className={getHeatmapColor(-300)} aria-hidden="true" />
-                  Déficit (−)
-                </span>
-                <span>
-                  <i className={getHeatmapColor(0)} aria-hidden="true" />
-                  Equilibrio (0)
-                </span>
-                <span>
-                  <i className={getHeatmapColor(300)} aria-hidden="true" />
-                  Superávit (+)
-                </span>
-                <span>Parcial: neutral</span>
-              </p>
-              <div className="ah-period-note">
-                <span>
-                  {registeredDays
-                    ? countLabel(registeredDays, 'día con registros', 'días con registros')
-                    : 'Sin registros en este período'}
-                </span>
-                <span>
-                  {state.view === 'year'
-                    ? 'Elegí un mes para explorar'
-                    : 'Elegí un día para ver su detalle'}
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -781,7 +761,7 @@ export default function Heatmap({
           aria-label="Detalle del día"
         >
           <div className="ah-detail-heading" aria-live="polite" aria-atomic="true">
-            <p className="ah-eyebrow">{selected === today ? 'Explorando · Hoy' : 'Explorando'}</p>
+            <p className="ah-eyebrow">{selected === today ? 'Fecha consultada · Hoy' : 'Fecha consultada'}</p>
             <h3>{dateLabel(selected)}</h3>
             <p className="ah-day-status" data-empty={!hasData} data-incomplete={incomplete}>
               {!hasData
@@ -794,17 +774,36 @@ export default function Heatmap({
                       : '')}
             </p>
           </div>
-          {hasData && (selectedInfo.canColorBalance ? (
-            <BalanceReading value={selectedInfo.balance} category={selectedInfo.category}
-              label={selectedInfo.label + ' · Con comidas registradas'} />
-          ) : (
-            <p className="ah-incomplete-note" data-balance="empty">Balance provisional · Sin comidas registradas</p>
-          ))}
+          {hasData && (
+            <div className="ah-day-energy">
+              {selectedInfo.canColorBalance ? (
+                <BalanceReading value={selectedInfo.balance} category={selectedInfo.category}
+                  label={selectedInfo.label + ' · Con comidas registradas'} />
+              ) : (
+                <p className="ah-incomplete-note" data-balance="empty">
+                  {selectedInfo.balance === null ? 'Sin datos energéticos' : 'Balance provisional'} · Sin comidas registradas
+                </p>
+              )}
+              {selectedInfo.balance !== null && (
+                <dl className="ah-day-channels">
+                  <div>
+                    <dt>Calorías consumidas</dt>
+                    <dd>{selectedInfo.withMeals
+                      ? <>{number(getCaloriesIngested(dayRecord))} <small>kcal</small></>
+                      : <span className="ah-missing">Sin comidas</span>}</dd>
+                  </div>
+                  <div>
+                    <dt>Gasto estimado</dt>
+                    <dd>{number(calculateDailyExpenditure(profile, dayRecord))} <small>kcal</small></dd>
+                  </div>
+                </dl>
+              )}
+            </div>
+          )}
           {!hasData ? (
             <div className="ah-empty">
               <CalendarBlank aria-hidden="true" />
-              <p>Este día está por contar.</p>
-              <span>Cuando registres comidas, entrenamientos o hábitos, aparecerán acá.</span>
+              <p>Las comidas, entrenamientos y hábitos que registres para esta fecha aparecerán acá.</p>
             </div>
           ) : (
             <>

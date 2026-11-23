@@ -1,0 +1,33 @@
+{
+  "browser": "158.0.8127.36",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "duration": 8.6,
+  "motion": [
+    {
+      "name": "scale",
+      "duration": 210
+    },
+    {
+      "name": "scale",
+      "duration": 210
+    },
+    {
+      "name": "scale",
+      "duration": 210
+    }
+  ],
+  "sequence": [
+    "Mes",
+    "Superávit",
+    "Parcial",
+    "Semana",
+    "Año",
+    "Noviembre",
+    "Superávit",
+    "Ver y editar el 12 de noviembre"
+  ],
+  "writes": 0
+}
