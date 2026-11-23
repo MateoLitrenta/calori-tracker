@@ -1,0 +1,2868 @@
+{
+  "baseline": "4694914ddd5363815faf77168e3cd85bbcc69a44",
+  "browser": "158.0.8127.36",
+  "cases": [
+    {
+      "width": 320,
+      "theme": "light",
+      "days": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "current": null,
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "events": []
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": null,
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "events": [
+            "Almuerzo del lunes"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "current": null,
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "events": [
+            "Comidas registradas"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "current": null,
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "events": []
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "current": null,
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "events": [
+            "Comida de ayer",
+            "Fútbol 5"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": "date",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "events": [
+            "Yogur, fruta y avena",
+            "Gimnasio",
+            "Arroz con verduras y pollo",
+            "Caminata",
+            "Tostadas con queso"
+          ]
+        }
+      ],
+      "views": {
+        "month": {
+          "normal": {
+            "section": {
+              "w": 288,
+              "h": 1549
+            },
+            "detail": {
+              "w": 288,
+              "h": 819
+            },
+            "calendar": {
+              "w": 288,
+              "h": 540
+            },
+            "overflow": 0,
+            "localCalendarScroll": 30,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 288,
+              "h": 3577
+            },
+            "detail": {
+              "w": 288,
+              "h": 2196
+            },
+            "calendar": {
+              "w": 288,
+              "h": 1154
+            },
+            "overflow": 0,
+            "localCalendarScroll": 336,
+            "shortTargets": [],
+            "clipped": [],
+            "selector": {
+              "centerError": 0,
+              "leftInset": -3,
+              "rightInset": -3,
+              "lineCounts": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        },
+        "week": {
+          "normal": {
+            "section": {
+              "w": 288,
+              "h": 1549
+            },
+            "detail": {
+              "w": 288,
+              "h": 819
+            },
+            "calendar": {
+              "w": 288,
+              "h": 540
+            },
+            "overflow": 0,
+            "localCalendarScroll": 30,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 288,
+              "h": 3521
+            },
+            "detail": {
+              "w": 288,
+              "h": 2196
+            },
+            "calendar": {
+              "w": 288,
+              "h": 1098
+            },
+            "overflow": 0,
+            "localCalendarScroll": 336,
+            "shortTargets": [],
+            "clipped": [],
+            "selector": {
+              "centerError": 0,
+              "leftInset": -3,
+              "rightInset": -3,
+              "lineCounts": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        },
+        "year": {
+          "normal": {
+            "section": {
+              "w": 288,
+              "h": 1882
+            },
+            "detail": {
+              "w": 288,
+              "h": 819
+            },
+            "calendar": {
+              "w": 288,
+              "h": 873
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 288,
+              "h": 4376
+            },
+            "detail": {
+              "w": 288,
+              "h": 2196
+            },
+            "calendar": {
+              "w": 288,
+              "h": 1953
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": [],
+            "selector": {
+              "centerError": 0,
+              "leftInset": -3,
+              "rightInset": -3,
+              "lineCounts": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "contrast": {},
+      "focus": true,
+      "exploreThenOpen": true
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "days": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "current": null,
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "events": []
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": null,
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "events": [
+            "Almuerzo del lunes"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "current": null,
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "events": [
+            "Comidas registradas"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "current": null,
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "events": []
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "current": null,
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "events": [
+            "Comida de ayer",
+            "Fútbol 5"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": "date",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "events": [
+            "Yogur, fruta y avena",
+            "Gimnasio",
+            "Arroz con verduras y pollo",
+            "Caminata",
+            "Tostadas con queso"
+          ]
+        }
+      ],
+      "views": {
+        "month": {
+          "normal": {
+            "section": {
+              "w": 288,
+              "h": 1549
+            },
+            "detail": {
+              "w": 288,
+              "h": 819
+            },
+            "calendar": {
+              "w": 288,
+              "h": 540
+            },
+            "overflow": 0,
+            "localCalendarScroll": 30,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 288,
+              "h": 3577
+            },
+            "detail": {
+              "w": 288,
+              "h": 2196
+            },
+            "calendar": {
+              "w": 288,
+              "h": 1154
+            },
+            "overflow": 0,
+            "localCalendarScroll": 336,
+            "shortTargets": [],
+            "clipped": [],
+            "selector": {
+              "centerError": 0,
+              "leftInset": -3,
+              "rightInset": -3,
+              "lineCounts": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        },
+        "week": {
+          "normal": {
+            "section": {
+              "w": 288,
+              "h": 1549
+            },
+            "detail": {
+              "w": 288,
+              "h": 819
+            },
+            "calendar": {
+              "w": 288,
+              "h": 540
+            },
+            "overflow": 0,
+            "localCalendarScroll": 30,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 288,
+              "h": 3521
+            },
+            "detail": {
+              "w": 288,
+              "h": 2196
+            },
+            "calendar": {
+              "w": 288,
+              "h": 1098
+            },
+            "overflow": 0,
+            "localCalendarScroll": 336,
+            "shortTargets": [],
+            "clipped": [],
+            "selector": {
+              "centerError": 0,
+              "leftInset": -3,
+              "rightInset": -3,
+              "lineCounts": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        },
+        "year": {
+          "normal": {
+            "section": {
+              "w": 288,
+              "h": 1882
+            },
+            "detail": {
+              "w": 288,
+              "h": 819
+            },
+            "calendar": {
+              "w": 288,
+              "h": 873
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 288,
+              "h": 4376
+            },
+            "detail": {
+              "w": 288,
+              "h": 2196
+            },
+            "calendar": {
+              "w": 288,
+              "h": 1953
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": [],
+            "selector": {
+              "centerError": 0,
+              "leftInset": -3,
+              "rightInset": -3,
+              "lineCounts": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "contrast": {},
+      "focus": true,
+      "exploreThenOpen": true
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "days": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "current": null,
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "events": []
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": null,
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "events": [
+            "Almuerzo del lunes"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "current": null,
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "events": [
+            "Comidas registradas"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "current": null,
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "events": []
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "current": null,
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "events": [
+            "Comida de ayer",
+            "Fútbol 5"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": "date",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "events": [
+            "Yogur, fruta y avena",
+            "Gimnasio",
+            "Arroz con verduras y pollo",
+            "Caminata",
+            "Tostadas con queso"
+          ]
+        }
+      ],
+      "views": {
+        "month": {
+          "normal": {
+            "section": {
+              "w": 343,
+              "h": 1561
+            },
+            "detail": {
+              "w": 343,
+              "h": 717
+            },
+            "calendar": {
+              "w": 343,
+              "h": 654
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 343,
+              "h": 3399
+            },
+            "detail": {
+              "w": 343,
+              "h": 1933
+            },
+            "calendar": {
+              "w": 343,
+              "h": 1240
+            },
+            "overflow": 0,
+            "localCalendarScroll": 299,
+            "shortTargets": [],
+            "clipped": [],
+            "selector": {
+              "centerError": 0,
+              "leftInset": -3,
+              "rightInset": -3,
+              "lineCounts": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        },
+        "week": {
+          "normal": {
+            "section": {
+              "w": 343,
+              "h": 1361
+            },
+            "detail": {
+              "w": 343,
+              "h": 717
+            },
+            "calendar": {
+              "w": 343,
+              "h": 454
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 343,
+              "h": 3136
+            },
+            "detail": {
+              "w": 343,
+              "h": 1933
+            },
+            "calendar": {
+              "w": 343,
+              "h": 976
+            },
+            "overflow": 0,
+            "localCalendarScroll": 299,
+            "shortTargets": [],
+            "clipped": [],
+            "selector": {
+              "centerError": 0,
+              "leftInset": -3,
+              "rightInset": -3,
+              "lineCounts": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        },
+        "year": {
+          "normal": {
+            "section": {
+              "w": 343,
+              "h": 1699
+            },
+            "detail": {
+              "w": 343,
+              "h": 717
+            },
+            "calendar": {
+              "w": 343,
+              "h": 793
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 343,
+              "h": 3667
+            },
+            "detail": {
+              "w": 343,
+              "h": 1933
+            },
+            "calendar": {
+              "w": 343,
+              "h": 1508
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": [],
+            "selector": {
+              "centerError": 0.015625,
+              "leftInset": -3.015625,
+              "rightInset": -2.984375,
+              "lineCounts": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "contrast": {
+        "10": {
+          "ratio": 12.41,
+          "minimum": 4.5,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            227,
+            229,
+            228
+          ]
+        },
+        "11": {
+          "ratio": 13.2,
+          "minimum": 4.5,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            235,
+            236,
+            228
+          ]
+        },
+        "12": {
+          "ratio": 8.21,
+          "minimum": 4.5,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            232,
+            173,
+            168
+          ]
+        },
+        "13": {
+          "ratio": 9.75,
+          "minimum": 4.5,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            159,
+            217,
+            178
+          ]
+        },
+        "08": {
+          "ratio": 15.56,
+          "minimum": 4.5,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            255,
+            254,
+            250
+          ]
+        },
+        ".ah-navigation h3": {
+          "ratio": 14.38,
+          "minimum": 3,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            246,
+            245,
+            239
+          ]
+        },
+        ".ah-detail-heading h3": {
+          "ratio": 15.56,
+          "minimum": 3,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            255,
+            254,
+            250
+          ]
+        },
+        ".ah-day-status": {
+          "ratio": 6.85,
+          "minimum": 4.5,
+          "fg": [
+            80,
+            93,
+            85
+          ],
+          "bg": [
+            255,
+            254,
+            250
+          ]
+        },
+        ".ah-open": {
+          "ratio": 5.83,
+          "minimum": 4.5,
+          "fg": [
+            146,
+            65,
+            17
+          ],
+          "bg": [
+            241,
+            233,
+            219
+          ]
+        }
+      },
+      "focus": true,
+      "exploreThenOpen": true,
+      "secondAccountHasOwnHistory": true,
+      "waterOnlyEnergyMissing": true
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "days": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "current": null,
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "events": []
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": null,
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "events": [
+            "Almuerzo del lunes"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "current": null,
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "events": [
+            "Comidas registradas"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "current": null,
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "events": []
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "current": null,
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "events": [
+            "Comida de ayer",
+            "Fútbol 5"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": "date",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "events": [
+            "Yogur, fruta y avena",
+            "Gimnasio",
+            "Arroz con verduras y pollo",
+            "Caminata",
+            "Tostadas con queso"
+          ]
+        }
+      ],
+      "views": {
+        "month": {
+          "normal": {
+            "section": {
+              "w": 343,
+              "h": 1561
+            },
+            "detail": {
+              "w": 343,
+              "h": 717
+            },
+            "calendar": {
+              "w": 343,
+              "h": 654
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 343,
+              "h": 3399
+            },
+            "detail": {
+              "w": 343,
+              "h": 1933
+            },
+            "calendar": {
+              "w": 343,
+              "h": 1240
+            },
+            "overflow": 0,
+            "localCalendarScroll": 299,
+            "shortTargets": [],
+            "clipped": [],
+            "selector": {
+              "centerError": 0,
+              "leftInset": -3,
+              "rightInset": -3,
+              "lineCounts": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        },
+        "week": {
+          "normal": {
+            "section": {
+              "w": 343,
+              "h": 1361
+            },
+            "detail": {
+              "w": 343,
+              "h": 717
+            },
+            "calendar": {
+              "w": 343,
+              "h": 454
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 343,
+              "h": 3136
+            },
+            "detail": {
+              "w": 343,
+              "h": 1933
+            },
+            "calendar": {
+              "w": 343,
+              "h": 976
+            },
+            "overflow": 0,
+            "localCalendarScroll": 299,
+            "shortTargets": [],
+            "clipped": [],
+            "selector": {
+              "centerError": 0,
+              "leftInset": -3,
+              "rightInset": -3,
+              "lineCounts": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        },
+        "year": {
+          "normal": {
+            "section": {
+              "w": 343,
+              "h": 1699
+            },
+            "detail": {
+              "w": 343,
+              "h": 717
+            },
+            "calendar": {
+              "w": 343,
+              "h": 793
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 343,
+              "h": 3667
+            },
+            "detail": {
+              "w": 343,
+              "h": 1933
+            },
+            "calendar": {
+              "w": 343,
+              "h": 1508
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": [],
+            "selector": {
+              "centerError": 0.015625,
+              "leftInset": -3.015625,
+              "rightInset": -2.984375,
+              "lineCounts": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "contrast": {
+        "10": {
+          "ratio": 10.35,
+          "minimum": 4.5,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            54,
+            59,
+            57
+          ]
+        },
+        "11": {
+          "ratio": 12.64,
+          "minimum": 4.5,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            38,
+            46,
+            43
+          ]
+        },
+        "12": {
+          "ratio": 7.05,
+          "minimum": 4.5,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            115,
+            70,
+            74
+          ]
+        },
+        "13": {
+          "ratio": 5.84,
+          "minimum": 4.5,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            57,
+            104,
+            78
+          ]
+        },
+        "08": {
+          "ratio": 14.87,
+          "minimum": 4.5,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            26,
+            33,
+            31
+          ]
+        },
+        ".ah-navigation h3": {
+          "ratio": 16.72,
+          "minimum": 3,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            16,
+            21,
+            21
+          ]
+        },
+        ".ah-detail-heading h3": {
+          "ratio": 14.87,
+          "minimum": 3,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            26,
+            33,
+            31
+          ]
+        },
+        ".ah-day-status": {
+          "ratio": 9.15,
+          "minimum": 4.5,
+          "fg": [
+            186,
+            196,
+            189
+          ],
+          "bg": [
+            26,
+            33,
+            31
+          ]
+        },
+        ".ah-open": {
+          "ratio": 8.25,
+          "minimum": 4.5,
+          "fg": [
+            255,
+            172,
+            114
+          ],
+          "bg": [
+            32,
+            39,
+            39
+          ]
+        }
+      },
+      "focus": true,
+      "exploreThenOpen": true
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "days": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "current": null,
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "events": []
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": null,
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "events": [
+            "Almuerzo del lunes"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "current": null,
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "events": [
+            "Comidas registradas"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "current": null,
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "events": []
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "current": null,
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "events": [
+            "Comida de ayer",
+            "Fútbol 5"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": "date",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "events": [
+            "Yogur, fruta y avena",
+            "Gimnasio",
+            "Arroz con verduras y pollo",
+            "Caminata",
+            "Tostadas con queso"
+          ]
+        }
+      ],
+      "views": {
+        "month": {
+          "normal": {
+            "section": {
+              "w": 454,
+              "h": 1485
+            },
+            "detail": {
+              "w": 454,
+              "h": 713
+            },
+            "calendar": {
+              "w": 454,
+              "h": 615
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 454,
+              "h": 2793
+            },
+            "detail": {
+              "w": 454,
+              "h": 1414
+            },
+            "calendar": {
+              "w": 454,
+              "h": 1123
+            },
+            "overflow": 0,
+            "localCalendarScroll": 192,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "week": {
+          "normal": {
+            "section": {
+              "w": 454,
+              "h": 1237
+            },
+            "detail": {
+              "w": 454,
+              "h": 713
+            },
+            "calendar": {
+              "w": 454,
+              "h": 367
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 454,
+              "h": 2488
+            },
+            "detail": {
+              "w": 454,
+              "h": 1414
+            },
+            "calendar": {
+              "w": 454,
+              "h": 819
+            },
+            "overflow": 0,
+            "localCalendarScroll": 192,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "year": {
+          "normal": {
+            "section": {
+              "w": 454,
+              "h": 1617
+            },
+            "detail": {
+              "w": 454,
+              "h": 713
+            },
+            "calendar": {
+              "w": 454,
+              "h": 747
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 454,
+              "h": 3045
+            },
+            "detail": {
+              "w": 454,
+              "h": 1414
+            },
+            "calendar": {
+              "w": 454,
+              "h": 1376
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        }
+      },
+      "contrast": {},
+      "focus": true,
+      "exploreThenOpen": true
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "days": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "current": null,
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "events": []
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": null,
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "events": [
+            "Almuerzo del lunes"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "current": null,
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "events": [
+            "Comidas registradas"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "current": null,
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "events": []
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "current": null,
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "events": [
+            "Comida de ayer",
+            "Fútbol 5"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": "date",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "events": [
+            "Yogur, fruta y avena",
+            "Gimnasio",
+            "Arroz con verduras y pollo",
+            "Caminata",
+            "Tostadas con queso"
+          ]
+        }
+      ],
+      "views": {
+        "month": {
+          "normal": {
+            "section": {
+              "w": 454,
+              "h": 1485
+            },
+            "detail": {
+              "w": 454,
+              "h": 713
+            },
+            "calendar": {
+              "w": 454,
+              "h": 615
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 454,
+              "h": 2793
+            },
+            "detail": {
+              "w": 454,
+              "h": 1414
+            },
+            "calendar": {
+              "w": 454,
+              "h": 1123
+            },
+            "overflow": 0,
+            "localCalendarScroll": 192,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "week": {
+          "normal": {
+            "section": {
+              "w": 454,
+              "h": 1237
+            },
+            "detail": {
+              "w": 454,
+              "h": 713
+            },
+            "calendar": {
+              "w": 454,
+              "h": 367
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 454,
+              "h": 2488
+            },
+            "detail": {
+              "w": 454,
+              "h": 1414
+            },
+            "calendar": {
+              "w": 454,
+              "h": 819
+            },
+            "overflow": 0,
+            "localCalendarScroll": 192,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "year": {
+          "normal": {
+            "section": {
+              "w": 454,
+              "h": 1617
+            },
+            "detail": {
+              "w": 454,
+              "h": 713
+            },
+            "calendar": {
+              "w": 454,
+              "h": 747
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 454,
+              "h": 3045
+            },
+            "detail": {
+              "w": 454,
+              "h": 1414
+            },
+            "calendar": {
+              "w": 454,
+              "h": 1376
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        }
+      },
+      "contrast": {},
+      "focus": true,
+      "exploreThenOpen": true
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "days": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "current": null,
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "events": []
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": null,
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "events": [
+            "Almuerzo del lunes"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "current": null,
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "events": [
+            "Comidas registradas"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "current": null,
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "events": []
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "current": null,
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "events": [
+            "Comida de ayer",
+            "Fútbol 5"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": "date",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "events": [
+            "Yogur, fruta y avena",
+            "Gimnasio",
+            "Arroz con verduras y pollo",
+            "Caminata",
+            "Tostadas con queso"
+          ]
+        }
+      ],
+      "views": {
+        "month": {
+          "normal": {
+            "section": {
+              "w": 710,
+              "h": 1479
+            },
+            "detail": {
+              "w": 710,
+              "h": 723
+            },
+            "calendar": {
+              "w": 710,
+              "h": 594
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 710,
+              "h": 2341
+            },
+            "detail": {
+              "w": 710,
+              "h": 1148
+            },
+            "calendar": {
+              "w": 710,
+              "h": 933
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "week": {
+          "normal": {
+            "section": {
+              "w": 710,
+              "h": 1231
+            },
+            "detail": {
+              "w": 710,
+              "h": 723
+            },
+            "calendar": {
+              "w": 710,
+              "h": 346
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 710,
+              "h": 2036
+            },
+            "detail": {
+              "w": 710,
+              "h": 1148
+            },
+            "calendar": {
+              "w": 710,
+              "h": 629
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "year": {
+          "normal": {
+            "section": {
+              "w": 710,
+              "h": 1385
+            },
+            "detail": {
+              "w": 710,
+              "h": 723
+            },
+            "calendar": {
+              "w": 710,
+              "h": 500
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 710,
+              "h": 2237
+            },
+            "detail": {
+              "w": 710,
+              "h": 1148
+            },
+            "calendar": {
+              "w": 710,
+              "h": 829
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        }
+      },
+      "contrast": {},
+      "focus": true,
+      "exploreThenOpen": true
+    },
+    {
+      "width": 1024,
+      "theme": "dark",
+      "days": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "current": null,
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "events": []
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": null,
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "events": [
+            "Almuerzo del lunes"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "current": null,
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "events": [
+            "Comidas registradas"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "current": null,
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "events": []
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "current": null,
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "events": [
+            "Comida de ayer",
+            "Fútbol 5"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": "date",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "events": [
+            "Yogur, fruta y avena",
+            "Gimnasio",
+            "Arroz con verduras y pollo",
+            "Caminata",
+            "Tostadas con queso"
+          ]
+        }
+      ],
+      "views": {
+        "month": {
+          "normal": {
+            "section": {
+              "w": 710,
+              "h": 1479
+            },
+            "detail": {
+              "w": 710,
+              "h": 723
+            },
+            "calendar": {
+              "w": 710,
+              "h": 594
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 710,
+              "h": 2341
+            },
+            "detail": {
+              "w": 710,
+              "h": 1148
+            },
+            "calendar": {
+              "w": 710,
+              "h": 933
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "week": {
+          "normal": {
+            "section": {
+              "w": 710,
+              "h": 1231
+            },
+            "detail": {
+              "w": 710,
+              "h": 723
+            },
+            "calendar": {
+              "w": 710,
+              "h": 346
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 710,
+              "h": 2036
+            },
+            "detail": {
+              "w": 710,
+              "h": 1148
+            },
+            "calendar": {
+              "w": 710,
+              "h": 629
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "year": {
+          "normal": {
+            "section": {
+              "w": 710,
+              "h": 1385
+            },
+            "detail": {
+              "w": 710,
+              "h": 723
+            },
+            "calendar": {
+              "w": 710,
+              "h": 500
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 710,
+              "h": 2237
+            },
+            "detail": {
+              "w": 710,
+              "h": 1148
+            },
+            "calendar": {
+              "w": 710,
+              "h": 829
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        }
+      },
+      "contrast": {},
+      "focus": true,
+      "exploreThenOpen": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "days": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "current": null,
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "events": []
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": null,
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "events": [
+            "Almuerzo del lunes"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "current": null,
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "events": [
+            "Comidas registradas"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "current": null,
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "events": []
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "current": null,
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "events": [
+            "Comida de ayer",
+            "Fútbol 5"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": "date",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "events": [
+            "Yogur, fruta y avena",
+            "Gimnasio",
+            "Arroz con verduras y pollo",
+            "Caminata",
+            "Tostadas con queso"
+          ]
+        }
+      ],
+      "views": {
+        "month": {
+          "normal": {
+            "section": {
+              "w": 1126,
+              "h": 869
+            },
+            "detail": {
+              "w": 513,
+              "h": 728
+            },
+            "calendar": {
+              "w": 589,
+              "h": 623
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 1126,
+              "h": 1554
+            },
+            "detail": {
+              "w": 513,
+              "h": 1387
+            },
+            "calendar": {
+              "w": 589,
+              "h": 1044
+            },
+            "overflow": 0,
+            "localCalendarScroll": 57,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "week": {
+          "normal": {
+            "section": {
+              "w": 1126,
+              "h": 869
+            },
+            "detail": {
+              "w": 513,
+              "h": 728
+            },
+            "calendar": {
+              "w": 589,
+              "h": 371
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 1126,
+              "h": 1554
+            },
+            "detail": {
+              "w": 513,
+              "h": 1387
+            },
+            "calendar": {
+              "w": 589,
+              "h": 774
+            },
+            "overflow": 0,
+            "localCalendarScroll": 57,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "year": {
+          "normal": {
+            "section": {
+              "w": 1126,
+              "h": 869
+            },
+            "detail": {
+              "w": 513,
+              "h": 728
+            },
+            "calendar": {
+              "w": 589,
+              "h": 500
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 1126,
+              "h": 1554
+            },
+            "detail": {
+              "w": 513,
+              "h": 1387
+            },
+            "calendar": {
+              "w": 589,
+              "h": 940
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        }
+      },
+      "contrast": {
+        "10": {
+          "ratio": 12.41,
+          "minimum": 4.5,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            227,
+            229,
+            228
+          ]
+        },
+        "11": {
+          "ratio": 13.2,
+          "minimum": 4.5,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            235,
+            236,
+            228
+          ]
+        },
+        "12": {
+          "ratio": 8.21,
+          "minimum": 4.5,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            232,
+            173,
+            168
+          ]
+        },
+        "13": {
+          "ratio": 9.75,
+          "minimum": 4.5,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            159,
+            217,
+            178
+          ]
+        },
+        "08": {
+          "ratio": 15.56,
+          "minimum": 4.5,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            255,
+            254,
+            250
+          ]
+        },
+        ".ah-navigation h3": {
+          "ratio": 14.38,
+          "minimum": 3,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            246,
+            245,
+            239
+          ]
+        },
+        ".ah-detail-heading h3": {
+          "ratio": 15.56,
+          "minimum": 3,
+          "fg": [
+            28,
+            37,
+            34
+          ],
+          "bg": [
+            255,
+            254,
+            250
+          ]
+        },
+        ".ah-day-status": {
+          "ratio": 6.85,
+          "minimum": 4.5,
+          "fg": [
+            80,
+            93,
+            85
+          ],
+          "bg": [
+            255,
+            254,
+            250
+          ]
+        },
+        ".ah-open": {
+          "ratio": 5.83,
+          "minimum": 4.5,
+          "fg": [
+            146,
+            65,
+            17
+          ],
+          "bg": [
+            241,
+            233,
+            219
+          ]
+        }
+      },
+      "focus": true,
+      "exploreThenOpen": true
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "days": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "current": null,
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "events": []
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": null,
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "events": [
+            "Almuerzo del lunes"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "current": null,
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "events": [
+            "Comidas registradas"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "current": null,
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "events": []
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "current": null,
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "events": [
+            "Comida de ayer",
+            "Fútbol 5"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": "date",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "events": [
+            "Yogur, fruta y avena",
+            "Gimnasio",
+            "Arroz con verduras y pollo",
+            "Caminata",
+            "Tostadas con queso"
+          ]
+        }
+      ],
+      "views": {
+        "month": {
+          "normal": {
+            "section": {
+              "w": 1126,
+              "h": 869
+            },
+            "detail": {
+              "w": 513,
+              "h": 728
+            },
+            "calendar": {
+              "w": 589,
+              "h": 623
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 1126,
+              "h": 1554
+            },
+            "detail": {
+              "w": 513,
+              "h": 1387
+            },
+            "calendar": {
+              "w": 589,
+              "h": 1044
+            },
+            "overflow": 0,
+            "localCalendarScroll": 57,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "week": {
+          "normal": {
+            "section": {
+              "w": 1126,
+              "h": 869
+            },
+            "detail": {
+              "w": 513,
+              "h": 728
+            },
+            "calendar": {
+              "w": 589,
+              "h": 371
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 1126,
+              "h": 1554
+            },
+            "detail": {
+              "w": 513,
+              "h": 1387
+            },
+            "calendar": {
+              "w": 589,
+              "h": 774
+            },
+            "overflow": 0,
+            "localCalendarScroll": 57,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "year": {
+          "normal": {
+            "section": {
+              "w": 1126,
+              "h": 869
+            },
+            "detail": {
+              "w": 513,
+              "h": 728
+            },
+            "calendar": {
+              "w": 589,
+              "h": 500
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 1126,
+              "h": 1554
+            },
+            "detail": {
+              "w": 513,
+              "h": 1387
+            },
+            "calendar": {
+              "w": 589,
+              "h": 940
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        }
+      },
+      "contrast": {
+        "10": {
+          "ratio": 10.35,
+          "minimum": 4.5,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            54,
+            59,
+            57
+          ]
+        },
+        "11": {
+          "ratio": 12.64,
+          "minimum": 4.5,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            38,
+            46,
+            43
+          ]
+        },
+        "12": {
+          "ratio": 7.05,
+          "minimum": 4.5,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            115,
+            70,
+            74
+          ]
+        },
+        "13": {
+          "ratio": 5.84,
+          "minimum": 4.5,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            57,
+            104,
+            78
+          ]
+        },
+        "08": {
+          "ratio": 14.87,
+          "minimum": 4.5,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            26,
+            33,
+            31
+          ]
+        },
+        ".ah-navigation h3": {
+          "ratio": 16.72,
+          "minimum": 3,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            16,
+            21,
+            21
+          ]
+        },
+        ".ah-detail-heading h3": {
+          "ratio": 14.87,
+          "minimum": 3,
+          "fg": [
+            245,
+            244,
+            238
+          ],
+          "bg": [
+            26,
+            33,
+            31
+          ]
+        },
+        ".ah-day-status": {
+          "ratio": 9.15,
+          "minimum": 4.5,
+          "fg": [
+            186,
+            196,
+            189
+          ],
+          "bg": [
+            26,
+            33,
+            31
+          ]
+        },
+        ".ah-open": {
+          "ratio": 8.25,
+          "minimum": 4.5,
+          "fg": [
+            255,
+            172,
+            114
+          ],
+          "bg": [
+            32,
+            39,
+            39
+          ]
+        }
+      },
+      "focus": true,
+      "exploreThenOpen": true
+    },
+    {
+      "width": 1920,
+      "theme": "light",
+      "days": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "current": null,
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "events": []
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": null,
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "events": [
+            "Almuerzo del lunes"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "current": null,
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "events": [
+            "Comidas registradas"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "current": null,
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "events": []
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "current": null,
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "events": [
+            "Comida de ayer",
+            "Fútbol 5"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": "date",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "events": [
+            "Yogur, fruta y avena",
+            "Gimnasio",
+            "Arroz con verduras y pollo",
+            "Caminata",
+            "Tostadas con queso"
+          ]
+        }
+      ],
+      "views": {
+        "month": {
+          "normal": {
+            "section": {
+              "w": 1440,
+              "h": 869
+            },
+            "detail": {
+              "w": 659,
+              "h": 728
+            },
+            "calendar": {
+              "w": 757,
+              "h": 602
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 1440,
+              "h": 1320
+            },
+            "detail": {
+              "w": 659,
+              "h": 1152
+            },
+            "calendar": {
+              "w": 757,
+              "h": 961
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "week": {
+          "normal": {
+            "section": {
+              "w": 1440,
+              "h": 869
+            },
+            "detail": {
+              "w": 659,
+              "h": 728
+            },
+            "calendar": {
+              "w": 757,
+              "h": 350
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 1440,
+              "h": 1320
+            },
+            "detail": {
+              "w": 659,
+              "h": 1152
+            },
+            "calendar": {
+              "w": 757,
+              "h": 643
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "year": {
+          "normal": {
+            "section": {
+              "w": 1440,
+              "h": 869
+            },
+            "detail": {
+              "w": 659,
+              "h": 728
+            },
+            "calendar": {
+              "w": 757,
+              "h": 500
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 1440,
+              "h": 1320
+            },
+            "detail": {
+              "w": 659,
+              "h": 1152
+            },
+            "calendar": {
+              "w": 757,
+              "h": 829
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        }
+      },
+      "contrast": {},
+      "focus": true,
+      "exploreThenOpen": true
+    },
+    {
+      "width": 1920,
+      "theme": "dark",
+      "days": [
+        {
+          "date": "2026-11-08",
+          "state": "empty",
+          "balance": "empty",
+          "current": null,
+          "label": "domingo 8 de noviembre de 2026 · Sin registros · Sin registros",
+          "events": []
+        },
+        {
+          "date": "2026-11-09",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": null,
+          "label": "lunes 9 de noviembre de 2026 · 1 comida · 0 entrenamientos · 4.100 pasos · 1.250 ml de agua · Déficit Alto · -1.103 kcal",
+          "events": [
+            "Almuerzo del lunes"
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "state": "with-meals",
+          "balance": "neutral",
+          "current": null,
+          "label": "martes 10 de noviembre de 2026 · 1 comida · 0 entrenamientos · Mantenimiento · 0 kcal",
+          "events": [
+            "Comidas registradas"
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "state": "partial",
+          "balance": "empty",
+          "current": null,
+          "label": "miércoles 11 de noviembre de 2026 · 0 comidas · 0 entrenamientos · 1.900 pasos · 500 ml de agua · Sin comidas registradas · Registro parcial · Sin comidas · -1.755 kcal provisional",
+          "events": []
+        },
+        {
+          "date": "2026-11-12",
+          "state": "with-meals",
+          "balance": "surplus-high",
+          "current": null,
+          "label": "jueves 12 de noviembre de 2026 · 1 comida · 1 entrenamiento · 8.750 pasos · 2.250 ml de agua · Peso 73,2 kg · Superávit Alto · +651 kcal · Fútbol: 1",
+          "events": [
+            "Comida de ayer",
+            "Fútbol 5"
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "state": "with-meals",
+          "balance": "deficit-high",
+          "current": "date",
+          "label": "viernes 13 de noviembre de 2026 · Hoy · 3 comidas · 2 entrenamientos · 6.300 pasos · 1.750 ml de agua · Peso 72,8 kg · Déficit Alto · -1.031 kcal · Gimnasio: 1 · Otros entrenamientos: 1",
+          "events": [
+            "Yogur, fruta y avena",
+            "Gimnasio",
+            "Arroz con verduras y pollo",
+            "Caminata",
+            "Tostadas con queso"
+          ]
+        }
+      ],
+      "views": {
+        "month": {
+          "normal": {
+            "section": {
+              "w": 1440,
+              "h": 869
+            },
+            "detail": {
+              "w": 659,
+              "h": 728
+            },
+            "calendar": {
+              "w": 757,
+              "h": 602
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 1440,
+              "h": 1320
+            },
+            "detail": {
+              "w": 659,
+              "h": 1152
+            },
+            "calendar": {
+              "w": 757,
+              "h": 961
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "week": {
+          "normal": {
+            "section": {
+              "w": 1440,
+              "h": 869
+            },
+            "detail": {
+              "w": 659,
+              "h": 728
+            },
+            "calendar": {
+              "w": 757,
+              "h": 350
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 1440,
+              "h": 1320
+            },
+            "detail": {
+              "w": 659,
+              "h": 1152
+            },
+            "calendar": {
+              "w": 757,
+              "h": 643
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        },
+        "year": {
+          "normal": {
+            "section": {
+              "w": 1440,
+              "h": 869
+            },
+            "detail": {
+              "w": 659,
+              "h": 728
+            },
+            "calendar": {
+              "w": 757,
+              "h": 500
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          },
+          "doubled": {
+            "section": {
+              "w": 1440,
+              "h": 1320
+            },
+            "detail": {
+              "w": 659,
+              "h": 1152
+            },
+            "calendar": {
+              "w": 757,
+              "h": 829
+            },
+            "overflow": 0,
+            "localCalendarScroll": 0,
+            "shortTargets": [],
+            "clipped": []
+          }
+        }
+      },
+      "contrast": {},
+      "focus": true,
+      "exploreThenOpen": true
+    }
+  ]
+}

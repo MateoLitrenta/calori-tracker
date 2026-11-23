@@ -85,7 +85,7 @@ function kpis(tree) {
   const hero = nodes(tree, element => element.props.className === 'charts-summary-balance')[0];
   const metrics = nodes(tree, element => element.props.className === 'charts-summary-metrics')[0];
   return [
-    { label: nodes(hero, element => element.type === 'h4')[0].props.children,
+    { label: nodes(hero, element => element.type === 'h3')[0].props.children,
       value: nodes(hero, element => element.props.className?.split(' ').includes('charts-balance-value'))[0].props.children },
     ...nodes(metrics, element => element.type === 'div').map(element => ({
       label: nodes(element, child => child.type === 'dt')[0].props.children,
@@ -93,6 +93,21 @@ function kpis(tree) {
     })),
   ];
 }
+
+test('the reading order leads from the summary to the legend, interactive plot and selected detail', () => {
+  const { tree, html: markup } = render(weeklyRecords, 'Semana', '2026-09-28');
+  const sectionHeadings = nodes(tree, node => node.type === 'h2').map(node => node.props.children);
+  assert.deepEqual(sectionHeadings, ['Resumen del período', 'Consumidas vs gasto', 'Actividad']);
+  const energy = nodes(tree, node => node.props['aria-labelledby'] === 'charts-energy-heading')[0];
+  const legend = nodes(energy, node => node.props.className === 'charts-legend')[0];
+  assert.match(html(legend), /Consumidas/);
+  assert.match(html(legend), /Gasto estimado/);
+  assert.ok(markup.indexOf('class="charts-legend"') < markup.indexOf('class="charts-plot"'));
+  assert.ok(markup.indexOf('class="charts-plot"') < markup.indexOf('id="charts-bucket-detail"'));
+  const detail = nodes(energy, node => node.props.id === 'charts-bucket-detail')[0];
+  assert.equal(nodes(detail, node => node.type === 'h3')[0].props.children, 'Lunes');
+  assert.equal(nodes(render({}).tree, node => node.props.className === 'charts-legend').length, 0);
+});
 
 test('the visible calorie scale matches the plotted bars and exact amounts across periods', () => {
   for (const period of ['Semana', 'Mes', 'Año']) {
@@ -241,6 +256,7 @@ test('chart selection updates the same compact metric strip without a reserved e
     const strip = nodes(initial.tree, element => element.props.id === 'charts-bucket-detail')[0];
     assert.ok(strip);
     assert.equal(strip.props['data-selected'], false);
+    assert.equal(strip.props.hidden, true, 'The reading instructions already appear above the plot');
     assert.equal(nodes(initial.tree, element => element.props.className === 'charts-detail-slot').length, 0);
     assert.equal(nodes(strip, element => element.type === 'dd').length, 3);
     const clear = nodes(strip, element => element.props['aria-label'] === 'Quitar selección del gráfico')[0];
@@ -252,8 +268,9 @@ test('chart selection updates the same compact metric strip without a reserved e
     assert.equal(selectedStrip.type, strip.type);
     assert.equal(selectedStrip.key, strip.key);
     assert.equal(selectedStrip.props['data-selected'], true);
+    assert.equal(selectedStrip.props.hidden, false);
     assert.equal(nodes(selectedStrip, element => element.type === 'dd').length, 3);
-    assert.equal(nodes(selectedStrip, element => element.type === 'h4').length, 1);
+    assert.equal(nodes(selectedStrip, element => element.type === 'h3').length, 1);
     const activity = tree => nodes(tree, element => element.props['aria-labelledby'] === 'charts-activity-heading')[0];
     assert.equal(html(activity(selected.tree)), html(activity(initial.tree)));
     assert.deepEqual(kpis(selected.tree), kpis(initial.tree));
@@ -473,7 +490,7 @@ test('monthly labels identify the exact statistical groups including the clipped
   last.props.onClick();
   const selected = render(weeklyRecords, 'Mes', globalThis.__chartsHarness.selectedBucket);
   const detail = nodes(selected.tree, element => element.props.id === 'charts-bucket-detail')[0];
-  assert.equal(nodes(detail, element => element.type === 'h4')[0].props.children, '29 sep 2026 – 30 sep 2026');
+  assert.equal(nodes(detail, element => element.type === 'h3')[0].props.children, '29 sep 2026 – 30 sep 2026');
 });
 
 test('the annual overview names late-year activity and keeps access to all twelve months', () => {

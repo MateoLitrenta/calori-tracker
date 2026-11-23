@@ -220,6 +220,31 @@ test('activity without food stays visibly partial and neutral despite its negati
   assert.equal(view.saves.length, 0);
 });
 
+test('daily history channels retain recorded zero, unknown intake and missing energy without changing the editable day', async t => {
+  const initial = fixtures();
+  initial[mealDay] = record(mealDay, { meals: [{ ...meal(), calories: 0 }] });
+  const view = await mount(t, initial);
+  const channelText = () => [...view.detail().querySelectorAll('.ah-day-channels > div')].map(group =>
+    [group.querySelector('dt').textContent, group.querySelector('dd').textContent.trim()]);
+  for (const date of [yesterday, mealDay, partialDay]) {
+    await view.selectDay(date);
+    assert.deepEqual(channelText(), [
+      ['Calorías consumidas', date === partialDay ? 'Sin comidas' : date === mealDay ? '0 kcal' : '650 kcal'],
+      ['Gasto estimado', calculateDailyExpenditure(profile, initial[date]).toLocaleString('es-AR') + ' kcal'],
+    ]);
+    assert.equal(view.heading(), today);
+    assert.equal(view.day(date).getAttribute('aria-pressed'), 'true');
+    assert.equal(view.day(today).getAttribute('aria-current'), 'date');
+  }
+  for (const date of [waterDay, emptyDay]) {
+    await view.selectDay(date);
+    assert.deepEqual(channelText(), []);
+    if (date === waterDay) assert.match(view.detail().textContent, /Sin datos energéticos/);
+    assert.equal(view.heading(), today);
+  }
+  assert.equal(view.saves.length, 0);
+});
+
 test('week and month use the legend scale only for days with a meal-backed balance', async t => {
   const initial = { [mealDay]: energyRecord(mealDay, -300), [yesterday]: energyRecord(yesterday, 300),
     [today]: energyRecord(today, 0), [workoutDay]: record(workoutDay, { workouts: [workout] }) };

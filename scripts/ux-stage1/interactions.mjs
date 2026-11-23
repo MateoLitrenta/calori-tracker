@@ -42,7 +42,7 @@ try{
   await page.locator('.charts-bucket').first().focus();
   assert.equal(await scroll.evaluate(e=>e.scrollLeft),0);
   await page.locator('.charts-bucket').last().focus();await page.keyboard.press('Enter');
-  assert.match(await page.locator('.charts-detail h4').textContent(),/diciembre/i);
+  assert.match(await page.locator('.charts-detail :is(h3,h4)').textContent(),/diciembre/i);
   assert.match(await page.locator('.charts-detail').textContent(),/Sin datos|Sin comidas/);
   const focus=await page.evaluate(()=>getComputedStyle(document.activeElement).outlineWidth);
   assert.ok(parseFloat(focus)>=2);

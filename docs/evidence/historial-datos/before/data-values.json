@@ -1,0 +1,808 @@
+{
+  "rich-Semana": {
+    "range": [
+      "2026-11-09",
+      "2026-11-15"
+    ],
+    "summary": {
+      "consumed": 1801,
+      "expenditure": 1912,
+      "balance": -68,
+      "mealDays": 4,
+      "energyDays": 5,
+      "stepDays": 5,
+      "steps": 3422,
+      "workoutCalories": 480,
+      "workoutCount": 2
+    },
+    "comparison": {
+      "consumed": -556,
+      "expenditure": -143,
+      "balance": -371
+    },
+    "streak": 3,
+    "labels": [
+      "Lunes. Consumidas: 1.566 kcal. Gasto estimado: 1.869 kcal. Balance: -303 kcal. Déficit Moderado.",
+      "Martes. Consumidas: Sin comidas registradas. Gasto estimado: 2.082 kcal. Balance: Sin datos. Sin datos.",
+      "Miércoles. Consumidas: 2.258 kcal. Gasto estimado: 1.816 kcal. Balance: +442 kcal. Superávit Moderado.",
+      "Jueves. Consumidas: 1.879 kcal. Gasto estimado: 1.789 kcal. Balance: +90 kcal. Superávit Leve.",
+      "Viernes. Consumidas: 1.500 kcal. Gasto estimado: 2.003 kcal. Balance: -503 kcal. Déficit Alto.",
+      "Sábado. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+      "Domingo. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos."
+    ],
+    "barHeights": [
+      [
+        "62.64%",
+        "false"
+      ],
+      [
+        "74.76%",
+        "false"
+      ],
+      [
+        "83.28%",
+        "false"
+      ],
+      [
+        "90.32%",
+        "false"
+      ],
+      [
+        "72.64%",
+        "false"
+      ],
+      [
+        "75.16%",
+        "false"
+      ],
+      [
+        "71.56%",
+        "false"
+      ],
+      [
+        "60%",
+        "false"
+      ],
+      [
+        "80.12%",
+        "false"
+      ]
+    ],
+    "scale": [
+      "2.500",
+      "1.250",
+      "0"
+    ],
+    "balance": [
+      "-68"
+    ],
+    "means": [
+      "1.801",
+      "1.912"
+    ],
+    "delta": [
+      "-556",
+      "-143",
+      "-371"
+    ]
+  },
+  "rich-Mes": {
+    "range": [
+      "2026-11-01",
+      "2026-11-30"
+    ],
+    "summary": {
+      "consumed": 2095,
+      "expenditure": 2017,
+      "balance": 84,
+      "mealDays": 11,
+      "energyDays": 12,
+      "stepDays": 12,
+      "steps": 5956,
+      "workoutCalories": 1200,
+      "workoutCount": 5
+    },
+    "comparison": {
+      "consumed": -182,
+      "expenditure": -49,
+      "balance": -124
+    },
+    "streak": 3,
+    "labels": [
+      "1 nov 2026 – 7 nov 2026. Consumidas promedio: 2.316 kcal/día. Gasto promedio: 2.125 kcal/día. Balance promedio: +191 kcal/día. Superávit Leve.",
+      "8 nov 2026 – 14 nov 2026. Consumidas promedio: 1.830 kcal/día. Gasto promedio: 1.909 kcal/día. Balance promedio: -45 kcal/día. Déficit Leve.",
+      "15 nov 2026 – 21 nov 2026. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "22 nov 2026 – 28 nov 2026. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "29 nov 2026 – 30 nov 2026. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos."
+    ],
+    "barHeights": [
+      [
+        "92.64%",
+        "false"
+      ],
+      [
+        "85%",
+        "false"
+      ],
+      [
+        "73.2%",
+        "false"
+      ],
+      [
+        "76.36%",
+        "false"
+      ]
+    ],
+    "scale": [
+      "2.500",
+      "1.250",
+      "0"
+    ],
+    "balance": [
+      "+84"
+    ],
+    "means": [
+      "2.095",
+      "2.017"
+    ],
+    "delta": [
+      "-182",
+      "-49",
+      "-124"
+    ]
+  },
+  "rich-Año": {
+    "range": [
+      "2026-01-01",
+      "2026-12-31"
+    ],
+    "summary": {
+      "consumed": 2218,
+      "expenditure": 2053,
+      "balance": 162,
+      "mealDays": 186,
+      "energyDays": 232,
+      "stepDays": 232,
+      "steps": 7096,
+      "workoutCalories": 20880,
+      "workoutCount": 87
+    },
+    "comparison": null,
+    "streak": 3,
+    "labels": [
+      "Enero. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "Febrero. Consumidas promedio: 2.511 kcal/día. Gasto promedio: 1.918 kcal/día. Balance promedio: +700 kcal/día. Superávit Alto.",
+      "Marzo. Consumidas promedio: 2.246 kcal/día. Gasto promedio: 2.047 kcal/día. Balance promedio: +193 kcal/día. Superávit Leve.",
+      "Abril. Consumidas promedio: 2.171 kcal/día. Gasto promedio: 2.051 kcal/día. Balance promedio: +106 kcal/día. Superávit Leve.",
+      "Mayo. Consumidas promedio: 2.213 kcal/día. Gasto promedio: 2.054 kcal/día. Balance promedio: +154 kcal/día. Superávit Leve.",
+      "Junio. Consumidas promedio: 2.244 kcal/día. Gasto promedio: 2.064 kcal/día. Balance promedio: +175 kcal/día. Superávit Leve.",
+      "Julio. Consumidas promedio: 2.216 kcal/día. Gasto promedio: 2.069 kcal/día. Balance promedio: +136 kcal/día. Superávit Leve.",
+      "Agosto. Consumidas promedio: 2.196 kcal/día. Gasto promedio: 2.045 kcal/día. Balance promedio: +153 kcal/día. Superávit Leve.",
+      "Septiembre. Consumidas promedio: 2.230 kcal/día. Gasto promedio: 2.052 kcal/día. Balance promedio: +179 kcal/día. Superávit Leve.",
+      "Octubre. Consumidas promedio: 2.277 kcal/día. Gasto promedio: 2.066 kcal/día. Balance promedio: +208 kcal/día. Superávit Leve.",
+      "Noviembre. Consumidas promedio: 2.095 kcal/día. Gasto promedio: 2.017 kcal/día. Balance promedio: +84 kcal/día. Superávit Leve.",
+      "Diciembre. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos."
+    ],
+    "barHeights": [
+      [
+        "83.7%",
+        "false"
+      ],
+      [
+        "63.9333%",
+        "false"
+      ],
+      [
+        "74.8667%",
+        "false"
+      ],
+      [
+        "68.2333%",
+        "false"
+      ],
+      [
+        "72.3667%",
+        "false"
+      ],
+      [
+        "68.3667%",
+        "false"
+      ],
+      [
+        "73.7667%",
+        "false"
+      ],
+      [
+        "68.4667%",
+        "false"
+      ],
+      [
+        "74.8%",
+        "false"
+      ],
+      [
+        "68.8%",
+        "false"
+      ],
+      [
+        "73.8667%",
+        "false"
+      ],
+      [
+        "68.9667%",
+        "false"
+      ],
+      [
+        "73.2%",
+        "false"
+      ],
+      [
+        "68.1667%",
+        "false"
+      ],
+      [
+        "74.3333%",
+        "false"
+      ],
+      [
+        "68.4%",
+        "false"
+      ],
+      [
+        "75.9%",
+        "false"
+      ],
+      [
+        "68.8667%",
+        "false"
+      ],
+      [
+        "69.8333%",
+        "false"
+      ],
+      [
+        "67.2333%",
+        "false"
+      ]
+    ],
+    "scale": [
+      "3.000",
+      "1.500",
+      "0"
+    ],
+    "balance": [
+      "+162"
+    ],
+    "means": [
+      "2.218",
+      "2.053"
+    ],
+    "delta": []
+  },
+  "sparse-Semana": {
+    "range": [
+      "2026-11-09",
+      "2026-11-15"
+    ],
+    "summary": {
+      "consumed": 1500,
+      "expenditure": 2003,
+      "balance": -503,
+      "mealDays": 1,
+      "energyDays": 1,
+      "stepDays": 1,
+      "steps": 2100,
+      "workoutCalories": 240,
+      "workoutCount": 1
+    },
+    "comparison": null,
+    "streak": 1,
+    "labels": [
+      "Lunes. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+      "Martes. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+      "Miércoles. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+      "Jueves. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+      "Viernes. Consumidas: 1.500 kcal. Gasto estimado: 2.003 kcal. Balance: -503 kcal. Déficit Alto.",
+      "Sábado. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+      "Domingo. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos."
+    ],
+    "barHeights": [
+      [
+        "60%",
+        "false"
+      ],
+      [
+        "80.12%",
+        "false"
+      ]
+    ],
+    "scale": [
+      "2.500",
+      "1.250",
+      "0"
+    ],
+    "balance": [
+      "-503"
+    ],
+    "means": [
+      "1.500",
+      "2.003"
+    ],
+    "delta": []
+  },
+  "sparse-Mes": {
+    "range": [
+      "2026-11-01",
+      "2026-11-30"
+    ],
+    "summary": {
+      "consumed": 1500,
+      "expenditure": 2003,
+      "balance": -503,
+      "mealDays": 1,
+      "energyDays": 1,
+      "stepDays": 1,
+      "steps": 2100,
+      "workoutCalories": 240,
+      "workoutCount": 1
+    },
+    "comparison": null,
+    "streak": 1,
+    "labels": [
+      "1 nov 2026 – 7 nov 2026. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "8 nov 2026 – 14 nov 2026. Consumidas promedio: 1.500 kcal/día. Gasto promedio: 2.003 kcal/día. Balance promedio: -503 kcal/día. Déficit Alto.",
+      "15 nov 2026 – 21 nov 2026. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "22 nov 2026 – 28 nov 2026. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "29 nov 2026 – 30 nov 2026. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos."
+    ],
+    "barHeights": [
+      [
+        "60%",
+        "false"
+      ],
+      [
+        "80.12%",
+        "false"
+      ]
+    ],
+    "scale": [
+      "2.500",
+      "1.250",
+      "0"
+    ],
+    "balance": [
+      "-503"
+    ],
+    "means": [
+      "1.500",
+      "2.003"
+    ],
+    "delta": []
+  },
+  "sparse-Año": {
+    "range": [
+      "2026-01-01",
+      "2026-12-31"
+    ],
+    "summary": {
+      "consumed": 1500,
+      "expenditure": 2003,
+      "balance": -503,
+      "mealDays": 1,
+      "energyDays": 1,
+      "stepDays": 1,
+      "steps": 2100,
+      "workoutCalories": 240,
+      "workoutCount": 1
+    },
+    "comparison": null,
+    "streak": 1,
+    "labels": [
+      "Enero. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "Febrero. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "Marzo. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "Abril. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "Mayo. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "Junio. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "Julio. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "Agosto. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "Septiembre. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "Octubre. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "Noviembre. Consumidas promedio: 1.500 kcal/día. Gasto promedio: 2.003 kcal/día. Balance promedio: -503 kcal/día. Déficit Alto.",
+      "Diciembre. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos."
+    ],
+    "barHeights": [
+      [
+        "60%",
+        "false"
+      ],
+      [
+        "80.12%",
+        "false"
+      ]
+    ],
+    "scale": [
+      "2.500",
+      "1.250",
+      "0"
+    ],
+    "balance": [
+      "-503"
+    ],
+    "means": [
+      "1.500",
+      "2.003"
+    ],
+    "delta": []
+  },
+  "empty-Semana": {
+    "range": [
+      "2026-11-09",
+      "2026-11-15"
+    ],
+    "summary": {
+      "consumed": null,
+      "expenditure": null,
+      "balance": null,
+      "mealDays": 0,
+      "energyDays": 0,
+      "stepDays": 0,
+      "steps": null,
+      "workoutCalories": null,
+      "workoutCount": 0
+    },
+    "comparison": null,
+    "streak": 0,
+    "labels": [],
+    "barHeights": [],
+    "scale": [],
+    "balance": [
+      null
+    ],
+    "means": [
+      null,
+      null
+    ],
+    "delta": []
+  },
+  "empty-Mes": {
+    "range": [
+      "2026-11-01",
+      "2026-11-30"
+    ],
+    "summary": {
+      "consumed": null,
+      "expenditure": null,
+      "balance": null,
+      "mealDays": 0,
+      "energyDays": 0,
+      "stepDays": 0,
+      "steps": null,
+      "workoutCalories": null,
+      "workoutCount": 0
+    },
+    "comparison": null,
+    "streak": 0,
+    "labels": [],
+    "barHeights": [],
+    "scale": [],
+    "balance": [
+      null
+    ],
+    "means": [
+      null,
+      null
+    ],
+    "delta": []
+  },
+  "empty-Año": {
+    "range": [
+      "2026-01-01",
+      "2026-12-31"
+    ],
+    "summary": {
+      "consumed": null,
+      "expenditure": null,
+      "balance": null,
+      "mealDays": 0,
+      "energyDays": 0,
+      "stepDays": 0,
+      "steps": null,
+      "workoutCalories": null,
+      "workoutCount": 0
+    },
+    "comparison": null,
+    "streak": 0,
+    "labels": [],
+    "barHeights": [],
+    "scale": [],
+    "balance": [
+      null
+    ],
+    "means": [
+      null,
+      null
+    ],
+    "delta": []
+  },
+  "extreme-Semana": {
+    "range": [
+      "2026-11-09",
+      "2026-11-15"
+    ],
+    "summary": {
+      "consumed": 248245,
+      "expenditure": 1912,
+      "balance": 246375,
+      "mealDays": 4,
+      "energyDays": 5,
+      "stepDays": 5,
+      "steps": 3422,
+      "workoutCalories": 480,
+      "workoutCount": 2
+    },
+    "comparison": {
+      "consumed": 245888,
+      "expenditure": -143,
+      "balance": 246072
+    },
+    "streak": 3,
+    "labels": [
+      "Lunes. Consumidas: 1.566 kcal. Gasto estimado: 1.869 kcal. Balance: -303 kcal. Déficit Moderado.",
+      "Martes. Consumidas: Sin comidas registradas. Gasto estimado: 2.082 kcal. Balance: Sin datos. Sin datos.",
+      "Miércoles. Consumidas: 2.258 kcal. Gasto estimado: 1.816 kcal. Balance: +442 kcal. Superávit Moderado.",
+      "Jueves. Consumidas: 987.654 kcal. Gasto estimado: 1.789 kcal. Balance: +985.865 kcal. Superávit Alto.",
+      "Viernes. Consumidas: 1.500 kcal. Gasto estimado: 2.003 kcal. Balance: -503 kcal. Déficit Alto.",
+      "Sábado. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos.",
+      "Domingo. Consumidas: Sin comidas registradas. Gasto estimado: Sin datos. Balance: Sin datos. Sin datos."
+    ],
+    "barHeights": [
+      [
+        "0.158502%",
+        "false"
+      ],
+      [
+        "0.18917%",
+        "false"
+      ],
+      [
+        "0.210729%",
+        "false"
+      ],
+      [
+        "0.228543%",
+        "false"
+      ],
+      [
+        "0.183806%",
+        "false"
+      ],
+      [
+        "99.965%",
+        "false"
+      ],
+      [
+        "0.181073%",
+        "false"
+      ],
+      [
+        "0.151822%",
+        "false"
+      ],
+      [
+        "0.202733%",
+        "false"
+      ]
+    ],
+    "scale": [
+      "988.000",
+      "494.000",
+      "0"
+    ],
+    "balance": [
+      "+246.375"
+    ],
+    "means": [
+      "248.245",
+      "1.912"
+    ],
+    "delta": [
+      "+245.888",
+      "-143",
+      "+246.072"
+    ]
+  },
+  "extreme-Mes": {
+    "range": [
+      "2026-11-01",
+      "2026-11-30"
+    ],
+    "summary": {
+      "consumed": 91711,
+      "expenditure": 2017,
+      "balance": 89699,
+      "mealDays": 11,
+      "energyDays": 12,
+      "stepDays": 12,
+      "steps": 5956,
+      "workoutCalories": 1200,
+      "workoutCount": 5
+    },
+    "comparison": {
+      "consumed": 89434,
+      "expenditure": -49,
+      "balance": 89491
+    },
+    "streak": 3,
+    "labels": [
+      "1 nov 2026 – 7 nov 2026. Consumidas promedio: 2.316 kcal/día. Gasto promedio: 2.125 kcal/día. Balance promedio: +191 kcal/día. Superávit Leve.",
+      "8 nov 2026 – 14 nov 2026. Consumidas promedio: 198.985 kcal/día. Gasto promedio: 1.909 kcal/día. Balance promedio: +197.110 kcal/día. Superávit Alto.",
+      "15 nov 2026 – 21 nov 2026. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "22 nov 2026 – 28 nov 2026. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "29 nov 2026 – 30 nov 2026. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos."
+    ],
+    "barHeights": [
+      [
+        "1.16382%",
+        "false"
+      ],
+      [
+        "1.06784%",
+        "false"
+      ],
+      [
+        "99.9925%",
+        "false"
+      ],
+      [
+        "0.959296%",
+        "false"
+      ]
+    ],
+    "scale": [
+      "199.000",
+      "99.500",
+      "0"
+    ],
+    "balance": [
+      "+89.699"
+    ],
+    "means": [
+      "91.711",
+      "2.017"
+    ],
+    "delta": [
+      "+89.434",
+      "-49",
+      "+89.491"
+    ]
+  },
+  "extreme-Año": {
+    "range": [
+      "2026-01-01",
+      "2026-12-31"
+    ],
+    "summary": {
+      "consumed": 7518,
+      "expenditure": 2053,
+      "balance": 5462,
+      "mealDays": 186,
+      "energyDays": 232,
+      "stepDays": 232,
+      "steps": 7096,
+      "workoutCalories": 20880,
+      "workoutCount": 87
+    },
+    "comparison": null,
+    "streak": 3,
+    "labels": [
+      "Enero. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos.",
+      "Febrero. Consumidas promedio: 2.511 kcal/día. Gasto promedio: 1.918 kcal/día. Balance promedio: +700 kcal/día. Superávit Alto.",
+      "Marzo. Consumidas promedio: 2.246 kcal/día. Gasto promedio: 2.047 kcal/día. Balance promedio: +193 kcal/día. Superávit Leve.",
+      "Abril. Consumidas promedio: 2.171 kcal/día. Gasto promedio: 2.051 kcal/día. Balance promedio: +106 kcal/día. Superávit Leve.",
+      "Mayo. Consumidas promedio: 2.213 kcal/día. Gasto promedio: 2.054 kcal/día. Balance promedio: +154 kcal/día. Superávit Leve.",
+      "Junio. Consumidas promedio: 2.244 kcal/día. Gasto promedio: 2.064 kcal/día. Balance promedio: +175 kcal/día. Superávit Leve.",
+      "Julio. Consumidas promedio: 2.216 kcal/día. Gasto promedio: 2.069 kcal/día. Balance promedio: +136 kcal/día. Superávit Leve.",
+      "Agosto. Consumidas promedio: 2.196 kcal/día. Gasto promedio: 2.045 kcal/día. Balance promedio: +153 kcal/día. Superávit Leve.",
+      "Septiembre. Consumidas promedio: 2.230 kcal/día. Gasto promedio: 2.052 kcal/día. Balance promedio: +179 kcal/día. Superávit Leve.",
+      "Octubre. Consumidas promedio: 2.277 kcal/día. Gasto promedio: 2.066 kcal/día. Balance promedio: +208 kcal/día. Superávit Leve.",
+      "Noviembre. Consumidas promedio: 91.711 kcal/día. Gasto promedio: 2.017 kcal/día. Balance promedio: +89.699 kcal/día. Superávit Alto.",
+      "Diciembre. Consumidas promedio: Sin comidas registradas. Gasto promedio: Sin datos. Balance promedio: Sin datos. Sin datos."
+    ],
+    "barHeights": [
+      [
+        "2.72935%",
+        "false"
+      ],
+      [
+        "2.08478%",
+        "false"
+      ],
+      [
+        "2.4413%",
+        "false"
+      ],
+      [
+        "2.225%",
+        "false"
+      ],
+      [
+        "2.35978%",
+        "false"
+      ],
+      [
+        "2.22935%",
+        "false"
+      ],
+      [
+        "2.40543%",
+        "false"
+      ],
+      [
+        "2.23261%",
+        "false"
+      ],
+      [
+        "2.43913%",
+        "false"
+      ],
+      [
+        "2.24348%",
+        "false"
+      ],
+      [
+        "2.4087%",
+        "false"
+      ],
+      [
+        "2.24891%",
+        "false"
+      ],
+      [
+        "2.38696%",
+        "false"
+      ],
+      [
+        "2.22283%",
+        "false"
+      ],
+      [
+        "2.42391%",
+        "false"
+      ],
+      [
+        "2.23043%",
+        "false"
+      ],
+      [
+        "2.475%",
+        "false"
+      ],
+      [
+        "2.24565%",
+        "false"
+      ],
+      [
+        "99.6859%",
+        "false"
+      ],
+      [
+        "2.19239%",
+        "false"
+      ]
+    ],
+    "scale": [
+      "92.000",
+      "46.000",
+      "0"
+    ],
+    "balance": [
+      "+5.462"
+    ],
+    "means": [
+      "7.518",
+      "2.053"
+    ],
+    "delta": []
+  }
+}
