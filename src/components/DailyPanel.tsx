@@ -582,7 +582,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       {estimating ? 'Estimando…' : estimateFailure && !estimationBlocked ? 'Reintentar estimación' : 'Estimar con IA'}
     </button>
     {estimateNotice}
-    {mealEstimate?.contextKey === estimateContextKey && <EntryEstimateResult estimate={mealEstimate} adjusted={mealEstimate.calorieVersion !== estimateVersions.mealCalories}
+    {mealEstimate?.contextKey === estimateContextKey && <EntryEstimateResult estimate={mealEstimate} calories={mealCals} adjusted={mealEstimate.calorieVersion !== estimateVersions.mealCalories}
       outdated={mealEstimate.inputVersion !== estimateVersions.mealInput} />}
   </div>;
   const workEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
@@ -592,7 +592,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       {estimating ? 'Estimando gasto energético…' : estimateFailure && !estimationBlocked ? 'Reintentar estimación' : 'Estimar con IA'}
     </button>
     {estimateNotice}
-    {workEstimate?.contextKey === estimateContextKey && <EntryEstimateResult estimate={workEstimate} adjusted={workEstimate.calorieVersion !== estimateVersions.workCalories}
+    {workEstimate?.contextKey === estimateContextKey && <EntryEstimateResult estimate={workEstimate} calories={workCals} adjusted={workEstimate.calorieVersion !== estimateVersions.workCalories}
       outdated={workEstimate.inputVersion !== estimateVersions.workInput} />}
   </div>;
 
@@ -652,7 +652,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
             </div>
           </details>}
           {isGroup && <p className="fitness-scale-note">Comparación en kcal · misma escala</p>}
-          {isGroup && <p className="fitness-period-days">{summary.days} días con datos. {balanceLabel}</p>}
+          {isGroup && <p className="fitness-period-days">{summary.days} {summary.days === 1 ? 'día' : 'días'} con datos. {balanceLabel}</p>}
         </section>
       </div>
 
@@ -737,7 +737,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                       <input id="add-meal-calories"
                         required
                         type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
-                        value={mealCals} onChange={e => { reviseEstimate('mealCalories'); setMealCals(Number(e.target.value)); }}
+                        value={mealCals} onChange={e => { reviseEstimate('mealCalories'); setMealCals(e.target.value === '' ? '' : Number(e.target.value)); }}
                         className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                       />
                     </div>
@@ -1245,7 +1245,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   <input id="edit-meal-calories"
                     required
                     type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
-                    value={mealCals} onChange={e => { reviseEstimate('mealCalories'); setMealCals(Number(e.target.value)); }}
+                    value={mealCals} onChange={e => { reviseEstimate('mealCalories'); setMealCals(e.target.value === '' ? '' : Number(e.target.value)); }}
                     className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                   />
                 </div>

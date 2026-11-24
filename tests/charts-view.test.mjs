@@ -173,7 +173,7 @@ test('workout-only data show expenditure without invented consumption or balance
   ]);
   assert.match(markup, /1 día con datos · 0 días con comidas/);
   const hero = nodes(tree, element => element.props.className === 'charts-summary-balance')[0];
-  assert.match(html(hero), /Registrá comidas para calcular tu balance\./);
+  assert.match(html(hero), /El balance requiere comidas registradas hasta hoy\./);
   assert.doesNotMatch(html(hero), /0 kcal|Mantenimiento|charts-balance-label/);
   const tuesday = nodes(tree, element => element.type === 'button' &&
     element.props['aria-label']?.startsWith('Martes.'))[0];
@@ -189,7 +189,7 @@ test('workout-only data show expenditure without invented consumption or balance
 test('empty periods expose an honest accessible empty state without fake calorie values', () => {
   const { tree, html: markup } = render({ '2026-09-30': record('2026-09-30', { water: 500, weight: 80 }) });
   assert.deepEqual(kpis(tree).slice(0, 3).map(item => item.value), ['Sin datos', 'Sin datos', 'Sin datos']);
-  assert.match(markup, /Todavía no hay comidas, pasos ni ejercicio registrados en este período\./);
+  assert.match(markup, /Hasta hoy no hay comidas, pasos ni ejercicio registrados en este período\./);
   assert.match(markup, /Registrá comidas y actividad para ver tu evolución\./);
   assert.equal(nodes(tree, element => element.props.role === 'status').length, 1);
   assert.equal(nodes(tree, element => element.props.role === 'listitem').length, 0);
@@ -294,7 +294,7 @@ test('chart detail keeps missing values honest in the compact strip', () => {
   const detail = nodes(tree, element => element.props.id === 'charts-bucket-detail')[0];
   assert.match(html(detail), /Sin comidas registradas/);
   const consumed = nodes(detail, element => element.type === 'dd')[0];
-  assert.equal(consumed.props.children, 'Sin comidas');
+  assert.equal(consumed.props.children, 'Sin comidas registradas');
   assert.equal(consumed.props.title, 'Sin comidas registradas');
   assert.match(html(detail), /2\.080 kcal/);
   assert.match(html(detail), /Sin datos/);
@@ -414,7 +414,7 @@ test('no meals yields an honest insight for empty, steps-only and workout-only p
     { '2026-09-30': record('2026-09-30', { workouts: [workout(300)] }) }]) {
     const { tree } = render(records);
     const insight = nodes(tree, element => element.props.className === 'charts-insight')[0];
-    assert.equal(insight.props.children, 'Todavía no hay comidas registradas para calcular el balance de este período.');
+    assert.equal(insight.props.children, 'Hasta hoy no hay comidas registradas en este período para calcular el balance.');
     assert.doesNotMatch(html(insight), /0 kcal|Mantenimiento|Déficit|Superávit/);
   }
 });
@@ -472,7 +472,7 @@ test('the visible summary explains unequal samples and changes its explanation w
   assert.equal(nodes(nodes(summary(mixed.tree), element => element.type === 'details')[0],
     element => element.props.className === 'charts-summary-note').length, 0);
   const withMeals = render({ '2026-09-28': weeklyRecords['2026-09-28'], '2026-09-30': weeklyRecords['2026-09-30'] });
-  assert.match(html(note(withMeals.tree)), /los mismos 2 días con comidas/);
+  assert.match(html(note(withMeals.tree)), /sobre 2 días con comidas/);
   assert.match(html(note(withMeals.tree)), /tener registros no implica que estén completos/);
   assert.doesNotMatch(html(note(withMeals.tree)), /días de actividad sin comidas/);
   const activity = render({ '2026-09-29': weeklyRecords['2026-09-29'] });
@@ -540,4 +540,32 @@ test('comparison discloses current cutoff, full previous interval and each actua
   assert.match(html(section), /período actual está en curso/);
   assert.match(html(section), /anterior abarca el calendario completo/);
   assert.doesNotMatch(html(section), /mejor|peor/i);
+});
+
+test('future, empty, and recorded days stay distinct in the weekly detail', () => {
+  const records = { '2026-09-28': weeklyRecords['2026-09-28'], '2026-10-02': record('2026-10-02', { steps: 567 }) };
+  for (const [day, label] of [['2026-10-01', 'Fecha futura'], ['2026-09-29', 'Sin registros']]) {
+    const { tree, html: screen } = render(records, 'Semana', day);
+    const detail = html(nodes(tree, e => e.props.id === 'charts-bucket-detail')[0]);
+    assert.ok(detail.includes(label));
+    assert.doesNotMatch(detail, /Sin comidas|0 kcal/);
+    assert.match(screen, /567 pasos/);
+    assert.match(screen, /sobre 1 día con comidas/);
+  }
+});
+
+test('a future-only week shows the dated meal separately and explains the cutoff for all averages', () => {
+  const date = '2026-11-25';
+  const view = render({ [date]: record(date, { meals: [meal(500)] }) }, 'Semana', null, '2026-11-24');
+  assert.match(view.html, /23 nov – 29 nov 2026/);
+  assert.deepEqual(kpis(view.tree).map(item => item.value), ['Sin datos', 'Sin datos', 'Sin datos']);
+  const energy = nodes(view.tree, el => el.props['aria-labelledby'] === 'charts-energy-heading')[0];
+  const status = nodes(energy, el => el.props.role === 'status')[0];
+  const future = nodes(energy, el => el.type === 'p' && html(el).includes('500 kcal'))[0];
+  assert.match(html(future), /Fecha futura · 25 nov 2026 · Almuerzo \(500 kcal\)/);
+  assert.ok(html(energy).indexOf(html(status)) < html(energy).indexOf(html(future)));
+  assert.match(html(status), /Hasta hoy no hay comidas, pasos ni ejercicio registrados en este período/);
+  const summary = nodes(view.tree, el => el.props.className === 'charts-panel charts-summary')[0];
+  assert.match(html(summary), /Sin comidas registradas hasta hoy/);
+  assert.match(html(summary), /Sin registros energéticos hasta hoy/);
 });

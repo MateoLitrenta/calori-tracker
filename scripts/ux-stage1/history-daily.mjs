@@ -58,8 +58,8 @@ async function observeWeek(page,after){
   const displayed=await summary.locator('.ah-balance-reading b').textContent();
   assert.equal(displayed,values.week.summary.averageBalance===null?'Sin datos energéticos':(values.week.summary.averageBalance>0?'+':'')+locale(values.week.summary.averageBalance)+' kcal/día');
   if(after){
-    assert.equal(await section.locator('.ah-period-boundary').textContent(),'Domingo a sábado');
-    assert.ok((await summary.textContent()).includes(`${values.week.foodDays}/${values.week.elapsedDays} días con comidas · Base: ${values.week.summary.days} días con datos energéticos`));
+    assert.equal(await section.locator('.ah-period-boundary').textContent(),'Lunes a domingo');
+    assert.ok((await summary.textContent()).includes(`${values.week.foodDays}/${values.week.elapsedDays} ${values.week.elapsedDays===1?'día':'días'} con comidas · Base: ${values.week.summary.days} ${values.week.summary.days===1?'día':'días'} con datos energéticos`));
     const basis=await summary.locator('.ah-average-basis').textContent();
     if(values.week.provisional)assert.match(basis,/Historial incluye .*sin comidas.*Datos usa sólo días con comidas/);
     else if(values.week.summary.days)assert.match(basis,/Pueden faltar otras comidas/);

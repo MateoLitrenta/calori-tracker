@@ -126,7 +126,7 @@ test('local calendar validation and week navigation preserve the existing range,
   for (const value of ['2026-02-30', '2026-11-13', '2024-12-31', '2026-1-2', null]) assert.equal(isHomeDate(value, today), false);
   assert.equal(isHomeDate('2028-02-29', '2028-03-01'), true);
   assert.equal(isHomeDate('2027-02-29', '2027-03-01'), false);
-  assert.deepEqual(homeWeek('2027-01-01'), ['2026-12-27','2026-12-28','2026-12-29','2026-12-30','2026-12-31','2027-01-01','2027-01-02']);
+  assert.deepEqual(homeWeek('2027-01-01'), ['2026-12-28','2026-12-29','2026-12-30','2026-12-31','2027-01-01','2027-01-02','2027-01-03']);
   assert.equal(moveHomeWeek('2026-11-08', 1, today), today);
   assert.equal(moveHomeWeek('2025-01-03', -1, today), '2025-01-01');
   assert.equal(homeMonth('2028-02-15').flat().filter(day => day.startsWith('2028-02')).length, 29);
@@ -224,19 +224,19 @@ test('text enlargement reveals the selected day while resize respects keyboard e
     Object.defineProperty(button, 'offsetWidth', { get: () => cell });
     button.getBoundingClientRect = () => ({ left: cell * index - left, top: 0, width: cell, height: 48 });
   });
-  await view.click(view.day(yesterday)); // Wednesday in the fourth column.
+  await view.click(view.day(yesterday)); // Wednesday in the third column.
   resize();
   assert.equal(writes, 0);
-  cell = 88;
+  cell = 120;
   resize();
-  assert.equal(left, 72);
+  assert.equal(left, 80);
   resize();
   assert.equal(writes, 1);
   await act(() => view.day(yesterday).dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Home', bubbles: true })));
   assert.equal(left, 0);
   width = 250;
   resize();
-  assert.equal(document.activeElement.dataset.day, '2026-11-08');
+  assert.equal(document.activeElement.dataset.day, '2026-11-09');
   assert.equal(left, 0);
   assert.equal(view.selected(), yesterday);
   document.activeElement.blur();
@@ -354,14 +354,14 @@ test('calendar keyboard crosses months, keeps future/boundary days disabled and 
   await act(() => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true })));
   assert.equal(document.activeElement, view.calendarDay('2026-10-05'));
   await act(() => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Home', bubbles: true })));
-  assert.equal(document.activeElement, view.calendarDay('2026-10-04'));
+  assert.equal(document.activeElement, view.calendarDay('2026-10-05'));
   await act(() => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'End', bubbles: true })));
-  assert.equal(document.activeElement, view.calendarDay('2026-10-10'));
-  await view.click(view.calendarDay('2026-10-10')); assert.equal(view.selected(), '2026-10-10');
+  assert.equal(document.activeElement, view.calendarDay('2026-10-11'));
+  await view.click(view.calendarDay('2026-10-11')); assert.equal(view.selected(), '2026-10-11');
   await view.click(view.button('Abrir calendario mensual'));
   await view.click(document.querySelector('.home-date-picker [aria-label="Mes siguiente"]'));
   assert.equal(view.calendarDay('2026-11-13').disabled, true);
-  await view.click(view.calendarDay('2026-11-13')); assert.equal(view.selected(), '2026-10-10');
+  await view.click(view.calendarDay('2026-11-13')); assert.equal(view.selected(), '2026-10-11');
   assert.equal(view.saves.length, 0);
 });
 
@@ -378,7 +378,7 @@ test('calendar access preserves the original date, text and focus inside the act
 
 test('mobile week ranges spell out both months when they cross a month boundary', async t => {
   const view = await mount(t, { initialNow: '2026-12-03T12:00:00', stored: { [homePresentationKey('A')]: JSON.stringify({ version: 1, dailyDateStr: '2026-11-30' }) } });
-  assert.equal(view.selected(), '2026-11-30'); assert.equal(document.querySelector('.home-date-mobile-week').textContent, '29 nov–5 dic · dom–sáb');
+  assert.equal(view.selected(), '2026-11-30'); assert.equal(document.querySelector('.home-date-mobile-week').textContent, '30 nov–6 dic · lun–dom');
 });
 
 test('a local midnight refresh changes Hoy to a past date without changing a draft or its writer date', async t => {

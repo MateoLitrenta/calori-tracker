@@ -1,6 +1,6 @@
 import { useId, useLayoutEffect, useRef, type KeyboardEvent } from 'react';
 import { CalendarBlank, CaretLeft, CaretRight } from '@phosphor-icons/react';
-import { addDays, format, parseISO, startOfWeek } from 'date-fns';
+import { addDays, format, parseISO, startOfISOWeek } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 import { formatDateStr } from '../utils/helpers';
 import { homeDateBounds, homeWeek, isHomeDate, moveHomeWeek } from '../utils/homeDateNavigation';
@@ -65,8 +65,8 @@ export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, on
     }
     else if (index >= 0) event.currentTarget.focus();
   };
-  const currentWeek = formatDateStr(startOfWeek(parseISO(today), { weekStartsOn: 0 }));
-  const firstWeek = formatDateStr(startOfWeek(parseISO(min), { weekStartsOn: 0 }));
+  const currentWeek = formatDateStr(startOfISOWeek(parseISO(today)));
+  const firstWeek = formatDateStr(startOfISOWeek(parseISO(min)));
   return <section ref={rootRef} className="home-date-nav" aria-label="Fecha de Inicio">
     <div className="home-date-heading">
       <button type="button" aria-label="Semana anterior" disabled={days[0] <= firstWeek} onClick={() => onSelectDate(moveHomeWeek(selectedDateStr, -1, today))}>
@@ -76,7 +76,7 @@ export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, on
         <span className="home-date-kicker sr-only">{selectedDateStr === today ? 'Hoy' : 'Fecha anterior'}</span>
         <p className="home-entry-date-label">Registrando en</p>
         <h2 id={titleId}><time dateTime={selectedDateStr} aria-label={label}><span className="home-date-long-label">{label}</span><span className="home-date-compact-label">{compactLabel}</span></time></h2>
-        <span className="home-date-mobile-week">{compactWeek} · dom–sáb</span>
+        <span className="home-date-mobile-week">{compactWeek} · lun–dom</span>
       </div>
       <button type="button" className="home-date-today" onClick={() => onSelectDate(today)} disabled={selectedDateStr === today}>Hoy</button>
       <button type="button" className="home-date-calendar" aria-label="Abrir calendario mensual" onClick={onOpenCalendar}>

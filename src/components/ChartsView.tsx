@@ -7,7 +7,7 @@ import { es } from 'date-fns/locale';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildChartStats } from '../utils/chartStats';
 import type { ChartPeriod } from '../utils/chartStats';
-import { formatDateStr, getBalanceCategory, getBalanceLabel } from '../utils/helpers';
+import { formatDateStr, hasEnergyData, getBalanceCategory, getBalanceLabel } from '../utils/helpers';
 
 const periods = ['Semana', 'Mes', 'Año'] as const;
 const periodOptions = periods.map(value => ({ value, label: value }));
@@ -79,6 +79,10 @@ export default function ChartsView() {
       plot.removeEventListener('scroll', rememberScroll);
     };
   }, [annualScope, hasPlot, period]);
+  const futureEntries = useMemo(() => Object.entries(activeProfile?.records ?? {}).filter(([date, record]) =>
+    data && date > today && date >= data.start && date <= data.end &&
+    (record.water > 0 || (record.weight ?? 0) > 0 || hasEnergyData(record))
+  ).sort(([a], [b]) => a.localeCompare(b)), [activeProfile, data, today]);
   if (!data) return null;
 
   const { summary, buckets, comparison } = data;
@@ -90,16 +94,19 @@ export default function ChartsView() {
   const energyDays = `${days(summary.energyDays)} con datos`;
   const periodIntro = period === 'Semana' ? 'Esta semana' : period === 'Mes' ? 'Este mes' : 'Este año';
   const insight = summary.balance === null
-    ? 'Todavía no hay comidas registradas para calcular el balance de este período.'
+    ? 'Hasta hoy no hay comidas registradas en este período para calcular el balance.'
     : `${periodIntro} tu balance promedio fue de ${signed(summary.balance)} kcal/día · ${getBalanceLabel(summary.balance)}.`;
   const range = `${format(parseISO(data.start), 'd MMM', { locale: es })} – ${format(parseISO(data.end), 'd MMM yyyy', { locale: es })}`;
   const summaryNote = summary.mealDays === 0
     ? summary.energyDays === 0
-      ? 'Las medias aparecerán cuando registres comidas, pasos o ejercicio.'
-      : `Hay ${days(summary.energyDays)} con gasto estimado y ninguno con comidas. Falta ingesta para calcular el balance.`
+      ? 'Las medias usan los registros del período con fecha de hoy o anterior.'
+      : `Hasta hoy hay ${days(summary.energyDays)} con gasto estimado y ninguno con comidas. Falta ingesta para calcular el balance.`
     : summary.energyDays > summary.mealDays
       ? 'El balance usa sólo días con comidas. El gasto también incluye días de actividad sin comidas; por eso la resta de estas dos medias puede diferir del balance.'
-      : `El balance promedia los saldos diarios. Las tres medias usan los mismos ${mealDays}; tener registros no implica que estén completos.`;
+      : `El balance promedia los saldos diarios. Las tres medias se calculan sobre ${mealDays}; tener registros no implica que estén completos.`;
+  const futureDetail = detail && detail.start > today;
+  const dayRecord = detail && !averages ? activeProfile?.records[detail.start] : undefined;
+  const emptyDay = !averages && !dayRecord?.water && !dayRecord?.weight && !hasEnergyData(dayRecord);
   const recordedMonths = buckets.filter(bucket => bucket.summary.energyDays > 0).map(bucket => bucket.label.toLowerCase());
 
   return (
@@ -124,15 +131,15 @@ export default function ChartsView() {
               </div>
               <p className={`charts-balance-value ${balanceTone(summary.balance)}`}>{summary.balance === null ? 'Sin datos' : signed(summary.balance)}</p>
               {summary.balance === null
-                ? <p className="charts-secondary">Registrá comidas para calcular tu balance.</p>
+                ? <p className="charts-secondary">El balance requiere comidas registradas hasta hoy.</p>
                 : <span className="charts-unit">kcal/día<span className="charts-average-base"><span className="sr-only"> · </span>{mealDays}</span></span>}
             </div>
             <div className="charts-summary-secondary">
               <dl className="charts-summary-metrics">
                 <div><dt>Consumidas</dt><dd>{summary.consumed === null ? 'Sin datos' : number(summary.consumed)}
-                  <span className="charts-unit">{summary.consumed === null ? 'Sin comidas registradas' : <>kcal/día<span className="charts-average-base"><span className="sr-only"> · </span>{mealDays}</span></>}</span></dd></div>
+                  <span className="charts-unit">{summary.consumed === null ? 'Sin comidas registradas hasta hoy' : <>kcal/día<span className="charts-average-base"><span className="sr-only"> · </span>{mealDays}</span></>}</span></dd></div>
                 <div><dt>Gasto estimado</dt><dd>{summary.expenditure === null ? 'Sin datos' : number(summary.expenditure)}
-                  <span className="charts-unit">{summary.expenditure === null ? 'Sin registros energéticos' : <>kcal/día<span className="charts-average-base"><span className="sr-only"> · </span>{energyDays} energéticos</span></>}</span></dd></div>
+                  <span className="charts-unit">{summary.expenditure === null ? 'Sin registros energéticos hasta hoy' : <>kcal/día<span className="charts-average-base"><span className="sr-only"> · </span>{energyDays} energéticos</span></>}</span></dd></div>
               </dl>
             </div>
           </div>
@@ -170,7 +177,7 @@ export default function ChartsView() {
         {summary.energyDays === 0 ? (
           <div className="charts-empty" role="status">
             <ChartBar size={32} aria-hidden="true" />
-            <p>Todavía no hay comidas, pasos ni ejercicio registrados en este período.</p>
+            <p>Hasta hoy no hay comidas, pasos ni ejercicio registrados en este período.</p>
             <span>Registrá comidas y actividad para ver tu evolución.</span>
           </div>
         ) : (
@@ -184,7 +191,7 @@ export default function ChartsView() {
                   {buckets.map(bucket => {
                     const item = bucket.summary;
                     const title = period === 'Mes' ? dateRange(bucket.start, bucket.end) : bucket.title;
-                    const accessible = `${title}. ${averages ? 'Consumidas promedio' : 'Consumidas'}: ${item.consumed === null ? 'Sin comidas registradas' : kcal(item.consumed, false, averages)}. ${averages ? 'Gasto promedio' : 'Gasto estimado'}: ${kcal(item.expenditure, false, averages)}. ${averages ? 'Balance promedio' : 'Balance'}: ${kcal(item.balance, true, averages)}. ${getBalanceLabel(item.balance)}.`;
+                    const accessible = bucket.start > today ? `${title}. Fecha futura.` : `${title}. ${averages ? 'Consumidas promedio' : 'Consumidas'}: ${item.consumed === null ? 'Sin comidas registradas' : kcal(item.consumed, false, averages)}. ${averages ? 'Gasto promedio' : 'Gasto estimado'}: ${kcal(item.expenditure, false, averages)}. ${averages ? 'Balance promedio' : 'Balance'}: ${kcal(item.balance, true, averages)}. ${getBalanceLabel(item.balance)}.`;
                     return (
                       <div key={bucket.start} role="listitem">
                         <button type="button" className="charts-bucket" aria-label={accessible}
@@ -238,19 +245,31 @@ export default function ChartsView() {
                   <X size={16} aria-hidden="true" /><span>Quitar selección</span>
                 </button>
               </div>
-              <dl>
-                <div><dt>{averages ? 'Consumidas promedio' : 'Consumidas'}</dt><dd title={detail?.summary.consumed === null ? 'Sin comidas registradas' : undefined}>{!detail ? '—' : detail.summary.consumed === null ? 'Sin comidas' : kcal(detail.summary.consumed, false, averages)}</dd></div>
-                <div><dt>{averages ? 'Gasto promedio' : 'Gasto estimado'}</dt><dd>{detail ? kcal(detail.summary.expenditure, false, averages) : '—'}</dd></div>
-                <div><dt>{averages ? 'Balance promedio' : 'Balance'}</dt><dd className={balanceTone(detail?.summary.balance ?? null)}>{detail ? kcal(detail.summary.balance, true, averages) : '—'}</dd></div>
-              </dl>
-              <p className="charts-secondary charts-detail-caption">
-                <span className={`charts-detail-category ${balanceTone(detail?.summary.balance ?? null)}`}>{detail ? getBalanceLabel(detail.summary.balance) : 'Sin selección'}</span>
-                {detail && averages && <span>{days(detail.summary.mealDays)} con comidas · {days(detail.summary.energyDays)} con datos energéticos</span>}
-                {detail && !averages && <span className="charts-desktop-only">Valores registrados del día seleccionado.</span>}
-              </p>
+              {futureDetail ? <p className="charts-secondary">Fecha futura</p> : detail && emptyDay ? <p className="charts-secondary">Sin registros</p> : <>
+                <dl>
+                  <div><dt>{averages ? 'Consumidas promedio' : 'Consumidas'}</dt><dd title={detail?.summary.consumed === null ? 'Sin comidas registradas' : undefined}>{!detail ? '—' : detail.summary.consumed === null ? 'Sin comidas registradas' : kcal(detail.summary.consumed, false, averages)}</dd></div>
+                  <div><dt>{averages ? 'Gasto promedio' : 'Gasto estimado'}</dt><dd>{detail ? kcal(detail.summary.expenditure, false, averages) : '—'}</dd></div>
+                  <div><dt>{averages ? 'Balance promedio' : 'Balance'}</dt><dd className={balanceTone(detail?.summary.balance ?? null)}>{detail ? kcal(detail.summary.balance, true, averages) : '—'}</dd></div>
+                </dl>
+                <p className="charts-secondary charts-detail-caption">
+                  <span className={`charts-detail-category ${balanceTone(detail?.summary.balance ?? null)}`}>{detail ? getBalanceLabel(detail.summary.balance) : 'Sin selección'}</span>
+                  {detail && averages && <span>{days(detail.summary.mealDays)} con comidas · {days(detail.summary.energyDays)} con datos energéticos</span>}
+                  {detail && !averages && <span className="charts-desktop-only">Valores registrados del día seleccionado.</span>}
+                </p>
+              </>}
             </div>
           </>
         )}
+        {futureEntries.map(([date, record]) => (
+          <p key={date} className="charts-secondary">
+            Fecha futura · {dateLabel(date)} · {[
+              ...record.meals.map(meal => `${meal.name} (${number(meal.calories)} kcal)`),
+              ...record.workouts.map(workout => `${workout.activity} (${number(workout.calories)} kcal)`),
+              record.steps && `${number(record.steps)} pasos`, record.water && `${number(record.water)} ml de agua`,
+              record.weight && `${number(record.weight)} kg`,
+            ].filter(Boolean).join(' · ')}
+          </p>
+        ))}
       </section>
 
       <section key={`activity-${period}`} className="charts-panel charts-activity-panel" aria-labelledby="charts-activity-heading">

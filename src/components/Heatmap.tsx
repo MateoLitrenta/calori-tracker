@@ -1,5 +1,5 @@
 import { useId, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
-import { addDays, addMonths, endOfMonth, format, parseISO, startOfMonth, startOfWeek } from 'date-fns';
+import { addDays, addMonths, endOfMonth, format, parseISO, startOfMonth, startOfISOWeek } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 import {
   ArrowUpRight,
@@ -48,7 +48,7 @@ const views = [
   { value: 'month', label: 'Mes' },
   { value: 'year', label: 'Año' },
 ] as const;
-const weekdays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 const hasActivity = hasHistoryActivity;
 const countLabel = (count: number, one: string, many: string) =>
   count + ' ' + (count === 1 ? one : many);
@@ -135,10 +135,10 @@ const motionSnapshot = (value: ActivityHistoryState): HistoryMotionSnapshot => (
       ? value.anchor.slice(0, 4)
       : value.view === 'month'
         ? value.anchor.slice(0, 7)
-        : formatDateStr(startOfWeek(parseISO(value.dateStr), { weekStartsOn: 0 })),
+        : formatDateStr(startOfISOWeek(parseISO(value.dateStr))),
 });
 const monthWeeks = (month: string) => {
-  const first = startOfWeek(parseISO(month), { weekStartsOn: 0 }),
+  const first = startOfISOWeek(parseISO(month)),
     last = endOfMonth(parseISO(month));
   const result: string[][] = [];
   for (let date = first; date <= last; date = addDays(date, 7))
@@ -227,7 +227,7 @@ export default function Heatmap({
     0,
     weeks.findIndex((week) => week.includes(selected)),
   );
-  const weekStart = startOfWeek(parseISO(selected), { weekStartsOn: 0 });
+  const weekStart = startOfISOWeek(parseISO(selected));
   const weekDates = Array.from({ length: 7 }, (_, index) => formatDateStr(addDays(weekStart, index)));
   const scopeDates = state.view === 'year' ? yearDates : state.view === 'month' ? monthDates : weekDates;
   const periodInfo = getHistoryPeriod(records, scopeDates, profile, today);
@@ -330,8 +330,8 @@ export default function Heatmap({
     else if (event.key === 'ArrowRight') next = addDays(current, 1);
     else if (event.key === 'ArrowUp') next = addDays(current, -7);
     else if (event.key === 'ArrowDown') next = addDays(current, 7);
-    else if (event.key === 'Home') next = startOfWeek(current, { weekStartsOn: 0 });
-    else if (event.key === 'End') next = addDays(startOfWeek(current, { weekStartsOn: 0 }), 6);
+    else if (event.key === 'Home') next = startOfISOWeek(current);
+    else if (event.key === 'End') next = addDays(startOfISOWeek(current), 6);
     else if (event.key === 'PageUp') next = addMonths(current, -1);
     else if (event.key === 'PageDown') next = addMonths(current, 1);
     else return;
@@ -405,7 +405,7 @@ export default function Heatmap({
           ' · ' +
           (unavailable
             ? date > today
-              ? 'Fecha futura · No disponible'
+              ? (activity ? 'Fecha futura · ' + status : 'Fecha futura · No disponible')
               : 'Fuera del período disponible'
             : status +
               ' · ' +
@@ -432,6 +432,7 @@ export default function Heatmap({
             {energy.canColorBalance && energy.balance !== null ? signed(energy.balance) : 'Parcial'}
           </span>
         )}
+        {date > today && activity && <span className="ah-day-balance">Con registros</span>}
         <span className="ah-day-marks" aria-hidden="true">
           {!!record?.meals.length && !unavailable && <ForkKnife weight="fill" />}
           {!unavailable && <SportMarks sports={energy.sports} />}
@@ -472,7 +473,7 @@ export default function Heatmap({
             <div>
               <h3 aria-live="polite" aria-atomic="true">{heading}</h3>
               <p className="ah-period-note">
-                {state.view === 'week' && <span className="ah-period-boundary">Domingo a sábado</span>}
+                {state.view === 'week' && <span className="ah-period-boundary">Lunes a domingo</span>}
                 <span>{registeredDays
                   ? countLabel(registeredDays, 'día con registros', 'días con registros')
                   : 'Sin registros en este período'}</span>
@@ -535,19 +536,16 @@ export default function Heatmap({
                             : ' · ' +
                               monthInfo.foodDays +
                               ' de ' +
-                              monthInfo.elapsedDays +
-                              ' días con comidas' +
+                              countLabel(monthInfo.elapsedDays, 'día con comidas', 'días con comidas') +
                               ' · ' +
-                              count +
-                              ' días con registros' +
+                              countLabel(count, 'día con registros', 'días con registros') +
                               (monthInfo.summary.averageBalance !== null
                                 ? ' · ' +
                                   monthInfo.label +
                                   ' ' +
                                   signed(monthInfo.summary.averageBalance) +
                                   ' kcal/día · Base ' +
-                                  monthInfo.summary.days +
-                                  ' días energéticos'
+                                  countLabel(monthInfo.summary.days, 'día energético', 'días energéticos')
                                 : '') +
                               (monthInfo.sports.total
                                 ? ' · ' +
@@ -599,9 +597,9 @@ export default function Heatmap({
                         )}
                         {!future && count > 0 && (
                           <span className="ah-month-coverage">
-                            Comidas {monthInfo.foodDays}/{monthInfo.elapsedDays} días
+                            Comidas {monthInfo.foodDays}/{countLabel(monthInfo.elapsedDays, 'día', 'días')}
                             {monthInfo.summary.days > 0 && (
-                              <small>Base: {monthInfo.summary.days} días</small>
+                              <small>Base: {countLabel(monthInfo.summary.days, 'día', 'días')}</small>
                             )}
                           </span>
                         )}
@@ -737,8 +735,8 @@ export default function Heatmap({
                     unit="kcal/día"
                   />
                   <p>
-                    {periodInfo.foodDays}/{periodInfo.elapsedDays} días con comidas · Base:{' '}
-                    {summary.days} días con datos energéticos
+                    {periodInfo.foodDays}/{countLabel(periodInfo.elapsedDays, 'día con comidas', 'días con comidas')} · Base:{' '}
+                    {countLabel(summary.days, 'día con datos energéticos', 'días con datos energéticos')}
                   </p>
                   <p className="ah-average-basis">{averageBasis(periodInfo)}</p>
                   {periodInfo.sports.total > 0 && (
@@ -790,7 +788,7 @@ export default function Heatmap({
                     <dt>Calorías consumidas</dt>
                     <dd>{selectedInfo.withMeals
                       ? <>{number(getCaloriesIngested(dayRecord))} <small>kcal</small></>
-                      : <span className="ah-missing">Sin comidas</span>}</dd>
+                      : <span className="ah-missing">Sin comidas registradas</span>}</dd>
                   </div>
                   <div>
                     <dt>Gasto estimado</dt>
@@ -826,7 +824,7 @@ export default function Heatmap({
               </ul>
               {(dayRecord?.meals.length ?? 0) > 3 && (
                 <p className="ah-more">
-                  {dayRecord!.meals.length - 3} comidas más en el detalle completo
+                  {countLabel(dayRecord!.meals.length - 3, 'comida', 'comidas')} más en el detalle completo
                 </p>
               )}
               <dl className="ah-habits">

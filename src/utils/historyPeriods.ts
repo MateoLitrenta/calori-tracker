@@ -1,4 +1,4 @@
-import { addDays, addMonths, endOfMonth, format, startOfMonth, startOfWeek, subDays, subMonths } from 'date-fns';
+import { addDays, addMonths, endOfMonth, format, startOfMonth, startOfISOWeek, subDays, subMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 export type HistoryPeriod = 'day' | 'week' | 'month' | 'year';
@@ -11,7 +11,7 @@ export interface HistoryInterval {
 }
 
 // Presentation ranges only. Energy totals and averages remain in aggregateEnergy.
-// Keep the existing horizon: Sunday-aligned trailing year, 12 months, 2 years.
+// Keep the existing horizon: Monday-aligned trailing year, 12 months, 2 years.
 export function buildHistoryPeriods(today: Date) {
   const stamp = (date: Date) => format(date, 'yyyy-MM-dd');
   const range = (start: Date, end: Date) => {
@@ -19,7 +19,7 @@ export function buildHistoryPeriods(today: Date) {
     for (let date = start; date <= end; date = addDays(date, 1)) dates.push(stamp(date));
     return dates;
   };
-  const start = startOfWeek(subDays(today, 364), { weekStartsOn: 0 });
+  const start = startOfISOWeek(subDays(today, 364));
   const weeks: HistoryInterval[] = [];
   const columns: (string | null)[][] = [];
   for (let date = start; date <= today; date = addDays(date, 7)) {
