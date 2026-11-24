@@ -10,8 +10,16 @@ El resumen de estimación lee las calorías vigentes del formulario. Ante un aju
 
 [Comparativas y validación](evidence/coherencia-noviembre/README.md)
 
-## Etapa 2 en revisión · Coach y Mis objetivos
+## Etapa 2 integrada en el PR #93 · Coach y Mis objetivos
 
 La base es el merge `6842ae51e353c33386e261b1b4321c0766c7ef7e`. La conversación vacía agrupa la observación y preguntas complementarias junto al compositor. Las conversaciones existentes conservan su punto de lectura y los accesos plegables. Mis objetivos separa meta, período, avance registrado y acciones sujetas a confirmación.
 
 [Comparativas y recorridos sintéticos](evidence/coach-noviembre/README.md)
+
+## Etapa 3 en revisión · Datos e Historial
+
+La rama parte de `5a6048c346ce4052a9b1df02078177f36e06551c`, el merge del PR #93. En Datos, el balance encabeza un resumen compacto con las bases de las medias visibles y la explicación dentro de «Cómo se calculan». Las barras muestran el detalle al activarlas. En Historial, el día consultado queda junto al calendario y los agregados tienen su propio bloque. El año presenta doce tarjetas con sus estados y unidades.
+
+Las comparativas en Chrome con datos sintéticos cubren cuatro anchos, ambos temas, ampliación de texto, teclado, selección táctil emulada y la separación entre consultar y editar. La revisión en teléfono físico y con lector de pantalla queda pendiente.
+
+[Mediciones, capturas y recorridos de la etapa 3](evidence/datos-noviembre/README.md)

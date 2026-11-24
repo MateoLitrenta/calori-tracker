@@ -196,7 +196,7 @@ test('empty periods expose an honest accessible empty state without fake calorie
   assert.doesNotMatch(markup, />0 kcal</);
 });
 
-test('keyboard focus and pointer selection expose exact expenditure and balance in the detail', () => {
+test('only activation opens the detail while each focusable bar names its exact values', () => {
   const view = render(weeklyRecords);
   const initialDetail = nodes(view.tree, element => element.props.id === 'charts-bucket-detail')[0];
   assert.equal(initialDetail.props['data-selected'], false);
@@ -205,11 +205,11 @@ test('keyboard focus and pointer selection expose exact expenditure and balance 
   const monday = nodes(view.tree, element => element.type === 'button' &&
     element.props['aria-label']?.startsWith('Lunes.'))[0];
   assert.ok(monday);
-  assert.equal(typeof monday.props.onFocus, 'function');
-  assert.equal(typeof monday.props.onMouseEnter, 'function');
+  assert.equal(monday.props.onFocus, undefined);
+  assert.equal(monday.props.onMouseEnter, undefined);
   assert.equal(typeof monday.props.onClick, 'function');
   assert.equal(monday.props.disabled, undefined);
-  monday.props.onFocus();
+  monday.props.onClick();
   const selected = render(weeklyRecords, 'Semana', globalThis.__chartsHarness.selectedBucket);
   const detail = nodes(selected.tree, element => element.props.id === 'charts-bucket-detail')[0];
   assert.ok(detail);
@@ -262,7 +262,7 @@ test('chart selection updates the same compact metric strip without a reserved e
     const clear = nodes(strip, element => element.props['aria-label'] === 'Quitar selección del gráfico')[0];
     assert.equal(clear.props.disabled, true);
     const bucket = nodes(initial.tree, element => element.type === 'button' && element.props.className === 'charts-bucket')[0];
-    bucket.props.onFocus();
+    bucket.props.onClick();
     const selected = render(weeklyRecords, period, globalThis.__chartsHarness.selectedBucket);
     const selectedStrip = nodes(selected.tree, element => element.props.id === 'charts-bucket-detail')[0];
     assert.equal(selectedStrip.type, strip.type);
@@ -462,9 +462,9 @@ test('desktop and mobile navigation use Datos and Coach while preserving destina
 });
 
 
-test('the visible summary explains unequal samples and changes its explanation with actual coverage', () => {
+test('the calculation disclosure explains unequal samples and changes its explanation with actual coverage', () => {
   const summary = tree => nodes(tree, element => element.props.className === 'charts-panel charts-summary')[0];
-  const note = tree => nodes(summary(tree), element => element.props.className === 'charts-summary-note')[0];
+  const note = tree => nodes(nodes(summary(tree), element => element.type === 'details')[0], element => element.props.className === 'charts-method-note')[0];
   const mixed = render(weeklyRecords);
   assert.match(html(note(mixed.tree)), /balance usa sólo días con comidas/);
   assert.match(html(note(mixed.tree)), /gasto también incluye días de actividad sin comidas/);
@@ -472,6 +472,7 @@ test('the visible summary explains unequal samples and changes its explanation w
   assert.equal(nodes(nodes(summary(mixed.tree), element => element.type === 'details')[0],
     element => element.props.className === 'charts-summary-note').length, 0);
   const withMeals = render({ '2026-09-28': weeklyRecords['2026-09-28'], '2026-09-30': weeklyRecords['2026-09-30'] });
+  assert.match(html(nodes(summary(withMeals.tree), el => el.props.className === 'charts-summary-note')[0]), /Las tres medias usan 2 días con comidas/);
   assert.match(html(note(withMeals.tree)), /sobre 2 días con comidas/);
   assert.match(html(note(withMeals.tree)), /tener registros no implica que estén completos/);
   assert.doesNotMatch(html(note(withMeals.tree)), /días de actividad sin comidas/);

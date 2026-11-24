@@ -6,7 +6,8 @@ import { mkdir, mkdtemp, readFile, rmdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { before, go, open, origin, repo, start } from './browser.mjs';
 
-const out = path.join(repo, 'docs/evidence/historial-datos', before ? 'before' : 'after');
+const out = process.argv.includes('--noviembre') ? path.join(repo, 'docs/evidence/datos-noviembre/despues')
+  : path.join(repo, 'docs/evidence/historial-datos', before ? 'before' : 'after');
 const browser = await start();
 const periods = ['Semana','Mes','Año'];
 const widths = [[320,568],[375,812],[768,1024],[1024,768],[1440,900],[1920,1080]];
@@ -133,7 +134,7 @@ async function matrix(){
             samples.set(mode+'-'+period,sample);
           }
           if(mode==='extreme'){
-            if(period!=='Año')await page.locator('.charts-bucket').nth(1).focus();
+            if(period!=='Año')await page.locator('.charts-bucket').nth(1).press('Enter');
             await zoom(page);
             const enlarged=await geometry(page);
             geometryRows.push({width,theme,period,...enlarged});
@@ -192,7 +193,8 @@ async function interactions(){
       const contrast=await page.evaluate(contrastSamples);
       if(!before)assert.ok(contrast.every(c=>c.ratio>=c.minimum),JSON.stringify(contrast));
       await page.keyboard.press('Escape');assert.equal(await detail.getAttribute('data-selected'),'false');
-      await bucket.hover();assert.equal(await detail.getAttribute('data-selected'),'true');
+      await bucket.hover();assert.equal(await detail.getAttribute('data-selected'), before ? 'true' : 'false');
+      await bucket.click();
       await button(page,'Quitar selección del gráfico').click();assert.equal(await detail.getAttribute('data-selected'),'false');
       const motion=await page.locator('.charts-period .segmented-control-indicator').evaluate(el=>getComputedStyle(el).transitionDuration);
       assert.equal(parseFloat(motion),0);
@@ -209,7 +211,7 @@ async function interactions(){
       const scroll=page.locator('.charts-plot-scroll');
       const active=buckets.nth(9);
       await page.waitForFunction(()=>{const p=document.querySelector('.charts-plot-scroll').getBoundingClientRect(), b=document.querySelector('.charts-bucket[data-has-energy=true]').getBoundingClientRect();return b.left>=p.left-1 && b.right<=p.right+1;});
-      await active.focus();assert.match(await detail.locator('dd').first().textContent(),/^0\s*kcal/);
+      await active.press('Enter');assert.match(await detail.locator('dd').first().textContent(),/^0\s*kcal/);
       const zero=await page.locator('.charts-bar[data-zero=true]').count();assert.ok(zero>=1);
       await button(page,'Ver meses anteriores').click();
       await page.waitForTimeout(360);const chosen=await scroll.evaluate(el=>el.scrollLeft);

@@ -1,0 +1,136 @@
+[
+  {
+    "theme": "dark",
+    "focus": true,
+    "zero": 1,
+    "annualBuckets": 12,
+    "chosen": 29,
+    "restored": 29,
+    "normalMotion": "0.2s",
+    "reducedMotion": "0s",
+    "contrast": [
+      {
+        "selector": ".charts-balance-value",
+        "ratio": 14.02,
+        "minimum": 3
+      },
+      {
+        "selector": ".charts-summary-metrics dt",
+        "ratio": 14.02,
+        "minimum": 4.5
+      },
+      {
+        "selector": ".charts-summary-metrics dd",
+        "ratio": 14.02,
+        "minimum": 3
+      },
+      {
+        "selector": ".charts-range",
+        "ratio": 10.28,
+        "minimum": 4.5
+      },
+      {
+        "selector": ".charts-legend span",
+        "ratio": 14.87,
+        "minimum": 4.5
+      },
+      {
+        "selector": ".charts-scale span",
+        "ratio": 9.15,
+        "minimum": 4.5
+      },
+      {
+        "selector": ".charts-bucket-label",
+        "ratio": 14.87,
+        "minimum": 4.5
+      },
+      {
+        "selector": ".charts-detail dd",
+        "ratio": 12.64,
+        "minimum": 4.5
+      },
+      {
+        "selector": ".charts-activity-value",
+        "ratio": 14.87,
+        "minimum": 3
+      },
+      {
+        "selector": ".charts-comparison dd",
+        "ratio": 14.87,
+        "minimum": 3
+      },
+      {
+        "selector": ".charts-period button[aria-pressed=true]",
+        "ratio": 8.05,
+        "minimum": 4.5
+      }
+    ]
+  },
+  {
+    "theme": "light",
+    "focus": true,
+    "zero": 1,
+    "annualBuckets": 12,
+    "chosen": 29,
+    "restored": 29,
+    "normalMotion": "0.2s",
+    "reducedMotion": "0s",
+    "contrast": [
+      {
+        "selector": ".charts-balance-value",
+        "ratio": 12.41,
+        "minimum": 3
+      },
+      {
+        "selector": ".charts-summary-metrics dt",
+        "ratio": 12.41,
+        "minimum": 4.5
+      },
+      {
+        "selector": ".charts-summary-metrics dd",
+        "ratio": 12.41,
+        "minimum": 3
+      },
+      {
+        "selector": ".charts-range",
+        "ratio": 6.33,
+        "minimum": 4.5
+      },
+      {
+        "selector": ".charts-legend span",
+        "ratio": 15.56,
+        "minimum": 4.5
+      },
+      {
+        "selector": ".charts-scale span",
+        "ratio": 6.85,
+        "minimum": 4.5
+      },
+      {
+        "selector": ".charts-bucket-label",
+        "ratio": 15.56,
+        "minimum": 4.5
+      },
+      {
+        "selector": ".charts-detail dd",
+        "ratio": 13.2,
+        "minimum": 4.5
+      },
+      {
+        "selector": ".charts-activity-value",
+        "ratio": 15.56,
+        "minimum": 3
+      },
+      {
+        "selector": ".charts-comparison dd",
+        "ratio": 15.56,
+        "minimum": 3
+      },
+      {
+        "selector": ".charts-period button[aria-pressed=true]",
+        "ratio": 8.05,
+        "minimum": 4.5
+      }
+    ]
+  }
+]

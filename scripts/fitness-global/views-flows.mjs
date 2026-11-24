@@ -19,16 +19,18 @@ async function capture(page, panel, filename, includeToast = false) {
 async function charts(page, theme) {
   await go(page, 'Datos');
   const picker = page.getByRole('group', { name: 'Período', exact: true });
-  const detail = page.getByRole('group', { name: 'Detalle del gráfico' });
+  const detail = page.locator('#charts-bucket-detail');
   for (const period of ['Semana', 'Mes', 'Año']) {
     await picker.getByRole('button', { name: period }).click();
     const bars = page.locator('.charts-bucket');
     const clipped = await page.locator('.charts-plot-scroll').evaluate(el => el.scrollWidth > el.clientWidth);
-    if (clipped && period === 'Semana') assert.ok(await page.locator('.charts-week-hint').isVisible());
-    if (clipped && period === 'Año') assert.ok(await page.locator('.charts-year-hint').isVisible());
+    if (clipped && period === 'Semana') assert.ok(await page.locator('.charts-scroll-hint[data-overflow=true]').isVisible());
+    if (clipped && period === 'Año') assert.ok(await page.locator('.charts-year-navigation .charts-scroll-hint').isVisible());
     const values = bars.filter({ has: page.locator('.charts-bar-consumed') });
     const first = values.first();
     await first.focus();
+    assert.equal(await first.getAttribute('aria-pressed'), 'false');
+    await first.press('Enter');
     assert.equal(await first.getAttribute('aria-pressed'), 'true');
     const label = await first.getAttribute('aria-label');
     const totals = await detail.locator('dd').allTextContents();
