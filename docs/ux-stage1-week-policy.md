@@ -1,16 +1,16 @@
 # Política de semanas y períodos · Etapa 1
 
-**Actualización del 24/11/2026.** Se aprobó lunes a domingo para las tres vistas. La tabla siguiente documenta la base histórica. La política vigente y sus coberturas figuran en [Estado actual](ESTADO_ACTUAL.md).
+**Política vigente desde el 24/11/2026.** La semana calendario de Calori empieza el lunes y termina el domingo en Inicio, Historial y Datos. La decisión está aprobada e implementada. Las ventanas móviles de hábitos y los objetivos con fechas explícitas conservan sus límites. [Estado actual](ESTADO_ACTUAL.md)
 
-La base auditada es `c365e1e6f236ab76d17b46cbd8fe1ec9eace8831`, que integra el PR #79. Esta etapa conserva los intervalos actuales y hace visibles sus límites. Adoptar lunes a domingo en Inicio e Historial requiere aprobación explícita porque cambia los días incluidos en el resumen semanal de Historial.
+## Antecedente histórico superado · Semanas en la base del PR #79
 
-## Política implementada en la base
+La tabla describe el comportamiento del commit `c365e1e6f236ab76d17b46cbd8fe1ec9eace8831`. En esa versión, Inicio e Historial comenzaban la semana el domingo y Datos el lunes.
 
 | Superficie | Intervalo y referencia | Zona horaria y corte | Consecuencia visible |
 | --- | --- | --- | --- |
 | Inicio, navegación semanal | Domingo a sábado alrededor del día seleccionado. Las flechas avanzan siete días con límites en el historial disponible y hoy. | Fecha civil del dispositivo. `parseISO` y `addDays` conservan las fechas locales. | El 17 de noviembre de 2026 se ubica en 15–21 nov. El marcador y las escrituras corresponden al día seleccionado, no a la suma de esa semana. |
 | Inicio, calendario mensual | Mes calendario con filas de domingo a sábado. Puede mostrar días contiguos de otro mes. | Misma fecha civil y límites de selección que Inicio. | Cambiar de mes o explorar el calendario no convierte los días de relleno en parte del resumen mensual. |
-| Historial, vista semanal | Domingo a sábado alrededor del día explorado. Las flechas avanzan siete días. Home y End apuntan al domingo y sábado de la fila. | Fecha civil local. El resumen excluye fechas posteriores a hoy. | Los límites 15–21 nov son intencionales en el código actual. El 17 sólo transcurrieron tres fechas del intervalo, y el denominador incluye los días transcurridos con datos energéticos. |
+| Historial, vista semanal | Domingo a sábado alrededor del día explorado. Las flechas avanzan siete días. Home y End apuntan al domingo y sábado de la fila. | Fecha civil local. El resumen excluye fechas posteriores a hoy. | Los límites 15–21 nov son intencionales en la base del PR #79. El 17 sólo transcurrieron tres fechas del intervalo, y el denominador incluye los días transcurridos con datos energéticos. |
 | Historial, mes y año | Mes calendario y año calendario del ancla explorada. La grilla mensual mantiene filas de domingo a sábado. | Mismo corte local en hoy. Agua o peso pueden acreditar actividad sin contar como datos energéticos. | El promedio se calcula sólo sobre los días con comida, ejercicio o pasos. Si incluye días energéticos sin comidas, se presenta como provisional. |
 | Datos, Semana | Lunes a domingo de hoy. | Primero se resuelve `today` en la fecha local del dispositivo. Luego se construyen y recorren las fechas en UTC para operar sobre sus etiquetas sin desplazarlas por el huso o el horario de verano. Los agregados excluyen fechas posteriores a `today`. | El 17 de noviembre de 2026 muestra 16–22 nov. Las siete barras corresponden a las siete fechas, incluidas las futuras sin datos agregados. |
 | Datos, Mes | Mes calendario de hoy. Barras agrupadas en 1–7, 8–14, 15–21, 22–28 y el resto del mes. | Misma aritmética de fechas y corte que Datos semanal. | Son bloques de siete fechas desde el día 1. Pueden empezar cualquier día de semana. La presentación de esta etapa identifica sus fechas reales. |
@@ -20,9 +20,9 @@ La base auditada es `c365e1e6f236ab76d17b46cbd8fe1ec9eace8831`, que integra el P
 
 Fuentes del producto verificadas en esta base son [homeDateNavigation.ts](../src/utils/homeDateNavigation.ts), [WeeklyDateNav.tsx](../src/components/WeeklyDateNav.tsx), [Heatmap.tsx](../src/components/Heatmap.tsx), [historyPeriods.ts](../src/utils/historyPeriods.ts), [historyPresentation.ts](../src/utils/historyPresentation.ts), [chartStats.ts](../src/utils/chartStats.ts), [coachDates.ts](../src/utils/coachDates.ts) y [coachGoals.ts](../src/utils/coachGoals.ts).
 
-La diferencia semanal procede de dos convenciones explícitas del código. Compartir el mismo intervalo no hará iguales todos los promedios. Historial incluye cada día con datos energéticos en su balance promedio. Datos restringe su balance y consumo promedio a días con comidas, mientras el gasto promedio usa todos los días energéticos. Incluso con idénticos límites pueden representar poblaciones diferentes.
+La diferencia semanal procedía de las dos convenciones de la base auditada. Con el calendario unificado, las coberturas de las métricas siguen siendo distintas. Historial incluye cada día con datos energéticos en su balance promedio. Datos restringe su balance y consumo promedio a días con comidas, mientras el gasto promedio usa todos los días energéticos. Incluso con idénticos límites pueden representar poblaciones diferentes.
 
-## Comparación actual con el período anterior
+## Comparación con el período anterior
 
 Datos busca el día anterior al comienzo del intervalo actual y obtiene su semana, mes o año calendario completo. No alinea el día transcurrido del período anterior con el de hoy. Por ejemplo, al 17 de noviembre, Mes compara los registros del 1–17 de noviembre con los del 1–31 de octubre. La cabecera del período actual puede seguir mostrando el mes calendario 1–30 nov, porque el mismo gráfico conserva los bloques futuros.
 
@@ -38,32 +38,30 @@ Un ejemplo sintético reproducido usa un perfil con TMB de 1.618 kcal. Octubre r
 
 Este ejemplo prueba tanto la inclusión del último día de octubre como la desigualdad entre `balance` y la resta de las dos medias visibles. Al quitar la comida del 31 de octubre, desaparece la comparación por cobertura insuficiente. Las diferencias no acreditan mejoría ni empeoramiento.
 
-## Propuesta funcional pendiente de aprobación
+## Antecedente histórico · Propuesta aprobada e implementada el 24/11/2026
 
-La propuesta consiste en alinear las semanas de calendario de Inicio e Historial a lunes–domingo, manteniendo Datos como está. Abarcaría el orden de columnas y rótulos, los límites de las filas, Home/End, el ancla de navegación, las etiquetas y los integrantes del resumen semanal de Historial. Las fechas seleccionadas y los registros conservarían sus claves. Se necesitaría revisar también los estados de navegación guardados para conservar el día explorado al cambiar su fila.
+La propuesta original alineaba Inicio e Historial con Datos. La implementación conserva las claves de las fechas seleccionadas y de los registros. Cambian los límites de las filas, el orden de las columnas, los destinos de Home/End y las fechas que participan en el resumen semanal.
 
-Los meses y años continuarían siendo calendarios, con los mismos integrantes de sus resúmenes. Los bloques 1–7 del gráfico mensual, las ventanas móviles de hábitos y los períodos aceptados de objetivos conservarían su definición. El usuario debe aprobar el cambio del resumen semanal antes de implementar esta propuesta.
+Las siguientes tablas documentan el efecto del cambio de calendario.
 
-| Fecha de referencia | Inicio/Historial actuales | Propuesta lunes–domingo y Datos actual |
+| Fecha de referencia | Inicio/Historial en el PR #79 | Semana vigente en las tres vistas |
 | --- | --- | --- |
 | 17 nov 2026 | 15–21 nov 2026 | 16–22 nov 2026 |
 | 1 nov 2026, domingo | 1–7 nov 2026 | 26 oct–1 nov 2026 |
 | 1 ene 2027 | 27 dic 2026–2 ene 2027 | 28 dic 2026–3 ene 2027 |
 | 29 feb 2024 | 25 feb–2 mar 2024 | 26 feb–3 mar 2024 |
 
-El siguiente ejemplo usa siempre `aggregateEnergy` sin alterar su fórmula, pero le pasa los dos conjuntos de fechas para medir el impacto propuesto. Con TMB de 1.618 kcal, se registran 2.500 kcal el domingo 15, 2.000 kcal el lunes 16, 1.000 pasos sin comidas el martes 17 y 2.800 kcal el domingo 22.
+El siguiente ejemplo usa siempre `aggregateEnergy` sin alterar su fórmula, pero le pasa los dos conjuntos de fechas para comparar el calendario anterior con el vigente. Con TMB de 1.618 kcal, se registran 2.500 kcal el domingo 15, 2.000 kcal el lunes 16, 1.000 pasos sin comidas el martes 17 y 2.800 kcal el domingo 22.
 
-| Corte de datos | Resumen actual 15–21 nov | Resumen propuesto 16–22 nov | Motivo |
+| Corte de datos | Resumen anterior 15–21 nov | Resumen vigente 16–22 nov | Motivo |
 | --- | --- | --- | --- |
 | Martes 17 nov | 3 días energéticos, 4.500 kcal consumidas, 4.894 kcal de gasto, promedio −131 kcal/día | 2 días energéticos, 2.000 kcal consumidas, 3.276 kcal de gasto, promedio −638 kcal/día | El domingo 15 deja de pertenecer al intervalo. El 22 sigue siendo futuro y se excluye. |
-| Domingo 22 nov | 3 días energéticos, promedio −131 kcal/día | 3 días energéticos, promedio −31 kcal/día | El intervalo propuesto reemplaza el domingo 15 por el 22. |
-
-Estos resultados son una simulación de la decisión pendiente. La etapa 1 conserva los límites y los resultados actuales del producto.
+| Domingo 22 nov | 3 días energéticos, promedio −131 kcal/día | 3 días energéticos, promedio −31 kcal/día | El intervalo vigente reemplaza el domingo 15 por el 22. |
 
 ## Evidencia de límites y zona horaria
 
-Las [pruebas de política temporal](../tests/ux-stage1-week-policy.test.mjs) ejecutan las funciones reales del producto para los límites anteriores, la navegación de siete días, los grupos mensuales, las ventanas móviles y la comparación contra el mes previo. Los dos intervalos del ejemplo contrafáctico son entradas explícitas a la fórmula existente, sin activar una política alternativa.
+Las [pruebas de política temporal](../tests/ux-stage1-week-policy.test.mjs) ejecutan las funciones reales del producto para los límites vigentes, la navegación de siete días, los grupos mensuales, las ventanas móviles y la comparación contra el mes previo. El caso del domingo 22 y el lunes 23 verifica que cada registro participa en su propia semana.
 
 También ejecutan la resolución de fechas en procesos con `TZ` de Buenos Aires, Los Ángeles, Madrid y Kiritimati. Para el instante `2026-11-16T01:00:00Z`, los dos primeros dispositivos están en el domingo 15 y los otros dos en el lunes 16. Datos conserva el día local recibido en cada caso, por lo que la diferencia de semana entre esos dispositivos es esperable. Las semanas locales que atraviesan los cambios de horario de verano de Los Ángeles conservan siete etiquetas únicas, sin fechas repetidas ni omitidas.
 
-Estas pruebas cubren aritmética y presentación de fechas con datos sintéticos. La política lunes–domingo sigue pendiente de aprobación funcional.
+Estas pruebas cubren aritmética y presentación de fechas con datos sintéticos.
