@@ -4,7 +4,8 @@ import path from 'node:path';
 import { go, heights, open, repo, start } from './browser.mjs';
 
 const reference = process.argv.includes('--reference');
-const directory = path.join(repo, 'docs/evidence/ux-stage3', reference ? 'before' : 'after');
+const november = process.argv.includes('--november-flows');
+const directory = november ? path.join(repo, 'docs/evidence/coach-noviembre/despues') : path.join(repo, 'docs/evidence/ux-stage3', reference ? 'before' : 'after');
 await mkdir(directory, { recursive: true });
 const browser = await start();
 const results = [];
@@ -116,6 +117,9 @@ async function flows() {
     const yesterday = await seed(page);
     await page.evaluate(() => { window.__homeQA.goalError = 503; });
     await go(page, 'Coach');
+    assert.equal(await page.locator('.chat-message').count(), 12);
+    assert.equal(await page.locator('.chat-empty-suggestions').count(), 0);
+    assert.equal(await page.locator('.chat-proactive[data-insight-kind]').count(), 0);
     await page.evaluate(() => window.__homeQA.releaseGoals());
     const observation = page.locator('.chat-proactive');
     await observation.locator('.chat-proactive-heading').click();
@@ -138,6 +142,10 @@ async function flows() {
     const log = page.locator('.chat-messages');
     const place = async top => { await log.evaluate((e, value) => { e.scrollTop = value; }, top); await settle(page); };
     await place(120);
+    await page.locator('.chat-textarea').focus();
+    await settle(page);
+    const focusedTop = (await measure(page)).top;
+    assert.ok(Math.abs(focusedTop - 120) <= 2);
     await page.emulateMedia({ colorScheme: 'dark' });
     await settle(page);
     assert.ok(await page.locator('html').evaluate(e => e.classList.contains('dark')));
@@ -190,7 +198,7 @@ async function flows() {
     assert.ok((await measure(page)).expanded);
     await checkCounters(page, 3);
     assert.deepEqual(errors, []);
-    return { errorAndRetry: true, goalRefresh: true, delayedReplyAnchor: true, completeText: true,
+    return { errorAndRetry: true, goalRefresh: true, focusedTop, delayedReplyAnchor: true, completeText: true,
       system: true, navigation: true, exactSuggestion: true, newConversation: true, simulatedCalls: 3 };
   } finally {
     await context.close();
@@ -219,7 +227,9 @@ async function structured() {
 }
 
 try {
-  if (!process.argv.includes('--structured-only')) {
+  if (november) {
+    await writeFile(path.join(directory, 'recorrido.json'), JSON.stringify(await flows(), null, 2) + '\n');
+  } else if (!process.argv.includes('--structured-only')) {
     for (const width of Object.keys(heights).map(Number)) {
       for (const theme of ['light', 'dark']) {
         results.push(await matrix(width, theme));
@@ -229,7 +239,7 @@ try {
     }
     if (!reference) await writeFile(path.join(directory, 'flows.json'), JSON.stringify(await flows(), null, 2) + '\n');
   }
-  await structured();
+  if (!november) await structured();
 } finally {
   await browser.close();
 }

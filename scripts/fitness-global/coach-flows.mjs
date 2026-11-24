@@ -116,7 +116,7 @@ async function runScenario(width, theme) {
     await page.waitForFunction(() => window.__homeQA.goalWrites.length === 1);
     await button('Mis objetivos').click();
     const panel = page.getByRole('dialog', {name:'Mis objetivos'});
-    await panel.getByRole('button', {name:'Modificar'}).click();
+    await panel.getByRole('button', {name:'Editar objetivo'}).click();
     await panel.getByLabel('Nueva meta (sesiones)').fill('2');
     await panel.getByRole('button', {name:'Revisar cambio'}).click();
     assert.equal((await counts()).goals, 1);

@@ -43,3 +43,14 @@
 .coach-goal-confirmation { border-left: 3px solid var(--fit-orange); }
 .coach-goal-confirmation-title { margin: 0 0 8px; }
 @media (max-width: 374px) { .coach-goal-card { padding: 12px; } }
+
+.coach-goal-card .coach-goal-count { justify-content: flex-start; gap: 10px; }
+.coach-goal-coverage { color: var(--fit-quiet); font-size: 0.875rem; }
+.coach-goal-coverage summary { width: fit-content; min-height: 44px; padding-block: 12px; cursor: pointer; }
+.coach-goal-coverage p { margin-top: 0; }
+.coach-goal-actions { border-top: 1px solid var(--fit-rule); padding-top: 12px; }
+.coach-goal-actions .coach-goal-edit-trigger { background: var(--fit-soft); }
+.coach-goals-panel .coach-goal-refresh { align-self: flex-start; background: transparent; border-color: transparent; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 340px) {
+  .coach-goal-card h3 { font-size: 1.25rem; }
+}
