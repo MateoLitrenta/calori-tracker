@@ -81,7 +81,7 @@ export default function CoachGoalsPanel({ resource, history, today, userId, onCl
             {!resource.goals.length && <p>No tenés objetivos aceptados. Podés proponer uno en Coach y confirmarlo.</p>}
             <div className="coach-goal-list">{resource.goals.map(goal => <CoachGoalCard key={goal.id} goal={goal} history={history} today={today}>
               {goal.status === 'active' && <div className="coach-goal-actions">
-                <button type="button" onClick={() => choose(goal)}>Editar objetivo</button>
+                <button type="button" className="coach-goal-edit-trigger" onClick={() => choose(goal)}>Editar objetivo</button>
                 <button type="button" onClick={() => choose(goal, true)}>Cancelar objetivo</button>
               </div>}
             </CoachGoalCard>)}</div>

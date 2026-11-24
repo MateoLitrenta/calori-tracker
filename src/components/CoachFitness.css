@@ -281,6 +281,10 @@
   margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--fit-rule);
 }
 .chat-empty .chat-suggestion { background: var(--fit-page); gap: 8px; }
+@media (min-width: 768px) {
+  .assistant-view .chat-heading { flex-wrap: wrap; }
+  .chat-heading-title { flex: 1 0 min-content; }
+}
 .chat-heading-actions [aria-label="Mis objetivos"] { background: var(--fit-soft); color: var(--fit-accent); }
 @media (max-width: 767px) {
   .assistant-view .chat-heading { flex-wrap: wrap; gap: 2px 8px; padding-block: 4px; }

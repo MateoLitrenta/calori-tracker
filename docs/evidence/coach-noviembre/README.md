@@ -31,6 +31,21 @@ El titular usa la evidencia disponible para el tipo de observación. Los pasos c
 
 Chrome 158.0.8127.36 en Windows, con datos y servicios locales simulados y sin tráfico de usuario hacia servicios externos. Para el reflujo se duplicaron los tamaños de fuente computados a 320 px. El caso de respuesta tardía usa transporte simulado. Quedan pendientes Safari en iPhone físico, teclado nativo, lector de pantalla y conversación con IA real.
 
+## Revisión de contraste y encabezado
+
+En la base `cd703e38`, Chrome midió texto `#241b14` sobre fondo `#262e2b` en Oscuro (1,21:1) y sobre `#ebece4` en Claro (14,21:1) en las cuatro acciones. Ahora sólo el disparador «Editar objetivo» usa el fondo secundario. Las cuatro acciones principales usan texto `#241b14` sobre naranja `#ff9a53`, con **8,05:1** de contraste efectivo en ambos temas.
+
+| Estado | Claro | Oscuro |
+| --- | --- | --- |
+| Revisar cambio | [Ver captura](acciones/light-revisar.jpg) | [Ver captura](acciones/dark-revisar.jpg) |
+| Confirmar modificación | [Ver captura](acciones/light-modificar.jpg) | [Ver captura](acciones/dark-modificar.jpg) |
+| Confirmar cancelación | [Ver captura](acciones/light-cancelar.jpg) | [Ver captura](acciones/dark-cancelar.jpg) |
+| Aceptar objetivo propuesto en el chat | [Ver captura](acciones/light-aceptar.jpg) | [Ver captura](acciones/dark-aceptar.jpg) |
+
+Con la barra lateral visible, a 768 px el título de la base se superponía 8,9 px con «Mis objetivos». Ahora el grupo pasa a otra fila cuando falta espacio. A 820 y 900 px se conserva la fila compartida. En ambos temas, los tres controles recibieron foco, conservaron sus etiquetas y midieron al menos 44 × 44 px. El desbordamiento horizontal de la página fue de 0 px en los tres anchos. [768 px](acciones/encabezado-768.png) · [820 px](acciones/encabezado-820.png) · [900 px](acciones/encabezado-900.png).
+
+Con el servidor de fixtures del candidato, ejecutar `node scripts/fitness-global/coach-goal-contrast.mjs`. El recorrido mide los estilos computados y el contraste, comprueba que revisar no escriba, confirma por teclado una aceptación, una modificación y una cancelación, y comprueba el retorno de foco a «Mis objetivos».
+
 ## Reproducción
 
 Iniciar las instancias locales con `node scripts/home-mobile/serve-qa.mjs --coach-november --history-data` y, en otra terminal, el mismo comando con `--before --port=5193`. Con la instalación de Playwright y Chrome de QA, ejecutar `node scripts/fitness-global/coach-november.mjs --before`, luego sin `--before`, y por último `node scripts/fitness-global/coach-stage3.mjs --november-flows`. El Draft enlaza la CI y la Preview del SHA final.
