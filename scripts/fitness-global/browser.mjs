@@ -12,9 +12,9 @@ export const start = () => chromium.launch({channel:process.env.QA_BROWSER_CHANN
 export const tabs = {Inicio:'.home-variants', Coach:'.assistant-view textarea', Datos:'.charts-insights', Perfil:'.profile-view'};
 export const heights = {320:568,375:812,393:852,440:956,768:1024,1440:900};
 
-export async function open(browser, width, preference='light', system='light', localOrigin=origin) {
+export async function open(browser, width, preference='light', system='light', localOrigin=origin, options={}) {
   assert.ok(['http://127.0.0.1:5193','http://127.0.0.1:5194'].includes(localOrigin),'Isolated fixtures only');
-  const context = await browser.newContext({viewport:{width,height:heights[width]}, colorScheme:system,
+  const context = await browser.newContext({...options, viewport:{width,height:heights[width]}, colorScheme:system,
     timezoneId:'America/Buenos_Aires', locale:'es-AR', reducedMotion:'reduce'});
   const errors = [];
   await context.route('**/*', route => {

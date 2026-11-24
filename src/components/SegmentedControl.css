@@ -40,3 +40,29 @@
 @media (prefers-reduced-motion: reduce) {
   .segmented-control-indicator { transition: none; }
 }
+
+/* At large text sizes the three labels still fit together when Semana gets a wider track. */
+@container (max-width: 12em) {
+  :is(.ah-view-switch, .charts-period) {
+    --segment-gap: 0px;
+    --week-track: 42%;
+    --short-track: 29%;
+    grid-template-columns: var(--week-track) var(--short-track) var(--short-track);
+    padding: 0;
+  }
+  :is(.ah-view-switch, .charts-period) > button { padding-inline: 2px; }
+  :is(.ah-view-switch, .charts-period):has(button:nth-of-type(2)[aria-pressed='true']) {
+    --indicator-start: var(--week-track);
+    --indicator-width: var(--short-track);
+  }
+  :is(.ah-view-switch, .charts-period):has(button:nth-of-type(3)[aria-pressed='true']) {
+    --indicator-start: calc(var(--week-track) + var(--short-track));
+    --indicator-width: var(--short-track);
+  }
+  :is(.ah-view-switch, .charts-period) .segmented-control-indicator {
+    inset: 3px auto 3px calc(var(--indicator-start, 0%) + 3px);
+    width: calc(var(--indicator-width, var(--week-track)) - 6px);
+    transform: none;
+    transition-property: left, width;
+  }
+}

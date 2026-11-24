@@ -74,26 +74,23 @@ const sportsLabel = (sports: HistorySports) =>
   ]
     .filter(Boolean)
     .join(' · ');
-function SportMarks({ sports, counts = false }: { sports: HistorySports; counts?: boolean }) {
+function SportMarks({ sports }: { sports: HistorySports }) {
   if (!sports.total) return null;
   return (
     <span className="ah-sports" aria-hidden="true">
       {sports.football > 0 && (
         <span data-sport="football" title={'Fútbol: ' + sports.football}>
           <SoccerBall weight="fill" />
-          {counts && <span>{sports.football}</span>}
         </span>
       )}
       {sports.gym > 0 && (
         <span data-sport="gym" title={'Gimnasio: ' + sports.gym}>
           <Barbell weight="fill" />
-          {counts && <span>{sports.gym}</span>}
         </span>
       )}
       {sports.other > 0 && (
         <span data-sport="other" title={'Otros entrenamientos: ' + sports.other}>
           <Pulse weight="bold" />
-          {counts && <span>{sports.other}</span>}
         </span>
       )}
     </span>
@@ -522,6 +519,8 @@ export default function Heatmap({
                       <button
                         className="ah-month history-month"
                         data-month={key}
+                        data-selected={key === selected.slice(0, 7)}
+                        aria-current={current ? 'date' : undefined}
                         data-activity={count > 0}
                         data-balance={future ? 'empty' : monthInfo.category}
                         data-provisional={monthInfo.provisional}
@@ -531,6 +530,7 @@ export default function Heatmap({
                         aria-label={
                           'Ver ' +
                           monthLabel(key + '-01') +
+                          (current ? ' · En curso' : '') + (key === selected.slice(0, 7) ? ' · Mes consultado' : '') +
                           (future
                             ? ' · Próximamente'
                             : ' · ' +
@@ -594,24 +594,6 @@ export default function Heatmap({
                             }
                             unit="kcal/día"
                           />
-                        )}
-                        {!future && count > 0 && (
-                          <span className="ah-month-coverage">
-                            Comidas {monthInfo.foodDays}/{countLabel(monthInfo.elapsedDays, 'día', 'días')}
-                            {monthInfo.summary.days > 0 && (
-                              <small>Base: {countLabel(monthInfo.summary.days, 'día', 'días')}</small>
-                            )}
-                          </span>
-                        )}
-                        {!future && count > 0 && (
-                          <span className="ah-month-sports">
-                            <span>
-                              {monthInfo.sports.total
-                                ? monthInfo.sports.total + ' entrenos'
-                                : 'Sin entrenos'}
-                            </span>
-                            <SportMarks sports={monthInfo.sports} counts />
-                          </span>
                         )}
                       </button>
                     );
@@ -722,31 +704,7 @@ export default function Heatmap({
                   detailRef.current?.scrollIntoView({ block: 'start' });
                 }}>Ver detalle del día <ArrowDown aria-hidden="true" /></button>
               </div>
-              {state.view !== 'year' && (
-                <div
-                  className="ah-period-summary"
-                  data-period={state.view}
-                  data-provisional={periodInfo.provisional}
-                >
-                  <BalanceReading
-                    value={summary.averageBalance}
-                    category={periodInfo.category}
-                    label={averageLabel(periodInfo)}
-                    unit="kcal/día"
-                  />
-                  <p>
-                    {periodInfo.foodDays}/{countLabel(periodInfo.elapsedDays, 'día con comidas', 'días con comidas')} · Base:{' '}
-                    {countLabel(summary.days, 'día con datos energéticos', 'días con datos energéticos')}
-                  </p>
-                  <p className="ah-average-basis">{averageBasis(periodInfo)}</p>
-                  {periodInfo.sports.total > 0 && (
-                    <p className="ah-period-sports">
-                      {countLabel(periodInfo.sports.total, 'entrenamiento', 'entrenamientos')} ·{' '}
-                      {sportsLabel(periodInfo.sports)}
-                    </p>
-                  )}
-                </div>
-              )}
+
             </div>
           </div>
         </div>
@@ -887,6 +845,33 @@ export default function Heatmap({
           </p>
         </div>
       </div>
+      {state.view !== 'year' && (
+        <section
+          aria-label={`Resumen de ${viewLabel.toLowerCase()}`}
+          className="ah-period-summary"
+          data-period={state.view}
+          data-provisional={periodInfo.provisional}
+        >
+          <h3>Resumen {state.view === 'month' ? 'del mes' : 'de la semana'}</h3>
+          <BalanceReading
+            value={summary.averageBalance}
+            category={periodInfo.category}
+            label={averageLabel(periodInfo)}
+            unit="kcal/día"
+          />
+          <p>
+            {periodInfo.foodDays}/{countLabel(periodInfo.elapsedDays, 'día con comidas', 'días con comidas')} · Base:{' '}
+            {countLabel(summary.days, 'día con datos energéticos', 'días con datos energéticos')}
+          </p>
+          <p className="ah-average-basis">{averageBasis(periodInfo)}</p>
+          {periodInfo.sports.total > 0 && (
+            <p className="ah-period-sports">
+              {countLabel(periodInfo.sports.total, 'entrenamiento', 'entrenamientos')} ·{' '}
+              {sportsLabel(periodInfo.sports)}
+            </p>
+          )}
+        </section>
+      )}
       <details className="ah-energy">
         <summary>Ver resumen energético</summary>
         <div>

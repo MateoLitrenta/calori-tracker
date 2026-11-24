@@ -92,6 +92,13 @@ export default function ChartsView() {
   const averages = period !== 'Semana';
   const mealDays = `${days(summary.mealDays)} con comidas`;
   const energyDays = `${days(summary.energyDays)} con datos`;
+  const sharedBase = summary.mealDays > 0 && summary.mealDays === summary.energyDays;
+  const unit = (base: string) => <span className="charts-unit">kcal/día{!sharedBase &&
+    <span className="charts-average-base"><span className="sr-only"> · </span>{base}</span>}</span>;
+  const clearDetail = (restoreFocus: boolean) => {
+    if (restoreFocus) plotRef.current?.querySelector<HTMLButtonElement>('[aria-pressed="true"]')?.focus({ preventScroll: true });
+    setSelectedBucket(null);
+  };
   const periodIntro = period === 'Semana' ? 'Esta semana' : period === 'Mes' ? 'Este mes' : 'Este año';
   const insight = summary.balance === null
     ? 'Hasta hoy no hay comidas registradas en este período para calcular el balance.'
@@ -107,6 +114,7 @@ export default function ChartsView() {
   const futureDetail = detail && detail.start > today;
   const dayRecord = detail && !averages ? activeProfile?.records[detail.start] : undefined;
   const emptyDay = !averages && !dayRecord?.water && !dayRecord?.weight && !hasEnergyData(dayRecord);
+  const detailStatus = futureDetail ? 'Fecha futura' : emptyDay ? 'Sin registros' : null;
   const recordedMonths = buckets.filter(bucket => bucket.summary.energyDays > 0).map(bucket => bucket.label.toLowerCase());
 
   return (
@@ -122,7 +130,7 @@ export default function ChartsView() {
 
       <section className="charts-panel charts-summary" aria-label={`Resumen de ${period.toLowerCase()}`}>
         <div key={`summary-${period}`} className="charts-kpis">
-          <h2>Resumen del período</h2>
+          <h2 className="sr-only">Resumen del período</h2>
           <div className="charts-summary-body">
             <div className="charts-summary-balance" data-empty={summary.balance === null}>
               <div className="charts-balance-heading">
@@ -132,24 +140,25 @@ export default function ChartsView() {
               <p className={`charts-balance-value ${balanceTone(summary.balance)}`}>{summary.balance === null ? 'Sin datos' : signed(summary.balance)}</p>
               {summary.balance === null
                 ? <p className="charts-secondary">El balance requiere comidas registradas hasta hoy.</p>
-                : <span className="charts-unit">kcal/día<span className="charts-average-base"><span className="sr-only"> · </span>{mealDays}</span></span>}
+                : unit(mealDays)}
             </div>
             <div className="charts-summary-secondary">
               <dl className="charts-summary-metrics">
                 <div><dt>Consumidas</dt><dd>{summary.consumed === null ? 'Sin datos' : number(summary.consumed)}
-                  <span className="charts-unit">{summary.consumed === null ? 'Sin comidas registradas hasta hoy' : <>kcal/día<span className="charts-average-base"><span className="sr-only"> · </span>{mealDays}</span></>}</span></dd></div>
+                  {summary.consumed === null ? <span className="charts-unit">Sin comidas registradas hasta hoy</span> : unit(mealDays)}</dd></div>
                 <div><dt>Gasto estimado</dt><dd>{summary.expenditure === null ? 'Sin datos' : number(summary.expenditure)}
-                  <span className="charts-unit">{summary.expenditure === null ? 'Sin registros energéticos hasta hoy' : <>kcal/día<span className="charts-average-base"><span className="sr-only"> · </span>{energyDays} energéticos</span></>}</span></dd></div>
+                  {summary.expenditure === null ? <span className="charts-unit">Sin registros energéticos hasta hoy</span> : unit(energyDays + ' energéticos')}</dd></div>
               </dl>
             </div>
           </div>
         </div>
         <div className="charts-summary-foot">
-          <p className="charts-summary-note">{summaryNote}</p>
+          {sharedBase && <p className="charts-summary-note">Las tres medias usan {mealDays}.</p>}
           <details className="charts-method">
             <summary>Cómo se calculan</summary>
             <p className="charts-coverage">{energyDays} · {mealDays}</p>
             <p className="charts-insight">{insight}</p>
+            <p className="charts-method-note">{summaryNote}</p>
             <p>Balance y consumidas usan días con comidas. Gasto usa días con cualquier registro energético (comidas, pasos o ejercicio). Incluye TMB, pasos y ejercicio registrado. Se excluyen días sin datos y fechas futuras.</p>
             <p>El redondeo de cada media también puede producir pequeñas diferencias al restarlas, incluso si usan los mismos días.</p>
           </details>
@@ -160,7 +169,7 @@ export default function ChartsView() {
         onKeyDown={event => {
           if (event.key === 'Escape' && detail) {
             event.stopPropagation();
-            setSelectedBucket(null);
+            clearDetail(!!(event.target as HTMLElement | undefined)?.closest('.charts-detail'));
           }
         }}>
         <div className="charts-plot-heading">
@@ -198,8 +207,7 @@ export default function ChartsView() {
                           data-has-energy={item.energyDays > 0}
                           aria-pressed={detail?.start === bucket.start}
                           aria-describedby={detail?.start === bucket.start ? 'charts-bucket-detail' : undefined}
-                          onMouseEnter={() => setSelectedBucket(bucket.start)}
-                          onFocus={() => setSelectedBucket(bucket.start)}
+                          title={accessible}
                           onClick={() => setSelectedBucket(bucket.start)}>
                           <span className="charts-bar-pair" aria-hidden="true">
                             {item.energyDays === 0 && <span className="charts-bar-empty">—</span>}
@@ -241,22 +249,20 @@ export default function ChartsView() {
               <div className="charts-detail-header">
                 <h3>{detail ? period === 'Mes' ? dateRange(detail.start, detail.end) : detail.title : 'Detalle'}</h3>
                 <button type="button" className="charts-detail-clear" disabled={!detail}
-                  aria-label="Quitar selección del gráfico" title="Quitar selección" onClick={() => setSelectedBucket(null)}>
+                  aria-label="Quitar selección del gráfico" title="Quitar selección" onClick={() => clearDetail(true)}>
                   <X size={16} aria-hidden="true" /><span>Quitar selección</span>
                 </button>
               </div>
-              {futureDetail ? <p className="charts-secondary">Fecha futura</p> : detail && emptyDay ? <p className="charts-secondary">Sin registros</p> : <>
-                <dl>
-                  <div><dt>{averages ? 'Consumidas promedio' : 'Consumidas'}</dt><dd title={detail?.summary.consumed === null ? 'Sin comidas registradas' : undefined}>{!detail ? '—' : detail.summary.consumed === null ? 'Sin comidas registradas' : kcal(detail.summary.consumed, false, averages)}</dd></div>
-                  <div><dt>{averages ? 'Gasto promedio' : 'Gasto estimado'}</dt><dd>{detail ? kcal(detail.summary.expenditure, false, averages) : '—'}</dd></div>
-                  <div><dt>{averages ? 'Balance promedio' : 'Balance'}</dt><dd className={balanceTone(detail?.summary.balance ?? null)}>{detail ? kcal(detail.summary.balance, true, averages) : '—'}</dd></div>
-                </dl>
-                <p className="charts-secondary charts-detail-caption">
-                  <span className={`charts-detail-category ${balanceTone(detail?.summary.balance ?? null)}`}>{detail ? getBalanceLabel(detail.summary.balance) : 'Sin selección'}</span>
-                  {detail && averages && <span>{days(detail.summary.mealDays)} con comidas · {days(detail.summary.energyDays)} con datos energéticos</span>}
-                  {detail && !averages && <span className="charts-desktop-only">Valores registrados del día seleccionado.</span>}
-                </p>
-              </>}
+              <dl>
+                <div><dt>{averages ? 'Consumidas promedio' : 'Consumidas'}</dt><dd title={!detailStatus && detail?.summary.consumed === null ? 'Sin comidas registradas' : undefined}>{!detail || detailStatus ? '—' : detail.summary.consumed === null ? 'Sin comidas registradas' : kcal(detail.summary.consumed, false, averages)}</dd></div>
+                <div><dt>{averages ? 'Gasto promedio' : 'Gasto estimado'}</dt><dd>{detail && !detailStatus ? kcal(detail.summary.expenditure, false, averages) : '—'}</dd></div>
+                <div><dt>{averages ? 'Balance promedio' : 'Balance'}</dt><dd className={balanceTone(detail?.summary.balance ?? null)}>{detail && !detailStatus ? kcal(detail.summary.balance, true, averages) : '—'}</dd></div>
+              </dl>
+              <p className="charts-secondary charts-detail-caption">
+                <span className={`charts-detail-category ${balanceTone(detail?.summary.balance ?? null)}`}>{detail ? detailStatus ?? getBalanceLabel(detail.summary.balance) : 'Sin selección'}</span>
+                {detail && averages && <span>{days(detail.summary.mealDays)} con comidas · {days(detail.summary.energyDays)} con datos energéticos</span>}
+                {detail && !averages && !detailStatus && <span className="charts-desktop-only">Valores registrados del día seleccionado.</span>}
+              </p>
             </div>
           </>
         )}

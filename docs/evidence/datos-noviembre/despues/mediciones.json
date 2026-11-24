@@ -1,0 +1,78 @@
+{
+  "browser": "158.0.8127.36",
+  "rows": [
+    {
+      "width": 375,
+      "theme": "dark",
+      "summary": 259,
+      "plot": 556,
+      "hoverGrowth": 0,
+      "swipe": 105,
+      "detailGap": 63,
+      "year": 494
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "summary": 259,
+      "plot": 556,
+      "hoverGrowth": 0,
+      "detailGap": 63,
+      "year": 494
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "summary": 259,
+      "plot": 556,
+      "hoverGrowth": 0,
+      "detailGap": 107,
+      "year": 513
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "summary": 259,
+      "plot": 556,
+      "hoverGrowth": 0,
+      "detailGap": 107,
+      "year": 513
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "summary": 241,
+      "plot": 456,
+      "hoverGrowth": 0,
+      "detailGap": 63,
+      "year": 494
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "summary": 241,
+      "plot": 456,
+      "hoverGrowth": 0,
+      "detailGap": 63,
+      "year": 494
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "summary": 185,
+      "plot": 414,
+      "hoverGrowth": 0,
+      "detailGap": -475,
+      "year": 327
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "summary": 185,
+      "plot": 414,
+      "hoverGrowth": 0,
+      "detailGap": -475,
+      "year": 327
+    }
+  ]
+}
