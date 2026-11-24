@@ -1,0 +1,12 @@
+{
+  "errorAndRetry": true,
+  "goalRefresh": true,
+  "focusedTop": 120,
+  "delayedReplyAnchor": true,
+  "completeText": true,
+  "system": true,
+  "navigation": true,
+  "exactSuggestion": true,
+  "newConversation": true,
+  "simulatedCalls": 3
+}

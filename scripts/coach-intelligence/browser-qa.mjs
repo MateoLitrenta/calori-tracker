@@ -145,7 +145,7 @@ try {
           if (width < 768) assert.ok(data.openingGeometry?.gapToSuggestions >= 0 && data.openingGeometry.gapToSuggestions <= 24,
             `Opening options sit within 24px of the observation: ${data.openingGeometry?.gapToSuggestions}`);
         }
-        await page.getByText('Ver evidencia y límites', { exact: true }).click();
+        await page.locator('.chat-proactive-evidence summary').click();
         assert.ok((await page.locator('.chat-proactive-evidence').innerText()).length > 80, 'Evidence and limitations are available');
         const displayedInsight = await page.evaluate(() => window.__qa.expectedInsight());
         const beforeClick = performance.now();
@@ -176,7 +176,7 @@ try {
       assert.ok(geometry.action.height >= 40, 'CTA touch target'); assert.deepEqual(errors, []);
       const filename = `after-responsive-light-${width}.png`; await page.screenshot({ path: path.join(output, filename) });
       if (width < 400) {
-        await page.getByText('Ver evidencia y límites', { exact: true }).click();
+        await page.locator('.chat-proactive-evidence summary').click();
         await page.locator('.chat-proactive-action').scrollIntoViewIfNeeded();
         const expanded = await page.evaluate(() => {
           const card = document.querySelector('.chat-proactive'), composer = document.querySelector('.chat-composer').getBoundingClientRect(), action = document.querySelector('.chat-proactive-action').getBoundingClientRect();
@@ -193,7 +193,7 @@ try {
         });
         assert.ok(limit.visibleInsideCard, 'Full limitation can be read by scrolling the observation');
         await page.screenshot({ path: path.join(output, `after-evidence-scrolled-light-${width}.png`) });
-        await page.getByText('Ver evidencia y límites', { exact: true }).click();
+        await page.locator('.chat-proactive-evidence summary').click();
         assert.equal(await page.locator('.chat-proactive-evidence[open]').count(), 0);
         await page.locator('.chat-proactive > details > summary').click();
         assert.equal(await page.locator('.chat-proactive > details[open]').count(), 0);

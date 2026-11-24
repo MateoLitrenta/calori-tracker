@@ -13,19 +13,21 @@ export default function CoachGoalCard({ goal, history, today, children }: {
   const progress = evaluateCoachGoal(goal, history, today);
   const percent = progress.registered === null ? null : Math.min(100, Math.round(progress.registered / goal.target * 100));
   const unit = goal.type === 'workout_sessions' ? 'sesiones' : 'días';
-  const remainingUnit = progress.remainingToRegister === 1 ? goal.type === 'workout_sessions' ? 'sesión pendiente' : 'día pendiente' : `${unit} pendientes`;
   const state = goal.status === 'cancelled' ? 'Cancelado' : progress.classification === 'history_unavailable' ? 'Progreso no disponible'
     : progress.classification === 'registered_target_reached' ? 'Meta alcanzada'
       : progress.phase === 'ended' ? 'Período finalizado' : progress.phase === 'not_started' ? 'Por empezar' : 'En curso';
   return <article className="coach-goal-card" aria-label={goalLabel(goal)}>
     <div className="coach-goal-top"><span>{goal.type === 'workout_sessions' ? 'Entrenamiento' : 'Pasos'}</span><span className="coach-goal-state">{state}</span></div>
     <h3>{goalLabel(goal)}</h3>
-    <p className="coach-goal-period">{dateLabel(goal.startDate)} – {dateLabel(goal.endDate)}</p>
+    <p className="coach-goal-period">{dateLabel(goal.startDate)}{goal.endDate !== goal.startDate && ' – ' + dateLabel(goal.endDate)}</p>
     {progress.registered === null ? <p>No hay registros verificables para evaluar todo este período.</p> : <>
       <div className="coach-goal-count"><strong>{progress.registered}/{goal.target}</strong><span>{unit} con registros · {percent} %</span></div>
       <progress max={100} value={percent!} aria-label={`Progreso de ${goalLabel(goal)}`} />
-      <p>{progress.remainingToRegister === 0 ? 'Meta cubierta con tus registros.' : `${progress.remainingToRegister} ${remainingUnit} de registrar.`}</p>
-      {progress.unknownDays > 0 && <p className="coach-goal-note">{progress.unknownDays} {progress.unknownDays === 1 ? 'día' : 'días'} sin registros de {goal.type === 'workout_sessions' ? 'entrenamiento' : 'pasos'}. No confirman incumplimiento.</p>}
+      <p>{goal.type === 'workout_sessions' ? 'El avance se calcula con los entrenamientos que registraste.' : 'El avance cuenta los días registrados en los que alcanzaste tu umbral de pasos.'}</p>
+      <details className="coach-goal-coverage"><summary>Cobertura del registro</summary>
+        <p>{progress.remainingToRegister === 0 ? 'Meta cubierta con tus registros.' : `Para alcanzar la meta según tus registros: ${progress.remainingToRegister} ${progress.remainingToRegister === 1 ? goal.type === 'workout_sessions' ? 'sesión' : 'día' : unit}.`}</p>
+        <p>{progress.observedDays} de {progress.elapsedDays} {progress.elapsedDays === 1 ? 'día transcurrido' : 'días transcurridos'} con registros de {goal.type === 'workout_sessions' ? 'entrenamiento' : 'pasos'}.</p>
+      </details>
     </>}
     {progress.phase === 'ended' && state !== 'Período finalizado' && <p className="coach-goal-note">Período finalizado.</p>}
     {children}
@@ -37,7 +39,7 @@ export function CoachGoalCards({ resource, history, today, type, limit, children
 }) {
   if (resource.status === 'loading') return <p className="coach-goal-note" role="status">Cargando objetivos…</p>;
   if (resource.status === 'disabled') return <p className="coach-goal-note" role="status">Los objetivos persistentes todavía no están habilitados.</p>;
-  if (resource.status === 'error') return <div role="alert" className="coach-goal-list"><p>{resource.error}</p><button type="button" onClick={() => { void resource.reload(); }}>Volver a consultar</button></div>;
+  if (resource.status === 'error') return <div role="alert" className="coach-goal-list"><p>{resource.error || 'No se pudo consultar la lista de objetivos.'}</p><button type="button" onClick={() => { void resource.reload(); }}>Volver a consultar</button></div>;
   const goals = resource.goals.filter(goal => (!limit || goal.status === 'active') && (!type || goal.type === type));
   return <div className="coach-goal-list">
     <p className="coach-goal-note">Progreso actual · registros al {dateLabel(today)}</p>

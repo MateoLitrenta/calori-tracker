@@ -146,8 +146,8 @@
 }
 .chat-composer-form:focus-within { border-color: var(--fit-focus); }
 .chat-textarea {
-  flex: 1 1 0; min-width: 0; min-height: 44px; max-height: 124px; margin: 0; padding: 12px 9px;
-  resize: none; border-radius: var(--fit-control-radius); background: transparent; color: var(--fit-ink); font-size: 16px; line-height: 20px;
+  flex: 1 1 0; min-width: 0; min-height: max(44px, calc(1.25em + 24px)); max-height: 124px; margin: 0; padding: 12px 9px;
+  resize: none; border-radius: var(--fit-control-radius); background: transparent; color: var(--fit-ink); font-size: 16px; line-height: 1.25;
 }
 .chat-textarea::placeholder { color: var(--fit-quiet); opacity: 1; }
 .chat-composer-form :is(.chat-image-button, .chat-audio-button, .chat-send), .chat-image-remove {
@@ -211,9 +211,6 @@
 .chat-proposal-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--fit-rule); }
 .chat-proposal-actions button { flex: 1 1 auto; }
 
-@media (max-width: 1099px) {
-  .chat-heading-actions button span { display: none; }
-}
 @media (min-width: 1000px) {
   .chat-proactive-body { display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 0 16px; }
   .chat-proactive-observation { grid-column: 1 / -1; }
@@ -246,4 +243,58 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .chat-typing-dot, .chat-transcribe-spinner, .chat-message-new, .chat-confirmation { animation: none; }
+}
+
+/* One reading column inside the shared screen frame. Keep the composer mounted
+   at the same edge while the empty introduction gives way to messages. */
+.assistant-view > :is(.chat-messages, .chat-composer, .chat-proactive[data-conversation="active"]) {
+  width: min(100%, 54rem);
+  margin-inline: auto;
+}
+.assistant-view[data-welcome="true"] .chat-messages { flex: 0 1 auto; margin-block-start: auto; }
+.assistant-view[data-welcome="true"] .chat-composer { margin-block-end: auto; }
+.assistant-view[data-welcome="true"] .chat-message-list { flex: 0 0 auto; }
+.assistant-view[data-welcome="true"] .chat-scroll-end { display: none; }
+@media (max-height: 560px) {
+  .assistant-view[data-welcome="true"] .chat-composer { margin-block-end: 0; }
+}
+.chat-empty:has(.chat-proactive) {
+  padding: clamp(12px, 2vw, 24px);
+  border: 1px solid var(--fit-rule);
+  border-radius: var(--fit-radius);
+  background: var(--fit-surface);
+}
+.chat-empty .chat-proactive {
+  margin: 0;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+}
+.chat-empty .chat-proactive-heading { padding: 0 32px 8px 0; }
+.chat-empty .chat-proactive-toggle { top: 0; right: 0; }
+.chat-empty .chat-proactive-title { max-width: 32ch; font-size: clamp(1.5rem, 2.6vw, 2rem); }
+.chat-empty .chat-proactive-body { padding: 0; }
+.chat-empty .chat-empty-suggestions {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--fit-rule);
+}
+.chat-empty .chat-suggestion { background: var(--fit-page); gap: 8px; }
+.chat-heading-actions [aria-label="Mis objetivos"] { background: var(--fit-soft); color: var(--fit-accent); }
+@media (max-width: 767px) {
+  .assistant-view .chat-heading { flex-wrap: wrap; gap: 2px 8px; padding-block: 4px; }
+  .chat-heading-actions { flex: 1 1 100%; flex-wrap: wrap; }
+  .chat-heading-actions button { flex: 1 1 auto; max-width: 100%; padding-inline: 4px; line-height: 1.2; }
+  .chat-heading-actions button svg { flex-shrink: 0; }
+  .chat-heading-actions button:not(:first-child) svg { display: none; }
+  .assistant-view > .chat-proactive[data-conversation="active"] { width: calc(100% - 2 * var(--chat-inset)); }
+  .chat-empty .chat-proactive-body { display: flex; align-items: center; flex-wrap: wrap; gap: 0 12px; }
+  .chat-empty .chat-proactive-heading { padding-inline-end: 0; }
+  .chat-empty .chat-proactive-title { font-size: 1.45rem; }
+  .chat-empty .chat-proactive-observation { width: 100%; }
+  .chat-empty .chat-proactive-evidence[open] { flex-basis: 100%; }
+}
+@media (max-width: 340px) {
+  .chat-empty .chat-proactive-title { font-size: 1.25rem; }
 }

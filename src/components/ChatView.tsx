@@ -13,7 +13,7 @@ import { confirmCoachGoal } from '../services/coachGoals';
 import type { CoachGoalProposal } from '../utils/coachGoals';
 import { buildCoachCard, parseCoachCard, type CoachCardSnapshot } from '../utils/coachPresentation';
 import { buildCoachContext } from '../utils/coachContext';
-import { buildProactiveInsight } from '../utils/coachProactive';
+import { buildProactiveInsight, type ProactiveInsight } from '../utils/coachProactive';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, DailyRecord, MealType } from '../types';
@@ -146,7 +146,8 @@ function blobToBase64(blob: Blob): Promise<string> {
 function suggestionLabel(prompt: string) {
   if (prompt.includes('objetivo confirmado')) return 'Mi próximo paso';
   if (prompt.includes('antes de comparar')) return 'Revisar mis datos';
-  if (prompt.includes('entrenamiento')) return 'Mis entrenamientos';
+  if (prompt.includes('organizar mis próximos entrenamientos')) return 'Organizar entrenamientos';
+  if (prompt.includes('entrenamiento')) return 'Revisar entrenamientos';
   if (prompt.includes('pasos')) return 'Mis pasos';
   if (prompt.includes('completar mi registro')) return 'Completar mi registro';
   if (prompt.includes('mi actividad')) return 'Datos para mi actividad';
@@ -154,6 +155,45 @@ function suggestionLabel(prompt: string) {
   if (prompt.includes('días con comidas registradas')) return 'Mis registros de comida';
   if (prompt.includes('registrar mis comidas') || prompt.includes('registrar una comida')) return 'Registrar comidas';
   return prompt;
+}
+
+function periodLabel(start: string, end: string) {
+  const label = (day: string) => new Date(day + 'T12:00:00').toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
+  return start === end ? label(start) : label(start) + ' – ' + label(end);
+}
+
+function observationHeading(insight: ProactiveInsight) {
+  const m = insight.metrics;
+  switch (insight.kind) {
+    case 'goal':
+      return m.goalType === 'step_days'
+        ? `${m.registered} de ${m.target} días con ${Number(m.stepThreshold).toLocaleString('es-AR')} pasos o más`
+        : `${m.registered} de ${m.target} ${m.target === 1 ? 'entrenamiento registrado' : 'entrenamientos registrados'}`;
+    case 'nutrition_logging': return `Comidas registradas en ${m.mealDays} de 7 días`;
+    case 'training': return `${m.workoutCount} ${m.workoutCount === 1 ? 'entrenamiento registrado' : 'entrenamientos registrados'}`;
+    case 'steps': return `Pasos registrados en ${m.stepDays} de 7 días`;
+    case 'incomplete': return 'Hay registros de agua o peso';
+    case 'getting_started': return 'Todavía no hay registros recientes';
+    default: return insight.title;
+  }
+}
+
+function initialSuggestions(insight: ProactiveInsight) {
+  const otherTopics = insight.suggestions.filter(prompt => {
+    if (prompt.includes('objetivo confirmado')) return insight.kind !== 'goal';
+    if (prompt.includes('entrenamiento')) return insight.kind !== 'training';
+    if (prompt.includes('pasos')) return insight.kind !== 'steps';
+    if (prompt.includes('antes de comparar')) return insight.kind !== 'data_quality';
+    if (/comida|completar mi registro/.test(prompt)) return insight.kind !== 'nutrition_logging';
+    return true;
+  });
+  const labels = new Set<string>();
+  return otherTopics.filter(prompt => {
+    const label = suggestionLabel(prompt);
+    if (labels.has(label)) return false;
+    labels.add(label);
+    return true;
+  }).slice(0, 3);
 }
 
 export default function ChatView({ scrollContainer, readingPositions }: {
@@ -911,8 +951,54 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
     }
   };
 
+  const observation = !isPastConversation && currentContext && (
+    <aside className="chat-proactive" aria-label="Una observación para vos" data-insight-kind={proactiveInsight?.kind}
+      data-conversation={hasMessages ? 'active' : 'empty'}>
+      {proactiveInsight ? <details open={proactiveExpanded} onToggle={event => setProactiveExpanded(event.currentTarget.open)}>
+        <summary className="chat-proactive-heading">
+          <span className="chat-proactive-eyebrow"><ChartLineUp size={17} weight="bold" aria-hidden="true" />{hasMessages ? 'Observación del Coach' : proactiveInsight.kind === 'goal' ? 'Tu objetivo' : 'Tus registros'}</span>
+          {!hasMessages && <span className="chat-proactive-title">{observationHeading(proactiveInsight)}</span>}
+          <CaretDown className="chat-proactive-toggle" size={18} weight="bold" aria-hidden="true" />
+        </summary>
+        <div className="chat-proactive-body">
+          {hasMessages && <h3 className="chat-proactive-title">{observationHeading(proactiveInsight)}</h3>}
+          <p className="chat-proactive-observation">{proactiveInsight.kind === 'goal' ? 'Objetivo confirmado · ' : 'Período · '}
+            {periodLabel(proactiveInsight.period.startDate, proactiveInsight.period.endDate)}
+          </p>
+          <button type="button" className="chat-proactive-action"
+            onClick={() => {
+              if (!hasMessages) textInputRef.current?.focus({ preventScroll: true });
+              return handleSend(proactiveInsight.prompt, undefined, proactiveInsight.id);
+            }}
+            disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !currentContext || goalStatus === 'loading'}>
+            {proactiveInsight.kind === 'goal' ? 'Consultar mi avance' : 'Preguntar al Coach'}<ArrowRight size={16} weight="bold" aria-hidden="true" />
+          </button>
+          <details className="chat-proactive-evidence">
+            <summary>En qué se basa <CaretDown size={13} aria-hidden="true" /></summary>
+            <p>{proactiveInsight.observation}</p>
+            <p>Hoy sigue en curso.</p>
+            <ul>{proactiveInsight.evidence.map(item => <li key={item}>{item}</li>)}</ul>
+            <p>{proactiveInsight.limitation}</p>
+          </details>
+          {goalStatus === 'loading' && observationStatus !== 'error' &&
+            <p role="status" className="chat-observation-feedback">Actualizando tus objetivos…</p>}
+          {observationStatus === 'error' && <div className="chat-observation-feedback">
+            <p role="status">{goalStatus === 'loading' ? 'Consultando tus objetivos…' : 'No pude consultar tus objetivos. Esta observación usa tus registros.'}</p>
+            <button type="button" className="chat-secondary" disabled={goalStatus === 'loading'}
+              onClick={event => {
+                event.currentTarget.closest('.chat-proactive')?.querySelector('summary')?.focus({ preventScroll: true });
+                void goals.reload();
+              }}>Reintentar consulta de objetivos</button>
+          </div>}
+        </div>
+      </details> : <p role="status" className="chat-observation-loading">Consultando tus objetivos…</p>}
+    </aside>
+  );
+  const welcome = !isPastConversation && !hasMessages && !!currentContext && !!proactiveInsight;
+  const starters = welcome ? initialSuggestions(proactiveInsight) : [];
+
   return (
-    <div className="assistant-view">
+    <div className="assistant-view" data-welcome={welcome}>
       
       {/* Header */}
       <header className="chat-heading">
@@ -931,7 +1017,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             aria-label="Historial" aria-expanded={showHistory} title="Historial">
             <ClockCounterClockwise className="chat-action-icon" size={19} aria-hidden="true" /><span>Historial</span>
           </button>
-          <button type="button" onClick={startConversation} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || isPastConversation}
+          <button type="button" onClick={startConversation} disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || hasPending || isPastConversation}
             aria-label="Nueva conversación" title="Nueva conversación">
             <Plus className="chat-action-icon" size={19} aria-hidden="true" /><span>Nueva conversación</span>
           </button>
@@ -958,43 +1044,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         </div>
       )}
 
-      {!isPastConversation && currentContext && (
-        <aside className="chat-proactive" aria-label="Una observación para vos" data-insight-kind={proactiveInsight?.kind}
-          data-conversation={hasMessages ? 'active' : 'empty'}>
-          {proactiveInsight ? <details open={proactiveExpanded} onToggle={event => setProactiveExpanded(event.currentTarget.open)}>
-            <summary className="chat-proactive-heading">
-              <span className="chat-proactive-eyebrow"><ChartLineUp size={17} weight="bold" aria-hidden="true" />{hasMessages ? 'Observación del Coach' : 'Tus registros'}</span>
-              {!hasMessages && <span className="chat-proactive-title">{proactiveInsight.title}</span>}
-              <CaretDown className="chat-proactive-toggle" size={18} weight="bold" aria-hidden="true" />
-            </summary>
-            <div className="chat-proactive-body">
-              {hasMessages && <h3 className="chat-proactive-title">{proactiveInsight.title}</h3>}
-              <p className="chat-proactive-observation">{proactiveInsight.observation}</p>
-              <button type="button" className="chat-proactive-action"
-                onClick={() => handleSend(proactiveInsight.prompt, undefined, proactiveInsight.id)}
-                disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !currentContext || goalStatus === 'loading'}>
-                {proactiveInsight.actionLabel}<ArrowRight size={16} weight="bold" aria-hidden="true" />
-              </button>
-              <details className="chat-proactive-evidence">
-                <summary>Ver evidencia y límites <CaretDown size={13} aria-hidden="true" /></summary>
-                <p>{new Date(`${proactiveInsight.period.startDate}T12:00:00`).toLocaleDateString('es-AR')} – {new Date(`${proactiveInsight.period.endDate}T12:00:00`).toLocaleDateString('es-AR')} · Hoy sigue en curso.</p>
-                <ul>{proactiveInsight.evidence.map(item => <li key={item}>{item}</li>)}</ul>
-                <p>{proactiveInsight.limitation}</p>
-              </details>
-              {goalStatus === 'loading' && observationStatus !== 'error' &&
-                <p role="status" className="chat-observation-feedback">Actualizando tus objetivos…</p>}
-              {observationStatus === 'error' && <div className="chat-observation-feedback">
-                <p role="status">{goalStatus === 'loading' ? 'Consultando tus objetivos…' : 'No pude consultar tus objetivos. Esta observación usa tus registros.'}</p>
-                <button type="button" className="chat-secondary" disabled={goalStatus === 'loading'}
-                  onClick={event => {
-                    event.currentTarget.closest('.chat-proactive')?.querySelector('summary')?.focus({ preventScroll: true });
-                    void goals.reload();
-                  }}>Reintentar consulta de objetivos</button>
-              </div>}
-            </div>
-          </details> : <p role="status" className="chat-observation-loading">Consultando tus objetivos…</p>}
-        </aside>
-      )}
+      {hasMessages && observation}
 
       {/* Messages Area */}
       <section ref={messagesScrollRef} className="chat-messages"
@@ -1088,10 +1138,14 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         )}
         {messages.length === 0 && (
           <div className="chat-empty">
-            <p className="chat-empty-label">{isPastConversation ? 'No hay mensajes en esta conversación.' : suggestions.length ? 'También podés empezar por acá' : !currentContext ? 'Cargando tus registros…' : null}</p>
-            {!isPastConversation && suggestions.length > 0 && <div className="chat-empty-suggestions">
-              {suggestions.slice(0, 3).map(suggestion => (
-                <button key={suggestion} type="button" onClick={() => handleSend(suggestion)}
+            {observation}
+            {isPastConversation ? <p>No hay mensajes en esta conversación.</p> : !currentContext ? <p role="status">Cargando tus registros…</p> : null}
+            {starters.length > 0 && <div className="chat-empty-suggestions" role="group" aria-label="Preguntas sugeridas">
+              {starters.map(suggestion => (
+                <button key={suggestion} type="button" onClick={() => {
+                  textInputRef.current?.focus({ preventScroll: true });
+                  return handleSend(suggestion);
+                }}
                   disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pendingImage || hasPending || !activeProfile || goalStatus === 'loading'}
                   className="chat-suggestion" title={suggestion} aria-description={suggestion}>
                   {suggestionLabel(suggestion)}<ArrowRight size={16} aria-hidden="true" />
@@ -1211,8 +1265,9 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 void sendComposer();
               }
             }}
-            disabled={isTyping || isRequestingAudio || isRecording || isProcessingAudio || !!pending || !activeProfile}
-            placeholder="Tu mensaje…"
+            readOnly={isTyping}
+            disabled={isRequestingAudio || isRecording || isProcessingAudio || !!pending || !activeProfile}
+            placeholder="Escribí…"
             className="chat-textarea"
           />
           <div ref={photoMenuRef} className="chat-photo-control relative flex-none"

@@ -202,6 +202,11 @@ test('goal progress is recalculated from authenticated activity and switching ac
   state.workouts.set(own, [{ date: dates[2], user_id: own }]);
   const selected = buildProactiveInsight(buildCoachContext(selectedProfile, today), [goal]);
   assert.equal(selected.metrics.registered, 2);
+  assert.equal(document.querySelector('.chat-proactive-title').textContent, '2 de 3 entrenamientos registrados');
+  assert.match(document.querySelector('.chat-proactive-action').textContent, /Consultar mi avance/);
+  const starters = [...document.querySelectorAll('.chat-empty-suggestions button')];
+  assert.ok(starters.length > 0 && starters.length <= 3);
+  assert.ok(starters.every(el => !el.title.includes('objetivo confirmado')));
   await state.click();
   const recalculated = observationFrom(state.prompts[0]);
   assert.equal(state.receivedBodies[0].proactiveInsightId, selected.id);

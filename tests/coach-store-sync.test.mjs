@@ -520,9 +520,9 @@ test('goal cards use the official aggregator for zero/partial/reached/ended/miss
   for (const [count, percent, remaining] of [[0, 0, 3], [1, 33, 2], [3, 100, 0], [5, 100, 0]]) {
     const html = markup(goal, context(count));
     assert.match(html, new RegExp(`${count}/3`)); assert.match(html, new RegExp(`value="${percent}"`));
-    assert.ok(html.includes(remaining ? `${remaining} sesiones pendientes` : 'Meta cubierta'));
+    assert.ok(html.includes(remaining ? `Para alcanzar la meta según tus registros: ${remaining} sesiones` : 'Meta cubierta'));
   }
-  assert.match(markup(goal, context(0)), /No confirman incumplimiento/);
+  assert.match(markup(goal, context(0)), /El avance se calcula con los entrenamientos que registraste/);
   assert.match(markup({ ...goal, endDate: '2026-10-20' }, context(0)), /Período finalizado/);
   assert.match(markup({ ...goal, startDate: '2026-10-22' }, context(0)), /Por empezar/);
   assert.match(markup({ ...goal, status: 'cancelled' }, context(0)), /Cancelado/);
@@ -544,12 +544,12 @@ test('Mis objetivos reviews edits and cancellations explicitly, saves once, refr
   for (let ancestor = dialog.parentElement; ancestor; ancestor = ancestor.parentElement) assert.notEqual(ancestor.inert, true, 'A desktop modal must never have an inert ancestor');
   assert.equal(state.document.activeElement.getAttribute('aria-label'), 'Cerrar formulario');
   assert.match(dialog.textContent, /0\/3/);
-  await click(state, 'Modificar'); await inputValue(state, '.coach-goal-edit input', '2');
+  await click(state, 'Editar objetivo'); await inputValue(state, '.coach-goal-edit input', '2');
   await click(state, 'Revisar cambio');
   assert.match(dialog.textContent, /Antes: 3 entrenamientos. Nueva meta: 2 entrenamientos/);
   assert.equal(state.goalWrites, 0);
   await click(state, 'Descartar propuesta'); assert.equal(state.goalWrites, 0);
-  await click(state, 'Modificar'); await inputValue(state, '.coach-goal-edit input', '2'); await click(state, 'Revisar cambio');
+  await click(state, 'Editar objetivo'); await inputValue(state, '.coach-goal-edit input', '2'); await click(state, 'Revisar cambio');
   let release; state.writeGate = new Promise(resolve => { release = resolve; });
   const confirm = [...dialog.querySelectorAll('button')].find(button => button.textContent === 'Confirmar modificación');
   await act(async () => { confirm.click(); confirm.click(); await turn(); });
@@ -572,7 +572,7 @@ test('failed saves and reads hide previous progress; version conflicts require a
   await goalManagement(state); await click(state, 'Coach'); await click(state, 'Mis objetivos');
   const normalRead = state.fetchGoals;
   state.fetchGoals = async (...args) => { if (state.readFailure) throw new Error('No pudimos consultar tus objetivos.'); return normalRead(...args); };
-  await click(state, 'Modificar'); await inputValue(state, '.coach-goal-edit input', '2'); await click(state, 'Revisar cambio');
+  await click(state, 'Editar objetivo'); await inputValue(state, '.coach-goal-edit input', '2'); await click(state, 'Revisar cambio');
   state.writeFailure = true; state.readFailure = true;
   await click(state, 'Confirmar modificación');
   assert.equal(state.goals[0].target, 3); assert.equal(state.goals[0].version, 1);
@@ -581,7 +581,7 @@ test('failed saves and reads hide previous progress; version conflicts require a
   assert.ok(!state.document.querySelector('[role="dialog"]').textContent.includes('Objetivo actualizado.'));
   await click(state, 'Volver a objetivos'); state.readFailure = false; state.writeFailure = false;
   await click(state, 'Volver a consultar');
-  await click(state, 'Modificar'); await inputValue(state, '.coach-goal-edit input', '2'); await click(state, 'Revisar cambio');
+  await click(state, 'Editar objetivo'); await inputValue(state, '.coach-goal-edit input', '2'); await click(state, 'Revisar cambio');
   state.goals[0] = { ...state.goals[0], target: 4, version: 2 };
   await click(state, 'Confirmar modificación');
   assert.equal(state.goals[0].target, 4); assert.equal(state.goals[0].version, 2);
@@ -597,13 +597,13 @@ test('late goal reads and pending goal edits cannot cross accounts; disabled fla
   const { CoachGoalsError } = await import(await compile(path.join(rootDir, 'services/coachGoals.ts')));
   const normalRead = state.fetchGoals;
   state.fetchGoals = async () => { throw new CoachGoalsError('Deshabilitado.', 'goals_disabled'); };
-  await click(state, 'Actualizar objetivos');
+  await click(state, 'Actualizar lista');
   assert.match(state.document.querySelector('[role="dialog"]').textContent, /no están habilitados/);
   assert.equal(state.document.querySelector('.coach-goal-card'), null);
   assert.equal(state.document.querySelector('.coach-goal-actions'), null);
   state.fetchGoals = normalRead;
   await click(state, 'Cerrar formulario'); await click(state, 'Mis objetivos');
-  await click(state, 'Modificar'); await inputValue(state, '.coach-goal-edit input', '2'); await click(state, 'Revisar cambio');
+  await click(state, 'Editar objetivo'); await inputValue(state, '.coach-goal-edit input', '2'); await click(state, 'Revisar cambio');
   let releaseWrite; state.writeGate = new Promise(resolve => { releaseWrite = resolve; });
   await click(state, 'Confirmar modificación');
   let releaseRead;

@@ -100,11 +100,13 @@ test('Coach empty state contains at most three suggestions and disappears with s
   const empty = render();
   const emptyState = nodes(empty, element => hasClass(element, 'chat-empty'))[0];
   assert.ok(emptyState);
-  assert.match(renderToStaticMarkup(emptyState), /También podés empezar por acá/);
+  assert.match(renderToStaticMarkup(emptyState), /Preguntas sugeridas/);
   assert.equal(nodes(empty, element => hasClass(element, 'chat-proactive')).length, 1);
   const suggestions = nodes(emptyState, element => hasClass(element, 'chat-empty-suggestions'))[0];
   assert.ok(suggestions);
-  assert.equal(nodes(suggestions, element => element.type === 'button').length, 3);
+  const buttons = nodes(suggestions, element => element.type === 'button');
+  assert.ok(buttons.length > 0 && buttons.length <= 3);
+  assert.equal(new Set(buttons.map(b => b.props.title)).size, buttons.length);
   const conversation = render([
     { id: 'user-message', role: 'user', text: '¿Cómo estuvo mi día?' },
     { id: 'coach-message', role: 'bot', text: 'Revisemos tus registros de hoy.' },
