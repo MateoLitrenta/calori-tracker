@@ -272,7 +272,7 @@ test('grouped periods keep accumulated balance and hide daily controls and recor
       profile, record: base, dateStr, records, onUpdateRecord() {},
       selectedGroup: { type, label: 'Período', dates: [dateStr] },
     }));
-    for (const text of ['Balance acumulado', '-698 kcal', 'Promedio diario:', '1 días con datos.']) {
+    for (const text of ['Balance acumulado', '-698 kcal', 'Promedio diario:', '1 día con datos.']) {
       assert.ok(html.includes(text));
     }
     assert.doesNotMatch(html, /daily-habits|daily-quick-actions|daily-logs|Ver desglose/);
@@ -605,6 +605,13 @@ test('meal photo selection, replacement, removal and AI proposal stay in the exi
   assert.match(renderToStaticMarkup(view()), /<h5[^>]*>Valor ajustado<\/h5>/);
   assert.doesNotMatch(renderToStaticMarkup(view()), /<h5[^>]*>Estimación con IA<\/h5>/);
   assert.equal(field(view, 'Kcal').props.value, 450);
+  assert.match(renderToStaticMarkup(view()), /Se guardarán 450 kcal/);
+  assert.match(renderToStaticMarkup(view()), /Estimación original: 400 kcal/);
+  for (const invalid of ['', '-2', '1.5']) {
+    fill(view, 'Kcal', invalid);
+    assert.match(renderToStaticMarkup(view()), /Ingresá un valor válido/);
+    assert.doesNotMatch(renderToStaticMarkup(view()), /Se guardarán/);
+  }
   assert.ok(shell(view));
 });
 

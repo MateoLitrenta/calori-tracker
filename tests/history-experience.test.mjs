@@ -229,7 +229,7 @@ test('daily history channels retain recorded zero, unknown intake and missing en
   for (const date of [yesterday, mealDay, partialDay]) {
     await view.selectDay(date);
     assert.deepEqual(channelText(), [
-      ['Calorías consumidas', date === partialDay ? 'Sin comidas' : date === mealDay ? '0 kcal' : '650 kcal'],
+      ['Calorías consumidas', date === partialDay ? 'Sin comidas registradas' : date === mealDay ? '0 kcal' : '650 kcal'],
       ['Gasto estimado', calculateDailyExpenditure(profile, initial[date]).toLocaleString('es-AR') + ' kcal'],
     ]);
     assert.equal(view.heading(), today);
@@ -323,7 +323,7 @@ test('week and annual month averages preserve the official mixed-period denomina
     [today]: record(today, { water: 2500 }),
   };
   const view = await mount(t, initial);
-  const expected = aggregateEnergy(initial, ['2026-11-08', '2026-11-09', mealDay, yesterday, today, '2026-11-13', '2026-11-14'], profile, today);
+  const expected = aggregateEnergy(initial, ['2026-11-09', mealDay, yesterday, today, '2026-11-13', '2026-11-14', '2026-11-15'], profile, today);
   await view.scale('Semana');
   const period = document.querySelector('.ah-period-summary .ah-balance-reading');
   assert.ok(period);
@@ -331,7 +331,7 @@ test('week and annual month averages preserve the official mixed-period denomina
   assert.match(period.textContent, /provisional/i);
   assert.ok(period.textContent.includes(expected.averageBalance.toLocaleString('es-AR')));
   assert.match(period.textContent, /kcal\/día/);
-  assert.match(document.querySelector('.ah-period-boundary').textContent, /Domingo a sábado/);
+  assert.match(document.querySelector('.ah-period-boundary').textContent, /Lunes a domingo/);
   assert.match(document.querySelector('.ah-period-summary .ah-average-basis').textContent,
     /Historial incluye 1 día sin comidas con pasos o ejercicio\. Datos usa sólo días con comidas/);
   await view.scale('Año');
@@ -714,13 +714,13 @@ for (const currentHasActivity of [true, false]) {
   });
 }
 
-test('week shows seven exact Sunday-aligned dates and navigates one real week at a time', async t => {
+test('week shows seven exact Monday-aligned dates and navigates one real week at a time', async t => {
   const view = await mount(t);
   await view.scale('Semana');
   const dates = () => [...document.querySelectorAll('.history-day[data-date]')].map(day => day.dataset.date);
-  assert.deepEqual(dates(), ['2026-11-08', '2026-11-09', '2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13', '2026-11-14']);
+  assert.deepEqual(dates(), ['2026-11-09', '2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13', '2026-11-14', '2026-11-15']);
   await view.click(view.button('Semana anterior'));
-  assert.deepEqual(dates(), ['2026-11-01', '2026-11-02', '2026-11-03', '2026-11-04', '2026-11-05', '2026-11-06', '2026-11-07']);
+  assert.deepEqual(dates(), ['2026-11-02', '2026-11-03', '2026-11-04', '2026-11-05', '2026-11-06', '2026-11-07', '2026-11-08']);
   await view.click(view.button('Semana siguiente'));
   assert.ok(view.day(today));
   assert.equal(view.heading(), today);

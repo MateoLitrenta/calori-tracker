@@ -1,5 +1,7 @@
 # Política de semanas y períodos · Etapa 1
 
+**Actualización del 24/11/2026.** Se aprobó lunes a domingo para las tres vistas. La tabla siguiente documenta la base histórica. La política vigente y sus coberturas figuran en [Estado actual](ESTADO_ACTUAL.md).
+
 La base auditada es `c365e1e6f236ab76d17b46cbd8fe1ec9eace8831`, que integra el PR #79. Esta etapa conserva los intervalos actuales y hace visibles sus límites. Adoptar lunes a domingo en Inicio e Historial requiere aprobación explícita porque cambia los días incluidos en el resumen semanal de Historial.
 
 ## Política implementada en la base

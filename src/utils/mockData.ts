@@ -1,12 +1,12 @@
-import { addDays, subDays, startOfWeek, endOfWeek } from 'date-fns';
+import { addDays, subDays, startOfISOWeek, endOfISOWeek } from 'date-fns';
 import type { DailyRecordsMap, MealType } from '../types';
 import { formatDateStr, generateUUID } from './helpers';
 
 export const generateMockRecords = (months: number): DailyRecordsMap => {
   const records: DailyRecordsMap = {};
   const today = new Date();
-  const startDate = startOfWeek(subDays(today, months * 30), { weekStartsOn: 0 }); // Sunday
-  const endDate = endOfWeek(today, { weekStartsOn: 0 }); // Saturday
+  const startDate = startOfISOWeek(subDays(today, months * 30)); // Monday
+  const endDate = endOfISOWeek(today); // Sunday
 
   const daysToGenerate = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
 

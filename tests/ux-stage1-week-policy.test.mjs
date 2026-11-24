@@ -13,18 +13,18 @@ const record = (calories, steps = 0) => ({ meals: calories === null ? [] : [{ ca
   workouts: [], water: 0, steps });
 const bounds = dates => [dates[0], dates.at(-1)];
 
-test('the existing week policies remain explicit at month, year and leap boundaries', () => {
+test('all calendar weeks coincide at month, year and leap boundaries', () => {
   const examples = [
-    ['2026-11-17', ['2026-11-15', '2026-11-21'], ['2026-11-16', '2026-11-22']],
-    ['2026-11-01', ['2026-11-01', '2026-11-07'], ['2026-10-26', '2026-11-01']],
-    ['2027-01-01', ['2026-12-27', '2027-01-02'], ['2026-12-28', '2027-01-03']],
-    ['2024-02-29', ['2024-02-25', '2024-03-02'], ['2024-02-26', '2024-03-03']],
+    ['2026-11-17', ['2026-11-16', '2026-11-22']],
+    ['2026-11-01', ['2026-10-26', '2026-11-01']],
+    ['2027-01-01', ['2026-12-28', '2027-01-03']],
+    ['2024-02-29', ['2024-02-26', '2024-03-03']],
   ];
-  for (const [day, sunday, monday] of examples) {
+  for (const [day, monday] of examples) {
     const journal = homeWeek(day);
     const history = buildHistoryPeriods(new Date(day + 'T12:00:00')).week.at(-1).dates;
     const charts = buildChartStats(profile, 'Semana', day);
-    assert.deepEqual(bounds(journal), sunday);
+    assert.deepEqual(bounds(journal), monday);
     assert.deepEqual(history, journal);
     assert.deepEqual([charts.start, charts.end], monday);
     assert.equal(charts.buckets.length, 7);
@@ -33,28 +33,19 @@ test('the existing week policies remain explicit at month, year and leap boundar
   assert.equal(moveHomeWeek('2026-12-30', 1, '2027-01-10'), '2027-01-06');
 });
 
-test('the unapproved Monday proposal changes the history sample even with the same energy formula', () => {
-  const records = {
-    '2026-11-15': record(2500),
-    '2026-11-16': record(2000),
-    '2026-11-17': record(null, 1000),
-    '2026-11-22': record(2800),
-  };
-  const frozen = structuredClone(records);
-  const sunday = homeWeek('2026-11-17');
-  // Counterfactual inputs only. This does not switch a product policy.
-  const monday = ['2026-11-16', '2026-11-17', '2026-11-18', '2026-11-19',
-    '2026-11-20', '2026-11-21', '2026-11-22'];
-  assert.equal(calculateBMR(profile), 1618);
-  const original = aggregateEnergy(records, sunday, profile, '2026-11-17');
-  const proposed = aggregateEnergy(records, monday, profile, '2026-11-17');
-  assert.deepEqual([original.days, original.consumed, original.expenditure, original.averageBalance],
-    [3, 4500, 4894, -131]);
-  assert.deepEqual([proposed.days, proposed.consumed, proposed.expenditure, proposed.averageBalance],
-    [2, 2000, 3276, -638]);
-  assert.equal(aggregateEnergy(records, sunday, profile, '2026-11-22').averageBalance, -131);
-  assert.equal(aggregateEnergy(records, monday, profile, '2026-11-22').averageBalance, -31);
-  assert.deepEqual(records, frozen);
+test('Sunday and Monday participate in separate weeks in all three views', () => {
+  const bmr = calculateBMR(profile);
+  const records = { '2026-11-22': record(bmr - 686), '2026-11-23': record(bmr + 734) };
+  for (const [day, balance] of [['2026-11-22', -686], ['2026-11-23', 734]]) {
+    const journal = homeWeek(day);
+    const history = buildHistoryPeriods(new Date(day + 'T12:00:00')).week.at(-1).dates;
+    const charts = buildChartStats({ ...profile, records }, 'Semana', day);
+    assert.deepEqual(history, journal);
+    assert.deepEqual(charts.buckets.map(bucket => bucket.start), journal);
+    assert.equal(aggregateEnergy(records, history, profile, day).averageBalance, balance);
+    assert.equal(charts.summary.balance, balance);
+    assert.equal(charts.summary.mealDays, 1);
+  }
 });
 
 test('monthly chart groups and rolling observation windows retain their distinct boundaries', () => {
@@ -112,7 +103,7 @@ test('local calendar dates and DST-safe labels are preserved across distinct dev
     const actual = JSON.parse(child.stdout);
     assert.equal(actual.day, day, zone);
     assert.deepEqual(actual.chart, chart, zone);
-    assert.deepEqual(actual.dates.map(bounds), [['2026-03-08', '2026-03-14'], ['2026-11-01', '2026-11-07']]);
+    assert.deepEqual(actual.dates.map(bounds), [['2026-03-02', '2026-03-08'], ['2026-10-26', '2026-11-01']]);
     assert.ok(actual.dates.every(dates => new Set(dates).size === 7));
   }
 });

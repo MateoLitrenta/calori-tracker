@@ -294,7 +294,7 @@ test('chart detail keeps missing values honest in the compact strip', () => {
   const detail = nodes(tree, element => element.props.id === 'charts-bucket-detail')[0];
   assert.match(html(detail), /Sin comidas registradas/);
   const consumed = nodes(detail, element => element.type === 'dd')[0];
-  assert.equal(consumed.props.children, 'Sin comidas');
+  assert.equal(consumed.props.children, 'Sin comidas registradas');
   assert.equal(consumed.props.title, 'Sin comidas registradas');
   assert.match(html(detail), /2\.080 kcal/);
   assert.match(html(detail), /Sin datos/);
@@ -472,7 +472,7 @@ test('the visible summary explains unequal samples and changes its explanation w
   assert.equal(nodes(nodes(summary(mixed.tree), element => element.type === 'details')[0],
     element => element.props.className === 'charts-summary-note').length, 0);
   const withMeals = render({ '2026-09-28': weeklyRecords['2026-09-28'], '2026-09-30': weeklyRecords['2026-09-30'] });
-  assert.match(html(note(withMeals.tree)), /los mismos 2 días con comidas/);
+  assert.match(html(note(withMeals.tree)), /sobre 2 días con comidas/);
   assert.match(html(note(withMeals.tree)), /tener registros no implica que estén completos/);
   assert.doesNotMatch(html(note(withMeals.tree)), /días de actividad sin comidas/);
   const activity = render({ '2026-09-29': weeklyRecords['2026-09-29'] });
@@ -540,4 +540,16 @@ test('comparison discloses current cutoff, full previous interval and each actua
   assert.match(html(section), /período actual está en curso/);
   assert.match(html(section), /anterior abarca el calendario completo/);
   assert.doesNotMatch(html(section), /mejor|peor/i);
+});
+
+test('future, empty, and recorded days stay distinct in the weekly detail', () => {
+  const records = { '2026-09-28': weeklyRecords['2026-09-28'], '2026-10-02': record('2026-10-02', { steps: 567 }) };
+  for (const [day, label] of [['2026-10-01', 'Fecha futura'], ['2026-09-29', 'Sin registros']]) {
+    const { tree, html: screen } = render(records, 'Semana', day);
+    const detail = html(nodes(tree, e => e.props.id === 'charts-bucket-detail')[0]);
+    assert.ok(detail.includes(label));
+    assert.doesNotMatch(detail, /Sin comidas|0 kcal/);
+    assert.match(screen, /567 pasos/);
+    assert.match(screen, /sobre 1 día con comidas/);
+  }
 });

@@ -1,13 +1,13 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { CaretLeft, CaretRight } from '@phosphor-icons/react';
-import { addDays, format, parseISO, startOfWeek } from 'date-fns';
+import { addDays, format, parseISO, startOfISOWeek } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 import EntryFormShell from './EntryFormShell';
 import { formatDateStr } from '../utils/helpers';
 import { homeDateBounds, homeMonth, isHomeDate, moveHomeMonth } from '../utils/homeDateNavigation';
 import './HomeDatePicker.css';
 
-const weekdays = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+const weekdays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
 export default function HomeDatePicker({ selectedDateStr, today, onSelectDate, onClose }: {
   selectedDateStr: string;
@@ -33,7 +33,7 @@ export default function HomeDatePicker({ selectedDateStr, today, onSelectDate, o
     else setBlocked(true);
   };
   const keydown = (event: KeyboardEvent<HTMLButtonElement>, date: string) => {
-    const parsed = parseISO(date), start = startOfWeek(parsed, { weekStartsOn: 0 });
+    const parsed = parseISO(date), start = startOfISOWeek(parsed);
     let next: string | undefined;
     switch (event.key) {
       case 'ArrowLeft': next = formatDateStr(addDays(parsed, -1)); break;

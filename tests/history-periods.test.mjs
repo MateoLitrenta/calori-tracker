@@ -6,7 +6,7 @@ import { aggregateEnergy } from '../src/utils/helpers.ts';
 const profile = { age: 30, sex: 'Masculino', weight: 70, height: 170, goal: 'Mantenimiento' };
 const record = calories => ({ meals: [{ calories }], workouts: [], water: 0, steps: 0 });
 
-test('calendar keeps the existing Sunday-aligned year, 53 weeks, twelve months and two calendar years', () => {
+test('calendar keeps the existing Monday-aligned year, 53 weeks, twelve months and two calendar years', () => {
   for (const stamp of ['2026-01-01', '2026-10-22', '2024-02-29', '2028-12-31']) {
     const today = new Date(stamp + 'T12:00:00');
     const calendar = buildHistoryPeriods(today);
@@ -22,7 +22,7 @@ test('calendar keeps the existing Sunday-aligned year, 53 weeks, twelve months a
     assert.equal(new Set(days).size, days.length);
     assert.equal(days.at(-1), stamp);
     assert.ok(days.every(date => date <= stamp));
-    assert.equal(new Date(days[0] + 'T12:00:00').getDay(), 0);
+    assert.equal(new Date(days[0] + 'T12:00:00').getDay(), 1);
     assert.equal(calendar.week[0].dates[0], days[0]);
     for (const label of calendar.monthLabels) {
       assert.ok(calendar.columns[label.colIndex].some(date => date?.endsWith('-01')));
@@ -34,7 +34,8 @@ test('ranges preserve leap days, cross-year weeks and partial current months/yea
   const calendar = buildHistoryPeriods(new Date('2024-02-29T12:00:00'));
   assert.equal(calendar.month.at(-1).dates.length, 29);
   assert.equal(calendar.year.at(-1).dates.length, 366);
-  assert.ok(calendar.week.some(week => week.dates[0] < '2024-01-01' && week.dates.at(-1) >= '2024-01-01'));
+  const newYear = buildHistoryPeriods(new Date('2025-01-01T12:00:00')).week.at(-1);
+  assert.deepEqual([newYear.dates[0], newYear.dates.at(-1)], ['2024-12-30', '2025-01-05']);
   const today = '2026-10-22';
   const current = buildHistoryPeriods(new Date(today + 'T12:00:00'));
   const records = { '2026-10-20': record(1618), '2026-10-22': record(1800), '2026-10-23': record(999999),
