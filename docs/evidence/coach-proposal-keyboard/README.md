@@ -24,13 +24,15 @@ No se modifica el formulario independiente de Inicio, el protocolo de guardado, 
 Ejecutado localmente:
 
 ```bash
-node --test tests/coach-viewport.test.mjs tests/coach-store-sync.test.mjs
+node --test tests/coach-viewport.test.mjs tests/coach-store-sync.test.mjs tests/chat-view.test.mjs tests/coach-proactive-flow.test.mjs
 npm run lint
 npm run build
 git diff --check
 ```
 
-Resultado: **38/38 pruebas focalizadas**, sin omisiones. TypeScript, build y diff aprobados. Lint: cero errores y las diez advertencias de la base. Vite conserva el aviso del bundle principal mayor de 500 kB.
+Resultado: **67/67 pruebas focalizadas**, sin omisiones. TypeScript, build y diff aprobados. Lint: cero errores y las diez advertencias de la base. Vite conserva el aviso del bundle principal mayor de 500 kB.
+
+La primera CI sobre `124a0472` encontró una importación sin extensión que impedía cargar dos archivos de pruebas mediante Node ESM. Se explicitó `.ts` en la importación del helper y se completó `ownerDocument.activeElement` en el lector simulado de la prueba de anclaje. Se mantienen todas sus aserciones. Los cuatro archivos afectados ahora ejecutan sus 67 casos en local; la regresión completa debe aprobar sobre el HEAD actualizado del PR.
 
 | Cobertura | Resultado de la prueba |
 | --- | --- |

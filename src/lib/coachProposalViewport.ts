@@ -1,4 +1,4 @@
-import { getFocusedCoachProposalField } from './coachViewport';
+import { getFocusedCoachProposalField } from './coachViewport.ts';
 
 // An inline editor lives inside the transcript. Reveal only that transcript's
 // active field; scrolling the whole page would move the fixed Coach shell.
