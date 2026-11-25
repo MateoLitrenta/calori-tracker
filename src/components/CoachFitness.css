@@ -237,8 +237,18 @@
   .chat-composer { padding: 7px 8px; }
   .chat-composer-recording .chat-composer-form { display: none; }
   .chat-recording-bar { margin-bottom: 0; gap: 4px; }
+}
+.app-shell-coach[data-coach-keyboard="open"] .chat-textarea {
+  max-height: clamp(64px, calc(var(--coach-viewport-height) * .24), 124px);
+}
+/* Keep the composer operable above a keyboard in a short landscape frame. */
+@media (max-height: 450px) {
+  .app-shell-coach[data-coach-keyboard="open"] .chat-heading { padding-block: 0; }
+  .app-shell-coach[data-coach-keyboard="open"] .chat-heading-title p { display: none; }
+  .app-shell-coach[data-coach-keyboard="open"] .chat-heading-actions { flex: none; }
+  .app-shell-coach[data-coach-keyboard="open"] :is(.chat-proactive, .chat-composer-suggestions) { display: none; }
   .app-shell-coach[data-coach-keyboard="open"] .chat-textarea {
-    max-height: clamp(64px, calc(var(--coach-viewport-height) * .24), 124px);
+    max-height: clamp(44px, calc(var(--coach-viewport-height) * .48), 90px);
   }
 }
 @media (max-width: 375px) {
@@ -303,7 +313,7 @@
   .chat-empty .chat-proactive-observation { width: 100%; }
   .chat-empty .chat-proactive-evidence[open] { flex-basis: 100%; }
 }
-@media (max-width: 350px) {
+@media (max-width: 350px), (min-width: 768px) and (max-height: 450px) {
   .app-shell-coach[data-coach-keyboard="open"] .chat-heading-actions { flex: none; flex-wrap: nowrap; }
   .app-shell-coach[data-coach-keyboard="open"] .chat-heading-actions button span { display: none; }
   .app-shell-coach[data-coach-keyboard="open"] .chat-heading-actions button svg { display: block; }

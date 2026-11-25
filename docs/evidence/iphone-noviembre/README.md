@@ -50,9 +50,26 @@ En Chrome, a 375 px la conversación pasó de 160 a 224 px visibles con teclado 
 
 [Coach de referencia en Chrome](antes/coach-chromium.json) · [Coach del candidato en Chrome](despues/coach-chromium.json) · [Coach del candidato en WebKit](despues/coach-webkit.json)
 
+## Seguimiento de la revisión del PR #96
+
+La revisión de `7e3960b6` reprodujo la pérdida de detección al pasar de un marco de 375 × 667 px con teclado abierto a uno de 667 × 375 px. Las dos pruebas nuevas del helper real cubren la ida y vuelta, un evento duplicado, el cierre con foco y el cruce 767/768. La prueba de rotación sin teclado sigue ejecutándose.
+
+El recorrido de navegador simula la reducción de la altura visual. Comprueba la reserva de espacio, el borrador, el cursor, el punto de lectura y el envío de una sola petición simulada con un toque. Con 190 px de altura visual disponible se compacta el encabezado y se repliegan temporalmente la observación y las sugerencias para mantener accesible el compositor. Para repetirlo con el servidor del candidato abierto:
+
+```sh
+node scripts/fitness-global/coach-iphone-keyboard.mjs --rotation
+node scripts/fitness-global/coach-iphone-keyboard.mjs --rotation --webkit
+```
+
+Chrome y WebKit pasaron la secuencia en Claro y Oscuro. En 667 × 375 px con el teclado abierto, Enviar quedó por encima del límite visual de 190 px. En 768 y 767 px también fue accesible y la barra inferior conservó 0 px de reserva. En todos los giros el punto de lectura siguió en 240 px. Al recuperar altura volvió la navegación móvil con el campo todavía enfocado.
+
+[Horizontal con teclado simulado](despues/coach-667-rotacion-teclado.jpg) · [Chrome](despues/coach-chromium-rotacion.json) · [WebKit](despues/coach-webkit-rotacion.json)
+
+Las pruebas de panel verifican que un aviso de eliminación desaparece al iniciar cualquier alta. El aviso sigue retirado al cancelar o guardar, y el guardado muestra el recibo de la nueva carga.
+
 ## Comprobación en Safari de iPhone
 
-1. Con la Preview del PR, comprobar el código en Perfil. En Coach escribir dos líneas, cerrar y reabrir el teclado, y tocar Enviar una vez en una cuenta de prueba autorizada para IA. Comprobar que la barra deja espacio mientras se escribe y vuelve al cerrar el teclado. Con una conversación larga, subir antes de que llegue la respuesta y observar si se conserva el lugar de lectura.
+1. Con la Preview del PR, comprobar el código en Perfil. En Coach escribir dos líneas, cerrar y reabrir el teclado, y tocar Enviar una vez en una cuenta de prueba autorizada para IA. Comprobar que la barra deja espacio mientras se escribe y vuelve al cerrar el teclado. Con una conversación larga, subir antes de que llegue la respuesta y observar si se conserva el lugar de lectura. Girar a horizontal con el teclado abierto, volver a vertical y cerrarlo con el campo enfocado. Repetir la rotación con el teclado cerrado.
 2. En Inicio, abrir una comida nueva. Cambiar la hora manualmente para cruzar dos franjas, elegir una categoría manual y pulsar Ahora. Repetir en un día pasado y editar un registro con una categoría diferente de la sugerida.
 3. En Claro, abrir una comida y un ejercicio desde Inicio y repetir al volver de Coach. Con Sistema seleccionado, cambiar el tema de iOS con el detalle abierto. El pie debe acompañar al resto del diálogo.
 4. Con registros sintéticos, cancelar una eliminación y confirmar después. Abrir enseguida otro detalle y comprobar que sus kcal quedan visibles. Para probar el error y reintento, usar el fallo simulado del recorrido automatizado.

@@ -11,6 +11,9 @@ const playwright = await import(pathToFileURL(module));
 const browser = await playwright[engine].launch(engine === 'chromium' ? { channel: 'chrome' } : {});
 const results = [];
 const target = process.argv.find(arg => arg.startsWith('--width='));
+const rotationCheck = process.argv.includes('--rotation');
+assert.ok(!rotationCheck || !before, 'Run the rotation check on the candidate');
+const frameHeight = width => rotationCheck ? 667 : heights[width];
 const draft = 'Pregunta sintética\nSegunda línea\nÚltima línea';
 const response = 'Respuesta sintética de QA';
 
@@ -46,7 +49,7 @@ function simulateViewport() {
 async function open(width, theme) {
   const mobile = width <= 767;
   const context = await browser.newContext({
-    viewport: { width, height: heights[width] }, isMobile: mobile, hasTouch: mobile,
+    viewport: { width, height: frameHeight(width) }, isMobile: mobile, hasTouch: mobile,
     colorScheme: theme, locale: 'es-AR', timezoneId: 'America/Buenos_Aires', reducedMotion: 'reduce',
   });
   const errors = [];
@@ -91,6 +94,7 @@ async function measure(page) {
     const visibleBottom = visualViewport.height + visualViewport.offsetTop;
     return {
       navVisible: nav.getClientRects().length > 0,
+      keyboardState: shell.dataset.coachKeyboard ?? null,
       navPadding: parseFloat(getComputedStyle(main).paddingBottom),
       readerHeight: log.clientHeight,
       scrollTop: log.scrollTop,
@@ -135,7 +139,7 @@ async function run(width, theme) {
     await page.setViewportSize({ width: 420, height: 320 });
     await viewport();
     assert.equal((await measure(page)).navVisible, true, 'Rotating alone keeps main navigation');
-    await page.setViewportSize({ width, height: heights[width] });
+    await page.setViewportSize({ width, height: frameHeight(width) });
     await viewport();
     await place(240);
     const keyboard = { reduction: width === 320 ? 243 : 282, offsetTop: 16, keyboard: true };
@@ -154,8 +158,36 @@ async function run(width, theme) {
     assert.equal(typing.caret, draft.length);
     assert.ok(Math.abs(typing.scrollTop - 240) <= 2);
     result.typing = typing;
-    if (engine === 'chromium') {
+    if (engine === 'chromium' && !rotationCheck) {
       await page.screenshot({ path: path.join(output, 'coach-' + width + '-' + theme + '-teclado.jpg'), quality: 85 });
+    }
+    if (rotationCheck) {
+      const rotate = async (width, height, reduction) => {
+        await page.setViewportSize({ width, height });
+        await viewport({ reduction, keyboard: true });
+        const state = await measure(page);
+        assert.ok(!state.navVisible && state.focus && !state.overflow, JSON.stringify(state));
+        assert.equal(state.text, draft);
+        assert.equal(state.caret, draft.length);
+        assert.ok(Math.abs(state.scrollTop - 240) <= 2, JSON.stringify(state));
+        assert.equal(state.keyboardState, 'open');
+        assert.equal(state.navPadding, 0);
+        assert.ok(state.sendVisible, JSON.stringify(state));
+        assert.ok(await box.evaluate(field => field.scrollHeight - field.clientHeight - field.scrollTop <= 1),
+          'The last line stays visible when the composer is resized');
+        return { width, height, visualHeight: height - reduction, ...state };
+      };
+      const landscape = await rotate(667, 375, 185);
+      await viewport({ reduction: 185, keyboard: true });
+      assert.equal((await measure(page)).keyboardState, 'open', 'Duplicate resize keeps the state');
+      if (engine === 'chromium' && theme === 'dark') {
+        await page.screenshot({ path: path.join(output, 'coach-667-rotacion-teclado.jpg'), quality: 85 });
+      }
+      const portrait = await rotate(375, 667, 282);
+      const wide = await rotate(768, 450, 235);
+      const narrow = await rotate(767, 450, 235);
+      const returned = await rotate(375, 667, 282);
+      result.rotation = [landscape, portrait, wide, narrow, returned];
     }
     await viewport();
     const restored = await measure(page);
@@ -229,11 +261,11 @@ async function run(width, theme) {
 
 await mkdir(output, { recursive: true });
 try {
-  const widths = target ? [Number(target.split('=')[1])] : engine === 'chromium' ? [375, 320, 1440] : [375, 320];
+  const widths = rotationCheck ? [375] : target ? [Number(target.split('=')[1])] : engine === 'chromium' ? [375, 320, 1440] : [375, 320];
   for (const width of widths) {
     for (const theme of ['light', 'dark']) await run(width, theme);
   }
-  await writeFile(path.join(output, 'coach-' + engine + (target ? '-diagnostic' : '') + '.json'), JSON.stringify({
+  await writeFile(path.join(output, 'coach-' + engine + (rotationCheck ? '-rotacion' : target ? '-diagnostic' : '') + '.json'), JSON.stringify({
     engine, version: browser.version(), simulatedKeyboard: true, results,
   }, null, 2) + '\n');
 } finally {

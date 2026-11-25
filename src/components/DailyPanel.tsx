@@ -495,6 +495,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const openEntry = (tab: 'comida' | 'entrenamiento') => {
     if (entryActive || savingMealRef.current || savingWorkoutRef.current) return;
     resetForms();
+    setDeletionNotice(null);
     setActiveTab(tab);
     const base = snapshotEntryRecord(currentRecord, profile.recordGeneration);
     if (tab === 'comida') {

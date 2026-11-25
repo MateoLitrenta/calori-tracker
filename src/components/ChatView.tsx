@@ -473,7 +473,14 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     const composer = composerRef.current;
     const shell = composer?.closest<HTMLElement>('.app-shell-coach');
     if (!composer || !shell) return;
-    const measure = () => shell.style.setProperty('--coach-composer-height', `${composer.offsetHeight}px`);
+    const measure = () => {
+      shell.style.setProperty('--coach-composer-height', `${composer.offsetHeight}px`);
+      const field = textInputRef.current;
+      if (shell.dataset.coachKeyboard === 'open' && field && field === document.activeElement &&
+          field.selectionEnd === field.value.length) {
+        field.scrollTop = field.scrollHeight;
+      }
+    };
     measure();
     const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(measure);
     observer?.observe(composer);

@@ -7,6 +7,7 @@ export function followCoachViewport(shell: HTMLElement) {
   const viewport = browser.visualViewport;
   let layoutWidth = browser.innerWidth;
   let maxViewportHeight = 0;
+  let keyboardOpen = false;
 
   const clear = () => {
     shell.style.removeProperty('--coach-viewport-height');
@@ -15,32 +16,40 @@ export function followCoachViewport(shell: HTMLElement) {
   };
 
   const resize = () => {
-    if (!mobile.matches) {
-      maxViewportHeight = 0;
+    const width = browser.innerWidth;
+    const height = viewport?.height ?? browser.innerHeight;
+    const atNormalScale = viewport && Math.abs(viewport.scale - 1) < 0.02;
+
+    if (!touch.matches) {
+      keyboardOpen = false;
+    } else if (atNormalScale && Math.abs(viewport.width - width) < 2) {
+      // Layout and visual resize events can arrive separately on rotation.
+      // While the keyboard is open, use the new layout height as the reference.
+      if (layoutWidth !== width) {
+        layoutWidth = width;
+        maxViewportHeight = keyboardOpen ? browser.innerHeight : 0;
+      }
+      maxViewportHeight = Math.max(maxViewportHeight, height);
+      const editorFocused = shell.ownerDocument.activeElement?.matches('.chat-composer .chat-textarea') ?? false;
+      // Small height changes can come from browser bars. Keep the keyboard
+      // state during blur and clear it when the visible area recovers.
+      keyboardOpen = (keyboardOpen || editorFocused) && maxViewportHeight - height >= 140;
+    }
+
+    const showKeyboardLayout = atNormalScale && keyboardOpen;
+    if (!mobile.matches && !showKeyboardLayout) {
       clear();
       return;
     }
-
-    const height = viewport?.height ?? browser.innerHeight;
     shell.style.setProperty('--coach-viewport-height', `${height}px`);
     shell.style.setProperty('--coach-viewport-top', `${viewport?.offsetTop ?? 0}px`);
-    if (layoutWidth !== browser.innerWidth) {
-      layoutWidth = browser.innerWidth;
-      maxViewportHeight = 0;
-    }
-    const unzoomed = viewport && Math.abs(viewport.scale - 1) < 0.02 &&
-      Math.abs(viewport.width - layoutWidth) < 2;
-    if (unzoomed) maxViewportHeight = Math.max(maxViewportHeight, height);
-    const editorFocused = shell.ownerDocument.activeElement?.matches('.chat-composer .chat-textarea') ?? false;
-    // Browser toolbars account for small height changes. Once open, wait for
-    // viewport recovery before restoring the bar, including during blur.
-    if (touch.matches && unzoomed && maxViewportHeight - height >= 140 &&
-        (editorFocused || shell.dataset.coachKeyboard === 'open')) {
+    if (showKeyboardLayout) {
       shell.dataset.coachKeyboard = 'open';
     } else {
       delete shell.dataset.coachKeyboard;
     }
   };
+
   resize();
   viewport?.addEventListener('resize', resize);
   viewport?.addEventListener('scroll', resize);

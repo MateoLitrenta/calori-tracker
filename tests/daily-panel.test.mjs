@@ -1483,6 +1483,46 @@ test('a record removed elsewhere cannot be deleted from a pending confirmation',
   assert.match(document.querySelector('.record-detail-modal [role="status"]').textContent, /ya no está en este día/);
 });
 
+for (const [kind, addLabel, draftFields, receiptLabel] of [
+  ['meal', 'Agregar comida', { 'add-meal-description': 'Ensalada de prueba', 'add-meal-calories': '180' }, 'Comida guardada'],
+  ['workout', 'Agregar ejercicio', { 'add-workout-activity': 'Caminata de prueba', 'add-workout-duration': '30', 'add-workout-calories': '100' }, 'Ejercicio guardado'],
+]) {
+  test(`starting a new ${kind} clears the deletion notice through cancellation and save`, async t => {
+    const view = await journalDOM(t, { record: journalRecord(4) });
+    dialogMethodsForDeletion();
+    const notice = () => document.querySelector('.record-delete-notice');
+    const add = () => [...document.querySelectorAll('button')].find(button => button.textContent.trim() === addLabel);
+    const deleteRecord = async () => {
+      await requestRecordDeletion(view, kind);
+      await act(async () => deleteAction().click());
+      await view.render({ record: view.saves.at(-1).record });
+      assert.ok(notice(), 'A successful deletion shows its notice');
+    };
+
+    await deleteRecord();
+    await act(() => add().click());
+    await act(() => document.querySelector('form.entry-form .entry-cancel').click());
+    assert.equal(document.querySelector('form.entry-form'), null);
+    assert.ok(!notice(), 'Canceling a new draft must not restore the deletion notice');
+
+    await deleteRecord();
+    await act(() => add().click());
+    await act(() => {
+      for (const [id, value] of Object.entries(draftFields)) {
+        const field = document.getElementById(id);
+        Object.getOwnPropertyDescriptor(Object.getPrototypeOf(field), 'value').set.call(field, value);
+        field.dispatchEvent(new window.Event('input', { bubbles: true }));
+      }
+    });
+    await act(async () => document.querySelector('form.entry-form')
+      .dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })));
+    await view.render({ record: view.saves.at(-1).record });
+    assert.equal(document.querySelector('.meal-saved-label')?.textContent.trim(), receiptLabel);
+    assert.ok(!notice(), 'A new save receipt must not share space with the deletion notice');
+    assert.equal(view.saves.length, 3);
+  });
+}
+
 test('a confirmed meal receipt focuses its stable row among namesakes only on request', async t => {
   const day = '2026-11-12';
   const record = journalRecord(8, day);

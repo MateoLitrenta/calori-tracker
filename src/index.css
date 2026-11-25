@@ -94,6 +94,14 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
 .view-skeleton-chat .skeleton-primary { flex: 1; min-height: 0; }
 .view-skeleton-chat .skeleton-secondary { min-height: 64px; }
 @media (min-width: 640px) { .skeleton-profile .skeleton-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 768px) {
+  .app-shell-coach[data-coach-keyboard="open"] {
+    position: fixed;
+    inset: var(--coach-viewport-top, 0px) 0 auto;
+    height: var(--coach-viewport-height, 100dvh);
+  }
+  .app-shell-coach[data-coach-keyboard="open"] .app-main { padding-block: 0; }
+}
 @media (max-width: 767px) {
   .app-shell-coach {
     --coach-nav-space: calc(4rem + env(safe-area-inset-bottom, 0px));
