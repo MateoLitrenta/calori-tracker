@@ -216,10 +216,57 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
 .fitness-entry-portal .entry-form .entry-form-footer button { width: 100%; }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer .entry-save { color: var(--fit-on-orange); background: var(--fit-orange); }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer .entry-save:hover:not(:disabled) { background: #f4a56d; color: var(--fit-on-orange); }
-:is(.fitness-home, .fitness-entry-portal) .record-detail-modal .record-detail-content { gap: 14px; }
-:is(.fitness-home, .fitness-entry-portal) .record-detail-modal :is(.record-detail-content,.record-detail-actions) { background: var(--fit-page); border-color: var(--fit-rule); }
-:is(.fitness-home, .fitness-entry-portal) .record-detail-content .record-detail-main { color: var(--fit-ink); font: 700 24px/1.15 var(--fit-face); }
-:is(.fitness-home, .fitness-entry-portal) .record-detail-actions button { min-height: 44px; border-radius: 6px; }
+.record-detail-modal {
+  background: var(--fit-page);
+  color: var(--fit-ink);
+}
+.record-detail-content .record-detail-main { font: 700 24px/1.15 var(--fit-face); color: var(--fit-ink); }
+.record-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: var(--fit-surface);
+  border-top: 1px solid var(--fit-rule);
+}
+.record-detail-actions button {
+  display: flex;
+  flex: 1 1 7em;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: var(--fit-target);
+  padding: 8px;
+  border: 1px solid var(--fit-control-line);
+  border-radius: var(--fit-control-radius);
+  font-weight: 600;
+  color: var(--fit-ink);
+  background: var(--fit-soft);
+}
+.record-detail-actions .record-detail-delete {
+  color: var(--fit-danger);
+  background: var(--fit-danger-soft);
+  border-color: currentColor;
+}
+.record-detail-actions button:hover:enabled { text-decoration: underline; }
+.record-detail-actions button:focus-visible { outline: 2px solid var(--fit-focus); outline-offset: 2px; }
+.record-detail-actions button:disabled, .record-delete-dialog button:disabled {
+  color: var(--fit-quiet);
+  background: var(--fit-soft);
+  border-color: var(--fit-rule);
+}
+.record-delete-dialog { overflow-wrap: anywhere; }
+.record-delete-dialog .profile-form-actions { justify-content: flex-end; }
+.record-delete-error, .record-delete-notice {
+  padding: 8px 12px;
+  border-radius: var(--fit-control-radius);
+  font-size: .875rem;
+}
+.record-delete-error { color: var(--fit-danger); background: var(--fit-danger-soft); }
+.record-delete-notice {
+  margin-block: 8px;
+  color: var(--fit-ink);
+  background: var(--fit-soft);
+}
 @media (max-width: 350px) {
   .fitness-entry-portal.home-variants .entry-form .entry-fields-grid { padding-inline: 12px; }
 }

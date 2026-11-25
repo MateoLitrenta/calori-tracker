@@ -95,11 +95,18 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
 .view-skeleton-chat .skeleton-secondary { min-height: 64px; }
 @media (min-width: 640px) { .skeleton-profile .skeleton-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width: 767px) {
-  .app-shell-coach { position: fixed; top: var(--coach-viewport-top, 0px); left: 0; right: 0; height: var(--coach-viewport-height, 100dvh); }
+  .app-shell-coach {
+    --coach-nav-space: calc(4rem + env(safe-area-inset-bottom, 0px));
+    position: fixed;
+    inset: var(--coach-viewport-top, 0px) 0 auto;
+    height: var(--coach-viewport-height, 100dvh);
+  }
+  .app-shell-coach[data-coach-keyboard="open"] { --coach-nav-space: 0px; }
   .app-shell-coach .app-stage { min-height: 0; }
-  .app-shell-coach .app-main { min-height: 0; overflow: hidden; padding: env(safe-area-inset-top) 0 calc(4rem + env(safe-area-inset-bottom)); }
+  .app-shell-coach .app-main { min-height: 0; overflow: hidden; padding: env(safe-area-inset-top) 0 var(--coach-nav-space); }
   .app-shell-coach .app-content { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; padding: 0; }
   .app-shell-coach > .app-bottom-nav { position: absolute; bottom: 0; }
+  .app-shell-coach[data-coach-keyboard="open"] > .app-bottom-nav { display: none; }
   .app-shell-coach .view-skeleton-chat { max-width: none; gap: 12px; }
   .app-shell-coach .view-skeleton-chat .skeleton-primary { border: 0; border-radius: 0; background: transparent; }
   .app-shell-coach .view-skeleton-chat .skeleton-secondary { border-radius: 0; }

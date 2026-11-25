@@ -24,10 +24,18 @@ Las comparativas en Chrome con datos sintéticos cubren cuatro anchos, ambos tem
 
 [Mediciones, capturas y recorridos de la etapa 3](evidence/datos-noviembre/README.md)
 
-## Etapa 4 en revisión · Perfil y formularios
+## Etapa 4 integrada en el PR #95 · Perfil y formularios
 
 La base es el merge del PR #94, `1fb0e34efd7a82bfd35913a462e77bb5de3f4cab`. Datos personales reúne la edición, el peso utilizado en estimaciones y la explicación del gasto. La foto tiene acciones independientes. Apariencia conserva el selector de tema y Gestión de datos requiere un despliegue explícito. Si falla el guardado personal, el formulario informa el error y conserva el borrador para reintentar.
 
-Los formularios diarios de comida y ejercicio comparten el selector nativo de hora y la acción Ahora. Las comparativas usan cuentas y registros sintéticos. La revisión del teclado y las barras de Safari en un iPhone físico queda pendiente.
+Los formularios diarios de comida y ejercicio comparten el selector nativo de hora y la acción Ahora. Las comparativas usaron cuentas y registros sintéticos. La revisión en iPhone del 25 de noviembre identificó los ajustes registrados en el bloque siguiente.
 
 [Comparativas, mediciones y recorrido de revisión](evidence/perfil-noviembre/README.md)
+
+## Ajustes del 25 de noviembre en revisión · Coach y registros
+
+La base es el merge del PR #95, `e76a468eb3f02a4ca30dfa4f92329df090088c19`. Coach recupera el espacio de navegación al abrir el teclado táctil. Las altas sugieren el tipo de comida según la hora local y respetan una elección manual. El detalle adapta su pie al tema y requiere confirmar la eliminación del registro identificado. El resumen y el recibo de comida conservan la categoría de la estimación original al reclasificar.
+
+El cambio de los nombres genéricos de comidas creadas por Coach y Liquid Glass corresponden a bloques posteriores.
+
+[Comparativas, criterios y revisión en iPhone](evidence/iphone-noviembre/README.md)

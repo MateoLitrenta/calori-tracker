@@ -79,8 +79,9 @@ export default function EntryFormShell({ title, onClose, children, dailyEditor =
     const focusable = () => Array.from(focusScope().querySelectorAll<HTMLElement>(
       'button:not(:disabled), input:not(:disabled):not([type="hidden"]):not([type="file"]), select:not(:disabled), textarea:not(:disabled), summary, [tabindex="0"]'
     )).filter(element => element.getClientRects().length > 0);
+    const hasConfirmation = () => !!document.querySelector('dialog[open]:is([data-discard-draft], [data-record-delete])');
     const keyboard = (event: KeyboardEvent) => {
-      if (document.querySelector('dialog[data-discard-draft][open]')) return;
+      if (hasConfirmation()) return;
       if (event.key === 'Escape') {
         event.preventDefault();
         const closeCamera = dialog.querySelector<HTMLButtonElement>('[data-entry-camera-close]');
@@ -98,7 +99,7 @@ export default function EntryFormShell({ title, onClose, children, dailyEditor =
       }
     };
     const containFocus = (event: FocusEvent) => {
-      if (document.querySelector('dialog[data-discard-draft][open]')) return;
+      if (hasConfirmation()) return;
       if (!focusScope().contains(event.target as Node)) (focusable()[0] ?? closeRef.current)?.focus({ preventScroll: true });
     };
     document.addEventListener('keydown', keyboard);

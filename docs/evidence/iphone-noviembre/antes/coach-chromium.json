@@ -1,0 +1,213 @@
+{
+  "engine": "chromium",
+  "version": "158.0.8127.37",
+  "simulatedKeyboard": true,
+  "results": [
+    {
+      "width": 375,
+      "theme": "light",
+      "focused": {
+        "navVisible": true,
+        "navPadding": 64,
+        "readerHeight": 442,
+        "scrollTop": 240,
+        "composerBottom": 741,
+        "viewportBottom": 812,
+        "sendVisible": true,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      },
+      "typing": {
+        "navVisible": true,
+        "navPadding": 64,
+        "readerHeight": 160,
+        "scrollTop": 240,
+        "composerBottom": 475,
+        "viewportBottom": 546,
+        "sendVisible": true,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      },
+      "restored": {
+        "navVisible": true,
+        "navPadding": 64,
+        "readerHeight": 442,
+        "scrollTop": 240,
+        "composerBottom": 741,
+        "viewportBottom": 812,
+        "sendVisible": true,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      }
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "focused": {
+        "navVisible": true,
+        "navPadding": 64,
+        "readerHeight": 442,
+        "scrollTop": 240,
+        "composerBottom": 741,
+        "viewportBottom": 812,
+        "sendVisible": true,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      },
+      "typing": {
+        "navVisible": true,
+        "navPadding": 64,
+        "readerHeight": 160,
+        "scrollTop": 240,
+        "composerBottom": 475,
+        "viewportBottom": 546,
+        "sendVisible": true,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      },
+      "restored": {
+        "navVisible": true,
+        "navPadding": 64,
+        "readerHeight": 442,
+        "scrollTop": 240,
+        "composerBottom": 741,
+        "viewportBottom": 812,
+        "sendVisible": true,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      }
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "focused": {
+        "navVisible": true,
+        "navPadding": 64,
+        "readerHeight": 152,
+        "scrollTop": 240,
+        "composerBottom": 497,
+        "viewportBottom": 568,
+        "sendVisible": true,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      },
+      "typing": {
+        "navVisible": true,
+        "navPadding": 64,
+        "readerHeight": 20,
+        "scrollTop": 240,
+        "composerBottom": 381,
+        "viewportBottom": 341,
+        "sendVisible": false,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      },
+      "restored": {
+        "navVisible": true,
+        "navPadding": 64,
+        "readerHeight": 152,
+        "scrollTop": 240,
+        "composerBottom": 497,
+        "viewportBottom": 568,
+        "sendVisible": true,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      }
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "focused": {
+        "navVisible": true,
+        "navPadding": 64,
+        "readerHeight": 152,
+        "scrollTop": 240,
+        "composerBottom": 497,
+        "viewportBottom": 568,
+        "sendVisible": true,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      },
+      "typing": {
+        "navVisible": true,
+        "navPadding": 64,
+        "readerHeight": 20,
+        "scrollTop": 240,
+        "composerBottom": 381,
+        "viewportBottom": 341,
+        "sendVisible": false,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      },
+      "restored": {
+        "navVisible": true,
+        "navPadding": 64,
+        "readerHeight": 152,
+        "scrollTop": 240,
+        "composerBottom": 497,
+        "viewportBottom": 568,
+        "sendVisible": true,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "focused": {
+        "navVisible": false,
+        "navPadding": 24,
+        "readerHeight": 553,
+        "scrollTop": 240,
+        "composerBottom": 867,
+        "viewportBottom": 900,
+        "sendVisible": true,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "focused": {
+        "navVisible": false,
+        "navPadding": 24,
+        "readerHeight": 553,
+        "scrollTop": 240,
+        "composerBottom": 867,
+        "viewportBottom": 900,
+        "sendVisible": true,
+        "focus": true,
+        "caret": 45,
+        "text": "Pregunta sintética\nSegunda línea\nÚltima línea",
+        "overflow": false
+      }
+    }
+  ]
+}

@@ -3,14 +3,15 @@ interface Props {
   calories: number | '';
   adjusted: boolean;
   outdated: boolean;
+  reclassifiedFrom?: string;
 }
 
 /** Provider text is secondary, original and rendered as plain text. */
-export default function EntryEstimateResult({ estimate, calories, adjusted, outdated }: Props) {
+export default function EntryEstimateResult({ estimate, calories, adjusted, outdated, reclassifiedFrom }: Props) {
   const valid = typeof calories === 'number' && Number.isInteger(calories) && calories > 0;
   return <section className="entry-estimate-result" aria-label="Estimación con IA">
     <div role="status" aria-live="polite">
-      <h5 className="entry-estimate-heading">{adjusted ? 'Valor ajustado' : outdated ? 'Datos modificados' : 'Estimación con IA'}</h5>
+      <h5 className="entry-estimate-heading">{adjusted ? 'Valor ajustado' : outdated ? 'Datos modificados' : reclassifiedFrom ? 'Categoría actualizada' : 'Estimación con IA'}</h5>
       <p className="entry-estimate-value">{valid
         ? `Se guardarán ${calories.toLocaleString('es-AR')} kcal`
         : 'Ingresá un valor válido en Calorías.'}
@@ -19,7 +20,8 @@ export default function EntryEstimateResult({ estimate, calories, adjusted, outd
       <p className="entry-estimate-note">{adjusted
         ? `Ajustado por vos. Estimación original: ${estimate.calories.toLocaleString('es-AR')} kcal.`
         : outdated ? `Estimación original: ${estimate.calories.toLocaleString('es-AR')} kcal. Los datos cambiaron. Revisá las calorías antes de guardar.`
-          : 'Estimación basada en los datos proporcionados.'}</p>
+          : reclassifiedFrom ? `Se conservan las calorías de la estimación original (${reclassifiedFrom}).`
+            : 'Estimación basada en los datos proporcionados.'}</p>
     </div>
     {estimate.assumptions.length > 0 && <details className="entry-estimate-details">
       <summary>¿Cómo se calculó?</summary>
