@@ -150,7 +150,9 @@ test('profile appearance reflects the shared preference and delegates all three 
     const section = node(initial, element => element.props['aria-labelledby'] === 'profile-information-heading');
     assert.match(markup(section), /Apariencia/);
     assert.match(markup(section), /Elegí cómo querés ver Calori\./);
-    assert.ok(markup(section).indexOf('Apariencia') < markup(section).indexOf('Cómo calculamos tu gasto'));
+    assert.doesNotMatch(markup(section), /Cómo calculamos tu gasto/);
+    const personal = node(initial, element => element.props['aria-labelledby'] === 'profile-name');
+    assert.match(markup(personal), /Cómo calculamos tu gasto/);
     const buttons = () => nodes(node(view.render(), element => element.props.role === 'group' &&
       element.props['aria-label'] === 'Apariencia'), element => element.type === 'button');
     assert.deepEqual(buttons().map(button => button.props.children), ['Sistema', 'Claro', 'Oscuro']);
@@ -614,11 +616,30 @@ test('profile save failure retains entered fields and only confirms after a succ
     fields()[2].props.onChange({target:{value:'35'}});
     await submit(view.render());
     assert.equal(fields()[0].props.value,'Draft retained');assert.equal(fields()[2].props.value,35);
-    assert.equal(successes.length,0);assert.equal(errors.length,1);assert.equal(calls,1);
+    const alerts = () => nodes(view.render(),e=>e.props.role==='alert');
+    assert.equal(alerts().length,1);
+    assert.match(markup(alerts()[0]), /No se pudieron guardar los datos\. Tu borrador se conserva/);
+    assert.equal(successes.length,0);assert.equal(errors.length,0);assert.equal(calls,1);
+    fields()[2].props.onChange({target:{value:'36'}});
+    assert.equal(alerts().length,1);
+    fields()[2].props.onChange({target:{value:'35'}});
     fail=false;await submit(view.render());
     assert.equal(successes.length,1);assert.equal(calls,2);
     assert.equal(nodes(view.render(),e=>e.type==='form').length,0);
+    assert.equal(alerts().length,0);
     assert.equal(globalThis.__entryHarness.profileStore.activeProfile,profile);
+    fail=true;
+    const edit=()=>node(view.render(),e=>e.type==='button'&&markup(e).includes('Editar perfil')).props.onClick();
+    edit();
+    fields()[0].props.onChange({target:{value:'Draft retained'}});
+    fields()[2].props.onChange({target:{value:'35'}});
+    await submit(view.render());
+    assert.equal(alerts().length,1);
+    node(node(view.render(),e=>e.type==='form'),e=>e.props.children==='Cancelar').props.onClick();
+    node(view.render(),e=>typeof e.props.onDiscard==='function').props.onDiscard();
+    edit();
+    assert.equal(alerts().length,0);
+    assert.equal(fields()[0].props.value,profile.name);
   }finally{globalThis.__entryHarness.toast.success=oldSuccess;globalThis.__entryHarness.toast.error=oldError;}
 });
 

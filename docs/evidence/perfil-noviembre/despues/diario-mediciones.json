@@ -1,0 +1,1554 @@
+[
+  {
+    "width": 375,
+    "theme": "dark",
+    "mode": "add-meal",
+    "original": "12:00",
+    "inputWidth": 269.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 212.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 129.9296875
+    },
+    "colors": {
+      "hora": {
+        "normal": {
+          "foreground": "#f5f4ee",
+          "background": "#1a211f",
+          "contrast": 14.87,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "hover": {
+          "foreground": "#f5f4ee",
+          "background": "#1a211f",
+          "contrast": 14.87,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "focus": {
+          "foreground": "#f5f4ee",
+          "background": "#1a211f",
+          "contrast": 14.87,
+          "opacity": 1,
+          "outline": "solid 2px rgb(255, 194, 141)"
+        }
+      },
+      "ahora": {
+        "normal": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "hover": {
+          "foreground": "#ffac72",
+          "background": "#262e2b",
+          "contrast": 7.56,
+          "opacity": 1,
+          "outline": "none 3px rgb(255, 172, 114)"
+        },
+        "focus": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        }
+      },
+      "guardar": {
+        "normal": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "hover": {
+          "foreground": "#241b14",
+          "background": "#f4a56d",
+          "contrast": 8.41,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "focus": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        }
+      },
+      "cancelar": {
+        "normal": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "hover": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "focus": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        }
+      }
+    },
+    "discardColors": {
+      "keep": {
+        "foreground": "#f5f4ee",
+        "background": "#262e2b",
+        "contrast": 12.64,
+        "opacity": 1,
+        "outline": "none 3px rgb(245, 244, 238)"
+      },
+      "discard": {
+        "foreground": "#ffaaa0",
+        "background": "#392624",
+        "contrast": 7.79,
+        "opacity": 1,
+        "outline": "none 3px rgb(255, 170, 160)"
+      }
+    }
+  },
+  {
+    "width": 375,
+    "theme": "dark",
+    "mode": "add-workout",
+    "original": "12:00",
+    "inputWidth": 269.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 212.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 129.9296875
+    },
+    "colors": {
+      "hora": {
+        "normal": {
+          "foreground": "#f5f4ee",
+          "background": "#1a211f",
+          "contrast": 14.87,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "hover": {
+          "foreground": "#f5f4ee",
+          "background": "#1a211f",
+          "contrast": 14.87,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "focus": {
+          "foreground": "#f5f4ee",
+          "background": "#1a211f",
+          "contrast": 14.87,
+          "opacity": 1,
+          "outline": "solid 2px rgb(255, 194, 141)"
+        }
+      },
+      "ahora": {
+        "normal": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "hover": {
+          "foreground": "#ffac72",
+          "background": "#262e2b",
+          "contrast": 7.56,
+          "opacity": 1,
+          "outline": "none 3px rgb(255, 172, 114)"
+        },
+        "focus": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        }
+      },
+      "guardar": {
+        "normal": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "hover": {
+          "foreground": "#241b14",
+          "background": "#f4a56d",
+          "contrast": 8.41,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "focus": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        }
+      },
+      "cancelar": {
+        "normal": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "hover": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "focus": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        }
+      }
+    }
+  },
+  {
+    "width": 375,
+    "theme": "dark",
+    "mode": "edit-meal",
+    "original": "08:30",
+    "inputWidth": 269.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 212.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 129.9296875
+    },
+    "colors": {
+      "hora": {
+        "normal": {
+          "foreground": "#f5f4ee",
+          "background": "#1a211f",
+          "contrast": 14.87,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "hover": {
+          "foreground": "#f5f4ee",
+          "background": "#1a211f",
+          "contrast": 14.87,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "focus": {
+          "foreground": "#f5f4ee",
+          "background": "#1a211f",
+          "contrast": 14.87,
+          "opacity": 1,
+          "outline": "solid 2px rgb(255, 194, 141)"
+        }
+      },
+      "ahora": {
+        "normal": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "hover": {
+          "foreground": "#ffac72",
+          "background": "#262e2b",
+          "contrast": 7.56,
+          "opacity": 1,
+          "outline": "none 3px rgb(255, 172, 114)"
+        },
+        "focus": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        }
+      },
+      "guardar": {
+        "normal": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "hover": {
+          "foreground": "#241b14",
+          "background": "#f4a56d",
+          "contrast": 8.41,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "focus": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        }
+      },
+      "cancelar": {
+        "normal": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "hover": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "focus": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        }
+      }
+    }
+  },
+  {
+    "width": 375,
+    "theme": "dark",
+    "mode": "edit-workout",
+    "original": "10:00",
+    "inputWidth": 269.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 212.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 129.9296875
+    },
+    "colors": {
+      "hora": {
+        "normal": {
+          "foreground": "#f5f4ee",
+          "background": "#1a211f",
+          "contrast": 14.87,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "hover": {
+          "foreground": "#f5f4ee",
+          "background": "#1a211f",
+          "contrast": 14.87,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "focus": {
+          "foreground": "#f5f4ee",
+          "background": "#1a211f",
+          "contrast": 14.87,
+          "opacity": 1,
+          "outline": "solid 2px rgb(255, 194, 141)"
+        }
+      },
+      "ahora": {
+        "normal": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "hover": {
+          "foreground": "#ffac72",
+          "background": "#262e2b",
+          "contrast": 7.56,
+          "opacity": 1,
+          "outline": "none 3px rgb(255, 172, 114)"
+        },
+        "focus": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        }
+      },
+      "guardar": {
+        "normal": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "hover": {
+          "foreground": "#241b14",
+          "background": "#f4a56d",
+          "contrast": 8.41,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "focus": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        }
+      },
+      "cancelar": {
+        "normal": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "hover": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        },
+        "focus": {
+          "foreground": "#f5f4ee",
+          "background": "#262e2b",
+          "contrast": 12.64,
+          "opacity": 1,
+          "outline": "none 3px rgb(245, 244, 238)"
+        }
+      }
+    }
+  },
+  {
+    "width": 375,
+    "theme": "light",
+    "mode": "add-meal",
+    "original": "12:00",
+    "inputWidth": 269.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 212.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 129.9296875
+    },
+    "colors": {
+      "hora": {
+        "normal": {
+          "foreground": "#1c2522",
+          "background": "#fffefa",
+          "contrast": 15.56,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "hover": {
+          "foreground": "#1c2522",
+          "background": "#fffefa",
+          "contrast": 15.56,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "focus": {
+          "foreground": "#1c2522",
+          "background": "#fffefa",
+          "contrast": 15.56,
+          "opacity": 1,
+          "outline": "solid 2px rgb(132, 65, 24)"
+        }
+      },
+      "ahora": {
+        "normal": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "hover": {
+          "foreground": "#924111",
+          "background": "#ebece4",
+          "contrast": 5.91,
+          "opacity": 1,
+          "outline": "none 3px rgb(146, 65, 17)"
+        },
+        "focus": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        }
+      },
+      "guardar": {
+        "normal": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "hover": {
+          "foreground": "#241b14",
+          "background": "#f4a56d",
+          "contrast": 8.41,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "focus": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        }
+      },
+      "cancelar": {
+        "normal": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "hover": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "focus": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        }
+      }
+    },
+    "discardColors": {
+      "keep": {
+        "foreground": "#1c2522",
+        "background": "#ebece4",
+        "contrast": 13.2,
+        "opacity": 1,
+        "outline": "none 3px rgb(28, 37, 34)"
+      },
+      "discard": {
+        "foreground": "#9f302c",
+        "background": "#f9eae5",
+        "contrast": 6.11,
+        "opacity": 1,
+        "outline": "none 3px rgb(159, 48, 44)"
+      }
+    }
+  },
+  {
+    "width": 375,
+    "theme": "light",
+    "mode": "add-workout",
+    "original": "12:00",
+    "inputWidth": 269.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 212.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 129.9296875
+    },
+    "colors": {
+      "hora": {
+        "normal": {
+          "foreground": "#1c2522",
+          "background": "#fffefa",
+          "contrast": 15.56,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "hover": {
+          "foreground": "#1c2522",
+          "background": "#fffefa",
+          "contrast": 15.56,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "focus": {
+          "foreground": "#1c2522",
+          "background": "#fffefa",
+          "contrast": 15.56,
+          "opacity": 1,
+          "outline": "solid 2px rgb(132, 65, 24)"
+        }
+      },
+      "ahora": {
+        "normal": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "hover": {
+          "foreground": "#924111",
+          "background": "#ebece4",
+          "contrast": 5.91,
+          "opacity": 1,
+          "outline": "none 3px rgb(146, 65, 17)"
+        },
+        "focus": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        }
+      },
+      "guardar": {
+        "normal": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "hover": {
+          "foreground": "#241b14",
+          "background": "#f4a56d",
+          "contrast": 8.41,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "focus": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        }
+      },
+      "cancelar": {
+        "normal": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "hover": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "focus": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        }
+      }
+    }
+  },
+  {
+    "width": 375,
+    "theme": "light",
+    "mode": "edit-meal",
+    "original": "08:30",
+    "inputWidth": 269.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 212.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 129.9296875
+    },
+    "colors": {
+      "hora": {
+        "normal": {
+          "foreground": "#1c2522",
+          "background": "#fffefa",
+          "contrast": 15.56,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "hover": {
+          "foreground": "#1c2522",
+          "background": "#fffefa",
+          "contrast": 15.56,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "focus": {
+          "foreground": "#1c2522",
+          "background": "#fffefa",
+          "contrast": 15.56,
+          "opacity": 1,
+          "outline": "solid 2px rgb(132, 65, 24)"
+        }
+      },
+      "ahora": {
+        "normal": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "hover": {
+          "foreground": "#924111",
+          "background": "#ebece4",
+          "contrast": 5.91,
+          "opacity": 1,
+          "outline": "none 3px rgb(146, 65, 17)"
+        },
+        "focus": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        }
+      },
+      "guardar": {
+        "normal": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "hover": {
+          "foreground": "#241b14",
+          "background": "#f4a56d",
+          "contrast": 8.41,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "focus": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        }
+      },
+      "cancelar": {
+        "normal": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "hover": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "focus": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        }
+      }
+    }
+  },
+  {
+    "width": 375,
+    "theme": "light",
+    "mode": "edit-workout",
+    "original": "10:00",
+    "inputWidth": 269.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 212.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 129.9296875
+    },
+    "colors": {
+      "hora": {
+        "normal": {
+          "foreground": "#1c2522",
+          "background": "#fffefa",
+          "contrast": 15.56,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "hover": {
+          "foreground": "#1c2522",
+          "background": "#fffefa",
+          "contrast": 15.56,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "focus": {
+          "foreground": "#1c2522",
+          "background": "#fffefa",
+          "contrast": 15.56,
+          "opacity": 1,
+          "outline": "solid 2px rgb(132, 65, 24)"
+        }
+      },
+      "ahora": {
+        "normal": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "hover": {
+          "foreground": "#924111",
+          "background": "#ebece4",
+          "contrast": 5.91,
+          "opacity": 1,
+          "outline": "none 3px rgb(146, 65, 17)"
+        },
+        "focus": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        }
+      },
+      "guardar": {
+        "normal": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "hover": {
+          "foreground": "#241b14",
+          "background": "#f4a56d",
+          "contrast": 8.41,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        },
+        "focus": {
+          "foreground": "#241b14",
+          "background": "#ff9a53",
+          "contrast": 8.05,
+          "opacity": 1,
+          "outline": "none 3px rgb(36, 27, 20)"
+        }
+      },
+      "cancelar": {
+        "normal": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "hover": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        },
+        "focus": {
+          "foreground": "#1c2522",
+          "background": "#ebece4",
+          "contrast": 13.2,
+          "opacity": 1,
+          "outline": "none 3px rgb(28, 37, 34)"
+        }
+      }
+    }
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "mode": "add-meal",
+    "original": "12:00",
+    "inputWidth": 226.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 169.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 86.9296875
+    }
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "mode": "add-workout",
+    "original": "12:00",
+    "inputWidth": 226.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 169.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 86.9296875
+    }
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "mode": "edit-meal",
+    "original": "08:30",
+    "inputWidth": 226.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 169.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 86.9296875
+    }
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "mode": "edit-workout",
+    "original": "10:00",
+    "inputWidth": 226.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 169.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 86.9296875
+    }
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "mode": "add-meal",
+    "original": "12:00",
+    "inputWidth": 226.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 169.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 86.9296875
+    }
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "mode": "add-workout",
+    "original": "12:00",
+    "inputWidth": 226.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 169.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 86.9296875
+    }
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "mode": "edit-meal",
+    "original": "08:30",
+    "inputWidth": 226.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 169.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 86.9296875
+    }
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "mode": "edit-workout",
+    "original": "10:00",
+    "inputWidth": 226.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 169.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 86.9296875
+    }
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "mode": "add-meal",
+    "original": "12:00",
+    "inputWidth": 290.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 233.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 150.9296875
+    }
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "mode": "add-workout",
+    "original": "12:00",
+    "inputWidth": 484.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 427.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 344.9296875
+    }
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "mode": "edit-meal",
+    "original": "08:30",
+    "inputWidth": 290.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 233.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 150.9296875
+    }
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "mode": "edit-workout",
+    "original": "10:00",
+    "inputWidth": 484.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 427.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 344.9296875
+    }
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "mode": "add-meal",
+    "original": "12:00",
+    "inputWidth": 290.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 233.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 150.9296875
+    }
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "mode": "add-workout",
+    "original": "12:00",
+    "inputWidth": 484.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 427.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 344.9296875
+    }
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "mode": "edit-meal",
+    "original": "08:30",
+    "inputWidth": 290.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 233.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 150.9296875
+    }
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "mode": "edit-workout",
+    "original": "10:00",
+    "inputWidth": 484.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 427.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 344.9296875
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "mode": "add-meal",
+    "original": "12:00",
+    "inputWidth": 290.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 233.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 150.9296875
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "mode": "add-workout",
+    "original": "12:00",
+    "inputWidth": 484.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 427.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 344.9296875
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "mode": "edit-meal",
+    "original": "08:30",
+    "inputWidth": 290.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 233.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 150.9296875
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "mode": "edit-workout",
+    "original": "10:00",
+    "inputWidth": 484.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 427.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 344.9296875
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "mode": "add-meal",
+    "original": "12:00",
+    "inputWidth": 290.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 233.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 150.9296875
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "mode": "add-workout",
+    "original": "12:00",
+    "inputWidth": 484.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 427.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 344.9296875
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "mode": "edit-meal",
+    "original": "08:30",
+    "inputWidth": 290.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 233.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 150.9296875
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "mode": "edit-workout",
+    "original": "10:00",
+    "inputWidth": 484.59375,
+    "inputHeight": 48,
+    "nowWidth": 61.40625,
+    "nowHeight": 48,
+    "gap": 8,
+    "footerGap": 8,
+    "footerVisible": true,
+    "label": "Hora",
+    "type": "time",
+    "overflow": 0,
+    "native": {
+      "display": "07:54 PM",
+      "editorWidth": 427.796875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 344.9296875
+    }
+  }
+]

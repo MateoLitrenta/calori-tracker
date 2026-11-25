@@ -16,10 +16,18 @@ La base es el merge `6842ae51e353c33386e261b1b4321c0766c7ef7e`. La conversación
 
 [Comparativas y recorridos sintéticos](evidence/coach-noviembre/README.md)
 
-## Etapa 3 en revisión · Datos e Historial
+## Etapa 3 integrada en el PR #94 · Datos e Historial
 
 La rama parte de `5a6048c346ce4052a9b1df02078177f36e06551c`, el merge del PR #93. En Datos, el balance encabeza un resumen compacto con las bases de las medias visibles y la explicación dentro de «Cómo se calculan». Las barras muestran el detalle al activarlas. En Historial, el día consultado queda junto al calendario y los agregados tienen su propio bloque. El año presenta doce tarjetas con sus estados y unidades.
 
 Las comparativas en Chrome con datos sintéticos cubren cuatro anchos, ambos temas, ampliación de texto, teclado, selección táctil emulada y la separación entre consultar y editar. La revisión en teléfono físico y con lector de pantalla queda pendiente.
 
 [Mediciones, capturas y recorridos de la etapa 3](evidence/datos-noviembre/README.md)
+
+## Etapa 4 en revisión · Perfil y formularios
+
+La base es el merge del PR #94, `1fb0e34efd7a82bfd35913a462e77bb5de3f4cab`. Datos personales reúne la edición, el peso utilizado en estimaciones y la explicación del gasto. La foto tiene acciones independientes. Apariencia conserva el selector de tema y Gestión de datos requiere un despliegue explícito. Si falla el guardado personal, el formulario informa el error y conserva el borrador para reintentar.
+
+Los formularios diarios de comida y ejercicio comparten el selector nativo de hora y la acción Ahora. Las comparativas usan cuentas y registros sintéticos. La revisión del teclado y las barras de Safari en un iPhone físico queda pendiente.
+
+[Comparativas, mediciones y recorrido de revisión](evidence/perfil-noviembre/README.md)
