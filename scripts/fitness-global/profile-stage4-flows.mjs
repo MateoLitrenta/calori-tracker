@@ -4,7 +4,8 @@ import path from 'node:path';
 import { go, open, repo, start } from './browser.mjs';
 
 const browser = await start();
-const dir = path.join(repo, 'docs/evidence/ux-stage4/after');
+const november = process.argv.includes('--perfil-noviembre');
+const dir = path.join(repo, november ? 'docs/evidence/perfil-noviembre/despues' : 'docs/evidence/ux-stage4/after');
 const rows = [];
 const button = (page, name) => page.getByRole('button', { name, exact: true });
 const frames = page => page.evaluate(() => new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done))));
@@ -196,6 +197,11 @@ try {
     const { context, page, errors } = await open(browser, width, 'system', 'light');
     try {
       await profile(page);
+      if(november) {
+        assert.deepEqual(errors,[]);
+        rows.push({width, profile: 'passed', retryReset: true, crossAccount: true});
+        continue;
+      }
       await entry(page);
       const colors = await typography(page);
       if (width === 1440) await previousStages(page);
@@ -206,5 +212,5 @@ try {
     } finally { await context.close(); }
   }
   await writeFile(path.join(dir, 'flows.json'), JSON.stringify(rows, null, 2) + '\n');
-  console.log('Profile, entries, layers, contrast and CSS text: %d passed', rows.length);
+  console.log(november ? 'Perfil y gestión de datos: %d recorridos aprobados' : 'Profile, entries, layers, contrast and CSS text: %d passed', rows.length);
 } finally { await browser.close(); }

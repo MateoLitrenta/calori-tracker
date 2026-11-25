@@ -78,7 +78,7 @@
   clip-path: none;
   white-space: normal;
   color: var(--fit-ink);
-  font-size: var(--fit-caption);
+  font-size: .875rem;
   line-height: 1.35;
   font-weight: 600;
 }
@@ -94,7 +94,7 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
   min-height: 48px;
   padding: 10px 12px;
   border: 1px solid var(--fit-control-line);
-  border-radius: 6px;
+  border-radius: var(--fit-control-radius);
   background: var(--fit-surface);
   color: var(--fit-ink);
   font: inherit;
@@ -105,16 +105,29 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
   outline: 2px solid var(--fit-focus);
   outline-offset: 1px;
 }
-:is(.fitness-home, .fitness-entry-portal) .fitness-field-pair {
+:is(.fitness-home, .fitness-entry-portal) .fitness-field-pair,
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-workout-metrics {
   display: grid;
-  grid-template-columns: repeat(2,minmax(0,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 7.5em), 1fr));
   align-items: start;
   gap: 12px;
 }
-:is(.fitness-home, .fitness-entry-portal) .fitness-meal-pair { grid-template-columns: minmax(0,.85fr) minmax(0,1.15fr); }
+:is(.fitness-home, .fitness-entry-portal) .fitness-meal-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.fitness-meal-pair > .entry-calories { flex: 1 1 8em; min-width: 0; }
+/* Cap each wrapped line at the sheet width even when mobile fields cannot shrink. */
+.fitness-meal-pair > .entry-time { flex: 2 1 min(100%, 16em); min-width: 0; max-width: 100%; }
 :is(.fitness-home, .fitness-entry-portal) .fitness-field-pair > .entry-field { grid-area: auto; }
-:is(.fitness-home, .fitness-entry-portal) .entry-time-row { gap: 4px; min-width: 0; }
-:is(.fitness-home, .fitness-entry-portal) .entry-time-row input { flex: 1 1 0; }
+:is(.fitness-home, .fitness-entry-portal) .entry-time-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0;
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-content .entry-time-row input {
+  /* Preserve room for the native day period and picker before wrapping the action. */
+  flex: 1 1 10em;
+}
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-content .entry-time-now {
   display: grid;
   place-items: center;
@@ -122,22 +135,29 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
   min-width: 44px;
   min-height: 48px;
   width: auto;
-  padding-inline: 8px;
+  padding-inline: .75em;
   border: 1px solid var(--fit-control-line);
-  border-radius: 6px;
-  background: var(--fit-surface);
-  color: var(--fit-quiet);
+  border-radius: var(--fit-control-radius);
+  background: var(--fit-soft);
+  color: var(--fit-ink);
+  font-size: .875rem;
+  font-weight: 600;
+}
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-time-now:hover:not(:disabled) {
+  border-color: var(--fit-accent);
+  color: var(--fit-accent);
 }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-unit-control { position: relative; display: block; }
-html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-form-content .entry-unit-control input { padding-right: 38px; }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-calories input:placeholder-shown + .entry-unit { visibility: hidden; }
+html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-form-content .entry-unit-control input { padding-inline-end: 3.25em; }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-unit {
   display: inline;
   position: absolute;
   top: 50%;
-  right: 10px;
+  inset-inline-end: .75em;
   transform: translateY(-50%);
   color: var(--fit-quiet);
-  font-size: 12px;
+  font-size: .8125rem;
   pointer-events: none;
 }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-ai-action {
@@ -191,18 +211,17 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
 .fitness-entry-portal .entry-form .entry-form-footer { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer button {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-  min-height: 48px; border-radius: 6px; padding: 9px 18px; color: var(--fit-on-orange); background: var(--fit-orange); font-size: var(--fit-body); font-weight: 700;
+  min-width: 44px; min-height: 48px; border-radius: var(--fit-control-radius); padding: 9px 18px; font-size: var(--fit-body); font-weight: 700;
 }
 .fitness-entry-portal .entry-form .entry-form-footer button { width: 100%; }
-:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer button:hover:not(:disabled) { background: #f4a56d; color: var(--fit-on-orange); }
-:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer button:disabled { opacity: .65; cursor: wait; }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer .entry-save { color: var(--fit-on-orange); background: var(--fit-orange); }
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer .entry-save:hover:not(:disabled) { background: #f4a56d; color: var(--fit-on-orange); }
 :is(.fitness-home, .fitness-entry-portal) .record-detail-modal .record-detail-content { gap: 14px; }
 :is(.fitness-home, .fitness-entry-portal) .record-detail-modal :is(.record-detail-content,.record-detail-actions) { background: var(--fit-page); border-color: var(--fit-rule); }
 :is(.fitness-home, .fitness-entry-portal) .record-detail-content .record-detail-main { color: var(--fit-ink); font: 700 24px/1.15 var(--fit-face); }
 :is(.fitness-home, .fitness-entry-portal) .record-detail-actions button { min-height: 44px; border-radius: 6px; }
 @media (max-width: 350px) {
   .fitness-entry-portal.home-variants .entry-form .entry-fields-grid { padding-inline: 12px; }
-  .fitness-entry-portal .fitness-meal-pair { grid-template-columns: minmax(0,.72fr) minmax(0,1.28fr); gap: 8px; }
 }
 
 /* Header and actions stay in place while the form fields scroll. */
@@ -227,25 +246,19 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
 .fitness-entry-portal .entry-form .entry-form-footer button { flex: 1 1 auto; width: auto; }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer .entry-cancel {
   color: var(--fit-ink);
-  background: var(--fit-surface);
+  background: var(--fit-soft);
   border: 1px solid var(--fit-rule);
 }
-:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer .entry-cancel:hover {
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer .entry-cancel:hover:not(:disabled) {
   background: var(--fit-soft);
   color: var(--fit-ink);
 }
 /* Desktop weight shares the form actions' natural widths, wrapping and 48px minimum. */
 @media (min-width: 768px) {
   .fitness-home .entry-weight-form .entry-form-footer { gap: 12px; padding: 16px; }
-  .fitness-home .entry-weight-form .entry-form-footer .entry-cancel:hover:enabled {
-    background: var(--fit-soft);
-    color: var(--fit-ink);
-  }
 }
-:is(.fitness-home, .fitness-entry-portal) .entry-time-row { flex-wrap: wrap; }
-:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-content .entry-time-row input {
-  /* Give the native hour, day period and picker space before wrapping Ahora. */
-  flex: 1 1 10em;
+:is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer button:disabled {
+  opacity: 1; color: var(--fit-quiet); background: var(--fit-soft); border: 1px solid var(--fit-rule); cursor: wait;
 }
 :is(.fitness-home, .fitness-entry-portal) .entry-form button {
   overflow-wrap: anywhere;

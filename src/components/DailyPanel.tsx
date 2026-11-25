@@ -575,6 +575,17 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const estimateNotice = (estimateFailure || !!deadline) && <p role="status" className="text-sm">
     {estimateFailure?.message} {!!deadline && 'Podés reintentar a las ' + new Date(deadline).toLocaleTimeString('es-AR') + '.'} Podés ingresar las calorías manualmente.
   </p>;
+  const renderTimeField = (id: string, value: string, setTime: (time: string) => void, required = false) => (
+    <div className="entry-field entry-time">
+      <label className="entry-field-label" htmlFor={id}>Hora</label>
+      <div className="entry-time-row">
+        <input id={id} type="time" required={required} value={value} onChange={event => setTime(event.target.value)} />
+        <button type="button" className="entry-time-now" aria-label="Usar hora actual" title="Hora actual"
+          onClick={() => { markEntryChanged(); setTime(format(new Date(), 'HH:mm')); }}>Ahora</button>
+      </div>
+    </div>
+  );
+
   const mealEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
     <button type="button" disabled={estimating || estimationBlocked} onClick={() => void handleEstimateMeal()}
       className="entry-ai-action min-h-11 self-start px-4 rounded-[var(--radius-control)] border border-[#f5a064]/50 text-[#b85b22] dark:text-[#f5a064] disabled:opacity-50">
@@ -734,33 +745,17 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   <div className="fitness-field-pair fitness-meal-pair">
                     <div className="entry-field entry-calories">
                       <label className="entry-field-label" htmlFor="add-meal-calories">Calorías</label>
-                      <input id="add-meal-calories"
-                        required
-                        type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
-                        value={mealCals} onChange={e => { reviseEstimate('mealCalories'); setMealCals(e.target.value === '' ? '' : Number(e.target.value)); }}
-                        className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                    <div className="entry-field entry-time">
-                      <label className="entry-field-label" htmlFor="add-meal-time">Hora</label>
-                      <div className="entry-time-row flex items-center gap-2">
-                        <input id="add-meal-time"
-                          type="time"
-                          required
-                          value={mealTime}
-                          onChange={e => setMealTime(e.target.value)}
-                          className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                      <div className="entry-unit-control">
+                        <input id="add-meal-calories"
+                          aria-describedby="add-meal-kcal" required
+                          type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
+                          value={mealCals} onChange={e => { reviseEstimate('mealCalories'); setMealCals(e.target.value === '' ? '' : Number(e.target.value)); }}
+                          className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                         />
-                        <button
-                          type="button" aria-label="Usar hora actual"
-                          title="Hora actual"
-                          onClick={() => { markEntryChanged(); setMealTime(format(new Date(), 'HH:mm')); }}
-                          className="entry-time-now bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 p-2 rounded-md hover:text-blue-400 text-slate-500 dark:text-gray-400 transition-colors flex-shrink-0"
-                        >
-                          Ahora
-                        </button>
+                        <span id="add-meal-kcal" className="entry-unit">kcal</span>
                       </div>
                     </div>
+                    {renderTimeField("add-meal-time", mealTime, setMealTime, true)}
                   </div>
                   <div className="entry-photo-section">
                     <p className="entry-photo-hint">Foto opcional · podés usarla para estimar con IA</p>
@@ -785,7 +780,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 {mealError && <p className="meal-write-error" role="alert">{mealError}</p>}
                 <div className="entry-form-footer">
                   <button type="button" className="entry-cancel" disabled={savingMeal || photoProcessing} onClick={closeEntry}>Cancelar</button>
-                  <button type="submit" disabled={savingMeal || photoProcessing} className="disabled:opacity-50">
+                  <button type="submit" disabled={savingMeal || photoProcessing} className="entry-save">
                     <Check weight="bold" /> {savingMeal ? 'Guardando…' : photoProcessing ? 'Preparando foto…' : 'Guardar comida'}
                   </button>
                 </div>
@@ -822,34 +817,18 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                     </div>
                     <div className="entry-field entry-calories">
                       <label className="entry-field-label" htmlFor="add-workout-calories">Calorías</label>
-                      <input id="add-workout-calories"
-                        required
-                        type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
-                        value={workCals} onChange={e => { reviseEstimate('workCalories'); setWorkCals(e.target.value === '' ? '' : Number(e.target.value)); }}
-                        className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                      />
+                      <div className="entry-unit-control">
+                        <input id="add-workout-calories"
+                          aria-describedby="add-workout-kcal" required
+                          type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
+                          value={workCals} onChange={e => { reviseEstimate('workCalories'); setWorkCals(e.target.value === '' ? '' : Number(e.target.value)); }}
+                          className="w-24 flex-shrink-0 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                        />
+                        <span id="add-workout-kcal" className="entry-unit">kcal</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="entry-field entry-time">
-                    <label className="entry-field-label" htmlFor="add-workout-time">Hora</label>
-                    <div className="entry-time-row flex items-center gap-2">
-                      <input id="add-workout-time"
-                        type="time"
-                        required
-                        value={workTime}
-                        onChange={e => setWorkTime(e.target.value)}
-                        className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                      />
-                      <button
-                        type="button" aria-label="Usar hora actual"
-                        title="Hora actual"
-                        onClick={() => { markEntryChanged(); setWorkTime(format(new Date(), 'HH:mm')); }}
-                        className="entry-time-now bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 p-2 rounded-md hover:text-orange-400 text-slate-500 dark:text-gray-400 transition-colors flex-shrink-0"
-                      >
-                        Ahora
-                      </button>
-                    </div>
-                  </div>
+                  {renderTimeField("add-workout-time", workTime, setWorkTime, true)}
                   {workEstimateControls}
                   {selectedWorkCategory !== null && ['Correr', 'Natación', 'Caminata'].includes(selectedWorkCategory) && (<div className="entry-workout-metrics flex gap-4">
                     <div className="entry-field entry-distance">
@@ -883,9 +862,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   </div>
 
                 </div>
-                <div className="entry-form-footer flex justify-end">
+                <div className="entry-form-footer">
                   <button type="button" className="entry-cancel" disabled={savingWorkout} onClick={closeEntry}>Cancelar</button>
-                  <button type="submit" disabled={savingWorkout} className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-medium text-base transition-colors flex items-center gap-2 disabled:opacity-50">
+                  <button type="submit" disabled={savingWorkout} className="entry-save">
                     <Check weight="bold" /> {savingWorkout ? 'Guardando…' : 'Guardar ejercicio'}
                   </button>
                 </div>
@@ -1204,7 +1183,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
             </div>
             <div className="entry-form-footer">
               <button type="button" className="entry-cancel" disabled={savingWeight} onClick={closeWeight}>Cancelar</button>
-              <button type="submit" className="entry-weight-save" disabled={savingWeight}><Check size={18} weight="bold" aria-hidden="true" /> {savingWeight ? "Guardando…" : "Guardar peso"}</button>
+              <button type="submit" className="entry-save entry-weight-save" disabled={savingWeight}><Check size={18} weight="bold" aria-hidden="true" /> {savingWeight ? "Guardando…" : "Guardar peso"}</button>
             </div>
           </form>
         </EntryFormShell>
@@ -1242,32 +1221,17 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               <div className="fitness-field-pair fitness-meal-pair">
                 <div className="entry-field entry-calories">
                   <label className="entry-field-label" htmlFor="edit-meal-calories">Calorías</label>
-                  <input id="edit-meal-calories"
-                    required
-                    type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
-                    value={mealCals} onChange={e => { reviseEstimate('mealCalories'); setMealCals(e.target.value === '' ? '' : Number(e.target.value)); }}
-                    className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-                <div className="entry-field entry-time">
-                  <label className="entry-field-label" htmlFor="edit-meal-time">Hora</label>
-                  <div className="entry-time-row flex items-center gap-2">
-                    <input id="edit-meal-time"
-                      type="time"
-                      value={mealTime}
-                      onChange={e => setMealTime(e.target.value)}
-                      className="w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                  <div className="entry-unit-control">
+                    <input id="edit-meal-calories"
+                      aria-describedby="edit-meal-kcal" required
+                      type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
+                      value={mealCals} onChange={e => { reviseEstimate('mealCalories'); setMealCals(e.target.value === '' ? '' : Number(e.target.value)); }}
+                      className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                     />
-                    <button
-                      type="button" aria-label="Usar hora actual"
-                      onClick={() => { markEntryChanged(); setMealTime(format(new Date(), 'HH:mm')); }}
-                      className="entry-time-now p-2 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md hover:bg-slate-200 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-white transition-colors"
-                      title="Hora actual"
-                    >
-                      Ahora
-                    </button>
+                    <span id="edit-meal-kcal" className="entry-unit">kcal</span>
                   </div>
                 </div>
+                {renderTimeField("edit-meal-time", mealTime, setMealTime)}
               </div>
               <div className="entry-photo-section">
                 <p className="entry-photo-hint">Foto opcional · podés usarla para estimar con IA</p>
@@ -1290,9 +1254,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
             </div>
             {mealError && <p className="meal-write-error" role="alert">{mealError}</p>}
-            <div className="entry-form-footer flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
+            <div className="entry-form-footer">
               <button type="button" className="entry-cancel" disabled={savingMeal || photoProcessing} onClick={closeEntry}>Cancelar</button>
-              <button type="submit" disabled={savingMeal || photoProcessing} className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
+              <button type="submit" disabled={savingMeal || photoProcessing} className="entry-save">
                 <Check weight="bold" /> {savingMeal ? 'Guardando…' : photoProcessing ? 'Preparando foto…' : 'Guardar cambios'}
               </button>
             </div>
@@ -1330,33 +1294,18 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 </div>
                 <div className="entry-field entry-calories">
                   <label className="entry-field-label" htmlFor="edit-workout-calories">Calorías</label>
-                  <input id="edit-workout-calories"
-                    required
-                    type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
-                    value={workCals} onChange={e => { reviseEstimate('workCalories'); setWorkCals(e.target.value === '' ? '' : Number(e.target.value)); }}
-                    className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                  />
+                  <div className="entry-unit-control">
+                    <input id="edit-workout-calories"
+                      aria-describedby="edit-workout-kcal" required
+                      type="number" inputMode="numeric" pattern="[0-9]*" min="0" placeholder="Kcal"
+                      value={workCals} onChange={e => { reviseEstimate('workCalories'); setWorkCals(e.target.value === '' ? '' : Number(e.target.value)); }}
+                      className="w-24 bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                    />
+                    <span id="edit-workout-kcal" className="entry-unit">kcal</span>
+                  </div>
                 </div>
               </div>
-              <div className="entry-field entry-time">
-                <label className="entry-field-label" htmlFor="edit-workout-time">Hora</label>
-                <div className="entry-time-row flex items-center gap-2">
-                  <input id="edit-workout-time"
-                    type="time"
-                    value={workTime}
-                    onChange={e => setWorkTime(e.target.value)}
-                    className="w-full bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
-                  />
-                  <button
-                    type="button" aria-label="Usar hora actual"
-                    onClick={() => { markEntryChanged(); setWorkTime(format(new Date(), 'HH:mm')); }}
-                    className="entry-time-now p-2 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-md hover:bg-slate-200 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-white transition-colors"
-                    title="Hora actual"
-                  >
-                    Ahora
-                  </button>
-                </div>
-              </div>
+              {renderTimeField("edit-workout-time", workTime, setWorkTime)}
               {workEstimateControls}
               <div className="entry-workout-metrics flex gap-4">
                 <div className="entry-field entry-distance">
@@ -1389,9 +1338,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               </div>
 
             </div>
-            <div className="entry-form-footer flex justify-end border-t border-slate-200 dark:border-gray-800 pt-4 mt-2">
+            <div className="entry-form-footer">
               <button type="button" className="entry-cancel" disabled={savingWorkout} onClick={closeEntry}>Cancelar</button>
-              <button type="submit" disabled={savingWorkout} className="w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2.5 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
+              <button type="submit" disabled={savingWorkout} className="entry-save">
                 <Check weight="bold" /> {savingWorkout ? 'Guardando…' : 'Guardar cambios'}
               </button>
             </div>

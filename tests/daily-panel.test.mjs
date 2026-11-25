@@ -929,6 +929,13 @@ test('all four entry modes associate labels, retain mobile CTAs and use accessib
     }
     const footer = node(form, e => e.props.className?.includes('entry-form-footer'));
     assert.ok(renderToStaticMarkup(footer).includes(cta));
+    const nativeTime = node(form, e => e.type === 'input' && e.props.type === 'time');
+    if (!action) assert.equal(nativeTime.props.value, title.includes('comida') ? meal.time : workout.time);
+    nativeTime.props.onChange({ target: { value: '08:27' } });
+    assert.equal(node(view(), e => e.type === 'input' && e.props.type === 'time').props.value, '08:27');
+    const calories = controls.find(control => control.props.id.endsWith('-calories'));
+    const suffix = node(form, e => e.props.id === calories.props['aria-describedby']);
+    assert.equal(suffix.props.children, 'kcal');
     const now = node(form, e => e.props['aria-label'] === 'Usar hora actual');
     assert.equal(now.props.children, 'Ahora');
     now.props.onClick();
