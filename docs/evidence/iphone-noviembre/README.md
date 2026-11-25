@@ -23,7 +23,7 @@ node scripts/fitness-global/iphone-records-compiled.mjs --before
 node scripts/fitness-global/iphone-records-compiled.mjs
 ```
 
-El recorrido mide el detalle a 320, 375 y 1440 px, en Claro y Oscuro. Incluye Sistema con el diálogo abierto, texto al 200 % a 320 px y movimiento reducido. El mismo script verifica los estilos del despliegue al indicar `CALORI_PREVIEW_URL` con la Preview exacta y pasar `--details-only`. Solo se solicitan recursos estáticos de ese origen. Autenticación, lectura de registros, escritura y estimación se simulan en el navegador, sin peticiones a Supabase ni Gemini.
+El recorrido mide el detalle a 320, 375 y 1440 px, en Claro y Oscuro. Incluye Sistema con el diálogo abierto, texto al 200 % a 320 px y movimiento reducido. El mismo script verifica los estilos del despliegue con `--details-only`. Si el despliegue permite el acceso desde Chrome, indicar su URL exacta en `CALORI_PREVIEW_URL`. Para una Preview protegida, obtener el HTML, CSS y JavaScript del despliegue mediante acceso autorizado y servir esos archivos en localhost. El recorrido solicita recursos estáticos del origen indicado. Autenticación, lectura de registros, escritura y estimación se simulan en el navegador, sin peticiones a Supabase ni Gemini.
 
 El build de referencia mostró `#191c1f` detrás de las acciones en Claro. En el candidato, los fondos computados son `#fffefa` en Claro y `#1a211f` en Oscuro. El contraste mínimo medido para Editar y Eliminar fue de 12,64:1 y 6,11:1, respectivamente. A 320 px con texto al 200 %, ambas acciones pasaron a filas independientes sin desbordamiento horizontal.
 
