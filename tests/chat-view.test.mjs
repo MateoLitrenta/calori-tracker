@@ -6,6 +6,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import ts from 'typescript';
 import { buildCoachCard } from '../src/utils/coachPresentation.ts';
 import { buildCoachContext } from '../src/utils/coachContext.ts';
+import { CoachConversationStore } from '../src/lib/coachConversation.ts';
 import apiHandler from '../api/ai/chat.ts';
 import { authorizedAIHandler } from './fixtures/ai-auth-mock.mjs';
 const chatHandler = authorizedAIHandler(apiHandler);
@@ -30,9 +31,11 @@ const imports = {
     export const useRef = (...args) => globalThis.__chatViewHarness.hooks.useRef(...args);
     export const useCallback = callback => callback;
     export const useMemo = callback => callback();
+    export const useSyncExternalStore = (_subscribe, getSnapshot) => getSnapshot();
     export const useEffect = (...args) => globalThis.__chatViewHarness.hooks.useEffect(...args);`),
   '../hooks/useAppStore': stub(`export const useAppStore = () => ({
     user: { id: 'user-a' }, activeProfile: globalThis.__chatViewHarness.profile,
+    coachConversations: globalThis.__chatViewHarness.coachConversations,
     avatarRevision: 0, updateRecord: (...args) => globalThis.__chatViewHarness.updateRecord?.(...args) ?? true
   });`),
   '../services/aiService': stub(`export * from ${JSON.stringify(new URL('../src/services/aiService.ts', import.meta.url).href)};
@@ -74,7 +77,6 @@ function mount(component, props) {
     updateProps(next) { props = { ...props, ...next }; },
     render() { cursor = 0; effects = []; globalThis.__chatViewHarness.hooks = hooks; return component(props); },
     flushAnchor() { effects.find(effect => Array.isArray(effect.deps?.[0]) && typeof effect.deps.at(-1) === 'string')?.callback(); },
-    flushPersistence() { effects.find(effect => typeof effect.deps?.[1] === 'string' && effect.deps[1].startsWith('calori:assistant:messages:'))?.callback(); },
   };
 }
 function nodes(tree, predicate) {
@@ -89,6 +91,10 @@ function conversation(messages = []) {
     getItem: key => storage.get(key) ?? null,
     setItem: (key, value) => storage.set(key, value), removeItem: key => storage.delete(key),
   };
+  // One authenticated session owns its conversations; persistence happens when
+  // the real controller publishes messages, not when the fake view flushes effects.
+  globalThis.__chatViewHarness.coachConversations = new CoachConversationStore(() => globalThis.__chatViewHarness.profile);
+  globalThis.__chatViewHarness.coachConversations.resetOwner('user-a');
   const outer = mount(ChatView, { scrollContainer: { current: null } }).render();
   storage.set(`calori:assistant:messages:user-a:${outer.props.today}`, JSON.stringify(messages));
   storage.set('calori:assistant:messages:user-a:migrated', outer.props.today);
@@ -369,7 +375,6 @@ test('stored card is a sibling of reply, stays stable and historical messages do
   assert.match(html, /Resumen de hoy|Sin datos todavía|Faltan comidas registradas\./);
   assert.doesNotMatch(html, /0 kcal|Mantenimiento/);
   assert.equal(nodes(view.render(), e => hasClass(e, 'chat-message-new')).length, 0);
-  view.flushPersistence();
   const saved = JSON.parse(localStorage.getItem(`calori:assistant:messages:user-a:${date}`));
   assert.deepEqual(saved[0].coachCard, card);
   const reloaded = render(saved);
@@ -416,7 +421,6 @@ test('new response snapshot uses the request context even when records change be
   assert.deepEqual(rendered.props.card, buildCoachCard('today_summary', sentContext));
   assert.equal(rendered.props.card.consumed, 500);
   assert.match(renderToStaticMarkup(view.render()), /Hay un déficit registrado\./);
-  view.flushPersistence();
   const stored = JSON.parse(localStorage.getItem(`calori:assistant:messages:user-a:${date}`));
   assert.deepEqual(stored.at(-1).coachCard, rendered.props.card);
 });
@@ -485,12 +489,13 @@ test('weekly interpretations persist with their snapshots and remain isolated by
     const card = buildCoachCard(type, buildCoachContext(profile, today));
     const view = conversation([{ id: type, role: 'bot', text, coachCard: card }]);
     view.render();
-    view.flushPersistence();
+    globalThis.__chatViewHarness.coachConversations.resetOwner('user-a');
     const outer = mount(ChatView, { scrollContainer: { current: null } }).render();
     const reload = mount(outer.type, outer.props).render();
     assert.deepEqual(nodes(reload, e => e.type.name === 'CoachInsightCard')[0].props.card, card);
     assert.ok(renderToStaticMarkup(reload).includes(text));
     for (const props of [{ ...outer.props, userId: 'user-b' }, { ...outer.props, dateStr: '2020-01-01' }]) {
+      outer.props.coachConversations.resetOwner(props.userId);
       const other = mount(outer.type, props).render();
       assert.equal(nodes(other, e => e.type.name === 'CoachInsightCard').length, 0);
       assert.ok(!renderToStaticMarkup(other).includes(text));
@@ -508,7 +513,6 @@ test('cardless and invalid-hint replies retain explicit numeric details through 
     await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
     assert.equal(nodes(view.render(), e => e.type.name === 'CoachInsightCard').length, 0);
     assert.match(renderToStaticMarkup(view.render()), /700 kcal/);
-    view.flushPersistence();
     const date = new Date().toLocaleDateString('en-CA');
     const stored = JSON.parse(localStorage.getItem(`calori:assistant:messages:user-a:${date}`));
     assert.equal(stored.at(-1).text, reply);
@@ -563,7 +567,7 @@ test('session, quota and provider errors preserve saved history/cards and cannot
       get(e => e.type === 'textarea').props.onChange({ target: { value: 'Comí una manzana.' } });
       await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
     };
-    await send(); view.flushPersistence();
+    await send();
     const stored = JSON.parse(localStorage.getItem(`calori:assistant:messages:user-a:${date}`));
     assert.equal(stored[0].text, 'Historial anterior.');
     assert.deepEqual(stored[0].coachCard, card);
@@ -636,7 +640,6 @@ test('a confirmed identical meal remains available as a separate explicit intent
   };
   await send(); await get(e => e.type === 'button' && e.props.children === 'Confirmar').props.onClick();
   view.render();
-  view.flushPersistence();
   const stored = JSON.parse(localStorage.getItem(`calori:assistant:messages:user-a:${date}`));
   assert.equal(stored.at(-1).recordedActions[0].entryId, writes[0].meals[0].id);
   view = conversation(stored);
