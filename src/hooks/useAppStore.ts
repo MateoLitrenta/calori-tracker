@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import type { User } from '@supabase/supabase-js';
 import type { RecordWriteFailure, RecordWriteOptions } from '../lib/recordFeedback';
 import { HabitDraftController } from '../lib/habitDraft';
+import { CoachConversationStore } from '../lib/coachConversation';
 
 const useAppStoreState = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -21,6 +22,8 @@ const useAppStoreState = () => {
   const profileRef = useRef(activeProfile);
   const [habitDrafts] = useState(() => new HabitDraftController(day => ({ dateStr: day,
     date: new Date(day + 'T12:00:00'), meals: [], workouts: [], steps: 0, water: 0, version: null }), async () => false));
+  const [coachConversations] = useState(() => new CoachConversationStore(() => null,
+    () => toast.error('No se pudo guardar la conversación en este dispositivo.')));
   useEffect(() => { profileRef.current = activeProfile; }, [activeProfile]);
 
   // Auth & Initial Data Load
@@ -34,6 +37,7 @@ const useAppStoreState = () => {
         identity.current = { userId: nextUser?.id ?? null, epoch: identity.current.epoch + 1 };
         pendingIntents.current.clear();
         habitDrafts.resetOwner();
+        coachConversations.resetOwner(nextUser?.id ?? null);
       }
       if (nextUser && nextUser.id !== sessionUserId) {
         setLoading(true);
@@ -61,7 +65,7 @@ const useAppStoreState = () => {
       isMounted = false;
       subscription.unsubscribe();
     };
-  }, [habitDrafts]);
+  }, [habitDrafts, coachConversations]);
 
   // Fetch profile when user changes
   useEffect(() => {
@@ -233,6 +237,7 @@ const useAppStoreState = () => {
   // UI subscriptions can unmount while the account's draft and writer stay alive.
   // Bind callbacks after render; only Auth identity changes clear the owner epoch.
   useEffect(() => {
+    coachConversations.configure(() => profileRef.current);
     habitDrafts.configure(day => {
       const profile = profileRef.current;
       return { ...(profile?.records[day] ?? { dateStr: day, date: new Date(day + 'T12:00:00'), meals: [], workouts: [], steps: 0, water: 0, version: null }),
@@ -255,6 +260,7 @@ const useAppStoreState = () => {
     completeOnboarding,
     updateRecord,
     habitDrafts,
+    coachConversations,
     resetData,
     signOut
   };

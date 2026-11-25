@@ -40,12 +40,22 @@ El cambio de los nombres genéricos de comidas creadas por Coach y Liquid Glass 
 
 [Comparativas, criterios y revisión en iPhone](evidence/iphone-noviembre/README.md)
 
-## Seguimiento del 25 de noviembre en revisión · Editar una propuesta de Coach
+## Seguimiento del 25 de noviembre integrado en el PR #97 · Editar una propuesta de Coach
 
 Base: merge del PR #96, `c74bbe2656d041e2d82469b9a9163243f9b5895d`. El video posterior mostró que abrir el teclado directamente en la edición de una propuesta dejaba visible la navegación inferior y desplazaba el campo fuera del lector. La detección anterior solo reconocía el compositor de mensajes.
 
 El candidato incluye los campos editables de la propuesta en la detección. Al escribir, recupera el espacio de navegación, compositor deshabilitado y observación; el lector desplaza únicamente lo necesario para mostrar el campo activo. La navegación vuelve cuando se cierra el teclado. Confirmar y Cancelar conservan el procesamiento mediante clic y la protección contra escrituras duplicadas.
 
-Las regresiones de React y de viewport son sintéticas. La aceptación visual en Safari de iPhone sigue pendiente; no se presenta la simulación como una comprobación física.
+Las regresiones de React y de viewport son sintéticas. Después del merge, el usuario confirmó en su revisión que el arreglo funciona. Esa aceptación corresponde al teclado de la propuesta, no a los cambios posteriores de persistencia al navegar.
 
 [Causa, pruebas y recorrido de aceptación](evidence/coach-proposal-keyboard/README.md)
+
+## Seguimiento del 25 de noviembre en revisión · Propuestas pendientes al navegar
+
+Base: merge del PR #97, `79ce7d58da24e2df50f0124cdf27033b3a9eece4`. El video posterior muestra una tarjeta pendiente que desaparece al ir a Inicio y volver a Coach, mientras su mensaje permanece.
+
+El candidato conserva la conversación, la propuesta, el modo edición y su intención de guardado en la sesión de la cuenta. Cambiar de sección permite retomar los valores, incluso cuando están incompletos. Confirmar espera el acuse; si falla, conserva el borrador y sus IDs. Cancelar retira la propuesta. Una respuesta o un guardado que termina fuera de Coach actualiza esa misma conversación sin repetir la petición. La vista que vuelve a montarse conserva el bloqueo de guardado y su propio punto de lectura.
+
+El alcance es la navegación interna durante la sesión abierta. Una recarga completa o el cierre de sesión no recuperan propuestas pendientes. Las conversaciones anteriores mantienen su política de solo lectura y la fecha del registro no se cambia al llegar la medianoche.
+
+[Causa, regresiones y recorrido de revisión](evidence/coach-pending-proposals/README.md)

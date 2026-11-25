@@ -40,6 +40,7 @@ const imports = {
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,
   '../utils/homeDateNavigation': new URL('../src/utils/homeDateNavigation.ts', import.meta.url).href,
   '../lib/habitDraft': new URL('../src/lib/habitDraft.ts', import.meta.url).href,
+  '../lib/coachConversation': new URL('../src/lib/coachConversation.ts', import.meta.url).href,
   './hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
   './utils/entryRoute': new URL('../src/utils/entryRoute.ts', import.meta.url).href,
   './lib/coachViewport': new URL('../src/lib/coachViewport.ts', import.meta.url).href,

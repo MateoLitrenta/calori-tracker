@@ -92,7 +92,7 @@ async function mountApp(t, actions, fail = false, setup) {
   dom.window.HTMLElement.prototype.scrollTo = () => {};
   const state = { reads: 0, logWrites: 0, mealWrites: 0, workoutWrites: 0, persisted: null,
     historyRecords: {}, listeners: new Set(), aiCalls: 0, currentProfile: profile, version: 0,
-    generation: profile.recordGeneration };
+    generation: profile.recordGeneration, recordAttempts: [], recordFailures: 0 };
   state.goals = [];
   state.goalOwner = profile.user_id;
   state.goalReads = 0;
@@ -115,8 +115,12 @@ async function mountApp(t, actions, fail = false, setup) {
     createResetIntent: generation => ({kind: 'reset', operationId: crypto.randomUUID(), generation, fingerprint: 'reset'}),
     commitRecordIntent: async (owner, intent) => {
       state.logWrites++;
+      state.recordAttempts.push({ owner, intent: structuredClone(intent) });
       if (!state.skipWriteGate) await writeGate;
-      if (fail) throw Object.assign(new Error('No se pudo completar el guardado'), {kind: 'invalid'});
+      if (fail || state.recordFailures > 0) {
+        state.recordFailures = Math.max(0, state.recordFailures - 1);
+        throw Object.assign(new Error('No se pudo completar el guardado'), {kind: 'invalid'});
+      }
       const previous = state.persistedUser === owner ? state.persisted : null;
       const record = structuredClone(intent.record);
       state.mealWrites += record.meals.filter(entry => !previous?.meals.some(saved => saved.id === entry.id)).length;
@@ -165,6 +169,359 @@ async function sendActions(state, hasProposal = true, text = 'Registrá estos da
   }
 }
 const meal = { type: 'add_meal', estimated: true, payload: { dateStr: today, name: 'Comida de prueba', type: 'Almuerzo', calories: 500, time: '12:30' } };
+
+function proposalField(state, index, text) {
+  const proposal = state.document.querySelectorAll('.chat-proposal-item')[index];
+  assert.ok(proposal, `Missing proposal ${index}`);
+  const label = [...proposal.querySelectorAll('.chat-proposal-edit label')].find(element =>
+    [...element.childNodes].filter(node => node.nodeType === 3).map(node => node.textContent).join('').trim() === text);
+  assert.ok(label, `Missing proposal field: ${text}`);
+  return label.querySelector('input, select, textarea');
+}
+async function changeProposalField(state, index, text, value) {
+  await act(async () => {
+    const field = proposalField(state, index, text);
+    const prototype = field.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype
+      : field.tagName === 'SELECT' ? window.HTMLSelectElement.prototype : window.HTMLInputElement.prototype;
+    Object.getOwnPropertyDescriptor(prototype, 'value').set.call(field, value);
+    field.dispatchEvent(new window.Event(field.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true }));
+    await turn();
+  });
+}
+function confirmationButton(state) {
+  const button = [...state.document.querySelectorAll('.chat-proposal-actions button')].find(element => element.textContent === 'Confirmar');
+  assert.ok(button, 'Missing proposal confirmation');
+  return button;
+}
+const conversationMessages = state => JSON.parse(state.document.defaultView.localStorage.getItem(`calori:assistant:messages:${profile.user_id}:${today}`) || '[]');
+
+async function readOlderCoachMessages(state) {
+  // Let the remount restore its position before the reader deliberately scrolls up.
+  await act(async () => { await new Promise(resolve => window.requestAnimationFrame(resolve)); });
+  const log = state.document.querySelector('.chat-messages'); assert.ok(log);
+  // JSDOM has no layout; these dimensions model a reader well above the end.
+  Object.defineProperties(log, {
+    scrollHeight: { value: 2000, configurable: true },
+    clientHeight: { value: 500, configurable: true },
+  });
+  const scrollCalls = [];
+  log.scrollTo = ({ top }) => { scrollCalls.push(top); log.scrollTop = top; };
+  await act(async () => {
+    log.scrollTop = 150;
+    log.dispatchEvent(new window.Event('scroll', { bubbles: true }));
+    await turn();
+  });
+  return { log, scrollCalls };
+}
+
+// These tests cross the real App boundary: Coach is absent while another tab is active.
+// They exercise proposal ownership and asynchronous writes independently of its mounted view.
+test('an unconfirmed Coach meal survives Inicio, Perfil and Datos without replaying AI or writing records', async t => {
+  const state = await mountApp(t, [meal]);
+  await sendActions(state);
+  const original = state.document.querySelector('.chat-confirmation').textContent;
+  for (const tab of ['Inicio', 'Perfil', 'Datos']) {
+    await click(state, tab);
+    assert.equal(state.document.querySelector('.chat-confirmation'), null, 'Coach must leave the active DOM');
+    await click(state, 'Coach');
+    assert.equal(state.document.querySelector('.chat-confirmation')?.textContent, original);
+    assert.equal(confirmationButton(state).disabled, false);
+  }
+  assert.equal(state.aiCalls, 1); assert.equal(state.logWrites, 0);
+  assert.equal(state.mealWrites, 0); assert.equal(state.workoutWrites, 0);
+});
+
+test('a late AI proposal finishes in the account session while Coach is unmounted without an extra request or save', async t => {
+  let resolveResponse;
+  const response = new Promise(resolve => { resolveResponse = resolve; });
+  const state = await mountApp(t, [meal], false, current => {
+    current.ai = async () => { current.aiCalls++; return response; };
+  });
+  await sendActions(state, false);
+  await click(state, 'Inicio'); await click(state, 'Coach');
+  assert.ok(state.document.querySelector('[aria-label="Coach está respondiendo"]'));
+  assert.equal(state.document.querySelector('button[aria-label="Enviar mensaje"]').disabled, true);
+  await click(state, 'Datos');
+  await act(async () => { resolveResponse({ reply: 'Revisá esta propuesta.', actions: [meal], presentation: 'none' }); await turn(); });
+  await click(state, 'Coach');
+  assert.match(state.document.querySelector('.chat-confirmation')?.textContent ?? '', /Comida de prueba/);
+  assert.equal(state.document.querySelector('[aria-label="Coach está respondiendo"]'), null);
+  assert.equal(state.aiCalls, 1); assert.equal(state.logWrites, 0);
+});
+
+test('a late AI response preserves older-message reading after Coach remounts', async t => {
+  let resolveResponse;
+  const response = new Promise(resolve => { resolveResponse = resolve; });
+  const state = await mountApp(t, [], false, current => {
+    current.ai = async () => { current.aiCalls++; return response; };
+    localStorage.setItem(`calori:assistant:messages:${profile.user_id}:${today}`, JSON.stringify([
+      { id: 'earlier-message', role: 'bot', text: 'Conversación anterior conservada.' },
+    ]));
+  });
+  await sendActions(state, false, 'Revisá mis registros.');
+  await click(state, 'Inicio'); await click(state, 'Coach');
+  const { log, scrollCalls } = await readOlderCoachMessages(state);
+  await act(async () => {
+    resolveResponse({ reply: 'Respuesta que llegó después de volver.', actions: [], presentation: 'none' });
+    await turn();
+    await new Promise(resolve => window.requestAnimationFrame(resolve));
+  });
+  assert.equal(state.document.querySelector('.chat-messages'), log);
+  assert.match(log.textContent, /Conversación anterior conservada/);
+  assert.match(log.textContent, /Respuesta que llegó después de volver/);
+  assert.equal(log.scrollTop, 150);
+  assert.deepEqual(scrollCalls, [], 'The current reader decides whether to follow a response from an older view');
+  assert.equal(state.document.querySelector('[aria-label="Coach está respondiendo"]'), null);
+  assert.equal(state.aiCalls, 1); assert.equal(state.logWrites, 0);
+});
+
+test('an AI response from a previous authentication epoch cannot restore a proposal after signing in again', async t => {
+  let resolveResponse;
+  const response = new Promise(resolve => { resolveResponse = resolve; });
+  const state = await mountApp(t, [meal], false, current => {
+    current.ai = async () => { current.aiCalls++; return response; };
+  });
+  await sendActions(state, false);
+  await act(async () => { for (const listener of state.listeners) listener('SIGNED_OUT', null); await turn(); });
+  await act(async () => { for (const listener of state.listeners) listener('SIGNED_IN', { user: { id: profile.user_id } }); await turn(); });
+  await click(state, 'Coach');
+  await act(async () => { resolveResponse({ reply: 'Respuesta de la sesión anterior.', actions: [meal], presentation: 'none' }); await turn(); });
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  assert.doesNotMatch(state.document.querySelector('.chat-messages').textContent, /Respuesta de la sesión anterior/);
+  assert.equal(state.document.querySelector('[aria-label="Coach está respondiendo"]'), null);
+  assert.equal(state.aiCalls, 1); assert.equal(state.logWrites, 0);
+});
+
+test('edited meal and workout proposals retain every field and edit mode across tabs without saving', async t => {
+  const workout = { type: 'add_workout', estimated: true, payload: { dateStr: today,
+    activity: 'Actividad de prueba', duration: 30, calories: 200, time: '17:00', details: '' } };
+  const state = await mountApp(t, [meal, workout]);
+  await sendActions(state); await click(state, 'Editar');
+  const fields = [[0, 'Nombre', 'Almuerzo corregido'], [0, 'Calorías (kcal)', '482'], [0, 'Hora', '13:45'],
+    [0, 'Tipo', 'Snack'], [0, 'Detalles', 'Una porción\nSin aderezo'], [1, 'Actividad', 'Caminata editada'],
+    [1, 'Duración (min)', '45'], [1, 'Calorías (kcal)', '175'], [1, 'Hora', '18:05'],
+    [1, 'Distancia (km, opcional)', '2.35'], [1, 'Ritmo (min/km, opcional)', '19:08'],
+    [1, 'Detalles', 'Primera vuelta\nSegunda vuelta']];
+  for (const [index, field, value] of fields) await changeProposalField(state, index, field, value);
+  await click(state, 'Perfil'); await click(state, 'Datos'); await click(state, 'Inicio'); await click(state, 'Coach');
+  for (const [index, field, value] of fields) assert.equal(proposalField(state, index, field).value, value);
+  assert.equal(state.document.querySelectorAll('.chat-proposal-edit').length, 2);
+  assert.equal(state.logWrites, 0); assert.equal(state.aiCalls, 1);
+});
+
+test('incomplete proposal edits survive navigation and can be completed before one explicit confirmation', async t => {
+  const state = await mountApp(t, [meal]);
+  await sendActions(state); await click(state, 'Editar');
+  await changeProposalField(state, 0, 'Nombre', '');
+  await changeProposalField(state, 0, 'Calorías (kcal)', '');
+  await click(state, 'Inicio'); await click(state, 'Coach');
+  assert.equal(proposalField(state, 0, 'Nombre').value, '');
+  assert.equal(proposalField(state, 0, 'Calorías (kcal)').value, '');
+  await click(state, 'Confirmar');
+  assert.equal(state.logWrites, 0, 'Restoration must not normalize an incomplete edit into a valid write');
+  await changeProposalField(state, 0, 'Nombre', 'Comida completada');
+  await changeProposalField(state, 0, 'Calorías (kcal)', '350');
+  await click(state, 'Confirmar');
+  assert.equal(state.logWrites, 1);
+  await act(async () => { state.release(); await turn(); });
+  assert.equal(state.persisted.meals[0].name, 'Comida completada');
+  assert.equal(state.persisted.meals[0].calories, 350);
+  assert.equal(state.mealWrites, 1); assert.equal(state.document.querySelector('.chat-confirmation'), null);
+});
+
+test('cancelling a resumed edited proposal removes it permanently from that conversation without a write', async t => {
+  const state = await mountApp(t, [meal]);
+  await sendActions(state); await click(state, 'Editar');
+  await changeProposalField(state, 0, 'Nombre', 'Borrador para cancelar');
+  await click(state, 'Datos'); await click(state, 'Coach');
+  await click(state, 'Cancelar');
+  await click(state, 'Perfil'); await click(state, 'Coach');
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  assert.equal(conversationMessages(state).filter(message => message.text === 'Registro cancelado.').length, 1);
+  assert.equal(state.logWrites, 0); assert.equal(state.aiCalls, 1);
+});
+
+test('returning before a proposal save acknowledgement keeps confirmation busy and prevents a duplicate write', async t => {
+  const state = await mountApp(t, [meal]);
+  await sendActions(state); await click(state, 'Editar');
+  await changeProposalField(state, 0, 'Calorías (kcal)', '650');
+  await click(state, 'Confirmar');
+  assert.equal(state.logWrites, 1);
+  await click(state, 'Inicio'); await click(state, 'Coach');
+  assert.equal(state.document.querySelector('.chat-confirmation')?.getAttribute('aria-busy'), 'true');
+  assert.equal(confirmationButton(state).disabled, true);
+  assert.equal(proposalField(state, 0, 'Calorías (kcal)').disabled, true, 'The pending write cannot discard a newer field edit');
+  await act(async () => { confirmationButton(state).click(); confirmationButton(state).click(); await turn(); });
+  assert.equal(state.logWrites, 1); assert.equal(state.persisted, null);
+  await act(async () => { state.release(); await turn(); });
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  assert.equal(state.persisted.meals[0].calories, 650);
+  assert.equal(conversationMessages(state).filter(message => message.recordedActions?.length).length, 1);
+  assert.equal(state.mealWrites, 1); assert.equal(state.logWrites, 1);
+});
+
+test('a late save acknowledgement preserves older-message reading after Coach remounts', async t => {
+  const state = await mountApp(t, [meal]);
+  await sendActions(state); await click(state, 'Confirmar');
+  await click(state, 'Inicio'); await click(state, 'Coach');
+  const { log, scrollCalls } = await readOlderCoachMessages(state);
+  await act(async () => {
+    state.release(); await turn();
+    await new Promise(resolve => window.requestAnimationFrame(resolve));
+  });
+  assert.equal(state.document.querySelector('.chat-messages'), log);
+  assert.match(log.textContent, /Registrado hoy/);
+  assert.equal(log.scrollTop, 150);
+  assert.deepEqual(scrollCalls, [], 'The receipt must respect the remounted reader instead of following the old view');
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  assert.equal(state.logWrites, 1); assert.equal(state.mealWrites, 1);
+  assert.equal(conversationMessages(state).filter(message => message.recordedActions?.length).length, 1);
+});
+
+test('an acknowledgement received outside Coach removes the proposal and retains replay provenance on return', async t => {
+  const state = await mountApp(t, [meal]);
+  await sendActions(state); await click(state, 'Confirmar'); await click(state, 'Datos');
+  await act(async () => { state.release(); await turn(); });
+  await click(state, 'Coach');
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  const receipts = conversationMessages(state).filter(message => message.recordedActions?.length);
+  assert.equal(receipts.length, 1);
+  assert.equal(receipts[0].recordedActions[0].entryId, state.persisted.meals[0].id);
+  assert.match(state.document.querySelector('.chat-messages').textContent, /Registrado hoy/);
+  await inputValue(state, 'textarea[aria-label="Mensaje para Coach"]', 'Repetí la propuesta para revisarla.');
+  await act(async () => { state.document.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })); await turn(); });
+  assert.match(state.document.querySelector('.chat-already-recorded')?.textContent ?? '', /Ya registrado/);
+  assert.equal(confirmationButton(state).disabled, true, 'An identical proposal is excluded unless explicitly selected again');
+  assert.equal(state.logWrites, 1); assert.equal(state.mealWrites, 1); assert.equal(state.aiCalls, 2);
+});
+
+test('a failed offscreen confirmation retains the edited proposal and entry IDs for a successful explicit retry', async t => {
+  t.mock.method(console, 'error', () => {});
+  const state = await mountApp(t, [meal], false, current => { current.recordFailures = 1; });
+  await sendActions(state); await click(state, 'Editar');
+  await changeProposalField(state, 0, 'Nombre', 'Borrador conservado');
+  await changeProposalField(state, 0, 'Calorías (kcal)', '571');
+  await changeProposalField(state, 0, 'Detalles', 'Primera línea\nSegunda línea');
+  await click(state, 'Confirmar'); await click(state, 'Perfil');
+  await act(async () => { state.release(); await turn(); });
+  await click(state, 'Coach');
+  assert.equal(proposalField(state, 0, 'Nombre').value, 'Borrador conservado');
+  assert.equal(proposalField(state, 0, 'Calorías (kcal)').value, '571');
+  assert.equal(proposalField(state, 0, 'Detalles').value, 'Primera línea\nSegunda línea');
+  assert.match(state.document.querySelector('.chat-messages').textContent, /No se pudo completar el guardado/);
+  assert.equal(confirmationButton(state).disabled, false);
+  assert.equal(state.persisted, null); assert.equal(state.logWrites, 1);
+  const firstId = state.recordAttempts[0].intent.record.meals[0].id;
+  await click(state, 'Confirmar');
+  assert.equal(state.recordAttempts[1].intent.record.meals[0].id, firstId);
+  assert.equal(state.persisted.meals[0].id, firstId);
+  assert.equal(state.persisted.meals[0].calories, 571);
+  assert.equal(state.mealWrites, 1); assert.equal(state.logWrites, 2);
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  assert.equal(conversationMessages(state).filter(message => message.recordedActions?.length).length, 1);
+});
+
+test('pending proposals are isolated by account and are not restored after ending that authenticated session', async t => {
+  const state = await mountApp(t, [meal]);
+  await sendActions(state);
+  state.currentProfile = { ...profile, id: 'profile-other', user_id: 'user-other' };
+  await act(async () => {
+    for (const listener of state.listeners) listener('SIGNED_IN', { user: { id: state.currentProfile.user_id } });
+    await turn();
+  });
+  await click(state, 'Coach');
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  assert.doesNotMatch(state.document.querySelector('.chat-messages').textContent, /Comida de prueba|Revisá esta propuesta/);
+  state.currentProfile = profile;
+  await act(async () => {
+    for (const listener of state.listeners) listener('SIGNED_IN', { user: { id: profile.user_id } });
+    await turn();
+  });
+  await click(state, 'Coach');
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  assert.equal(state.logWrites, 0); assert.equal(state.aiCalls, 1);
+});
+
+test('a stale confirmation cannot append a receipt into a newly authenticated session of the same account', async t => {
+  const state = await mountApp(t, [meal]);
+  await sendActions(state); await click(state, 'Confirmar');
+  await act(async () => {
+    for (const listener of state.listeners) listener('SIGNED_OUT', null);
+    await turn();
+  });
+  await act(async () => {
+    for (const listener of state.listeners) listener('SIGNED_IN', { user: { id: profile.user_id } });
+    await turn();
+  });
+  await click(state, 'Coach');
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  await act(async () => { state.release(); await turn(); });
+  assert.doesNotMatch(state.document.querySelector('.chat-messages').textContent, /Registrado hoy|No se pudo confirmar el guardado/);
+  assert.equal(conversationMessages(state).filter(message => message.recordedActions?.length).length, 0);
+  assert.equal(state.persistedUser, profile.user_id); assert.equal(state.logWrites, 1);
+});
+
+test('a proposal created today for a past entry day keeps its target date across navigation and confirmation', async t => {
+  const date = new Date(today + 'T12:00:00'); date.setDate(date.getDate() - 1);
+  const target = formatDateStr(date);
+  const state = await mountApp(t, [{ ...meal, payload: { ...meal.payload, dateStr: target } }]);
+  await sendActions(state);
+  const originalDate = state.document.querySelector('.chat-proposal-date').textContent;
+  await click(state, 'Inicio'); await click(state, 'Coach');
+  assert.equal(state.document.querySelector('.chat-proposal-date')?.textContent, originalDate);
+  await click(state, 'Confirmar');
+  await act(async () => { state.release(); await turn(); });
+  assert.equal(state.persisted.dateStr, target);
+  const receipts = conversationMessages(state).flatMap(message => message.recordedActions ?? []);
+  assert.equal(receipts.length, 1); assert.equal(receipts[0].dateStr, target);
+  assert.equal(state.logWrites, 1); assert.equal(state.mealWrites, 1);
+});
+
+test('an incomplete pending proposal remains read-only in yesterday’s conversation after midnight and can be cancelled without writing', async t => {
+  const beforeMidnight = new Date(today + 'T23:59:00');
+  const afterMidnight = new Date(beforeMidnight); afterMidnight.setDate(afterMidnight.getDate() + 1); afterMidnight.setHours(0, 1, 0, 0);
+  t.mock.timers.enable({ apis: ['Date'], now: beforeMidnight });
+  const state = await mountApp(t, [meal]);
+  await sendActions(state); await click(state, 'Editar');
+  await changeProposalField(state, 0, 'Nombre', 'Borrador de ayer');
+  await changeProposalField(state, 0, 'Calorías (kcal)', '');
+  const originalTarget = state.document.querySelector('.chat-proposal-date').textContent;
+  await act(async () => {
+    t.mock.timers.setTime(afterMidnight.getTime());
+    window.dispatchEvent(new window.Event('focus'));
+    await turn();
+  });
+  assert.equal(state.document.querySelector('.chat-confirmation'), null, 'A pending proposal cannot silently migrate into today');
+  const openYesterday = async () => {
+    await click(state, 'Historial');
+    await act(async () => {
+      const select = state.document.querySelector('.chat-history-picker select');
+      assert.ok(select);
+      assert.ok([...select.options].some(option => option.value === today));
+      Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, 'value').set.call(select, today);
+      select.dispatchEvent(new window.Event('change', { bubbles: true }));
+      await turn();
+    });
+  };
+  await openYesterday();
+  assert.equal(state.document.querySelector('.chat-proposal-date').textContent, originalTarget);
+  assert.equal(proposalField(state, 0, 'Nombre').value, 'Borrador de ayer');
+  assert.equal(proposalField(state, 0, 'Calorías (kcal)').value, '');
+  const editor = state.document.querySelector('.chat-proposal-edit');
+  assert.ok([...editor.querySelectorAll('input, select, textarea')].every(field => field.disabled));
+  assert.equal(confirmationButton(state).disabled, true);
+  const edit = [...state.document.querySelectorAll('.chat-proposal-actions button')].find(button => button.textContent === 'Editar');
+  assert.equal(edit.disabled, true);
+  assert.match(state.document.querySelector('.chat-proposal-footnote').textContent, /no está confirmado.*solo lectura/);
+  await act(async () => { confirmationButton(state).click(); edit.click(); await turn(); });
+  assert.equal(state.logWrites, 0);
+  await click(state, 'Cancelar');
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  await click(state, 'Volver a hoy'); await openYesterday();
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  assert.equal(conversationMessages(state).filter(message => message.text === 'Registro cancelado.').length, 1);
+  assert.equal(state.logWrites, 0); assert.equal(state.aiCalls, 1);
+});
 
 test('activity exploration and the explicitly opened day survive real App tab navigation without writes', async t => {
   const state = await mountApp(t, []);
@@ -379,6 +736,23 @@ function prepareGoal(state, failure = false) {
   };
   state.goalGate = new Promise(resolve => { state.releaseGoal = resolve; });
 }
+test('goal proposals share the navigation lifecycle and the remounted view refreshes its goals when confirmation finishes', async t => {
+  const state = await mountApp(t, []); prepareGoal(state); await sendActions(state);
+  const original = state.document.querySelector('.chat-confirmation').textContent;
+  await click(state, 'Perfil'); await click(state, 'Coach');
+  assert.equal(state.document.querySelector('.chat-confirmation')?.textContent, original);
+  await click(state, 'Aceptar objetivo');
+  await click(state, 'Inicio'); await click(state, 'Coach');
+  const confirm = state.document.querySelector('.chat-goal-confirm');
+  assert.ok(confirm?.disabled);
+  const readsBefore = state.goalReads;
+  await act(async () => { state.releaseGoal(); await turn(); });
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  assert.ok(state.goalReads > readsBefore, 'The current goal hook must refresh after an earlier view completes the write');
+  assert.equal(state.document.querySelector('.chat-proactive')?.dataset.insightKind, 'goal');
+  assert.equal(conversationMessages(state).filter(message => message.text.startsWith('Objetivo aceptado y guardado')).length, 1);
+  assert.equal(state.goalWrites, 1); assert.equal(state.aiCalls, 1); assert.equal(state.logWrites, 0);
+});
 test('a suggested goal writes once only after confirmation and does not create activities across Home/Data navigation', async t => {
   const state = await mountApp(t, []); prepareGoal(state); await sendActions(state);
   assert.equal(state.goalWrites,0); assert.match(state.document.querySelector('.chat-messages').textContent,/Solo se guarda al confirmar/);

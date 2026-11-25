@@ -11,6 +11,7 @@ import { buildCoachContext } from '../src/utils/coachContext.ts';
 import { buildProactiveInsight } from '../src/utils/coachProactive.ts';
 import { coachDates } from '../src/utils/coachDates.ts';
 import { formatDateStr } from '../src/utils/helpers.ts';
+import { CoachConversationStore } from '../src/lib/coachConversation.ts';
 import { supabase } from '../src/lib/supabase.ts';
 import { supabaseUrl } from '../src/lib/supabaseConfig.ts';
 
@@ -85,8 +86,10 @@ async function mountFlow(t, initial = trainingProfile(), goals = []) {
   const state = { store: null, goalResource: null, goals: new Map([[own, goals]]), workouts: new Map(),
     clientBodies: [], receivedBodies: [], prompts: [], goalOwners: [], modelCalls: 0, quotaCalls: 0, writes: 0,
     failTransport: false, transformBody: body => body };
+  const coachConversations = new CoachConversationStore(() => state.store?.activeProfile ?? null);
   state.setProfile = (value, acceptedGoals = []) => {
-    state.store = { user: { id: value.user_id }, activeProfile: value, avatarRevision: 0,
+    if (state.store?.user.id !== value.user_id) coachConversations.resetOwner(value.user_id);
+    state.store = { user: { id: value.user_id }, activeProfile: value, avatarRevision: 0, coachConversations,
       updateRecord: () => { state.writes++; throw Error('No record writes in this harness'); } };
     state.goalResource = { ownerId: value.user_id, status: 'ready', goals: acceptedGoals, hasMore: false, reload: async () => {} };
   };

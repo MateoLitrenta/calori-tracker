@@ -1,5 +1,5 @@
 import './CoachFitness.css';
-import { useState, useRef, useEffect, useCallback, useMemo, type RefObject } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, useSyncExternalStore, type RefObject, type SetStateAction } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowRight, CaretDown, ChartLineUp, CheckCircle, ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, Target, X } from '@phosphor-icons/react';
 import UserAvatar from './UserAvatar';
@@ -11,29 +11,21 @@ import { useCoachGoals, type CoachGoalsResource } from '../hooks/useCoachGoals';
 import { goalProgressQuery } from '../utils/coachGoalPresentation';
 import { confirmCoachGoal } from '../services/coachGoals';
 import type { CoachGoalProposal } from '../utils/coachGoals';
-import { buildCoachCard, parseCoachCard, type CoachCardSnapshot } from '../utils/coachPresentation';
+import { buildCoachCard, parseCoachCard } from '../utils/coachPresentation';
 import { buildCoachContext } from '../utils/coachContext';
 import { buildProactiveInsight, type ProactiveInsight } from '../utils/coachProactive';
 import { useAppStore } from '../hooks/useAppStore';
 import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
-import type { UserProfile, DailyRecord, MealType } from '../types';
+import type { UserProfile, MealType } from '../types';
 import { changedEntryDayMessage, reviewEntryBase, snapshotEntryRecord } from '../lib/entrySubmission';
 import type { RecordWriter } from '../lib/recordFeedback';
 import { findRecordedCoachAction, parseRecordedCoachActions, type RecordedCoachAction } from '../lib/coachActionReview';
+import type { ActionCommitDraft, CoachConversationStore, CoachMessage as Message, PendingCoachRecord } from '../lib/coachConversation';
 import { getFocusedCoachProposalField } from '../lib/coachViewport';
 import { followCoachProposalViewport, revealCoachProposalField } from '../lib/coachProposalViewport';
-import { generateAIResponse, transcribeAudio, validActions, isValidDateStr, type MediaAttachment, type DataAction, type ChatMessage } from '../services/aiService';
+import { generateAIResponse, transcribeAudio, validActions, isValidDateStr, type MediaAttachment, type DataAction } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
-
-interface Message extends ChatMessage {
-  id: string;
-  localTime?: string;
-  coachCard?: CoachCardSnapshot;
-  goalProgress?: 'all' | 'workout_sessions' | 'step_days';
-  recordedActions?: RecordedCoachAction[];
-}
-interface ActionCommitDraft { dateStr: string; base: DailyRecord; entryIds: string[]; types: DataAction['type'][] }
 
 function ProposedEntrySummary({ action }: { action: DataAction }) {
   const p = action.payload;
@@ -202,7 +194,7 @@ export default function ChatView({ scrollContainer, readingPositions }: {
   scrollContainer: RefObject<HTMLElement | null>;
   readingPositions?: RefObject<Map<string, number>>;
 }) {
-  const { user, activeProfile, avatarRevision, updateRecord } = useAppStore();
+  const { user, activeProfile, avatarRevision, updateRecord, coachConversations } = useAppStore();
   const [today, setToday] = useState(() => formatDateStr(new Date()));
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const goals = useCoachGoals(user?.id);
@@ -231,20 +223,59 @@ export default function ChatView({ scrollContainer, readingPositions }: {
   if (!user) return null;
   const dateStr = selectedDate ?? today;
   return <UserChat key={`${user.id}:${today}:${dateStr}`} userId={user.id} activeProfile={activeProfile} avatarRevision={avatarRevision}
-    updateRecord={updateRecord} dateStr={dateStr} today={today} onSelectDate={setSelectedDate} scrollContainer={scrollContainer} readingPositions={readingPositions} goals={goals} />;
+    updateRecord={updateRecord} coachConversations={coachConversations} dateStr={dateStr} today={today} onSelectDate={setSelectedDate} scrollContainer={scrollContainer} readingPositions={readingPositions} goals={goals} />;
 }
 
-function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr, today, onSelectDate, scrollContainer, readingPositions, goals }: {
+function UserChat({ userId, activeProfile, avatarRevision, updateRecord, coachConversations, dateStr, today, onSelectDate, scrollContainer, readingPositions, goals }: {
   userId: string; activeProfile: UserProfile | null;
   avatarRevision: number;
   updateRecord: RecordWriter;
+  coachConversations: CoachConversationStore;
   dateStr: string; today: string; onSelectDate: (date: string) => void;
   scrollContainer: RefObject<HTMLElement | null>;
   readingPositions?: RefObject<Map<string, number>>;
   goals: CoachGoalsResource;
 }) {
   const storageKey = `calori:assistant:messages:${userId}:${dateStr}`;
-  const [messages, setMessages] = useState<Message[]>(() => readDailyHistory(userId, dateStr, today));
+  const conversation = useMemo(() => coachConversations.open(userId, dateStr,
+    () => readDailyHistory(userId, dateStr, today)), [coachConversations, userId, dateStr, today]);
+  const messagesScrollRef = useRef<HTMLElement | null>(null);
+  const cardScrollDecision = useRef<{ id: string; nearEnd: boolean } | null>(null);
+  const rememberReplyAnchor = useCallback((id: string) => {
+    const log = messagesScrollRef.current ?? scrollContainer.current;
+    cardScrollDecision.current = { id, nearEnd: !log || log.scrollHeight - log.clientHeight - log.scrollTop <= 24 };
+  }, [scrollContainer]);
+  const subscribeConversation = useCallback((notify: () => void) => {
+    let lastMessage = conversation.getSnapshot().messages.at(-1);
+    return conversation.subscribe(() => {
+      const nextMessage = conversation.getSnapshot().messages.at(-1);
+      // A request may finish in an old, unmounted UserChat. Capture the reader
+      // in the current view before React paints its newly received message.
+      if (nextMessage?.role === 'bot' && nextMessage.id !== lastMessage?.id) rememberReplyAnchor(nextMessage.id);
+      lastMessage = nextMessage;
+      notify();
+    });
+  }, [conversation, rememberReplyAnchor]);
+  const { messages, pending, pendingGoal, isEditingProposal, operation } = useSyncExternalStore(subscribeConversation, conversation.getSnapshot);
+  const isTyping = operation !== null;
+  const isConfirming = operation === 'record';
+  const previousOperation = useRef(operation);
+  const { reload: reloadGoals } = goals;
+  useEffect(() => {
+    const completedGoal = previousOperation.current === 'goal' && operation !== 'goal';
+    previousOperation.current = operation;
+    // Refresh the hook in the currently mounted view, including a view opened
+    // again while another instance was waiting for the acknowledgement.
+    if (completedGoal) void reloadGoals();
+  }, [operation, reloadGoals]);
+  const setMessages = (next: SetStateAction<Message[]>) => conversation.update(previous => ({
+    messages: typeof next === 'function' ? next(previous.messages) : next,
+  }));
+  const setPending = (next: SetStateAction<PendingCoachRecord | null>) => conversation.update(previous => ({
+    pending: typeof next === 'function' ? next(previous.pending) : next,
+  }));
+  const setPendingGoal = (next: CoachGoalProposal | null) => conversation.update({ pendingGoal: next });
+  const setIsEditingProposal = (next: boolean) => conversation.update({ isEditingProposal: next });
   const hasMessages = messages.length > 0;
   const [initialMessageIds] = useState(() => new Set(messages.map(message => message.id)));
   const [proactiveExpanded, setProactiveExpanded] = useState(!hasMessages);
@@ -253,7 +284,6 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const [showHistory, setShowHistory] = useState(false);
   const [showGoals, setShowGoals] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isRequestingAudio, setIsRequestingAudio] = useState(false);
   const [isProcessingAudio, setIsProcessingAudio] = useState(false);
@@ -279,7 +309,6 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const recordingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const recordingCancelled = useRef(false);
   const audioBusy = useRef(false);
-  const messagesScrollRef = useRef<HTMLElement | null>(null);
   const composerRef = useRef<HTMLElement | null>(null);
   const messagesContentRef = useRef<HTMLDivElement | null>(null);
   const scrollToEnd = useCallback((behavior: ScrollBehavior) => {
@@ -288,18 +317,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : behavior });
   }, [scrollContainer]);
   const didScroll = useRef(false);
-  const cardScrollDecision = useRef<{ id: string; nearEnd: boolean } | null>(null);
-  const rememberReplyAnchor = (id: string) => {
-    const log = messagesScrollRef.current ?? scrollContainer.current;
-    cardScrollDecision.current = { id, nearEnd: !log || log.scrollHeight - log.clientHeight - log.scrollTop <= 24 };
-  };
   const mounted = useRef(true);
-  const busy = useRef(false);
-  const [pending, setPending] = useState<{ dateStr: string; actions: DataAction[]; registerAgain: number[] } | null>(null);
-  const pendingCommitRef = useRef<ActionCommitDraft | null>(null);
-  const [pendingGoal, setPendingGoal] = useState<CoachGoalProposal | null>(null);
-  const [isEditingProposal, setIsEditingProposal] = useState(false);
-  const [isConfirming, setIsConfirming] = useState(false);
   const confirmedActions = messages.flatMap(message => message.role === 'bot' ? message.recordedActions ?? [] : []);
   const recordedAction = (action: DataAction) => findRecordedCoachAction(action, activeProfile?.records ?? {}, confirmedActions);
   const repeatedActions = pending?.actions.map(recordedAction) ?? [];
@@ -317,7 +335,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
 
   const selectImage = async (file?: File | Blob) => {
     setShowPhotoMenu(false);
-    if (!file || imageBusy.current || audioBusy.current || busy.current || pending || pendingGoal || !activeProfile) return;
+    if (!file || imageBusy.current || audioBusy.current || conversation.isBusy() || pending || pendingGoal || !activeProfile) return;
     clearPendingImage();
     if ((file instanceof File && /\.(heic|heif)$/i.test(file.name)) || /image\/(heic|heif)/i.test(file.type)) {
       toast.error('Este formato de imagen no es compatible todavía. Probá sacar la foto desde la cámara de la app o usar JPG/PNG.');
@@ -361,7 +379,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
 
   const openCamera = async () => {
     setShowPhotoMenu(false);
-    if (!navigator.mediaDevices?.getUserMedia || imageBusy.current || audioBusy.current || busy.current || pending || pendingGoal) {
+    if (!navigator.mediaDevices?.getUserMedia || imageBusy.current || audioBusy.current || conversation.isBusy() || pending || pendingGoal) {
       toast.error('No pude acceder a la cámara. Revisá los permisos o elegí una foto de la galería.');
       return;
     }
@@ -490,14 +508,14 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   }, [isPastConversation]);
 
   const editProposal = (index: number, field: string, value: string | number | undefined) => {
+    if (conversation.isBusy()) return;
     setPending(prev => prev && ({ ...prev, actions: prev.actions.map((action, i) =>
       i === index ? { ...action, payload: { ...action.payload, [field]: value } } : action) }));
   };
 
   const appendReply = (text: string, recordedActions: RecordedCoachAction[] = []) => {
-    if (!mounted.current) return;
     const id = generateUUID();
-    rememberReplyAnchor(id);
+    if (mounted.current) rememberReplyAnchor(id);
     setMessages(prev => [...prev, { id, role: 'bot', text,
       ...(recordedActions.length ? { recordedActions } : {}) }]);
   };
@@ -516,18 +534,22 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const describeDate = (actionDate: string) =>
     new Date(`${actionDate}T12:00:00`).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
 
-  const newActionDraft = (actions: DataAction[], actionDate: string): ActionCommitDraft => ({
-    dateStr: actionDate,
-    base: snapshotEntryRecord(activeProfile?.records[actionDate] || {
-      dateStr: actionDate, date: new Date(`${actionDate}T12:00:00`), meals: [], workouts: [], steps: 0, water: 0,
-      version: null, generation: activeProfile?.recordGeneration,
-    }, activeProfile?.recordGeneration),
-    entryIds: actions.map(() => generateUUID()), types: actions.map(action => action.type),
-  });
+  const newActionDraft = (actions: DataAction[], actionDate: string): ActionCommitDraft => {
+    const profile = conversation.getProfile();
+    return {
+      dateStr: actionDate,
+      base: snapshotEntryRecord(profile?.records[actionDate] || {
+        dateStr: actionDate, date: new Date(`${actionDate}T12:00:00`), meals: [], workouts: [], steps: 0, water: 0,
+        version: null, generation: profile?.recordGeneration,
+      }, profile?.recordGeneration),
+      entryIds: actions.map(() => generateUUID()), types: actions.map(action => action.type),
+    };
+  };
 
-  const applyActions = async (actions: DataAction[], actionDate: string, draft?: ActionCommitDraft, included?: boolean[]) => {
+  const applyActions = async (token: symbol, actions: DataAction[], actionDate: string, draft?: ActionCommitDraft, included?: boolean[]) => {
     const currentToday = formatDateStr(new Date());
-    if (!mounted.current || !activeProfile || isPastConversation || dateStr !== currentToday ||
+    const profile = conversation.getProfile();
+    if (!conversation.isCurrent(token) || !profile || isPastConversation || dateStr !== currentToday ||
       !isValidDateStr(actionDate) || actionDate > currentToday) {
       throw new Error('La fecha cambió o no es válida. Pedime registrar los datos nuevamente.');
     }
@@ -535,18 +557,18 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       actions.some(action => action.payload.dateStr !== actionDate)) {
       throw new Error('Revisá los datos obligatorios antes de confirmar.');
     }
-    const latest = activeProfile.records[actionDate] || {
+    const latest = profile.records[actionDate] || {
       dateStr: actionDate, date: new Date(`${actionDate}T12:00:00`), meals: [], workouts: [], steps: 0, water: 0,
-      version: null, generation: activeProfile.recordGeneration,
+      version: null, generation: profile.recordGeneration,
     };
     const intent = draft ?? newActionDraft(actions, actionDate);
     if (intent.dateStr !== actionDate || intent.types.length !== actions.length || actions.some((action, index) => action.type !== intent.types[index])) {
       throw new Error('La propuesta cambió. Revisá los registros antes de confirmar de nuevo.');
     }
-    const base = reviewEntryBase(intent.base, latest, activeProfile.recordGeneration, () => window.confirm(changedEntryDayMessage));
+    const base = reviewEntryBase(intent.base, latest, profile.recordGeneration, () => window.confirm(changedEntryDayMessage));
     if (!base) throw new Error('La propuesta sigue pendiente. Revisá los datos del día antes de reintentar.');
     intent.base = base;
-    const record = snapshotEntryRecord(base, activeProfile.recordGeneration);
+    const record = snapshotEntryRecord(base, profile.recordGeneration);
     const recorded: RecordedCoachAction[] = [];
     for (const [index, a] of actions.entries()) {
       if (included && !included[index]) continue;
@@ -575,54 +597,50 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     if (!await updateRecord(actionDate, record, { feedback: 'contextual', onFailure: failure => { failureMessage = failure.message; } })) {
       throw new Error(failureMessage || 'No se pudo completar el guardado. Revisá los registros de esa fecha antes de reintentar.');
     }
-    appendReply(`Registrado ${actionDate === currentToday ? 'hoy' : `el ${describeDate(actionDate)}`}: ${actions.filter((_, index) => !included || included[index]).map(describeAction).join('; ')}.`, recorded);
+    if (conversation.isCurrent(token)) appendReply(`Registrado ${actionDate === currentToday ? 'hoy' : `el ${describeDate(actionDate)}`}: ${actions.filter((_, index) => !included || included[index]).map(describeAction).join('; ')}.`, recorded);
   };
 
   const confirmActions = async () => {
-    if (!pending || busy.current) return;
-    const included = pending.actions.map((action, index) => !recordedAction(action) || pending.registerAgain.includes(index));
+    const proposal = conversation.getSnapshot().pending;
+    if (!proposal || conversation.isBusy()) return;
+    const included = proposal.actions.map((action, index) => !recordedAction(action) || proposal.registerAgain.includes(index));
     if (!included.some(Boolean)) return;
-    if (validActions(pending.actions, formatDateStr(new Date())).length !== pending.actions.length ||
-      pending.actions.some(action => action.payload.dateStr !== pending.dateStr)) {
+    if (validActions(proposal.actions, formatDateStr(new Date())).length !== proposal.actions.length ||
+      proposal.actions.some(action => action.payload.dateStr !== proposal.dateStr)) {
       toast.error('Revisá nombre/actividad, tipo, calorías, hora y duración. Los valores numéricos deben ser positivos.');
       setIsEditingProposal(true);
       return;
     }
-    busy.current = true;
-    setIsTyping(true);
-    setIsConfirming(true);
-    const proposal = pending;
-    const draft = pendingCommitRef.current ??= newActionDraft(proposal.actions, proposal.dateStr);
+    const token = conversation.begin('record');
+    if (!token) return;
+    let confirmed = false;
     try {
-      await applyActions(proposal.actions, proposal.dateStr, draft, included);
-      pendingCommitRef.current = null;
-      if (mounted.current) setPending(null);
+      await applyActions(token, proposal.actions, proposal.dateStr, proposal.commit, included);
+      confirmed = true;
     } catch (error) {
-      appendReply(error instanceof Error ? error.message : 'No se pudo guardar.');
+      if (conversation.isCurrent(token)) appendReply(error instanceof Error ? error.message : 'No se pudo guardar.');
     } finally {
-      busy.current = false;
-      if (mounted.current) { setIsTyping(false); setIsConfirming(false); }
+      conversation.finish(token, confirmed ? { pending: null, isEditingProposal: false } : {});
     }
   };
 
   const confirmGoal = async () => {
-    if (!pendingGoal || busy.current || isPastConversation || dateStr !== formatDateStr(new Date())) return;
-    busy.current = true; setIsTyping(true);
-    const proposal = pendingGoal;
+    const proposal = conversation.getSnapshot().pendingGoal;
+    if (!proposal || conversation.isBusy() || isPastConversation || dateStr !== formatDateStr(new Date())) return;
+    const token = conversation.begin('goal');
+    if (!token) return;
     try {
       const saved = await confirmCoachGoal(proposal, today, userId);
-      if (!mounted.current) return;
+      if (!conversation.isCurrent(token)) return;
       setPendingGoal(null);
-      void goals.reload();
       appendReply(saved.status === 'cancelled' ? 'Objetivo cancelado. Tus registros no cambiaron.'
         : proposal.operation === 'update' ? 'Objetivo actualizado y guardado. Lo usaré para evaluar tus registros del período.'
           : 'Objetivo aceptado y guardado. Podés consultarlo en otras conversaciones para revisar tus registros del período.');
     } catch (error) {
-      if (mounted.current) {
+      if (conversation.isCurrent(token)) {
         appendReply(error instanceof Error ? error.message : 'No se pudo guardar el objetivo.');
-        void goals.reload();
       }
-    } finally { busy.current = false; if (mounted.current) setIsTyping(false); }
+    } finally { conversation.finish(token); }
   };
 
   useEffect(() => {
@@ -677,16 +695,6 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     return () => observer.disconnect();
   }, [hasMessages]);
 
-  useEffect(() => {
-    if (isPastConversation) return;
-    try {
-      if (messages.length) localStorage.setItem(storageKey, JSON.stringify(messages));
-      else localStorage.removeItem(storageKey);
-    } catch {
-      toast.error('No se pudo guardar la conversación en este dispositivo.');
-    }
-  }, [messages, storageKey, isPastConversation]);
-
   const currentContext = useMemo(() => activeProfile?.user_id === userId ? buildCoachContext(activeProfile, today) : null,
     [activeProfile, userId, today]);
   // The observation waits for the first result and retains its last evidence during refresh.
@@ -705,7 +713,8 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   const suggestions = proactiveInsight?.suggestions ?? [];
 
   const startConversation = () => {
-    if (busy.current || audioBusy.current || imageBusy.current || isCameraOpen || isPastConversation) return;
+    const current = conversation.getSnapshot();
+    if (conversation.isBusy() || current.pending || current.pendingGoal || audioBusy.current || imageBusy.current || isCameraOpen || isPastConversation) return;
     try {
       localStorage.removeItem(storageKey);
       readingPositions?.current.delete(storageKey);
@@ -717,7 +726,6 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
       clearPendingImage();
       setShowPhotoMenu(false);
       setPending(null);
-      pendingCommitRef.current = null;
       setIsEditingProposal(false);
     } catch {
       toast.error('No se pudo borrar la conversación local.');
@@ -741,8 +749,9 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   }, [messages, isTyping, hasPending, isEditingProposal, readingPositions, scrollToEnd, storageKey]);
 
   const handleSend = async (text: string, attachment?: MediaAttachment, proactiveInsightId?: string) => {
-    if ((!text.trim() && !attachment) || (audioBusy.current && !attachment) || busy.current || pending || !activeProfile || isPastConversation || dateStr !== formatDateStr(new Date())) return;
-    busy.current = true;
+    if ((!text.trim() && !attachment) || (audioBusy.current && !attachment) || conversation.isBusy() || conversation.getSnapshot().pending || !activeProfile || isPastConversation || dateStr !== formatDateStr(new Date())) return;
+    const token = conversation.begin('response');
+    if (!token) return;
     // Keep short evidence follow-ups tied to the observation; a new topic or
     // attachment returns to the ordinary conversation/action flow.
     const evidenceFollowup = /^[¿\s]*(?:por que\b|que registros\b|explica\b|en que te bas|y el periodo anterior\b)/iu.test(text.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
@@ -760,7 +769,6 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     setMessages(newHistory);
     setPendingGoal(null);
     setInputValue('');
-    setIsTyping(true);
 
     try {
       // Build Dynamic Context
@@ -779,7 +787,7 @@ HORA LOCAL ACTUAL: ${localTime}.
 DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
 
       const response = await generateAIResponse(newHistory, systemPrompt, todayStr, attachment, coachContext, observationId);
-      if (!mounted.current || dateStr !== formatDateStr(new Date())) return;
+      if (!conversation.isCurrent(token) || dateStr !== formatDateStr(new Date())) return;
       const actions = validActions(response.actions, todayStr);
       const requestedActions = Array.isArray(response.actions) && response.actions.length > 0;
       const proposals = actions.filter(a => a.type === 'add_meal' || a.type === 'add_workout');
@@ -808,38 +816,36 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         coachCard: !requestedActions && !response.goalProposal && attachment?.kind !== 'image'
           ? buildCoachCard(response.presentation, coachContext) : undefined
       };
-      if (botMsg.goalProgress) void goals.reload();
-      rememberReplyAnchor(botMsg.id);
+      if (botMsg.goalProgress && mounted.current) void goals.reload();
+      if (mounted.current) rememberReplyAnchor(botMsg.id);
       setMessages(prev => [...prev, botMsg]);
       if (response.goalProposal && !requestedActions) setPendingGoal(response.goalProposal);
-      if (direct.length) await applyActions(direct, todayStr);
-      if (mounted.current && proposals.length) {
+      if (direct.length) await applyActions(token, direct, todayStr);
+      if (conversation.isCurrent(token) && proposals.length) {
         const proposalDate = proposals[0].payload.dateStr as string;
         if (proposals.every(action => action.payload.dateStr === proposalDate)) {
           setIsEditingProposal(false);
-          pendingCommitRef.current = newActionDraft(proposals, proposalDate);
-          setPending({ dateStr: proposalDate, actions: proposals, registerAgain: [] });
+          setPending({ dateStr: proposalDate, actions: proposals, registerAgain: [], commit: newActionDraft(proposals, proposalDate) });
         } else {
           appendReply('Indicame una fecha por vez para confirmar esos registros.');
         }
       }
     } catch (error) {
-      if (!mounted.current) return;
+      if (!conversation.isCurrent(token)) return;
       const errorMessage = error instanceof Error && error.message
         ? error.message
         : 'Ha ocurrido un error al intentar conectarme al servidor de IA.';
 
-      toast.error(errorMessage);
+      if (mounted.current) toast.error(errorMessage);
       const id = new Date().getTime().toString();
-      rememberReplyAnchor(id);
+      if (mounted.current) rememberReplyAnchor(id);
       setMessages(prev => [...prev, {
         id,
         role: 'bot',
         text: `❌ ${errorMessage}`
       }]);
     } finally {
-      busy.current = false;
-      if (mounted.current) setIsTyping(false);
+      conversation.finish(token);
     }
   };
 
@@ -849,7 +855,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       await handleSend(inputValue);
       return;
     }
-    if (imageBusy.current || audioBusy.current || busy.current || pending || pendingGoal) return;
+    if (imageBusy.current || audioBusy.current || conversation.isBusy() || pending || pendingGoal) return;
     imageBusy.current = true;
     setIsProcessingImage(true);
     try {
@@ -880,7 +886,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
   };
 
   const startRecording = async () => {
-    if (audioBusy.current || imageBusy.current || isCameraOpen || busy.current || pending || pendingGoal || !activeProfile || isPastConversation) return;
+    if (audioBusy.current || imageBusy.current || isCameraOpen || conversation.isBusy() || pending || pendingGoal || !activeProfile || isPastConversation) return;
     recordingCancelled.current = false;
     setShowPhotoMenu(false);
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
@@ -1062,6 +1068,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       {isPastConversation && (
         <div className="chat-history-picker">
           <p>{new Date(`${dateStr}T12:00:00`).toLocaleDateString('es-AR')} · Solo lectura</p>
+          {hasPending && <p>Esta propuesta quedó sin confirmar en una conversación anterior. Volvé a hoy para pedir el registro nuevamente.</p>}
           <button type="button" onClick={() => onSelectDate(today)} className="chat-return-today">Volver a hoy</button>
         </div>
       )}
@@ -1079,8 +1086,8 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
         }}
         role="log" aria-label="Conversación con Coach" aria-live="polite" aria-relevant="additions text">
         <div ref={messagesContentRef} className="chat-message-list">
-        {pendingGoal && <CoachGoalConfirmation proposal={pendingGoal} busy={isTyping}
-          onConfirm={() => { void confirmGoal(); }} onDismiss={() => setPendingGoal(null)} />}
+        {pendingGoal && <CoachGoalConfirmation proposal={pendingGoal} busy={isTyping || isPastConversation}
+          onConfirm={() => { void confirmGoal(); }} onDismiss={() => { if (!conversation.isBusy()) setPendingGoal(null); }} />}
         {pending && (
           <div className="chat-confirmation order-last" role="region" aria-label="Propuesta de registros para revisar" aria-busy={isConfirming}>
             <div className="chat-proposal-heading">
@@ -1097,7 +1104,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 {repeatedActions[index] && <div className="chat-already-recorded">
                   <p>Ya registrado en esta conversación</p>
                   <label>
-                    <input type="checkbox" checked={pending.registerAgain.includes(index)} disabled={isTyping}
+                    <input type="checkbox" checked={pending.registerAgain.includes(index)} disabled={isTyping || isPastConversation}
                       onChange={event => { const checked = event.target.checked; setPending(previous => previous && ({ ...previous,
                         registerAgain: checked ? [...previous.registerAgain.filter(value => value !== index), index]
                           : previous.registerAgain.filter(value => value !== index) })); }}
@@ -1120,7 +1127,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                     ).map(({ field, label, type }) => (
                       <label key={field} className="flex flex-col gap-1">
                         {label}
-                        <input type={type} value={String(action.payload[field] ?? '')}
+                        <input type={type} value={String(action.payload[field] ?? '')} disabled={isTyping || isPastConversation}
                           min={type === 'number' ? '0.01' : undefined} step={type === 'number' ? 'any' : undefined}
                           onChange={e => editProposal(index, field, type === 'number'
                             ? (e.target.value === '' ? undefined : Number(e.target.value)) : e.target.value)}
@@ -1130,7 +1137,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                     {action.type === 'add_meal' && (
                       <label className="flex flex-col gap-1">
                         Tipo
-                        <select value={String(action.payload.type)} onChange={e => editProposal(index, 'type', e.target.value)}
+                        <select value={String(action.payload.type)} disabled={isTyping || isPastConversation} onChange={e => editProposal(index, 'type', e.target.value)}
                           className="chat-field">
                           {(['Desayuno', 'Almuerzo', 'Merienda', 'Cena', 'Snack'] as MealType[]).map(type => <option key={type}>{type}</option>)}
                         </select>
@@ -1138,7 +1145,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                     )}
                     <label className="flex flex-col gap-1 sm:col-span-2">
                       Detalles
-                      <textarea value={String(action.payload.details ?? '')} onChange={e => editProposal(index, 'details', e.target.value)}
+                      <textarea value={String(action.payload.details ?? '')} disabled={isTyping || isPastConversation} onChange={e => editProposal(index, 'details', e.target.value)}
                         className="chat-field" />
                     </label>
                   </div>
@@ -1147,7 +1154,9 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 )}
               </div>
             ))}
-            <p className="chat-proposal-footnote">{isConfirming ? 'Esperando la confirmación del guardado.' : 'Confirmá para guardar los registros seleccionados.'}</p>
+            <p className="chat-proposal-footnote">{isConfirming ? 'Esperando la confirmación del guardado.'
+              : isPastConversation ? 'El guardado no está confirmado. Esta conversación es de solo lectura.'
+                : 'Confirmá para guardar los registros seleccionados.'}</p>
             <div className="chat-proposal-actions" onPointerDown={event => {
               const reader = messagesScrollRef.current;
               const shell = reader?.closest<HTMLElement>('.app-shell-coach');
@@ -1158,11 +1167,14 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 event.preventDefault();
               }
             }}>
-              <button type="button" disabled={isTyping || !actionsToSave.length} onClick={confirmActions}
+              <button type="button" disabled={isTyping || isPastConversation || !actionsToSave.length} onClick={confirmActions}
                 className="chat-proposal-confirm">Confirmar</button>
-              <button type="button" disabled={isTyping} onClick={() => setIsEditingProposal(true)}
+              <button type="button" disabled={isTyping || isPastConversation} onClick={() => setIsEditingProposal(true)}
                 className="chat-secondary">Editar</button>
-              <button type="button" disabled={isTyping} onClick={() => { setPending(null); pendingCommitRef.current = null; appendReply('Registro cancelado.'); }}
+              <button type="button" disabled={isTyping} onClick={() => {
+                if (conversation.isBusy()) return;
+                conversation.update({ pending: null, isEditingProposal: false }); appendReply('Registro cancelado.');
+              }}
                 className="chat-secondary">Cancelar</button>
             </div>
           </div>

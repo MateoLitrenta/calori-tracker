@@ -6,6 +6,7 @@ const url=s=>'data:text/javascript;base64,'+Buffer.from(s).toString('base64');
 const methods=['fetchUserData','syncProfile','syncAvatarPath','completeOnboarding','fetchRecordSnapshot','commitRecordIntent','createRecordIntent','createResetIntent'];
 const imports={react:import.meta.resolve('react'),'../utils/helpers':new URL('../../src/utils/helpers.ts',import.meta.url).href,
  '../lib/habitDraft':new URL('../../src/lib/habitDraft.ts',import.meta.url).href,
+ '../lib/coachConversation':new URL('../../src/lib/coachConversation.ts',import.meta.url).href,
  '../lib/supabase':url('export const supabase={auth:{getSession:()=>globalThis.__atomicStore.session(),onAuthStateChange:cb=>{globalThis.__atomicStore.emit=cb;return{data:{subscription:{unsubscribe(){}}}}}}};'),
  '../lib/db':url(methods.map(n=>`export const ${n}=(...a)=>globalThis.__atomicStore.db.${n}(...a);`).join('\n')),
  'react-hot-toast':url('export default {error:(m,o)=>{globalThis.__atomicStore.errors.push(m);globalThis.__atomicStore.notifications.push({message:m,id:o?.id});},success(){}};')};
