@@ -32,10 +32,20 @@ Los formularios diarios de comida y ejercicio comparten el selector nativo de ho
 
 [Comparativas, mediciones y recorrido de revisión](evidence/perfil-noviembre/README.md)
 
-## Ajustes del 25 de noviembre en revisión · Coach y registros
+## Ajustes del 25 de noviembre integrados en el PR #96 · Coach y registros
 
 La base es el merge del PR #95, `e76a468eb3f02a4ca30dfa4f92329df090088c19`. Coach recupera el espacio de navegación al abrir el teclado táctil. Las altas sugieren el tipo de comida según la hora local y respetan una elección manual. El detalle adapta su pie al tema y requiere confirmar la eliminación del registro identificado. El resumen y el recibo de comida conservan la categoría de la estimación original al reclasificar.
 
 El cambio de los nombres genéricos de comidas creadas por Coach y Liquid Glass corresponden a bloques posteriores.
 
 [Comparativas, criterios y revisión en iPhone](evidence/iphone-noviembre/README.md)
+
+## Seguimiento del 25 de noviembre en revisión · Editar una propuesta de Coach
+
+Base: merge del PR #96, `c74bbe2656d041e2d82469b9a9163243f9b5895d`. El video posterior mostró que abrir el teclado directamente en la edición de una propuesta dejaba visible la navegación inferior y desplazaba el campo fuera del lector. La detección anterior solo reconocía el compositor de mensajes.
+
+El candidato incluye los campos editables de la propuesta en la detección. Al escribir, recupera el espacio de navegación, compositor deshabilitado y observación; el lector desplaza únicamente lo necesario para mostrar el campo activo. La navegación vuelve cuando se cierra el teclado. Confirmar y Cancelar conservan el procesamiento mediante clic y la protección contra escrituras duplicadas.
+
+Las regresiones de React y de viewport son sintéticas. La aceptación visual en Safari de iPhone sigue pendiente; no se presenta la simulación como una comprobación física.
+
+[Causa, pruebas y recorrido de aceptación](evidence/coach-proposal-keyboard/README.md)

@@ -702,3 +702,134 @@ test('Coach keeps header/composer outside its log and anchors delayed content on
   await click(state, 'Historial'); assert.ok(state.document.querySelector('.chat-history-picker'));
   assert.equal(log.contains(state.document.querySelector('.chat-history-picker')), false);
 });
+
+for (const scenario of [
+  { name: 'calories through confirmation', action: meal, selector: '.chat-proposal-edit input[type="number"]',
+    value: '725', fieldHeight: 44, confirm: true },
+  { name: 'multiline details through cancellation', action: { type: 'add_workout', estimated: true,
+    payload: { dateStr: today, activity: 'Actividad de prueba', duration: 30, calories: 200, time: '17:00', details: '' } },
+    selector: '.chat-proposal-edit textarea', value: 'Primera serie\nSegunda serie\nÚltima serie sin perder el borrador',
+    fieldHeight: 100, confirm: false },
+]) {
+  test(`Coach proposal editing keeps ${scenario.name} visible when the keyboard shrinks the reader`, async t => {
+    const previousObserver = globalThis.ResizeObserver, observers = [];
+    globalThis.ResizeObserver = class {
+      targets = [];
+      constructor(callback) { this.callback = callback; observers.push(this); }
+      observe(target) { this.targets.push(target); }
+      disconnect() { this.targets = []; }
+    };
+    t.after(() => { globalThis.ResizeObserver = previousObserver; });
+    let viewport;
+    const state = await mountApp(t, [scenario.action], false, () => {
+      Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true });
+      Object.defineProperty(window, 'innerHeight', { value: 812, configurable: true });
+      viewport = new window.EventTarget();
+      Object.assign(viewport, { width: 375, height: 812, offsetTop: 0, scale: 1 });
+      Object.defineProperty(window, 'visualViewport', { value: viewport, configurable: true });
+      window.matchMedia = query => ({
+        matches: query === '(max-width: 767px)' || query === '(any-pointer: coarse)',
+        addEventListener() {}, removeEventListener() {},
+      });
+    });
+    await sendActions(state);
+    await click(state, 'Editar');
+    const log = state.document.querySelector('[role="log"]');
+    const main = state.document.querySelector('.app-main');
+    const shell = state.document.querySelector('.app-shell-coach');
+    const field = state.document.querySelector(scenario.selector); assert.ok(field);
+    const label = field.closest('label'); assert.ok(label);
+    const observer = observers.find(item => item.targets.includes(log)); assert.ok(observer);
+
+    // Explicit synthetic layout: the reader starts at the end with a closed keyboard.
+    // Shrinking it would move this field above the reader if ResizeObserver anchored
+    // to the new end. JSDOM has no layout or browser scroll clamping of its own.
+    const total = 1800, readerTop = 80, labelOffset = 1400, fieldOffset = 1426;
+    let readerHeight = 600, scroll = total - readerHeight;
+    Object.defineProperties(log, {
+      scrollHeight: { get: () => total, configurable: true },
+      clientHeight: { get: () => readerHeight, configurable: true },
+      scrollTop: { get: () => scroll, set: value => { scroll = Math.max(0, Math.min(value, total - readerHeight)); }, configurable: true },
+    });
+    const rect = (top, height) => ({ x: 0, y: top, top, bottom: top + height, left: 0, right: 375, width: 375, height });
+    log.getBoundingClientRect = () => rect(readerTop, readerHeight);
+    field.getBoundingClientRect = () => rect(readerTop + fieldOffset - scroll, scenario.fieldHeight);
+    label.getBoundingClientRect = () => rect(readerTop + labelOffset - scroll, 26 + scenario.fieldHeight);
+    main.scrollTop = 87;
+    observer.callback(); // Establish the near-end dimensions before any field has focus.
+    assert.equal(scroll, total - readerHeight);
+    await act(async () => {
+      field.focus();
+      await new Promise(resolve => window.requestAnimationFrame(resolve));
+    });
+    assert.notEqual(shell.dataset.coachKeyboard, 'open', 'The proposal field is focused before the keyboard opens');
+    await inputValue(state, scenario.selector, scenario.value);
+    if (field.tagName === 'TEXTAREA') field.setSelectionRange(12, 12);
+    await act(async () => { await new Promise(resolve => window.requestAnimationFrame(resolve)); });
+    assert.equal(state.document.activeElement, field);
+    assert.equal(field.value, scenario.value);
+    assert.equal(state.logWrites, 0, 'Editing the proposal cannot persist an unconfirmed record');
+    const beforeKeyboard = scroll;
+    const assertVisible = () => {
+      const reader = log.getBoundingClientRect();
+      for (const element of [label, field]) {
+        const bounds = element.getBoundingClientRect();
+        assert.ok(bounds.top >= reader.top && bounds.bottom <= reader.bottom,
+          `Focused ${element.tagName} must remain inside the reader, not jump above it`);
+      }
+      assert.ok(scroll >= beforeKeyboard && scroll < total - readerHeight,
+        'Reveal only the obscured field rather than anchoring the reader to its new end');
+      assert.equal(main.scrollTop, 87, 'Revealing a proposal must not scroll the outer page');
+      assert.equal(state.document.activeElement, field);
+      assert.equal(field.value, scenario.value);
+      if (field.tagName === 'TEXTAREA') {
+        assert.equal(field.selectionStart, 12); assert.equal(field.selectionEnd, 12);
+      }
+    };
+    await act(async () => {
+      readerHeight = 260; viewport.height = 460;
+      viewport.dispatchEvent(new window.Event('resize'));
+      observer.callback();
+      // Assert synchronously: a later focus/viewport RAF must not conceal a bad
+      // ResizeObserver jump followed by another compensating scroll.
+      assertVisible();
+      await new Promise(resolve => window.requestAnimationFrame(resolve));
+    });
+    assertVisible();
+    assert.equal(shell.dataset.coachKeyboardOwner, 'proposal');
+
+    const action = [...state.document.querySelectorAll('.chat-proposal-actions button')]
+      .find(button => button.textContent === (scenario.confirm ? 'Confirmar' : 'Cancelar'));
+    assert.ok(action);
+    const touchDown = new window.Event('pointerdown', { bubbles: true, cancelable: true });
+    Object.defineProperty(touchDown, 'pointerType', { value: 'touch' });
+    await act(() => action.dispatchEvent(touchDown));
+    assert.equal(touchDown.defaultPrevented, true, 'Touch down keeps the active editor stable until the click');
+    assert.equal(state.document.activeElement, field);
+    assert.equal(state.logWrites, 0, 'Pointer down alone must not confirm or cancel the proposal');
+
+    if (scenario.confirm) {
+      await act(async () => {
+        // Same-batch duplicate clicks exercise the real synchronous write guard.
+        action.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+        action.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+        await turn();
+      });
+      assert.equal(state.logWrites, 1); assert.equal(state.mealWrites, 0);
+      await act(async () => { state.release(); await turn(); });
+      assert.equal(state.persisted.meals.length, 1);
+      assert.equal(state.persisted.meals[0].calories, 725);
+      assert.equal(state.persisted.dateStr, today);
+      assert.equal(state.persistedUser, profile.user_id);
+      assert.equal(state.mealWrites, 1); assert.equal(state.logWrites, 1);
+      assert.match(state.document.querySelector('.chat-messages').textContent, /Registrado hoy/);
+    } else {
+      await click(state, 'Cancelar');
+      assert.equal(state.document.querySelector('.chat-confirmation'), null);
+      assert.match(state.document.querySelector('.chat-messages').textContent, /Registro cancelado\./);
+      assert.equal(state.persisted, null);
+      assert.equal(state.logWrites, 0); assert.equal(state.workoutWrites, 0);
+    }
+    assert.equal(state.aiCalls, 1, 'Editing and confirming/cancelling must not ask the model again');
+  });
+}

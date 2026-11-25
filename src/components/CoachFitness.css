@@ -241,6 +241,15 @@
 .app-shell-coach[data-coach-keyboard="open"] .chat-textarea {
   max-height: clamp(64px, calc(var(--coach-viewport-height) * .24), 124px);
 }
+/* While editing a proposed record, use the space for that field. The disabled
+   message composer and observation stay mounted and recover when typing ends. */
+.app-shell-coach[data-coach-keyboard="open"][data-coach-keyboard-owner="proposal"] :is(.chat-composer, .chat-proactive[data-conversation="active"]) {
+  display: none;
+}
+.app-shell-coach[data-coach-keyboard="open"][data-coach-keyboard-owner="proposal"] .chat-proposal-edit textarea {
+  max-height: min(10rem, var(--coach-proposal-field-space, 10rem));
+  overflow-y: auto;
+}
 /* Keep the composer operable above a keyboard in a short landscape frame. */
 @media (max-height: 450px) {
   .app-shell-coach[data-coach-keyboard="open"] .chat-heading { padding-block: 0; }

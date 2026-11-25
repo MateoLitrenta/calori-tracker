@@ -1,3 +1,12 @@
+export function getFocusedCoachProposalField(shell: HTMLElement): HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null {
+  const field = shell.ownerDocument.activeElement;
+  const proposal = field?.closest('.chat-proposal-edit');
+  if (!field || !proposal || !shell.contains(proposal) || !shell.contains(field) ||
+      !field.matches('input, textarea, select') || field.matches(':disabled, [readonly]')) return null;
+  if (field.tagName === 'INPUT' && /^(checkbox|radio|file|button|submit|reset|hidden)$/.test((field as HTMLInputElement).type)) return null;
+  return field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+}
+
 // Keep the mobile shell attached to the space still visible above the keyboard.
 export function followCoachViewport(shell: HTMLElement) {
   const browser = shell.ownerDocument.defaultView;
@@ -8,11 +17,13 @@ export function followCoachViewport(shell: HTMLElement) {
   let layoutWidth = browser.innerWidth;
   let maxViewportHeight = 0;
   let keyboardOpen = false;
+  let keyboardOwner: 'proposal' | 'composer' | undefined;
 
   const clear = () => {
     shell.style.removeProperty('--coach-viewport-height');
     shell.style.removeProperty('--coach-viewport-top');
     delete shell.dataset.coachKeyboard;
+    delete shell.dataset.coachKeyboardOwner;
   };
 
   const resize = () => {
@@ -22,6 +33,7 @@ export function followCoachViewport(shell: HTMLElement) {
 
     if (!touch.matches) {
       keyboardOpen = false;
+      keyboardOwner = undefined;
     } else if (atNormalScale && Math.abs(viewport.width - width) < 2) {
       // Layout and visual resize events can arrive separately on rotation.
       // While the keyboard is open, use the new layout height as the reference.
@@ -30,10 +42,16 @@ export function followCoachViewport(shell: HTMLElement) {
         maxViewportHeight = keyboardOpen ? browser.innerHeight : 0;
       }
       maxViewportHeight = Math.max(maxViewportHeight, height);
-      const editorFocused = shell.ownerDocument.activeElement?.matches('.chat-composer .chat-textarea') ?? false;
+      const focused = shell.ownerDocument.activeElement;
+      const focusedOwner = getFocusedCoachProposalField(shell) ? 'proposal'
+        : focused && shell.contains(focused) && focused.matches('.chat-composer .chat-textarea:not(:disabled):not([readonly])') ? 'composer'
+          : undefined;
       // Small height changes can come from browser bars. Keep the keyboard
       // state during blur and clear it when the visible area recovers.
-      keyboardOpen = (keyboardOpen || editorFocused) && maxViewportHeight - height >= 140;
+      keyboardOpen = (keyboardOpen || !!focusedOwner) && maxViewportHeight - height >= 140;
+      // An action can take focus before its click. Retain the editing layout
+      // until the keyboard closes so the action does not move under the pointer.
+      keyboardOwner = keyboardOpen ? focusedOwner ?? keyboardOwner : undefined;
     }
 
     const showKeyboardLayout = atNormalScale && keyboardOpen;
@@ -45,8 +63,10 @@ export function followCoachViewport(shell: HTMLElement) {
     shell.style.setProperty('--coach-viewport-top', `${viewport?.offsetTop ?? 0}px`);
     if (showKeyboardLayout) {
       shell.dataset.coachKeyboard = 'open';
+      if (keyboardOwner) shell.dataset.coachKeyboardOwner = keyboardOwner;
     } else {
       delete shell.dataset.coachKeyboard;
+      delete shell.dataset.coachKeyboardOwner;
     }
   };
 

@@ -20,6 +20,8 @@ import type { UserProfile, DailyRecord, MealType } from '../types';
 import { changedEntryDayMessage, reviewEntryBase, snapshotEntryRecord } from '../lib/entrySubmission';
 import type { RecordWriter } from '../lib/recordFeedback';
 import { findRecordedCoachAction, parseRecordedCoachActions, type RecordedCoachAction } from '../lib/coachActionReview';
+import { getFocusedCoachProposalField } from '../lib/coachViewport';
+import { followCoachProposalViewport, revealCoachProposalField } from '../lib/coachProposalViewport';
 import { generateAIResponse, transcribeAudio, validActions, isValidDateStr, type MediaAttachment, type DataAction, type ChatMessage } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
@@ -652,13 +654,21 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
   useEffect(() => {
     const container = messagesScrollRef.current;
     if (!container) return;
+    return followCoachProposalViewport(container);
+  }, []);
+
+  useEffect(() => {
+    const container = messagesScrollRef.current;
+    if (!container) return;
     if (!hasMessages) { container.scrollTop = 0; return; }
     if (typeof ResizeObserver === 'undefined') return;
     let previousHeight = container.clientHeight;
     let previousScrollHeight = container.scrollHeight;
     const observer = new ResizeObserver(() => {
       const wasNearEnd = previousScrollHeight - previousHeight - container.scrollTop <= 24;
-      if (wasNearEnd) container.scrollTop = container.scrollHeight;
+      // A proposal field takes precedence over following the last message when
+      // the keyboard or the inline editor changes the available reading space.
+      if (!revealCoachProposalField(container) && wasNearEnd) container.scrollTop = container.scrollHeight;
       previousHeight = container.clientHeight;
       previousScrollHeight = container.scrollHeight;
     });
@@ -721,8 +731,10 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     const frame = requestAnimationFrame(() => {
       const saved = didScroll.current ? undefined : readingPositions?.current.get(storageKey);
       const container = messagesScrollRef.current;
-      if (container && saved !== undefined) container.scrollTop = saved;
-      else scrollToEnd('instant');
+      if (!container || !revealCoachProposalField(container)) {
+        if (container && saved !== undefined) container.scrollTop = saved;
+        else scrollToEnd('instant');
+      }
       didScroll.current = true;
     });
     return () => cancelAnimationFrame(frame);
@@ -1136,7 +1148,16 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
               </div>
             ))}
             <p className="chat-proposal-footnote">{isConfirming ? 'Esperando la confirmación del guardado.' : 'Confirmá para guardar los registros seleccionados.'}</p>
-            <div className="chat-proposal-actions">
+            <div className="chat-proposal-actions" onPointerDown={event => {
+              const reader = messagesScrollRef.current;
+              const shell = reader?.closest<HTMLElement>('.app-shell-coach');
+              if (event.pointerType === 'touch' && reader && shell?.dataset.coachKeyboard === 'open' &&
+                  getFocusedCoachProposalField(reader) && (event.target as HTMLElement).closest('button')) {
+                // Keep the keyboard/layout stable between touch down and click.
+                // Confirm/cancel still run exclusively through the click handler.
+                event.preventDefault();
+              }
+            }}>
               <button type="button" disabled={isTyping || !actionsToSave.length} onClick={confirmActions}
                 className="chat-proposal-confirm">Confirmar</button>
               <button type="button" disabled={isTyping} onClick={() => setIsEditingProposal(true)}
