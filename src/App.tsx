@@ -8,6 +8,7 @@ import { useAppStore } from './hooks/useAppStore';
 import toast, { Toaster } from 'react-hot-toast';
 import LandingPage from './components/LandingPage';
 import Onboarding from './components/Onboarding';
+import { followCoachViewport } from './lib/coachViewport';
 import { resolveEntryRoute } from './utils/entryRoute';
 import type { EntryRoute } from './utils/entryRoute';
 import type { HomeViewState } from './components/HomeView';
@@ -133,33 +134,9 @@ function App() {
     return () => window.clearTimeout(timer);
   }, [loading, profileReady, route]);
 
-  useEffect(() => {
-    if (!isCoachLayout) return;
+  useLayoutEffect(() => {
     const shell = appShellRef.current;
-    const mobile = window.matchMedia('(max-width: 767px)');
-    const viewport = window.visualViewport;
-    const resize = () => {
-      if (mobile.matches) {
-        shell?.style.setProperty('--coach-viewport-height', `${viewport?.height ?? window.innerHeight}px`);
-        shell?.style.setProperty('--coach-viewport-top', `${viewport?.offsetTop ?? 0}px`);
-      } else {
-        shell?.style.removeProperty('--coach-viewport-height');
-        shell?.style.removeProperty('--coach-viewport-top');
-      }
-    };
-    resize();
-    viewport?.addEventListener('resize', resize);
-    viewport?.addEventListener('scroll', resize);
-    window.addEventListener('resize', resize);
-    mobile.addEventListener('change', resize);
-    return () => {
-      viewport?.removeEventListener('resize', resize);
-      viewport?.removeEventListener('scroll', resize);
-      window.removeEventListener('resize', resize);
-      mobile.removeEventListener('change', resize);
-      shell?.style.removeProperty('--coach-viewport-height');
-      shell?.style.removeProperty('--coach-viewport-top');
-    };
+    if (isCoachLayout && shell) return followCoachViewport(shell);
   }, [isCoachLayout]);
 
   if (loading && !user) {

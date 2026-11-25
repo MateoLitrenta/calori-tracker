@@ -473,7 +473,14 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     const composer = composerRef.current;
     const shell = composer?.closest<HTMLElement>('.app-shell-coach');
     if (!composer || !shell) return;
-    const measure = () => shell.style.setProperty('--coach-composer-height', `${composer.offsetHeight}px`);
+    const measure = () => {
+      shell.style.setProperty('--coach-composer-height', `${composer.offsetHeight}px`);
+      const field = textInputRef.current;
+      if (shell.dataset.coachKeyboard === 'open' && field && field === document.activeElement &&
+          field.selectionEnd === field.value.length) {
+        field.scrollTop = field.scrollHeight;
+      }
+    };
     measure();
     const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(measure);
     observer?.observe(composer);
@@ -634,9 +641,12 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, dateStr
     const textarea = textInputRef.current;
     if (!textarea) return;
     const maxHeight = window.matchMedia('(max-width: 767px)').matches ? 124 : 148;
+    const previousScroll = textarea.scrollTop;
     textarea.style.height = 'auto';
     textarea.style.height = `${Math.min(Math.max(textarea.scrollHeight, 44), maxHeight)}px`;
-    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
+    if (document.activeElement === textarea) {
+      textarea.scrollTop = textarea.selectionStart === textarea.value.length ? textarea.scrollHeight : previousScroll;
+    }
   }, [inputValue]);
 
   useEffect(() => {
@@ -1315,6 +1325,19 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             disabled={(!inputValue.trim() && !pendingImage) || isTyping || isRequestingAudio || isRecording || isProcessingAudio || isProcessingImage || isCameraOpen || !!pending || !activeProfile}
             aria-label="Enviar mensaje"
             className="chat-send"
+            onPointerDown={event => {
+              if (event.pointerType === 'touch' && document.activeElement === textInputRef.current &&
+                  event.currentTarget.closest('[data-coach-keyboard="open"]')) {
+                // Preserve the editor's focus until the native click submits the form.
+                event.preventDefault();
+              }
+            }}
+            onClick={event => {
+              // WebKit can move focus to a tapped control even after pointerdown.
+              if (event.detail > 0 && event.currentTarget.closest('[data-coach-keyboard="open"]')) {
+                textInputRef.current?.focus({ preventScroll: true });
+              }
+            }}
           >
             <PaperPlaneRight size={18} weight="fill" />
           </button>

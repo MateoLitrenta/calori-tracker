@@ -169,7 +169,6 @@
 .entry-sheet-root .entry-form-footer button:hover:not(:disabled) { background: #e99050; }
 @keyframes calori-entry-sheet { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 .home-variants :is(.record-detail-details, .record-detail-meta) { border-radius: var(--radius-widget); }
-.home-variants :is(.record-detail-edit, .record-detail-modal button) { border-radius: var(--radius-control); }
 .home-variants .daily-logs li + li { border-color: var(--home-line); }
 
 .home-variants .daily-panel { gap: 24px; }

@@ -286,6 +286,7 @@ const hookUrl = stub(`
   export const useRef = value => globalThis.__dailyHooks.useRef(value);
   export const useId = () => globalThis.__dailyHooks.useRef('daily-records-test').current;
   export const useEffect = (...args) => globalThis.__dailyHooks.useEffect(...args);
+  export const useLayoutEffect = useEffect;
 `);
 const interactiveCode = code.replace(JSON.stringify(import.meta.resolve('react')), JSON.stringify(hookUrl));
 const { default: InteractiveDailyPanel } = await import(`data:text/javascript;base64,${Buffer.from(interactiveCode).toString('base64')}`);
@@ -1366,26 +1367,161 @@ for (const mobile of [false, true]) test(`weight dialog names its historical day
   assert.equal(document.activeElement, trigger);
 });
 
-test('workout deletion reports success only after persistence confirms it', async t => {
-  const successes = [], errors = [];
-  const toast = globalThis.__entryServices.toast;
-  const oldSuccess = toast.success, oldError = toast.error;
-  toast.success = message => successes.push(message); toast.error = message => errors.push(message);
-  t.after(() => { toast.success = oldSuccess; toast.error = oldError; });
-  for (const outcome of [false, true, 'reject']) {
-    let resolve;
-    const gate = new Promise(done => { resolve = done; });
-    const view = mount({ profile, record: { ...base, workouts: [{ id: 'delete-test', activity: 'Correr', duration: 30, calories: 300 }] }, dateStr, records: {},
-      onUpdateRecord: async () => { await gate; if (outcome === 'reject') throw Error('offline'); return outcome; } });
-    node(view(), e => e.props.className === 'daily-record-open').props.onClick({ currentTarget: null });
-    node(view(), e => e.type === 'button' && e.props.children?.some?.(part => typeof part === 'string' && part.includes('Eliminar'))).props.onClick({ stopPropagation() {} });
-    const count = successes.length;
-    assert.equal(count, outcome === false ? 0 : outcome === true ? 0 : 1);
-    resolve(); await new Promise(setImmediate);
-    assert.equal(successes.length, count + (outcome === true ? 1 : 0));
-  }
-  assert.equal(errors.length, 1);
+function dialogMethodsForDeletion() {
+  const prototype = window.HTMLDialogElement.prototype;
+  prototype.showModal ??= function () { this.setAttribute('open', ''); };
+  prototype.close ??= function () { this.removeAttribute('open'); };
+}
+
+const deleteDialog = () => document.querySelector('dialog[data-record-delete][open]');
+const deleteAction = () => deleteDialog().querySelector('button.profile-button-danger');
+
+async function requestRecordDeletion(view, kind) {
+  await act(() => view.list().querySelector(`[data-entry-kind="${kind}"]`).click());
+  await act(() => document.querySelector('.record-detail-delete').click());
+}
+
+test('meal deletion preserves the selected kind, latest day data, and focus through cancellation, failure and a double tap', async t => {
+  const day = '2026-11-12';
+  const record = { ...journalRecord(2, day), version: '1', generation: 'a' };
+  record.meals[0].photo_path = 'fixture-photo.jpg';
+  record.workouts[0].id = record.meals[0].id;
+  const attempts = [];
+  const view = await journalDOM(t, { record, dateStr: day, onUpdateRecord: (date, candidate, options) =>
+    new Promise(resolve => attempts.push({ date, candidate, options, resolve })),
+  });
+  dialogMethodsForDeletion();
+
+  await requestRecordDeletion(view, 'meal');
+  assert.match(deleteDialog().textContent, /¿Eliminar comida\?Comida 0.*12 nov 2026.*08:00.*100 kcal/);
+  const cancel = deleteDialog().querySelector('button.profile-button-neutral');
+  assert.equal(document.activeElement, cancel);
+  await act(() => cancel.click());
+  await act(() => new Promise(done => window.requestAnimationFrame(done)));
+  assert.equal(deleteDialog(), null);
+  assert.equal(document.activeElement, document.querySelector('.record-detail-delete'));
+  assert.equal(attempts.length, 0);
+
+  await act(() => document.querySelector('.record-detail-delete').click());
+  const recent = { ...record, version: '2', steps: 6400, water: 1750, weight: 72.5 };
+  await view.render({ record: recent });
+  await act(() => {
+    const action = deleteAction();
+    action.click();
+    action.click();
+  });
+  assert.equal(attempts.length, 1);
+  assert.equal(deleteAction().disabled, true);
+  assert.match(deleteDialog().textContent, /Eliminando/);
+  assert.equal(document.querySelector('.record-delete-notice'), null);
+  assert.equal(attempts[0].date, day);
+  assert.deepEqual(attempts[0].candidate, { ...recent, meals: [] });
+  assert.equal(attempts[0].options.feedback, 'contextual');
+
+  await act(async () => {
+    attempts[0].options.onFailure({ kind: 'conflict', message: 'Conflicto de prueba' });
+    attempts[0].resolve(false);
+  });
+  assert.match(deleteDialog().querySelector('[role="alert"]').textContent, /Los registros se actualizaron/);
+  assert.equal(deleteAction().disabled, false);
+  assert.equal(view.list().querySelectorAll('[data-entry-kind="meal"]').length, 1);
+  await act(() => deleteAction().click());
+  assert.equal(attempts.length, 2);
+  await act(async () => attempts[1].resolve(true));
+  await view.render({ record: attempts[1].candidate });
+
+  assert.equal(deleteDialog(), null);
+  assert.equal(document.querySelector('.record-detail-modal'), null);
+  assert.equal(document.activeElement, document.getElementById('fitness-daily-entries'));
+  assert.match(document.querySelector('.record-delete-notice').textContent, /Comida eliminada.*limpieza de la foto/);
+  await act(() => view.list().querySelector('[data-entry-kind="workout"]').click());
+  assert.equal(document.querySelector('.record-delete-notice'), null);
+  assert.match(document.querySelector('.record-detail-main').textContent, /Ejercicio 1/);
 });
+
+test('deletion ignores stale selections and late confirmations after a day or account change', async t => {
+  const day = '2026-11-12';
+  const record = journalRecord(2, day);
+  const attempts = [];
+  const view = await journalDOM(t, {
+    profile: { ...profile, user_id: 'account-a' }, record, dateStr: day,
+    onUpdateRecord: (date, candidate) => new Promise(resolve => attempts.push({ date, candidate, resolve })),
+  });
+  dialogMethodsForDeletion();
+  await requestRecordDeletion(view, 'workout');
+  const otherDay = '2026-11-13';
+  await view.render({ record: { ...record, dateStr: otherDay }, dateStr: otherDay });
+  assert.equal(deleteDialog(), null);
+  await view.render({ record, dateStr: day });
+  assert.equal(document.querySelector('.record-detail-modal'), null);
+  assert.equal(attempts.length, 0);
+  await requestRecordDeletion(view, 'workout');
+  await act(() => deleteAction().click());
+  assert.equal(attempts[0].date, day);
+  assert.deepEqual(attempts[0].candidate.workouts, []);
+  assert.deepEqual(attempts[0].candidate.meals, record.meals);
+  await view.render({ profile: { ...profile, user_id: 'account-b' } });
+  await requestRecordDeletion(view, 'workout');
+  await act(async () => attempts[0].resolve(true));
+  assert.ok(deleteDialog(), 'A selection from the new account remains open');
+  assert.equal(document.querySelector('.record-delete-notice'), null);
+});
+
+test('a record removed elsewhere cannot be deleted from a pending confirmation', async t => {
+  const day = '2026-11-12';
+  const record = journalRecord(2, day);
+  const view = await journalDOM(t, { record, dateStr: day });
+  dialogMethodsForDeletion();
+  await requestRecordDeletion(view, 'workout');
+  await view.render({ record: { ...record, workouts: [] } });
+  assert.match(deleteDialog().querySelector('[role="status"]').textContent, /ya no está en este día/);
+  assert.equal(deleteAction().disabled, true);
+  await act(() => deleteAction().click());
+  assert.equal(view.saves.length, 0);
+  await act(() => deleteDialog().dispatchEvent(new window.Event('cancel', { cancelable: true })));
+  assert.equal(deleteDialog(), null);
+  assert.match(document.querySelector('.record-detail-modal [role="status"]').textContent, /ya no está en este día/);
+});
+
+for (const [kind, addLabel, draftFields, receiptLabel] of [
+  ['meal', 'Agregar comida', { 'add-meal-description': 'Ensalada de prueba', 'add-meal-calories': '180' }, 'Comida guardada'],
+  ['workout', 'Agregar ejercicio', { 'add-workout-activity': 'Caminata de prueba', 'add-workout-duration': '30', 'add-workout-calories': '100' }, 'Ejercicio guardado'],
+]) {
+  test(`starting a new ${kind} clears the deletion notice through cancellation and save`, async t => {
+    const view = await journalDOM(t, { record: journalRecord(4) });
+    dialogMethodsForDeletion();
+    const notice = () => document.querySelector('.record-delete-notice');
+    const add = () => [...document.querySelectorAll('button')].find(button => button.textContent.trim() === addLabel);
+    const deleteRecord = async () => {
+      await requestRecordDeletion(view, kind);
+      await act(async () => deleteAction().click());
+      await view.render({ record: view.saves.at(-1).record });
+      assert.ok(notice(), 'A successful deletion shows its notice');
+    };
+
+    await deleteRecord();
+    await act(() => add().click());
+    await act(() => document.querySelector('form.entry-form .entry-cancel').click());
+    assert.equal(document.querySelector('form.entry-form'), null);
+    assert.ok(!notice(), 'Canceling a new draft must not restore the deletion notice');
+
+    await deleteRecord();
+    await act(() => add().click());
+    await act(() => {
+      for (const [id, value] of Object.entries(draftFields)) {
+        const field = document.getElementById(id);
+        Object.getOwnPropertyDescriptor(Object.getPrototypeOf(field), 'value').set.call(field, value);
+        field.dispatchEvent(new window.Event('input', { bubbles: true }));
+      }
+    });
+    await act(async () => document.querySelector('form.entry-form')
+      .dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })));
+    await view.render({ record: view.saves.at(-1).record });
+    assert.equal(document.querySelector('.meal-saved-label')?.textContent.trim(), receiptLabel);
+    assert.ok(!notice(), 'A new save receipt must not share space with the deletion notice');
+    assert.equal(view.saves.length, 3);
+  });
+}
 
 test('a confirmed meal receipt focuses its stable row among namesakes only on request', async t => {
   const day = '2026-11-12';

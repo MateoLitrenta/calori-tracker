@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useId } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect, useId } from 'react';
 import { ForkKnife, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, CaretRight, Sparkle } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
@@ -24,6 +24,20 @@ const workoutCategories = ['Gimnasio', 'Fútbol', 'Correr', 'Natación', 'Camina
 type WorkoutCategory = typeof workoutCategories[number];
 const exactWorkoutCategory = (activity: string) => workoutCategories.find(category => category.toLowerCase() === activity.trim().toLowerCase()) ?? null;
 type EntryEstimate = { calories: number; assumptions: string[]; context: string; inputVersion: number; calorieVersion: number; contextKey: string };
+type MealEstimate = EntryEstimate & { category: MealType };
+
+function mealTypeAtHour(hour: number): MealType {
+  if (hour < 5) return 'Snack';
+  if (hour < 12) return 'Desayuno';
+  if (hour < 16) return 'Almuerzo';
+  if (hour < 20) return 'Merienda';
+  return 'Cena';
+}
+
+function newMealSchedule() {
+  const now = new Date();
+  return { time: format(now, 'HH:mm'), type: mealTypeAtHour(now.getHours()), manualType: false };
+}
 
 function estimateRecovery(error: unknown) {
   if (!(error instanceof AIRequestError)) return { message: 'No pudimos estimar las calorías.' };
@@ -33,7 +47,7 @@ function estimateRecovery(error: unknown) {
 
 type EntryReceipt = {
   id: string; date: string; name: string; calories: number; estimated: boolean;
-} & ({ kind: 'meal'; replacedPhoto: boolean } | { kind: 'workout'; duration: number });
+} & ({ kind: 'meal'; replacedPhoto: boolean; reclassifiedFrom?: MealType } | { kind: 'workout'; duration: number });
 
 function findReceiptRow(list: HTMLUListElement | null, receipt: EntryReceipt) {
   return Array.from(list?.querySelectorAll<HTMLButtonElement>('[data-entry-id]') ?? [])
@@ -65,6 +79,7 @@ function DailyRecords({ count, children, receipt, onDismiss }: {
         <span className="meal-saved-label"><Check size={16} aria-hidden="true" /> {receipt.kind === 'meal' ? 'Comida guardada' : 'Ejercicio guardado'}</span>
         <strong>{receipt.name}</strong>
         <span>{receipt.kind === 'workout' && receipt.duration + ' min · '}{receipt.calories.toLocaleString('es-AR')} kcal{receipt.estimated && ' · Estimación con IA'} · {format(new Date(receipt.date + 'T12:00:00'), 'd MMM yyyy', { locale: es })}</span>
+        {receipt.kind === 'meal' && receipt.reclassifiedFrom && <span>Categoría de la estimación original: {receipt.reclassifiedFrom}.</span>}
         {receipt.kind === 'meal' && receipt.replacedPhoto && <span>La limpieza de la foto anterior queda pendiente.</span>}
       </div>
       <button type="button" className="meal-saved-open" onClick={() => {
@@ -99,6 +114,58 @@ function HabitSaveConfirmation({ confirmedAt }: { confirmedAt: number }) {
     return () => clearTimeout(timer);
   }, [expiresAt, visible]);
   return visible ? <span data-state="saved"><span aria-hidden="true">✓ </span>Guardado</span> : null;
+}
+
+type RecordItem = (MealEntry & { _type: 'meal' }) | (WorkoutEntry & { _type: 'workout' });
+type RecordSelection = { scope: string; item: RecordItem };
+
+function findSelectedRecord(record: DailyRecord, item: RecordItem): RecordItem | undefined {
+  if (item._type === 'meal') {
+    const meal = record.meals.find(entry => entry.id === item.id);
+    return meal && { ...meal, _type: 'meal' };
+  }
+  const workout = record.workouts.find(entry => entry.id === item.id);
+  return workout && { ...workout, _type: 'workout' };
+}
+
+function ConfirmRecordDeletion({ item, date, deleting, available, error, onCancel, onConfirm }: {
+  item: RecordItem; date: string; deleting: boolean; available: boolean; error?: string;
+  onCancel: () => void; onConfirm: () => void;
+}) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const cancel = useRef<HTMLButtonElement>(null);
+  const confirm = useRef<HTMLButtonElement>(null);
+  const titleId = useId();
+  const descriptionId = useId();
+  useLayoutEffect(() => {
+    const element = dialog.current!;
+    element.showModal();
+    cancel.current?.focus({ preventScroll: true });
+    return () => element.close();
+  }, []);
+  useLayoutEffect(() => {
+    if (error && !dialog.current?.contains(document.activeElement)) {
+      (available ? confirm : cancel).current?.focus({ preventScroll: true });
+    }
+  }, [error, available]);
+  const meal = item._type === 'meal';
+  return <dialog ref={dialog} data-record-delete className="profile-dialog" aria-labelledby={titleId} aria-describedby={descriptionId}
+    onCancel={event => { event.preventDefault(); if (!deleting) onCancel(); }}>
+    <div className="profile-dialog-body record-delete-dialog">
+      <h2 id={titleId} className="profile-section-title">{meal ? '¿Eliminar comida?' : '¿Eliminar ejercicio?'}</h2>
+      <p id={descriptionId}>
+        <strong>{meal ? item.name : item.activity}</strong>
+        <span className="block">{date}{item.time && ' · ' + item.time}{!meal && ' · ' + item.duration + ' min'} · {item.calories.toLocaleString('es-AR')} kcal</span>
+      </p>
+      {error && <p className="record-delete-error" role="alert">{error}</p>}
+      {!available && !deleting && <p className="record-delete-error" role="status">Este registro ya no está en este día.</p>}
+      {deleting && <p role="status">Eliminando…</p>}
+      <div className="profile-actions profile-form-actions">
+        <button ref={cancel} type="button" disabled={deleting} className="profile-button profile-button-neutral" onClick={onCancel}>Cancelar</button>
+        <button ref={confirm} type="button" disabled={deleting || !available} className="profile-button profile-button-danger" onClick={onConfirm}>Eliminar</button>
+      </div>
+    </div>
+  </dialog>;
 }
 
 interface DailyPanelProps {
@@ -136,6 +203,29 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   };
 
   const isGroup = selectedGroup && selectedGroup.type !== 'day';
+  const detailScope = JSON.stringify([profile.user_id ?? profile.id, dateStr, profile.recordGeneration, selectedGroup?.type ?? 'day']);
+  const [selection, setSelection] = useState<RecordSelection | null>(null);
+  const [deletion, setDeletion] = useState<{ deleting?: boolean; error?: string } | null>(null);
+  const [deletionNotice, setDeletionNotice] = useState<{ scope: string; text: string } | null>(null);
+  const deletionLock = useRef<RecordSelection | null>(null);
+  const recordOpener = useRef<HTMLButtonElement>(null);
+  const detailDeleteButton = useRef<HTMLButtonElement>(null);
+  const recordsHeading = useRef<HTMLHeadingElement>(null);
+
+  const detail = selection?.scope === detailScope ? selection : null;
+  if (selection && !detail) {
+    setSelection(null);
+    setDeletion(null);
+  }
+  if (deletionNotice && deletionNotice.scope !== detailScope) setDeletionNotice(null);
+  useLayoutEffect(() => () => { deletionLock.current = null; }, [detailScope]);
+  useEffect(() => {
+    if (deletionNotice?.scope === detailScope) recordsHeading.current?.focus();
+  }, [deletionNotice, detailScope]);
+
+  const liveDetailItem = detail && findSelectedRecord(currentRecord, detail.item);
+  const detailModalItem = liveDetailItem ?? detail?.item;
+  const deleting = deletion?.deleting ?? false;
 
   const isHistorical = dateStr < formatDateStr(new Date());
   const emptyHistory = !isGroup && isHistorical && !hasEnergyData(currentRecord);
@@ -173,21 +263,51 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   }
 
   // --- Handlers ---
-  const handleDeleteMeal = async (id: string) => {
-    const meal = currentRecord.meals.find(m => m.id === id);
-    if (!await onUpdateRecord(dateStr, { ...currentRecord, meals: currentRecord.meals.filter(m => m.id !== id) })) return;
-    // Storage deletion is not part of the record transaction. A path may also
-    // be referenced by another meal/device; retain it until safe cleanup exists.
-    toast.success(meal?.photo_path ? 'Comida eliminada. La limpieza de la foto queda pendiente.' : 'Comida eliminada', { style: { background: '#161b22', color: '#fff' }, icon: '🗑️' });
+  const closeDetail = () => {
+    if (deletionLock.current) return;
+    setDeletion(null);
+    setSelection(null);
   };
 
-  const handleDeleteWorkout = async (id: string) => {
+  const cancelRecordDeletion = () => {
+    if (deletionLock.current) return;
+    setDeletion(null);
+    const button = detailDeleteButton.current;
+    window.requestAnimationFrame(() => {
+      if (button?.isConnected) button.focus({ preventScroll: true });
+    });
+  };
+
+  const confirmRecordDeletion = async () => {
+    if (!detail || !liveDetailItem || deletionLock.current) return;
+    deletionLock.current = detail;
+    setDeletion({ deleting: true });
+    const meal = liveDetailItem._type === 'meal';
+    // Use the currently published version/generation. The record writer's CAS
+    // rejects concurrent changes that have yet to reach this view.
+    const base = snapshotEntryRecord(currentRecord, profile.recordGeneration);
+    const candidate = meal
+      ? { ...base, meals: base.meals.filter(entry => entry.id !== liveDetailItem.id) }
+      : { ...base, workouts: base.workouts.filter(entry => entry.id !== liveDetailItem.id) };
+    let confirmed = false;
+    let failure = 'No pudimos confirmar la eliminación. Intentá nuevamente.';
     try {
-      if (!await onUpdateRecord(dateStr, { ...currentRecord, workouts: currentRecord.workouts.filter(w => w.id !== id) })) return;
-      toast.success('Entrenamiento eliminado', { style: { background: '#161b22', color: '#fff' }, icon: '🗑️' });
-    } catch {
-      toast.error('No se pudo eliminar el ejercicio. Intentá nuevamente.');
+      confirmed = await onUpdateRecord(dateStr, candidate, { feedback: 'contextual', onFailure: reason => {
+        if (reason.kind === 'conflict') failure = 'Los registros se actualizaron. Revisá el registro antes de reintentar.';
+      } });
+    } catch { /* Keep the confirmation available for retry. */ }
+    if (deletionLock.current !== detail) return;
+    deletionLock.current = null;
+    if (!confirmed) {
+      setDeletion({ error: failure });
+      return;
     }
+    // Photo storage cleanup stays separate from the confirmed record write.
+    const text = liveDetailItem._type === 'meal'
+      ? liveDetailItem.photo_path ? 'Comida eliminada. La limpieza de la foto queda pendiente.' : 'Comida eliminada'
+      : 'Ejercicio eliminado';
+    closeDetail();
+    setDeletionNotice({ scope: detailScope, text });
   };
 
   const handleAddWater = (amount: number) => {
@@ -247,10 +367,10 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
   const [isEditingSteps, setIsEditingSteps] = useState(false);
   const [editStepsVal, setEditStepsVal] = useState('');
-  const [mealType, setMealType] = useState<MealType>('Almuerzo');
+  const [mealSchedule, setMealSchedule] = useState(newMealSchedule);
+  const { type: mealType, time: mealTime } = mealSchedule;
   const [mealCals, setMealCals] = useState<number | ''>('');
   const [mealDetails, setMealDetails] = useState('');
-  const [mealTime, setMealTime] = useState('');
   const [mealPhoto, setMealPhoto] = useState<Blob | null>(null);
   const [mealPhotoRemoved, setMealPhotoRemoved] = useState(false);
   const [estimateFailure, setEstimateFailure] = useState<ReturnType<typeof estimateRecovery> | null>(null);
@@ -275,7 +395,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     if (until) setRetryDeadlines(previous => ({ ...previous, [estimateModality]: until }));
   };
   const [workEstimate, setWorkEstimate] = useState<EntryEstimate | null>(null);
-  const [mealEstimate, setMealEstimate] = useState<EntryEstimate | null>(null);
+  const [mealEstimate, setMealEstimate] = useState<MealEstimate | null>(null);
   // One synchronous lock across the existing estimator controls; closing never starts a second call.
   const estimateBusyRef = useRef(false);
   const estimateSessionRef = useRef(0);
@@ -284,7 +404,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const mealInputVersion = useRef(0);
   const mealCalorieVersion = useRef(0);
   const [estimateVersions, setEstimateVersions] = useState({ workInput: 0, workCalories: 0, mealInput: 0, mealCalories: 0 });
-  const estimateContextKey = profile.id + ':' + dateStr;
+  const estimateContextKey = `${profile.user_id ?? profile.id}:${profile.id}:${dateStr}`;
   const reviseEstimate = (kind: keyof typeof estimateVersions) => {
     markEntryChanged();
     const reference = { workInput: workInputVersion, workCalories: workCalorieVersion, mealInput: mealInputVersion, mealCalories: mealCalorieVersion }[kind];
@@ -321,10 +441,23 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     setMealEstimate(null);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     estimateSessionRef.current += 1;
     return () => { estimateSessionRef.current += 1; };
-  }, [dateStr, profile.id]);
+  }, [estimateContextKey]);
+
+  const selectMealType = (type: MealType) => {
+    markEntryChanged();
+    setMealSchedule(previous => ({ ...previous, type, manualType: true }));
+  };
+
+  const changeMealTime = (time: string) => {
+    const valid = /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(time);
+    setMealSchedule(previous => ({
+      ...previous, time,
+      type: !previous.manualType && valid ? mealTypeAtHour(Number(time.slice(0, 2))) : previous.type,
+    }));
+  };
 
   const selectWorkCategory = (category: WorkoutCategory) => {
     reviseEstimate('workInput');
@@ -337,7 +470,6 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     setEntryReceipt(null);
     setMealError('');
     entryChanged.current = false;
-    setMealType('Almuerzo');
     mealDraftRef.current = null;
     workoutDraftRef.current = null;
     clearEstimates();
@@ -345,7 +477,6 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     setMealName('');
     setMealCals('');
     setMealDetails('');
-    setMealTime('');
     setMealPhoto(null);
     setPhotoProcessing(false);
     setMealPhotoRemoved(false);
@@ -364,10 +495,16 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const openEntry = (tab: 'comida' | 'entrenamiento') => {
     if (entryActive || savingMealRef.current || savingWorkoutRef.current) return;
     resetForms();
+    setDeletionNotice(null);
     setActiveTab(tab);
     const base = snapshotEntryRecord(currentRecord, profile.recordGeneration);
-    if (tab === 'comida') mealDraftRef.current = { id: generateUUID(), base, upload: null };
-    else workoutDraftRef.current = { id: generateUUID(), base };
+    if (tab === 'comida') {
+      mealDraftRef.current = { id: generateUUID(), base, upload: null };
+      setMealSchedule(newMealSchedule());
+    } else {
+      workoutDraftRef.current = { id: generateUUID(), base };
+      setWorkTime(format(new Date(), 'HH:mm'));
+    }
   };
 
   const requestClose = (close: () => void) => {
@@ -405,14 +542,6 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     const unsubscribe = habitController.subscribe(() => setHabitRevision(value => value + 1));
     return () => { unsubscribe(); if (!habitDrafts) habitController.dispose(); };
   }, [habitController, habitDrafts]);
-  useEffect(() => {
-    if (activeTab === 'comida' && !editingMealId) {
-      setMealTime(format(new Date(), 'HH:mm'));
-    } else if (activeTab === 'entrenamiento' && !editingWorkoutId) {
-      setWorkTime(format(new Date(), 'HH:mm'));
-    }
-  }, [activeTab, editingMealId, editingWorkoutId]);
-
   const handleEstimateMeal = async () => {
     if (estimateBusyRef.current || estimationBlocked) return;
     if (!mealName.trim() && !mealPhoto) { setEstimateFailure({ message: 'Describí la comida o agregá una foto.' }); return; }
@@ -421,6 +550,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     const session = estimateSessionRef.current;
     const inputVersion = mealInputVersion.current;
     const calorieVersion = mealCalorieVersion.current;
+    const sameFoodInput = () => session === estimateSessionRef.current && inputVersion === mealInputVersion.current;
     const context = !mealName ? 'Comida a partir de una foto' : mealName.length > 80 ? 'Comida indicada' : mealName;
     setEstimating(true);
     try {
@@ -428,11 +558,14 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
         reader.onerror = reject; reader.readAsDataURL(mealPhoto);
       }) } : undefined;
+      if (!sameFoodInput()) return;
       const result = await estimateMeal({ name: mealName, details: mealDetails, type: mealType, attachment });
-      if (session !== estimateSessionRef.current) return;
-        markEntryChanged();
-      setMealEstimate({ calories: result.calories, assumptions: result.assumptions, context, inputVersion, calorieVersion, contextKey: estimateContextKey });
-      if (inputVersion === mealInputVersion.current && calorieVersion === mealCalorieVersion.current) {
+      if (!sameFoodInput()) return;
+      markEntryChanged();
+      // Keep the category sent to the estimator even if the draft was reclassified while it ran.
+      setMealEstimate({ calories: result.calories, assumptions: result.assumptions, context, inputVersion, calorieVersion,
+        contextKey: estimateContextKey, category: mealType });
+      if (calorieVersion === mealCalorieVersion.current) {
         setMealCals(result.calories);
         if (!mealName.trim()) setMealName(result.description);
       }
@@ -488,6 +621,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       const meal: MealEntry = { id: draft.id, name: mealName, type: mealType, calories: Number(mealCals),
         time: mealTime || (draft.fallbackTime ??= format(new Date(), 'HH:mm')), details: mealDetails,
         photo_path: uploadedPath || (mealPhotoRemoved ? null : oldMeal?.photo_path ?? null) };
+      const estimated = mealEstimate?.contextKey === estimateContextKey && mealEstimate.calories === meal.calories
+        && mealEstimate.inputVersion === mealInputVersion.current && mealEstimate.calorieVersion === mealCalorieVersion.current;
       const meals = oldMeal ? base.meals.map(m => m.id === draft.id ? meal : m) : [...base.meals, meal];
       if (!await onUpdateRecord(dateStr, { ...base, meals }, {
         feedback: 'contextual', onFailure: failure => { failureMessage = failure.message; },
@@ -495,8 +630,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       resetForms(); setActiveTab(null);
       setEntryReceipt({ kind: 'meal', id: meal.id, date: dateStr, name: meal.name, calories: meal.calories,
         replacedPhoto: !!oldMeal?.photo_path && oldMeal.photo_path !== meal.photo_path,
-        estimated: mealEstimate?.contextKey === estimateContextKey && mealEstimate.calories === meal.calories
-          && mealEstimate.inputVersion === mealInputVersion.current && mealEstimate.calorieVersion === mealCalorieVersion.current });
+        estimated, reclassifiedFrom: estimated && mealEstimate.category !== meal.type ? mealEstimate.category : undefined });
     } catch {
       // An ambiguous DB response may already reference the uploaded object.
       // Keep the same entry ID, payload, blob and path for explicit retry.
@@ -513,10 +647,9 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     setEntryReceipt(null);
     setEditingMealId(m.id);
     setMealName(m.name);
-    setMealType(m.type);
+    setMealSchedule({ type: m.type, time: m.time || format(new Date(), 'HH:mm'), manualType: true });
     setMealCals(m.calories);
     setMealDetails(m.details || '');
-    setMealTime(m.time || format(new Date(), 'HH:mm'));
     setMealPhoto(null); setMealPhotoRemoved(false);
   };
 
@@ -564,8 +697,6 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     setWorkTime(w.time || format(new Date(), 'HH:mm'));
   };
 
-  const recordOpener = useRef<HTMLButtonElement>(null);
-  const [detailModalItem, setDetailModalItem] = useState<(MealEntry & { _type: 'meal' }) | (WorkoutEntry & { _type: 'workout' }) | null>(null);
   const entryDate = <p className="entry-date-context">Día del registro: <time dateTime={dateStr}>{panelSubtitle}</time></p>;
   const mealPhotoPath = mealPhotoRemoved ? null : currentRecord.meals.find(m => m.id === editingMealId)?.photo_path;
   const mealPhotoControls = <MealPhotoPicker blob={mealPhoto}
@@ -594,7 +725,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     </button>
     {estimateNotice}
     {mealEstimate?.contextKey === estimateContextKey && <EntryEstimateResult estimate={mealEstimate} calories={mealCals} adjusted={mealEstimate.calorieVersion !== estimateVersions.mealCalories}
-      outdated={mealEstimate.inputVersion !== estimateVersions.mealInput} />}
+      outdated={mealEstimate.inputVersion !== estimateVersions.mealInput}
+      reclassifiedFrom={mealEstimate.category !== mealType ? mealEstimate.category : undefined} />}
   </div>;
   const workEstimateControls = <div className="entry-ai-controls flex flex-col gap-1">
     <button type="button" disabled={estimating || estimationBlocked} onClick={() => void handleEstimateWorkout()}
@@ -732,7 +864,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                   <div className="entry-field entry-type">
                     <label className="entry-field-label" htmlFor="add-meal-type">Tipo de comida</label>
                     <select id="add-meal-type"
-                      value={mealType} onChange={e => { reviseEstimate('mealInput'); setMealType(e.target.value as MealType); }}
+                      value={mealType} onChange={e => selectMealType(e.target.value as MealType)}
                       className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                     >
                       <option value="Desayuno">Desayuno</option>
@@ -755,7 +887,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                         <span id="add-meal-kcal" className="entry-unit">kcal</span>
                       </div>
                     </div>
-                    {renderTimeField("add-meal-time", mealTime, setMealTime, true)}
+                    {renderTimeField("add-meal-time", mealTime, changeMealTime, true)}
                   </div>
                   <div className="entry-photo-section">
                     <p className="entry-photo-hint">Foto opcional · podés usarla para estimar con IA</p>
@@ -876,7 +1008,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         {/* Registros en orden cronológico */}
         <div className={`daily-logs ${totalEntries === 0 ? 'daily-logs--empty' : ''}`}>
           <div className="daily-logs-heading">
-            <h4 id="fitness-daily-entries" ref={onRecordsHeadingReady} tabIndex={-1} aria-describedby={dayContextId} className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
+            <h4 id="fitness-daily-entries" ref={element => { recordsHeading.current = element; onRecordsHeadingReady?.(element); }} tabIndex={-1} aria-describedby={dayContextId} className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
             <span className="fitness-entry-count">{totalEntries} {totalEntries === 1 ? 'registro' : 'registros'}</span>
             <time id={dayContextId} dateTime={dateStr} className="daily-active-date">
               {dateStr === formatDateStr(new Date()) ? 'Hoy · ' : ''}{panelSubtitle}
@@ -886,6 +1018,8 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
             }}>← Volver a Tu actividad</button>}
           </div>
 
+          {!detail && !entryActive && deletionNotice?.scope === detailScope &&
+            <p className="record-delete-notice" role="status">{deletionNotice.text}</p>}
           {totalEntries === 0 && (
             <p className="daily-logs-empty">Las comidas y los ejercicios que agregues para este día aparecerán acá.</p>
           )}
@@ -907,7 +1041,11 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               const meal = item._type === 'meal';
               return (
                 <li key={`${item._type}-${item.id}`}>
-                  <button type="button" data-entry-kind={item._type} data-entry-id={item.id} data-meal-id={meal ? item.id : undefined} className="daily-record-open" onClick={event => { recordOpener.current = event.currentTarget; setDetailModalItem(item); }}>
+                  <button type="button" data-entry-kind={item._type} data-entry-id={item.id} data-meal-id={meal ? item.id : undefined} className="daily-record-open" onClick={event => {
+                    recordOpener.current = event.currentTarget;
+                    setDeletionNotice(null);
+                    setSelection({ scope: detailScope, item });
+                  }}>
                     <span className="fitness-record-mark" aria-hidden="true">
                       {meal && item.photo_path ? <MealThumbnail path={item.photo_path} /> : meal
                         ? <ForkKnife size={17} aria-hidden="true" /> : <Barbell size={17} aria-hidden="true" />}
@@ -1083,7 +1221,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Detail Modal */}
       {detailModalItem && (
-        <EntryFormShell fitness dateContext={entryDate} title="Detalle del registro" restoreFocusTo={recordOpener} desktopModal closeLabel="Cerrar detalle" onClose={() => setDetailModalItem(null)}>
+        <EntryFormShell fitness dateContext={entryDate} title="Detalle del registro" restoreFocusTo={recordOpener} desktopModal closeLabel="Cerrar detalle" onClose={closeDetail}>
           <div className="record-detail-modal flex min-h-0 flex-col">
             <div className="record-detail-content entry-form-content p-6 flex flex-col gap-4">
 
@@ -1130,34 +1268,30 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               )}
             </div>
 
-            <div className="record-detail-actions p-4 border-t border-slate-200 dark:border-gray-800 flex gap-3 bg-slate-100 dark:bg-[#0f141c]">
+            {!liveDetailItem && !deletion && <p className="record-delete-error" role="status">Este registro ya no está en este día.</p>}
+            <div className="record-detail-actions">
               <button 
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  const item = detailModalItem;
-                  setDetailModalItem(null);
+                  const item = liveDetailItem;
+                  if (!item) return;
+                  closeDetail();
                   if (item._type === 'meal') startEditMeal(item as MealEntry);
                   else startEditWorkout(item as WorkoutEntry);
                 }}
-                className="record-detail-edit flex-1 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 hover:bg-slate-200 dark:hover:bg-gray-800/50 text-slate-900 dark:text-white py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                className="record-detail-edit" disabled={!liveDetailItem || deleting}
               >
-                <PencilSimple size={18} /> Editar
+                <PencilSimple size={18} aria-hidden="true" /> Editar
               </button>
-              <button 
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (detailModalItem._type === 'meal') handleDeleteMeal(detailModalItem.id);
-                  else handleDeleteWorkout(detailModalItem.id);
-                  setDetailModalItem(null);
-                }}
-                className="flex-1 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-              >
-                <Trash size={18} /> Eliminar
+              <button ref={detailDeleteButton} type="button" disabled={!liveDetailItem || deleting}
+                className="record-detail-delete" onClick={() => setDeletion({})}>
+                <Trash size={18} aria-hidden="true" /> Eliminar
               </button>
             </div>
           </div>
+          {deletion && <ConfirmRecordDeletion item={detailModalItem} date={panelSubtitle} deleting={deleting}
+            available={!!liveDetailItem} error={deletion.error} onCancel={cancelRecordDeletion} onConfirm={confirmRecordDeletion} />}
         </EntryFormShell>
       )}
 
@@ -1208,7 +1342,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               <div className="entry-field entry-type">
                 <label className="entry-field-label" htmlFor="edit-meal-type">Tipo de comida</label>
                 <select id="edit-meal-type"
-                  value={mealType} onChange={e => { reviseEstimate('mealInput'); setMealType(e.target.value as MealType); }}
+                  value={mealType} onChange={e => selectMealType(e.target.value as MealType)}
                   className="bg-slate-100 text-slate-900 dark:bg-[#0d1117] dark:text-white border border-slate-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
                 >
                   <option value="Desayuno">Desayuno</option>
@@ -1231,7 +1365,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                     <span id="edit-meal-kcal" className="entry-unit">kcal</span>
                   </div>
                 </div>
-                {renderTimeField("edit-meal-time", mealTime, setMealTime)}
+                {renderTimeField("edit-meal-time", mealTime, changeMealTime)}
               </div>
               <div className="entry-photo-section">
                 <p className="entry-photo-hint">Foto opcional · podés usarla para estimar con IA</p>

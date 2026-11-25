@@ -42,6 +42,7 @@ const imports = {
   '../lib/habitDraft': new URL('../src/lib/habitDraft.ts', import.meta.url).href,
   './hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
   './utils/entryRoute': new URL('../src/utils/entryRoute.ts', import.meta.url).href,
+  './lib/coachViewport': new URL('../src/lib/coachViewport.ts', import.meta.url).href,
   ...Object.fromEntries(['Sidebar', 'BottomNav', 'AuthModal', 'ThemeToggle', 'LandingPage', 'Onboarding']
     .map(name => [`./components/${name}`, stub(`export default function ${name}() { return null; }`)])),
 };

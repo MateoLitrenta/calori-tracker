@@ -162,10 +162,9 @@
 .home-variants .entry-desktop-modal:has(.entry-weight-form) > div:first-child > button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
 
 /* Record details share the entry shell's keyboard and viewport behavior. */
-.home-variants .record-detail-modal { min-height: 0; background: var(--home-card); color: var(--home-text); }
-.home-variants .record-detail-modal .record-detail-content { display: flex; flex-direction: column; min-height: 0; gap: 16px; padding: 16px; overflow-y: auto; background: var(--home-card); }
+.home-variants .record-detail-modal { min-height: 0; }
+.home-variants .record-detail-modal .record-detail-content { display: flex; flex-direction: column; min-height: 0; gap: 16px; padding: 16px; overflow-y: auto; }
 .home-variants .record-detail-modal .entry-date-context { margin: 0; color: var(--home-muted); font-size: 13px; }
 .home-variants .record-detail-modal .entry-date-context time { color: var(--home-text); }
-.home-variants .record-detail-modal .record-detail-actions { flex: none; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: var(--home-control); }
-.home-variants .record-detail-modal .record-detail-actions button { min-height: 44px; }
+.home-variants .record-detail-actions { flex: none; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); }
 .home-variants .entry-desktop-modal:has(.record-detail-modal) > div:first-child > button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }

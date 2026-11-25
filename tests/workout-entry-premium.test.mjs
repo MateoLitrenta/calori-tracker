@@ -56,9 +56,10 @@ const deferred = () => { let resolve, reject; const promise = new Promise((done,
 async function mount(t, options = {}) {
   const dom = new JSDOM('<main class="app-main"><div class="home-variants" id="root"></div></main>', { pretendToBeVisual: true });
   const previous = {};
-  for (const name of ['window', 'document', 'HTMLElement', 'getComputedStyle', 'IS_REACT_ACT_ENVIRONMENT', '__workoutEntryServices']) previous[name] = globalThis[name];
+  for (const name of ['window', 'document', 'HTMLElement', 'getComputedStyle', 'FileReader', 'IS_REACT_ACT_ENVIRONMENT', '__workoutEntryServices']) previous[name] = globalThis[name];
   globalThis.window = dom.window; globalThis.document = dom.window.document;
   globalThis.HTMLElement = dom.window.HTMLElement; globalThis.getComputedStyle = dom.window.getComputedStyle;
+  globalThis.FileReader = dom.window.FileReader;
   globalThis.IS_REACT_ACT_ENVIRONMENT = true;
   window.matchMedia = () => ({ matches: !!options.mobile, addEventListener() {}, removeEventListener() {} });
   // JSDOM provides the element but not the browser top-layer implementation.
@@ -73,16 +74,23 @@ async function mount(t, options = {}) {
     workout: async input => { requests.push({ kind: 'workout', input }); return options.estimateWorkout ? options.estimateWorkout(input) : { calories: 485, assumptions: [] }; },
   };
   let record = structuredClone(options.record || emptyRecord());
+  const selectedDate = options.selectedDate ?? dateStr;
   const { createRoot } = await import('react-dom/client');
   const root = createRoot(document.getElementById('root'));
   let refresh;
+  let switchContext;
   function App() {
     const [current, setCurrent] = React.useState(record);
     const [user, setUser] = React.useState({ ...profile, ...options.profile });
+    const [date, setDate] = React.useState(selectedDate);
     React.useEffect(() => {
       refresh = (next, generation = user.recordGeneration) => { record = next; setCurrent(next); setUser(previous => ({ ...previous, recordGeneration: generation })); };
+      switchContext = ({ newDate, userId }) => {
+        if (newDate) setDate(newDate);
+        if (userId) setUser(previous => ({ ...previous, user_id: userId }));
+      };
     }, [user.recordGeneration]);
-    return React.createElement(DailyPanel, { profile: user, dateStr, record: current, records: { [dateStr]: current },
+    return React.createElement(DailyPanel, { profile: user, dateStr: date, record: current, records: { [date]: current },
       onUpdateRecord: async (date, next, writeOptions) => {
         saves.push({ date, record: structuredClone(next) });
         const success = options.save ? await options.save(date, next) : true;
@@ -132,6 +140,7 @@ async function mount(t, options = {}) {
     removePhoto: () => act(() => globalThis.__workoutEntryServices.photoProps.onRemove()),
     editMeal: async () => { await click([...document.querySelectorAll('.daily-record-open')].find(node => node.textContent.includes(record.meals[0]?.name))); await click(document.querySelector('.record-detail-edit')); },
     refresh: (next, generation) => act(() => refresh(next, generation)),
+    switchContext: context => act(() => switchContext(context)),
     estimate: () => click([...document.querySelectorAll('button')].find(node => node.textContent.includes('Estimar con IA'))),
     settle: callback => act(async () => { callback(); await new Promise(setImmediate); }) };
 }
@@ -548,29 +557,166 @@ test('meal estimates use the same integrated secondary explanation and preserve 
   await view.submit();
   assert.equal(view.record().meals[0].calories, 650);
   assert.equal(view.record().meals[0].details, 'Porción mediana\nSin salsa');
+  assert.doesNotMatch(document.querySelector('.meal-saved').textContent, /Estimación con IA/);
 });
 
 for (const editing of [false, true]) {
-  test(`${editing ? 'edit' : 'add'} meal type change invalidates a pending estimate without labeling unchanged calories as manually adjusted`, async t => {
+  test(`${editing ? 'edit' : 'add'} meal category changes keep the estimate attributed to the category sent`, async t => {
     const pending = deferred();
     const meal = { id: 'existing-meal', name: 'Comida existente', type: 'Almuerzo', calories: 600,
       details: 'Notas existentes', time: '12:30' };
     const view = await mount(t, { record: { ...emptyRecord(), meals: editing ? [meal] : [] }, estimateMeal: () => pending.promise });
     const prefix = editing ? 'edit' : 'add';
     if (editing) {
-      await view.click(document.querySelector('.daily-record-open'));
-      await view.click(document.querySelector('.record-detail-edit'));
+      await view.editMeal();
     } else {
-      await view.click(view.button('Agregar comida'));
-      await view.fill('add-meal-description', 'Nueva comida'); await view.fill('add-meal-calories', '600');
+      await view.openMeal();
+      await view.fill('add-meal-description', 'Nueva comida');
+      await view.fill('add-meal-time', '12:30');
     }
     await view.estimate();
+    assert.equal(view.requests[0].input.type, 'Almuerzo');
     await view.fill(`${prefix}-meal-type`, 'Cena');
     await view.settle(() => pending.resolve({ calories: 485, description: 'Resultado anterior', assumptions: ['Original assumption'] }));
-    assert.equal(document.getElementById(`${prefix}-meal-calories`).value, '600');
+    assert.equal(document.getElementById(`${prefix}-meal-calories`).value, '485');
     assert.equal(document.getElementById(`${prefix}-meal-type`).value, 'Cena');
+    await view.fill(`${prefix}-meal-type`, 'Desayuno');
     const panel = document.querySelector('section[aria-label="Estimación con IA"]');
-    assert.ok(panel); assert.match(panel.textContent, /Datos modificados/); assert.doesNotMatch(panel.textContent, /Valor ajustado/);
-    assert.equal(view.requests.length, 1); assert.equal(view.saves.length, 0);
+    assert.match(panel.textContent, /Categoría actualizada.*Se guardarán 485 kcal.*estimación original \(Almuerzo\)/);
+    assert.doesNotMatch(panel.textContent, /Datos modificados|Valor ajustado/);
+    assert.equal(document.getElementById(`${prefix}-meal-calories`).value, '485');
+    await view.submit();
+    assert.equal(view.requests.length, 1);
+    assert.equal(view.saves.length, 1);
+    assert.equal(view.record().meals[0].type, 'Desayuno');
+    assert.match(document.querySelector('.meal-saved').textContent, /485 kcal.*Estimación con IA.*Categoría de la estimación original: Almuerzo/);
+  });
+}
+
+test('a new meal samples local time on open and suggests a category at every band boundary without following the clock', async t => {
+  t.mock.timers.enable({ apis: ['Date'] });
+  const view = await mount(t);
+  for (const [time, type] of [
+    ['00:00', 'Snack'], ['04:59', 'Snack'], ['05:00', 'Desayuno'], ['11:59', 'Desayuno'],
+    ['12:00', 'Almuerzo'], ['15:59', 'Almuerzo'], ['16:00', 'Merienda'], ['19:59', 'Merienda'],
+    ['20:00', 'Cena'], ['23:59', 'Cena'],
+  ]) {
+    const [hours, minutes] = time.split(':').map(Number);
+    t.mock.timers.setTime(new Date(2026, 10, 25, hours, minutes).getTime());
+    await view.openMeal();
+    assert.equal(document.getElementById('add-meal-time').value, time);
+    assert.equal(document.getElementById('add-meal-type').value, type);
+    t.mock.timers.tick(3600_000);
+    assert.equal(document.getElementById('add-meal-type').value, type);
+    await view.click(document.querySelector('[aria-label="Cerrar formulario"]'));
+  }
+});
+
+test('meal time follows the suggestion until a manual choice, which survives Ahora and persistence failure on a past day', async t => {
+  const selectedDate = '2026-11-24';
+  const save = () => false;
+  t.mock.timers.enable({ apis: ['Date'], now: new Date(2026, 10, 25, 10, 10) });
+  const view = await mount(t, { selectedDate, record: { ...emptyRecord(), dateStr: selectedDate }, save });
+  const time = () => document.getElementById('add-meal-time').value;
+  const type = () => document.getElementById('add-meal-type').value;
+  const now = () => view.click(document.querySelector('.entry-time-now'));
+  await view.openMeal();
+  assert.equal(type(), 'Desayuno');
+  await view.fill('add-meal-time', '19:59');
+  assert.equal(type(), 'Merienda');
+  await view.fill('add-meal-time', '25:00');
+  assert.equal(time(), '');
+  assert.equal(type(), 'Merienda');
+  await now();
+  assert.equal(time(), '10:10');
+  assert.equal(type(), 'Desayuno');
+  await view.fill('add-meal-type', 'Snack');
+  await view.fill('add-meal-time', '20:00');
+  assert.equal(type(), 'Snack');
+  await now();
+  assert.equal(type(), 'Snack');
+  assert.equal(document.querySelector('.entry-date-context time').dateTime, selectedDate);
+  await view.fill('add-meal-description', 'Comida de ayer');
+  await view.fill('add-meal-calories', '450');
+  await view.submit();
+  assert.equal(view.saves[0].date, selectedDate);
+  assert.equal(view.saves[0].record.meals[0].time, '10:10');
+  assert.equal(view.saves[0].record.meals[0].type, 'Snack');
+  assert.equal(type(), 'Snack');
+  await view.click(document.querySelector('[aria-label="Cerrar formulario"]'));
+  await view.click(view.button('Descartar cambios'));
+  await view.openMeal();
+  assert.equal(type(), 'Desayuno');
+  assert.equal(view.requests.length, 0);
+});
+
+test('editing a meal starts from the saved category and changing Hora or Ahora never applies the suggestion', async t => {
+  t.mock.timers.enable({ apis: ['Date'], now: new Date(2026, 10, 25, 10, 10) });
+  const meal = { id: 'edit-time', name: 'Comida de prueba', type: 'Merienda', calories: 400, time: '13:00' };
+  const view = await mount(t, { record: { ...emptyRecord(), meals: [meal] } });
+  await view.editMeal();
+  const type = document.getElementById('edit-meal-type');
+  const time = document.getElementById('edit-meal-time');
+  assert.equal(type.value, 'Merienda');
+  assert.equal(time.value, '13:00');
+  await view.fill('edit-meal-time', '23:00');
+  assert.equal(type.value, 'Merienda');
+  await view.click(document.querySelector('.entry-time-now'));
+  assert.equal(type.value, 'Merienda');
+  assert.equal(time.value, '10:10');
+  await view.submit();
+  assert.equal(view.record().meals[0].time, '10:10');
+  assert.equal(view.record().meals[0].type, 'Merienda');
+});
+
+test('food input changes keep an accepted estimate as a reference and remove estimation provenance from the receipt', async t => {
+  const view = await mount(t);
+  await view.openMeal();
+  await view.fill('add-meal-description', 'Ensalada');
+  await view.estimate();
+  await view.fill('add-meal-time', '20:30');
+  await view.fill('add-meal-notes', 'Porción doble');
+  const panel = document.querySelector('.entry-estimate-result');
+  assert.match(panel.textContent, /Datos modificados.*Se guardarán 400 kcal.*Revisá las calorías/);
+  await view.choosePhoto(new window.Blob(['new food photo']));
+  assert.match(panel.textContent, /Datos modificados/);
+  await view.submit();
+  assert.equal(view.record().meals[0].calories, 400);
+  assert.equal(view.requests.length, 1);
+  assert.doesNotMatch(document.querySelector('.meal-saved').textContent, /Estimación con IA/);
+});
+
+for (const change of ['description', 'photo', 'draft', 'date', 'account']) {
+  test(`late meal estimate is isolated from a changed ${change}`, async t => {
+    const pending = deferred();
+    const requestStarted = deferred();
+    const view = await mount(t, { estimateMeal: input => {
+      requestStarted.resolve(input);
+      return pending.promise;
+    } });
+    await view.openMeal();
+    await view.fill('add-meal-description', 'Descripción original');
+    await view.fill('add-meal-calories', '320');
+    if (change === 'photo') await view.choosePhoto(new window.Blob(['original food photo']));
+    await view.estimate();
+    const request = await requestStarted.promise;
+    if (change === 'description') {
+      await view.fill('add-meal-description', 'Comida diferente');
+    } else if (change === 'photo') {
+      assert.equal(request.attachment.kind, 'image');
+      await view.choosePhoto(new window.Blob(['new food photo']));
+    } else if (change === 'draft') {
+      await view.click(document.querySelector('[aria-label="Cerrar formulario"]'));
+      await view.click(view.button('Descartar cambios'));
+      await view.openMeal();
+      await view.fill('add-meal-description', 'Segundo borrador');
+      await view.fill('add-meal-calories', '320');
+    } else {
+      await view.switchContext(change === 'date' ? { newDate: '2000-01-01' } : { userId: 'different-owner' });
+    }
+    await view.settle(() => pending.resolve({ calories: 485, description: 'Resultado anterior', assumptions: ['Previous data only'] }));
+    assert.equal(document.getElementById('add-meal-calories').value, '320');
+    assert.equal(document.querySelector('.entry-estimate-result'), null);
+    assert.equal(view.requests.length, 1);
   });
 }

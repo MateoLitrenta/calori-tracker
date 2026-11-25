@@ -86,6 +86,9 @@ async function mountApp(t, actions, fail = false, setup) {
   globalThis.IS_REACT_ACT_ENVIRONMENT = true;
   dom.window.matchMedia = () => ({ matches: false, addEventListener() {}, removeEventListener() {} });
   dom.window.scrollTo = () => {};
+  // JSDOM models the element but does not implement the native top layer.
+  dom.window.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
+  dom.window.HTMLDialogElement.prototype.close = function () { this.open = false; };
   dom.window.HTMLElement.prototype.scrollTo = () => {};
   const state = { reads: 0, logWrites: 0, mealWrites: 0, workoutWrites: 0, persisted: null,
     historyRecords: {}, listeners: new Set(), aiCalls: 0, currentProfile: profile, version: 0,
@@ -204,9 +207,6 @@ test('leaving Inicio cannot silently discard an active entry draft', async t => 
   assert.equal(state.document.querySelector('#add-meal-description')?.value, 'Borrador que debe conservarse');
   assert.equal(state.document.querySelector('.charts-insights'), null, 'Finish or close the draft before changing sections');
   assert.equal(state.logWrites, 0);
-  // JSDOM models the element but does not implement the native top layer.
-  window.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
-  window.HTMLDialogElement.prototype.close = function () { this.open = false; };
   await click(state, 'Cancelar');
   assert.equal(state.document.activeElement.textContent, 'Seguir editando');
   await click(state, 'Seguir editando');
@@ -639,7 +639,14 @@ test('goals follow shared Home workout add/edit/delete and step changes across n
   await act(async () => { state.document.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })); await turn(); });
   assert.equal(state.persisted.workouts[0].duration, 40);
   await click(state, 'Coach'); assert.match(state.document.querySelector('.coach-goal-card').textContent, /1\/3/);
-  await click(state, 'Inicio'); await act(() => state.document.querySelector('.daily-record-open').click()); await click(state, 'Eliminar');
+  await click(state, 'Inicio');
+  await act(() => state.document.querySelector('.daily-record-open').click());
+  await click(state, 'Eliminar');
+  assert.equal(state.persisted.workouts.length, 1, 'The detail action must request confirmation before writing');
+  const confirm = state.document.querySelector('dialog[data-record-delete][open] .profile-button-danger');
+  assert.ok(confirm);
+  await act(async () => { confirm.click(); await turn(); });
+  assert.equal(state.persisted.workouts.length, 0);
   await act(async () => { state.document.querySelector('[title="Editar pasos"]').click(); await turn(); });
   await inputValue(state, '.daily-habits input', '8000');
   await act(async () => { state.document.querySelector('.daily-habits input').blur(); await new Promise(resolve => setTimeout(resolve, 450)); });

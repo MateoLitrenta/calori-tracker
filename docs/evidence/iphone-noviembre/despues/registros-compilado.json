@@ -1,0 +1,976 @@
+{
+  "origin": "http://127.0.0.1:5204",
+  "browser": "158.0.8127.37",
+  "reports": [
+    {
+      "width": 320,
+      "theme": "light",
+      "states": [
+        {
+          "pass": "inicio-directo",
+          "kind": "comida",
+          "footer": "rgb(255, 254, 250)",
+          "border": "rgb(203, 206, 196)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(255, 254, 250)",
+          "controls": {
+            "Editar": {
+              "foreground": "#1c2522",
+              "background": "#ebece4",
+              "contrast": 13.2,
+              "opacity": 1,
+              "outline": "none 3px rgb(28, 37, 34)",
+              "width": 139,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#9f302c",
+              "background": "#f9eae5",
+              "contrast": 6.11,
+              "opacity": 1,
+              "outline": "none 3px rgb(159, 48, 44)",
+              "width": 139,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "inicio-directo",
+          "kind": "ejercicio",
+          "footer": "rgb(255, 254, 250)",
+          "border": "rgb(203, 206, 196)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(255, 254, 250)",
+          "controls": {
+            "Editar": {
+              "foreground": "#1c2522",
+              "background": "#ebece4",
+              "contrast": 13.2,
+              "opacity": 1,
+              "outline": "none 3px rgb(28, 37, 34)",
+              "width": 139,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#9f302c",
+              "background": "#f9eae5",
+              "contrast": 6.11,
+              "opacity": 1,
+              "outline": "none 3px rgb(159, 48, 44)",
+              "width": 139,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "vuelta-coach",
+          "kind": "comida",
+          "footer": "rgb(255, 254, 250)",
+          "border": "rgb(203, 206, 196)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(255, 254, 250)",
+          "controls": {
+            "Editar": {
+              "foreground": "#1c2522",
+              "background": "#ebece4",
+              "contrast": 13.2,
+              "opacity": 1,
+              "outline": "none 3px rgb(28, 37, 34)",
+              "width": 139,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#9f302c",
+              "background": "#f9eae5",
+              "contrast": 6.11,
+              "opacity": 1,
+              "outline": "none 3px rgb(159, 48, 44)",
+              "width": 139,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "vuelta-coach",
+          "kind": "ejercicio",
+          "footer": "rgb(255, 254, 250)",
+          "border": "rgb(203, 206, 196)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(255, 254, 250)",
+          "controls": {
+            "Editar": {
+              "foreground": "#1c2522",
+              "background": "#ebece4",
+              "contrast": 13.2,
+              "opacity": 1,
+              "outline": "none 3px rgb(28, 37, 34)",
+              "width": 139,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#9f302c",
+              "background": "#f9eae5",
+              "contrast": 6.11,
+              "opacity": 1,
+              "outline": "none 3px rgb(159, 48, 44)",
+              "width": 139,
+              "height": 44
+            }
+          }
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "states": [
+        {
+          "pass": "inicio-directo",
+          "kind": "comida",
+          "footer": "rgb(26, 33, 31)",
+          "border": "rgb(65, 75, 69)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(26, 33, 31)",
+          "controls": {
+            "Editar": {
+              "foreground": "#f5f4ee",
+              "background": "#262e2b",
+              "contrast": 12.64,
+              "opacity": 1,
+              "outline": "none 3px rgb(245, 244, 238)",
+              "width": 139,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#ffaaa0",
+              "background": "#392624",
+              "contrast": 7.79,
+              "opacity": 1,
+              "outline": "none 3px rgb(255, 170, 160)",
+              "width": 139,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "inicio-directo",
+          "kind": "ejercicio",
+          "footer": "rgb(26, 33, 31)",
+          "border": "rgb(65, 75, 69)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(26, 33, 31)",
+          "controls": {
+            "Editar": {
+              "foreground": "#f5f4ee",
+              "background": "#262e2b",
+              "contrast": 12.64,
+              "opacity": 1,
+              "outline": "none 3px rgb(245, 244, 238)",
+              "width": 139,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#ffaaa0",
+              "background": "#392624",
+              "contrast": 7.79,
+              "opacity": 1,
+              "outline": "none 3px rgb(255, 170, 160)",
+              "width": 139,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "vuelta-coach",
+          "kind": "comida",
+          "footer": "rgb(26, 33, 31)",
+          "border": "rgb(65, 75, 69)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(26, 33, 31)",
+          "controls": {
+            "Editar": {
+              "foreground": "#f5f4ee",
+              "background": "#262e2b",
+              "contrast": 12.64,
+              "opacity": 1,
+              "outline": "none 3px rgb(245, 244, 238)",
+              "width": 139,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#ffaaa0",
+              "background": "#392624",
+              "contrast": 7.79,
+              "opacity": 1,
+              "outline": "none 3px rgb(255, 170, 160)",
+              "width": 139,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "vuelta-coach",
+          "kind": "ejercicio",
+          "footer": "rgb(26, 33, 31)",
+          "border": "rgb(65, 75, 69)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(26, 33, 31)",
+          "controls": {
+            "Editar": {
+              "foreground": "#f5f4ee",
+              "background": "#262e2b",
+              "contrast": 12.64,
+              "opacity": 1,
+              "outline": "none 3px rgb(245, 244, 238)",
+              "width": 139,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#ffaaa0",
+              "background": "#392624",
+              "contrast": 7.79,
+              "opacity": 1,
+              "outline": "none 3px rgb(255, 170, 160)",
+              "width": 139,
+              "height": 44
+            }
+          }
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "states": [
+        {
+          "pass": "inicio-directo",
+          "kind": "comida",
+          "footer": "rgb(255, 254, 250)",
+          "border": "rgb(203, 206, 196)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(255, 254, 250)",
+          "controls": {
+            "Editar": {
+              "foreground": "#1c2522",
+              "background": "#ebece4",
+              "contrast": 13.2,
+              "opacity": 1,
+              "outline": "none 3px rgb(28, 37, 34)",
+              "width": 166.5,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#9f302c",
+              "background": "#f9eae5",
+              "contrast": 6.11,
+              "opacity": 1,
+              "outline": "none 3px rgb(159, 48, 44)",
+              "width": 166.5,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "inicio-directo",
+          "kind": "ejercicio",
+          "footer": "rgb(255, 254, 250)",
+          "border": "rgb(203, 206, 196)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(255, 254, 250)",
+          "controls": {
+            "Editar": {
+              "foreground": "#1c2522",
+              "background": "#ebece4",
+              "contrast": 13.2,
+              "opacity": 1,
+              "outline": "none 3px rgb(28, 37, 34)",
+              "width": 166.5,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#9f302c",
+              "background": "#f9eae5",
+              "contrast": 6.11,
+              "opacity": 1,
+              "outline": "none 3px rgb(159, 48, 44)",
+              "width": 166.5,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "vuelta-coach",
+          "kind": "comida",
+          "footer": "rgb(255, 254, 250)",
+          "border": "rgb(203, 206, 196)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(255, 254, 250)",
+          "controls": {
+            "Editar": {
+              "foreground": "#1c2522",
+              "background": "#ebece4",
+              "contrast": 13.2,
+              "opacity": 1,
+              "outline": "none 3px rgb(28, 37, 34)",
+              "width": 166.5,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#9f302c",
+              "background": "#f9eae5",
+              "contrast": 6.11,
+              "opacity": 1,
+              "outline": "none 3px rgb(159, 48, 44)",
+              "width": 166.5,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "vuelta-coach",
+          "kind": "ejercicio",
+          "footer": "rgb(255, 254, 250)",
+          "border": "rgb(203, 206, 196)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(255, 254, 250)",
+          "controls": {
+            "Editar": {
+              "foreground": "#1c2522",
+              "background": "#ebece4",
+              "contrast": 13.2,
+              "opacity": 1,
+              "outline": "none 3px rgb(28, 37, 34)",
+              "width": 166.5,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#9f302c",
+              "background": "#f9eae5",
+              "contrast": 6.11,
+              "opacity": 1,
+              "outline": "none 3px rgb(159, 48, 44)",
+              "width": 166.5,
+              "height": 44
+            }
+          }
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "states": [
+        {
+          "pass": "inicio-directo",
+          "kind": "comida",
+          "footer": "rgb(26, 33, 31)",
+          "border": "rgb(65, 75, 69)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(26, 33, 31)",
+          "controls": {
+            "Editar": {
+              "foreground": "#f5f4ee",
+              "background": "#262e2b",
+              "contrast": 12.64,
+              "opacity": 1,
+              "outline": "none 3px rgb(245, 244, 238)",
+              "width": 166.5,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#ffaaa0",
+              "background": "#392624",
+              "contrast": 7.79,
+              "opacity": 1,
+              "outline": "none 3px rgb(255, 170, 160)",
+              "width": 166.5,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "inicio-directo",
+          "kind": "ejercicio",
+          "footer": "rgb(26, 33, 31)",
+          "border": "rgb(65, 75, 69)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(26, 33, 31)",
+          "controls": {
+            "Editar": {
+              "foreground": "#f5f4ee",
+              "background": "#262e2b",
+              "contrast": 12.64,
+              "opacity": 1,
+              "outline": "none 3px rgb(245, 244, 238)",
+              "width": 166.5,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#ffaaa0",
+              "background": "#392624",
+              "contrast": 7.79,
+              "opacity": 1,
+              "outline": "none 3px rgb(255, 170, 160)",
+              "width": 166.5,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "vuelta-coach",
+          "kind": "comida",
+          "footer": "rgb(26, 33, 31)",
+          "border": "rgb(65, 75, 69)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(26, 33, 31)",
+          "controls": {
+            "Editar": {
+              "foreground": "#f5f4ee",
+              "background": "#262e2b",
+              "contrast": 12.64,
+              "opacity": 1,
+              "outline": "none 3px rgb(245, 244, 238)",
+              "width": 166.5,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#ffaaa0",
+              "background": "#392624",
+              "contrast": 7.79,
+              "opacity": 1,
+              "outline": "none 3px rgb(255, 170, 160)",
+              "width": 166.5,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "vuelta-coach",
+          "kind": "ejercicio",
+          "footer": "rgb(26, 33, 31)",
+          "border": "rgb(65, 75, 69)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(26, 33, 31)",
+          "controls": {
+            "Editar": {
+              "foreground": "#f5f4ee",
+              "background": "#262e2b",
+              "contrast": 12.64,
+              "opacity": 1,
+              "outline": "none 3px rgb(245, 244, 238)",
+              "width": 166.5,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#ffaaa0",
+              "background": "#392624",
+              "contrast": 7.79,
+              "opacity": 1,
+              "outline": "none 3px rgb(255, 170, 160)",
+              "width": 166.5,
+              "height": 44
+            }
+          }
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "states": [
+        {
+          "pass": "inicio-directo",
+          "kind": "comida",
+          "footer": "rgb(255, 254, 250)",
+          "border": "rgb(203, 206, 196)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(255, 254, 250)",
+          "controls": {
+            "Editar": {
+              "foreground": "#1c2522",
+              "background": "#ebece4",
+              "contrast": 13.2,
+              "opacity": 1,
+              "outline": "none 3px rgb(28, 37, 34)",
+              "width": 171,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#9f302c",
+              "background": "#f9eae5",
+              "contrast": 6.11,
+              "opacity": 1,
+              "outline": "none 3px rgb(159, 48, 44)",
+              "width": 171,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "inicio-directo",
+          "kind": "ejercicio",
+          "footer": "rgb(255, 254, 250)",
+          "border": "rgb(203, 206, 196)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(255, 254, 250)",
+          "controls": {
+            "Editar": {
+              "foreground": "#1c2522",
+              "background": "#ebece4",
+              "contrast": 13.2,
+              "opacity": 1,
+              "outline": "none 3px rgb(28, 37, 34)",
+              "width": 171,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#9f302c",
+              "background": "#f9eae5",
+              "contrast": 6.11,
+              "opacity": 1,
+              "outline": "none 3px rgb(159, 48, 44)",
+              "width": 171,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "vuelta-coach",
+          "kind": "comida",
+          "footer": "rgb(255, 254, 250)",
+          "border": "rgb(203, 206, 196)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(255, 254, 250)",
+          "controls": {
+            "Editar": {
+              "foreground": "#1c2522",
+              "background": "#ebece4",
+              "contrast": 13.2,
+              "opacity": 1,
+              "outline": "none 3px rgb(28, 37, 34)",
+              "width": 171,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#9f302c",
+              "background": "#f9eae5",
+              "contrast": 6.11,
+              "opacity": 1,
+              "outline": "none 3px rgb(159, 48, 44)",
+              "width": 171,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "vuelta-coach",
+          "kind": "ejercicio",
+          "footer": "rgb(255, 254, 250)",
+          "border": "rgb(203, 206, 196)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(255, 254, 250)",
+          "controls": {
+            "Editar": {
+              "foreground": "#1c2522",
+              "background": "#ebece4",
+              "contrast": 13.2,
+              "opacity": 1,
+              "outline": "none 3px rgb(28, 37, 34)",
+              "width": 171,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#9f302c",
+              "background": "#f9eae5",
+              "contrast": 6.11,
+              "opacity": 1,
+              "outline": "none 3px rgb(159, 48, 44)",
+              "width": 171,
+              "height": 44
+            }
+          }
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "states": [
+        {
+          "pass": "inicio-directo",
+          "kind": "comida",
+          "footer": "rgb(26, 33, 31)",
+          "border": "rgb(65, 75, 69)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(26, 33, 31)",
+          "controls": {
+            "Editar": {
+              "foreground": "#f5f4ee",
+              "background": "#262e2b",
+              "contrast": 12.64,
+              "opacity": 1,
+              "outline": "none 3px rgb(245, 244, 238)",
+              "width": 171,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#ffaaa0",
+              "background": "#392624",
+              "contrast": 7.79,
+              "opacity": 1,
+              "outline": "none 3px rgb(255, 170, 160)",
+              "width": 171,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "inicio-directo",
+          "kind": "ejercicio",
+          "footer": "rgb(26, 33, 31)",
+          "border": "rgb(65, 75, 69)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(26, 33, 31)",
+          "controls": {
+            "Editar": {
+              "foreground": "#f5f4ee",
+              "background": "#262e2b",
+              "contrast": 12.64,
+              "opacity": 1,
+              "outline": "none 3px rgb(245, 244, 238)",
+              "width": 171,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#ffaaa0",
+              "background": "#392624",
+              "contrast": 7.79,
+              "opacity": 1,
+              "outline": "none 3px rgb(255, 170, 160)",
+              "width": 171,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "vuelta-coach",
+          "kind": "comida",
+          "footer": "rgb(26, 33, 31)",
+          "border": "rgb(65, 75, 69)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(26, 33, 31)",
+          "controls": {
+            "Editar": {
+              "foreground": "#f5f4ee",
+              "background": "#262e2b",
+              "contrast": 12.64,
+              "opacity": 1,
+              "outline": "none 3px rgb(245, 244, 238)",
+              "width": 171,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#ffaaa0",
+              "background": "#392624",
+              "contrast": 7.79,
+              "opacity": 1,
+              "outline": "none 3px rgb(255, 170, 160)",
+              "width": 171,
+              "height": 44
+            }
+          }
+        },
+        {
+          "pass": "vuelta-coach",
+          "kind": "ejercicio",
+          "footer": "rgb(26, 33, 31)",
+          "border": "rgb(65, 75, 69)",
+          "content": "rgba(0, 0, 0, 0)",
+          "semanticSurface": "rgb(26, 33, 31)",
+          "controls": {
+            "Editar": {
+              "foreground": "#f5f4ee",
+              "background": "#262e2b",
+              "contrast": 12.64,
+              "opacity": 1,
+              "outline": "none 3px rgb(245, 244, 238)",
+              "width": 171,
+              "height": 44
+            },
+            "Eliminar": {
+              "foreground": "#ffaaa0",
+              "background": "#392624",
+              "contrast": 7.79,
+              "opacity": 1,
+              "outline": "none 3px rgb(255, 170, 160)",
+              "width": 171,
+              "height": 44
+            }
+          }
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "theme": "system",
+      "pass": "inicio-directo",
+      "kind": "comida",
+      "light": {
+        "footer": "rgb(255, 254, 250)",
+        "border": "rgb(203, 206, 196)",
+        "content": "rgba(0, 0, 0, 0)",
+        "semanticSurface": "rgb(255, 254, 250)",
+        "controls": {
+          "Editar": {
+            "foreground": "#1c2522",
+            "background": "#ebece4",
+            "contrast": 13.2,
+            "opacity": 1,
+            "outline": "none 3px rgb(28, 37, 34)",
+            "width": 166.5,
+            "height": 44
+          },
+          "Eliminar": {
+            "foreground": "#9f302c",
+            "background": "#f9eae5",
+            "contrast": 6.11,
+            "opacity": 1,
+            "outline": "none 3px rgb(159, 48, 44)",
+            "width": 166.5,
+            "height": 44
+          }
+        }
+      },
+      "dark": {
+        "footer": "rgb(26, 33, 31)",
+        "border": "rgb(65, 75, 69)",
+        "content": "rgba(0, 0, 0, 0)",
+        "semanticSurface": "rgb(26, 33, 31)",
+        "controls": {
+          "Editar": {
+            "foreground": "#f5f4ee",
+            "background": "#262e2b",
+            "contrast": 12.64,
+            "opacity": 1,
+            "outline": "none 3px rgb(245, 244, 238)",
+            "width": 166.5,
+            "height": 44
+          },
+          "Eliminar": {
+            "foreground": "#ffaaa0",
+            "background": "#392624",
+            "contrast": 7.79,
+            "opacity": 1,
+            "outline": "none 3px rgb(255, 170, 160)",
+            "width": 166.5,
+            "height": 44
+          }
+        }
+      }
+    },
+    {
+      "width": 375,
+      "theme": "system",
+      "pass": "inicio-directo",
+      "kind": "ejercicio",
+      "light": {
+        "footer": "rgb(255, 254, 250)",
+        "border": "rgb(203, 206, 196)",
+        "content": "rgba(0, 0, 0, 0)",
+        "semanticSurface": "rgb(255, 254, 250)",
+        "controls": {
+          "Editar": {
+            "foreground": "#1c2522",
+            "background": "#ebece4",
+            "contrast": 13.2,
+            "opacity": 1,
+            "outline": "none 3px rgb(28, 37, 34)",
+            "width": 166.5,
+            "height": 44
+          },
+          "Eliminar": {
+            "foreground": "#9f302c",
+            "background": "#f9eae5",
+            "contrast": 6.11,
+            "opacity": 1,
+            "outline": "none 3px rgb(159, 48, 44)",
+            "width": 166.5,
+            "height": 44
+          }
+        }
+      },
+      "dark": {
+        "footer": "rgb(26, 33, 31)",
+        "border": "rgb(65, 75, 69)",
+        "content": "rgba(0, 0, 0, 0)",
+        "semanticSurface": "rgb(26, 33, 31)",
+        "controls": {
+          "Editar": {
+            "foreground": "#f5f4ee",
+            "background": "#262e2b",
+            "contrast": 12.64,
+            "opacity": 1,
+            "outline": "none 3px rgb(245, 244, 238)",
+            "width": 166.5,
+            "height": 44
+          },
+          "Eliminar": {
+            "foreground": "#ffaaa0",
+            "background": "#392624",
+            "contrast": 7.79,
+            "opacity": 1,
+            "outline": "none 3px rgb(255, 170, 160)",
+            "width": 166.5,
+            "height": 44
+          }
+        }
+      }
+    },
+    {
+      "width": 375,
+      "theme": "system",
+      "pass": "vuelta-coach",
+      "kind": "comida",
+      "light": {
+        "footer": "rgb(255, 254, 250)",
+        "border": "rgb(203, 206, 196)",
+        "content": "rgba(0, 0, 0, 0)",
+        "semanticSurface": "rgb(255, 254, 250)",
+        "controls": {
+          "Editar": {
+            "foreground": "#1c2522",
+            "background": "#ebece4",
+            "contrast": 13.2,
+            "opacity": 1,
+            "outline": "none 3px rgb(28, 37, 34)",
+            "width": 166.5,
+            "height": 44
+          },
+          "Eliminar": {
+            "foreground": "#9f302c",
+            "background": "#f9eae5",
+            "contrast": 6.11,
+            "opacity": 1,
+            "outline": "none 3px rgb(159, 48, 44)",
+            "width": 166.5,
+            "height": 44
+          }
+        }
+      },
+      "dark": {
+        "footer": "rgb(26, 33, 31)",
+        "border": "rgb(65, 75, 69)",
+        "content": "rgba(0, 0, 0, 0)",
+        "semanticSurface": "rgb(26, 33, 31)",
+        "controls": {
+          "Editar": {
+            "foreground": "#f5f4ee",
+            "background": "#262e2b",
+            "contrast": 12.64,
+            "opacity": 1,
+            "outline": "none 3px rgb(245, 244, 238)",
+            "width": 166.5,
+            "height": 44
+          },
+          "Eliminar": {
+            "foreground": "#ffaaa0",
+            "background": "#392624",
+            "contrast": 7.79,
+            "opacity": 1,
+            "outline": "none 3px rgb(255, 170, 160)",
+            "width": 166.5,
+            "height": 44
+          }
+        }
+      }
+    },
+    {
+      "width": 375,
+      "theme": "system",
+      "pass": "vuelta-coach",
+      "kind": "ejercicio",
+      "light": {
+        "footer": "rgb(255, 254, 250)",
+        "border": "rgb(203, 206, 196)",
+        "content": "rgba(0, 0, 0, 0)",
+        "semanticSurface": "rgb(255, 254, 250)",
+        "controls": {
+          "Editar": {
+            "foreground": "#1c2522",
+            "background": "#ebece4",
+            "contrast": 13.2,
+            "opacity": 1,
+            "outline": "none 3px rgb(28, 37, 34)",
+            "width": 166.5,
+            "height": 44
+          },
+          "Eliminar": {
+            "foreground": "#9f302c",
+            "background": "#f9eae5",
+            "contrast": 6.11,
+            "opacity": 1,
+            "outline": "none 3px rgb(159, 48, 44)",
+            "width": 166.5,
+            "height": 44
+          }
+        }
+      },
+      "dark": {
+        "footer": "rgb(26, 33, 31)",
+        "border": "rgb(65, 75, 69)",
+        "content": "rgba(0, 0, 0, 0)",
+        "semanticSurface": "rgb(26, 33, 31)",
+        "controls": {
+          "Editar": {
+            "foreground": "#f5f4ee",
+            "background": "#262e2b",
+            "contrast": 12.64,
+            "opacity": 1,
+            "outline": "none 3px rgb(245, 244, 238)",
+            "width": 166.5,
+            "height": 44
+          },
+          "Eliminar": {
+            "foreground": "#ffaaa0",
+            "background": "#392624",
+            "contrast": 7.79,
+            "opacity": 1,
+            "outline": "none 3px rgb(255, 170, 160)",
+            "width": 166.5,
+            "height": 44
+          }
+        }
+      }
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "textScale": 2,
+      "overflow": 0,
+      "actionWidths": [
+        286,
+        286
+      ]
+    },
+    {
+      "suggested": "Desayuno",
+      "aiRequests": 1,
+      "receipt": true
+    },
+    {
+      "delete": "cancel, fail, retry, double click, success and notice hidden",
+      "theme": "light",
+      "writes": 2
+    },
+    {
+      "delete": "cancel, fail, retry, double click, success and notice hidden",
+      "theme": "dark",
+      "writes": 2
+    },
+    {
+      "delete": "workout: conflict, refresh and retry",
+      "water": 2200,
+      "writes": 2
+    }
+  ]
+}
