@@ -195,6 +195,90 @@ function confirmationButton(state) {
 }
 const conversationMessages = state => JSON.parse(state.document.defaultView.localStorage.getItem(`calori:assistant:messages:${profile.user_id}:${today}`) || '[]');
 
+test('generic Coach meal titles use each meal description consistently through confirmation, Home, history data and detail editing', async t => {
+  const descriptions = ['Milanesa con papas y cerveza', 'Sorrentinos con salsa'];
+  const actions = descriptions.map((details, index) => ({ ...meal, payload: { ...meal.payload,
+    name: index ? 'Cena' : 'Almuerzo', type: index ? 'Cena' : 'Almuerzo', time: index ? '21:00' : '13:00',
+    calories: index ? 650 : 900, details } }));
+  const original = structuredClone(actions);
+  const state = await mountApp(t, actions, false, current => { current.skipWriteGate = true; });
+  await sendActions(state, true, 'Registrá mi almuerzo y mi cena.');
+  assert.deepEqual([...state.document.querySelectorAll('.chat-proposal-name')].map(element => element.textContent), descriptions);
+  assert.deepEqual(actions, original, 'Preparing a title must not mutate the received action or its complete description');
+  assert.equal(state.aiCalls, 1); assert.equal(state.logWrites, 0);
+  await click(state, 'Confirmar');
+  assert.equal(state.document.querySelector('.chat-confirmation'), null);
+  assert.deepEqual(state.persisted.meals.map(entry => entry.name), descriptions);
+  assert.deepEqual(state.persisted.meals.map(entry => entry.details), descriptions);
+  const receipt = state.document.querySelector('.chat-saved').textContent;
+  for (const description of descriptions) assert.ok(receipt.includes(description));
+  await click(state, 'Inicio');
+  assert.deepEqual([...state.document.querySelectorAll('.daily-record-title')].map(element => element.textContent), descriptions);
+  assert.deepEqual(state.historyRecords[today].meals.map(entry => entry.name), descriptions);
+  const firstRow = state.document.querySelector('.daily-record-open');
+  await act(async () => { firstRow.click(); await turn(); });
+  assert.equal(state.document.querySelector('.record-detail-main').textContent, descriptions[0]);
+  assert.equal(state.document.querySelector('.record-detail-details').textContent, descriptions[0]);
+  await click(state, 'Editar');
+  assert.equal(state.document.querySelector('#edit-meal-description').value, descriptions[0]);
+  assert.equal(state.document.querySelector('#edit-meal-notes').value, descriptions[0]);
+  assert.equal(state.mealWrites, 2); assert.equal(state.logWrites, 1); assert.equal(state.aiCalls, 1);
+});
+
+test('a manually chosen generic meal name and its category survive navigation and a failed save without being generated again', async t => {
+  t.mock.method(console, 'error', () => {});
+  const originalDetails = 'Milanesa con papas y cerveza';
+  const state = await mountApp(t, [{ ...meal, payload: { ...meal.payload, name: 'Almuerzo', details: originalDetails } }], false,
+    current => { current.skipWriteGate = true; current.recordFailures = 1; });
+  await sendActions(state); await click(state, 'Editar');
+  await changeProposalField(state, 0, 'Nombre de la comida', 'Cena');
+  await changeProposalField(state, 0, 'Tipo', 'Merienda');
+  await changeProposalField(state, 0, 'Detalles', originalDetails + '\nLa mitad de las papas.');
+  await click(state, 'Perfil'); await click(state, 'Datos'); await click(state, 'Inicio'); await click(state, 'Coach');
+  assert.equal(proposalField(state, 0, 'Nombre de la comida').value, 'Cena');
+  assert.equal(proposalField(state, 0, 'Tipo').value, 'Merienda');
+  assert.equal(proposalField(state, 0, 'Detalles').value, originalDetails + '\nLa mitad de las papas.');
+  await click(state, 'Confirmar');
+  assert.equal(state.persisted, null); assert.equal(state.recordAttempts.length, 1);
+  const first = state.recordAttempts[0].intent.record.meals[0];
+  await click(state, 'Inicio'); await click(state, 'Coach');
+  assert.equal(proposalField(state, 0, 'Nombre de la comida').value, 'Cena');
+  await click(state, 'Confirmar');
+  const saved = state.persisted.meals[0];
+  assert.equal(saved.id, first.id);
+  assert.equal(saved.name, 'Cena', 'An explicit user title is authoritative, even when it also names a category');
+  assert.equal(saved.type, 'Merienda');
+  assert.equal(saved.details, originalDetails + '\nLa mitad de las papas.');
+  assert.match(state.document.querySelector('.chat-saved').textContent, /Cena · Merienda · 500 kcal/);
+  await click(state, 'Inicio');
+  assert.equal(state.document.querySelector('.daily-record-title').textContent, 'Cena');
+  assert.equal(state.mealWrites, 1); assert.equal(state.logWrites, 2); assert.equal(state.aiCalls, 1);
+});
+
+test('a meal without a recoverable title keeps its proposal and notes, requests a name and cannot save an empty title', async t => {
+  const state = await mountApp(t, [{ ...meal, payload: { ...meal.payload, name: 'Comida', details: 'Porción mediana' } }], false,
+    current => { current.skipWriteGate = true; });
+  await sendActions(state);
+  const field = proposalField(state, 0, 'Nombre de la comida');
+  assert.equal(field.value, '');
+  assert.equal(field.getAttribute('aria-invalid'), 'true');
+  assert.match(state.document.querySelector('.chat-confirmation').textContent, /Completá el nombre con los alimentos o bebidas que registraste/);
+  assert.equal(proposalField(state, 0, 'Detalles').value, 'Porción mediana');
+  await click(state, 'Confirmar');
+  assert.equal(state.logWrites, 0); assert.ok(state.document.querySelector('.chat-confirmation'));
+  await click(state, 'Datos'); await click(state, 'Coach');
+  assert.equal(proposalField(state, 0, 'Nombre de la comida').value, '');
+  assert.equal(proposalField(state, 0, 'Detalles').value, 'Porción mediana');
+  assert.equal(proposalField(state, 0, 'Calorías (kcal)').value, '500');
+  await changeProposalField(state, 0, 'Nombre de la comida', 'Tostadas con queso');
+  assert.notEqual(proposalField(state, 0, 'Nombre de la comida').getAttribute('aria-invalid'), 'true');
+  await click(state, 'Confirmar');
+  assert.equal(state.persisted.meals[0].name, 'Tostadas con queso');
+  assert.equal(state.persisted.meals[0].details, 'Porción mediana');
+  assert.equal(state.persisted.meals[0].calories, 500);
+  assert.equal(state.mealWrites, 1); assert.equal(state.logWrites, 1); assert.equal(state.aiCalls, 1);
+});
+
 async function readOlderCoachMessages(state) {
   // Let the remount restore its position before the reader deliberately scrolls up.
   await act(async () => { await new Promise(resolve => window.requestAnimationFrame(resolve)); });
@@ -297,7 +381,7 @@ test('edited meal and workout proposals retain every field and edit mode across 
     activity: 'Actividad de prueba', duration: 30, calories: 200, time: '17:00', details: '' } };
   const state = await mountApp(t, [meal, workout]);
   await sendActions(state); await click(state, 'Editar');
-  const fields = [[0, 'Nombre', 'Almuerzo corregido'], [0, 'Calorías (kcal)', '482'], [0, 'Hora', '13:45'],
+  const fields = [[0, 'Nombre de la comida', 'Almuerzo corregido'], [0, 'Calorías (kcal)', '482'], [0, 'Hora', '13:45'],
     [0, 'Tipo', 'Snack'], [0, 'Detalles', 'Una porción\nSin aderezo'], [1, 'Actividad', 'Caminata editada'],
     [1, 'Duración (min)', '45'], [1, 'Calorías (kcal)', '175'], [1, 'Hora', '18:05'],
     [1, 'Distancia (km, opcional)', '2.35'], [1, 'Ritmo (min/km, opcional)', '19:08'],
@@ -312,14 +396,14 @@ test('edited meal and workout proposals retain every field and edit mode across 
 test('incomplete proposal edits survive navigation and can be completed before one explicit confirmation', async t => {
   const state = await mountApp(t, [meal]);
   await sendActions(state); await click(state, 'Editar');
-  await changeProposalField(state, 0, 'Nombre', '');
+  await changeProposalField(state, 0, 'Nombre de la comida', '');
   await changeProposalField(state, 0, 'Calorías (kcal)', '');
   await click(state, 'Inicio'); await click(state, 'Coach');
-  assert.equal(proposalField(state, 0, 'Nombre').value, '');
+  assert.equal(proposalField(state, 0, 'Nombre de la comida').value, '');
   assert.equal(proposalField(state, 0, 'Calorías (kcal)').value, '');
   await click(state, 'Confirmar');
   assert.equal(state.logWrites, 0, 'Restoration must not normalize an incomplete edit into a valid write');
-  await changeProposalField(state, 0, 'Nombre', 'Comida completada');
+  await changeProposalField(state, 0, 'Nombre de la comida', 'Comida completada');
   await changeProposalField(state, 0, 'Calorías (kcal)', '350');
   await click(state, 'Confirmar');
   assert.equal(state.logWrites, 1);
@@ -332,7 +416,7 @@ test('incomplete proposal edits survive navigation and can be completed before o
 test('cancelling a resumed edited proposal removes it permanently from that conversation without a write', async t => {
   const state = await mountApp(t, [meal]);
   await sendActions(state); await click(state, 'Editar');
-  await changeProposalField(state, 0, 'Nombre', 'Borrador para cancelar');
+  await changeProposalField(state, 0, 'Nombre de la comida', 'Borrador para cancelar');
   await click(state, 'Datos'); await click(state, 'Coach');
   await click(state, 'Cancelar');
   await click(state, 'Perfil'); await click(state, 'Coach');
@@ -399,13 +483,13 @@ test('a failed offscreen confirmation retains the edited proposal and entry IDs 
   t.mock.method(console, 'error', () => {});
   const state = await mountApp(t, [meal], false, current => { current.recordFailures = 1; });
   await sendActions(state); await click(state, 'Editar');
-  await changeProposalField(state, 0, 'Nombre', 'Borrador conservado');
+  await changeProposalField(state, 0, 'Nombre de la comida', 'Borrador conservado');
   await changeProposalField(state, 0, 'Calorías (kcal)', '571');
   await changeProposalField(state, 0, 'Detalles', 'Primera línea\nSegunda línea');
   await click(state, 'Confirmar'); await click(state, 'Perfil');
   await act(async () => { state.release(); await turn(); });
   await click(state, 'Coach');
-  assert.equal(proposalField(state, 0, 'Nombre').value, 'Borrador conservado');
+  assert.equal(proposalField(state, 0, 'Nombre de la comida').value, 'Borrador conservado');
   assert.equal(proposalField(state, 0, 'Calorías (kcal)').value, '571');
   assert.equal(proposalField(state, 0, 'Detalles').value, 'Primera línea\nSegunda línea');
   assert.match(state.document.querySelector('.chat-messages').textContent, /No se pudo completar el guardado/);
@@ -483,7 +567,7 @@ test('an incomplete pending proposal remains read-only in yesterday’s conversa
   t.mock.timers.enable({ apis: ['Date'], now: beforeMidnight });
   const state = await mountApp(t, [meal]);
   await sendActions(state); await click(state, 'Editar');
-  await changeProposalField(state, 0, 'Nombre', 'Borrador de ayer');
+  await changeProposalField(state, 0, 'Nombre de la comida', 'Borrador de ayer');
   await changeProposalField(state, 0, 'Calorías (kcal)', '');
   const originalTarget = state.document.querySelector('.chat-proposal-date').textContent;
   await act(async () => {
@@ -505,7 +589,7 @@ test('an incomplete pending proposal remains read-only in yesterday’s conversa
   };
   await openYesterday();
   assert.equal(state.document.querySelector('.chat-proposal-date').textContent, originalTarget);
-  assert.equal(proposalField(state, 0, 'Nombre').value, 'Borrador de ayer');
+  assert.equal(proposalField(state, 0, 'Nombre de la comida').value, 'Borrador de ayer');
   assert.equal(proposalField(state, 0, 'Calorías (kcal)').value, '');
   const editor = state.document.querySelector('.chat-proposal-edit');
   assert.ok([...editor.querySelectorAll('input, select, textarea')].every(field => field.disabled));
