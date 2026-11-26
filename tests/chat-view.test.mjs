@@ -256,7 +256,7 @@ test('Coach conflict review preserves another device entries and never duplicate
   const today = new Date().toLocaleDateString('en-CA');
   const base = { dateStr: today, date: new Date(), meals: [], workouts: [], steps: 0, water: 0, version: '1', generation: 'generation-one' };
   globalThis.__chatViewHarness.profile = { ...profile, recordGeneration: 'generation-one', records: { [today]: base } };
-  const actions = [{ type: 'add_meal', estimated: false, payload: { name: 'Comida pendiente', type: 'Almuerzo', calories: 400, time: '12:00', dateStr: today } }];
+  const actions = [{ type: 'add_meal', estimated: false, payload: { name: 'Sopa de verduras', type: 'Almuerzo', calories: 400, time: '12:00', dateStr: today } }];
   const saved = []; globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Revisá la propuesta.', actions });
   globalThis.__chatViewHarness.updateRecord = async (date, record) => { saved.push({ date, record: structuredClone(record) }); return saved.length > 1; };
   const view = conversation(), get = predicate => nodes(view.render(), predicate)[0];
@@ -655,6 +655,70 @@ test('a confirmed identical meal remains available as a separate explicit intent
   assert.notEqual(writes[1].meals[0].id, writes[1].meals[1].id);
   assert.equal(writes[1].meals.reduce((total, meal) => total + meal.calories, 0), 1800);
 });
+
+for (const [scenario, details] of [['descriptive notes', 'Milanesa con papas'], ['ambiguous notes', 'Porción mediana']]) {
+  test(`a receipt-backed generic meal from an earlier version retains replay protection with ${scenario}`, async t => {
+    const previous = { profile: globalThis.__chatViewHarness.profile, ai: globalThis.__chatViewHarness.generateAIResponse,
+      write: globalThis.__chatViewHarness.updateRecord };
+    t.after(() => { Object.assign(globalThis.__chatViewHarness, { profile: previous.profile,
+      generateAIResponse: previous.ai, updateRecord: previous.write }); });
+    const date = new Date().toLocaleDateString('en-CA');
+    const originalMeal = { id: '10000000-0000-4000-8000-000000000001', name: 'Almuerzo', type: 'Almuerzo',
+      calories: 900, time: '13:00', details };
+    const current = { ...profile, recordGeneration: 'generation-one', records: { [date]: {
+      dateStr: date, date: new Date(`${date}T12:00:00`), meals: [structuredClone(originalMeal)], workouts: [],
+      steps: 0, water: 0, version: 'legacy', generation: 'generation-one',
+    } } };
+    globalThis.__chatViewHarness.profile = current;
+    const action = { type: 'add_meal', estimated: true,
+      payload: { dateStr: date, name: originalMeal.name, type: originalMeal.type,
+        calories: originalMeal.calories, time: originalMeal.time, details } };
+    const writes = [];
+    globalThis.__chatViewHarness.updateRecord = async (_, record) => {
+      writes.push(structuredClone(record)); current.records = { [date]: { ...record, version: String(writes.length) } }; return true;
+    };
+    globalThis.__chatViewHarness.generateAIResponse = async () => ({ reply: 'Revisá esta propuesta.', actions: [action] });
+    const view = conversation([{ id: 'legacy-receipt', role: 'bot', text: 'Registrado hoy: Almuerzo.',
+      recordedActions: [{ type: 'add_meal', dateStr: date, entryId: originalMeal.id }] }]);
+    const get = predicate => nodes(view.render(), predicate)[0];
+    const confirm = () => get(e => e.type === 'button' && e.props.children === 'Confirmar');
+    const send = async () => {
+      get(e => e.type === 'textarea' && e.props['aria-label'] === 'Mensaje para Coach').props.onChange({ target: { value: 'Revisá este registro.' } });
+      await get(e => e.type === 'form').props.onSubmit({ preventDefault() {} });
+    };
+    await send();
+    assert.match(renderToStaticMarkup(get(e => hasClass(e, 'chat-already-recorded'))), /Ya registrado/);
+    assert.equal(confirm().props.disabled, true);
+    assert.equal(nodes(view.render(), e => hasClass(e, 'chat-proposal-edit')).length, 0,
+      'A previously confirmed generic title must not become an empty draft');
+    await confirm().props.onClick();
+    assert.equal(writes.length, 0);
+    assert.deepEqual(current.records[date].meals, [originalMeal]);
+    const checkbox = get(e => e.type === 'input' && e.props.type === 'checkbox');
+    assert.equal(checkbox.props.checked, false);
+    checkbox.props.onChange({ target: { checked: true } });
+    assert.equal(confirm().props.disabled, false);
+    await confirm().props.onClick();
+    assert.equal(writes.length, 1); assert.equal(writes[0].meals.length, 2);
+    assert.deepEqual(writes[0].meals[0], originalMeal);
+    assert.notEqual(writes[0].meals[1].id, originalMeal.id);
+    assert.equal(writes[0].meals[1].name, 'Almuerzo');
+    assert.equal(writes[0].meals[1].details, details);
+
+    await send();
+    assert.equal(confirm().props.disabled, true);
+    await get(e => e.type === 'button' && e.props.children === 'Editar').props.onClick();
+    get(e => e.type === 'input' && e.props.type === 'text' && e.props.value === 'Almuerzo').props.onChange({ target: { value: 'Milanesa revisada' } });
+    assert.equal(nodes(view.render(), e => hasClass(e, 'chat-already-recorded')).length, 0,
+      'An explicit edited name still represents a new intention');
+    assert.equal(confirm().props.disabled, false);
+    await confirm().props.onClick();
+    assert.equal(writes.length, 2); assert.equal(writes[1].meals.length, 3);
+    assert.deepEqual(writes[1].meals[0], originalMeal);
+    assert.equal(writes[1].meals[2].name, 'Milanesa revisada');
+    assert.equal(writes[1].meals[2].details, details);
+  });
+}
 
 test('similar meals without an exact confirmed match are saved normally', async t => {
   const original = globalThis.__chatViewHarness.profile;

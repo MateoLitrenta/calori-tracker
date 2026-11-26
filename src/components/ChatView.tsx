@@ -20,6 +20,7 @@ import type { UserProfile, MealType } from '../types';
 import { changedEntryDayMessage, reviewEntryBase, snapshotEntryRecord } from '../lib/entrySubmission';
 import type { RecordWriter } from '../lib/recordFeedback';
 import { findRecordedCoachAction, parseRecordedCoachActions, type RecordedCoachAction } from '../lib/coachActionReview';
+import { prepareCoachMealAction } from '../lib/coachMealNames';
 import type { ActionCommitDraft, CoachConversationStore, CoachMessage as Message, PendingCoachRecord } from '../lib/coachConversation';
 import { getFocusedCoachProposalField } from '../lib/coachViewport';
 import { followCoachProposalViewport, revealCoachProposalField } from '../lib/coachProposalViewport';
@@ -31,7 +32,7 @@ function ProposedEntrySummary({ action }: { action: DataAction }) {
   const p = action.payload;
   return <>
     <p className="chat-proposal-kind">{action.type === 'add_meal' ? String(p.type) : 'Ejercicio'}</p>
-    <h4 className="chat-proposal-name">{String(action.type === 'add_meal' ? p.name : p.activity)}</h4>
+    <h4 className="chat-proposal-name">{String(action.type === 'add_meal' ? p.name || 'Comida por completar' : p.activity)}</h4>
     <dl className="chat-proposal-metrics">
       <div><dt>Energía</dt><dd>{(p.calories as number).toLocaleString('es-AR', { maximumFractionDigits: 20 })} <span>kcal</span></dd></div>
       <div><dt>Hora</dt><dd><time dateTime={String(p.time)}>{String(p.time)}</time> <span>hs</span></dd></div>
@@ -788,7 +789,15 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
 
       const response = await generateAIResponse(newHistory, systemPrompt, todayStr, attachment, coachContext, observationId);
       if (!conversation.isCurrent(token) || dateStr !== formatDateStr(new Date())) return;
-      const actions = validActions(response.actions, todayStr);
+      // Prepare model-supplied titles only once. Edits and retries must retain
+      // the exact name the person reviewed, including an intentionally short one.
+      // A receipt-backed replay keeps the historical title so changing the
+      // naming policy cannot disguise a record already confirmed in this chat.
+      const latestConfirmed = conversation.getSnapshot().messages.flatMap(message =>
+        message.role === 'bot' ? message.recordedActions ?? [] : []);
+      const latestRecords = conversation.getProfile()?.records ?? {};
+      const actions = validActions(response.actions, todayStr).map(action =>
+        findRecordedCoachAction(action, latestRecords, latestConfirmed) ? action : prepareCoachMealAction(action));
       const requestedActions = Array.isArray(response.actions) && response.actions.length > 0;
       const proposals = actions.filter(a => a.type === 'add_meal' || a.type === 'add_workout');
       const direct = actions.filter(a => a.type !== 'add_meal' && a.type !== 'add_workout');
@@ -824,7 +833,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       if (conversation.isCurrent(token) && proposals.length) {
         const proposalDate = proposals[0].payload.dateStr as string;
         if (proposals.every(action => action.payload.dateStr === proposalDate)) {
-          setIsEditingProposal(false);
+          setIsEditingProposal(proposals.some(action => action.type === 'add_meal' && !String(action.payload.name).trim()));
           setPending({ dateStr: proposalDate, actions: proposals, registerAgain: [], commit: newActionDraft(proposals, proposalDate) });
         } else {
           appendReply('Indicame una fecha por vez para confirmar esos registros.');
@@ -1115,7 +1124,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                 {isEditingProposal ? (
                   <div className="chat-proposal-edit grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {(action.type === 'add_meal'
-                      ? [{ field: 'name', label: 'Nombre', type: 'text' },
+                      ? [{ field: 'name', label: 'Nombre de la comida', type: 'text' },
                         { field: 'calories', label: 'Calorías (kcal)', type: 'number' },
                         { field: 'time', label: 'Hora', type: 'time' }]
                       : [{ field: 'activity', label: 'Actividad', type: 'text' },
@@ -1125,13 +1134,20 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
                         { field: 'distance', label: 'Distancia (km, opcional)', type: 'number' },
                         { field: 'pace', label: 'Ritmo (min/km, opcional)', type: 'text' }]
                     ).map(({ field, label, type }) => (
-                      <label key={field} className="flex flex-col gap-1">
+                      <label key={field} className={`flex flex-col gap-1${field === 'name' ? ' sm:col-span-2' : ''}`}>
                         {label}
                         <input type={type} value={String(action.payload[field] ?? '')} disabled={isTyping || isPastConversation}
                           min={type === 'number' ? '0.01' : undefined} step={type === 'number' ? 'any' : undefined}
+                          placeholder={field === 'name' ? 'Ej. milanesa con papas' : undefined}
+                          aria-invalid={field === 'name' && !String(action.payload.name ?? '').trim() ? true : undefined}
+                          aria-describedby={field === 'name' && !String(action.payload.name ?? '').trim() ? `coach-meal-name-${index}-hint` : undefined}
                           onChange={e => editProposal(index, field, type === 'number'
                             ? (e.target.value === '' ? undefined : Number(e.target.value)) : e.target.value)}
                           className="chat-field" />
+                        {field === 'name' && !String(action.payload.name ?? '').trim() && <span
+                          id={`coach-meal-name-${index}-hint`} className="chat-proposal-name-hint">
+                          Completá el nombre con los alimentos o bebidas que registraste.
+                        </span>}
                       </label>
                     ))}
                     {action.type === 'add_meal' && (

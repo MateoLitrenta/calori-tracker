@@ -36,7 +36,7 @@ Los formularios diarios de comida y ejercicio comparten el selector nativo de ho
 
 La base es el merge del PR #95, `e76a468eb3f02a4ca30dfa4f92329df090088c19`. Coach recupera el espacio de navegación al abrir el teclado táctil. Las altas sugieren el tipo de comida según la hora local y respetan una elección manual. El detalle adapta su pie al tema y requiere confirmar la eliminación del registro identificado. El resumen y el recibo de comida conservan la categoría de la estimación original al reclasificar.
 
-El cambio de los nombres genéricos de comidas creadas por Coach y Liquid Glass corresponden a bloques posteriores.
+El cambio de los nombres genéricos de comidas creadas por Coach se encuentra en revisión en el bloque del 26 de noviembre. Liquid Glass corresponde a un bloque posterior.
 
 [Comparativas, criterios y revisión en iPhone](evidence/iphone-noviembre/README.md)
 
@@ -50,7 +50,7 @@ Las regresiones de React y de viewport son sintéticas. Después del merge, el u
 
 [Causa, pruebas y recorrido de aceptación](evidence/coach-proposal-keyboard/README.md)
 
-## Seguimiento del 25 de noviembre en revisión · Propuestas pendientes al navegar
+## Seguimiento del 25 de noviembre integrado en el PR #98 · Propuestas pendientes al navegar
 
 Base: merge del PR #97, `79ce7d58da24e2df50f0124cdf27033b3a9eece4`. El video posterior muestra una tarjeta pendiente que desaparece al ir a Inicio y volver a Coach, mientras su mensaje permanece.
 
@@ -59,3 +59,13 @@ El candidato conserva la conversación, la propuesta, el modo edición y su inte
 El alcance es la navegación interna durante la sesión abierta. Una recarga completa o el cierre de sesión no recuperan propuestas pendientes. Las conversaciones anteriores mantienen su política de solo lectura y la fecha del registro no se cambia al llegar la medianoche.
 
 [Causa, regresiones y recorrido de revisión](evidence/coach-pending-proposals/README.md)
+
+## Bloque del 26 de noviembre en revisión · Nombres de comidas del Coach
+
+Base: merge del PR #98, `c4ed2f221121bec448e7aa08e161e4fa82c60bd5`. El contrato de IA distingue el nombre de los alimentos de la categoría y conserva la descripción completa en detalles. Las propuestas nuevas con títulos genéricos recuperan un nombre compacto de su propia descripción. Si solo contienen notas, cantidades aisladas o supuestos, la propuesta conserva sus datos y abre la edición para completar el nombre.
+
+La preparación del título se aplica una sola vez a la respuesta recibida. Los nombres editados por la persona se conservan en navegación, confirmación y reintentos. Los registros históricos respaldados por un recibo se reconocen antes de preparar títulos, manteniendo el aviso de ya registrado. El nombre confirmado es el mismo que llega a Inicio, Historial y la edición del registro.
+
+Las pruebas usan App/React y servicios sintéticos. El navegador disponible no pudo acceder al servidor local, por lo que la presentación visual y el comportamiento de Gemini real siguen pendientes de comprobar en Preview. El fixture reproducible sirve las vistas reales con red remota bloqueada.
+
+[Decisiones, pruebas y recorrido de revisión](evidence/coach-meal-names/README.md)
