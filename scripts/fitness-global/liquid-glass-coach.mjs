@@ -11,8 +11,10 @@ const playwright = await import(pathToFileURL(modulePath));
 const browser = await playwright[engine].launch(engine === 'chromium' ? { channel: process.env.QA_BROWSER_CHANNEL || 'chrome' } : {});
 const iteration2 = process.argv.includes('--iteration-2');
 const iterationFinal = process.argv.includes('--iteration-final');
-assert.ok(!(iteration2 || iterationFinal) || !before, 'Usá el candidato para el recorrido de esta iteración');
-const output = path.join(repo, 'docs/evidence/liquid-glass-navigation', iterationFinal ? 'iteracion-final' : iteration2 ? 'iteracion-2' : before ? 'before' : 'after');
+const profileAdjustment = process.argv.includes('--glass-profile');
+assert.ok(!(iteration2 || iterationFinal || profileAdjustment) || !before, 'Usá el candidato para el recorrido de esta iteración');
+const output = path.join(repo, 'docs/evidence/liquid-glass-navigation', profileAdjustment ? 'ajuste-perfil'
+  : iterationFinal ? 'iteracion-final' : iteration2 ? 'iteracion-2' : before ? 'before' : 'after');
 await mkdir(output, { recursive: true });
 
 const portrait = { width: 375, height: 667 };
@@ -115,7 +117,7 @@ async function run(theme) {
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
   const shot = async name => {
-    if (engine !== 'chromium' || iteration2 || iterationFinal) return;
+    if (engine !== 'chromium' || iteration2 || iterationFinal || profileAdjustment) return;
     const file = 'coach-' + name + '-' + theme + '.jpg';
     await page.screenshot({ path: path.join(output, file), quality: 87 });
     shots.push(file);
@@ -123,6 +125,7 @@ async function run(theme) {
   try {
     await page.goto(origin + '/qa?controls=0&theme=' + theme, { waitUntil: 'commit', timeout: 90000 });
     await page.locator('.home-variants').waitFor({ timeout: 90000 });
+    if (profileAdjustment) assert.equal(await page.evaluate(() => window.__homeQA.phase), 'liquid-glass-profile-after');
     await page.evaluate(() => {
       window.simulateCoachViewport();
       const { today, store } = window.__homeQA;

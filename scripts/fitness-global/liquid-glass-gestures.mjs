@@ -13,7 +13,9 @@ const modulePath = process.env.PLAYWRIGHT_MODULE || path.resolve(repo, '../qa-to
 const playwright = await import(pathToFileURL(modulePath));
 const browser = await playwright[engine].launch(engine === 'chromium' ? { channel: process.env.QA_BROWSER_CHANNEL || 'chrome' } : {});
 const iterationFinal = process.argv.includes('--iteration-final');
-const output = path.join(repo, 'docs/evidence/liquid-glass-navigation', iterationFinal ? 'iteracion-final' : 'iteracion-2');
+const profileAdjustment = process.argv.includes('--glass-profile');
+const output = path.join(repo, 'docs/evidence/liquid-glass-navigation', profileAdjustment ? 'ajuste-perfil'
+  : iterationFinal ? 'iteracion-final' : 'iteracion-2');
 await mkdir(output, { recursive: true });
 
 const navigation = '.app-bottom-nav:visible, .app-sidebar:visible nav';
@@ -61,6 +63,7 @@ async function mount({ viewport = initial, theme = 'dark', touch = false, record
   try {
     await page.goto(origin + '/qa?controls=0&theme=' + theme, { waitUntil: 'commit', timeout: 90000 });
     await page.locator('.home-variants').waitFor({ timeout: 90000 });
+    if (profileAdjustment) assert.equal(await page.evaluate(() => window.__homeQA.phase), 'liquid-glass-profile-after');
     await keyframe(page);
     return { page, context, errors };
   } catch (error) {
@@ -353,6 +356,84 @@ async function touchScenarios(page, context) {
   return { touchTap: true, gestureInput: 'Chromium Input.dispatchTouchEvent', vertical, horizontal, cancelled: true, scroll, touchAction: reduced };
 }
 
+async function profileScrollEnd(page) {
+  const main = page.locator('.app-main');
+  await main.evaluate(el => { el.scrollTop = el.scrollHeight; });
+  await keyframe(page);
+  const geometry = await main.evaluate(el => {
+    const controls = [...el.querySelectorAll('.profile-view :is(summary, button:not(:disabled), a[href])')];
+    const last = controls.findLast(control => {
+      const closed = control.closest('details:not([open])');
+      return (!closed || closed.querySelector(':scope > summary')?.contains(control))
+        && control.getClientRects().length && getComputedStyle(control).visibility === 'visible';
+    });
+    const control = last.getBoundingClientRect();
+    const capsule = document.querySelector('.bottom-nav-track').getBoundingClientRect();
+    const hit = document.elementFromPoint((control.left + control.right) / 2, (control.top + control.bottom) / 2);
+    return {
+      control: last.textContent.trim(), hit: last.contains(hit),
+      clearance: capsule.top - control.bottom, bottomGap: innerHeight - capsule.bottom,
+      leftGap: capsule.left, rightGap: innerWidth - capsule.right,
+      width: innerWidth, horizontalOverflow: Math.max(el.scrollWidth - el.clientWidth, document.documentElement.scrollWidth - innerWidth),
+      scroll: el.scrollTop, max: el.scrollHeight - el.clientHeight,
+    };
+  });
+  assert.ok(geometry.hit && geometry.clearance >= 0 && geometry.horizontalOverflow <= 1, JSON.stringify(geometry));
+  assert.ok(geometry.max > 0 && side(geometry.scroll, geometry.max), JSON.stringify(geometry));
+  return geometry;
+}
+
+async function profileScenarios(page, context) {
+  await go(page, 'Perfil');
+  const appearance = page.getByRole('group', { name: 'Apariencia' });
+  const themes = [];
+  for (const [choice, osPreference, scheme] of [['Claro', 'dark', 'light'], ['Oscuro', 'light', 'dark'], ['Sistema', 'dark', 'dark']]) {
+    await page.emulateMedia({ colorScheme: osPreference });
+    await appearance.getByRole('button', { name: choice, exact: true }).click();
+    assert.equal(await appearance.getByRole('button', { pressed: true }).innerText(), choice);
+    await page.waitForFunction(dark => document.documentElement.classList.contains('dark') === dark, scheme === 'dark');
+    themes.push({ choice, osPreference, scheme });
+  }
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.waitForFunction(() => !document.documentElement.classList.contains('dark'));
+  assert.equal(await appearance.getByRole('button', { pressed: true }).innerText(), 'Sistema');
+  themes.push({ choice: 'Sistema', osPreference: 'light', scheme: 'light' });
+
+  const closed = await profileScrollEnd(page);
+  const management = page.locator('.profile-management');
+  const summary = management.locator('summary');
+  await resetScroll(page);
+  await page.getByRole('button', { name: 'Cerrar sesión', exact: true }).evaluate(el => el.focus({ preventScroll: true }));
+  await page.keyboard.press('Tab');
+  await keyframe(page);
+  const keyboardFocus = await summary.evaluate(el => {
+    const bounds = el.getBoundingClientRect();
+    const style = getComputedStyle(el);
+    const capsule = document.querySelector('.bottom-nav-track').getBoundingClientRect();
+    return { focused: el === document.activeElement && el.matches(':focus-visible'), outline: style.outlineStyle,
+      top: bounds.top, clearance: capsule.top - bounds.bottom };
+  });
+  assert.ok(keyboardFocus.focused && keyboardFocus.outline !== 'none'
+    && keyboardFocus.top >= 0 && keyboardFocus.clearance > 0, JSON.stringify(keyboardFocus));
+  await page.keyboard.press('Enter');
+  assert.equal(await management.evaluate(el => el.open), true);
+  const open = await profileScrollEnd(page);
+
+  let safeArea = null;
+  if (engine === 'chromium') {
+    const cdp = await context.newCDPSession(page);
+    try {
+      await cdp.send('Emulation.setSafeAreaInsetsOverride', { insets: { top: 0, left: 24, right: 18, bottom: 34 } });
+      safeArea = await profileScrollEnd(page);
+      assert.ok(safeArea.bottomGap >= 34 && safeArea.leftGap >= 24 && safeArea.rightGap >= 18, JSON.stringify(safeArea));
+    } finally {
+      await cdp.detach();
+    }
+  }
+  await settled(page, 'Perfil');
+  return { themes, closed, open, safeArea, keyboardFocus };
+}
+
 async function checked(result, run) {
   try {
     const out = await run(result.page, result.context);
@@ -465,7 +546,11 @@ try {
   else {
     const mouseReport = await checked(await mount(), mouseScenarios);
     const responsiveReport = await checked(await mount({ theme: 'light' }), dimensions);
-    const touchReport = await checked(await mount({ theme: 'light', touch: true }), touchScenarios);
+    const touchReport = await checked(await mount({ theme: 'light', touch: true }), async (page, context) => {
+      const touch = await touchScenarios(page, context);
+      if (profileAdjustment) touch.profile = await profileScenarios(page, context);
+      return touch;
+    });
     const report = { engine, version: browser.version(), mouse: mouseReport, responsive: responsiveReport, touch: touchReport };
     await writeFile(path.join(output, 'gestos-' + engine + '.json'), JSON.stringify(report, null, 2) + '\n');
     console.log(engine + ': ratón, teclado, anchos, interrupciones y entrada táctil comprobados');

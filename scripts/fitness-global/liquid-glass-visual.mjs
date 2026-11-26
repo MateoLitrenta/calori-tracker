@@ -8,11 +8,12 @@ import { pathToFileURL } from 'node:url';
 import { before, go, origin, repo, start } from './browser.mjs';
 
 const finalGlass = process.argv.includes('--glass-final');
-const optics = finalGlass || process.argv.includes('--glass-iteration-2');
+const profileGlass = process.argv.includes('--glass-profile');
+const optics = profileGlass || finalGlass || process.argv.includes('--glass-iteration-2');
 const webkit = process.argv.includes('--webkit');
 assert.ok(!webkit || optics, 'WebKit matrix output requires a phase-specific fixture');
 const output = path.join(repo, 'docs/evidence/liquid-glass-navigation',
-  finalGlass ? 'iteracion-final' : optics ? 'iteracion-2' : '', before ? 'before' : 'after');
+  profileGlass ? 'ajuste-perfil' : finalGlass ? 'iteracion-final' : optics ? 'iteracion-2' : '', before ? 'before' : 'after');
 const playwright = process.env.PLAYWRIGHT_MODULE || path.resolve(repo, '../qa-tools/node_modules/playwright/index.mjs');
 const browser = webkit ? await (await import(pathToFileURL(playwright))).webkit.launch() : await start();
 const mobile = {
@@ -49,7 +50,7 @@ async function startPage(theme, viewport, options = {}, preference = theme) {
   await page.goto(origin + '/qa?controls=0&theme=' + preference, { waitUntil: 'commit', timeout: 90000 });
   await page.locator('.fitness-home').waitFor({ timeout: 90000 });
   if (optics) {
-    const phase = finalGlass ? 'liquid-glass-final' : 'liquid-glass-2';
+    const phase = profileGlass ? 'liquid-glass-profile' : finalGlass ? 'liquid-glass-final' : 'liquid-glass-2';
     assert.equal(await page.evaluate(() => window.__homeQA.phase), phase + (before ? '-before' : '-after'));
   }
   await settle(page);
@@ -575,15 +576,150 @@ async function scrollVideo(page) {
   report.motion.push({ scenario: 'desplazamiento', ...walk });
 }
 
+async function positionProfileAccount(page) {
+  const row = page.locator('.profile-password-row');
+  const track = await page.locator(mobile.surface).boundingBox();
+  const position = track.y + track.height / 2;
+  await contentPosition(page, 0);
+  const bottom = async () => row.evaluate(el => el.getBoundingClientRect().bottom);
+  const details = await bottom() < position;
+  if (details) {
+    await page.getByRole('button', { name: 'Cómo calculamos tu gasto' }).click();
+    await contentPosition(page, 0);
+  }
+  const target = Math.round((await bottom()) - position);
+  await contentPosition(page, target);
+  assert.ok(Math.abs((await bottom()) - position) <= 1, 'Match the same divider to the capsule in both versions');
+  return details;
+}
+
+async function profileBackdrop(page) {
+  return page.evaluate(() => {
+    const main = document.querySelector('.app-main');
+    const track = document.querySelector('.bottom-nav-track').getBoundingClientRect();
+    const account = document.querySelector('.profile-account-panel');
+    const panel = account.getBoundingClientRect();
+    const mainStyle = getComputedStyle(main);
+    const samples = [.15, .35, .55, .75].map(fraction => {
+      const x = track.left + track.width * fraction;
+      const y = track.top + track.height * .25;
+      const stack = document.elementsFromPoint(x, y);
+      return { x, y, hasMain: stack.includes(main), hasAccount: stack.includes(account) };
+    });
+    return {
+      mainBottom: main.getBoundingClientRect().bottom, trackTop: track.top, trackBottom: track.bottom,
+      bottomMargin: mainStyle.marginBottom, bottomPadding: mainStyle.paddingBottom,
+      scrollPadding: mainStyle.scrollPaddingBlockEnd, scrollTop: main.scrollTop,
+      range: main.scrollHeight - main.clientHeight,
+      accountTop: panel.top, accountBottom: panel.bottom,
+      accountBackground: getComputedStyle(account).backgroundColor,
+      dividers: [...account.querySelectorAll('.profile-setting-row')].map(el => {
+        const style = getComputedStyle(el);
+        return { bottom: el.getBoundingClientRect().bottom, border: style.borderBottomColor };
+      }),
+      horizontalOverflow: main.scrollWidth > main.clientWidth,
+      samples,
+    };
+  });
+}
+
+async function profileLastControl(page) {
+  await page.locator('.profile-management > summary').click();
+  await contentPosition(page, 100000);
+  return page.getByRole('button', { name: 'Borrar todos los registros' }).evaluate(el => {
+    const box = el.getBoundingClientRect();
+    const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+    return {
+      label: el.textContent.trim(), bottom: box.bottom,
+      navTop: document.querySelector('.bottom-nav-track').getBoundingClientRect().top,
+      hit: el.contains(hit),
+    };
+  });
+}
+
+async function runProfileGlass(theme) {
+  const { context, page, errors } = await startPage(theme, { width: 390, height: 844 });
+  try {
+    for (const [width, height] of [[375, 812], [390, 844], [440, 956]]) {
+      await page.setViewportSize({ width, height });
+      await page.waitForFunction(w => innerWidth === w, width);
+      await go(page, 'Perfil');
+      const expandedEnergy = await positionProfileAccount(page);
+      const info = await geometry(page, mobile);
+      await verifyGeometry(page, info, width);
+      const overlap = await profileBackdrop(page);
+      assert.ok(!overlap.horizontalOverflow);
+      assert.ok(overlap.samples.every(point => before ? !point.hasMain && !point.hasAccount : point.hasMain && point.hasAccount),
+        'Account panel must enter the backdrop only when the scrollport fills the frame: ' + JSON.stringify(overlap));
+      if (!before) assert.equal(overlap.bottomPadding, overlap.scrollPadding);
+      const samples = await contrast(page, mobile);
+      verifyContrast(samples, 'Perfil Cuenta ' + width + ' ' + theme);
+      const prefix = 'perfil-' + width + '-' + theme;
+      if (!webkit) await picture(page, prefix + '-cuenta');
+      if (!webkit && before && width === 390 && theme === 'light') {
+        const borders = await page.addStyleTag({ content: '.profile-account-panel,.profile-account-panel .profile-setting-row{border-color:transparent!important}' });
+        await settle(page);
+        try {
+          await picture(page, 'diagnostico-sin-bordes');
+          const details = await profileBackdrop(page);
+          assert.equal(details.mainBottom, overlap.mainBottom);
+          assert.deepEqual(details.samples, overlap.samples);
+          report.conditions.push({ scenario: 'diagnostico-sin-bordes', details });
+        } finally {
+          await borders.evaluate(el => el.remove());
+        }
+      }
+      const lastControl = await profileLastControl(page);
+      assert.ok(lastControl.hit && lastControl.bottom <= lastControl.navTop - 1, JSON.stringify(lastControl));
+      if (!webkit) await picture(page, prefix + '-final');
+      const finalContrast = await contrast(page, mobile);
+      verifyContrast(finalContrast, 'Perfil final ' + width + ' ' + theme);
+      report.matrix.push({
+        view: 'Perfil', theme, width, expandedEnergy, info, overlap, lastControl,
+        end: await profileBackdrop(page), contrast: samples, finalContrast,
+      });
+      await go(page, 'Inicio');
+      console.log('Perfil', theme, width + ' × ' + height);
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForFunction(() => innerWidth === 390);
+    for (const [name, top] of [['Inicio', 178], ['Datos', 140], ['Coach', 0]]) {
+      await go(page, name);
+      await contentPosition(page, top);
+      const info = await geometry(page, mobile);
+      await verifyGeometry(page, info, 390);
+      const samples = await contrast(page, mobile);
+      verifyContrast(samples, name + ' ' + theme);
+      report.matrix.push({ view: name, theme, width: 390, info, contrast: samples });
+      if (!webkit) await picture(page, 'control-' + name.toLowerCase() + '-390-' + theme);
+    }
+    const notice = 'ResizeObserver loop completed with undelivered notifications.';
+    if (webkit) {
+      (report.browserWarnings ??= []).push({ theme, message: notice, count: errors.filter(error => error === notice).length });
+    }
+    assert.deepEqual(webkit ? errors.filter(error => error !== notice) : errors, []);
+  } finally {
+    await context.close();
+  }
+}
+
 try {
-  if (!conditionsOnly) for (const theme of themes) await runMatrix(theme);
-  if (!webkit) for (const theme of themes) await runConditions(theme);
-  if (finalGlass) for (const theme of themes) await runLateralBackdrop(theme);
-  if (optics && !finalGlass && !webkit && !conditionsOnly) {
-    await record('material-en-movimiento', scrollVideo);
-  } else if (!optics && !before && !conditionsOnly) {
-    await record('movimiento-indicador', indicatorVideo);
-    await record('contenido-detras-del-vidrio', scrollVideo);
+  if (profileGlass) {
+    for (const theme of themes) await runProfileGlass(theme);
+    if (!webkit) await record('perfil-en-movimiento', async page => {
+      await go(page, 'Perfil');
+      await scrollVideo(page);
+    });
+  } else {
+    if (!conditionsOnly) for (const theme of themes) await runMatrix(theme);
+    if (!webkit) for (const theme of themes) await runConditions(theme);
+    if (finalGlass) for (const theme of themes) await runLateralBackdrop(theme);
+    if (optics && !finalGlass && !webkit && !conditionsOnly) {
+      await record('material-en-movimiento', scrollVideo);
+    } else if (!optics && !before && !conditionsOnly) {
+      await record('movimiento-indicador', indicatorVideo);
+      await record('contenido-detras-del-vidrio', scrollVideo);
+    }
   }
   const filename = webkit ? 'mediciones-webkit.json' : conditionsOnly ? 'condiciones.json' : 'mediciones.json';
   await writeFile(path.join(output, filename), JSON.stringify(report, null, 2) + '\n');

@@ -1,6 +1,6 @@
 # Liquid Glass · Navegación de Calori
 
-[Refinamiento final de translucidez](iteracion-final/README.md)
+[Ajuste de Perfil](ajuste-perfil/README.md) · [Refinamiento final de translucidez](iteracion-final/README.md)
 
 [Iteración 2 · Espesor óptico y arrastre](iteracion-2/README.md)
 

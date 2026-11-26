@@ -1,5 +1,11 @@
 # Estado actual de Calori
 
+## Liquid Glass · Ajuste de Perfil en el PR Draft #103
+
+Sobre el candidato `397a5d258c39c1cfc4309d28626bbd93fe201d4f`, Perfil móvil incorpora la reserva inferior al área desplazable. El margen anterior recortaba las tarjetas justo antes de la cápsula. Ahora sus superficies pueden pasar detrás del vidrio y la reserva deja espacio para el último control y su foco.
+
+[Diagnóstico, comparativas y regresiones](evidence/liquid-glass-navigation/ajuste-perfil/README.md)
+
 ## Liquid Glass · Refinamiento final de material en el PR Draft #103
 
 La revisión de `3a61032d73b1bb674efb4f958bb909d4c246732f` aprobó el arrastre, los radios y la selección naranja. La última iteración deja pasar más fondo por el vidrio, en especial en la cápsula en Claro. Reduce el desenfoque y concentra el reflejo en el borde superior. El lateral sigue en su columna y el contenido de Inicio pasa por debajo de la cápsula durante el desplazamiento.
