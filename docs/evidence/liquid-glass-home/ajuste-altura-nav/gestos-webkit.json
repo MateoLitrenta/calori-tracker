@@ -1,0 +1,287 @@
+{
+  "engine": "webkit",
+  "version": "26.0",
+  "mouse": {
+    "gestures": [
+      {
+        "from": "Inicio",
+        "accepted": "Inicio",
+        "pointerDelta": [
+          22.625,
+          0
+        ],
+        "markerDelta": [
+          22,
+          0
+        ]
+      },
+      {
+        "from": "Inicio",
+        "accepted": "Coach",
+        "pointerDelta": [
+          90.5,
+          0
+        ],
+        "markerDelta": [
+          90,
+          0
+        ]
+      },
+      {
+        "from": "Coach",
+        "accepted": "Coach",
+        "pointerDelta": [
+          0,
+          -70
+        ],
+        "markerDelta": [
+          0,
+          -2.39
+        ]
+      },
+      {
+        "from": "Coach",
+        "accepted": "Coach",
+        "pointerDelta": [
+          58.825,
+          -65
+        ],
+        "markerDelta": [
+          59,
+          -2.35
+        ]
+      },
+      {
+        "from": "Coach",
+        "accepted": "Datos",
+        "pointerDelta": [
+          84.165,
+          -20
+        ],
+        "markerDelta": [
+          84,
+          -1.58
+        ]
+      },
+      {
+        "from": "Inicio",
+        "accepted": "Inicio",
+        "pointerDelta": [
+          -95.025,
+          0
+        ],
+        "markerDelta": [
+          -1.68,
+          0
+        ]
+      },
+      {
+        "from": "Inicio",
+        "accepted": "Coach",
+        "pointerDelta": [
+          90.5,
+          0
+        ],
+        "markerDelta": [
+          90,
+          0
+        ]
+      }
+    ],
+    "interrupts": [
+      {
+        "kind": "lost",
+        "selected": "Inicio"
+      },
+      {
+        "kind": "resize",
+        "selected": "Inicio"
+      },
+      {
+        "kind": "breakpoint",
+        "selected": "Inicio"
+      },
+      {
+        "kind": "external",
+        "selected": "Datos"
+      }
+    ],
+    "scroll": 190,
+    "motion": {
+      "pointerType": "mouse",
+      "lost": 15
+    },
+    "reducedMotion": "0s",
+    "dirtyProfileStayedSelected": true
+  },
+  "responsive": [
+    {
+      "width": 320,
+      "height": 568,
+      "result": {
+        "from": "Inicio",
+        "accepted": "Coach",
+        "pointerDelta": [
+          68.61999999999999,
+          0
+        ],
+        "markerDelta": [
+          69,
+          0
+        ]
+      }
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "result": {
+        "from": "Inicio",
+        "accepted": "Coach",
+        "pointerDelta": [
+          81.545,
+          0
+        ],
+        "markerDelta": [
+          81,
+          0
+        ]
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "result": {
+        "from": "Inicio",
+        "accepted": "Coach",
+        "pointerDelta": [
+          85.07,
+          0
+        ],
+        "markerDelta": [
+          85,
+          0
+        ]
+      }
+    },
+    {
+      "width": 440,
+      "height": 956,
+      "result": {
+        "from": "Inicio",
+        "accepted": "Coach",
+        "pointerDelta": [
+          96.82,
+          0
+        ],
+        "markerDelta": [
+          97,
+          0
+        ]
+      }
+    },
+    {
+      "width": 768,
+      "height": 844,
+      "selected": "Datos",
+      "sidebar": true
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "selected": "Datos",
+      "sidebar": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "selected": "Datos",
+      "sidebar": true
+    }
+  ],
+  "touch": {
+    "touchTap": true,
+    "destinations": [
+      "Coach",
+      "Datos",
+      "Perfil",
+      "Inicio",
+      "Coach"
+    ],
+    "gestureInput": "tap Playwright, arrastre con mouse en matriz",
+    "touchAction": {
+      "current": "none",
+      "other": "auto",
+      "content": "auto"
+    },
+    "profile": {
+      "themes": [
+        {
+          "choice": "Claro",
+          "osPreference": "dark",
+          "scheme": "light"
+        },
+        {
+          "choice": "Oscuro",
+          "osPreference": "light",
+          "scheme": "dark"
+        },
+        {
+          "choice": "Sistema",
+          "osPreference": "dark",
+          "scheme": "dark"
+        },
+        {
+          "choice": "Sistema",
+          "osPreference": "light",
+          "scheme": "light"
+        }
+      ],
+      "closed": {
+        "control": "Gestión de datos",
+        "hit": true,
+        "clearance": 19,
+        "bottomGap": 22,
+        "reserved": 80,
+        "leftGap": 10,
+        "rightGap": 10,
+        "width": 390,
+        "horizontalOverflow": 0,
+        "scroll": 222,
+        "max": 222
+      },
+      "open": {
+        "control": "Borrar todos los registros",
+        "hit": true,
+        "clearance": 35,
+        "bottomGap": 22,
+        "reserved": 80,
+        "leftGap": 10,
+        "rightGap": 10,
+        "width": 390,
+        "horizontalOverflow": 0,
+        "scroll": 351,
+        "max": 351
+      },
+      "safeArea": null,
+      "keyboardFocus": {
+        "focused": true,
+        "outline": "solid",
+        "top": 693,
+        "clearance": 19
+      },
+      "enlarged": {
+        "control": "Borrar todos los registros",
+        "hit": true,
+        "clearance": 51.203125,
+        "bottomGap": 22,
+        "reserved": 88.800003,
+        "leftGap": 10,
+        "rightGap": 10,
+        "width": 390,
+        "horizontalOverflow": 0,
+        "scroll": 720,
+        "max": 720
+      }
+    }
+  }
+}

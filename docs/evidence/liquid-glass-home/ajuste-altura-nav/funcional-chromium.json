@@ -1,0 +1,525 @@
+{
+  "engine": "chromium",
+  "version": "158.0.8127.37",
+  "scenarios": [
+    {
+      "width": 320,
+      "theme": "light",
+      "week": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "weekDays": [
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+        "Domingo"
+      ],
+      "energy": [
+        {
+          "date": "2026-11-13",
+          "intake": 1250,
+          "gasto": 2281,
+          "saldo": -1031,
+          "category": "Déficit Alto",
+          "tracks": [
+            54.8005,
+            100
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "intake": 1679,
+          "gasto": 1679,
+          "saldo": 0,
+          "category": "Mantenimiento",
+          "tracks": [
+            100,
+            100
+          ]
+        },
+        {
+          "date": "2026-11-12",
+          "intake": 3100,
+          "gasto": 2449,
+          "saldo": 651,
+          "category": "Superávit Alto",
+          "tracks": [
+            100,
+            79
+          ]
+        }
+      ],
+      "forms": [
+        {
+          "name": "Agregar comida",
+          "date": "2026-11-12",
+          "layout": "sheet",
+          "preservedDraftUntilConfirmed": true,
+          "focusRestored": true,
+          "scrollPreserved": true,
+          "visibleFooter": [
+            {
+              "textSize": 100,
+              "actions": [
+                {
+                  "label": "Cancelar",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                },
+                {
+                  "label": "Guardar comida",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                }
+              ]
+            },
+            {
+              "textSize": 200,
+              "actions": [
+                {
+                  "label": "Cancelar",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                },
+                {
+                  "label": "Guardar comida",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Agregar ejercicio",
+          "date": "2026-11-09",
+          "layout": "sheet",
+          "preservedDraftUntilConfirmed": true,
+          "focusRestored": true,
+          "scrollPreserved": true,
+          "visibleFooter": [
+            {
+              "textSize": 100,
+              "actions": [
+                {
+                  "label": "Cancelar",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                },
+                {
+                  "label": "Guardar ejercicio",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                }
+              ]
+            },
+            {
+              "textSize": 200,
+              "actions": [
+                {
+                  "label": "Cancelar",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                },
+                {
+                  "label": "Guardar ejercicio",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "history": {
+        "inspected": "2026-11-09",
+        "registerDayBeforeOpening": "2026-11-13",
+        "registerDayAfterOpening": "2026-11-09",
+        "focusOnJournal": true
+      },
+      "scroll": {
+        "before": 230,
+        "after": 230,
+        "restoredMax": 589
+      },
+      "mobile": {
+        "homeEnd": {
+          "reserved": 96,
+          "capsuleTop": 494,
+          "bottomClearance": 22.015625,
+          "offset": 589,
+          "maxScroll": 589,
+          "control": {
+            "label": "Historial y tendenciasExplorá tus semanas, meses y años",
+            "top": 395.484375,
+            "bottom": 453.984375,
+            "hit": true
+          }
+        },
+        "dataEnd": {
+          "reserved": 96,
+          "capsuleTop": 494,
+          "bottomClearance": 21.609375,
+          "offset": 914,
+          "maxScroll": 914,
+          "control": {
+            "label": "Quitar selección",
+            "top": 262.046875,
+            "bottom": 306.046875,
+            "hit": true
+          }
+        },
+        "mealReceipt": [
+          {
+            "textSize": 100,
+            "clearance": 14,
+            "close": true,
+            "openRecord": true,
+            "receiptScroll": 0
+          },
+          {
+            "textSize": 75,
+            "clearance": 10,
+            "close": true,
+            "openRecord": true,
+            "receiptScroll": 0
+          },
+          {
+            "textSize": 200,
+            "clearance": 93.203125,
+            "close": true,
+            "openRecord": true,
+            "receiptScroll": 172
+          }
+        ]
+      },
+      "usage": {
+        "writes": 1,
+        "aiCalls": 0,
+        "externalRequests": 0
+      }
+    },
+    {
+      "width": 440,
+      "theme": "dark",
+      "week": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "weekDays": [
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+        "Domingo"
+      ],
+      "energy": [
+        {
+          "date": "2026-11-13",
+          "intake": 1250,
+          "gasto": 2281,
+          "saldo": -1031,
+          "category": "Déficit Alto",
+          "tracks": [
+            54.8005,
+            100
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "intake": 1679,
+          "gasto": 1679,
+          "saldo": 0,
+          "category": "Mantenimiento",
+          "tracks": [
+            100,
+            100
+          ]
+        },
+        {
+          "date": "2026-11-12",
+          "intake": 3100,
+          "gasto": 2449,
+          "saldo": 651,
+          "category": "Superávit Alto",
+          "tracks": [
+            100,
+            79
+          ]
+        }
+      ],
+      "forms": [
+        {
+          "name": "Agregar comida",
+          "date": "2026-11-12",
+          "layout": "sheet",
+          "preservedDraftUntilConfirmed": true,
+          "focusRestored": true,
+          "scrollPreserved": true,
+          "visibleFooter": [
+            {
+              "textSize": 100,
+              "actions": [
+                {
+                  "label": "Cancelar",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                },
+                {
+                  "label": "Guardar comida",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                }
+              ]
+            },
+            {
+              "textSize": 200,
+              "actions": [
+                {
+                  "label": "Cancelar",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                },
+                {
+                  "label": "Guardar comida",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Agregar ejercicio",
+          "date": "2026-11-09",
+          "layout": "sheet",
+          "preservedDraftUntilConfirmed": true,
+          "focusRestored": true,
+          "scrollPreserved": true,
+          "visibleFooter": [
+            {
+              "textSize": 100,
+              "actions": [
+                {
+                  "label": "Cancelar",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                },
+                {
+                  "label": "Guardar ejercicio",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                }
+              ]
+            },
+            {
+              "textSize": 200,
+              "actions": [
+                {
+                  "label": "Cancelar",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                },
+                {
+                  "label": "Guardar ejercicio",
+                  "top": 70.296875,
+                  "bottom": 114.296875,
+                  "hit": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "history": {
+        "inspected": "2026-11-09",
+        "registerDayBeforeOpening": "2026-11-13",
+        "registerDayAfterOpening": "2026-11-09",
+        "focusOnJournal": true
+      },
+      "scroll": {
+        "before": 230,
+        "after": 114,
+        "restoredMax": 114
+      },
+      "mobile": {
+        "homeEnd": {
+          "reserved": 96,
+          "capsuleTop": 878,
+          "bottomClearance": 17.5625,
+          "offset": 114,
+          "maxScroll": 114,
+          "control": {
+            "label": "Historial y tendenciasExplorá tus semanas, meses y años",
+            "top": 783.9375,
+            "bottom": 842.4375,
+            "hit": true
+          }
+        },
+        "dataEnd": {
+          "reserved": 96,
+          "capsuleTop": 878,
+          "bottomClearance": 18.0625,
+          "offset": 411,
+          "maxScroll": 411,
+          "control": {
+            "label": "Quitar selección",
+            "top": 346.171875,
+            "bottom": 390.171875,
+            "hit": true
+          }
+        },
+        "mealReceipt": [
+          {
+            "textSize": 100,
+            "clearance": 10,
+            "close": true,
+            "openRecord": true,
+            "receiptScroll": 0
+          },
+          {
+            "textSize": 75,
+            "clearance": 10,
+            "close": true,
+            "openRecord": true,
+            "receiptScroll": 0
+          },
+          {
+            "textSize": 200,
+            "clearance": 89.203125,
+            "close": true,
+            "openRecord": true,
+            "receiptScroll": 0
+          }
+        ]
+      },
+      "usage": {
+        "writes": 1,
+        "aiCalls": 0,
+        "externalRequests": 0
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "week": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "weekDays": [
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+        "Domingo"
+      ],
+      "energy": [
+        {
+          "date": "2026-11-13",
+          "intake": 1250,
+          "gasto": 2281,
+          "saldo": -1031,
+          "category": "Déficit Alto",
+          "tracks": [
+            54.8005,
+            100
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "intake": 1679,
+          "gasto": 1679,
+          "saldo": 0,
+          "category": "Mantenimiento",
+          "tracks": [
+            100,
+            100
+          ]
+        },
+        {
+          "date": "2026-11-12",
+          "intake": 3100,
+          "gasto": 2449,
+          "saldo": 651,
+          "category": "Superávit Alto",
+          "tracks": [
+            100,
+            79
+          ]
+        }
+      ],
+      "forms": [
+        {
+          "name": "Agregar comida",
+          "date": "2026-11-12",
+          "layout": "dialog",
+          "preservedDraftUntilConfirmed": true,
+          "focusRestored": true,
+          "scrollPreserved": true
+        },
+        {
+          "name": "Agregar ejercicio",
+          "date": "2026-11-09",
+          "layout": "dialog",
+          "preservedDraftUntilConfirmed": true,
+          "focusRestored": true,
+          "scrollPreserved": true
+        }
+      ],
+      "history": {
+        "inspected": "2026-11-09",
+        "registerDayBeforeOpening": "2026-11-13",
+        "registerDayAfterOpening": "2026-11-09",
+        "focusOnJournal": true
+      },
+      "scroll": {
+        "before": 230,
+        "after": 230,
+        "restoredMax": 641
+      },
+      "usage": {
+        "writes": 0,
+        "aiCalls": 0,
+        "externalRequests": 0
+      }
+    }
+  ]
+}

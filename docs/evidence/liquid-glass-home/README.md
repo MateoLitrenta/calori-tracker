@@ -13,7 +13,7 @@ El cambio de producto se limita al CSS del encabezado, del calendario semanal, d
 
 ## Evidencia
 
-[Capturas y mediciones](visual.md) · [Recorridos funcionales](funcional.md)
+[Capturas y mediciones](visual.md) · [Recorridos funcionales](funcional.md) · [Ajuste de altura de la cápsula](ajuste-altura-nav/README.md)
 
 ## Revisión
 

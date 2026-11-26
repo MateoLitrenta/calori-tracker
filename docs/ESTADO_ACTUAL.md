@@ -6,6 +6,10 @@ La etapa parte del merge de navegación Liquid Glass del PR #103, `cee76612a4352
 
 [Decisiones, comparativas y verificación](evidence/liquid-glass-home/README.md)
 
+La revisión del candidato `27f20caffeb976e57c4beffaa79a606d0c993184` aprobó la composición de Inicio 2A. En el mismo Draft se suma una separación inferior de 12 a 16 px a la cápsula móvil. El área segura sigue a cargo del navegador. Las reservas de contenido y avisos toman la altura y el nuevo margen de la cápsula.
+
+[Mediciones y recorrido de revisión en Safari](evidence/liquid-glass-home/ajuste-altura-nav/README.md)
+
 ## Liquid Glass · Ajuste de Perfil integrado en el PR #103
 
 Sobre el candidato `397a5d258c39c1cfc4309d28626bbd93fe201d4f`, Perfil móvil incorpora la reserva inferior al área desplazable. El margen anterior recortaba las tarjetas justo antes de la cápsula. Ahora sus superficies pueden pasar detrás del vidrio y la reserva deja espacio para el último control y su foco.

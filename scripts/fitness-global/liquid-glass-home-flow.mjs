@@ -5,9 +5,10 @@ import { pathToFileURL } from 'node:url';
 import { before, go, open, origin, repo, start } from './browser.mjs';
 
 const webkit = process.argv.includes('--webkit');
+const navLift = process.argv.includes('--glass-nav-lift');
 const playwright = process.env.PLAYWRIGHT_MODULE || path.resolve(repo, '../qa-tools/node_modules/playwright/index.mjs');
 const browser = webkit ? await (await import(pathToFileURL(playwright))).webkit.launch() : await start();
-const output = path.join(repo, 'docs/evidence/liquid-glass-home');
+const output = path.join(repo, 'docs/evidence/liquid-glass-home', navLift ? 'ajuste-altura-nav' : '');
 const button = (scope, name) => scope.getByRole('button', { name, exact: true });
 const day = (page, value) => page.locator(`.home-week-days [data-day="${value}"]`);
 const selectedDate = page => page.locator('.home-date-context time').getAttribute('datetime');
@@ -62,17 +63,105 @@ async function checkEnergy(page, date, { intake, steps, exercise, category }) {
   return { date, intake, gasto, saldo, category, tracks };
 }
 
+async function controlHit(locator) {
+  const result = await locator.evaluate(el => {
+    const bounds = el.getBoundingClientRect();
+    const hit = document.elementFromPoint(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
+    return { label: el.textContent.trim(), top: bounds.top, bottom: bounds.bottom, hit: el.contains(hit) };
+  });
+  assert.ok(result.top >= 0 && result.hit, JSON.stringify(result));
+  return result;
+}
+
+async function checkScrollEnd(page, target) {
+  const content = main(page);
+  await content.evaluate(el => { el.scrollTop = el.scrollHeight; });
+  await settle(page);
+  const geometry = await content.evaluate(el => {
+    const top = document.querySelector('.bottom-nav-track').getBoundingClientRect().top;
+    return {
+      reserved: parseFloat(getComputedStyle(el).paddingBottom), capsuleTop: top,
+      bottomClearance: top - el.querySelector('.app-content').getBoundingClientRect().bottom,
+      offset: el.scrollTop, maxScroll: el.scrollHeight - el.clientHeight,
+    };
+  });
+  assert.ok(Math.abs(geometry.offset - geometry.maxScroll) <= 1 && geometry.bottomClearance >= 0,
+    JSON.stringify(geometry));
+  // Datos may keep its last control above the viewport once the reader reaches the final activity metrics.
+  await target.evaluate(el => {
+    const nav = document.querySelector('.bottom-nav-track').getBoundingClientRect();
+    const bounds = el.getBoundingClientRect();
+    if (bounds.top < 0 || bounds.bottom > nav.top) el.scrollIntoView({ block: 'center' });
+  });
+  const control = await controlHit(target);
+  assert.ok(control.bottom <= geometry.capsuleTop, JSON.stringify({ control, geometry }));
+  return { ...geometry, control };
+}
+
+async function checkMealReceipt(page) {
+  const opener = button(page, 'Agregar comida');
+  await opener.evaluate(el => el.scrollIntoView({ block: 'center' }));
+  await opener.click();
+  await page.locator('#add-meal-description').fill('Comida sintética de la prueba de navegación');
+  await page.locator('#add-meal-calories').fill('360');
+  await button(page, 'Guardar comida').click();
+  const receipt = page.locator('.meal-saved');
+  await receipt.waitFor();
+  const gaps = [];
+  for (const textSize of [100, 75, 200]) {
+    await page.evaluate(value => { document.documentElement.style.fontSize = value + '%'; }, textSize);
+    await settle(page);
+    const clearance = await receipt.evaluate(el =>
+      document.querySelector('.bottom-nav-track').getBoundingClientRect().top - el.getBoundingClientRect().bottom);
+    assert.ok(clearance >= 8, JSON.stringify({ textSize, clearance }));
+    const close = await controlHit(button(receipt, 'Cerrar confirmación'));
+    const record = button(receipt, 'Ver registro');
+    const receiptScroll = await record.evaluate(el => {
+      const container = el.closest('.meal-saved');
+      const control = el.getBoundingClientRect();
+      const bounds = container.getBoundingClientRect();
+      if (control.bottom > bounds.bottom) container.scrollTop += control.bottom - bounds.bottom + 1;
+      return container.scrollTop;
+    });
+    const openRecord = await controlHit(record);
+    gaps.push({ textSize, clearance, close: close.hit, openRecord: openRecord.hit, receiptScroll });
+  }
+  await page.evaluate(() => { document.documentElement.style.fontSize = ''; });
+  await button(receipt, 'Cerrar confirmación').click();
+  await receipt.waitFor({ state: 'hidden' });
+  return gaps;
+}
+
 async function closeWithoutWriting(page, name, input, date, width) {
   const trigger = button(page, name);
   await trigger.scrollIntoViewIfNeeded();
+  if (navLift) {
+    await trigger.evaluate(el => el.focus({ preventScroll: true }));
+    await settle(page);
+  }
   const scroll = await main(page).evaluate(node => node.scrollTop);
-  await trigger.press('Enter');
+  if (navLift) await page.keyboard.press('Enter');
+  else await trigger.press('Enter');
   const dialog = page.getByRole('dialog', { name, exact: true });
   await dialog.waitFor();
   assert.equal(await dialog.getAttribute('aria-modal'), 'true');
   assert.ok(await dialog.evaluate(node => node.classList.contains(innerWidth < 768 ? 'entry-bottom-sheet' : 'entry-desktop-modal')));
   assert.equal(await dialog.locator('.entry-date-context time').getAttribute('datetime'), date);
   assert.ok(await main(page).evaluate(node => node.inert));
+  let visibleFooter = null;
+  if (navLift && width < 768) {
+    const label = name === 'Agregar comida' ? 'Guardar comida' : 'Guardar ejercicio';
+    const actions = dialog.locator('.entry-form-footer');
+    visibleFooter = [];
+    for (const textSize of [100, 200]) {
+      await page.evaluate(value => { document.documentElement.style.fontSize = value + '%'; }, textSize);
+      await settle(page);
+      assert.ok(await page.locator('.app-bottom-nav').evaluate(el => el.inert && getComputedStyle(el).opacity === '0'));
+      visibleFooter.push({ textSize, actions: [await controlHit(button(actions, 'Cancelar')), await controlHit(button(actions, label))] });
+    }
+    await page.evaluate(() => { document.documentElement.style.fontSize = ''; });
+    await settle(page);
+  }
   const field = dialog.locator(input);
   await field.fill('Borrador sintético');
   await button(dialog, 'Cancelar').click();
@@ -86,9 +175,10 @@ async function closeWithoutWriting(page, name, input, date, width) {
   await page.waitForFunction(label =>
     document.activeElement?.matches('.daily-quick-actions button') && document.activeElement.textContent.trim() === label, name);
   assert.equal(await main(page).evaluate(node => node.inert), false);
-  assert.ok(Math.abs(scroll - await main(page).evaluate(node => node.scrollTop)) <= 1, 'Canceling preserves the reading position');
+  const returnedScroll = await main(page).evaluate(node => node.scrollTop);
+  assert.ok(Math.abs(scroll - returnedScroll) <= 1, 'Canceling preserves the reading position ' + JSON.stringify({ name, width, scroll, returnedScroll }));
   assert.equal(await selectedDate(page), date);
-  return { name, date, layout: width < 768 ? 'sheet' : 'dialog', preservedDraftUntilConfirmed: true, focusRestored: true, scrollPreserved: true };
+  return { name, date, layout: width < 768 ? 'sheet' : 'dialog', preservedDraftUntilConfirmed: true, focusRestored: true, scrollPreserved: true, ...(visibleFooter ? { visibleFooter } : {}) };
 }
 
 async function checkHistory(page, today) {
@@ -105,7 +195,9 @@ async function checkHistory(page, today) {
 async function run(width, theme) {
   const { page, context, errors } = await open(browser, width, theme, theme, origin);
   try {
-    assert.equal(await page.evaluate(() => window.__homeQA.phase), before ? 'liquid-glass-home-before' : 'liquid-glass-home-after');
+    const phase = navLift ? 'liquid-glass-nav-lift' : 'liquid-glass-home';
+    assert.equal(await page.evaluate(() => window.__homeQA.phase), phase + (before ? '-before' : '-after'));
+    const verifyBottom = navLift && width < 768 && !before;
     const today = '2026-11-13';
     const week = [9, 10, 11, 12, 13, 14, 15];
     assert.equal(await selectedDate(page), today);
@@ -154,19 +246,36 @@ async function run(width, theme) {
     });
     assert.ok(scroll > 0);
     await go(page, 'Datos');
+    let dataEnd;
+    if (verifyBottom) {
+      const bucket = page.locator('.charts-bucket').first();
+      await bucket.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
+      await bucket.click();
+      dataEnd = await checkScrollEnd(page, button(page, 'Quitar selección del gráfico'));
+    }
     await go(page, 'Inicio');
     await settle(page);
-    const restored = await main(page).evaluate(node => node.scrollTop);
-    assert.ok(Math.abs(scroll - restored) <= 1, JSON.stringify({ scroll, restored }));
+    const restored = await main(page).evaluate(node => ({ offset: node.scrollTop, max: node.scrollHeight - node.clientHeight }));
+    // Activity disclosures can return collapsed, bounding the reachable previous offset.
+    const expectedScroll = navLift ? Math.min(scroll, restored.max) : scroll;
+    assert.ok(Math.abs(expectedScroll - restored.offset) <= 1, JSON.stringify({ scroll, restored }));
     assert.equal(await selectedDate(page), '2026-11-09');
 
+    let mobile;
+    if (verifyBottom) {
+      const historyToggle = page.locator('.home-history-toggle');
+      if (await historyToggle.getAttribute('aria-expanded') === 'true') await historyToggle.click();
+      const homeEnd = await checkScrollEnd(page, historyToggle);
+      const mealReceipt = await checkMealReceipt(page);
+      mobile = { homeEnd, dataEnd, mealReceipt };
+    }
     const usage = await page.evaluate(() => ({
       writes: window.__homeQA.writes.length, aiCalls: window.__homeQA.aiCalls.length,
       externalRequests: window.__homeQA.externalRequests,
     }));
-    assert.deepEqual(usage, { writes: 0, aiCalls: 0, externalRequests: 0 });
+    assert.deepEqual(usage, { writes: verifyBottom ? 1 : 0, aiCalls: 0, externalRequests: 0 });
     assert.deepEqual(errors, []);
-    return { width, theme, week, weekDays, energy, forms, history, scroll: { before: scroll, after: restored }, usage };
+    return { width, theme, week, weekDays, energy, forms, history, scroll: { before: scroll, after: restored.offset, ...(navLift ? { restoredMax: restored.max } : {}) }, mobile, usage };
   } finally {
     await context.close();
   }
@@ -174,7 +283,8 @@ async function run(width, theme) {
 
 try {
   const scenarios = [];
-  for (const [width, theme] of [[375, 'light'], [1440, 'dark']]) {
+  const cases = navLift ? [[320, 'light'], [440, 'dark'], [1440, 'dark']] : [[375, 'light'], [1440, 'dark']];
+  for (const [width, theme] of cases) {
     const scenario = await run(width, theme);
     scenarios.push(scenario);
     console.log(JSON.stringify(scenario));

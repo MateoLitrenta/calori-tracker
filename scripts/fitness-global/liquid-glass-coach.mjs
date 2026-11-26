@@ -12,8 +12,9 @@ const browser = await playwright[engine].launch(engine === 'chromium' ? { channe
 const iteration2 = process.argv.includes('--iteration-2');
 const iterationFinal = process.argv.includes('--iteration-final');
 const profileAdjustment = process.argv.includes('--glass-profile');
-assert.ok(!(iteration2 || iterationFinal || profileAdjustment) || !before, 'Usá el candidato para el recorrido de esta iteración');
-const output = path.join(repo, 'docs/evidence/liquid-glass-navigation', profileAdjustment ? 'ajuste-perfil'
+const navLift = process.argv.includes('--glass-nav-lift');
+assert.ok(!(iteration2 || iterationFinal || profileAdjustment || navLift) || !before, 'Usá el candidato para el recorrido de esta iteración');
+const output = navLift ? path.join(repo, 'docs/evidence/liquid-glass-home/ajuste-altura-nav') : path.join(repo, 'docs/evidence/liquid-glass-navigation', profileAdjustment ? 'ajuste-perfil'
   : iterationFinal ? 'iteracion-final' : iteration2 ? 'iteracion-2' : before ? 'before' : 'after');
 await mkdir(output, { recursive: true });
 
@@ -117,7 +118,7 @@ async function run(theme) {
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
   const shot = async name => {
-    if (engine !== 'chromium' || iteration2 || iterationFinal || profileAdjustment) return;
+    if (engine !== 'chromium' || iteration2 || iterationFinal || profileAdjustment || navLift) return;
     const file = 'coach-' + name + '-' + theme + '.jpg';
     await page.screenshot({ path: path.join(output, file), quality: 87 });
     shots.push(file);
@@ -125,7 +126,9 @@ async function run(theme) {
   try {
     await page.goto(origin + '/qa?controls=0&theme=' + theme, { waitUntil: 'commit', timeout: 90000 });
     await page.locator('.home-variants').waitFor({ timeout: 90000 });
-    if (profileAdjustment) assert.equal(await page.evaluate(() => window.__homeQA.phase), 'liquid-glass-profile-after');
+    if (profileAdjustment || navLift) {
+      assert.equal(await page.evaluate(() => window.__homeQA.phase), navLift ? 'liquid-glass-nav-lift-after' : 'liquid-glass-profile-after');
+    }
     await page.evaluate(() => {
       window.simulateCoachViewport();
       const { today, store } = window.__homeQA;
@@ -180,6 +183,29 @@ async function run(theme) {
     }
     await viewport(page);
     await readNavigation(page, 'Coach');
+    const afterKeyboard = navLift ? await page.evaluate(() => {
+      const shell = document.querySelector('.app-shell-coach');
+      const main = shell.querySelector('.app-main');
+      const capsule = shell.querySelector('.bottom-nav-track').getBoundingClientRect();
+      const composer = shell.querySelector('.chat-composer').getBoundingClientRect();
+      const probe = document.createElement('span');
+      probe.style.cssText = 'position:absolute;bottom:var(--feedback-offset);width:0;height:0';
+      shell.appendChild(probe);
+      const feedbackY = probe.getBoundingClientRect().bottom;
+      probe.remove();
+      return {
+        clearance: capsule.top - composer.bottom,
+        bottomGap: shell.getBoundingClientRect().bottom - capsule.bottom,
+        capsuleHeight: capsule.height,
+        reserved: parseFloat(getComputedStyle(main).paddingBottom),
+        feedbackGap: composer.top - feedbackY,
+      };
+    }) : undefined;
+    if (afterKeyboard) {
+      assert.ok(afterKeyboard.bottomGap >= 18 && afterKeyboard.clearance >= 1 && afterKeyboard.feedbackGap >= 1,
+        JSON.stringify(afterKeyboard));
+      assert.ok(afterKeyboard.reserved >= afterKeyboard.capsuleHeight + afterKeyboard.bottomGap + 1, JSON.stringify(afterKeyboard));
+    }
     assert.deepEqual(await editor(page).inputValue(), draft);
     assert.ok(await editor(page).evaluate(el => el === document.activeElement));
     await viewport(page, keyboard);
@@ -288,7 +314,7 @@ async function run(theme) {
       return [qa.aiCalls.length, qa.writes.length, qa.profileWrites.length, qa.externalRequests];
     }), [2, 1, 0, 0]);
     assert.deepEqual(errors, []);
-    return { theme, composer, mealGeometry, exerciseGeometry, shots, explicitWrites: saved.count,
+    return { theme, composer, mealGeometry, exerciseGeometry, afterKeyboard, shots, explicitWrites: saved.count,
       readingPosition: 240, rejectedNavigation: 'Perfil', confirmedNavigation: 'Inicio' };
   } catch (error) {
     if (errors.length) console.error(errors);
