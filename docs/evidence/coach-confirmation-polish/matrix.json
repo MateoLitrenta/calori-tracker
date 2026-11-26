@@ -1,0 +1,102 @@
+[
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "before": {
+      "reading_shift_px": 213.0,
+      "scroll_before": 213,
+      "scroll_after": 0,
+      "composer_shift_px": 0,
+      "horizontal_overflow": false,
+      "receipt_top": 496.25,
+      "receipt_bottom": 596.296875,
+      "log_top": 166.5
+    },
+    "after": {
+      "reading_shift_px": 0.0,
+      "scroll_before": 213,
+      "scroll_after": 213,
+      "composer_shift_px": 0,
+      "horizontal_overflow": false,
+      "receipt_top": 283.25,
+      "receipt_bottom": 383.296875,
+      "log_top": 166.5
+    }
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "before": {
+      "reading_shift_px": 213.0,
+      "scroll_before": 213,
+      "scroll_after": 0,
+      "composer_shift_px": 0,
+      "horizontal_overflow": false,
+      "receipt_top": 496.25,
+      "receipt_bottom": 596.296875,
+      "log_top": 166.5
+    },
+    "after": {
+      "reading_shift_px": 0.0,
+      "scroll_before": 213,
+      "scroll_after": 213,
+      "composer_shift_px": 0,
+      "horizontal_overflow": false,
+      "receipt_top": 283.25,
+      "receipt_bottom": 383.296875,
+      "log_top": 166.5
+    }
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "light",
+    "before": {
+      "reading_shift_px": 341.0,
+      "scroll_before": 341,
+      "scroll_after": 0,
+      "composer_shift_px": 0,
+      "horizontal_overflow": false,
+      "receipt_top": 472.375,
+      "receipt_bottom": 608.796875,
+      "log_top": 153
+    },
+    "after": {
+      "reading_shift_px": 32.0,
+      "scroll_before": 341,
+      "scroll_after": 309,
+      "composer_shift_px": 0,
+      "horizontal_overflow": false,
+      "receipt_top": 163.375,
+      "receipt_bottom": 299.796875,
+      "log_top": 153
+    }
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "theme": "dark",
+    "before": {
+      "reading_shift_px": 341.0,
+      "scroll_before": 341,
+      "scroll_after": 0,
+      "composer_shift_px": 0,
+      "horizontal_overflow": false,
+      "receipt_top": 472.375,
+      "receipt_bottom": 608.796875,
+      "log_top": 153
+    },
+    "after": {
+      "reading_shift_px": 32.0,
+      "scroll_before": 341,
+      "scroll_after": 309,
+      "composer_shift_px": 0,
+      "horizontal_overflow": false,
+      "receipt_top": 163.375,
+      "receipt_bottom": 299.796875,
+      "log_top": 153
+    }
+  }
+]

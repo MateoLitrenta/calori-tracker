@@ -31,7 +31,8 @@ const textareaUrl = `data:text/javascript;base64,${Buffer.from(textareaCode).toS
 const estimateResultSource = await readFile(new URL('../src/components/EntryEstimateResult.tsx', import.meta.url), 'utf8');
 const estimateResultCode = ts.transpileModule(withoutIcons(estimateResultSource), { compilerOptions: { module: ts.ModuleKind.ESNext,
   jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023 } }).outputText
-  .replace(/from ["']([^"']+)["']/g, (_, specifier) => `from ${JSON.stringify(import.meta.resolve(specifier))}`);
+  .replace(/from ["']([^"']+)["']/g, (_, specifier) => `from ${JSON.stringify(specifier === '../utils/helpers'
+    ? new URL('../src/utils/helpers.ts', import.meta.url).href : import.meta.resolve(specifier))}`);
 const estimateResultUrl = `data:text/javascript;base64,${Buffer.from(estimateResultCode).toString('base64')}`;
 globalThis.__entryServices = { estimateMeal: async () => ({}), estimateWorkout: async () => ({}), toast: { error() {} } };
 const imports = {
@@ -207,7 +208,7 @@ test('journal keeps every record and its full description in chronological DOM o
     assert.equal(html.includes('class="daily-records-toggle"'), count > 4);
     for (let index = 0; index < count; index++) {
       assert.ok(html.includes(records[index].name), 'Long descriptions must remain complete');
-      assert.ok(html.replace(/<[^>]+>/g, '').includes(`+${records[index].calories} kcal`));
+      assert.ok(html.replace(/<[^>]+>/g, '').includes('+1.234.567 kcal'));
       if (index) assert.ok(html.indexOf(records[index - 1].name) < html.indexOf(records[index].name));
     }
     assert.ok(html.indexOf('Agregar comida') < html.indexOf('Registros del día'), 'Keep the existing mobile reading order');

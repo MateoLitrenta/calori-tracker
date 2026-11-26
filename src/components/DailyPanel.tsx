@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap, UserProfile } from '../types';
-import { hasEnergyData, formatDateStr, getCaloriesIngested, generateUUID, aggregateEnergy, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure, getBalanceLabel } from '../utils/helpers';
+import { hasEnergyData, formatDateStr, formatCalories, getCaloriesIngested, generateUUID, aggregateEnergy, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure, getBalanceLabel } from '../utils/helpers';
 import { estimateMeal, estimateWorkout } from '../services/aiService';
 import { AIRequestError } from '../services/aiTransport';
 import { supabase } from '../lib/supabase';
@@ -78,7 +78,7 @@ function DailyRecords({ count, children, receipt, onDismiss }: {
       <div role="status">
         <span className="meal-saved-label"><Check size={16} aria-hidden="true" /> {receipt.kind === 'meal' ? 'Comida guardada' : 'Ejercicio guardado'}</span>
         <strong>{receipt.name}</strong>
-        <span>{receipt.kind === 'workout' && receipt.duration + ' min · '}{receipt.calories.toLocaleString('es-AR')} kcal{receipt.estimated && ' · Estimación con IA'} · {format(new Date(receipt.date + 'T12:00:00'), 'd MMM yyyy', { locale: es })}</span>
+        <span>{receipt.kind === 'workout' && receipt.duration + ' min · '}{formatCalories(receipt.calories)} kcal{receipt.estimated && ' · Estimación con IA'} · {format(new Date(receipt.date + 'T12:00:00'), 'd MMM yyyy', { locale: es })}</span>
         {receipt.kind === 'meal' && receipt.reclassifiedFrom && <span>Categoría de la estimación original: {receipt.reclassifiedFrom}.</span>}
         {receipt.kind === 'meal' && receipt.replacedPhoto && <span>La limpieza de la foto anterior queda pendiente.</span>}
       </div>
@@ -155,7 +155,7 @@ function ConfirmRecordDeletion({ item, date, deleting, available, error, onCance
       <h2 id={titleId} className="profile-section-title">{meal ? '¿Eliminar comida?' : '¿Eliminar ejercicio?'}</h2>
       <p id={descriptionId}>
         <strong>{meal ? item.name : item.activity}</strong>
-        <span className="block">{date}{item.time && ' · ' + item.time}{!meal && ' · ' + item.duration + ' min'} · {item.calories.toLocaleString('es-AR')} kcal</span>
+        <span className="block">{date}{item.time && ' · ' + item.time}{!meal && ' · ' + item.duration + ' min'} · {formatCalories(item.calories)} kcal</span>
       </p>
       {error && <p className="record-delete-error" role="alert">{error}</p>}
       {!available && !deleting && <p className="record-delete-error" role="status">Este registro ya no está en este día.</p>}
@@ -1054,7 +1054,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                       <span className="daily-record-title">{meal ? item.name : item.activity}</span>
                       <span className="daily-record-meta">{item.time && `${item.time} · `}{meal ? item.type : `Ejercicio · ${item.duration} min`}</span>
                     </span>
-                    <span className="fitness-record-kcal">{meal ? '+' : '-'}{item.calories} <small>kcal</small></span>
+                    <span className="fitness-record-kcal">{meal ? '+' : '-'}{formatCalories(item.calories)} <small>kcal</small></span>
                     <CaretRight size={14} aria-hidden="true" />
                   </button>
                 </li>
@@ -1237,7 +1237,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
               <div className="text-center py-2">
                 <span className={`text-3xl font-black tracking-tight ${detailModalItem._type === 'meal' ? 'text-blue-400' : 'text-orange-400'}`}>
-                  {detailModalItem._type === 'meal' ? '+' : '-'}{detailModalItem.calories} <span className="text-lg font-medium text-slate-500 dark:text-gray-400">kcal</span>
+                  {detailModalItem._type === 'meal' ? '+' : '-'}{formatCalories(detailModalItem.calories)} <span className="text-lg font-medium text-slate-500 dark:text-gray-400">kcal</span>
                 </span>
               </div>
 

@@ -1,0 +1,125 @@
+{
+  "before": {
+    "activeElement": null,
+    "composer": {
+      "bottom": 748,
+      "height": 113,
+      "left": 0,
+      "right": 375,
+      "top": 635,
+      "width": 375,
+      "x": 0,
+      "y": 635
+    },
+    "height": 812,
+    "log": {
+      "height": 482,
+      "scrollHeight": 897,
+      "scrollTop": 415,
+      "top": 153
+    },
+    "messages": [
+      {
+        "height": 42.671875,
+        "text": "Ayudame a completar las comidas de hoy.",
+        "top": -252
+      },
+      {
+        "height": 65.34375,
+        "text": "Podemos registrar una comida por vez. Contame qué comiste y a qué hora.",
+        "top": -197.328125
+      },
+      {
+        "height": 88.015625,
+        "text": "Hoy a las 13:30 comí milanesa napolitana con papas al horno, ensalada de tomate, cerveza y ensalada de frutas de postre.",
+        "top": -119.984375
+      },
+      {
+        "height": 65.34375,
+        "text": "Preparé esta propuesta sintética para que la revises.",
+        "top": -19.96875
+      },
+      {
+        "height": 42.671875,
+        "text": "Fallo sintético de QA. No se guardó.",
+        "top": 57.375
+      }
+    ],
+    "overflow": false,
+    "proposal": {
+      "bottom": 611.984375,
+      "height": 499.9375,
+      "left": 14,
+      "right": 351,
+      "top": 112.046875,
+      "width": 337,
+      "x": 14,
+      "y": 112.046875
+    },
+    "theme": "dark",
+    "width": 375
+  },
+  "after": {
+    "activeElement": null,
+    "composer": {
+      "bottom": 748,
+      "height": 113,
+      "left": 0,
+      "right": 375,
+      "top": 635,
+      "width": 375,
+      "x": 0,
+      "y": 635
+    },
+    "height": 812,
+    "log": {
+      "height": 482,
+      "scrollHeight": 846,
+      "scrollTop": 364,
+      "top": 153
+    },
+    "messages": [
+      {
+        "height": 42.671875,
+        "text": "Ayudame a completar las comidas de hoy.",
+        "top": -201
+      },
+      {
+        "height": 65.34375,
+        "text": "Podemos registrar una comida por vez. Contame qué comiste y a qué hora.",
+        "top": -146.328125
+      },
+      {
+        "height": 88.015625,
+        "text": "Hoy a las 13:30 comí milanesa napolitana con papas al horno, ensalada de tomate, cerveza y ensalada de frutas de postre.",
+        "top": -68.984375
+      },
+      {
+        "height": 65.34375,
+        "text": "Preparé esta propuesta sintética para que la revises.",
+        "top": 31.03125
+      },
+      {
+        "height": 42.671875,
+        "text": "Fallo sintético de QA. No se guardó.",
+        "top": 108.375
+      },
+      {
+        "height": 136.421875,
+        "text": "Guardado confirmado\n\nRegistrado hoy: Milanesa napolitana con papas al horno, ensalada de tomate, cerveza y ensalada de frutas de postre · Almuerzo · 1",
+        "top": 163.046875
+      }
+    ],
+    "overflow": false,
+    "proposal": null,
+    "theme": "dark",
+    "width": 375
+  },
+  "errorState": {
+    "error": "Fallo sintético de QA. No se guardó.",
+    "proposal": "PROPUESTA PENDIENTE\n\nRevisá tu registro\n\n26 de nov de 2026\n\nAlmuerzo\n\nMilanesa napolitana con papas al horno, ensalada de tomate, cerveza y ensalada de frutas de postre\nEnergía\n1.100 kcal\nHora\n13:30 hs\n\nPropuesta con estimaciones\n\nUna milanesa napolitana al horno, papas al horno, ensalada de tomate, una cerveza y una porción de ensalada de frutas de postre.\n\nConfirmá para guardar los registros seleccionados.\n\nConfirmar\nEditar\nCancelar",
+    "confirmEnabled": true
+  },
+  "saveResult": "Prueba sintética de nombres\n\nSin servicios remotos. Caso: long. IA: 1. Guardados: 1.\n\nElegí el caso y enviá un mensaje desde Coach.\n\nPreparar nombre genérico\nPreparar nombre incompleto\nPreparar nombre largo\nPreparar dos comidas\nSimular fallo de guardado\nMantener guardado pendiente\nResolver guardado pendienteOcultar controles de prueba\n[\n  {\n    \"date\": \"2026-11-26\",\n    \"status\": \"failed\"\n  },\n  {\n    \"date\": \"2026-11-26\",\n    \"status\": \"confirmed\"\n  }\n]",
+  "resizeWarnings": []
+}

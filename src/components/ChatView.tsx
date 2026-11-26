@@ -1,5 +1,5 @@
 import './CoachFitness.css';
-import { useState, useRef, useEffect, useCallback, useMemo, useSyncExternalStore, type RefObject, type SetStateAction } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, useCallback, useMemo, useSyncExternalStore, type RefObject, type SetStateAction } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowRight, CaretDown, ChartLineUp, CheckCircle, ClockCounterClockwise, ImageSquare, Microphone, PaperPlaneRight, Plus, Target, X } from '@phosphor-icons/react';
 import UserAvatar from './UserAvatar';
@@ -15,7 +15,7 @@ import { buildCoachCard, parseCoachCard } from '../utils/coachPresentation';
 import { buildCoachContext } from '../utils/coachContext';
 import { buildProactiveInsight, type ProactiveInsight } from '../utils/coachProactive';
 import { useAppStore } from '../hooks/useAppStore';
-import { buildDailyEnergyContext, formatDateStr, generateUUID } from '../utils/helpers';
+import { buildDailyEnergyContext, formatCalories, formatDateStr, generateUUID } from '../utils/helpers';
 import type { UserProfile, MealType } from '../types';
 import { changedEntryDayMessage, reviewEntryBase, snapshotEntryRecord } from '../lib/entrySubmission';
 import type { RecordWriter } from '../lib/recordFeedback';
@@ -24,6 +24,7 @@ import { prepareCoachMealAction } from '../lib/coachMealNames';
 import type { ActionCommitDraft, CoachConversationStore, CoachMessage as Message, PendingCoachRecord } from '../lib/coachConversation';
 import { getFocusedCoachProposalField } from '../lib/coachViewport';
 import { followCoachProposalViewport, revealCoachProposalField } from '../lib/coachProposalViewport';
+import { createCoachConfirmationViewport } from '../lib/coachConfirmationViewport';
 import { generateAIResponse, transcribeAudio, validActions, isValidDateStr, type MediaAttachment, type DataAction } from '../services/aiService';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
@@ -34,7 +35,7 @@ function ProposedEntrySummary({ action }: { action: DataAction }) {
     <p className="chat-proposal-kind">{action.type === 'add_meal' ? String(p.type) : 'Ejercicio'}</p>
     <h4 className="chat-proposal-name">{String(action.type === 'add_meal' ? p.name || 'Comida por completar' : p.activity)}</h4>
     <dl className="chat-proposal-metrics">
-      <div><dt>Energía</dt><dd>{(p.calories as number).toLocaleString('es-AR', { maximumFractionDigits: 20 })} <span>kcal</span></dd></div>
+      <div><dt>Energía</dt><dd>{formatCalories(p.calories as number)} <span>kcal</span></dd></div>
       <div><dt>Hora</dt><dd><time dateTime={String(p.time)}>{String(p.time)}</time> <span>hs</span></dd></div>
       {action.type === 'add_workout' && <div><dt>Duración</dt><dd>{(p.duration as number).toLocaleString('es-AR', { maximumFractionDigits: 20 })} <span>min</span></dd></div>}
     </dl>
@@ -241,19 +242,31 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, coachCo
   const conversation = useMemo(() => coachConversations.open(userId, dateStr,
     () => readDailyHistory(userId, dateStr, today)), [coachConversations, userId, dateStr, today]);
   const messagesScrollRef = useRef<HTMLElement | null>(null);
+  const messagesContentRef = useRef<HTMLDivElement | null>(null);
+  const confirmationViewport = useRef<ReturnType<typeof createCoachConfirmationViewport> | null>(null);
   const cardScrollDecision = useRef<{ id: string; nearEnd: boolean } | null>(null);
   const rememberReplyAnchor = useCallback((id: string) => {
     const log = messagesScrollRef.current ?? scrollContainer.current;
     cardScrollDecision.current = { id, nearEnd: !log || log.scrollHeight - log.clientHeight - log.scrollTop <= 24 };
   }, [scrollContainer]);
   const subscribeConversation = useCallback((notify: () => void) => {
-    let lastMessage = conversation.getSnapshot().messages.at(-1);
+    let previous = conversation.getSnapshot();
     return conversation.subscribe(() => {
-      const nextMessage = conversation.getSnapshot().messages.at(-1);
+      const next = conversation.getSnapshot();
+      const nextMessage = next.messages.at(-1);
+      const lastMessage = previous.messages.at(-1);
+      const pendingIds = previous.pending?.commit.entryIds;
+      const confirmsPending = pendingIds && nextMessage?.recordedActions?.some(action => pendingIds.includes(action.entryId));
+      if (nextMessage && confirmsPending && (previous.operation === 'record' || next.operation === 'record') &&
+          (nextMessage.id !== lastMessage?.id || !next.pending)) {
+        confirmationViewport.current?.capture(nextMessage.id);
+      } else if (next.operation === 'response' && previous.operation !== 'response') {
+        confirmationViewport.current?.release();
+      }
       // A request may finish in an old, unmounted UserChat. Capture the reader
       // in the current view before React paints its newly received message.
       if (nextMessage?.role === 'bot' && nextMessage.id !== lastMessage?.id) rememberReplyAnchor(nextMessage.id);
-      lastMessage = nextMessage;
+      previous = next;
       notify();
     });
   }, [conversation, rememberReplyAnchor]);
@@ -311,7 +324,6 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, coachCo
   const recordingCancelled = useRef(false);
   const audioBusy = useRef(false);
   const composerRef = useRef<HTMLElement | null>(null);
-  const messagesContentRef = useRef<HTMLDivElement | null>(null);
   const scrollToEnd = useCallback((behavior: ScrollBehavior) => {
     const container = messagesScrollRef.current ?? scrollContainer.current;
     container?.scrollTo({ top: container.scrollHeight,
@@ -323,6 +335,11 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, coachCo
   const recordedAction = (action: DataAction) => findRecordedCoachAction(action, activeProfile?.records ?? {}, confirmedActions);
   const repeatedActions = pending?.actions.map(recordedAction) ?? [];
   const actionsToSave = pending?.actions.filter((_, index) => !repeatedActions[index] || pending.registerAgain.includes(index)) ?? [];
+  const lastMessage = messages.at(-1);
+  // A successful write publishes its receipt immediately before removing the
+  // proposal. Show the replacement once, not both cards between notifications.
+  const receiptAwaitingProposal = isConfirming && pending && lastMessage?.recordedActions?.some(action => pending.commit.entryIds.includes(action.entryId))
+    ? lastMessage.id : null;
 
   const clearPendingImage = () => {
     imageSelection.current += 1;
@@ -524,8 +541,8 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, coachCo
   const describeAction = (a: DataAction) => {
     const p = a.payload;
     switch (a.type) {
-      case 'add_meal': return `${p.name} · ${p.type} · ${p.calories} kcal · ${p.time}`;
-      case 'add_workout': return `${p.activity} · ${p.duration} min · ${p.calories} kcal · ${p.time}`;
+      case 'add_meal': return `${p.name} · ${p.type} · ${formatCalories(p.calories as number)} kcal · ${p.time}`;
+      case 'add_workout': return `${p.activity} · ${p.duration} min · ${formatCalories(p.calories as number)} kcal · ${p.time}`;
       case 'set_steps': return `${p.steps} pasos (total)`;
       case 'add_water': return `+${p.water} ml de agua`;
       case 'set_weight': return `${p.weight} kg de peso de hoy`;
@@ -670,6 +687,19 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, coachCo
     }
   }, [inputValue]);
 
+  useLayoutEffect(() => {
+    const reader = messagesScrollRef.current;
+    const content = messagesContentRef.current;
+    if (!reader || !content) return;
+    const viewport = createCoachConfirmationViewport(reader, content);
+    confirmationViewport.current = viewport;
+    return () => { viewport.release(); confirmationViewport.current = null; };
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!pending) confirmationViewport.current?.commit(messages.at(-1)?.id);
+  }, [messages, pending]);
+
   useEffect(() => {
     const container = messagesScrollRef.current;
     if (!container) return;
@@ -687,7 +717,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, coachCo
       const wasNearEnd = previousScrollHeight - previousHeight - container.scrollTop <= 24;
       // A proposal field takes precedence over following the last message when
       // the keyboard or the inline editor changes the available reading space.
-      if (!revealCoachProposalField(container) && wasNearEnd) container.scrollTop = container.scrollHeight;
+      if (!revealCoachProposalField(container) && !confirmationViewport.current?.resize() && wasNearEnd) container.scrollTop = container.scrollHeight;
       previousHeight = container.clientHeight;
       previousScrollHeight = container.scrollHeight;
     });
@@ -718,6 +748,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, coachCo
     if (conversation.isBusy() || current.pending || current.pendingGoal || audioBusy.current || imageBusy.current || isCameraOpen || isPastConversation) return;
     try {
       localStorage.removeItem(storageKey);
+      confirmationViewport.current?.release();
       readingPositions?.current.delete(storageKey);
       didScroll.current = false;
       setMessages([]);
@@ -736,6 +767,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, coachCo
   const hasPending = !!pending || !!pendingGoal;
   useEffect(() => {
     if (!messages.length && !isTyping && !hasPending) return;
+    if (confirmationViewport.current?.ownsScroll()) { didScroll.current = true; return; }
     if (cardScrollDecision.current && cardScrollDecision.current.id === messages.at(-1)?.id && !cardScrollDecision.current.nearEnd) return;
     const frame = requestAnimationFrame(() => {
       const saved = didScroll.current ? undefined : readingPositions?.current.get(storageKey);
@@ -1087,6 +1119,7 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
       {/* Messages Area */}
       <section ref={messagesScrollRef} className="chat-messages"
         onScroll={event => {
+          confirmationViewport.current?.scroll();
           const positions = readingPositions?.current;
           if (!positions || !didScroll.current) return;
           const log = event.currentTarget;
@@ -1213,8 +1246,8 @@ DESFASE LOCAL RESPECTO DE UTC (minutos): ${-now.getTimezoneOffset()}.`;
             </div>}
           </div>
         )}
-        {messages.map((msg) => (
-          <div key={msg.id} className={`chat-message chat-message-${msg.role} ${msg.role === 'bot' && (msg.coachCard || msg.goalProgress) ? 'chat-message-structured' : ''} ${initialMessageIds.has(msg.id) ? '' : 'chat-message-new'} flex gap-3 min-w-0 max-w-[95%] md:max-w-[80%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
+        {messages.filter(msg => msg.id !== receiptAwaitingProposal).map((msg) => (
+          <div key={msg.id} data-coach-message-id={msg.id} className={`chat-message chat-message-${msg.role} ${msg.recordedActions?.length ? 'chat-message-receipt' : ''} ${msg.role === 'bot' && (msg.coachCard || msg.goalProgress) ? 'chat-message-structured' : ''} ${initialMessageIds.has(msg.id) ? '' : 'chat-message-new'} flex gap-3 min-w-0 max-w-[95%] md:max-w-[80%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
             <div className="chat-message-avatar flex-shrink-0 w-8 h-8 flex items-center justify-center">
               {msg.role === 'user' ? (
                 <UserAvatar userId={userId} path={activeProfile?.user_id === userId ? activeProfile.avatar_path : null}

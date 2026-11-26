@@ -3,6 +3,10 @@ import type { ActivityLevel, DailyRecord, DailyRecordsMap, UserProfile } from '.
 
 export const formatDateStr = (date: Date) => format(date, 'yyyy-MM-dd');
 
+const caloriesFormatter = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 20 });
+// Presentation only: keep the original number for inputs, storage and calculations.
+export const formatCalories = (value: number): string => caloriesFormatter.format(value);
+
 export const generateUUID = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
