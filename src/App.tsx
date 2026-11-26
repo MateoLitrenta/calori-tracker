@@ -184,7 +184,7 @@ function App() {
 
       <div className="app-stage flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Main Content Area */}
-        <main ref={mainRef} aria-busy={loading ? 'true' : undefined} className="app-main flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8 w-full">
+        <main ref={mainRef} aria-busy={loading ? 'true' : undefined} className="app-main flex-1 flex flex-col overflow-y-auto p-0 md:p-8 pb-[var(--glass-nav-content-reserve)] md:pb-8 w-full">
           {activeTab === 'home' && route === '/app' && (
             <header className="home-header">
               <div className="home-heading-brand">

@@ -14,7 +14,8 @@ const playwright = await import(pathToFileURL(modulePath));
 const browser = await playwright[engine].launch(engine === 'chromium' ? { channel: process.env.QA_BROWSER_CHANNEL || 'chrome' } : {});
 const iterationFinal = process.argv.includes('--iteration-final');
 const profileAdjustment = process.argv.includes('--glass-profile');
-const output = path.join(repo, 'docs/evidence/liquid-glass-navigation', profileAdjustment ? 'ajuste-perfil'
+const navLift = process.argv.includes('--glass-nav-lift');
+const output = navLift ? path.join(repo, 'docs/evidence/liquid-glass-home/ajuste-altura-nav') : path.join(repo, 'docs/evidence/liquid-glass-navigation', profileAdjustment ? 'ajuste-perfil'
   : iterationFinal ? 'iteracion-final' : 'iteracion-2');
 await mkdir(output, { recursive: true });
 
@@ -63,7 +64,9 @@ async function mount({ viewport = initial, theme = 'dark', touch = false, record
   try {
     await page.goto(origin + '/qa?controls=0&theme=' + theme, { waitUntil: 'commit', timeout: 90000 });
     await page.locator('.home-variants').waitFor({ timeout: 90000 });
-    if (profileAdjustment) assert.equal(await page.evaluate(() => window.__homeQA.phase), 'liquid-glass-profile-after');
+    if (profileAdjustment || navLift) {
+      assert.equal(await page.evaluate(() => window.__homeQA.phase), navLift ? 'liquid-glass-nav-lift-after' : 'liquid-glass-profile-after');
+    }
     await keyframe(page);
     return { page, context, errors };
   } catch (error) {
@@ -306,7 +309,9 @@ async function mouseScenarios(page) {
 
 async function dimensions(page) {
   const results = [];
-  for (const [width, height] of [[320, 568], [375, 812], [768, 844], [1280, 800], [1440, 900]]) {
+  const mobile = [[320, 568], [375, 812]];
+  if (navLift) mobile.push([390, 844], [440, 956]);
+  for (const [width, height] of [...mobile, [768, 844], [1280, 800], [1440, 900]]) {
     await page.setViewportSize({ width, height });
     await page.waitForFunction(expected => innerWidth === expected, width);
     await page.locator(width < 768 ? '.app-bottom-nav' : '.app-sidebar').waitFor();
@@ -336,7 +341,16 @@ async function touchScenarios(page, context) {
   await button(page, 'Coach').tap();
   await settled(page, 'Coach');
   assert.equal(await page.evaluate(() => window.__gestureQA.pointerType), 'touch');
-  if (engine !== 'chromium') return { touchTap: true, gestureInput: 'tap Playwright, arrastre con mouse en matriz', touchAction: reduced };
+  const destinations = ['Coach'];
+  if (navLift) {
+    for (const tab of ['Datos', 'Perfil', 'Inicio', 'Coach']) {
+      await button(page, tab).tap();
+      await settled(page, tab);
+      assert.equal(await page.evaluate(() => window.__gestureQA.pointerType), 'touch');
+      destinations.push(tab);
+    }
+  }
+  if (engine !== 'chromium') return { touchTap: true, destinations, gestureInput: 'tap Playwright, arrastre con mouse en matriz', touchAction: reduced };
   const session = await context.newCDPSession(page);
   const input = await touch(session);
   const vertical = await perform(page, input, 0, -75, 'Coach', traceVertical);
@@ -353,7 +367,7 @@ async function touchScenarios(page, context) {
   await settled(page, 'Perfil');
   await keyboardFocus(page, 'Inicio', 'Coach', 'Perfil');
   const scroll = await neighbourScroll(page, input);
-  return { touchTap: true, gestureInput: 'Chromium Input.dispatchTouchEvent', vertical, horizontal, cancelled: true, scroll, touchAction: reduced };
+  return { touchTap: true, destinations, gestureInput: 'Chromium Input.dispatchTouchEvent', vertical, horizontal, cancelled: true, scroll, touchAction: reduced };
 }
 
 async function profileScrollEnd(page) {
@@ -373,6 +387,7 @@ async function profileScrollEnd(page) {
     return {
       control: last.textContent.trim(), hit: last.contains(hit),
       clearance: capsule.top - control.bottom, bottomGap: innerHeight - capsule.bottom,
+      reserved: parseFloat(getComputedStyle(el).paddingBottom),
       leftGap: capsule.left, rightGap: innerWidth - capsule.right,
       width: innerWidth, horizontalOverflow: Math.max(el.scrollWidth - el.clientWidth, document.documentElement.scrollWidth - innerWidth),
       scroll: el.scrollTop, max: el.scrollHeight - el.clientHeight,
@@ -430,8 +445,15 @@ async function profileScenarios(page, context) {
       await cdp.detach();
     }
   }
+  let enlarged = null;
+  if (navLift) {
+    await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
+    enlarged = await profileScrollEnd(page);
+    await page.evaluate(() => { document.documentElement.style.fontSize = ''; });
+    assert.ok(open.bottomGap >= 18 && enlarged.reserved > open.reserved, JSON.stringify({ open, enlarged }));
+  }
   await settled(page, 'Perfil');
-  return { themes, closed, open, safeArea, keyboardFocus };
+  return { themes, closed, open, safeArea, keyboardFocus, enlarged };
 }
 
 async function checked(result, run) {
@@ -548,7 +570,7 @@ try {
     const responsiveReport = await checked(await mount({ theme: 'light' }), dimensions);
     const touchReport = await checked(await mount({ theme: 'light', touch: true }), async (page, context) => {
       const touch = await touchScenarios(page, context);
-      if (profileAdjustment) touch.profile = await profileScenarios(page, context);
+      if (profileAdjustment || navLift) touch.profile = await profileScenarios(page, context);
       return touch;
     });
     const report = { engine, version: browser.version(), mouse: mouseReport, responsive: responsiveReport, touch: touchReport };

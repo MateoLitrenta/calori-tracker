@@ -1,0 +1,186 @@
+{
+  "engine": "chromium",
+  "version": "158.0.8127.37",
+  "scenarios": [
+    {
+      "width": 375,
+      "theme": "light",
+      "week": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "weekDays": [
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+        "Domingo"
+      ],
+      "energy": [
+        {
+          "date": "2026-11-13",
+          "intake": 1250,
+          "gasto": 2281,
+          "saldo": -1031,
+          "category": "Déficit Alto",
+          "tracks": [
+            54.8005,
+            100
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "intake": 1679,
+          "gasto": 1679,
+          "saldo": 0,
+          "category": "Mantenimiento",
+          "tracks": [
+            100,
+            100
+          ]
+        },
+        {
+          "date": "2026-11-12",
+          "intake": 3100,
+          "gasto": 2449,
+          "saldo": 651,
+          "category": "Superávit Alto",
+          "tracks": [
+            100,
+            79
+          ]
+        }
+      ],
+      "forms": [
+        {
+          "name": "Agregar comida",
+          "date": "2026-11-12",
+          "layout": "sheet",
+          "preservedDraftUntilConfirmed": true,
+          "focusRestored": true,
+          "scrollPreserved": true
+        },
+        {
+          "name": "Agregar ejercicio",
+          "date": "2026-11-09",
+          "layout": "sheet",
+          "preservedDraftUntilConfirmed": true,
+          "focusRestored": true,
+          "scrollPreserved": true
+        }
+      ],
+      "history": {
+        "inspected": "2026-11-09",
+        "registerDayBeforeOpening": "2026-11-13",
+        "registerDayAfterOpening": "2026-11-09",
+        "focusOnJournal": true
+      },
+      "scroll": {
+        "before": 230,
+        "after": 230
+      },
+      "usage": {
+        "writes": 0,
+        "aiCalls": 0,
+        "externalRequests": 0
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "week": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "weekDays": [
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+        "Domingo"
+      ],
+      "energy": [
+        {
+          "date": "2026-11-13",
+          "intake": 1250,
+          "gasto": 2281,
+          "saldo": -1031,
+          "category": "Déficit Alto",
+          "tracks": [
+            54.8005,
+            100
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "intake": 1679,
+          "gasto": 1679,
+          "saldo": 0,
+          "category": "Mantenimiento",
+          "tracks": [
+            100,
+            100
+          ]
+        },
+        {
+          "date": "2026-11-12",
+          "intake": 3100,
+          "gasto": 2449,
+          "saldo": 651,
+          "category": "Superávit Alto",
+          "tracks": [
+            100,
+            79
+          ]
+        }
+      ],
+      "forms": [
+        {
+          "name": "Agregar comida",
+          "date": "2026-11-12",
+          "layout": "dialog",
+          "preservedDraftUntilConfirmed": true,
+          "focusRestored": true,
+          "scrollPreserved": true
+        },
+        {
+          "name": "Agregar ejercicio",
+          "date": "2026-11-09",
+          "layout": "dialog",
+          "preservedDraftUntilConfirmed": true,
+          "focusRestored": true,
+          "scrollPreserved": true
+        }
+      ],
+      "history": {
+        "inspected": "2026-11-09",
+        "registerDayBeforeOpening": "2026-11-13",
+        "registerDayAfterOpening": "2026-11-09",
+        "focusOnJournal": true
+      },
+      "scroll": {
+        "before": 230,
+        "after": 230
+      },
+      "usage": {
+        "writes": 0,
+        "aiCalls": 0,
+        "externalRequests": 0
+      }
+    }
+  ]
+}

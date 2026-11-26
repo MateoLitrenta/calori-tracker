@@ -3,8 +3,11 @@
   --glass-nav-mobile-inset: 4px;
   --glass-nav-mobile-height: max(56px, calc(36px + .9rem));
   --glass-nav-mobile-radius: calc(var(--glass-nav-mobile-height) / 2);
-  --glass-nav-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+  --glass-nav-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --glass-nav-lift: 12px;
+  --glass-nav-bottom: calc(6px + var(--glass-nav-lift) + var(--glass-nav-safe-bottom));
   --glass-nav-reserve: calc(var(--glass-nav-mobile-height) + var(--glass-nav-bottom) + 2px);
+  --glass-nav-content-reserve: max(calc(6rem + var(--glass-nav-safe-bottom)), calc(var(--glass-nav-reserve) + 16px));
   --glass-nav-sidebar-radius: 26px;
   --glass-nav-sidebar-inset: 12px;
   --glass-nav-rim: color-mix(in srgb, var(--fit-control-line) 38%, transparent);
@@ -17,6 +20,17 @@
   --glass-nav-tint-high: 88%;
   --glass-nav-tint-low: 73%;
   --glass-nav-tint-glint: rgb(255 255 255 / .35);
+}
+
+/* Use the smaller browser frame so retracting Safari's bars does not change the extra gap. */
+@supports (height: 100svh) {
+  :root { --glass-nav-lift: clamp(12px, 2svh, 16px); }
+}
+
+@media (max-width: 767px) {
+  .app-shell:not(.app-shell-coach) {
+    --feedback-offset: max(calc(5.5rem + var(--glass-nav-safe-bottom)), calc(var(--glass-nav-reserve) + var(--space-small)));
+  }
 }
 
 html.dark {

@@ -1,0 +1,358 @@
+{
+  "engine": "webkit",
+  "browserVersion": "26.0",
+  "origin": "http://127.0.0.1:5194",
+  "syntheticViewport": true,
+  "states": [
+    {
+      "theme": "light",
+      "composer": [
+        {
+          "focus": true,
+          "caret": [
+            52,
+            52
+          ],
+          "field": [
+            318,
+            402
+          ],
+          "reader": [
+            165,
+            261
+          ],
+          "visible": [
+            12,
+            414
+          ],
+          "keyboard": "open",
+          "owner": "composer",
+          "navPadding": 0,
+          "width": 375
+        },
+        {
+          "focus": true,
+          "caret": [
+            52,
+            52
+          ],
+          "field": [
+            94,
+            178
+          ],
+          "reader": [
+            45,
+            81
+          ],
+          "visible": [
+            0,
+            190
+          ],
+          "keyboard": "open",
+          "owner": "composer",
+          "navPadding": 0,
+          "width": 667
+        },
+        {
+          "focus": true,
+          "caret": [
+            52,
+            52
+          ],
+          "field": [
+            117,
+            201
+          ],
+          "reader": [
+            45,
+            102
+          ],
+          "visible": [
+            0,
+            215
+          ],
+          "keyboard": "open",
+          "owner": "composer",
+          "navPadding": 0,
+          "width": 768
+        },
+        {
+          "focus": true,
+          "caret": [
+            52,
+            52
+          ],
+          "field": [
+            119,
+            203
+          ],
+          "reader": [
+            45,
+            106
+          ],
+          "visible": [
+            0,
+            215
+          ],
+          "keyboard": "open",
+          "owner": "composer",
+          "navPadding": 0,
+          "width": 767
+        },
+        {
+          "focus": true,
+          "caret": [
+            52,
+            52
+          ],
+          "field": [
+            306,
+            390
+          ],
+          "reader": [
+            153,
+            249
+          ],
+          "visible": [
+            0,
+            402
+          ],
+          "keyboard": "open",
+          "owner": "composer",
+          "navPadding": 0,
+          "width": 375
+        }
+      ],
+      "mealGeometry": {
+        "focus": true,
+        "caret": null,
+        "field": [
+          144,
+          188
+        ],
+        "reader": [
+          111,
+          414
+        ],
+        "visible": [
+          12,
+          414
+        ],
+        "keyboard": "open",
+        "owner": "proposal",
+        "navPadding": 0,
+        "width": 375
+      },
+      "exerciseGeometry": {
+        "focus": true,
+        "caret": [
+          4,
+          8
+        ],
+        "field": [
+          227.296875,
+          293.296875
+        ],
+        "reader": [
+          111,
+          414
+        ],
+        "visible": [
+          12,
+          414
+        ],
+        "keyboard": "open",
+        "owner": "proposal",
+        "navPadding": 0,
+        "width": 375
+      },
+      "afterKeyboard": {
+        "clearance": 2,
+        "bottomGap": 19.328125,
+        "capsuleHeight": 56,
+        "reserved": 77.339996,
+        "feedbackGap": 8
+      },
+      "shots": [],
+      "explicitWrites": 1,
+      "readingPosition": 240,
+      "rejectedNavigation": "Perfil",
+      "confirmedNavigation": "Inicio"
+    },
+    {
+      "theme": "dark",
+      "composer": [
+        {
+          "focus": true,
+          "caret": [
+            52,
+            52
+          ],
+          "field": [
+            318,
+            402
+          ],
+          "reader": [
+            165,
+            261
+          ],
+          "visible": [
+            12,
+            414
+          ],
+          "keyboard": "open",
+          "owner": "composer",
+          "navPadding": 0,
+          "width": 375
+        },
+        {
+          "focus": true,
+          "caret": [
+            52,
+            52
+          ],
+          "field": [
+            94,
+            178
+          ],
+          "reader": [
+            45,
+            81
+          ],
+          "visible": [
+            0,
+            190
+          ],
+          "keyboard": "open",
+          "owner": "composer",
+          "navPadding": 0,
+          "width": 667
+        },
+        {
+          "focus": true,
+          "caret": [
+            52,
+            52
+          ],
+          "field": [
+            117,
+            201
+          ],
+          "reader": [
+            45,
+            102
+          ],
+          "visible": [
+            0,
+            215
+          ],
+          "keyboard": "open",
+          "owner": "composer",
+          "navPadding": 0,
+          "width": 768
+        },
+        {
+          "focus": true,
+          "caret": [
+            52,
+            52
+          ],
+          "field": [
+            119,
+            203
+          ],
+          "reader": [
+            45,
+            106
+          ],
+          "visible": [
+            0,
+            215
+          ],
+          "keyboard": "open",
+          "owner": "composer",
+          "navPadding": 0,
+          "width": 767
+        },
+        {
+          "focus": true,
+          "caret": [
+            52,
+            52
+          ],
+          "field": [
+            306,
+            390
+          ],
+          "reader": [
+            153,
+            249
+          ],
+          "visible": [
+            0,
+            402
+          ],
+          "keyboard": "open",
+          "owner": "composer",
+          "navPadding": 0,
+          "width": 375
+        }
+      ],
+      "mealGeometry": {
+        "focus": true,
+        "caret": null,
+        "field": [
+          144,
+          188
+        ],
+        "reader": [
+          111,
+          414
+        ],
+        "visible": [
+          12,
+          414
+        ],
+        "keyboard": "open",
+        "owner": "proposal",
+        "navPadding": 0,
+        "width": 375
+      },
+      "exerciseGeometry": {
+        "focus": true,
+        "caret": [
+          4,
+          8
+        ],
+        "field": [
+          227.296875,
+          293.296875
+        ],
+        "reader": [
+          111,
+          414
+        ],
+        "visible": [
+          12,
+          414
+        ],
+        "keyboard": "open",
+        "owner": "proposal",
+        "navPadding": 0,
+        "width": 375
+      },
+      "afterKeyboard": {
+        "clearance": 2,
+        "bottomGap": 19.328125,
+        "capsuleHeight": 56,
+        "reserved": 77.339996,
+        "feedbackGap": 8
+      },
+      "shots": [],
+      "explicitWrites": 1,
+      "readingPosition": 240,
+      "rejectedNavigation": "Perfil",
+      "confirmedNavigation": "Inicio"
+    }
+  ]
+}

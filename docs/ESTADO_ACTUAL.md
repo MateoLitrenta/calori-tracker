@@ -1,18 +1,28 @@
 # Estado actual de Calori
 
-## Liquid Glass · Ajuste de Perfil en el PR Draft #103
+## Liquid Glass · Inicio etapa 2A
+
+La etapa parte del merge de navegación Liquid Glass del PR #103, `cee76612a4352e82f626fc4eaf2951998f792e9c`. El encabezado de Inicio enlaza con un panel redondeado para el calendario semanal y el balance. La superficie de lectura es sólida y usa el borde óptico y la sombra de la navegación. La selección del día y el botón Agregar comida toman el naranja de Calori. Las dos acciones conservan su disposición responsive y sus formularios.
+
+[Decisiones, comparativas y verificación](evidence/liquid-glass-home/README.md)
+
+La revisión del candidato `27f20caffeb976e57c4beffaa79a606d0c993184` aprobó la composición de Inicio 2A. En el mismo Draft se suma una separación inferior de 12 a 16 px a la cápsula móvil. El área segura sigue a cargo del navegador. Las reservas de contenido y avisos toman la altura y el nuevo margen de la cápsula.
+
+[Mediciones y recorrido de revisión en Safari](evidence/liquid-glass-home/ajuste-altura-nav/README.md)
+
+## Liquid Glass · Ajuste de Perfil integrado en el PR #103
 
 Sobre el candidato `397a5d258c39c1cfc4309d28626bbd93fe201d4f`, Perfil móvil incorpora la reserva inferior al área desplazable. El margen anterior recortaba las tarjetas justo antes de la cápsula. Ahora sus superficies pueden pasar detrás del vidrio y la reserva deja espacio para el último control y su foco.
 
 [Diagnóstico, comparativas y regresiones](evidence/liquid-glass-navigation/ajuste-perfil/README.md)
 
-## Liquid Glass · Refinamiento final de material en el PR Draft #103
+## Liquid Glass · Refinamiento final de material integrado en el PR #103
 
 La revisión de `3a61032d73b1bb674efb4f958bb909d4c246732f` aprobó el arrastre, los radios y la selección naranja. La última iteración deja pasar más fondo por el vidrio, en especial en la cápsula en Claro. Reduce el desenfoque y concentra el reflejo en el borde superior. El lateral sigue en su columna y el contenido de Inicio pasa por debajo de la cápsula durante el desplazamiento.
 
 [Comparativas, alcance y recorrido de revisión](evidence/liquid-glass-navigation/iteracion-final/README.md)
 
-## Liquid Glass · Iteración 2 de navegación en el PR Draft #103
+## Liquid Glass · Iteración 2 de navegación integrada en el PR #103
 
 Base del PR #102, `80c9a1500b68d877e1de5c57c4f6eae8f7a431fa`. La propuesta aplica material neutro translúcido y selección naranja a la cápsula inferior móvil y la barra lateral. El acabado parte de los colores de Fitness Moderno y se ajusta al teclado y las áreas seguras que ya usa la aplicación.
 

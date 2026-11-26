@@ -1,0 +1,5977 @@
+{
+  "browser": "158.0.8127.37",
+  "phase": "before",
+  "cases": [
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "zoom": 100,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 506,
+        "width": 300,
+        "height": 56,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 52.203125,
+        "bottom": 453.796875,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "zoom": 100,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 506,
+        "width": 300,
+        "height": 56,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 2,
+        "inputClearance": 14,
+        "viewportBottom": 568
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "light",
+      "zoom": 100,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 506,
+        "width": 300,
+        "height": 56,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 50.1875,
+        "bottom": 455.8125,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "light",
+      "zoom": 100,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 506,
+        "width": 300,
+        "height": 56,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 64,
+      "scrollPadding": 64,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 18.734375,
+        "bottom": 487.265625,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "zoom": 200,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 497.203125,
+        "width": 300,
+        "height": 64.796875,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 139.234375,
+        "bottom": 357.96875,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "zoom": 200,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 497.203125,
+        "width": 300,
+        "height": 64.796875,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 149.796875,
+      "reservePadding": 72.8,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 2,
+        "inputClearance": 14,
+        "viewportBottom": 568
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "light",
+      "zoom": 200,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 497.203125,
+        "width": 300,
+        "height": 64.796875,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 152.890625,
+        "bottom": 344.3125,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "light",
+      "zoom": 200,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 497.203125,
+        "width": 300,
+        "height": 64.796875,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 72.8,
+      "scrollPadding": 72.8,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 35.34375,
+        "bottom": 461.859375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "zoom": 100,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 750,
+        "width": 355,
+        "height": 56,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 51.5625,
+        "bottom": 698.4375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "zoom": 100,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 750,
+        "width": 355,
+        "height": 56,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 169.59375,
+        "inputClearance": 181.59375,
+        "viewportBottom": 812
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "light",
+      "zoom": 100,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 750,
+        "width": 355,
+        "height": 56,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 50.1875,
+        "bottom": 699.8125,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "light",
+      "zoom": 100,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 750,
+        "width": 355,
+        "height": 56,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 64,
+      "scrollPadding": 64,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 18.5625,
+        "bottom": 731.4375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "zoom": 200,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 741.203125,
+        "width": 355,
+        "height": 64.796875,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 139.0625,
+        "bottom": 602.140625,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "zoom": 200,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 741.203125,
+        "width": 355,
+        "height": 64.796875,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 149.796875,
+      "reservePadding": 72.8,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 129,
+        "inputClearance": 141,
+        "viewportBottom": 812
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "light",
+      "zoom": 200,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 741.203125,
+        "width": 355,
+        "height": 64.796875,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 152.953125,
+        "bottom": 588.25,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "light",
+      "zoom": 200,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 741.203125,
+        "width": 355,
+        "height": 64.796875,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 72.8,
+      "scrollPadding": 72.8,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 34.984375,
+        "bottom": 706.21875,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "zoom": 100,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 782,
+        "width": 370,
+        "height": 56,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 52.359375,
+        "bottom": 729.640625,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "zoom": 100,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 782,
+        "width": 370,
+        "height": 56,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 185.59375,
+        "inputClearance": 197.59375,
+        "viewportBottom": 844
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "light",
+      "zoom": 100,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 782,
+        "width": 370,
+        "height": 56,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 49.875,
+        "bottom": 732.125,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "light",
+      "zoom": 100,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 782,
+        "width": 370,
+        "height": 56,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 64,
+      "scrollPadding": 64,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 18.5625,
+        "bottom": 763.4375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "zoom": 200,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 773.203125,
+        "width": 370,
+        "height": 64.796875,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 139.4375,
+        "bottom": 633.765625,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "zoom": 200,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 773.203125,
+        "width": 370,
+        "height": 64.796875,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 149.796875,
+      "reservePadding": 72.8,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 145,
+        "inputClearance": 157,
+        "viewportBottom": 844
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "light",
+      "zoom": 200,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 773.203125,
+        "width": 370,
+        "height": 64.796875,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 152.953125,
+        "bottom": 620.25,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "light",
+      "zoom": 200,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 773.203125,
+        "width": 370,
+        "height": 64.796875,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 72.8,
+      "scrollPadding": 72.8,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 34.984375,
+        "bottom": 738.21875,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "zoom": 100,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 894,
+        "width": 420,
+        "height": 56,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 51.5625,
+        "bottom": 842.4375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "zoom": 100,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 894,
+        "width": 420,
+        "height": 56,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 241.59375,
+        "inputClearance": 253.59375,
+        "viewportBottom": 956
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "light",
+      "zoom": 100,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 894,
+        "width": 420,
+        "height": 56,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 50.0625,
+        "bottom": 843.9375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "light",
+      "zoom": 100,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 894,
+        "width": 420,
+        "height": 56,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 64,
+      "scrollPadding": 64,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 18.5625,
+        "bottom": 875.4375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "zoom": 200,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 885.203125,
+        "width": 420,
+        "height": 64.796875,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 139.09375,
+        "bottom": 746.109375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "zoom": 200,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 885.203125,
+        "width": 420,
+        "height": 64.796875,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 149.796875,
+      "reservePadding": 72.8,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 201,
+        "inputClearance": 213,
+        "viewportBottom": 956
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "light",
+      "zoom": 200,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 885.203125,
+        "width": 420,
+        "height": 64.796875,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 153.40625,
+        "bottom": 731.796875,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "light",
+      "zoom": 200,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 885.203125,
+        "width": 420,
+        "height": 64.796875,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 72.8,
+      "scrollPadding": 72.8,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 35.078125,
+        "bottom": 850.125,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 506,
+        "width": 300,
+        "height": 56,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 52.203125,
+        "bottom": 453.796875,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 506,
+        "width": 300,
+        "height": 56,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 2,
+        "inputClearance": 14,
+        "viewportBottom": 568
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 506,
+        "width": 300,
+        "height": 56,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 50.1875,
+        "bottom": 455.8125,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 506,
+        "width": 300,
+        "height": 56,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ],
+        [
+          73,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 64,
+      "scrollPadding": 64,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 18.734375,
+        "bottom": 487.265625,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 497.203125,
+        "width": 300,
+        "height": 64.796875,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 139.234375,
+        "bottom": 357.96875,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 497.203125,
+        "width": 300,
+        "height": 64.796875,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 149.796875,
+      "reservePadding": 72.8,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 2,
+        "inputClearance": 14,
+        "viewportBottom": 568
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 497.203125,
+        "width": 300,
+        "height": 64.796875,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 152.890625,
+        "bottom": 344.3125,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 320,
+      "height": 568,
+      "smallHeight": 568,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 497.203125,
+        "width": 300,
+        "height": 64.796875,
+        "bottom": 562,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          73,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 72.8,
+      "scrollPadding": 72.8,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 35.34375,
+        "bottom": 461.859375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 750,
+        "width": 355,
+        "height": 56,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 51.5625,
+        "bottom": 698.4375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 750,
+        "width": 355,
+        "height": 56,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 169.59375,
+        "inputClearance": 181.59375,
+        "viewportBottom": 812
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 750,
+        "width": 355,
+        "height": 56,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 50.1875,
+        "bottom": 699.8125,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 750,
+        "width": 355,
+        "height": 56,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ],
+        [
+          86.75,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 64,
+      "scrollPadding": 64,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 18.5625,
+        "bottom": 731.4375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 741.203125,
+        "width": 355,
+        "height": 64.796875,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 139.0625,
+        "bottom": 602.140625,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 741.203125,
+        "width": 355,
+        "height": 64.796875,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 149.796875,
+      "reservePadding": 72.8,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 129,
+        "inputClearance": 141,
+        "viewportBottom": 812
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 741.203125,
+        "width": 355,
+        "height": 64.796875,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 152.953125,
+        "bottom": 588.25,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 375,
+      "height": 812,
+      "smallHeight": 812,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 741.203125,
+        "width": 355,
+        "height": 64.796875,
+        "bottom": 806,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          86.75,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 72.8,
+      "scrollPadding": 72.8,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 34.984375,
+        "bottom": 706.21875,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 782,
+        "width": 370,
+        "height": 56,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 52.359375,
+        "bottom": 729.640625,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 782,
+        "width": 370,
+        "height": 56,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 185.59375,
+        "inputClearance": 197.59375,
+        "viewportBottom": 844
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 782,
+        "width": 370,
+        "height": 56,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 49.875,
+        "bottom": 732.125,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 782,
+        "width": 370,
+        "height": 56,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 64,
+      "scrollPadding": 64,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 18.5625,
+        "bottom": 763.4375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 773.203125,
+        "width": 370,
+        "height": 64.796875,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 139.4375,
+        "bottom": 633.765625,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 773.203125,
+        "width": 370,
+        "height": 64.796875,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 149.796875,
+      "reservePadding": 72.8,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 145,
+        "inputClearance": 157,
+        "viewportBottom": 844
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 773.203125,
+        "width": 370,
+        "height": 64.796875,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 152.953125,
+        "bottom": 620.25,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 773.203125,
+        "width": 370,
+        "height": 64.796875,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          90.5,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 72.8,
+      "scrollPadding": 72.8,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 34.984375,
+        "bottom": 738.21875,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 894,
+        "width": 420,
+        "height": 56,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 51.5625,
+        "bottom": 842.4375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 894,
+        "width": 420,
+        "height": 56,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 241.59375,
+        "inputClearance": 253.59375,
+        "viewportBottom": 956
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 894,
+        "width": 420,
+        "height": 56,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 50.0625,
+        "bottom": 843.9375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "dark",
+      "zoom": 100,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 894,
+        "width": 420,
+        "height": 56,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ],
+        [
+          103,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 64,
+      "scrollPadding": 64,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 18.5625,
+        "bottom": 875.4375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 885.203125,
+        "width": 420,
+        "height": 64.796875,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Historial y tendenciasExplorá tus semanas, meses y años",
+        "clearance": 139.09375,
+        "bottom": 746.109375,
+        "hit": true
+      }
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 885.203125,
+        "width": 420,
+        "height": 64.796875,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 149.796875,
+      "reservePadding": 72.8,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 201,
+        "inputClearance": 213,
+        "viewportBottom": 956
+      },
+      "last": null
+    },
+    {
+      "name": "Datos",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 885.203125,
+        "width": 420,
+        "height": 64.796875,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 192,
+      "scrollPadding": 0,
+      "coach": null,
+      "last": {
+        "last": "Actividad",
+        "clearance": 153.40625,
+        "bottom": 731.796875,
+        "hit": true
+      }
+    },
+    {
+      "name": "Perfil",
+      "theme": "dark",
+      "zoom": 200,
+      "width": 440,
+      "height": 956,
+      "smallHeight": 956,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 885.203125,
+        "width": 420,
+        "height": 64.796875,
+        "bottom": 950,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "32.4px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "28.4px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ],
+        [
+          103,
+          56.796875,
+          true,
+          0
+        ]
+      ],
+      "reserve": 72.796875,
+      "offset": 176,
+      "reservePadding": 72.8,
+      "scrollPadding": 72.8,
+      "coach": null,
+      "last": {
+        "last": "Gestión de datos",
+        "clearance": 35.078125,
+        "bottom": 850.125,
+        "hit": true
+      }
+    }
+  ],
+  "safeAreas": [
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "inset": 34,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 34,
+      "capsule": {
+        "top": 748,
+        "width": 336,
+        "height": 56,
+        "bottom": 804,
+        "left": 30,
+        "right": 24,
+        "gap": 40,
+        "gapInShell": 40,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 98,
+      "offset": 122,
+      "reservePadding": 130,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "inset": 34,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 34,
+      "capsule": {
+        "top": 748,
+        "width": 336,
+        "height": 56,
+        "bottom": 804,
+        "left": 30,
+        "right": 24,
+        "gap": 40,
+        "gapInShell": 40,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 98,
+      "offset": 175,
+      "reservePadding": 98,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 168.59375,
+        "inputClearance": 180.59375,
+        "viewportBottom": 844
+      }
+    },
+    {
+      "name": "Datos",
+      "theme": "light",
+      "inset": 34,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 34,
+      "capsule": {
+        "top": 748,
+        "width": 336,
+        "height": 56,
+        "bottom": 804,
+        "left": 30,
+        "right": 24,
+        "gap": 40,
+        "gapInShell": 40,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 98,
+      "offset": 122,
+      "reservePadding": 130,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Perfil",
+      "theme": "light",
+      "inset": 34,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 34,
+      "capsule": {
+        "top": 748,
+        "width": 336,
+        "height": 56,
+        "bottom": 804,
+        "left": 30,
+        "right": 24,
+        "gap": 40,
+        "gapInShell": 40,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 98,
+      "offset": 122,
+      "reservePadding": 98,
+      "scrollPadding": 98,
+      "coach": null
+    },
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "inset": 21,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 21,
+      "capsule": {
+        "top": 761,
+        "width": 336,
+        "height": 56,
+        "bottom": 817,
+        "left": 30,
+        "right": 24,
+        "gap": 27,
+        "gapInShell": 27,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 85,
+      "offset": 109,
+      "reservePadding": 117,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "inset": 21,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 21,
+      "capsule": {
+        "top": 761,
+        "width": 336,
+        "height": 56,
+        "bottom": 817,
+        "left": 30,
+        "right": 24,
+        "gap": 27,
+        "gapInShell": 27,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 85,
+      "offset": 162,
+      "reservePadding": 85,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 175.09375,
+        "inputClearance": 187.09375,
+        "viewportBottom": 844
+      }
+    },
+    {
+      "name": "Datos",
+      "theme": "light",
+      "inset": 21,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 21,
+      "capsule": {
+        "top": 761,
+        "width": 336,
+        "height": 56,
+        "bottom": 817,
+        "left": 30,
+        "right": 24,
+        "gap": 27,
+        "gapInShell": 27,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 85,
+      "offset": 109,
+      "reservePadding": 117,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Perfil",
+      "theme": "light",
+      "inset": 21,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 21,
+      "capsule": {
+        "top": 761,
+        "width": 336,
+        "height": 56,
+        "bottom": 817,
+        "left": 30,
+        "right": 24,
+        "gap": 27,
+        "gapInShell": 27,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 85,
+      "offset": 109,
+      "reservePadding": 85,
+      "scrollPadding": 85,
+      "coach": null
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "inset": 34,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 34,
+      "capsule": {
+        "top": 748,
+        "width": 336,
+        "height": 56,
+        "bottom": 804,
+        "left": 30,
+        "right": 24,
+        "gap": 40,
+        "gapInShell": 40,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 98,
+      "offset": 122,
+      "reservePadding": 130,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "inset": 34,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 34,
+      "capsule": {
+        "top": 748,
+        "width": 336,
+        "height": 56,
+        "bottom": 804,
+        "left": 30,
+        "right": 24,
+        "gap": 40,
+        "gapInShell": 40,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 98,
+      "offset": 175,
+      "reservePadding": 98,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 168.59375,
+        "inputClearance": 180.59375,
+        "viewportBottom": 844
+      }
+    },
+    {
+      "name": "Datos",
+      "theme": "dark",
+      "inset": 34,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 34,
+      "capsule": {
+        "top": 748,
+        "width": 336,
+        "height": 56,
+        "bottom": 804,
+        "left": 30,
+        "right": 24,
+        "gap": 40,
+        "gapInShell": 40,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 98,
+      "offset": 122,
+      "reservePadding": 130,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Perfil",
+      "theme": "dark",
+      "inset": 34,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 34,
+      "capsule": {
+        "top": 748,
+        "width": 336,
+        "height": 56,
+        "bottom": 804,
+        "left": 30,
+        "right": 24,
+        "gap": 40,
+        "gapInShell": 40,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 98,
+      "offset": 122,
+      "reservePadding": 98,
+      "scrollPadding": 98,
+      "coach": null
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "inset": 21,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 21,
+      "capsule": {
+        "top": 761,
+        "width": 336,
+        "height": 56,
+        "bottom": 817,
+        "left": 30,
+        "right": 24,
+        "gap": 27,
+        "gapInShell": 27,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 85,
+      "offset": 109,
+      "reservePadding": 117,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "inset": 21,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 21,
+      "capsule": {
+        "top": 761,
+        "width": 336,
+        "height": 56,
+        "bottom": 817,
+        "left": 30,
+        "right": 24,
+        "gap": 27,
+        "gapInShell": 27,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 85,
+      "offset": 162,
+      "reservePadding": 85,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 175.09375,
+        "inputClearance": 187.09375,
+        "viewportBottom": 844
+      }
+    },
+    {
+      "name": "Datos",
+      "theme": "dark",
+      "inset": 21,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 21,
+      "capsule": {
+        "top": 761,
+        "width": 336,
+        "height": 56,
+        "bottom": 817,
+        "left": 30,
+        "right": 24,
+        "gap": 27,
+        "gapInShell": 27,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 85,
+      "offset": 109,
+      "reservePadding": 117,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Perfil",
+      "theme": "dark",
+      "inset": 21,
+      "method": "CDP",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 21,
+      "capsule": {
+        "top": 761,
+        "width": 336,
+        "height": 56,
+        "bottom": 817,
+        "left": 30,
+        "right": 24,
+        "gap": 27,
+        "gapInShell": 27,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ],
+        [
+          82,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 85,
+      "offset": 109,
+      "reservePadding": 85,
+      "scrollPadding": 85,
+      "coach": null
+    }
+  ],
+  "resize": [
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "width": 667,
+      "height": 375,
+      "smallHeight": 375,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 313,
+        "width": 448,
+        "height": 56,
+        "bottom": 369,
+        "left": 109.5,
+        "right": 109.5,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          110,
+          48,
+          true,
+          0
+        ],
+        [
+          110,
+          48,
+          true,
+          0
+        ],
+        [
+          110,
+          48,
+          true,
+          0
+        ],
+        [
+          110,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "width": 667,
+      "height": 375,
+      "smallHeight": 375,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 313,
+        "width": 448,
+        "height": 56,
+        "bottom": 369,
+        "left": 109.5,
+        "right": 109.5,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          110,
+          48,
+          true,
+          0
+        ],
+        [
+          110,
+          48,
+          true,
+          0
+        ],
+        [
+          110,
+          48,
+          true,
+          0
+        ],
+        [
+          110,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 2,
+        "inputClearance": 14,
+        "viewportBottom": 375
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "width": 390,
+      "height": 736,
+      "smallHeight": 736,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 674,
+        "width": 370,
+        "height": 56,
+        "bottom": 730,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "width": 390,
+      "height": 736,
+      "smallHeight": 736,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 674,
+        "width": 370,
+        "height": 56,
+        "bottom": 730,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 131.59375,
+        "inputClearance": 143.59375,
+        "viewportBottom": 736
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "light",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 782,
+        "width": 370,
+        "height": 56,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Coach",
+      "theme": "light",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 782,
+        "width": 370,
+        "height": 56,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 185.59375,
+        "inputClearance": 197.59375,
+        "viewportBottom": 844
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "width": 667,
+      "height": 375,
+      "smallHeight": 375,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 313,
+        "width": 448,
+        "height": 56,
+        "bottom": 369,
+        "left": 109.5,
+        "right": 109.5,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          110,
+          48,
+          true,
+          0
+        ],
+        [
+          110,
+          48,
+          true,
+          0
+        ],
+        [
+          110,
+          48,
+          true,
+          0
+        ],
+        [
+          110,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "width": 667,
+      "height": 375,
+      "smallHeight": 375,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 313,
+        "width": 448,
+        "height": 56,
+        "bottom": 369,
+        "left": 109.5,
+        "right": 109.5,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          110,
+          48,
+          true,
+          0
+        ],
+        [
+          110,
+          48,
+          true,
+          0
+        ],
+        [
+          110,
+          48,
+          true,
+          0
+        ],
+        [
+          110,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 2,
+        "inputClearance": 14,
+        "viewportBottom": 375
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "width": 390,
+      "height": 736,
+      "smallHeight": 736,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 674,
+        "width": 370,
+        "height": 56,
+        "bottom": 730,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "width": 390,
+      "height": 736,
+      "smallHeight": 736,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 674,
+        "width": 370,
+        "height": 56,
+        "bottom": 730,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 131.59375,
+        "inputClearance": 143.59375,
+        "viewportBottom": 736
+      }
+    },
+    {
+      "name": "Inicio",
+      "theme": "dark",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 782,
+        "width": 370,
+        "height": 56,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 88,
+      "reservePadding": 96,
+      "scrollPadding": 0,
+      "coach": null
+    },
+    {
+      "name": "Coach",
+      "theme": "dark",
+      "width": 390,
+      "height": 844,
+      "smallHeight": 844,
+      "cssSafe": 0,
+      "capsule": {
+        "top": 782,
+        "width": 370,
+        "height": 56,
+        "bottom": 838,
+        "left": 10,
+        "right": 10,
+        "gap": 6,
+        "gapInShell": 6,
+        "radius": "28px",
+        "background": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(10px) saturate(1.1)"
+      },
+      "indicator": {
+        "radius": "24px",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0)) repeat scroll 0% 0% / auto padding-box border-box",
+        "duration": "0s"
+      },
+      "selectionAligned": true,
+      "horizontalOverflow": 0,
+      "buttons": [
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ],
+        [
+          90.5,
+          48,
+          true,
+          0
+        ]
+      ],
+      "reserve": 64,
+      "offset": 141,
+      "reservePadding": 64,
+      "scrollPadding": 0,
+      "coach": {
+        "composerClearance": 185.59375,
+        "inputClearance": 197.59375,
+        "viewportBottom": 844
+      }
+    }
+  ],
+  "desktop": [
+    {
+      "theme": "light",
+      "navHidden": true,
+      "geometry": [
+        12,
+        12,
+        244,
+        744
+      ],
+      "style": [
+        "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 1 0.996078 0.980392 / 0.83) none repeat scroll 0% 0% / auto padding-box border-box",
+        "26px",
+        "blur(12px) saturate(1.1)",
+        "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+      ]
+    },
+    {
+      "theme": "dark",
+      "navHidden": true,
+      "geometry": [
+        12,
+        12,
+        244,
+        744
+      ],
+      "style": [
+        "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.101961 0.129412 0.121569 / 0.85) none repeat scroll 0% 0% / auto padding-box border-box",
+        "26px",
+        "blur(12px) saturate(1.1)",
+        "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+      ]
+    }
+  ],
+  "warnings": []
+}
