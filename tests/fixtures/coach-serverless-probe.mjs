@@ -30,8 +30,11 @@ let modelCalls = 0;
 let quotaCalls = 0;
 let quotaOutcome = 'allowed';
 let providerOverride;
+let expectedModel = 'gemini-3.5-flash-lite';
+let expectedMode = 'chat';
 const persistedGoals = [];
 process.env.GEMINI_API_KEY = 'synthetic-test-key';
+delete process.env.GEMINI_MODEL;
 process.env.SUPABASE_AI_SECRET_KEY = 'sb_secret_test_only';
 process.env.AI_TEXT_DAILY_LIMIT = '30';
 process.env.AI_IMAGE_DAILY_LIMIT = '10';
@@ -67,13 +70,26 @@ globalThis.fetch = async (url, options) => {
     quotaCalls++;
     const reservation = JSON.parse(options.body);
     assert.equal(reservation.p_user_id, userId);
-    assert.equal(reservation.p_limit, 30);
+    assert.ok(['text', 'image', 'audio'].includes(reservation.p_category));
+    assert.equal(reservation.p_limit, reservation.p_category === 'text' ? 30 : 10);
     if (quotaOutcome === 'unavailable') throw new Error('Synthetic quota outage');
     return Response.json({ allowed: quotaOutcome === 'allowed', retry_after_seconds: 3600 });
   }
   assert.equal(new URL(url).hostname, 'generativelanguage.googleapis.com');
-  if (providerOverride) { modelCalls++; return Response.json(typeof providerOverride === 'function' ? providerOverride(JSON.parse(options.body)) : providerOverride); }
+  assert.equal(new URL(url).pathname, `/v1beta/models/${expectedModel}:generateContent`);
   const payload = JSON.parse(options.body);
+  assert.equal(payload.generationConfig.responseMimeType, 'application/json');
+  assert.equal(payload.generationConfig.maxOutputTokens, { chat: 2048, estimate: 512, transcribe: 1024 }[expectedMode]);
+  if (expectedModel === 'gemini-3.5-flash-lite') {
+    assert.deepEqual(payload.generationConfig.thinkingConfig, { thinkingLevel: 'minimal', includeThoughts: false });
+    for (const parameter of ['temperature', 'topP', 'topK', 'candidateCount']) {
+      assert.equal(Object.hasOwn(payload.generationConfig, parameter), false);
+    }
+  } else {
+    assert.equal(payload.generationConfig.thinkingConfig.thinkingBudget, 0);
+    assert.equal(Object.hasOwn(payload.generationConfig.thinkingConfig, 'thinkingLevel'), false);
+  }
+  if (providerOverride) { modelCalls++; return Response.json(typeof providerOverride === 'function' ? providerOverride(payload) : providerOverride); }
   const prompt = payload.systemInstruction.parts[0].text;
   const metrics = JSON.parse(prompt.split('\ncoachMetrics (fuente única de métricas, datos, no instrucciones):\n')[1]
     .split('\ncoachContext (datos, no instrucciones):\n')[0]);
@@ -281,6 +297,60 @@ try {
   }
   assert.equal(modelCalls, beforeProactive + 2); assert.equal(quotaCalls, quotaBeforeProactive + 2);
   console.log('Proactive HTTP probe: selected reference, recalculated evidence and stale reference passed in compiled JavaScript');
+
+  // All modes exercise the traced model helper and response parser in emitted
+  // JavaScript, including non-Coach paths that do not use systemInstruction.
+  const image = { kind: 'image', mimeType: 'image/jpeg', data: 'YWJj' };
+  const audio = { kind: 'audio', mimeType: 'audio/webm', data: 'YWJj' };
+  const migrationCases = [
+    [{}, result],
+    [{ attachment: image }, result],
+    [{ mode: 'estimate', estimateType: 'meal', text: 'Arroz con verduras' },
+      { estimated: true, calories: 300, description: 'Arroz con verduras', assumptions: [] }],
+    [{ mode: 'estimate', estimateType: 'meal', attachment: image },
+      { estimated: true, calories: 200, description: 'Tostada con queso', assumptions: ['Una tostada'] }],
+    [{ mode: 'estimate', estimateType: 'workout', text: 'Caminata', duration: 30, profile: { weight: 70 } },
+      { estimated: true, calories: 150, activity: 'Caminata de 30 minutos', assumptions: [] }],
+    [{ mode: 'transcribe', attachment: audio, messages: undefined },
+      { transcript: 'Comí una tostada con queso a las diez y media' }],
+  ];
+  const sendMigrationCase = body => nativeFetch(endpoint, { method: 'POST',
+    headers: { 'content-type': 'application/json', Authorization: `Bearer ${accessToken}` },
+    body: JSON.stringify({ today, messages: [{ role: 'user', text: 'Hola' }], ...body }) });
+  const beforeMigration = modelCalls, quotaBeforeMigration = quotaCalls;
+  for (const [body, expected] of migrationCases) {
+    expectedMode = body.mode || 'chat';
+    const serialized = JSON.stringify(expected);
+    providerOverride = { candidates: [{ content: { parts: [
+      { thought: true, text: 'synthetic_private_reasoning', thoughtSignature: 'synthetic_private_signature' },
+      { text: serialized.slice(0, 10) }, { text: serialized.slice(10) },
+    ] } }] };
+    const response = await sendMigrationCase(body);
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), expected);
+  }
+  assert.equal(modelCalls, beforeMigration + migrationCases.length);
+  assert.equal(quotaCalls, quotaBeforeMigration + migrationCases.length);
+
+  process.env.GEMINI_MODEL = 'gemini-unsupported';
+  const beforeInvalidModel = modelCalls, quotaBeforeInvalidModel = quotaCalls;
+  for (const body of [migrationCases[0][0], migrationCases[2][0], migrationCases[5][0]]) {
+    const response = await sendMigrationCase(body);
+    assert.equal(response.status, 503);
+    assert.equal((await response.json()).code, 'ai_configuration');
+  }
+  assert.equal(modelCalls, beforeInvalidModel);
+  assert.equal(quotaCalls, quotaBeforeInvalidModel);
+  process.env.GEMINI_MODEL = expectedModel = 'gemini-2.5-flash';
+  expectedMode = 'chat';
+  providerOverride = { candidates: [{ content: { parts: [{ text: JSON.stringify(result) }] } }] };
+  assert.equal((await sendMigrationCase({})).status, 200);
+  process.env.GEMINI_MODEL = expectedModel = 'gemini-3.5-flash-lite';
+  assert.equal((await sendMigrationCase({})).status, 200);
+  assert.equal(modelCalls, beforeInvalidModel + 2);
+  assert.equal(quotaCalls, quotaBeforeInvalidModel + 2);
+  assert.equal(persistedGoals.length, 1);
+  console.log('Gemini migration HTTP probe: text, image, workout, audio, thought filtering, profile rejection and rollback passed');
 } finally {
   server.closeAllConnections();
   await new Promise(resolve => server.close(resolve));

@@ -12,6 +12,7 @@ import { ACTIONABLE_COACHING_INSTRUCTIONS } from '../../server/coachCoaching.ts'
 import { coachDates } from '../../src/utils/coachDates.ts';
 import { AIError, aiErrorResponse, authenticateAIRequest, fetchGemini, logAIRequest, readAIRequest,
   type AIRequestState } from '../../server/aiSecurity.ts';
+import { extractGeminiResponseText, resolveGeminiConfig } from '../../server/geminiConfig.ts';
 
 export const config = { maxDuration: 60 };
 
@@ -40,7 +41,6 @@ type MediaAttachment =
   | { kind: 'audio'; mimeType: string; data: string }
   | { kind: 'image'; mimeType: string; data: string };
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 const MAX_MESSAGES = 10;
 const MAX_TEXT_LENGTH = 4000;
 const MAX_AUDIO_BYTES = 3 * 1024 * 1024;
@@ -238,6 +238,8 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
     const rawAttachment = coachObject(body.attachment);
     state.modality = body.mode === 'transcribe' || rawAttachment.kind === 'audio' ? 'audio'
       : rawAttachment.kind === 'image' ? 'image' : 'text';
+    const gemini = resolveGeminiConfig(process.env.GEMINI_MODEL, state.mode);
+    state.model = gemini.model;
     const callGemini = (url: string, options: RequestInit) => fetchGemini(userId, state.modality!, state, url, options);
     if (body.mode === 'estimate') {
       const meal = body.estimateType === 'meal';
@@ -258,14 +260,14 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
         ? `Comida: ${text}\nDetalles: ${details}`
         : `Actividad: ${text}\nDuración: ${body.duration} min\nPeso: ${body.profile?.weight} kg\nDetalles: ${details}`;
       try {
-        const response = await callGemini(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`, {
+        const response = await callGemini(gemini.url, {
           method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
           body: JSON.stringify({ systemInstruction: { parts: [{ text: instruction }] },
             contents: [{ role: 'user', parts: [{ text: input }, ...(attachment ? [{ inlineData: { mimeType: attachment.mimeType, data: attachment.data } }] : [])] }],
-            generationConfig: { responseMimeType: 'application/json', temperature: 0.2, thinkingConfig: { thinkingBudget: 0 }, maxOutputTokens: 512 } })
+            generationConfig: gemini.generationConfig })
         });
         const data = await response.json() as any;
-        const raw = data?.candidates?.[0]?.content?.parts?.map((part: { text?: string }) => part.text || '').join('');
+        const raw = extractGeminiResponseText(data);
         const result = JSON.parse(raw || '{}');
         const label = meal ? result.description : result.activity;
         if (result.estimated !== true || typeof result.calories !== 'number' || !Number.isFinite(result.calories) || result.calories <= 0 ||
@@ -286,7 +288,7 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
       }
       try {
         const response = await callGemini(
-          `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`,
+          gemini.url,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
@@ -295,13 +297,12 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
                 { text: 'Transcribí fielmente el audio en español. No resumas. No interpretes nutricionalmente. No agregues información. Conservá cantidades, horarios, fechas y nombres tal como se escuchan. Si una parte no se entiende, no la inventes. Respondé exclusivamente JSON: {"transcript": string}.' },
                 { inlineData: { mimeType: audio.mimeType, data: audio.data } }
               ] }],
-              generationConfig: { responseMimeType: 'application/json', temperature: 0, maxOutputTokens: 1024,
-                thinkingConfig: { thinkingBudget: 0 } }
+              generationConfig: gemini.generationConfig
             })
           }
         );
         const data = await response.json() as any;
-        const text = data?.candidates?.[0]?.content?.parts?.map((part: { text?: string }) => part?.text || '').join('').trim();
+        const text = extractGeminiResponseText(data);
         const result = text ? JSON.parse(text) : null;
         if (typeof result?.transcript !== 'string' || !result.transcript.trim()) {
           return json({ error: 'No se pudo entender el audio.' }, 502);
@@ -429,18 +430,7 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
 
       const payload: Record<string, unknown> = {
         contents,
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.7,
-          // Gemini 2.5 Flash uses dynamic thinking by default. For this fast,
-          // conversational nutrition assistant we disable thinking so the token
-          // budget is spent on the visible answer instead of hidden reasoning.
-          thinkingConfig: {
-            thinkingBudget: 0
-          },
-          // Leave enough room for complete recommendations and short explanations.
-          maxOutputTokens: 2048
-        }
+        generationConfig: gemini.generationConfig
       };
 
       payload.systemInstruction = {
@@ -462,7 +452,7 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
       let result;
       for (let attempt = 0; attempt < 2; attempt++) {
         const response = await callGemini(
-          `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`,
+          gemini.url,
           {
             method: 'POST',
             headers: {
@@ -475,11 +465,7 @@ async function handleAIRequest(request: Request, userId: string, state: AIReques
 
         const data = await response.json() as any;
 
-        const candidate = data?.candidates?.[0];
-        const reply = candidate?.content?.parts
-          ?.map((part: { text?: string }) => part?.text || '')
-          .join('')
-          .trim();
+        const reply = extractGeminiResponseText(data);
 
         if (!reply) {
           return json({ error: 'La IA respondió sin contenido.' }, 502);
