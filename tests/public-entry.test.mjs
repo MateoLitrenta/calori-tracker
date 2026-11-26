@@ -44,6 +44,7 @@ const imports = {
   './hooks/useAppStore': stub('export const useAppStore = () => globalThis.__entryHarness.profileStore;'),
   './utils/entryRoute': new URL('../src/utils/entryRoute.ts', import.meta.url).href,
   './lib/coachViewport': new URL('../src/lib/coachViewport.ts', import.meta.url).href,
+  '../lib/bottomNavDrag': new URL('../src/lib/bottomNavDrag.ts', import.meta.url).href,
   ...Object.fromEntries(['Sidebar', 'BottomNav', 'AuthModal', 'ThemeToggle', 'LandingPage', 'Onboarding']
     .map(name => [`./components/${name}`, stub(`export default function ${name}() { return null; }`)])),
 };
@@ -721,7 +722,7 @@ test('BottomNav preserves labels and navigation, with exactly one current page a
   const tabs = ['home', 'chat', 'charts', 'profile'];
   for (const activeTab of tabs) {
     const selected = [];
-    const tree = BottomNav({ activeTab, onTabChange: tab => selected.push(tab) });
+    const tree = mount(BottomNav, { activeTab, onTabChange: tab => selected.push(tab) }).render();
     const buttons = nodes(tree, element => element.type === 'button');
     assert.equal(nodes(tree, element => element.props.className === 'bottom-nav-indicator').length, 1);
     assert.equal(node(tree, element => element.props.style?.['--active-index'] !== undefined).props.style['--active-index'], tabs.indexOf(activeTab));

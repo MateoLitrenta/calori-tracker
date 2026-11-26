@@ -1,10 +1,12 @@
 # Estado actual de Calori
 
-## Liquid Glass · Etapa 1 de navegación en revisión
+## Liquid Glass · Iteración 2 de navegación en el PR Draft #103
 
 Base del PR #102, `80c9a1500b68d877e1de5c57c4f6eae8f7a431fa`. La propuesta aplica material neutro translúcido y selección naranja a la cápsula inferior móvil y la barra lateral. El acabado parte de los colores de Fitness Moderno y se ajusta al teclado y las áreas seguras que ya usa la aplicación.
 
-[Decisiones, comparativas y recorrido de revisión](evidence/liquid-glass-navigation/README.md)
+La dirección de la primera versión, `6edcba9252f5bb248b9cd98bbdddb276c16b17a2`, fue aprobada para seguir refinando. La iteración 2 añade borde óptico, tinte oscuro con tono y saturación de marca y arrastre directo de la selección móvil. La navegación se confirma al soltar y se prueba con ratón, tacto emulado y teclado.
+
+[Primera versión](evidence/liquid-glass-navigation/README.md) · [Iteración 2 y recorrido de revisión](evidence/liquid-glass-navigation/iteracion-2/README.md)
 
 ## 26 de noviembre de 2026 · Pulido de confirmación y calorías del Coach integrado en el PR #102
 

@@ -1,0 +1,41 @@
+.bottom-nav-item[aria-current="page"] {
+  touch-action: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bottom-nav-item[aria-current="page"] { cursor: grab; }
+  .bottom-nav-track[data-dragging] .bottom-nav-item { cursor: grabbing; }
+}
+
+.bottom-nav-track[data-dragging] > .bottom-nav-indicator {
+  transform: translate(var(--bottom-nav-drag-x), var(--bottom-nav-drag-y))
+    scale(var(--bottom-nav-drag-sx), var(--bottom-nav-drag-sy));
+  transition: none;
+}
+
+.bottom-nav-track[data-dragging] .bottom-nav-item:hover { background: transparent; }
+
+.bottom-nav-track[data-drag-release] > .bottom-nav-indicator {
+  transition: transform 240ms cubic-bezier(.19, .92, .33, 1.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bottom-nav-track[data-dragging] > .bottom-nav-indicator {
+    transform: translate(var(--bottom-nav-drag-x), var(--bottom-nav-drag-y));
+  }
+  .bottom-nav-track[data-drag-release] > .bottom-nav-indicator { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .bottom-nav-track[data-dragging] > .bottom-nav-indicator {
+    background: transparent;
+    border-color: Highlight;
+  }
+  .bottom-nav-track[data-dragging] .bottom-nav-item[aria-current="page"] {
+    color: ButtonText;
+    outline-color: ButtonText;
+  }
+  .bottom-nav-track[data-drag-release] > .bottom-nav-indicator { transition: none; }
+}

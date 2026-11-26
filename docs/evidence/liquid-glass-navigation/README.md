@@ -1,5 +1,7 @@
 # Liquid Glass · Navegación de Calori
 
+[Iteración 2 · Espesor óptico y arrastre](iteracion-2/README.md)
+
 Comparación con `80c9a1500b68d877e1de5c57c4f6eae8f7a431fa`, merge del PR #102. Las capturas y los recorridos usan el mismo contenido sintético en la referencia y el candidato. [Propuesta de diseño y referencias oficiales](diseno.md)
 
 ## Decisiones de implementación

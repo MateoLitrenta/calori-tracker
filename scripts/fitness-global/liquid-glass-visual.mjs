@@ -4,10 +4,15 @@ import { mkdir, mkdtemp, rmdir, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { before, go, origin, repo, start } from './browser.mjs';
 
-const output = path.join(repo, 'docs/evidence/liquid-glass-navigation', before ? 'before' : 'after');
-const browser = await start();
+const optics = process.argv.includes('--glass-iteration-2');
+const webkit = process.argv.includes('--webkit');
+assert.ok(!webkit || optics, 'WebKit matrix output is scoped to iteration 2');
+const output = path.join(repo, 'docs/evidence/liquid-glass-navigation', optics ? 'iteracion-2' : '', before ? 'before' : 'after');
+const playwright = process.env.PLAYWRIGHT_MODULE || path.resolve(repo, '../qa-tools/node_modules/playwright/index.mjs');
+const browser = webkit ? await (await import(pathToFileURL(playwright))).webkit.launch() : await start();
 const mobile = {
   nav: '.app-bottom-nav', surface: '.bottom-nav-track', marker: '.bottom-nav-indicator',
 };
@@ -17,7 +22,7 @@ const desktop = {
 const sizes = [[320, 568], [375, 812], [390, 844], [767, 844], [768, 844], [1280, 800], [1440, 900]];
 const themes = ['light', 'dark'];
 const conditionsOnly = process.argv.includes('--conditions');
-const report = { browser: browser.version(), origin, matrix: [], conditions: [], motion: [] };
+const report = { browser: browser.version(), engine: webkit ? 'webkit' : 'chromium', origin, matrix: [], conditions: [], motion: [] };
 await mkdir(output, { recursive: true });
 
 const settle = page => page.evaluate(async () => {
@@ -28,7 +33,7 @@ const settle = page => page.evaluate(async () => {
 async function startPage(theme, viewport, options = {}, preference = theme) {
   const context = await browser.newContext({
     viewport, colorScheme: theme, locale: 'es-AR', timezoneId: 'America/Buenos_Aires',
-    reducedMotion: 'reduce', ...options,
+    reducedMotion: 'reduce', deviceScaleFactor: optics ? 2 : 1, ...options,
   });
   const errors = [];
   await context.route('**/*', route => {
@@ -40,12 +45,15 @@ async function startPage(theme, viewport, options = {}, preference = theme) {
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(origin + '/qa?controls=0&theme=' + preference, { waitUntil: 'commit', timeout: 90000 });
   await page.locator('.fitness-home').waitFor({ timeout: 90000 });
+  if (optics) {
+    assert.equal(await page.evaluate(() => window.__homeQA.phase), before ? 'liquid-glass-2-before' : 'liquid-glass-2-after');
+  }
   await settle(page);
   return { context, page, errors };
 }
 
 const picture = (page, filename, options = {}) =>
-  page.screenshot({ path: path.join(output, filename + '.jpg'), quality: 86, ...options });
+  page.screenshot({ path: path.join(output, filename + '.jpg'), scale: 'css', quality: 86, ...options });
 
 async function geometry(page, selectors) {
   return page.evaluate(({ nav, surface, marker }) => {
@@ -58,6 +66,7 @@ async function geometry(page, selectors) {
     const navigation = document.querySelector(nav);
     const selected = document.querySelector(marker);
     const style = getComputedStyle(material);
+    const markerStyle = selected && getComputedStyle(selected);
     const main = document.querySelector('.app-main');
     const buttons = [...navigation.querySelectorAll('button')].map(button => {
       const icon = button.querySelector('svg');
@@ -83,9 +92,12 @@ async function geometry(page, selectors) {
       radius: style.borderTopLeftRadius,
       fill: style.backgroundColor, backdrop: style.backdropFilter || style.webkitBackdropFilter || 'none',
       outline: style.borderColor,
+      surfaceLighting: { image: style.backgroundImage, shadow: style.boxShadow },
+      brandOrange: getComputedStyle(document.documentElement).getPropertyValue('--fit-orange').trim(),
       indicator: selected ? {
-        ...markerBox, radius: getComputedStyle(selected).borderTopLeftRadius,
-        fill: getComputedStyle(selected).backgroundColor, image: getComputedStyle(selected).backgroundImage,
+        ...markerBox, radius: markerStyle.borderTopLeftRadius,
+        fill: markerStyle.backgroundColor, image: markerStyle.backgroundImage,
+        rim: markerStyle.borderColor, shadow: markerStyle.boxShadow,
       } : null,
       coveragePercent: round(materialBox.width * materialBox.height / (innerWidth * innerHeight) * 100),
       reservedBottom: parseFloat(getComputedStyle(main).paddingBottom),
@@ -206,19 +218,30 @@ async function runMatrix(theme) {
     for (const [width, height] of sizes) {
       await page.setViewportSize({ width, height });
       await contentPosition(page);
-      await picture(page, 'inicio-' + width + '-' + theme);
+      if (!webkit) await picture(page, 'inicio-' + width + '-' + theme);
       const info = await geometry(page, width < 768 ? mobile : desktop);
       await verifyGeometry(page, info, width);
-      if (width === 390) {
-        await page.locator(mobile.surface).screenshot({path: path.join(output, 'curvas-movil-' + theme + '.png')});
+      if (optics) {
+        assert.equal(info.brandOrange, '#ff9a53');
+        assert.equal(parseFloat(info.radius), width < 768 ? 28 : 26);
+        assert.equal(parseFloat(info.indicator.radius), width < 768 ? 24 : 14);
       }
-      if (width === 1440) {
+      if (!webkit && width === 390) {
+        const pathToImage = path.join(output, 'curvas-movil-' + theme + '.png');
+        if (optics) {
+          const top = Math.floor(info.material.top) - 12;
+          await page.screenshot({ path: pathToImage, clip: {x: 0, y: top, width, height: height - top} });
+        } else {
+          await page.locator(mobile.surface).screenshot({path: pathToImage});
+        }
+      }
+      if (!webkit && width === 1440) {
         await page.screenshot({
           path: path.join(output, 'curvas-lateral-' + theme + '.png'),
           clip: {x: 0, y: 0, width: 280, height: 405},
         });
       }
-      if (width === 390 || width === 1440) {
+      if (optics || width === 390 || width === 1440) {
         info.contrast = await contrast(page, width < 768 ? mobile : desktop);
         verifyContrast(info.contrast, theme + ' ' + width);
       }
@@ -242,7 +265,15 @@ async function runMatrix(theme) {
       report.matrix.push({ theme, ...info });
       console.log('Inicio', theme, width + ' × ' + height);
     }
-    assert.deepEqual(errors, []);
+    if (webkit) {
+      // Both iterations issue this WebKit notification during rapid viewport changes.
+      const resizeNotice = 'ResizeObserver loop completed with undelivered notifications.';
+      const count = errors.filter(message => message === resizeNotice).length;
+      (report.browserWarnings ??= []).push({ theme, message: resizeNotice, count });
+      assert.deepEqual(errors.filter(message => message !== resizeNotice), []);
+    } else {
+      assert.deepEqual(errors, []);
+    }
   } finally {
     await context.close();
   }
@@ -401,7 +432,7 @@ async function record(name, action) {
   const video = page.video();
   let seconds;
   try {
-    await contentPosition(page);
+    await contentPosition(page, optics ? 0 : undefined);
     const ready = performance.now();
     await page.waitForTimeout(250);
     await action(page);
@@ -411,7 +442,7 @@ async function record(name, action) {
   } finally {
     await context.close();
   }
-  const require = createRequire(process.env.PLAYWRIGHT_MODULE || path.resolve(repo, '../qa-tools/node_modules/playwright/index.mjs'));
+  const require = createRequire(playwright);
   const { registry } = require('playwright-core/lib/server/registry/index');
   const ffmpeg = registry.findExecutable('ffmpeg').executablePath();
   execFileSync(ffmpeg, ['-hide_banner', '-loglevel', 'error', '-sseof', '-' + seconds.toFixed(3), '-i',
@@ -483,12 +514,14 @@ async function scrollVideo(page) {
 
 try {
   if (!conditionsOnly) for (const theme of themes) await runMatrix(theme);
-  for (const theme of themes) await runConditions(theme);
-  if (!before && !conditionsOnly) {
+  if (!webkit) for (const theme of themes) await runConditions(theme);
+  if (optics && !webkit && !conditionsOnly) {
+    await record('material-en-movimiento', scrollVideo);
+  } else if (!optics && !before && !conditionsOnly) {
     await record('movimiento-indicador', indicatorVideo);
     await record('contenido-detras-del-vidrio', scrollVideo);
   }
-  const filename = conditionsOnly ? 'condiciones.json' : 'mediciones.json';
+  const filename = webkit ? 'mediciones-webkit.json' : conditionsOnly ? 'condiciones.json' : 'mediciones.json';
   await writeFile(path.join(output, filename), JSON.stringify(report, null, 2) + '\n');
 } finally {
   await browser.close();

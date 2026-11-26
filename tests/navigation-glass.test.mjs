@@ -11,6 +11,8 @@ const root = parent => parent.type === 'root';
 const query = (name, condition) => parent => parent.type === 'atrule' && parent.name === name && condition.test(parent.params);
 const glassSupport = query('supports', /backdrop-filter.*color-mix/);
 const tintSupport = query('supports', /^\(background: color-mix/);
+const relativeTintSupport = query('supports', /^\(color: hsl\(from red /);
+const darkTint = ':where(html.dark) :is(.bottom-nav-indicator, .sidebar-nav-indicator)';
 const contrastPreference = query('media', /prefers-contrast: more.*prefers-reduced-transparency: reduce/);
 const forcedColors = query('media', /forced-colors: active/);
 
@@ -28,6 +30,7 @@ test('navigation material falls back to an opaque surface and keeps blur scoped 
   for (const surface of surfaces) {
     assert.equal(value(styles, surface, 'background'), 'var(--fit-surface)');
     assert.equal(value(styles, surface, 'backdrop-filter'), undefined);
+    assert.match(value(styles, surface, 'background', glassSupport), /radial-gradient\([\s\S]*var\(--glass-nav-reflection-depth\)/);
     for (const property of ['backdrop-filter', '-webkit-backdrop-filter']) {
       assert.match(value(styles, surface, property, glassSupport), /^blur\(/);
       assert.equal(value(styles, surface, property, contrastPreference), 'none');
@@ -50,6 +53,8 @@ test('navigation selection has a solid fallback and pairs system colors in force
     assert.match(value(styles, indicator, 'background', tintSupport), /linear-gradient\([\s\S]*var\(--fit-orange\)/);
     assert.equal(value(styles, indicator, 'background', forcedColors), 'Highlight');
   }
+  assert.match(value(styles, darkTint, 'background', relativeTintSupport),
+    /hsl\(from var\(--fit-orange\) h s var\(--glass-nav-tint-lightness-high\)\)[\s\S]*hsl\(from var\(--fit-orange\) h s var\(--glass-nav-tint-lightness-low\)\)/);
   const current = ':is(.bottom-nav-item, .sidebar-nav-item)[aria-current="page"]';
   assert.equal(value(styles, current, 'color', forcedColors), 'HighlightText');
   assert.equal(value(styles, current + ':focus-visible', 'outline-color', forcedColors), 'HighlightText');
@@ -73,6 +78,13 @@ const percent = token => {
   assert.match(token, /^\d+(?:\.\d+)?%$/);
   return Number.parseFloat(token) / 100;
 };
+function withLightness(color, lightness) {
+  const max = Math.max(...color), min = Math.min(...color);
+  const chroma = max - min;
+  const saturation = chroma / (1 - Math.abs(max + min - 1));
+  const nextChroma = saturation * (1 - Math.abs(2 * lightness - 1));
+  return color.map(channel => lightness - nextChroma / 2 + nextChroma * (channel - min) / chroma);
+}
 
 test('navigation tokens retain text, icon, focus and selection contrast across backdrop extremes', () => {
   for (const button of ['.bottom-nav-item', '.sidebar-nav-item']) {
@@ -94,11 +106,21 @@ test('navigation tokens retain text, icon, focus and selection contrast across b
     const low = percent(token(styles, '--glass-nav-tint-low'));
     const high = percent(token(styles, '--glass-nav-tint-high'));
     const tint = Array.from({ length: 11 }, (_, index) => mix(orange, board, low + (high - low) * index / 10));
+    if (theme === 'Oscuro') {
+      const lowerLightness = percent(token(styles, '--glass-nav-tint-lightness-low'));
+      const upperLightness = percent(token(styles, '--glass-nav-tint-lightness-high'));
+      const saturatedStops = Array.from({ length: 11 }, (_, index) =>
+        withLightness(orange, lowerLightness + (upperLightness - lowerLightness) * index / 10));
+      tint.push(...saturatedStops);
+    }
+    const reflection = token(styles, '--glass-nav-reflection').match(/^rgb\(255 255 255 \/ ([.\d]+)\)$/)?.[1];
+    assert.ok(reflection);
 
     for (const target of surfaces) {
       const opacity = percent(value(styles, target, '--glass-nav-opacity'));
       const glass = backgroundExtremes.map(backdrop => mix(surface, backdrop, opacity));
-      for (const backdrop of [...glass, surface]) {
+      const illuminated = glass.map(backdrop => mix([1, 1, 1], backdrop, Number(reflection)));
+      for (const backdrop of [...glass, ...illuminated, surface]) {
         assert.ok(contrast(ink, backdrop) >= 4.5, theme + ' ' + target + ' label/icon');
         assert.ok(contrast(focus, backdrop) >= 3, theme + ' ' + target + ' focus');
         assert.ok(contrast(selectedEdge, backdrop) >= 3, theme + ' ' + target + ' active edge');

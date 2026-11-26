@@ -9,7 +9,9 @@ const engine = process.argv.includes('--webkit') ? 'webkit' : 'chromium';
 const modulePath = process.env.PLAYWRIGHT_MODULE || path.resolve(repo, '../qa-tools/node_modules/playwright/index.mjs');
 const playwright = await import(pathToFileURL(modulePath));
 const browser = await playwright[engine].launch(engine === 'chromium' ? { channel: process.env.QA_BROWSER_CHANNEL || 'chrome' } : {});
-const output = path.join(repo, 'docs/evidence/liquid-glass-navigation', before ? 'before' : 'after');
+const iteration2 = process.argv.includes('--iteration-2');
+assert.ok(!iteration2 || !before, 'Usá el candidato para el recorrido de iteración 2');
+const output = path.join(repo, 'docs/evidence/liquid-glass-navigation', iteration2 ? 'iteracion-2' : before ? 'before' : 'after');
 await mkdir(output, { recursive: true });
 
 const portrait = { width: 375, height: 667 };
@@ -112,7 +114,7 @@ async function run(theme) {
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
   const shot = async name => {
-    if (engine !== 'chromium') return;
+    if (engine !== 'chromium' || iteration2) return;
     const file = 'coach-' + name + '-' + theme + '.jpg';
     await page.screenshot({ path: path.join(output, file), quality: 87 });
     shots.push(file);
