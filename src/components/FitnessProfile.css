@@ -110,8 +110,9 @@
 .profile-management .profile-reset-error { color: var(--fit-danger); }
 @media (max-width: 767px) {
   .app-main:has(.profile-view) {
-    margin-bottom: calc(4rem + env(safe-area-inset-bottom));
-    padding-bottom: 0;
+    /* Keep cards behind the glass while the last controls and their focus clear it. */
+    padding-bottom: var(--glass-nav-reserve);
+    scroll-padding-block-end: var(--glass-nav-reserve);
   }
 }
 @media (max-width: 390px) {

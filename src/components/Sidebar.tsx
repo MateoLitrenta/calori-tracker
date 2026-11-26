@@ -22,7 +22,7 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
   ] as const;
 
   return (
-    <aside className="app-sidebar hidden md:flex flex-col w-64 border-r p-6 justify-between flex-shrink-0 h-full overflow-y-auto">
+    <aside className="app-sidebar hidden md:flex flex-col justify-between flex-shrink-0 overflow-y-auto">
       <div>
         <div className="flex items-center gap-3 mb-10">
           <img src="/brand/calori-logo-symbol.png" alt="" className="brand-symbol brand-symbol-sidebar" />
@@ -39,9 +39,10 @@ export default function Sidebar({ activeTab, onTabChange, onAuthOpen }: SidebarP
                   key={id}
                   aria-current={isActive ? 'page' : undefined}
                   onClick={() => onTabChange(id)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-[var(--fit-control-radius)] font-medium transition-colors"
+                  type="button"
+                  className="sidebar-nav-item"
                 >
-                  <Icon size={24} weight={isActive ? 'fill' : 'regular'} />
+                  <Icon size={24} weight={isActive ? 'fill' : 'regular'} aria-hidden="true" />
                   {label}
                 </button>
               );

@@ -1,0 +1,215 @@
+/* The two navigation surfaces borrow Calori's existing palette. */
+:root {
+  --glass-nav-mobile-inset: 4px;
+  --glass-nav-mobile-height: max(56px, calc(36px + .9rem));
+  --glass-nav-mobile-radius: calc(var(--glass-nav-mobile-height) / 2);
+  --glass-nav-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+  --glass-nav-reserve: calc(var(--glass-nav-mobile-height) + var(--glass-nav-bottom) + 2px);
+  --glass-nav-sidebar-radius: 26px;
+  --glass-nav-sidebar-inset: 12px;
+  --glass-nav-rim: color-mix(in srgb, var(--fit-control-line) 38%, transparent);
+  --glass-nav-glint: rgb(255 255 255 / .8);
+  --glass-nav-reflection: rgb(255 255 255 / .19);
+  --glass-nav-edge-shade: rgb(36 27 20 / .14);
+  --glass-nav-contact: rgb(32 38 30 / .12);
+  --glass-nav-shadow: 0 7px 22px rgb(32 38 30 / .12);
+  --glass-nav-selected-edge: var(--fit-accent);
+  --glass-nav-tint-high: 88%;
+  --glass-nav-tint-low: 73%;
+  --glass-nav-tint-glint: rgb(255 255 255 / .35);
+}
+
+html.dark {
+  --glass-nav-glint: rgb(255 255 255 / .22);
+  --glass-nav-reflection: rgb(255 255 255 / .055);
+  --glass-nav-edge-shade: rgb(0 0 0 / .48);
+  --glass-nav-contact: rgb(0 0 0 / .38);
+  --glass-nav-shadow: 0 8px 22px rgb(0 0 0 / .33);
+  --glass-nav-selected-edge: var(--fit-orange);
+  --glass-nav-tint-high: 47%;
+  --glass-nav-tint-low: 38%;
+  --glass-nav-tint-lightness-high: 34.5%;
+  --glass-nav-tint-lightness-low: 28.5%;
+  --glass-nav-tint-glint: rgb(255 255 255 / .13);
+}
+
+.app-bottom-nav {
+  position: fixed;
+  inset-inline: max(10px, calc(env(safe-area-inset-left, 0px) + 6px)) max(10px, calc(env(safe-area-inset-right, 0px) + 6px));
+  bottom: var(--glass-nav-bottom);
+  z-index: 50;
+  max-width: 448px;
+  margin-inline: auto;
+}
+
+.bottom-nav-track, .app-sidebar {
+  /* The opaque surface also serves browsers without backdrop filtering. */
+  border: 1px solid var(--fit-rule);
+  background: var(--fit-surface);
+  color: var(--fit-ink);
+  box-shadow:
+    inset 0 1px 0 var(--glass-nav-glint),
+    inset 0 -1px 0 var(--glass-nav-edge-shade),
+    0 1px 2px var(--glass-nav-contact),
+    var(--glass-nav-shadow);
+}
+
+.bottom-nav-track {
+  --glass-nav-opacity: 72%;
+  --glass-nav-blur: 10px;
+  --glass-nav-reflection-depth: 12px;
+  /* The 1px border counts toward the concentric inset. */
+  --glass-nav-track-padding: calc(var(--glass-nav-mobile-inset) - 1px);
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  height: var(--glass-nav-mobile-height);
+  padding: var(--glass-nav-track-padding);
+  border-radius: var(--glass-nav-mobile-radius);
+}
+
+.app-sidebar {
+  --glass-nav-opacity: 83%;
+  --glass-nav-blur: 12px;
+  --glass-nav-reflection-depth: 38px;
+  width: 244px;
+  margin: 12px 0 12px 12px;
+  padding: calc(var(--glass-nav-sidebar-inset) - 1px);
+  border-radius: var(--glass-nav-sidebar-radius);
+}
+
+html.dark .bottom-nav-track { --glass-nav-opacity: 78%; }
+html.dark .app-sidebar { --glass-nav-opacity: 85%; }
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) and (background: color-mix(in srgb, white, transparent)) {
+  .bottom-nav-track, .app-sidebar {
+    /* Grazing light is confined to the upper edge of the blurred surface. */
+    background:
+      radial-gradient(ellipse 92% var(--glass-nav-reflection-depth) at 16% 0%, var(--glass-nav-reflection), transparent),
+      color-mix(in srgb, var(--fit-surface) var(--glass-nav-opacity), transparent);
+    -webkit-backdrop-filter: blur(var(--glass-nav-blur)) saturate(1.1);
+    backdrop-filter: blur(var(--glass-nav-blur)) saturate(1.1);
+  }
+}
+
+.app-sidebar nav { position: relative; }
+
+.bottom-nav-indicator, .sidebar-nav-indicator {
+  border: 1px solid var(--glass-nav-selected-edge);
+  background: var(--fit-board);
+  box-shadow: inset 0 1px 0 var(--glass-nav-tint-glint), inset 0 -1px 0 var(--glass-nav-edge-shade);
+}
+
+.bottom-nav-indicator {
+  position: absolute;
+  inset-block: var(--glass-nav-track-padding);
+  inset-inline-start: var(--glass-nav-track-padding);
+  width: calc((100% - 2 * var(--glass-nav-track-padding)) / 4);
+  pointer-events: none;
+  transform: translateX(calc(var(--active-index) * 100%));
+  transition: transform var(--motion-control) var(--motion-ease-enter);
+}
+
+.bottom-nav-indicator, .bottom-nav-item {
+  border-radius: calc(var(--glass-nav-mobile-radius) - var(--glass-nav-mobile-inset));
+}
+
+.sidebar-nav-indicator, .sidebar-nav-item {
+  border-radius: calc(var(--glass-nav-sidebar-radius) - var(--glass-nav-sidebar-inset));
+}
+
+.bottom-nav-item, .sidebar-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: var(--fit-target);
+  min-width: var(--fit-target);
+  color: var(--fit-ink);
+  font-weight: 600;
+}
+
+.bottom-nav-item {
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  font-size: .75rem;
+  line-height: 1.2;
+}
+
+.sidebar-nav-item {
+  gap: 10px;
+  padding: 10px 12px;
+  line-height: 1.2;
+}
+
+.bottom-nav-item svg, .sidebar-nav-item svg { flex: none; }
+
+@media (hover: hover) {
+  :is(.bottom-nav-item, .sidebar-nav-item):hover:not([aria-current="page"]) {
+    background: var(--fit-soft);
+  }
+}
+
+@supports (background: color-mix(in srgb, white, transparent)) {
+  .bottom-nav-track, .app-sidebar { border-color: var(--glass-nav-rim); }
+  .bottom-nav-indicator, .sidebar-nav-indicator {
+    background: linear-gradient(155deg,
+      color-mix(in srgb, var(--fit-orange) var(--glass-nav-tint-high), var(--fit-board)),
+      color-mix(in srgb, var(--fit-orange) var(--glass-nav-tint-low), var(--fit-board)));
+  }
+  @media (hover: hover) {
+    :is(.bottom-nav-item, .sidebar-nav-item):hover:not([aria-current="page"]) {
+      background: color-mix(in srgb, var(--fit-soft) 72%, transparent);
+    }
+  }
+}
+
+@supports (color: hsl(from red h s 32%)) {
+  /* Lower luminance under pale labels while retaining the brand hue and saturation. */
+  :where(html.dark) :is(.bottom-nav-indicator, .sidebar-nav-indicator) {
+    background: linear-gradient(155deg,
+      hsl(from var(--fit-orange) h s var(--glass-nav-tint-lightness-high)),
+      hsl(from var(--fit-orange) h s var(--glass-nav-tint-lightness-low)));
+  }
+}
+
+:is(.bottom-nav-item, .sidebar-nav-item):focus-visible {
+  outline: 2px solid var(--fit-focus);
+  outline-offset: -3px;
+}
+
+@media (prefers-contrast: more), (prefers-reduced-transparency: reduce) {
+  .bottom-nav-track, .app-sidebar {
+    border-color: var(--fit-control-line);
+    background: var(--fit-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .bottom-nav-track, .app-sidebar {
+    border-color: ButtonText;
+    background: Canvas;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .bottom-nav-indicator, .sidebar-nav-indicator {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background: Highlight;
+    box-shadow: none;
+    transition: none;
+  }
+
+  :is(.bottom-nav-item, .sidebar-nav-item)[aria-current="page"] {
+    forced-color-adjust: none;
+    color: HighlightText;
+  }
+
+  :is(.bottom-nav-item, .sidebar-nav-item):focus-visible { outline-color: ButtonText; }
+  :is(.bottom-nav-item, .sidebar-nav-item)[aria-current="page"]:focus-visible { outline-color: HighlightText; }
+}

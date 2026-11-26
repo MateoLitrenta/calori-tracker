@@ -1,0 +1,3800 @@
+{
+  "browser": "158.0.8127.37",
+  "engine": "chromium",
+  "origin": "http://127.0.0.1:5193",
+  "matrix": [
+    {
+      "view": "Perfil",
+      "theme": "light",
+      "width": 375,
+      "expandedEnergy": false,
+      "info": {
+        "viewport": [
+          375,
+          812
+        ],
+        "material": {
+          "left": 10,
+          "top": 750,
+          "right": 365,
+          "bottom": 806,
+          "width": 355,
+          "height": 56
+        },
+        "main": {
+          "left": 0,
+          "top": 0,
+          "right": 375,
+          "bottom": 748,
+          "width": 375,
+          "height": 748
+        },
+        "buttons": [
+          {
+            "label": "Inicio",
+            "current": false,
+            "left": 14,
+            "top": 754,
+            "right": 100.75,
+            "bottom": 802,
+            "width": 86.75,
+            "height": 48,
+            "labelWidth": 29.58,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 47.38,
+              "top": 759.8,
+              "right": 67.38,
+              "bottom": 779.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Coach",
+            "current": false,
+            "left": 100.75,
+            "top": 754,
+            "right": 187.5,
+            "bottom": 802,
+            "width": 86.75,
+            "height": 48,
+            "labelWidth": 33.38,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 134.13,
+              "top": 759.8,
+              "right": 154.13,
+              "bottom": 779.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Datos",
+            "current": false,
+            "left": 187.5,
+            "top": 754,
+            "right": 274.25,
+            "bottom": 802,
+            "width": 86.75,
+            "height": 48,
+            "labelWidth": 31.48,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 220.88,
+              "top": 759.8,
+              "right": 240.88,
+              "bottom": 779.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Perfil",
+            "current": true,
+            "left": 274.25,
+            "top": 754,
+            "right": 361,
+            "bottom": 802,
+            "width": 86.75,
+            "height": 48,
+            "labelWidth": 28.09,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 307.63,
+              "top": 759.8,
+              "right": 327.63,
+              "bottom": 779.8,
+              "width": 20,
+              "height": 20
+            }
+          }
+        ],
+        "rightGap": 10,
+        "bottomGap": 6,
+        "radius": "28px",
+        "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+        "backdrop": "blur(10px) saturate(1.1)",
+        "outline": "color(srgb 0.505882 0.541176 0.505882 / 0.38)",
+        "surfaceLighting": {
+          "image": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+          "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+        },
+        "brandOrange": "#ff9a53",
+        "indicator": {
+          "left": 274.25,
+          "top": 754,
+          "right": 361,
+          "bottom": 802,
+          "width": 86.75,
+          "height": 48,
+          "radius": "24px",
+          "fill": "rgba(0, 0, 0, 0)",
+          "image": "linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949))",
+          "rim": "rgb(146, 65, 17)",
+          "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset"
+        },
+        "coveragePercent": 6.53,
+        "reservedBottom": 0,
+        "pageOverflow": false
+      },
+      "overlap": {
+        "mainBottom": 748,
+        "trackTop": 750,
+        "trackBottom": 806,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 49,
+        "range": 242,
+        "accountTop": 585.9375,
+        "accountBottom": 853.4375,
+        "accountBackground": "rgb(255, 254, 250)",
+        "dividers": [
+          {
+            "bottom": 703.4375,
+            "border": "rgb(203, 206, 196)"
+          },
+          {
+            "bottom": 778.4375,
+            "border": "rgb(203, 206, 196)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 63.25,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 134.25,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 205.25000000000003,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 276.25,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      },
+      "lastControl": {
+        "label": "Borrar todos los registros",
+        "bottom": 714.9375,
+        "navTop": 750,
+        "hit": true
+      },
+      "end": {
+        "mainBottom": 748,
+        "trackTop": 750,
+        "trackBottom": 806,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 373,
+        "range": 373,
+        "accountTop": 261.9375,
+        "accountBottom": 529.4375,
+        "accountBackground": "rgb(255, 254, 250)",
+        "dividers": [
+          {
+            "bottom": 379.4375,
+            "border": "rgb(203, 206, 196)"
+          },
+          {
+            "bottom": 454.4375,
+            "border": "rgb(203, 206, 196)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 63.25,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 134.25,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 205.25000000000003,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 276.25,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      },
+      "contrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": true,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fca96e",
+            "ratio": 8.26
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fca76a",
+            "ratio": 8.13
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        }
+      ],
+      "finalContrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": true,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fca96e",
+            "ratio": 8.26
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fca76a",
+            "ratio": 8.13
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        }
+      ]
+    },
+    {
+      "view": "Perfil",
+      "theme": "light",
+      "width": 390,
+      "expandedEnergy": false,
+      "info": {
+        "viewport": [
+          390,
+          844
+        ],
+        "material": {
+          "left": 10,
+          "top": 782,
+          "right": 380,
+          "bottom": 838,
+          "width": 370,
+          "height": 56
+        },
+        "main": {
+          "left": 0,
+          "top": 0,
+          "right": 390,
+          "bottom": 780,
+          "width": 390,
+          "height": 780
+        },
+        "buttons": [
+          {
+            "label": "Inicio",
+            "current": false,
+            "left": 14,
+            "top": 786,
+            "right": 104.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 29.58,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 49.25,
+              "top": 791.8,
+              "right": 69.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Coach",
+            "current": false,
+            "left": 104.5,
+            "top": 786,
+            "right": 195,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 33.38,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 139.75,
+              "top": 791.8,
+              "right": 159.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Datos",
+            "current": false,
+            "left": 195,
+            "top": 786,
+            "right": 285.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 31.48,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 230.25,
+              "top": 791.8,
+              "right": 250.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Perfil",
+            "current": true,
+            "left": 285.5,
+            "top": 786,
+            "right": 376,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 28.09,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 320.75,
+              "top": 791.8,
+              "right": 340.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          }
+        ],
+        "rightGap": 10,
+        "bottomGap": 6,
+        "radius": "28px",
+        "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+        "backdrop": "blur(10px) saturate(1.1)",
+        "outline": "color(srgb 0.505882 0.541176 0.505882 / 0.38)",
+        "surfaceLighting": {
+          "image": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+          "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+        },
+        "brandOrange": "#ff9a53",
+        "indicator": {
+          "left": 285.5,
+          "top": 786,
+          "right": 376,
+          "bottom": 834,
+          "width": 90.5,
+          "height": 48,
+          "radius": "24px",
+          "fill": "rgba(0, 0, 0, 0)",
+          "image": "linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949))",
+          "rim": "rgb(146, 65, 17)",
+          "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset"
+        },
+        "coveragePercent": 6.29,
+        "reservedBottom": 0,
+        "pageOverflow": false
+      },
+      "overlap": {
+        "mainBottom": 780,
+        "trackTop": 782,
+        "trackBottom": 838,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 17,
+        "range": 210,
+        "accountTop": 617.9375,
+        "accountBottom": 885.4375,
+        "accountBackground": "rgb(255, 254, 250)",
+        "dividers": [
+          {
+            "bottom": 735.4375,
+            "border": "rgb(203, 206, 196)"
+          },
+          {
+            "bottom": 810.4375,
+            "border": "rgb(203, 206, 196)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 65.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 139.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 213.50000000000003,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 287.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      },
+      "lastControl": {
+        "label": "Borrar todos los registros",
+        "bottom": 746.9375,
+        "navTop": 782,
+        "hit": true
+      },
+      "end": {
+        "mainBottom": 780,
+        "trackTop": 782,
+        "trackBottom": 838,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 341,
+        "range": 341,
+        "accountTop": 293.9375,
+        "accountBottom": 561.4375,
+        "accountBackground": "rgb(255, 254, 250)",
+        "dividers": [
+          {
+            "bottom": 411.4375,
+            "border": "rgb(203, 206, 196)"
+          },
+          {
+            "bottom": 486.4375,
+            "border": "rgb(203, 206, 196)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 65.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 139.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 213.50000000000003,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 287.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      },
+      "contrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": true,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fca96e",
+            "ratio": 8.26
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fca769",
+            "ratio": 8.13
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        }
+      ],
+      "finalContrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": true,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fca96e",
+            "ratio": 8.26
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fca769",
+            "ratio": 8.13
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        }
+      ]
+    },
+    {
+      "view": "Perfil",
+      "theme": "light",
+      "width": 440,
+      "expandedEnergy": true,
+      "info": {
+        "viewport": [
+          440,
+          956
+        ],
+        "material": {
+          "left": 10,
+          "top": 894,
+          "right": 430,
+          "bottom": 950,
+          "width": 420,
+          "height": 56
+        },
+        "main": {
+          "left": 0,
+          "top": 0,
+          "right": 440,
+          "bottom": 892,
+          "width": 440,
+          "height": 892
+        },
+        "buttons": [
+          {
+            "label": "Inicio",
+            "current": false,
+            "left": 14,
+            "top": 898,
+            "right": 117,
+            "bottom": 946,
+            "width": 103,
+            "height": 48,
+            "labelWidth": 29.58,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 55.5,
+              "top": 903.8,
+              "right": 75.5,
+              "bottom": 923.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Coach",
+            "current": false,
+            "left": 117,
+            "top": 898,
+            "right": 220,
+            "bottom": 946,
+            "width": 103,
+            "height": 48,
+            "labelWidth": 33.38,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 158.5,
+              "top": 903.8,
+              "right": 178.5,
+              "bottom": 923.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Datos",
+            "current": false,
+            "left": 220,
+            "top": 898,
+            "right": 323,
+            "bottom": 946,
+            "width": 103,
+            "height": 48,
+            "labelWidth": 31.48,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 261.5,
+              "top": 903.8,
+              "right": 281.5,
+              "bottom": 923.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Perfil",
+            "current": true,
+            "left": 323,
+            "top": 898,
+            "right": 426,
+            "bottom": 946,
+            "width": 103,
+            "height": 48,
+            "labelWidth": 28.09,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 364.5,
+              "top": 903.8,
+              "right": 384.5,
+              "bottom": 923.8,
+              "width": 20,
+              "height": 20
+            }
+          }
+        ],
+        "rightGap": 10,
+        "bottomGap": 6,
+        "radius": "28px",
+        "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+        "backdrop": "blur(10px) saturate(1.1)",
+        "outline": "color(srgb 0.505882 0.541176 0.505882 / 0.38)",
+        "surfaceLighting": {
+          "image": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+          "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+        },
+        "brandOrange": "#ff9a53",
+        "indicator": {
+          "left": 323,
+          "top": 898,
+          "right": 426,
+          "bottom": 946,
+          "width": 103,
+          "height": 48,
+          "radius": "24px",
+          "fill": "rgba(0, 0, 0, 0)",
+          "image": "linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949))",
+          "rim": "rgb(146, 65, 17)",
+          "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset"
+        },
+        "coveragePercent": 5.59,
+        "reservedBottom": 0,
+        "pageOverflow": false
+      },
+      "overlap": {
+        "mainBottom": 892,
+        "trackTop": 894,
+        "trackBottom": 950,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 51,
+        "range": 244,
+        "accountTop": 729.4375,
+        "accountBottom": 996.9375,
+        "accountBackground": "rgb(255, 254, 250)",
+        "dividers": [
+          {
+            "bottom": 846.9375,
+            "border": "rgb(203, 206, 196)"
+          },
+          {
+            "bottom": 921.9375,
+            "border": "rgb(203, 206, 196)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 73,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 157,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 241.00000000000003,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 325,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      },
+      "lastControl": {
+        "label": "Borrar todos los registros",
+        "bottom": 858.9375,
+        "navTop": 894,
+        "hit": true
+      },
+      "end": {
+        "mainBottom": 892,
+        "trackTop": 894,
+        "trackBottom": 950,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 355,
+        "range": 355,
+        "accountTop": 425.4375,
+        "accountBottom": 692.9375,
+        "accountBackground": "rgb(255, 254, 250)",
+        "dividers": [
+          {
+            "bottom": 542.9375,
+            "border": "rgb(203, 206, 196)"
+          },
+          {
+            "bottom": 617.9375,
+            "border": "rgb(203, 206, 196)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 73,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 157,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 241.00000000000003,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 325,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      },
+      "contrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": true,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fca96e",
+            "ratio": 8.26
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fca76a",
+            "ratio": 8.13
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        }
+      ],
+      "finalContrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": true,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fca96e",
+            "ratio": 8.26
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fca76a",
+            "ratio": 8.13
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        }
+      ]
+    },
+    {
+      "view": "Inicio",
+      "theme": "light",
+      "width": 390,
+      "info": {
+        "viewport": [
+          390,
+          844
+        ],
+        "material": {
+          "left": 10,
+          "top": 782,
+          "right": 380,
+          "bottom": 838,
+          "width": 370,
+          "height": 56
+        },
+        "main": {
+          "left": 0,
+          "top": 0,
+          "right": 390,
+          "bottom": 844,
+          "width": 390,
+          "height": 844
+        },
+        "buttons": [
+          {
+            "label": "Inicio",
+            "current": true,
+            "left": 14,
+            "top": 786,
+            "right": 104.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 29.58,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 49.25,
+              "top": 791.8,
+              "right": 69.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Coach",
+            "current": false,
+            "left": 104.5,
+            "top": 786,
+            "right": 195,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 33.38,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 139.75,
+              "top": 791.8,
+              "right": 159.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Datos",
+            "current": false,
+            "left": 195,
+            "top": 786,
+            "right": 285.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 31.48,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 230.25,
+              "top": 791.8,
+              "right": 250.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Perfil",
+            "current": false,
+            "left": 285.5,
+            "top": 786,
+            "right": 376,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 28.09,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 320.75,
+              "top": 791.8,
+              "right": 340.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          }
+        ],
+        "rightGap": 10,
+        "bottomGap": 6,
+        "radius": "28px",
+        "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+        "backdrop": "blur(10px) saturate(1.1)",
+        "outline": "color(srgb 0.505882 0.541176 0.505882 / 0.38)",
+        "surfaceLighting": {
+          "image": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+          "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+        },
+        "brandOrange": "#ff9a53",
+        "indicator": {
+          "left": 14,
+          "top": 786,
+          "right": 104.5,
+          "bottom": 834,
+          "width": 90.5,
+          "height": 48,
+          "radius": "24px",
+          "fill": "rgba(0, 0, 0, 0)",
+          "image": "linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949))",
+          "rim": "rgb(146, 65, 17)",
+          "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset"
+        },
+        "coveragePercent": 6.29,
+        "reservedBottom": 96,
+        "pageOverflow": false
+      },
+      "contrast": [
+        {
+          "label": "Inicio",
+          "active": true,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fca96e",
+            "ratio": 8.26
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fca769",
+            "ratio": 8.13
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fbfaf5",
+            "ratio": 15.03
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#edece8",
+            "ratio": 13.29
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fefdf8",
+            "ratio": 15.42
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fdfcf8",
+            "ratio": 15.3
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#f9f8f4",
+            "ratio": 14.78
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        }
+      ]
+    },
+    {
+      "view": "Datos",
+      "theme": "light",
+      "width": 390,
+      "info": {
+        "viewport": [
+          390,
+          844
+        ],
+        "material": {
+          "left": 10,
+          "top": 782,
+          "right": 380,
+          "bottom": 838,
+          "width": 370,
+          "height": 56
+        },
+        "main": {
+          "left": 0,
+          "top": 0,
+          "right": 390,
+          "bottom": 844,
+          "width": 390,
+          "height": 844
+        },
+        "buttons": [
+          {
+            "label": "Inicio",
+            "current": false,
+            "left": 14,
+            "top": 786,
+            "right": 104.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 29.58,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 49.25,
+              "top": 791.8,
+              "right": 69.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Coach",
+            "current": false,
+            "left": 104.5,
+            "top": 786,
+            "right": 195,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 33.38,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 139.75,
+              "top": 791.8,
+              "right": 159.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Datos",
+            "current": true,
+            "left": 195,
+            "top": 786,
+            "right": 285.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 31.48,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 230.25,
+              "top": 791.8,
+              "right": 250.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Perfil",
+            "current": false,
+            "left": 285.5,
+            "top": 786,
+            "right": 376,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 28.09,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 320.75,
+              "top": 791.8,
+              "right": 340.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          }
+        ],
+        "rightGap": 10,
+        "bottomGap": 6,
+        "radius": "28px",
+        "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+        "backdrop": "blur(10px) saturate(1.1)",
+        "outline": "color(srgb 0.505882 0.541176 0.505882 / 0.38)",
+        "surfaceLighting": {
+          "image": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+          "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+        },
+        "brandOrange": "#ff9a53",
+        "indicator": {
+          "left": 195,
+          "top": 786,
+          "right": 285.5,
+          "bottom": 834,
+          "width": 90.5,
+          "height": 48,
+          "radius": "24px",
+          "fill": "rgba(0, 0, 0, 0)",
+          "image": "linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949))",
+          "rim": "rgb(146, 65, 17)",
+          "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset"
+        },
+        "coveragePercent": 6.29,
+        "reservedBottom": 96,
+        "pageOverflow": false
+      },
+      "contrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#f9f8f4",
+            "ratio": 14.78
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#f5f4ef",
+            "ratio": 14.26
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fefcf8",
+            "ratio": 15.33
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fffdf9",
+            "ratio": 15.46
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": true,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fca96e",
+            "ratio": 8.26
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fca76a",
+            "ratio": 8.13
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#f1f1ed",
+            "ratio": 13.87
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#ecebe7",
+            "ratio": 13.17
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        }
+      ]
+    },
+    {
+      "view": "Coach",
+      "theme": "light",
+      "width": 390,
+      "info": {
+        "viewport": [
+          390,
+          844
+        ],
+        "material": {
+          "left": 10,
+          "top": 782,
+          "right": 380,
+          "bottom": 838,
+          "width": 370,
+          "height": 56
+        },
+        "main": {
+          "left": 0,
+          "top": 0,
+          "right": 390,
+          "bottom": 844,
+          "width": 390,
+          "height": 844
+        },
+        "buttons": [
+          {
+            "label": "Inicio",
+            "current": false,
+            "left": 14,
+            "top": 786,
+            "right": 104.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 29.58,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 49.25,
+              "top": 791.8,
+              "right": 69.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Coach",
+            "current": true,
+            "left": 104.5,
+            "top": 786,
+            "right": 195,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 33.38,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 139.75,
+              "top": 791.8,
+              "right": 159.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Datos",
+            "current": false,
+            "left": 195,
+            "top": 786,
+            "right": 285.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 31.48,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 230.25,
+              "top": 791.8,
+              "right": 250.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Perfil",
+            "current": false,
+            "left": 285.5,
+            "top": 786,
+            "right": 376,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 28.09,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 320.75,
+              "top": 791.8,
+              "right": 340.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          }
+        ],
+        "rightGap": 10,
+        "bottomGap": 6,
+        "radius": "28px",
+        "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+        "backdrop": "blur(10px) saturate(1.1)",
+        "outline": "color(srgb 0.505882 0.541176 0.505882 / 0.38)",
+        "surfaceLighting": {
+          "image": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+          "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+        },
+        "brandOrange": "#ff9a53",
+        "indicator": {
+          "left": 104.5,
+          "top": 786,
+          "right": 195,
+          "bottom": 834,
+          "width": 90.5,
+          "height": 48,
+          "radius": "24px",
+          "fill": "rgba(0, 0, 0, 0)",
+          "image": "linear-gradient(155deg, color(srgb 0.993412 0.641098 0.38949), color(srgb 0.985176 0.687569 0.46949))",
+          "rim": "rgb(146, 65, 17)",
+          "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset"
+        },
+        "coveragePercent": 6.29,
+        "reservedBottom": 64,
+        "pageOverflow": false
+      },
+      "contrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": true,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fca96e",
+            "ratio": 8.26
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fca76a",
+            "ratio": 8.13
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": false,
+          "text": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "icon": {
+            "foreground": "#1c2522",
+            "background": "#fcfbf6",
+            "ratio": 15.16
+          },
+          "outline": [
+            "rgb(28, 37, 34)",
+            "none",
+            "3px"
+          ]
+        }
+      ]
+    },
+    {
+      "view": "Perfil",
+      "theme": "dark",
+      "width": 375,
+      "expandedEnergy": false,
+      "info": {
+        "viewport": [
+          375,
+          812
+        ],
+        "material": {
+          "left": 10,
+          "top": 750,
+          "right": 365,
+          "bottom": 806,
+          "width": 355,
+          "height": 56
+        },
+        "main": {
+          "left": 0,
+          "top": 0,
+          "right": 375,
+          "bottom": 748,
+          "width": 375,
+          "height": 748
+        },
+        "buttons": [
+          {
+            "label": "Inicio",
+            "current": false,
+            "left": 14,
+            "top": 754,
+            "right": 100.75,
+            "bottom": 802,
+            "width": 86.75,
+            "height": 48,
+            "labelWidth": 29.58,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 47.38,
+              "top": 759.8,
+              "right": 67.38,
+              "bottom": 779.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Coach",
+            "current": false,
+            "left": 100.75,
+            "top": 754,
+            "right": 187.5,
+            "bottom": 802,
+            "width": 86.75,
+            "height": 48,
+            "labelWidth": 33.38,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 134.13,
+              "top": 759.8,
+              "right": 154.13,
+              "bottom": 779.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Datos",
+            "current": false,
+            "left": 187.5,
+            "top": 754,
+            "right": 274.25,
+            "bottom": 802,
+            "width": 86.75,
+            "height": 48,
+            "labelWidth": 31.48,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 220.88,
+              "top": 759.8,
+              "right": 240.88,
+              "bottom": 779.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Perfil",
+            "current": true,
+            "left": 274.25,
+            "top": 754,
+            "right": 361,
+            "bottom": 802,
+            "width": 86.75,
+            "height": 48,
+            "labelWidth": 28.09,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 307.63,
+              "top": 759.8,
+              "right": 327.63,
+              "bottom": 779.8,
+              "width": 20,
+              "height": 20
+            }
+          }
+        ],
+        "rightGap": 10,
+        "bottomGap": 6,
+        "radius": "28px",
+        "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+        "backdrop": "blur(10px) saturate(1.1)",
+        "outline": "color(srgb 0.466667 0.521569 0.482353 / 0.38)",
+        "surfaceLighting": {
+          "image": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+          "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+        },
+        "brandOrange": "#ff9a53",
+        "indicator": {
+          "left": 274.25,
+          "top": 754,
+          "right": 361,
+          "bottom": 802,
+          "width": 86.75,
+          "height": 48,
+          "radius": "24px",
+          "fill": "rgba(0, 0, 0, 0)",
+          "image": "linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0))",
+          "rim": "rgb(255, 154, 83)",
+          "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset"
+        },
+        "coveragePercent": 6.53,
+        "reservedBottom": 0,
+        "pageOverflow": false
+      },
+      "overlap": {
+        "mainBottom": 748,
+        "trackTop": 750,
+        "trackBottom": 806,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 49,
+        "range": 242,
+        "accountTop": 585.9375,
+        "accountBottom": 853.4375,
+        "accountBackground": "rgb(26, 33, 31)",
+        "dividers": [
+          {
+            "bottom": 703.4375,
+            "border": "rgb(65, 75, 69)"
+          },
+          {
+            "bottom": 778.4375,
+            "border": "rgb(65, 75, 69)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 63.25,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 134.25,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 205.25000000000003,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 276.25,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      },
+      "lastControl": {
+        "label": "Borrar todos los registros",
+        "bottom": 714.9375,
+        "navTop": 750,
+        "hit": true
+      },
+      "end": {
+        "mainBottom": 748,
+        "trackTop": 750,
+        "trackBottom": 806,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 373,
+        "range": 373,
+        "accountTop": 261.9375,
+        "accountBottom": 529.4375,
+        "accountBackground": "rgb(26, 33, 31)",
+        "dividers": [
+          {
+            "bottom": 379.4375,
+            "border": "rgb(65, 75, 69)"
+          },
+          {
+            "bottom": 454.4375,
+            "border": "rgb(65, 75, 69)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 63.25,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 134.25,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 205.25000000000003,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 276.25,
+            "y": 764,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      },
+      "contrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": true,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#a14300",
+            "ratio": 5.74
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#a74500",
+            "ratio": 5.45
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        }
+      ],
+      "finalContrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": true,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#a14300",
+            "ratio": 5.74
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#a74500",
+            "ratio": 5.45
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        }
+      ]
+    },
+    {
+      "view": "Perfil",
+      "theme": "dark",
+      "width": 390,
+      "expandedEnergy": false,
+      "info": {
+        "viewport": [
+          390,
+          844
+        ],
+        "material": {
+          "left": 10,
+          "top": 782,
+          "right": 380,
+          "bottom": 838,
+          "width": 370,
+          "height": 56
+        },
+        "main": {
+          "left": 0,
+          "top": 0,
+          "right": 390,
+          "bottom": 780,
+          "width": 390,
+          "height": 780
+        },
+        "buttons": [
+          {
+            "label": "Inicio",
+            "current": false,
+            "left": 14,
+            "top": 786,
+            "right": 104.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 29.58,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 49.25,
+              "top": 791.8,
+              "right": 69.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Coach",
+            "current": false,
+            "left": 104.5,
+            "top": 786,
+            "right": 195,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 33.38,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 139.75,
+              "top": 791.8,
+              "right": 159.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Datos",
+            "current": false,
+            "left": 195,
+            "top": 786,
+            "right": 285.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 31.48,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 230.25,
+              "top": 791.8,
+              "right": 250.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Perfil",
+            "current": true,
+            "left": 285.5,
+            "top": 786,
+            "right": 376,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 28.09,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 320.75,
+              "top": 791.8,
+              "right": 340.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          }
+        ],
+        "rightGap": 10,
+        "bottomGap": 6,
+        "radius": "28px",
+        "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+        "backdrop": "blur(10px) saturate(1.1)",
+        "outline": "color(srgb 0.466667 0.521569 0.482353 / 0.38)",
+        "surfaceLighting": {
+          "image": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+          "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+        },
+        "brandOrange": "#ff9a53",
+        "indicator": {
+          "left": 285.5,
+          "top": 786,
+          "right": 376,
+          "bottom": 834,
+          "width": 90.5,
+          "height": 48,
+          "radius": "24px",
+          "fill": "rgba(0, 0, 0, 0)",
+          "image": "linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0))",
+          "rim": "rgb(255, 154, 83)",
+          "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset"
+        },
+        "coveragePercent": 6.29,
+        "reservedBottom": 0,
+        "pageOverflow": false
+      },
+      "overlap": {
+        "mainBottom": 780,
+        "trackTop": 782,
+        "trackBottom": 838,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 17,
+        "range": 210,
+        "accountTop": 617.9375,
+        "accountBottom": 885.4375,
+        "accountBackground": "rgb(26, 33, 31)",
+        "dividers": [
+          {
+            "bottom": 735.4375,
+            "border": "rgb(65, 75, 69)"
+          },
+          {
+            "bottom": 810.4375,
+            "border": "rgb(65, 75, 69)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 65.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 139.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 213.50000000000003,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 287.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      },
+      "lastControl": {
+        "label": "Borrar todos los registros",
+        "bottom": 746.9375,
+        "navTop": 782,
+        "hit": true
+      },
+      "end": {
+        "mainBottom": 780,
+        "trackTop": 782,
+        "trackBottom": 838,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 341,
+        "range": 341,
+        "accountTop": 293.9375,
+        "accountBottom": 561.4375,
+        "accountBackground": "rgb(26, 33, 31)",
+        "dividers": [
+          {
+            "bottom": 411.4375,
+            "border": "rgb(65, 75, 69)"
+          },
+          {
+            "bottom": 486.4375,
+            "border": "rgb(65, 75, 69)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 65.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 139.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 213.50000000000003,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 287.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      },
+      "contrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": true,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#a04200",
+            "ratio": 5.82
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#a74500",
+            "ratio": 5.45
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        }
+      ],
+      "finalContrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": true,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#a04200",
+            "ratio": 5.82
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#a74500",
+            "ratio": 5.45
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        }
+      ]
+    },
+    {
+      "view": "Perfil",
+      "theme": "dark",
+      "width": 440,
+      "expandedEnergy": true,
+      "info": {
+        "viewport": [
+          440,
+          956
+        ],
+        "material": {
+          "left": 10,
+          "top": 894,
+          "right": 430,
+          "bottom": 950,
+          "width": 420,
+          "height": 56
+        },
+        "main": {
+          "left": 0,
+          "top": 0,
+          "right": 440,
+          "bottom": 892,
+          "width": 440,
+          "height": 892
+        },
+        "buttons": [
+          {
+            "label": "Inicio",
+            "current": false,
+            "left": 14,
+            "top": 898,
+            "right": 117,
+            "bottom": 946,
+            "width": 103,
+            "height": 48,
+            "labelWidth": 29.58,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 55.5,
+              "top": 903.8,
+              "right": 75.5,
+              "bottom": 923.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Coach",
+            "current": false,
+            "left": 117,
+            "top": 898,
+            "right": 220,
+            "bottom": 946,
+            "width": 103,
+            "height": 48,
+            "labelWidth": 33.38,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 158.5,
+              "top": 903.8,
+              "right": 178.5,
+              "bottom": 923.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Datos",
+            "current": false,
+            "left": 220,
+            "top": 898,
+            "right": 323,
+            "bottom": 946,
+            "width": 103,
+            "height": 48,
+            "labelWidth": 31.48,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 261.5,
+              "top": 903.8,
+              "right": 281.5,
+              "bottom": 923.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Perfil",
+            "current": true,
+            "left": 323,
+            "top": 898,
+            "right": 426,
+            "bottom": 946,
+            "width": 103,
+            "height": 48,
+            "labelWidth": 28.09,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 364.5,
+              "top": 903.8,
+              "right": 384.5,
+              "bottom": 923.8,
+              "width": 20,
+              "height": 20
+            }
+          }
+        ],
+        "rightGap": 10,
+        "bottomGap": 6,
+        "radius": "28px",
+        "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+        "backdrop": "blur(10px) saturate(1.1)",
+        "outline": "color(srgb 0.466667 0.521569 0.482353 / 0.38)",
+        "surfaceLighting": {
+          "image": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+          "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+        },
+        "brandOrange": "#ff9a53",
+        "indicator": {
+          "left": 323,
+          "top": 898,
+          "right": 426,
+          "bottom": 946,
+          "width": 103,
+          "height": 48,
+          "radius": "24px",
+          "fill": "rgba(0, 0, 0, 0)",
+          "image": "linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0))",
+          "rim": "rgb(255, 154, 83)",
+          "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset"
+        },
+        "coveragePercent": 5.59,
+        "reservedBottom": 0,
+        "pageOverflow": false
+      },
+      "overlap": {
+        "mainBottom": 892,
+        "trackTop": 894,
+        "trackBottom": 950,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 51,
+        "range": 244,
+        "accountTop": 729.4375,
+        "accountBottom": 996.9375,
+        "accountBackground": "rgb(26, 33, 31)",
+        "dividers": [
+          {
+            "bottom": 846.9375,
+            "border": "rgb(65, 75, 69)"
+          },
+          {
+            "bottom": 921.9375,
+            "border": "rgb(65, 75, 69)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 73,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 157,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 241.00000000000003,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 325,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      },
+      "lastControl": {
+        "label": "Borrar todos los registros",
+        "bottom": 858.9375,
+        "navTop": 894,
+        "hit": true
+      },
+      "end": {
+        "mainBottom": 892,
+        "trackTop": 894,
+        "trackBottom": 950,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 355,
+        "range": 355,
+        "accountTop": 425.4375,
+        "accountBottom": 692.9375,
+        "accountBackground": "rgb(26, 33, 31)",
+        "dividers": [
+          {
+            "bottom": 542.9375,
+            "border": "rgb(65, 75, 69)"
+          },
+          {
+            "bottom": 617.9375,
+            "border": "rgb(65, 75, 69)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 73,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 157,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 241.00000000000003,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 325,
+            "y": 908,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      },
+      "contrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": true,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#a04200",
+            "ratio": 5.82
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#a64500",
+            "ratio": 5.49
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        }
+      ],
+      "finalContrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": true,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#a04200",
+            "ratio": 5.82
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#a64500",
+            "ratio": 5.49
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        }
+      ]
+    },
+    {
+      "view": "Inicio",
+      "theme": "dark",
+      "width": 390,
+      "info": {
+        "viewport": [
+          390,
+          844
+        ],
+        "material": {
+          "left": 10,
+          "top": 782,
+          "right": 380,
+          "bottom": 838,
+          "width": 370,
+          "height": 56
+        },
+        "main": {
+          "left": 0,
+          "top": 0,
+          "right": 390,
+          "bottom": 844,
+          "width": 390,
+          "height": 844
+        },
+        "buttons": [
+          {
+            "label": "Inicio",
+            "current": true,
+            "left": 14,
+            "top": 786,
+            "right": 104.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 29.58,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 49.25,
+              "top": 791.8,
+              "right": 69.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Coach",
+            "current": false,
+            "left": 104.5,
+            "top": 786,
+            "right": 195,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 33.38,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 139.75,
+              "top": 791.8,
+              "right": 159.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Datos",
+            "current": false,
+            "left": 195,
+            "top": 786,
+            "right": 285.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 31.48,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 230.25,
+              "top": 791.8,
+              "right": 250.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Perfil",
+            "current": false,
+            "left": 285.5,
+            "top": 786,
+            "right": 376,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 28.09,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 320.75,
+              "top": 791.8,
+              "right": 340.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          }
+        ],
+        "rightGap": 10,
+        "bottomGap": 6,
+        "radius": "28px",
+        "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+        "backdrop": "blur(10px) saturate(1.1)",
+        "outline": "color(srgb 0.466667 0.521569 0.482353 / 0.38)",
+        "surfaceLighting": {
+          "image": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+          "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+        },
+        "brandOrange": "#ff9a53",
+        "indicator": {
+          "left": 14,
+          "top": 786,
+          "right": 104.5,
+          "bottom": 834,
+          "width": 90.5,
+          "height": 48,
+          "radius": "24px",
+          "fill": "rgba(0, 0, 0, 0)",
+          "image": "linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0))",
+          "rim": "rgb(255, 154, 83)",
+          "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset"
+        },
+        "coveragePercent": 6.29,
+        "reservedBottom": 96,
+        "pageOverflow": false
+      },
+      "contrast": [
+        {
+          "label": "Inicio",
+          "active": true,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#a04200",
+            "ratio": 5.82
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#a74500",
+            "ratio": 5.45
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#1c2321",
+            "ratio": 14.53
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#29302e",
+            "ratio": 12.24
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#1a211f",
+            "ratio": 14.87
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#1b2220",
+            "ratio": 14.7
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#1b2320",
+            "ratio": 14.57
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#1f2724",
+            "ratio": 13.87
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        }
+      ]
+    },
+    {
+      "view": "Datos",
+      "theme": "dark",
+      "width": 390,
+      "info": {
+        "viewport": [
+          390,
+          844
+        ],
+        "material": {
+          "left": 10,
+          "top": 782,
+          "right": 380,
+          "bottom": 838,
+          "width": 370,
+          "height": 56
+        },
+        "main": {
+          "left": 0,
+          "top": 0,
+          "right": 390,
+          "bottom": 844,
+          "width": 390,
+          "height": 844
+        },
+        "buttons": [
+          {
+            "label": "Inicio",
+            "current": false,
+            "left": 14,
+            "top": 786,
+            "right": 104.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 29.58,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 49.25,
+              "top": 791.8,
+              "right": 69.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Coach",
+            "current": false,
+            "left": 104.5,
+            "top": 786,
+            "right": 195,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 33.38,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 139.75,
+              "top": 791.8,
+              "right": 159.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Datos",
+            "current": true,
+            "left": 195,
+            "top": 786,
+            "right": 285.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 31.48,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 230.25,
+              "top": 791.8,
+              "right": 250.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Perfil",
+            "current": false,
+            "left": 285.5,
+            "top": 786,
+            "right": 376,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 28.09,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 320.75,
+              "top": 791.8,
+              "right": 340.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          }
+        ],
+        "rightGap": 10,
+        "bottomGap": 6,
+        "radius": "28px",
+        "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+        "backdrop": "blur(10px) saturate(1.1)",
+        "outline": "color(srgb 0.466667 0.521569 0.482353 / 0.38)",
+        "surfaceLighting": {
+          "image": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+          "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+        },
+        "brandOrange": "#ff9a53",
+        "indicator": {
+          "left": 195,
+          "top": 786,
+          "right": 285.5,
+          "bottom": 834,
+          "width": 90.5,
+          "height": 48,
+          "radius": "24px",
+          "fill": "rgba(0, 0, 0, 0)",
+          "image": "linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0))",
+          "rim": "rgb(255, 154, 83)",
+          "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset"
+        },
+        "coveragePercent": 6.29,
+        "reservedBottom": 96,
+        "pageOverflow": false
+      },
+      "contrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#1f2724",
+            "ratio": 13.87
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#232a28",
+            "ratio": 13.3
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#1b2220",
+            "ratio": 14.7
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#1a211f",
+            "ratio": 14.87
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": true,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#a14300",
+            "ratio": 5.74
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#a74500",
+            "ratio": 5.45
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#262d2a",
+            "ratio": 12.78
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#2b312f",
+            "ratio": 12.04
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        }
+      ]
+    },
+    {
+      "view": "Coach",
+      "theme": "dark",
+      "width": 390,
+      "info": {
+        "viewport": [
+          390,
+          844
+        ],
+        "material": {
+          "left": 10,
+          "top": 782,
+          "right": 380,
+          "bottom": 838,
+          "width": 370,
+          "height": 56
+        },
+        "main": {
+          "left": 0,
+          "top": 0,
+          "right": 390,
+          "bottom": 844,
+          "width": 390,
+          "height": 844
+        },
+        "buttons": [
+          {
+            "label": "Inicio",
+            "current": false,
+            "left": 14,
+            "top": 786,
+            "right": 104.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 29.58,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 49.25,
+              "top": 791.8,
+              "right": 69.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Coach",
+            "current": true,
+            "left": 104.5,
+            "top": 786,
+            "right": 195,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 33.38,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 139.75,
+              "top": 791.8,
+              "right": 159.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Datos",
+            "current": false,
+            "left": 195,
+            "top": 786,
+            "right": 285.5,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 31.48,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 230.25,
+              "top": 791.8,
+              "right": 250.25,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          },
+          {
+            "label": "Perfil",
+            "current": false,
+            "left": 285.5,
+            "top": 786,
+            "right": 376,
+            "bottom": 834,
+            "width": 90.5,
+            "height": 48,
+            "labelWidth": 28.09,
+            "labelHeight": 16,
+            "labelFits": true,
+            "icon": {
+              "left": 320.75,
+              "top": 791.8,
+              "right": 340.75,
+              "bottom": 811.8,
+              "width": 20,
+              "height": 20
+            }
+          }
+        ],
+        "rightGap": 10,
+        "bottomGap": 6,
+        "radius": "28px",
+        "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+        "backdrop": "blur(10px) saturate(1.1)",
+        "outline": "color(srgb 0.466667 0.521569 0.482353 / 0.38)",
+        "surfaceLighting": {
+          "image": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+          "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+        },
+        "brandOrange": "#ff9a53",
+        "indicator": {
+          "left": 104.5,
+          "top": 786,
+          "right": 195,
+          "bottom": 834,
+          "width": 90.5,
+          "height": 48,
+          "radius": "24px",
+          "fill": "rgba(0, 0, 0, 0)",
+          "image": "linear-gradient(155deg, color(srgb 0.69 0.284826 0), color(srgb 0.57 0.235291 0))",
+          "rim": "rgb(255, 154, 83)",
+          "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset"
+        },
+        "coveragePercent": 6.29,
+        "reservedBottom": 64,
+        "pageOverflow": false
+      },
+      "contrast": [
+        {
+          "label": "Inicio",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Coach",
+          "active": true,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#a14300",
+            "ratio": 5.74
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#a74500",
+            "ratio": 5.45
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Datos",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        },
+        {
+          "label": "Perfil",
+          "active": false,
+          "text": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "icon": {
+            "foreground": "#f5f4ee",
+            "background": "#181f1d",
+            "ratio": 15.21
+          },
+          "outline": [
+            "rgb(245, 244, 238)",
+            "none",
+            "3px"
+          ]
+        }
+      ]
+    }
+  ],
+  "conditions": [
+    {
+      "scenario": "diagnostico-sin-bordes",
+      "details": {
+        "mainBottom": 780,
+        "trackTop": 782,
+        "trackBottom": 838,
+        "bottomMargin": "64px",
+        "bottomPadding": "0px",
+        "scrollPadding": "auto",
+        "scrollTop": 17,
+        "range": 210,
+        "accountTop": 617.9375,
+        "accountBottom": 885.4375,
+        "accountBackground": "rgb(255, 254, 250)",
+        "dividers": [
+          {
+            "bottom": 735.4375,
+            "border": "rgba(0, 0, 0, 0)"
+          },
+          {
+            "bottom": 810.4375,
+            "border": "rgba(0, 0, 0, 0)"
+          }
+        ],
+        "horizontalOverflow": false,
+        "samples": [
+          {
+            "x": 65.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 139.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 213.50000000000003,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          },
+          {
+            "x": 287.5,
+            "y": 796,
+            "hasMain": false,
+            "hasAccount": false
+          }
+        ]
+      }
+    }
+  ],
+  "motion": [
+    {
+      "scenario": "desplazamiento",
+      "distance": 210,
+      "scrolls": [
+        0,
+        210
+      ],
+      "frames": 151,
+      "frameMedianMs": 16.7
+    }
+  ]
+}

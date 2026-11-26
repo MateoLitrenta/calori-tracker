@@ -8,13 +8,14 @@ import ts from 'typescript';
 const stub = code => `data:text/javascript,${encodeURIComponent(code)}`;
 globalThis.__chartsHarness = { profile: null, period: 'Semana' };
 const imports = {
-  react: stub(`import { useMemo, useRef, useLayoutEffect } from ${JSON.stringify(import.meta.resolve('react'))};
+  react: stub(`import { useCallback, useEffect, useMemo, useRef, useLayoutEffect } from ${JSON.stringify(import.meta.resolve('react'))};
     export const useState = initial => {
       const field = initial === null ? 'selectedBucket' : initial === false ? 'plotOverflows' : 'period';
       const harness = globalThis.__chartsHarness;
       return [harness[field] ?? initial, next => { harness[field] = typeof next === 'function' ? next(harness[field]) : next; }];
     };
-    export { useMemo, useRef, useLayoutEffect };`),
+    export { useCallback, useEffect, useMemo, useRef, useLayoutEffect };`),
+  '../lib/bottomNavDrag': new URL('../src/lib/bottomNavDrag.ts', import.meta.url).href,
   '../hooks/useAppStore': stub(`export const useAppStore = () => ({
     activeProfile: globalThis.__chartsHarness.profile,
     user: { id: 'test-user' }, avatarRevision: 0, signOut() {}
@@ -441,7 +442,12 @@ test('desktop and mobile navigation use Datos and Coach while preserving destina
   globalThis.__chartsHarness.profile = profile;
   for (const component of [Sidebar, BottomNav]) {
     const destinations = [];
-    const tree = component({ activeTab: 'chat', onTabChange(tab) { destinations.push(tab); }, onAuthOpen() {} });
+    let tree;
+    function Capture() {
+      tree = component({ activeTab: 'chat', onTabChange(tab) { destinations.push(tab); }, onAuthOpen() {} });
+      return tree;
+    }
+    renderToStaticMarkup(React.createElement(Capture));
     const coachButton = nodes(tree, element => element.type === 'button' &&
       renderToStaticMarkup(element).includes('Coach'))[0];
     assert.ok(coachButton);

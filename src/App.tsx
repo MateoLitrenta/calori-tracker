@@ -14,6 +14,7 @@ import type { EntryRoute } from './utils/entryRoute';
 import type { HomeViewState } from './components/HomeView';
 import './DesktopExperience.css';
 import './FitnessSystem.css';
+import './components/NavigationGlass.css';
 
 const HomeView = lazy(() => import('./components/HomeView'));
 const loadChatView = () => import('./components/ChatView');
