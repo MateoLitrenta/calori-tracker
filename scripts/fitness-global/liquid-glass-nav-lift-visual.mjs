@@ -14,7 +14,6 @@ const reportName = webkit ? 'mediciones-webkit.json' : 'mediciones-chromium.json
 const phase = before ? 'before' : 'after';
 const report = { browser: browser.version(), phase, cases: [], safeAreas: [], resize: [], desktop: [], warnings: [] };
 
-const nav = '.app-bottom-nav';
 const small = [[320, 568], [375, 812], [390, 844], [440, 956]];
 const themes = quick ? ['light'] : ['light', 'dark'];
 const widths = quick ? [[390, 844]] : small;
