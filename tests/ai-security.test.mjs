@@ -29,18 +29,20 @@ after(() => db.close());
 beforeEach(async () => { await db.exec('reset role; truncate ai_private.daily_usage; set role service_role;'); });
 
 function infrastructure(t) {
-  const envNames = ['GEMINI_API_KEY', 'SUPABASE_AI_SECRET_KEY', 'AI_TEXT_DAILY_LIMIT', 'AI_IMAGE_DAILY_LIMIT', 'AI_AUDIO_DAILY_LIMIT', 'AI_GEMINI_TIMEOUT_MS'];
+  const envNames = ['GEMINI_API_KEY', 'GEMINI_MODEL', 'SUPABASE_AI_SECRET_KEY', 'AI_TEXT_DAILY_LIMIT', 'AI_IMAGE_DAILY_LIMIT', 'AI_AUDIO_DAILY_LIMIT', 'AI_GEMINI_TIMEOUT_MS'];
   const oldEnv = Object.fromEntries(envNames.map(key => [key, process.env[key]]));
   const oldFetch = globalThis.fetch;
   const oldInfo = console.info;
   const logs = [];
   const reservations = [];
+  const providerRequests = [];
   let calls = 0;
-  const control = { logs, reservations, authFailure: undefined, quotaFailure: false,
+  const control = { logs, reservations, providerRequests, authFailure: undefined, quotaFailure: false,
     provider: async () => Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify({ reply: 'Respuesta de prueba.', actions: [], presentation: 'none' }) }] } }],
       usageMetadata: { promptTokenCount: 100, candidatesTokenCount: 20, totalTokenCount: 120 } }),
     get calls() { return calls; } };
   process.env.GEMINI_API_KEY = 'gemini_do_not_log';
+  delete process.env.GEMINI_MODEL;
   process.env.SUPABASE_AI_SECRET_KEY = 'sb_secret_do_not_log';
   process.env.AI_TEXT_DAILY_LIMIT = '30'; process.env.AI_IMAGE_DAILY_LIMIT = '10'; process.env.AI_AUDIO_DAILY_LIMIT = '10';
   delete process.env.AI_GEMINI_TIMEOUT_MS;
@@ -66,6 +68,7 @@ function infrastructure(t) {
       return Response.json(result.rows[0].quota);
     }
     assert.equal(new URL(url).hostname, 'generativelanguage.googleapis.com');
+    providerRequests.push({ url, body: JSON.parse(options.body) });
     calls++;
     return control.provider(url, options);
   };
@@ -106,23 +109,38 @@ test('verified tokens also enforce issuer, audience, role and not-before', async
   assert.equal((await mock.request({}, sign({ aud: ['authenticated', 'additional'] }))).status, 200);
 });
 
-test('chat, image estimates and transcription all authenticate and reserve the validated modality', async t => {
+test('Gemini 3.5 requests use compatible parameters and reserve each validated modality once', async t => {
   const mock = infrastructure(t);
   const image = { kind: 'image', mimeType: 'image/jpeg', data: 'YWJj' };
   const audio = { kind: 'audio', mimeType: 'audio/webm', data: 'YWJj' };
   const requests = [
-    [{}, 'text', { reply: 'Hola', actions: [] }],
+    [{}, 'text', { reply: 'Hola', actions: [] }, 2048],
+    [{ mode: 'estimate', estimateType: 'meal', text: 'Arroz con verduras' }, 'text',
+      { estimated: true, calories: 300, description: 'Arroz con verduras', assumptions: [] }, 512],
+    [{ mode: 'estimate', estimateType: 'workout', text: 'Caminata', duration: 30, profile: { weight: 70 } }, 'text',
+      { estimated: true, calories: 200, activity: 'Caminata de 30 minutos', assumptions: [] }, 512],
     [{ mode: 'estimate', estimateType: 'meal', attachment: image }, 'image',
-      { estimated: true, calories: 100, description: 'Comida', assumptions: [] }],
+      { estimated: true, calories: 100, description: 'Comida', assumptions: [] }, 512],
     [{ attachment: image }, 'image', { reply: 'Revisá la propuesta.', presentation: 'none',
       actions: [{ type: 'add_meal', estimated: true,
-        payload: { dateStr: '2026-10-09', name: 'Comida', type: 'Almuerzo', calories: 100, time: '12:30' } }] }],
-    [{ mode: 'transcribe', attachment: audio, messages: undefined }, 'audio', { transcript: 'Audio de prueba' }],
+        payload: { dateStr: '2026-10-09', name: 'Comida', type: 'Almuerzo', calories: 100, time: '12:30' } }] }, 2048],
+    [{ mode: 'transcribe', attachment: audio, messages: undefined }, 'audio', { transcript: 'Audio de prueba' }, 1024],
   ];
-  for (const [body, category, result] of requests) {
+  for (const [body, category, result, maxOutputTokens] of requests) {
+    const beforeCalls = mock.calls, beforeReservations = mock.reservations.length;
     assert.equal((await mock.request(body, '')).status, 401);
+    assert.equal(mock.calls, beforeCalls);
+    assert.equal(mock.reservations.length, beforeReservations);
     mock.provider = async () => Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify(result) }] } }] });
     assert.equal((await mock.request(body)).status, 200);
+    assert.equal(mock.calls, beforeCalls + 1);
+    assert.equal(mock.reservations.length, beforeReservations + 1);
+    const sent = mock.providerRequests.at(-1);
+    assert.equal(new URL(sent.url).pathname, '/v1beta/models/gemini-3.5-flash-lite:generateContent');
+    assert.deepEqual(sent.body.generationConfig, {
+      responseMimeType: 'application/json', maxOutputTokens,
+      thinkingConfig: { thinkingLevel: 'minimal', includeThoughts: false },
+    });
     const reservation = mock.reservations.at(-1);
     assert.equal(reservation.p_category, category);
     assert.equal(reservation.p_limit, category === 'text' ? 30 : 10);
@@ -132,7 +150,7 @@ test('chat, image estimates and transcription all authenticate and reserve the v
   }
   await db.exec('reset role');
   const counters = await db.query('select category, used from ai_private.daily_usage order by category');
-  assert.deepEqual(counters.rows, [{ category: 'audio', used: 1 }, { category: 'image', used: 2 }, { category: 'text', used: 1 }]);
+  assert.deepEqual(counters.rows, [{ category: 'audio', used: 1 }, { category: 'image', used: 2 }, { category: 'text', used: 3 }]);
   await db.exec('set role service_role');
   const calls = mock.calls;
   // Exhaust only synthetic media buckets, leaving the text bucket available.
@@ -144,6 +162,82 @@ test('chat, image estimates and transcription all authenticate and reserve the v
   assert.equal((await mock.request()).status, 200);
 });
 
+test('model selection is request-local, supports explicit rollback and rejects unsupported profiles before quota', async t => {
+  const mock = infrastructure(t);
+  const audio = { kind: 'audio', mimeType: 'audio/webm', data: 'YWJj' };
+  const cases = [
+    [{}, { reply: 'Hola', actions: [] }, 0.7, 2048],
+    [{ mode: 'estimate', estimateType: 'meal', text: 'Arroz con verduras' },
+      { estimated: true, calories: 300, description: 'Arroz con verduras', assumptions: [] }, 0.2, 512],
+    [{ mode: 'transcribe', attachment: audio, messages: undefined }, { transcript: 'Una tostada con queso' }, 0, 1024],
+  ];
+  process.env.GEMINI_MODEL = 'gemini-2.5-flash';
+  for (const [body, result, temperature, maxOutputTokens] of cases) {
+    mock.provider = async () => Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify(result) }] } }] });
+    assert.equal((await mock.request(body)).status, 200);
+    const sent = mock.providerRequests.at(-1);
+    assert.equal(new URL(sent.url).pathname, '/v1beta/models/gemini-2.5-flash:generateContent');
+    assert.equal(sent.body.generationConfig.temperature, temperature);
+    assert.equal(sent.body.generationConfig.maxOutputTokens, maxOutputTokens);
+    assert.equal(sent.body.generationConfig.thinkingConfig.thinkingBudget, 0);
+    assert.equal(Object.hasOwn(sent.body.generationConfig.thinkingConfig, 'thinkingLevel'), false);
+  }
+  const calls = mock.calls, reservations = mock.reservations.length;
+  for (const model of ['gemini-unknown', '   ']) {
+    process.env.GEMINI_MODEL = model;
+    for (const [body] of cases) {
+      const response = await mock.request(body);
+      assert.equal(response.status, 503);
+      assert.equal((await response.json()).code, 'ai_configuration');
+      assert.equal(mock.calls, calls);
+      assert.equal(mock.reservations.length, reservations);
+    }
+  }
+  process.env.GEMINI_MODEL = 'gemini-3.5-flash-lite';
+  mock.provider = async () => Response.json({ candidates: [{ content: { parts: [{ text: '{"reply":"Hola","actions":[]}' }] } }] });
+  assert.equal((await mock.request()).status, 200);
+  assert.equal(new URL(mock.providerRequests.at(-1).url).pathname, '/v1beta/models/gemini-3.5-flash-lite:generateContent');
+  assert.equal(Object.hasOwn(mock.providerRequests.at(-1).body.generationConfig, 'temperature'), false);
+  assert.equal(mock.calls, calls + 1);
+  assert.equal(mock.reservations.length, reservations + 1);
+});
+
+test('Gemini thought parts never enter returned JSON for Coach, estimates or transcription', async t => {
+  const mock = infrastructure(t);
+  const privateThought = 'synthetic_hidden_reasoning_do_not_log';
+  const cases = [
+    [{}, { reply: 'Revisá la propuesta.', actions: [], presentation: 'none' }],
+    [{ mode: 'estimate', estimateType: 'meal', text: 'Tostada con queso' },
+      { estimated: true, calories: 200, description: 'Tostada con queso', assumptions: ['Una tostada'] }],
+    [{ mode: 'transcribe', attachment: { kind: 'audio', mimeType: 'audio/webm', data: 'YWJj' }, messages: undefined },
+      { transcript: 'Comí una tostada con queso a las diez y media' }],
+  ];
+  for (const [body, result] of cases) {
+    const serialized = JSON.stringify(result);
+    const thought = { thought: true, text: privateThought, thoughtSignature: 'private_synthetic_signature' };
+    const before = { calls: mock.calls, reservations: mock.reservations.length };
+    mock.provider = async () => Response.json({ candidates: [{ content: { parts: [
+      thought, { text: serialized.slice(0, 12) }, { thoughtSignature: 'private_synthetic_signature' },
+      { text: serialized.slice(12) },
+    ] } }], usageMetadata: { promptTokenCount: 100, candidatesTokenCount: 20, thoughtsTokenCount: 7, totalTokenCount: 127 } });
+    const response = await mock.request(body);
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), result);
+    assert.equal(mock.calls, before.calls + 1);
+    assert.equal(mock.reservations.length, before.reservations + 1);
+    const event = JSON.parse(mock.logs.at(-1));
+    assert.equal(event.model, 'gemini-3.5-flash-lite');
+    assert.equal(event.tokens.thoughts, 7);
+    mock.provider = async () => Response.json({ candidates: [{ content: { parts: [thought] } }] });
+    const missingAnswer = await mock.request(body);
+    assert.equal(missingAnswer.status, 502);
+    assert.equal(Object.hasOwn(await missingAnswer.json(), 'actions'), false);
+    assert.equal(mock.calls, before.calls + 2);
+    assert.equal(mock.reservations.length, before.reservations + 2);
+  }
+  for (const value of [privateThought, 'private_synthetic_signature']) assert.ok(!mock.logs.join('\n').includes(value));
+});
+
 test('valid session reaches Gemini; client identifiers cannot choose another user quota', async t => {
   const mock = infrastructure(t);
   assert.equal((await mock.request({ userId: other, user_id: other, email: 'other@example.invalid' })).status, 200);
@@ -151,7 +245,18 @@ test('valid session reaches Gemini; client identifiers cannot choose another use
   assert.equal(mock.calls, 1);
   const event = JSON.parse(mock.logs[0]);
   assert.equal(event.modality, 'text'); assert.equal(event.providerCalls, 1);
+  assert.equal(event.model, 'gemini-3.5-flash-lite');
   assert.deepEqual(event.tokens, { prompt: 100, output: 20, total: 120 });
+  // Provider metadata is optional and untrusted. Invalid thinking counters
+  // must not become a misleading numeric measurement in operational logs.
+  for (const thoughtsTokenCount of [-1, 1.5, Number.MAX_SAFE_INTEGER + 1, '7', null, 0]) {
+    mock.provider = async () => Response.json({ candidates: [{ content: { parts: [{ text: '{"reply":"Hola","actions":[]}' }] } }],
+      usageMetadata: { promptTokenCount: 100, candidatesTokenCount: 20, totalTokenCount: 120, thoughtsTokenCount } });
+    assert.equal((await mock.request()).status, 200);
+    const tokens = JSON.parse(mock.logs.at(-1)).tokens;
+    assert.equal(Object.hasOwn(tokens, 'thoughts'), thoughtsTokenCount === 0);
+    if (thoughtsTokenCount === 0) assert.equal(tokens.thoughts, 0);
+  }
 });
 
 test('concurrent authenticated calls cannot exceed the persistent quota; users and modes are independent', async t => {

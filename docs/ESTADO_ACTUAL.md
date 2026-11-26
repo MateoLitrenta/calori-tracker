@@ -1,5 +1,15 @@
 # Estado actual de Calori
 
+## 26 de noviembre de 2026 · Migración de Gemini y configuración común de Preview
+
+El usuario solicitó cambiar el modelo a `gemini-3.5-flash-lite` en Preview y Production y habilitar la configuración de IA para las previews de todas las ramas del repositorio. El servidor resuelve un perfil explícito para Coach, estimación y transcripción, usa los parámetros compatibles del modelo y conserva los cupos y máximos de salida existentes. El lector de JSON excluye pensamientos y firmas; los logs identifican el modelo sin guardar conversaciones.
+
+La configuración común de Preview utiliza las credenciales y cupos existentes. Las URLs anteriores no se actualizan: las ramas deben incorporar la migración y desplegarse de nuevo. Preview y Production siguen compartiendo datos y contadores de la cuenta. La protección de Vercel se conserva.
+
+Esta entrega es independiente del PR #99 de nombres de comidas, que continúa en revisión. La publicación efectiva, los commits y las comprobaciones reales deben consultarse en el PR de migración; los tests sintéticos no acreditan la calidad de Gemini real.
+
+[Decisiones, fuentes oficiales, validación y recuperación](gemini-35-migration.md)
+
 ## Auditoría del 24 de noviembre de 2026 · Etapa 1 integrada en el PR #92
 
 La rama parte del merge del PR #91. Inicio, Historial y Datos comparten la semana calendario de lunes a domingo. Las grillas mensuales y Home/End siguen ese mismo orden. Explorar una fecha conserva el día editable hasta abrir sus registros.
@@ -50,7 +60,7 @@ Las regresiones de React y de viewport son sintéticas. Después del merge, el u
 
 [Causa, pruebas y recorrido de aceptación](evidence/coach-proposal-keyboard/README.md)
 
-## Seguimiento del 25 de noviembre en revisión · Propuestas pendientes al navegar
+## Seguimiento del 25 de noviembre integrado en el PR #98 · Propuestas pendientes al navegar
 
 Base: merge del PR #97, `79ce7d58da24e2df50f0124cdf27033b3a9eece4`. El video posterior muestra una tarjeta pendiente que desaparece al ir a Inicio y volver a Coach, mientras su mensaje permanece.
 
