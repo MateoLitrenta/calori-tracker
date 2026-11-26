@@ -1,0 +1,228 @@
+{
+  "before": {
+    "activeElement": null,
+    "composer": {
+      "bottom": 876,
+      "height": 117,
+      "left": 411,
+      "right": 1275,
+      "top": 759,
+      "width": 864,
+      "x": 411,
+      "y": 759
+    },
+    "height": 900,
+    "log": {
+      "height": 593,
+      "scrollHeight": 3238,
+      "scrollTop": 0,
+      "top": 166.5
+    },
+    "messages": [
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 1. Consulta breve del historial.",
+        "top": 180.5
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 2. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético permi",
+        "top": 253.25
+      },
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 3. Consulta breve del historial.",
+        "top": 548.75
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 4. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético permi",
+        "top": 621.5
+      },
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 5. Consulta breve del historial.",
+        "top": 917
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 6. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético permi",
+        "top": 989.75
+      },
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 7. Consulta breve del historial.",
+        "top": 1285.25
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 8. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético permi",
+        "top": 1358
+      },
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 9. Consulta breve del historial.",
+        "top": 1653.5
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 10. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético perm",
+        "top": 1726.25
+      },
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 11. Consulta breve del historial.",
+        "top": 2021.75
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 12. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético perm",
+        "top": 2094.5
+      },
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 13. Consulta breve del historial.",
+        "top": 2390
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 14. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético perm",
+        "top": 2462.75
+      },
+      {
+        "height": 73.5,
+        "text": "Hoy a las 13:30 comí milanesa napolitana con papas al horno, ensalada de tomate, cerveza y ensalada de frutas de postre.",
+        "top": 2758.25
+      },
+      {
+        "height": 48.75,
+        "text": "Preparé esta propuesta sintética para que la revises.",
+        "top": 2855.75
+      }
+    ],
+    "overflow": false,
+    "proposal": {
+      "bottom": 3390.4375,
+      "height": 436.9375,
+      "left": 411,
+      "right": 1051,
+      "top": 2953.5,
+      "width": 640,
+      "x": 411,
+      "y": 2953.5
+    },
+    "theme": "dark",
+    "width": 1440
+  },
+  "after": {
+    "activeElement": null,
+    "composer": {
+      "bottom": 876,
+      "height": 117,
+      "left": 411,
+      "right": 1275,
+      "top": 759,
+      "width": 864,
+      "x": 411,
+      "y": 759
+    },
+    "height": 900,
+    "log": {
+      "height": 593,
+      "scrollHeight": 2901,
+      "scrollTop": 0,
+      "top": 166.5
+    },
+    "messages": [
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 1. Consulta breve del historial.",
+        "top": 180.5
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 2. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético permi",
+        "top": 253.25
+      },
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 3. Consulta breve del historial.",
+        "top": 548.75
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 4. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético permi",
+        "top": 621.5
+      },
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 5. Consulta breve del historial.",
+        "top": 917
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 6. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético permi",
+        "top": 989.75
+      },
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 7. Consulta breve del historial.",
+        "top": 1285.25
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 8. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético permi",
+        "top": 1358
+      },
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 9. Consulta breve del historial.",
+        "top": 1653.5
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 10. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético perm",
+        "top": 1726.25
+      },
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 11. Consulta breve del historial.",
+        "top": 2021.75
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 12. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético perm",
+        "top": 2094.5
+      },
+      {
+        "height": 48.75,
+        "text": "Mensaje de prueba 13. Consulta breve del historial.",
+        "top": 2390
+      },
+      {
+        "height": 271.5,
+        "text": "Mensaje de prueba 14. Este texto sintético permite comprobar que la lectura se conserva al cambiar la altura de una tarjeta. Este texto sintético perm",
+        "top": 2462.75
+      },
+      {
+        "height": 73.5,
+        "text": "Hoy a las 13:30 comí milanesa napolitana con papas al horno, ensalada de tomate, cerveza y ensalada de frutas de postre.",
+        "top": 2758.25
+      },
+      {
+        "height": 48.75,
+        "text": "Preparé esta propuesta sintética para que la revises.",
+        "top": 2855.75
+      },
+      {
+        "height": 100.046875,
+        "text": "Guardado confirmado\n\nRegistrado hoy: Milanesa napolitana con papas al horno, ensalada de tomate, cerveza y ensalada de frutas de postre · Almuerzo · 1",
+        "top": 2928.5
+      }
+    ],
+    "overflow": false,
+    "proposal": null,
+    "theme": "dark",
+    "width": 1440
+  }
+}

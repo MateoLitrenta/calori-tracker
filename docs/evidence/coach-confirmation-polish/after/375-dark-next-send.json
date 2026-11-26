@@ -1,0 +1,61 @@
+{
+  "activeElement": null,
+  "composer": {
+    "bottom": 748,
+    "height": 113,
+    "left": 0,
+    "right": 375,
+    "top": 635,
+    "width": 375,
+    "x": 0,
+    "y": 635
+  },
+  "height": 812,
+  "log": {
+    "height": 482,
+    "scrollHeight": 611,
+    "scrollTop": 129,
+    "top": 153
+  },
+  "messages": [
+    {
+      "height": 42.671875,
+      "text": "Ayudame a completar las comidas de hoy.",
+      "top": 34
+    },
+    {
+      "height": 65.34375,
+      "text": "Podemos registrar una comida por vez. Contame qué comiste y a qué hora.",
+      "top": 88.671875
+    },
+    {
+      "height": 88.015625,
+      "text": "Hoy a las 13:30 comí milanesa napolitana con papas al horno, ensalada de tomate, cerveza y ensalada de frutas de postre.",
+      "top": 166.015625
+    },
+    {
+      "height": 65.34375,
+      "text": "Preparé esta propuesta sintética para que la revises.",
+      "top": 266.03125
+    },
+    {
+      "height": 136.421875,
+      "text": "Guardado confirmado\n\nRegistrado hoy: Milanesa napolitana con papas al horno, ensalada de tomate, cerveza y ensalada de frutas de postre · Almuerzo · 1",
+      "top": 343.375
+    },
+    {
+      "height": 65.34375,
+      "text": "Borrador sintético sin enviar.\nQuiero conservar esta pregunta.",
+      "top": 491.796875
+    },
+    {
+      "height": 42.671875,
+      "text": "Respuesta sintética de QA",
+      "top": 569.140625
+    }
+  ],
+  "overflow": false,
+  "proposal": null,
+  "theme": "dark",
+  "width": 375
+}

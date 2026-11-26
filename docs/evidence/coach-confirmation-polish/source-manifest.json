@@ -1,0 +1,13 @@
+{
+  "base_tree": "21c2e90d9d1528d3af8a9389341b621164971b75",
+  "captured": "2026-11-26",
+  "method": "Real app in iframe via sites-preview and CUA Chrome; synthetic boundaries only",
+  "files": {
+    "src/components/ChatView.tsx": "ad432ebebecca930cb4b85b7425ec9217ffc71c7955fe91c1d1df775afbeaad6",
+    "src/components/CoachFitness.css": "723fcc40361e088596b8820135388948b06bd7f4e214fed4c4cabbdb5d01b7a8",
+    "src/components/DailyPanel.tsx": "3244037dc139c5a16d5ac25b690890df6d2d1b08939bf8d5419b8c8ba54989b6",
+    "src/components/EntryEstimateResult.tsx": "69edaa9410d445cfb4c550aa915a7b8e505faa86425fd0d754772b8d9a0b0841",
+    "src/lib/coachConfirmationViewport.ts": "2efdad5ea47b6502ec04c223df79d4d680fcb6a1b593d34d3b4595005dc4d6bf",
+    "src/utils/helpers.ts": "ee71d47d5dc50260def5626133e7745e98bd6791b5263420bf1e6724eba30984"
+  }
+}

@@ -91,7 +91,7 @@
 
 .chat-messages { display: flex; flex: 1 1 0; flex-direction: column; gap: 12px; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; padding: 14px var(--chat-inset); }
 .chat-message-list { display: flex; flex: 1 0 auto; flex-direction: column; gap: inherit; min-width: 0; }
-.chat-scroll-end { min-height: 1px; }
+.chat-scroll-end { order: 10000; min-height: 1px; }
 .chat-empty { min-width: 0; width: 100%; }
 .chat-empty-label { margin: 0 0 7px; color: var(--fit-quiet); font-size: 13px; font-weight: 600; }
 .chat-empty-suggestions { display: grid; gap: 7px; }
@@ -127,6 +127,10 @@
 .chat-typing-dot:nth-child(3) { animation-delay: .32s; }
 @keyframes coach-pulse { from { opacity: .4; } to { opacity: 1; } }
 .chat-message-new, .chat-confirmation { animation: calori-enter var(--motion-control) var(--motion-ease-enter); }
+/* The receipt replaces a proposal at the reader's current position. Only fade
+   it in: a translated entry would move the visual anchor during measurement. */
+@keyframes coach-receipt-enter { from { opacity: 0; } to { opacity: 1; } }
+.chat-message-new.chat-message-receipt { animation-name: coach-receipt-enter; }
 
 .chat-composer { flex: none; padding: 9px var(--chat-inset); border-top: 1px solid var(--fit-rule); background: var(--fit-page); }
 .chat-composer-suggestions summary {

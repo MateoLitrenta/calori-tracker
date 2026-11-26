@@ -1,0 +1,108 @@
+{
+  "before": {
+    "activeElement": null,
+    "composer": {
+      "bottom": 748,
+      "height": 113,
+      "left": 0,
+      "right": 375,
+      "top": 635,
+      "width": 375,
+      "x": 0,
+      "y": 635
+    },
+    "height": 812,
+    "log": {
+      "height": 482,
+      "scrollHeight": 823,
+      "scrollTop": 341,
+      "top": 153
+    },
+    "messages": [
+      {
+        "height": 42.671875,
+        "text": "Ayudame a completar las comidas de hoy.",
+        "top": -178
+      },
+      {
+        "height": 65.34375,
+        "text": "Podemos registrar una comida por vez. Contame qué comiste y a qué hora.",
+        "top": -123.328125
+      },
+      {
+        "height": 88.015625,
+        "text": "Hoy a las 13:30 comí milanesa napolitana con papas al horno, ensalada de tomate, cerveza y ensalada de frutas de postre.",
+        "top": -45.984375
+      },
+      {
+        "height": 65.34375,
+        "text": "Preparé esta propuesta sintética para que la revises.",
+        "top": 54.03125
+      }
+    ],
+    "overflow": false,
+    "proposal": {
+      "bottom": 624.8125,
+      "height": 480.4375,
+      "left": 14,
+      "right": 361,
+      "top": 144.375,
+      "width": 347,
+      "x": 14,
+      "y": 144.375
+    },
+    "theme": "dark",
+    "width": 375
+  },
+  "after": {
+    "activeElement": null,
+    "composer": {
+      "bottom": 748,
+      "height": 113,
+      "left": 0,
+      "right": 375,
+      "top": 635,
+      "width": 375,
+      "x": 0,
+      "y": 635
+    },
+    "height": 812,
+    "log": {
+      "height": 482,
+      "scrollHeight": 482,
+      "scrollTop": 0,
+      "top": 153
+    },
+    "messages": [
+      {
+        "height": 42.671875,
+        "text": "Ayudame a completar las comidas de hoy.",
+        "top": 163
+      },
+      {
+        "height": 65.34375,
+        "text": "Podemos registrar una comida por vez. Contame qué comiste y a qué hora.",
+        "top": 217.671875
+      },
+      {
+        "height": 88.015625,
+        "text": "Hoy a las 13:30 comí milanesa napolitana con papas al horno, ensalada de tomate, cerveza y ensalada de frutas de postre.",
+        "top": 295.015625
+      },
+      {
+        "height": 65.34375,
+        "text": "Preparé esta propuesta sintética para que la revises.",
+        "top": 395.03125
+      },
+      {
+        "height": 136.421875,
+        "text": "Guardado confirmado\n\nRegistrado hoy: Milanesa napolitana con papas al horno, ensalada de tomate, cerveza y ensalada de frutas de postre · Almuerzo · 1",
+        "top": 472.375
+      }
+    ],
+    "overflow": false,
+    "proposal": null,
+    "theme": "dark",
+    "width": 375
+  }
+}

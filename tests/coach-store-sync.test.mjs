@@ -199,29 +199,35 @@ test('generic Coach meal titles use each meal description consistently through c
   const descriptions = ['Milanesa con papas y cerveza', 'Sorrentinos con salsa'];
   const actions = descriptions.map((details, index) => ({ ...meal, payload: { ...meal.payload,
     name: index ? 'Cena' : 'Almuerzo', type: index ? 'Cena' : 'Almuerzo', time: index ? '21:00' : '13:00',
-    calories: index ? 650 : 900, details } }));
+    calories: index ? 650 : 1100, details } }));
   const original = structuredClone(actions);
   const state = await mountApp(t, actions, false, current => { current.skipWriteGate = true; });
   await sendActions(state, true, 'Registrá mi almuerzo y mi cena.');
   assert.deepEqual([...state.document.querySelectorAll('.chat-proposal-name')].map(element => element.textContent), descriptions);
+  assert.equal(state.document.querySelector('.chat-proposal-metrics dd').textContent, '1.100 kcal');
   assert.deepEqual(actions, original, 'Preparing a title must not mutate the received action or its complete description');
   assert.equal(state.aiCalls, 1); assert.equal(state.logWrites, 0);
   await click(state, 'Confirmar');
   assert.equal(state.document.querySelector('.chat-confirmation'), null);
   assert.deepEqual(state.persisted.meals.map(entry => entry.name), descriptions);
   assert.deepEqual(state.persisted.meals.map(entry => entry.details), descriptions);
+  assert.deepEqual(state.persisted.meals.map(entry => entry.calories), [1100, 650], 'Localized presentation keeps original numeric values');
   const receipt = state.document.querySelector('.chat-saved').textContent;
   for (const description of descriptions) assert.ok(receipt.includes(description));
+  assert.match(receipt, /Almuerzo · 1\.100 kcal/);
   await click(state, 'Inicio');
   assert.deepEqual([...state.document.querySelectorAll('.daily-record-title')].map(element => element.textContent), descriptions);
   assert.deepEqual(state.historyRecords[today].meals.map(entry => entry.name), descriptions);
+  assert.equal(state.document.querySelector('.fitness-record-kcal').textContent, '+1.100 kcal');
   const firstRow = state.document.querySelector('.daily-record-open');
   await act(async () => { firstRow.click(); await turn(); });
   assert.equal(state.document.querySelector('.record-detail-main').textContent, descriptions[0]);
   assert.equal(state.document.querySelector('.record-detail-details').textContent, descriptions[0]);
+  assert.match(state.document.querySelector('.record-detail-content').textContent, /\+1\.100 kcal/);
   await click(state, 'Editar');
   assert.equal(state.document.querySelector('#edit-meal-description').value, descriptions[0]);
   assert.equal(state.document.querySelector('#edit-meal-notes').value, descriptions[0]);
+  assert.equal(state.document.querySelector('#edit-meal-calories').value, '1100', 'An input retains the unformatted numeric value');
   assert.equal(state.mealWrites, 2); assert.equal(state.logWrites, 1); assert.equal(state.aiCalls, 1);
 });
 

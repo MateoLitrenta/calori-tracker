@@ -32,7 +32,8 @@ const imports = {
     export const useCallback = callback => callback;
     export const useMemo = callback => callback();
     export const useSyncExternalStore = (_subscribe, getSnapshot) => getSnapshot();
-    export const useEffect = (...args) => globalThis.__chatViewHarness.hooks.useEffect(...args);`),
+    export const useEffect = (...args) => globalThis.__chatViewHarness.hooks.useEffect(...args);
+    export const useLayoutEffect = (...args) => globalThis.__chatViewHarness.hooks.useEffect(...args);`),
   '../hooks/useAppStore': stub(`export const useAppStore = () => ({
     user: { id: 'user-a' }, activeProfile: globalThis.__chatViewHarness.profile,
     coachConversations: globalThis.__chatViewHarness.coachConversations,

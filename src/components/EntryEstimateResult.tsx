@@ -1,3 +1,5 @@
+import { formatCalories } from '../utils/helpers';
+
 interface Props {
   estimate: { calories: number; assumptions: string[]; context: string };
   calories: number | '';
@@ -13,13 +15,13 @@ export default function EntryEstimateResult({ estimate, calories, adjusted, outd
     <div role="status" aria-live="polite">
       <h5 className="entry-estimate-heading">{adjusted ? 'Valor ajustado' : outdated ? 'Datos modificados' : reclassifiedFrom ? 'Categoría actualizada' : 'Estimación con IA'}</h5>
       <p className="entry-estimate-value">{valid
-        ? `Se guardarán ${calories.toLocaleString('es-AR')} kcal`
+        ? `Se guardarán ${formatCalories(calories)} kcal`
         : 'Ingresá un valor válido en Calorías.'}
       </p>
       <p className="entry-estimate-context">{estimate.context}</p>
       <p className="entry-estimate-note">{adjusted
-        ? `Ajustado por vos. Estimación original: ${estimate.calories.toLocaleString('es-AR')} kcal.`
-        : outdated ? `Estimación original: ${estimate.calories.toLocaleString('es-AR')} kcal. Los datos cambiaron. Revisá las calorías antes de guardar.`
+        ? `Ajustado por vos. Estimación original: ${formatCalories(estimate.calories)} kcal.`
+        : outdated ? `Estimación original: ${formatCalories(estimate.calories)} kcal. Los datos cambiaron. Revisá las calorías antes de guardar.`
           : reclassifiedFrom ? `Se conservan las calorías de la estimación original (${reclassifiedFrom}).`
             : 'Estimación basada en los datos proporcionados.'}</p>
     </div>

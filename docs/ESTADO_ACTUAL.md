@@ -1,5 +1,15 @@
 # Estado actual de Calori
 
+## 26 de noviembre de 2026 · Pulido de confirmación y calorías del Coach en revisión
+
+Base: merge del PR #99, `21c2e90d9d1528d3af8a9389341b621164971b75`. El usuario aprobó la revisión real de nombres descriptivos en escritorio y pidió resolver los dos retoques registrados en el [issue #101](https://github.com/MateoLitrenta/calori-tracker/issues/101).
+
+El candidato conserva una referencia de lectura antes de sustituir la propuesta por el recibo. Reserva únicamente el rango de desplazamiento que falta; el contenido nuevo y el desplazamiento hacia el inicio consumen ese espacio. Si la persona está leyendo mensajes anteriores, el guardado no la lleva al final. En una propuesta móvil que comienza fuera del lector, el recibo se sitúa dentro del área visible. La reserva pertenece a la vista montada, se libera al continuar la conversación y no altera datos ni persistencia. La entrada del recibo usa opacidad y respeta movimiento reducido.
+
+Propuesta, recibo nuevo, lista, detalle y resumen de estimación usan el mismo formato de kcal en español argentino. Se conservan el valor numérico de los campos, los signos de cada contexto, las calorías almacenadas, la fecha y la categoría.
+
+La reproducción y las comparativas usan App/React reales con datos y servicios sintéticos. Los resultados y límites se registran en [la evidencia de este bloque](evidence/coach-confirmation-polish/README.md). La Preview y la CI del candidato definitivo se identifican en el PR. Este bloque requiere revisión antes de merge y publicación en Production.
+
 ## 26 de noviembre de 2026 · Migración de Gemini y configuración común de Preview
 
 El usuario solicitó cambiar el modelo a `gemini-3.5-flash-lite` en Preview y Production y habilitar la configuración de IA para las previews de todas las ramas del repositorio. El servidor resuelve un perfil explícito para Coach, estimación y transcripción, usa los parámetros compatibles del modelo y conserva los cupos y máximos de salida existentes. El lector de JSON excluye pensamientos y firmas; los logs identifican el modelo sin guardar conversaciones.
@@ -8,7 +18,7 @@ La configuración común de Preview utiliza las credenciales y cupos existentes.
 
 La migración se integró en el PR #100, merge `1023b0b3de1313c19fda181aa80ddfa9ca95ace5`. En su Preview se verificaron dos turnos reales de Coach y estimaciones de comida y ejercicio: cuatro respuestas HTTP 200 con `gemini-3.5-flash-lite` identificado en los logs. Se descartaron las propuestas y borradores de prueba sin guardar registros. Esta comprobación valida integración, no precisión nutricional ni las modalidades de foto y audio.
 
-El PR #99 de nombres de comidas continúa en revisión y ahora incorpora esta base para generar una Preview compatible. La publicación efectiva y la evidencia de cada SHA se detallan en sus respectivos PR.
+El PR #99 de nombres de comidas incorporó esta base y fue integrado tras la revisión real del usuario. La publicación efectiva y la evidencia de cada SHA se detallan en sus respectivos PR.
 
 [Decisiones, fuentes oficiales, validación y recuperación](gemini-35-migration.md)
 
@@ -48,7 +58,7 @@ Los formularios diarios de comida y ejercicio comparten el selector nativo de ho
 
 La base es el merge del PR #95, `e76a468eb3f02a4ca30dfa4f92329df090088c19`. Coach recupera el espacio de navegación al abrir el teclado táctil. Las altas sugieren el tipo de comida según la hora local y respetan una elección manual. El detalle adapta su pie al tema y requiere confirmar la eliminación del registro identificado. El resumen y el recibo de comida conservan la categoría de la estimación original al reclasificar.
 
-El cambio de los nombres genéricos de comidas creadas por Coach se encuentra en revisión en el bloque del 26 de noviembre. Liquid Glass corresponde a un bloque posterior.
+El cambio de los nombres genéricos de comidas creadas por Coach se integró en el PR #99. Liquid Glass corresponde a un bloque posterior.
 
 [Comparativas, criterios y revisión en iPhone](evidence/iphone-noviembre/README.md)
 
@@ -72,12 +82,12 @@ El alcance es la navegación interna durante la sesión abierta. Una recarga com
 
 [Causa, regresiones y recorrido de revisión](evidence/coach-pending-proposals/README.md)
 
-## Bloque del 26 de noviembre en revisión · Nombres de comidas del Coach
+## Bloque del 26 de noviembre integrado en el PR #99 · Nombres de comidas del Coach
 
 Base inicial: merge del PR #98, `c4ed2f221121bec448e7aa08e161e4fa82c60bd5`; actualizada con el merge del PR #100, `1023b0b3de1313c19fda181aa80ddfa9ca95ace5`. El contrato de IA distingue el nombre de los alimentos de la categoría y conserva la descripción completa en detalles. Las propuestas nuevas con títulos genéricos recuperan un nombre compacto de su propia descripción. Si solo contienen notas, cantidades aisladas o supuestos, la propuesta conserva sus datos y abre la edición para completar el nombre.
 
 La preparación del título se aplica una sola vez a la respuesta recibida. Los nombres editados por la persona se conservan en navegación, confirmación y reintentos. Los registros históricos respaldados por un recibo se reconocen antes de preparar títulos, manteniendo el aviso de ya registrado. El nombre confirmado es el mismo que llega a Inicio, Historial y la edición del registro.
 
-Las pruebas usan App/React y servicios sintéticos. El navegador disponible no pudo acceder al servidor local, por lo que la presentación visual y el comportamiento de Gemini real siguen pendientes de comprobar en Preview. El fixture reproducible sirve las vistas reales con red remota bloqueada.
+Las pruebas automatizadas usan App/React y servicios sintéticos. La revisión posterior del usuario en la Preview `kqg68ox2h`, del HEAD `dd37bb20`, comprobó dos propuestas reales de comida, confirmación, recibos, Inicio y detalle con sus nombres y datos conservados. Esa grabación corresponde a escritorio y tema oscuro; no se extiende a edición manual del nombre ni a Safari en iPhone. El PR se integró en `main` como `21c2e90d9d1528d3af8a9389341b621164971b75` y Production quedó READY. El fixture reproducible conserva servicios sintéticos y red remota bloqueada.
 
 [Decisiones, pruebas y recorrido de revisión](evidence/coach-meal-names/README.md)
