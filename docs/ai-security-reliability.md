@@ -43,7 +43,7 @@ Se reserva antes de cada invocación de Gemini, incluyendo el segundo intento de
 | Variable | Requerida | Valor piloto / significado |
 | --- | --- | --- |
 | `GEMINI_API_KEY` | Existente | Mantener la credencial del proyecto Gemini verificado |
-| `GEMINI_MODEL` | Existente, opcional | Se conserva `gemini-2.5-flash` como fallback del código |
+| `GEMINI_MODEL` | Existente, opcional | Desde la migración del 26/11, el default es `gemini-3.5-flash-lite`; consultar [perfiles y compatibilidad](gemini-35-migration.md) |
 | `SUPABASE_AI_SECRET_KEY` | Nueva | Clave privada `sb_secret_…` o legacy service role del **mismo proyecto de Calori** |
 | `AI_TEXT_DAILY_LIMIT` | Nueva | `30` |
 | `AI_IMAGE_DAILY_LIMIT` | Nueva | `10` |

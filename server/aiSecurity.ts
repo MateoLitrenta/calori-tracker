@@ -1,14 +1,17 @@
 import { supabaseUrl, supabasePublishableKey } from '../src/lib/supabaseConfig.ts';
+import type { GeminiModel } from './geminiConfig.ts';
 
 export type AIModality = 'text' | 'image' | 'audio';
 export interface AIRequestState {
   startedAt: number;
   mode?: 'chat' | 'estimate' | 'transcribe';
+  model?: GeminiModel;
   modality?: AIModality;
   providerCalls: number;
   promptTokens: number | null;
   outputTokens: number | null;
   totalTokens: number | null;
+  thoughtsTokens?: number;
   usageReportedCalls: number;
 }
 
@@ -131,6 +134,10 @@ export async function fetchGemini(userId: string, modality: AIModality, state: A
     const count = data?.usageMetadata?.[field];
     if (Number.isSafeInteger(count) && count >= 0) state[destination] = (state[destination] ?? 0) + count;
   }
+  const thoughtsTokens = data?.usageMetadata?.thoughtsTokenCount;
+  if (Number.isSafeInteger(thoughtsTokens) && thoughtsTokens >= 0) {
+    state.thoughtsTokens = (state.thoughtsTokens ?? 0) + thoughtsTokens;
+  }
   if (['promptTokenCount', 'candidatesTokenCount', 'totalTokenCount'].every(field =>
     Number.isSafeInteger(data?.usageMetadata?.[field]) && data.usageMetadata[field] >= 0)) state.usageReportedCalls++;
   // The existing handler still validates the model-specific payload/schema.
@@ -166,8 +173,10 @@ export async function readAIRequest(request: Request): Promise<unknown> {
 export function logAIRequest(state: AIRequestState, response: Response, code?: string): void {
   // No identity, bearer/key, prompt, history, nutrition data or raw exceptions.
   console.info(JSON.stringify({ event: 'ai_request', endpoint: '/api/ai/chat', status: response.status,
+    model: state.model ?? null,
     durationMs: Math.max(0, Date.now() - state.startedAt), mode: state.mode || 'unknown', modality: state.modality || 'unknown',
     result: response.ok ? 'ok' : 'error', category: code || (response.ok ? 'success' : 'invalid_response'),
-    providerCalls: state.providerCalls, tokens: { prompt: state.promptTokens, output: state.outputTokens, total: state.totalTokens },
+    providerCalls: state.providerCalls, tokens: { prompt: state.promptTokens, output: state.outputTokens, total: state.totalTokens,
+      ...(state.thoughtsTokens === undefined ? {} : { thoughts: state.thoughtsTokens }) },
     tokenCoverage: state.usageReportedCalls === 0 ? 'unavailable' : state.usageReportedCalls === state.providerCalls ? 'complete' : 'partial' }));
 }

@@ -2,6 +2,8 @@
 
 Base: `c4ed2f221121bec448e7aa08e161e4fa82c60bd5`, merge del PR #98.
 
+Actualización de base: incorpora `1023b0b3de1313c19fda181aa80ddfa9ca95ace5`, merge del PR #100, para usar el perfil compatible de Gemini 3.5 Flash-Lite. La configuración de IA de Vercel es común a las nuevas Previews. La URL anterior conserva su configuración original; consultar el PR #99 para el nuevo despliegue y su CI. Los cambios de nombres siguen en Draft, sin integrarse en Production.
+
 ## Problema y criterio
 
 El contrato de `add_meal` exigía un nombre no vacío, pero no distinguía un título reconocible de la categoría. La interfaz ya utilizaba el mismo `payload.name` para la propuesta, el recibo y el registro. El ajuste empieza en el contrato de IA y prepara una sola vez los títulos genéricos al recibir una respuesta válida.
@@ -38,6 +40,8 @@ Las pruebas de ChatView cubren además la compatibilidad con los recibos de comi
 
 Validación local del candidato: **175/175** pruebas focalizadas, sin omisiones; TypeScript de frontend, IA y Coach, build y `git diff --check` aprobados. Lint conserva las diez advertencias de la base. El build mantiene el aviso existente del bundle principal mayor de 500 kB. El script de QA también pasó lint y su comprobación HTTP/módulos.
 
+Tras integrar la migración del PR #100: **119/119** pruebas focalizadas de nombres, ChatView, sincronización, seguridad de IA, artefacto serverless, política de respuesta, hora y contexto, sin omisiones. TypeScript de frontend, IA y Coach, lint y build aprobaron. Continúan las diez advertencias de lint y el aviso de tamaño del bundle. La CI del nuevo HEAD se registra en el PR.
+
 ## Reproducción visual local
 
 ```bash
@@ -70,6 +74,6 @@ El panel «Prueba sintética de nombres» permite preparar el próximo caso y si
 
 ## Límites de la evidencia
 
-Los servicios remotos de las pruebas son sintéticos. El contrato de IA se comprueba con respuestas simuladas; Gemini real requiere la comprobación de Preview con una sesión autorizada. No se modifican variables de entorno ni cuotas.
+Los servicios remotos de las pruebas de nombres son sintéticos. El contrato de IA se comprueba con respuestas simuladas; el flujo completo de nombres requiere la revisión de esta Preview con una sesión autorizada. La configuración común de IA se aplicó por separado en el PR #100, donde se verificaron cuatro respuestas reales de texto. Esa evidencia no sustituye la aceptación visual del PR #99 ni el recorrido de confirmación de nombres.
 
 El navegador disponible rechazó la conexión al servidor local por `ERR_CONNECTION_REFUSED`. No se obtuvieron capturas ni se afirma una validación visual en navegador o iPhone físico. El fixture queda disponible para reproducir esa comprobación en un equipo que pueda acceder a su loopback.

@@ -1,5 +1,17 @@
 # Estado actual de Calori
 
+## 26 de noviembre de 2026 · Migración de Gemini y configuración común de Preview
+
+El usuario solicitó cambiar el modelo a `gemini-3.5-flash-lite` en Preview y Production y habilitar la configuración de IA para las previews de todas las ramas del repositorio. El servidor resuelve un perfil explícito para Coach, estimación y transcripción, usa los parámetros compatibles del modelo y conserva los cupos y máximos de salida existentes. El lector de JSON excluye pensamientos y firmas; los logs identifican el modelo sin guardar conversaciones.
+
+La configuración común de Preview utiliza las credenciales y cupos existentes. Las URLs anteriores no se actualizan: las ramas deben incorporar la migración y desplegarse de nuevo. Preview y Production siguen compartiendo datos y contadores de la cuenta. La protección de Vercel se conserva.
+
+La migración se integró en el PR #100, merge `1023b0b3de1313c19fda181aa80ddfa9ca95ace5`. En su Preview se verificaron dos turnos reales de Coach y estimaciones de comida y ejercicio: cuatro respuestas HTTP 200 con `gemini-3.5-flash-lite` identificado en los logs. Se descartaron las propuestas y borradores de prueba sin guardar registros. Esta comprobación valida integración, no precisión nutricional ni las modalidades de foto y audio.
+
+El PR #99 de nombres de comidas continúa en revisión y ahora incorpora esta base para generar una Preview compatible. La publicación efectiva y la evidencia de cada SHA se detallan en sus respectivos PR.
+
+[Decisiones, fuentes oficiales, validación y recuperación](gemini-35-migration.md)
+
 ## Auditoría del 24 de noviembre de 2026 · Etapa 1 integrada en el PR #92
 
 La rama parte del merge del PR #91. Inicio, Historial y Datos comparten la semana calendario de lunes a domingo. Las grillas mensuales y Home/End siguen ese mismo orden. Explorar una fecha conserva el día editable hasta abrir sus registros.
@@ -62,7 +74,7 @@ El alcance es la navegación interna durante la sesión abierta. Una recarga com
 
 ## Bloque del 26 de noviembre en revisión · Nombres de comidas del Coach
 
-Base: merge del PR #98, `c4ed2f221121bec448e7aa08e161e4fa82c60bd5`. El contrato de IA distingue el nombre de los alimentos de la categoría y conserva la descripción completa en detalles. Las propuestas nuevas con títulos genéricos recuperan un nombre compacto de su propia descripción. Si solo contienen notas, cantidades aisladas o supuestos, la propuesta conserva sus datos y abre la edición para completar el nombre.
+Base inicial: merge del PR #98, `c4ed2f221121bec448e7aa08e161e4fa82c60bd5`; actualizada con el merge del PR #100, `1023b0b3de1313c19fda181aa80ddfa9ca95ace5`. El contrato de IA distingue el nombre de los alimentos de la categoría y conserva la descripción completa en detalles. Las propuestas nuevas con títulos genéricos recuperan un nombre compacto de su propia descripción. Si solo contienen notas, cantidades aisladas o supuestos, la propuesta conserva sus datos y abre la edición para completar el nombre.
 
 La preparación del título se aplica una sola vez a la respuesta recibida. Los nombres editados por la persona se conservan en navegación, confirmación y reintentos. Los registros históricos respaldados por un recibo se reconocen antes de preparar títulos, manteniendo el aviso de ya registrado. El nombre confirmado es el mismo que llega a Inicio, Historial y la edición del registro.
 
