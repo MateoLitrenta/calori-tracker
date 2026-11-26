@@ -83,14 +83,11 @@ html.dark {
   --fit-balance-empty: var(--fit-soft);
 }
 .app-shell, .app-main { background: var(--fit-page); color: var(--fit-ink); }
-.app-sidebar, .app-bottom-nav, .appearance-picker {
+.appearance-picker {
   background: var(--fit-surface); border-color: var(--fit-rule); color: var(--fit-ink);
 }
-.app-sidebar nav button, .bottom-nav-item, .appearance-picker button { color: var(--fit-quiet); }
-.app-sidebar nav, .app-sidebar nav button { position: relative; }
-.sidebar-nav-indicator { background: var(--fit-board); border-radius: var(--fit-control-radius); }
-.app-sidebar nav button:hover:not([aria-current="page"]), .appearance-picker button:hover { background: var(--fit-soft); color: var(--fit-ink); }
-.app-sidebar nav button:focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -2px; }
+.appearance-picker button { color: var(--fit-quiet); }
+.appearance-picker button:hover { background: var(--fit-soft); color: var(--fit-ink); }
 .appearance-picker [aria-pressed="true"] {
   background: var(--fit-board); color: var(--fit-accent);
 }

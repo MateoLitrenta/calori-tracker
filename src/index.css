@@ -49,14 +49,12 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
 }
 @keyframes calori-skeleton { 0%, 100% { opacity: .65; } 50% { opacity: .9; } }
 
-:is(.app-shell, .app-main, .app-bottom-nav, .home-header) { transition: background-color var(--motion-control) var(--motion-ease-control), border-color var(--motion-control) var(--motion-ease-control), color var(--motion-control) var(--motion-ease-control); }
+:is(.app-shell, .app-main, .home-header) { transition: background-color var(--motion-control) var(--motion-ease-control), border-color var(--motion-control) var(--motion-ease-control), color var(--motion-control) var(--motion-ease-control); }
 .app-content > :is(.home-variants, .charts-view, .profile-view) { animation: calori-enter var(--motion-control) var(--motion-ease-enter); }
 .app-content > .assistant-view { animation: calori-fade var(--motion-control) var(--motion-ease-enter); }
 /* A modal must keep the viewport as its containing block, even during page entry. */
 .app-content > .home-variants:has(.fixed.inset-0), .app-content > .profile-view:has(dialog[open]) { animation: none; }
 
-.app-bottom-nav .bottom-nav-item { position: relative; isolation: isolate; border-radius: var(--radius-control); transition: color var(--motion-control) var(--motion-ease-control), transform var(--motion-fast) var(--motion-ease-control); }
-.bottom-nav-track { position: relative; }
 .navigation-indicator {
   position: absolute;
   top: 0;
@@ -64,15 +62,6 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
   pointer-events: none;
   transition: transform var(--motion-control) var(--motion-ease-enter);
 }
-
-.app-bottom-nav .bottom-nav-item[aria-current="page"],
-.app-sidebar nav button[aria-current="page"] { color: var(--fit-accent); }
-.bottom-nav-indicator { position: absolute; pointer-events: none; top: 0; left: 8px; width: calc((100% - 16px) / 4); height: 3px; transform: translateX(calc(var(--active-index) * 100%)); transition: transform var(--motion-control) var(--motion-ease-enter); }
-.bottom-nav-indicator::before { content: ''; display: block; width: 24px; height: 100%; margin-inline: auto; background: var(--fit-accent); }
-.bottom-nav-item svg { transition: transform var(--motion-control) var(--motion-ease-control); }
-.bottom-nav-item[aria-current="page"] svg { transform: translateY(-1px); }
-.app-bottom-nav .bottom-nav-item:active { transform: scale(.97); }
-.bottom-nav-item:focus-visible { outline: 2px solid var(--fit-accent); outline-offset: -3px; }
 
 .view-skeleton { --skeleton-surface: var(--fit-surface); --skeleton-fill: var(--fit-soft); --skeleton-line: var(--fit-rule); display: flex; flex-direction: column; gap: 18px; width: 100%; max-width: var(--content-max); min-width: 0; margin-inline: auto; animation: calori-fade var(--motion-fast) var(--motion-ease-enter) 140ms both; }
 .skeleton-block { display: block; background: var(--skeleton-fill); border-radius: var(--radius-control); animation: calori-skeleton 1600ms ease-in-out infinite; }
@@ -104,7 +93,7 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
 }
 @media (max-width: 767px) {
   .app-shell-coach {
-    --coach-nav-space: calc(4rem + env(safe-area-inset-bottom, 0px));
+    --coach-nav-space: var(--glass-nav-reserve);
     position: fixed;
     inset: var(--coach-viewport-top, 0px) 0 auto;
     height: var(--coach-viewport-height, 100dvh);
@@ -113,7 +102,7 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
   .app-shell-coach .app-stage { min-height: 0; }
   .app-shell-coach .app-main { min-height: 0; overflow: hidden; padding: env(safe-area-inset-top) 0 var(--coach-nav-space); }
   .app-shell-coach .app-content { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; padding: 0; }
-  .app-shell-coach > .app-bottom-nav { position: absolute; bottom: 0; }
+  .app-shell-coach > .app-bottom-nav { position: absolute; }
   .app-shell-coach[data-coach-keyboard="open"] > .app-bottom-nav { display: none; }
   .app-shell-coach .view-skeleton-chat { max-width: none; gap: 12px; }
   .app-shell-coach .view-skeleton-chat .skeleton-primary { border: 0; border-radius: 0; background: transparent; }
@@ -124,7 +113,6 @@ html.dark { --scroll-thumb: #34383b; --scroll-thumb-hover: #a9abae; }
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   /* Keep the loading reveal delay, with an instant reveal and no pulse. */
   .view-skeleton { animation: calori-fade 0s linear 140ms both !important; }
-  .app-bottom-nav .bottom-nav-item:active, .bottom-nav-item[aria-current="page"] svg,
   .home-variants :is(.daily-habits button, .daily-quick-actions button, .habit-adjustments button):active:not(:disabled),
   .assistant-view .chat-confirmation button:active:not(:disabled) { transform: none !important; }
 }

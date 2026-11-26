@@ -3,6 +3,7 @@ import path from 'node:path';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { before, go, heights, origin, repo } from './browser.mjs';
+import { simulateViewport } from './coach-qa-viewport.mjs';
 
 const engine = process.argv.includes('--webkit') ? 'webkit' : 'chromium';
 const output = path.join(repo, 'docs/evidence/iphone-noviembre', before ? 'antes' : 'despues');
@@ -16,35 +17,6 @@ assert.ok(!rotationCheck || !before, 'Run the rotation check on the candidate');
 const frameHeight = width => rotationCheck ? 667 : heights[width];
 const draft = 'Pregunta sintética\nSegunda línea\nÚltima línea';
 const response = 'Respuesta sintética de QA';
-
-// Model the visual viewport independently of the layout viewport. This measures
-// application geometry around a simulated keyboard, without emulating iOS chrome.
-function simulateViewport() {
-  const visualViewport = new EventTarget();
-  Object.defineProperty(window, 'visualViewport', { value: visualViewport, configurable: true });
-  window.simulateCoachViewport = ({ reduction = 0, offsetTop = 0, scale = 1, keyboard = false } = {}) => {
-    const height = Math.round((innerHeight - reduction) / scale);
-    Object.assign(visualViewport, { height, width: innerWidth / scale, offsetTop, offsetLeft: 0, scale });
-    let panel = document.querySelector('#simulated-coach-keyboard');
-    if (keyboard && !panel) {
-      panel = document.createElement('div');
-      panel.id = 'simulated-coach-keyboard';
-      panel.textContent = 'Teclado táctil simulado';
-      Object.assign(panel.style, {
-        position: 'fixed', inset: 'auto 0 0', zIndex: '9999', background: '#313539',
-        color: '#fff', borderTop: '1px dashed #c2c7ca', padding: '12px', textAlign: 'center',
-      });
-      document.body.append(panel);
-    }
-    if (panel) {
-      panel.style.height = innerHeight - height - offsetTop + 'px';
-      panel.hidden = !keyboard;
-    }
-    visualViewport.dispatchEvent(new Event('resize'));
-    visualViewport.dispatchEvent(new Event('scroll'));
-  };
-  window.simulateCoachViewport();
-}
 
 async function open(width, theme) {
   const mobile = width <= 767;

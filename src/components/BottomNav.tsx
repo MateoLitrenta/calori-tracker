@@ -18,8 +18,8 @@ const destinations = [
 export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const activeIndex = destinations.findIndex(({ tab }) => tab === activeTab);
   return (
-    <nav aria-label="Navegación principal" className="app-bottom-nav fixed bottom-0 left-0 w-full z-50 md:hidden border-t pb-[env(safe-area-inset-bottom)]">
-      <div className="bottom-nav-track flex justify-around items-center h-16 max-w-md mx-auto px-2"
+    <nav aria-label="Navegación principal" className="app-bottom-nav md:hidden">
+      <div className="bottom-nav-track"
         style={{ '--active-index': activeIndex } as CSSProperties}>
         <span className="bottom-nav-indicator" aria-hidden="true" />
         {destinations.map(({ tab, label, Icon }) => {
@@ -27,9 +27,9 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
           return (
             <button key={tab} type="button" onClick={() => onTabChange(tab)}
               aria-current={current ? 'page' : undefined}
-              className="bottom-nav-item flex flex-col items-center justify-center w-full h-full space-y-1">
-              <Icon size={24} weight={current ? 'fill' : 'regular'} aria-hidden="true" />
-              <span className="text-xs font-medium">{label}</span>
+              className="bottom-nav-item">
+              <Icon size={20} weight={current ? 'fill' : 'regular'} aria-hidden="true" />
+              <span>{label}</span>
             </button>
           );
         })}

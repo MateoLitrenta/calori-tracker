@@ -1,6 +1,12 @@
 # Estado actual de Calori
 
-## 26 de noviembre de 2026 · Pulido de confirmación y calorías del Coach en revisión
+## Liquid Glass · Etapa 1 de navegación en revisión
+
+Base del PR #102, `80c9a1500b68d877e1de5c57c4f6eae8f7a431fa`. La propuesta aplica material neutro translúcido y selección naranja a la cápsula inferior móvil y la barra lateral. El acabado parte de los colores de Fitness Moderno y se ajusta al teclado y las áreas seguras que ya usa la aplicación.
+
+[Decisiones, comparativas y recorrido de revisión](evidence/liquid-glass-navigation/README.md)
+
+## 26 de noviembre de 2026 · Pulido de confirmación y calorías del Coach integrado en el PR #102
 
 Base: merge del PR #99, `21c2e90d9d1528d3af8a9389341b621164971b75`. El usuario aprobó la revisión real de nombres descriptivos en escritorio y pidió resolver los dos retoques registrados en el [issue #101](https://github.com/MateoLitrenta/calori-tracker/issues/101).
 
@@ -8,7 +14,7 @@ El candidato conserva una referencia de lectura antes de sustituir la propuesta 
 
 Propuesta, recibo nuevo, lista, detalle y resumen de estimación usan el mismo formato de kcal en español argentino. Se conservan el valor numérico de los campos, los signos de cada contexto, las calorías almacenadas, la fecha y la categoría.
 
-La reproducción y las comparativas usan App/React reales con datos y servicios sintéticos. Los resultados y límites se registran en [la evidencia de este bloque](evidence/coach-confirmation-polish/README.md). La Preview y la CI del candidato definitivo se identifican en el PR. Este bloque requiere revisión antes de merge y publicación en Production.
+La reproducción y las comparativas usan App/React reales con datos y servicios sintéticos. Los resultados y límites se registran en [la evidencia de este bloque](evidence/coach-confirmation-polish/README.md). La Preview y la CI del candidato definitivo se identifican en el PR. El bloque quedó integrado en `main` con el merge `80c9a1500b68d877e1de5c57c4f6eae8f7a431fa`.
 
 ## 26 de noviembre de 2026 · Migración de Gemini y configuración común de Preview
 
@@ -58,7 +64,7 @@ Los formularios diarios de comida y ejercicio comparten el selector nativo de ho
 
 La base es el merge del PR #95, `e76a468eb3f02a4ca30dfa4f92329df090088c19`. Coach recupera el espacio de navegación al abrir el teclado táctil. Las altas sugieren el tipo de comida según la hora local y respetan una elección manual. El detalle adapta su pie al tema y requiere confirmar la eliminación del registro identificado. El resumen y el recibo de comida conservan la categoría de la estimación original al reclasificar.
 
-El cambio de los nombres genéricos de comidas creadas por Coach se integró en el PR #99. Liquid Glass corresponde a un bloque posterior.
+El cambio de los nombres genéricos de comidas creadas por Coach se integró en el PR #99.
 
 [Comparativas, criterios y revisión en iPhone](evidence/iphone-noviembre/README.md)
 
