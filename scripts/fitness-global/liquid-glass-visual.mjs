@@ -7,10 +7,12 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { before, go, origin, repo, start } from './browser.mjs';
 
-const optics = process.argv.includes('--glass-iteration-2');
+const finalGlass = process.argv.includes('--glass-final');
+const optics = finalGlass || process.argv.includes('--glass-iteration-2');
 const webkit = process.argv.includes('--webkit');
-assert.ok(!webkit || optics, 'WebKit matrix output is scoped to iteration 2');
-const output = path.join(repo, 'docs/evidence/liquid-glass-navigation', optics ? 'iteracion-2' : '', before ? 'before' : 'after');
+assert.ok(!webkit || optics, 'WebKit matrix output requires a phase-specific fixture');
+const output = path.join(repo, 'docs/evidence/liquid-glass-navigation',
+  finalGlass ? 'iteracion-final' : optics ? 'iteracion-2' : '', before ? 'before' : 'after');
 const playwright = process.env.PLAYWRIGHT_MODULE || path.resolve(repo, '../qa-tools/node_modules/playwright/index.mjs');
 const browser = webkit ? await (await import(pathToFileURL(playwright))).webkit.launch() : await start();
 const mobile = {
@@ -23,6 +25,7 @@ const sizes = [[320, 568], [375, 812], [390, 844], [767, 844], [768, 844], [1280
 const themes = ['light', 'dark'];
 const conditionsOnly = process.argv.includes('--conditions');
 const report = { browser: browser.version(), engine: webkit ? 'webkit' : 'chromium', origin, matrix: [], conditions: [], motion: [] };
+if (finalGlass) report.transmission = [];
 await mkdir(output, { recursive: true });
 
 const settle = page => page.evaluate(async () => {
@@ -46,7 +49,8 @@ async function startPage(theme, viewport, options = {}, preference = theme) {
   await page.goto(origin + '/qa?controls=0&theme=' + preference, { waitUntil: 'commit', timeout: 90000 });
   await page.locator('.fitness-home').waitFor({ timeout: 90000 });
   if (optics) {
-    assert.equal(await page.evaluate(() => window.__homeQA.phase), before ? 'liquid-glass-2-before' : 'liquid-glass-2-after');
+    const phase = finalGlass ? 'liquid-glass-final' : 'liquid-glass-2';
+    assert.equal(await page.evaluate(() => window.__homeQA.phase), phase + (before ? '-before' : '-after'));
   }
   await settle(page);
   return { context, page, errors };
@@ -139,23 +143,27 @@ async function contentPosition(page, viewTop = 178) {
 }
 
 async function contrast(page, selectors) {
-  const buttons = await page.locator(selectors.nav + ' button').evaluateAll(elements => {
+  const targets = selectors.nav + ' button' + (finalGlass && selectors === desktop
+    ? ', .app-sidebar .sidebar-label, .app-sidebar .sidebar-signout, .app-sidebar .brand-symbol-sidebar + span'
+    : '');
+  const buttons = await page.locator(targets).evaluateAll(elements => {
     const region = rect => ({ left: rect.left, top: rect.top, width: rect.width, height: rect.height });
     return elements.map(button => {
       const svg = button.querySelector('svg');
       const label = document.createRange();
-      label.selectNode(svg.nextSibling);
+      if (svg?.nextSibling) label.selectNode(svg.nextSibling);
+      else label.selectNodeContents(button);
       const style = getComputedStyle(button);
       return {
         label: button.textContent.trim(), active: button.getAttribute('aria-current') === 'page',
         text: { color: style.color, ...region(label.getBoundingClientRect()) },
-        icon: { color: getComputedStyle(svg).color, ...region(svg.getBoundingClientRect()) },
+        icon: svg ? { color: getComputedStyle(svg).color, ...region(svg.getBoundingClientRect()) } : null,
         outline: [style.outlineColor, style.outlineStyle, style.outlineWidth],
       };
     });
   });
   // Capture the actual blurred, tinted pixels underneath the foreground.
-  const hidden = await page.addStyleTag({ content: selectors.nav + ' button { color: transparent !important; }' });
+  const hidden = await page.addStyleTag({ content: `:is(${targets}) { color: transparent !important; }` });
   let rendered;
   try {
     rendered = (await page.screenshot({ type: 'png', scale: 'css' })).toString('base64');
@@ -200,14 +208,14 @@ async function contrast(page, selectors) {
       return { foreground: hex(foreground), background: worst.background, ratio: Math.round(worst.ratio * 100) / 100 };
     };
     return buttons.map(({ label, active, text, icon, outline }) =>
-      ({ label, active, text: sample(text), icon: sample(icon), outline }));
+      ({ label, active, text: sample(text), icon: icon ? sample(icon) : null, outline }));
   }, { rendered, buttons });
 }
 
 function verifyContrast(samples, description) {
   if (before) return;
   for (const control of samples) {
-    assert.ok(control.text.ratio >= 4.5 && control.icon.ratio >= 3,
+    assert.ok(control.text.ratio >= 4.5 && (!control.icon || control.icon.ratio >= 3),
       description + ': ' + JSON.stringify(control));
   }
 }
@@ -218,7 +226,7 @@ async function runMatrix(theme) {
     for (const [width, height] of sizes) {
       await page.setViewportSize({ width, height });
       await contentPosition(page);
-      if (!webkit) await picture(page, 'inicio-' + width + '-' + theme);
+      if (!webkit && (!finalGlass || width === 390 || width === 1440)) await picture(page, 'inicio-' + width + '-' + theme);
       const info = await geometry(page, width < 768 ? mobile : desktop);
       await verifyGeometry(page, info, width);
       if (optics) {
@@ -279,8 +287,8 @@ async function runMatrix(theme) {
   }
 }
 
-async function backdrop(page, variant, theme) {
-  await page.evaluate(({ variant, theme }) => {
+async function backdrop(page, variant, theme, lateral = false) {
+  await page.evaluate(({ variant, theme, lateral }) => {
     let panel = document.querySelector('#fixture-glass-background');
     if (!panel) {
       panel = document.createElement('div');
@@ -293,6 +301,11 @@ async function backdrop(page, variant, theme) {
       });
       document.querySelector('.app-shell').prepend(panel);
     }
+    if (lateral) {
+      Object.assign(panel.style, {
+        position: 'absolute', inset: '0 auto 0 0', zIndex: 'auto', height: 'auto', width: '256px', padding: '172px 12px 12px',
+      });
+    }
     panel.style.background = ({
       opaque: theme === 'dark' ? '#293134' : '#f1ebe0',
       complex: 'repeating-linear-gradient(117deg, #1c2522 0 23px, #ff9a53 23px 50px, #fffefa 50px 73px, #2c6370 73px 109px)',
@@ -300,8 +313,55 @@ async function backdrop(page, variant, theme) {
       black: '#000000',
     })[variant];
     panel.style.color = variant === 'white' || (variant === 'opaque' && theme === 'light') ? '#1c2522' : '#fffefa';
-  }, { variant, theme });
+  }, { variant, theme, lateral });
   await settle(page);
+}
+
+async function sampleTransmission(page, selectors) {
+  const lateral = selectors === desktop;
+  const surface = await page.locator(selectors.surface).boundingBox();
+  const rendered = (await page.screenshot({ type: 'png', scale: 'css', clip: {
+    x: Math.round(surface.x + surface.width * .6), y: Math.round(surface.y + surface.height * (lateral ? .45 : .5)),
+    width: 5, height: 5,
+  } })).toString('base64');
+  return page.evaluate(async rendered => {
+    const image = new Image();
+    image.src = 'data:image/png;base64,' + rendered;
+    await image.decode();
+    const canvas = document.createElement('canvas');
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0);
+    const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const mean = [0, 0, 0];
+    for (let i = 0; i < data.length; i += 4) {
+      for (let channel = 0; channel < 3; channel++) mean[channel] += data[i + channel];
+    }
+    return mean.map(sum => Math.round(sum / (data.length / 4) * 100) / 100);
+  }, rendered);
+}
+
+async function runLateralBackdrop(theme) {
+  const { context, page, errors } = await startPage(theme, { width: 1440, height: 900 });
+  try {
+    const endpoints = {};
+    for (const variant of ['black', 'white', 'complex']) {
+      await backdrop(page, variant, theme, true);
+      if (variant !== 'complex') endpoints[variant] = await sampleTransmission(page, desktop);
+      const samples = await contrast(page, desktop);
+      verifyContrast(samples, 'lateral ' + theme + ' ' + variant);
+      report.conditions.push({ scenario: 'lateral-prueba-' + variant, theme, contrast: samples });
+      if (!webkit && variant === 'complex') await page.screenshot({
+        path: path.join(output, 'lateral-fondo-prueba-' + theme + '.png'),
+        clip: { x: 0, y: 0, width: 290, height: 900 },
+      });
+    }
+    report.transmission.push({ surface: 'lateral', theme, ...endpoints });
+    assert.deepEqual(errors, []);
+  } finally {
+    await context.close();
+  }
 }
 
 async function disableFirstBackdropLayer(page) {
@@ -333,12 +393,15 @@ async function runConditions(theme) {
   };
   try {
     await contentPosition(page);
+    const endpoints = {};
     for (const [variant, title] of [['opaque', 'fondo-cercano'], ['complex', 'fondo-complejo'],
       ['black', 'fondo-negro'], ['white', 'fondo-blanco']]) {
       await backdrop(page, variant, theme);
+      if (finalGlass && (variant === 'black' || variant === 'white')) endpoints[variant] = await sampleTransmission(page, mobile);
       await collect(title);
-      if (variant === 'opaque' || variant === 'complex') await picture(page, title + '-' + theme);
+      if ((!finalGlass && variant === 'opaque') || variant === 'complex') await picture(page, title + '-' + theme);
     }
+    if (finalGlass) report.transmission.push({ surface: 'cápsula', theme, ...endpoints });
     await backdrop(page, 'complex', theme);
     const session = await context.newCDPSession(page);
     for (const [name, value, title] of [
@@ -351,7 +414,7 @@ async function runConditions(theme) {
       await settle(page);
       const applied = await page.evaluate(({name, value}) => matchMedia('(' + name + ': ' + value + ')').matches, {name, value});
       await collect(title, { applied });
-      await picture(page, title + '-' + theme);
+      if (!finalGlass) await picture(page, title + '-' + theme);
     }
     await session.send('Emulation.setEmulatedMedia', { features: [] });
     await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
@@ -379,7 +442,7 @@ async function runConditions(theme) {
     const focus = nav.getByRole('button', {name: 'Coach'});
     assert.ok(await focus.evaluate(el => el.matches(':focus-visible') && getComputedStyle(el).outlineStyle !== 'none'));
     assert.equal(await location(focus), null, 'Focus alone must not select the tab');
-    await picture(page, 'texto-200-foco-' + theme);
+    if (!finalGlass) await picture(page, 'texto-200-foco-' + theme);
     await page.keyboard.press('Enter');
     await page.locator('.assistant-view').waitFor();
     assert.equal(await location(focus), 'page');
@@ -416,7 +479,7 @@ async function runConditions(theme) {
       assert.ok(disabled >= 1, 'A backdrop enhancement must have been tested');
       assert.equal(fallback.backdrop, 'none');
     }
-    await picture(page, 'sin-backdrop-' + theme);
+    if (!finalGlass) await picture(page, 'sin-backdrop-' + theme);
     assert.deepEqual(errors, []);
   } finally {
     await context.close();
@@ -515,7 +578,8 @@ async function scrollVideo(page) {
 try {
   if (!conditionsOnly) for (const theme of themes) await runMatrix(theme);
   if (!webkit) for (const theme of themes) await runConditions(theme);
-  if (optics && !webkit && !conditionsOnly) {
+  if (finalGlass) for (const theme of themes) await runLateralBackdrop(theme);
+  if (optics && !finalGlass && !webkit && !conditionsOnly) {
     await record('material-en-movimiento', scrollVideo);
   } else if (!optics && !before && !conditionsOnly) {
     await record('movimiento-indicador', indicatorVideo);

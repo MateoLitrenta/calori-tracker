@@ -1,5 +1,11 @@
 # Estado actual de Calori
 
+## Liquid Glass · Refinamiento final de material en el PR Draft #103
+
+La revisión de `3a61032d73b1bb674efb4f958bb909d4c246732f` aprobó el arrastre, los radios y la selección naranja. La última iteración deja pasar más fondo por el vidrio, en especial en la cápsula en Claro. Reduce el desenfoque y concentra el reflejo en el borde superior. El lateral sigue en su columna y el contenido de Inicio pasa por debajo de la cápsula durante el desplazamiento.
+
+[Comparativas, alcance y recorrido de revisión](evidence/liquid-glass-navigation/iteracion-final/README.md)
+
 ## Liquid Glass · Iteración 2 de navegación en el PR Draft #103
 
 Base del PR #102, `80c9a1500b68d877e1de5c57c4f6eae8f7a431fa`. La propuesta aplica material neutro translúcido y selección naranja a la cápsula inferior móvil y la barra lateral. El acabado parte de los colores de Fitness Moderno y se ajusta al teclado y las áreas seguras que ya usa la aplicación.

@@ -7,13 +7,12 @@
   --glass-nav-reserve: calc(var(--glass-nav-mobile-height) + var(--glass-nav-bottom) + 2px);
   --glass-nav-sidebar-radius: 26px;
   --glass-nav-sidebar-inset: 12px;
-  --glass-nav-blur: 14px;
   --glass-nav-rim: color-mix(in srgb, var(--fit-control-line) 38%, transparent);
   --glass-nav-glint: rgb(255 255 255 / .8);
-  --glass-nav-reflection: rgb(255 255 255 / .27);
+  --glass-nav-reflection: rgb(255 255 255 / .19);
   --glass-nav-edge-shade: rgb(36 27 20 / .14);
   --glass-nav-contact: rgb(32 38 30 / .12);
-  --glass-nav-shadow: 0 8px 24px rgb(32 38 30 / .13);
+  --glass-nav-shadow: 0 7px 22px rgb(32 38 30 / .12);
   --glass-nav-selected-edge: var(--fit-accent);
   --glass-nav-tint-high: 88%;
   --glass-nav-tint-low: 73%;
@@ -22,10 +21,10 @@
 
 html.dark {
   --glass-nav-glint: rgb(255 255 255 / .22);
-  --glass-nav-reflection: rgb(255 255 255 / .08);
+  --glass-nav-reflection: rgb(255 255 255 / .055);
   --glass-nav-edge-shade: rgb(0 0 0 / .48);
   --glass-nav-contact: rgb(0 0 0 / .38);
-  --glass-nav-shadow: 0 9px 24px rgb(0 0 0 / .39);
+  --glass-nav-shadow: 0 8px 22px rgb(0 0 0 / .33);
   --glass-nav-selected-edge: var(--fit-orange);
   --glass-nav-tint-high: 47%;
   --glass-nav-tint-low: 38%;
@@ -56,8 +55,9 @@ html.dark {
 }
 
 .bottom-nav-track {
-  --glass-nav-opacity: 84%;
-  --glass-nav-reflection-depth: 18px;
+  --glass-nav-opacity: 72%;
+  --glass-nav-blur: 10px;
+  --glass-nav-reflection-depth: 12px;
   /* The 1px border counts toward the concentric inset. */
   --glass-nav-track-padding: calc(var(--glass-nav-mobile-inset) - 1px);
   position: relative;
@@ -69,13 +69,17 @@ html.dark {
 }
 
 .app-sidebar {
-  --glass-nav-opacity: 90%;
-  --glass-nav-reflection-depth: 56px;
+  --glass-nav-opacity: 83%;
+  --glass-nav-blur: 12px;
+  --glass-nav-reflection-depth: 38px;
   width: 244px;
   margin: 12px 0 12px 12px;
   padding: calc(var(--glass-nav-sidebar-inset) - 1px);
   border-radius: var(--glass-nav-sidebar-radius);
 }
+
+html.dark .bottom-nav-track { --glass-nav-opacity: 78%; }
+html.dark .app-sidebar { --glass-nav-opacity: 85%; }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) and (background: color-mix(in srgb, white, transparent)) {
   .bottom-nav-track, .app-sidebar {

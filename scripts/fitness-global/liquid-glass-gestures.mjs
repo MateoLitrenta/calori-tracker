@@ -12,7 +12,8 @@ const videoOnly = process.argv.includes('--video');
 const modulePath = process.env.PLAYWRIGHT_MODULE || path.resolve(repo, '../qa-tools/node_modules/playwright/index.mjs');
 const playwright = await import(pathToFileURL(modulePath));
 const browser = await playwright[engine].launch(engine === 'chromium' ? { channel: process.env.QA_BROWSER_CHANNEL || 'chrome' } : {});
-const output = path.join(repo, 'docs/evidence/liquid-glass-navigation/iteracion-2');
+const iterationFinal = process.argv.includes('--iteration-final');
+const output = path.join(repo, 'docs/evidence/liquid-glass-navigation', iterationFinal ? 'iteracion-final' : 'iteracion-2');
 await mkdir(output, { recursive: true });
 
 const navigation = '.app-bottom-nav:visible, .app-sidebar:visible nav';
@@ -304,6 +305,8 @@ async function dimensions(page) {
   const results = [];
   for (const [width, height] of [[320, 568], [375, 812], [768, 844], [1280, 800], [1440, 900]]) {
     await page.setViewportSize({ width, height });
+    await page.waitForFunction(expected => innerWidth === expected, width);
+    await page.locator(width < 768 ? '.app-bottom-nav' : '.app-sidebar').waitFor();
     await go(page, 'Inicio');
     const from = await settled(page, 'Inicio');
     assert.ok(from.labels.every(([, , w, h]) => w >= 44 && h >= 44));

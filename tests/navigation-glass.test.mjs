@@ -117,13 +117,19 @@ test('navigation tokens retain text, icon, focus and selection contrast across b
     assert.ok(reflection);
 
     for (const target of surfaces) {
-      const opacity = percent(value(styles, target, '--glass-nav-opacity'));
+      const opacity = percent((theme === 'Oscuro' && value(styles, 'html.dark ' + target, '--glass-nav-opacity'))
+        || value(styles, target, '--glass-nav-opacity'));
       const glass = backgroundExtremes.map(backdrop => mix(surface, backdrop, opacity));
       const illuminated = glass.map(backdrop => mix([1, 1, 1], backdrop, Number(reflection)));
       for (const backdrop of [...glass, ...illuminated, surface]) {
         assert.ok(contrast(ink, backdrop) >= 4.5, theme + ' ' + target + ' label/icon');
         assert.ok(contrast(focus, backdrop) >= 3, theme + ' ' + target + ' focus');
         assert.ok(contrast(selectedEdge, backdrop) >= 3, theme + ' ' + target + ' active edge');
+        if (target === '.app-sidebar') {
+          for (const property of ['--fit-quiet', '--fit-danger']) {
+            assert.ok(contrast(color(property), backdrop) >= 4.5, theme + ' sidebar ' + property);
+          }
+        }
       }
       for (const backdrop of [...tint, board, soft]) {
         assert.ok(contrast(ink, backdrop) >= 4.5, theme + ' selection/hover label/icon');
