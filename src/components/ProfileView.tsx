@@ -11,6 +11,10 @@ import UserAvatar from './UserAvatar';
 import ViewSkeleton from './ViewSkeleton';
 import DiscardDraftDialog from './DiscardDraftDialog';
 import toast from 'react-hot-toast';
+import { parseISO } from 'date-fns';
+import { latestWeightMeasurement } from '../utils/profileWeight';
+
+const weightDateFormatter = new Intl.DateTimeFormat('es-AR', { dateStyle: 'long' });
 
 const themeOptions = [
   { value: 'system', label: 'Sistema' },
@@ -93,6 +97,7 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
   if (!user || !activeProfile || activeProfile.user_id !== user.id) return <ViewSkeleton view="profile" />;
   const { name, sex, age, weight, height } = { ...(base ?? activeProfile), ...changes };
   if (sex == null || age == null || weight == null || height == null) return <ViewSkeleton view="profile" />;
+  const measurement = isEditing ? undefined : latestWeightMeasurement(activeProfile.records);
 
   function change<K extends keyof Personal>(key: K, value: Personal[K]) {
     setChanges(previous => {
@@ -305,9 +310,16 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
                 <div><dt>Altura</dt><dd>{height} <span>cm</span></dd></div>
                 <div><dt>Sexo</dt><dd>{sex}</dd></div>
                 <div className="profile-fact-weight">
-                  <dt>Peso de perfil</dt>
-                  <dd><span className="profile-weight-value">{weight} <small>kg</small></span>
-                    <span className="profile-muted profile-weight-note">Se usa para estimar tu gasto. Las mediciones diarias se registran en Inicio.</span></dd>
+                  <dt>Peso vigente</dt>
+                  <dd>
+                    <span className="profile-weight-value">{(measurement?.weight ?? weight).toLocaleString('es-AR')} <small>kg</small></span>
+                    <span className="profile-muted profile-weight-note">
+                      {measurement ? <>
+                        <span className="block">Medición del <time dateTime={measurement.dateStr}>{weightDateFormatter.format(parseISO(measurement.dateStr))}</time></span>
+                        <span className="block">Peso base para estimaciones · {weight.toLocaleString('es-AR')} kg</span>
+                      </> : 'Peso base de tu perfil. Se usa para estimar tu gasto.'}
+                    </span>
+                  </dd>
                 </div>
               </dl>
             </div>
@@ -328,10 +340,10 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
                   <input required type="number" min="1" max="120" value={age} onChange={e => change('age', Number(e.target.value))} />
                 </label>
                 <div className="profile-weight-field">
-                  <label className="profile-field">Peso de perfil (kg)
+                  <label className="profile-field">Peso base para estimaciones (kg)
                     <input required type="number" min="20" max="300" aria-describedby="profile-weight-help" step="0.1" value={weight} onChange={e => change('weight', Number(e.target.value))} />
                   </label>
-                  <p id="profile-weight-help" className="profile-muted profile-weight-note">Editar este peso actualiza tus estimaciones. Las mediciones diarias se registran en Inicio.</p>
+                  <p id="profile-weight-help" className="profile-muted profile-weight-note">Editar este peso recalcula tus estimaciones de gasto, incluso las de días anteriores. Registrá las mediciones en Inicio.</p>
                 </div>
                 <label className="profile-field">Altura (cm)
                   <input required type="number" min="50" max="250" value={height} onChange={e => change('height', Number(e.target.value))} />
@@ -356,7 +368,7 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
           </button>
           {showEnergyInfo && (
             <div id="profile-energy-details" className="profile-energy-details profile-muted">
-              <p>TMB: tu gasto en reposo.</p>
+              <p>TMB: tu gasto en reposo, estimado con el peso base de tu perfil.</p>
               <p>Gasto estimado = TMB + calorías de pasos + calorías de ejercicio registrados.</p>
               <p>Pasos y ejercicio pueden solaparse. Usamos los valores registrados sin correcciones.</p>
             </div>

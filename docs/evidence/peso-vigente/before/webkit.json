@@ -1,0 +1,48 @@
+{
+  "engine": "webkit",
+  "version": "26.0",
+  "cases": [
+    {
+      "width": 390,
+      "theme": "dark",
+      "reading": {
+        "weight": 77,
+        "date": null,
+        "base": 77,
+        "text": "Peso de perfil 77 kg Se usa para estimar tu gasto. Las mediciones diarias se registran en Inicio. "
+      },
+      "layout": {
+        "weightWidth": 324,
+        "weightHeight": 69,
+        "overflow": 0,
+        "clearance": 393
+      },
+      "events": null,
+      "remote": {
+        "external": 0,
+        "ai": 0
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "reading": {
+        "weight": 77,
+        "date": null,
+        "base": 77,
+        "text": "Peso de perfil 77 kg Se usa para estimar tu gasto. Las mediciones diarias se registran en Inicio. "
+      },
+      "layout": {
+        "weightWidth": 598.65625,
+        "weightHeight": 50,
+        "overflow": 0,
+        "clearance": null
+      },
+      "events": null,
+      "remote": {
+        "external": 0,
+        "ai": 0
+      }
+    }
+  ]
+}

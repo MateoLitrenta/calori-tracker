@@ -38,6 +38,7 @@ const imports = {
   './ViewSkeleton': stub('export default props => globalThis.__entryHarness.ViewSkeleton(props);'),
   './components/ViewSkeleton': stub('export default props => globalThis.__entryHarness.ViewSkeleton(props);'),
   '../utils/helpers': new URL('../src/utils/helpers.ts', import.meta.url).href,
+  '../utils/profileWeight': new URL('../src/utils/profileWeight.ts', import.meta.url).href,
   '../utils/homeDateNavigation': new URL('../src/utils/homeDateNavigation.ts', import.meta.url).href,
   '../lib/habitDraft': new URL('../src/lib/habitDraft.ts', import.meta.url).href,
   '../lib/coachConversation': new URL('../src/lib/coachConversation.ts', import.meta.url).href,
@@ -538,6 +539,47 @@ test('failed profile sign-out shows an error and allows retry without changing p
   confirmation.open();
   await confirmation.buttons()[1].props.onClick();
   assert.equal(confirmation.dialog.open, false);
+});
+
+test('profile derives the displayed weight from each refreshed record snapshot while editing the base weight', async () => {
+  const oldDate = '2025-11-22';
+  const recentDate = '2025-11-26';
+  const records = {
+    [recentDate]: { dateStr: recentDate, weight: 80 },
+    [oldDate]: { dateStr: oldDate, weight: 79 },
+  };
+  const saved = [];
+  const store = {
+    user: { id: 'user-a' }, activeProfile: { ...profile, weight: 77, records },
+    updateProfile: async value => saved.push(value),
+  };
+  globalThis.__entryHarness.profileStore = store;
+  const view = mount(ProfileView, {});
+  const displayed = () => node(view.render(), el => el.props.className === 'profile-weight-value');
+  const selectedDate = () => nodes(view.render(), el => el.type === 'time').map(el => el.props.dateTime);
+
+  assert.match(markup(displayed()), /80.*kg/);
+  assert.deepEqual(selectedDate(), [recentDate]);
+
+  const changed = { ...records, [recentDate]: { ...records[recentDate], weight: 81.5 } };
+  store.activeProfile = { ...store.activeProfile, records: changed };
+  assert.match(markup(displayed()), /81,5.*kg/);
+
+  node(view.render(), el => el.type === 'button' && markup(el).includes('Editar perfil')).props.onClick();
+  const input = node(view.render(), el => el.props['aria-describedby'] === 'profile-weight-help');
+  assert.equal(input.props.value, 77);
+  input.props.onChange({ target: { value: '78' } });
+  await submit(view.render());
+  assert.equal(saved.length, 1);
+  assert.equal(saved[0].weight, 78);
+  assert.equal(saved[0].records, changed);
+
+  store.activeProfile = { ...saved[0], records: { [oldDate]: changed[oldDate] } };
+  assert.match(markup(displayed()), /79.*kg/);
+  assert.deepEqual(selectedDate(), [oldDate]);
+  store.activeProfile = { ...store.activeProfile, records: {} };
+  assert.match(markup(displayed()), /78.*kg/);
+  assert.deepEqual(selectedDate(), []);
 });
 
 test('profile v2 keeps edit fields, validation, cancel and save within the personal section', async () => {

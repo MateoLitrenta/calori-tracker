@@ -1,0 +1,172 @@
+{
+  "engine": "chromium",
+  "version": "158.0.8127.37",
+  "cases": [
+    {
+      "width": 375,
+      "theme": "light",
+      "reading": {
+        "weight": 80,
+        "date": "2026-11-26",
+        "base": 77,
+        "text": "Peso vigente 80 kg Medición del 26 de noviembre de 2026 Peso base para estimaciones · 77 kg"
+      },
+      "layout": {
+        "weightWidth": 309,
+        "weightHeight": 69.5,
+        "overflow": 0,
+        "clearance": 359.0625
+      },
+      "events": {
+        "readings": [
+          {
+            "weight": 80,
+            "date": "2026-11-26",
+            "base": 77,
+            "text": "Peso vigente 80 kg Medición del 26 de noviembre de 2026 Peso base para estimaciones · 77 kg"
+          },
+          {
+            "weight": 80,
+            "date": "2026-11-26",
+            "base": 77,
+            "text": "Peso vigente 80 kg Medición del 26 de noviembre de 2026 Peso base para estimaciones · 77 kg"
+          },
+          {
+            "weight": 80.5,
+            "date": "2026-11-26",
+            "base": 77,
+            "text": "Peso vigente 80,5 kg Medición del 26 de noviembre de 2026 Peso base para estimaciones · 77 kg"
+          },
+          {
+            "weight": 82,
+            "date": "2026-11-27",
+            "base": 77,
+            "text": "Peso vigente 82 kg Medición del 27 de noviembre de 2026 Peso base para estimaciones · 77 kg"
+          },
+          {
+            "weight": 80.5,
+            "date": "2026-11-26",
+            "base": 77,
+            "text": "Peso vigente 80,5 kg Medición del 26 de noviembre de 2026 Peso base para estimaciones · 77 kg"
+          },
+          {
+            "weight": 81.5,
+            "date": "2026-11-24",
+            "base": 77,
+            "text": "Peso vigente 81,5 kg Medición del 24 de noviembre de 2026 Peso base para estimaciones · 77 kg"
+          },
+          {
+            "weight": 77,
+            "date": null,
+            "base": 77,
+            "text": "Peso vigente 77 kg Peso base de tu perfil. Se usa para estimar tu gasto."
+          },
+          {
+            "weight": 79,
+            "date": null,
+            "base": 79,
+            "text": "Peso vigente 79 kg Peso base de tu perfil. Se usa para estimar tu gasto."
+          }
+        ],
+        "writes": [
+          {
+            "date": "2026-11-24",
+            "weight": 81.5,
+            "status": "confirmed"
+          },
+          {
+            "date": "2026-11-26",
+            "weight": 80.5,
+            "status": "confirmed"
+          },
+          {
+            "date": "2026-11-27",
+            "weight": 82,
+            "status": "confirmed"
+          }
+        ],
+        "state": {
+          "base": 79,
+          "profileWrites": 1,
+          "recordWrites": 3,
+          "dates": [
+            "2026-11-24",
+            "2026-11-26",
+            "2026-11-27",
+            "2026-11-28"
+          ],
+          "presentWeights": 1
+        },
+        "energyBefore": "3 comidas · 2 ejerciciosSegún tus registros Las dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho. Calorías consumidas 1.250 kcal Gasto estimado 2.321 kcal TMB: 1.719 kcal Pasos: 252 kcal Ejercicio: 350 kcal Déficit Alto",
+        "energyAfter": "3 comidas · 2 ejerciciosSegún tus registros Las dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho. Calorías consumidas 1.250 kcal Gasto estimado 2.321 kcal TMB: 1.719 kcal Pasos: 252 kcal Ejercicio: 350 kcal Déficit Alto"
+      },
+      "remote": {
+        "external": 0,
+        "ai": 0
+      }
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "reading": {
+        "weight": 80,
+        "date": "2026-11-26",
+        "base": 77,
+        "text": "Peso vigente 80 kg Medición del 26 de noviembre de 2026 Peso base para estimaciones · 77 kg"
+      },
+      "layout": {
+        "weightWidth": 324,
+        "weightHeight": 69.5,
+        "overflow": 0,
+        "clearance": 391.0625
+      },
+      "events": null,
+      "remote": {
+        "external": 0,
+        "ai": 0
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "reading": {
+        "weight": 80,
+        "date": "2026-11-26",
+        "base": 77,
+        "text": "Peso vigente 80 kg Medición del 26 de noviembre de 2026 Peso base para estimaciones · 77 kg"
+      },
+      "layout": {
+        "weightWidth": 592.828125,
+        "weightHeight": 69.5,
+        "overflow": 0,
+        "clearance": null
+      },
+      "events": null,
+      "remote": {
+        "external": 0,
+        "ai": 0
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "reading": {
+        "weight": 80,
+        "date": "2026-11-26",
+        "base": 77,
+        "text": "Peso vigente 80 kg Medición del 26 de noviembre de 2026 Peso base para estimaciones · 77 kg"
+      },
+      "layout": {
+        "weightWidth": 592.828125,
+        "weightHeight": 69.5,
+        "overflow": 0,
+        "clearance": null
+      },
+      "events": null,
+      "remote": {
+        "external": 0,
+        "ai": 0
+      }
+    }
+  ]
+}
