@@ -844,3 +844,128 @@ html.dark .activity-history-v2 {
 @container (max-width: 719px) {
   .ah-day:has(.ah-day-balance) .ah-day-marks { display: none; }
 }
+
+/* Home borrows the glass rims and keeps the balance fills on their own scale. */
+.home-variants.fitness-home .home-history :is(.ah-calendar-surface, .ah-detail, .ah-period-summary) {
+  background: var(--fit-surface);
+  box-shadow:
+    inset 0 1px 0 var(--glass-nav-glint),
+    inset 0 0 0 1px var(--fit-rule),
+    0 1px 2px var(--glass-nav-contact);
+}
+.home-variants.fitness-home .home-history .ah-calendar-surface {
+  border-radius: calc(var(--home-glass-control-radius) + var(--space-micro));
+}
+.home-variants.fitness-home .home-history :is(.ah-detail, .ah-period-summary) {
+  border-radius: var(--home-glass-radius);
+}
+.home-variants.fitness-home .home-history .ah-detail {
+  border-color: transparent;
+}
+.home-variants.fitness-home .home-history .ah-period-summary {
+  border-block-start: 0;
+  padding: var(--fit-space);
+}
+.home-variants.fitness-home .home-history .ah-day-energy {
+  border-radius: var(--home-glass-control-radius);
+}
+
+.home-variants.fitness-home .home-history .ah-view-switch {
+  border-radius: calc(var(--home-glass-control-radius) + max(3px, var(--segment-gap)) + 1px);
+  background: linear-gradient(var(--glass-nav-reflection), transparent), var(--fit-soft);
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint), 0 1px 2px var(--glass-nav-contact);
+}
+.home-variants.fitness-home .home-history .ah-view-switch :is(button, .segmented-control-indicator) {
+  border-radius: var(--home-glass-control-radius);
+}
+.home-variants.fitness-home .home-history .ah-view-switch > button {
+  padding-inline: var(--space-small);
+  font-size: .875rem;
+}
+.home-variants.fitness-home .home-history .ah-view-switch .segmented-control-indicator {
+  box-shadow: inset 0 1px 0 var(--glass-nav-tint-glint), inset 0 0 0 1px var(--fit-accent);
+}
+.home-variants.fitness-home .home-history .ah-view-switch > button:focus-visible {
+  outline-offset: -2px;
+}
+.home-variants.fitness-home .home-history .ah-view-switch > button[aria-pressed='true']:focus-visible {
+  outline-color: var(--fit-on-orange);
+}
+
+.home-variants.fitness-home .home-history :is(.ah-nav-actions, .ah-compact-week) button {
+  border: 1px solid var(--fit-control-line);
+  border-radius: calc(var(--home-glass-control-radius) - var(--space-micro));
+  background: var(--fit-surface);
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint);
+}
+.home-variants.fitness-home .home-history .ah-compact-week > div {
+  gap: 2px;
+}
+.home-variants.fitness-home .home-history .ah-open {
+  border-color: var(--fit-control-line);
+  border-radius: var(--home-glass-control-radius);
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint);
+}
+
+.home-variants.fitness-home .home-history .ah-day {
+  border-radius: calc(var(--home-glass-control-radius) - var(--space-micro));
+}
+.home-variants.fitness-home .home-history .ah-day-number {
+  font-size: 1.125rem;
+}
+.home-variants.fitness-home .home-history .ah-day[aria-pressed='true'] .ah-day-fill {
+  border-radius: calc(var(--home-glass-control-radius) - var(--space-micro) - 3px);
+}
+.home-variants.fitness-home .home-history .ah-day[aria-pressed='true'][data-incomplete='true'] {
+  border-bottom-style: dashed;
+  box-shadow: inset 0 1px 0 var(--fit-accent), inset 1px 0 0 var(--fit-accent), inset -1px 0 0 var(--fit-accent);
+}
+.home-variants.fitness-home .home-history :is(.ah-day, .ah-month):focus-visible {
+  outline-offset: -3px;
+}
+.home-variants.fitness-home .home-history .ah-month {
+  border: 1px solid var(--fit-rule);
+  border-radius: var(--home-glass-control-radius);
+}
+.home-variants.fitness-home .home-history .ah-month[data-selected='true'] {
+  border-color: var(--fit-accent);
+  box-shadow: inset 0 0 0 1px var(--fit-accent), inset 0 2px 0 var(--glass-nav-glint);
+}
+
+.home-variants.fitness-home .home-history .ah-month[aria-current='date'] .ah-month-caption {
+  color: var(--fit-accent);
+  font-weight: 650;
+}
+
+@media (hover: hover) {
+  .home-variants.fitness-home .home-history .ah-view-switch > button:not([aria-pressed='true']):hover {
+    background: var(--fit-board);
+    color: var(--fit-ink);
+  }
+  .home-variants.fitness-home .home-history :is(.ah-nav-actions, .ah-compact-week) button:hover:not(:disabled) {
+    background: var(--home-hover);
+  }
+  .home-variants.fitness-home .home-history .ah-month:hover:not(:disabled) {
+    border-color: var(--fit-accent);
+  }
+}
+
+@media (max-width: 767px) {
+  .home-variants.fitness-home .home-history .home-history-toggle {
+    padding-inline: var(--space-compact);
+    border: 1px solid var(--fit-rule);
+    border-radius: var(--home-glass-control-radius);
+    background: linear-gradient(var(--glass-nav-reflection), transparent), var(--fit-surface);
+    box-shadow: inset 0 1px 0 var(--glass-nav-glint), 0 1px 2px var(--glass-nav-contact);
+  }
+  .home-variants.fitness-home .home-history .home-history-toggle > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .home-variants.fitness-home .home-history .home-history-toggle > svg {
+    flex: none;
+  }
+  .home-variants.fitness-home .home-history :is(button, summary) {
+    scroll-margin-block-end: calc(var(--glass-nav-reserve) + var(--space-small));
+  }
+}

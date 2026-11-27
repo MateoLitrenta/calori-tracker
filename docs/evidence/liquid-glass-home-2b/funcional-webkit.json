@@ -1,0 +1,210 @@
+{
+  "engine": "webkit",
+  "version": "26.0",
+  "results": [
+    {
+      "width": 375,
+      "theme": "light",
+      "block": "records",
+      "result": {
+        "states": [
+          5,
+          1,
+          0
+        ],
+        "signed": [
+          "+1.100 kcal",
+          "+750 kcal",
+          "-250 kcal"
+        ],
+        "receipt": true,
+        "detailFocus": true
+      },
+      "usage": {
+        "writes": [
+          [
+            "2026-11-13",
+            "confirmed"
+          ]
+        ],
+        "ai": 0,
+        "external": 0
+      }
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "block": "habits",
+      "result": {
+        "water": 2000,
+        "steps": 10000,
+        "weight": 112.4,
+        "saved": true,
+        "failedDraft": true,
+        "retried": true,
+        "large": [
+          "1.234.567 ml",
+          "12.345.678",
+          "112,4 kg"
+        ],
+        "minimumTargets": true
+      },
+      "usage": {
+        "writes": [
+          [
+            "2026-11-13",
+            "confirmed"
+          ],
+          [
+            "2026-11-13",
+            "failed"
+          ],
+          [
+            "2026-11-13",
+            "confirmed"
+          ],
+          [
+            "2026-11-13",
+            "confirmed"
+          ]
+        ],
+        "ai": 0,
+        "external": 0
+      }
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "block": "activity",
+      "result": {
+        "states": {
+          "11": "partial",
+          "13": "with-meals",
+          "14": "future",
+          "08": "empty",
+          "09": "with-meals"
+        },
+        "week": [
+          "2026-11-09",
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13",
+          "2026-11-14",
+          "2026-11-15"
+        ],
+        "months": 12,
+        "keyboard": true,
+        "consultedThenOpened": "2026-11-12",
+        "restored": 230
+      },
+      "usage": {
+        "writes": [],
+        "ai": 0,
+        "external": 0
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "block": "records",
+      "result": {
+        "states": [
+          5,
+          1,
+          0
+        ],
+        "signed": [
+          "+1.100 kcal",
+          "+750 kcal",
+          "-250 kcal"
+        ],
+        "receipt": true,
+        "detailFocus": true
+      },
+      "usage": {
+        "writes": [
+          [
+            "2026-11-13",
+            "confirmed"
+          ]
+        ],
+        "ai": 0,
+        "external": 0
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "block": "habits",
+      "result": {
+        "water": 2000,
+        "steps": 10000,
+        "weight": 112.4,
+        "saved": true,
+        "failedDraft": true,
+        "retried": true,
+        "large": [
+          "1.234.567 ml",
+          "12.345.678",
+          "112,4 kg"
+        ],
+        "minimumTargets": true
+      },
+      "usage": {
+        "writes": [
+          [
+            "2026-11-13",
+            "confirmed"
+          ],
+          [
+            "2026-11-13",
+            "failed"
+          ],
+          [
+            "2026-11-13",
+            "confirmed"
+          ],
+          [
+            "2026-11-13",
+            "confirmed"
+          ]
+        ],
+        "ai": 0,
+        "external": 0
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "block": "activity",
+      "result": {
+        "states": {
+          "11": "partial",
+          "13": "with-meals",
+          "14": "future",
+          "08": "empty",
+          "09": "with-meals"
+        },
+        "week": [
+          "2026-11-09",
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13",
+          "2026-11-14",
+          "2026-11-15"
+        ],
+        "months": 12,
+        "keyboard": true,
+        "consultedThenOpened": "2026-11-12",
+        "restored": 230
+      },
+      "usage": {
+        "writes": [],
+        "ai": 0,
+        "external": 0
+      }
+    }
+  ]
+}
