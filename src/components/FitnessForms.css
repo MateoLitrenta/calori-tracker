@@ -216,17 +216,80 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
 .fitness-entry-portal .entry-form .entry-form-footer button { width: 100%; }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer .entry-save { color: var(--fit-on-orange); background: var(--fit-orange); }
 :is(.fitness-home, .fitness-entry-portal) .entry-form .entry-form-footer .entry-save:hover:not(:disabled) { background: #f4a56d; color: var(--fit-on-orange); }
+.fitness-entry-portal .entry-bottom-sheet[data-entry-glass]:has(> .record-detail-modal) {
+  border-radius: var(--home-glass-radius) var(--home-glass-radius) 0 0;
+}
+.entry-bottom-sheet[data-entry-glass]:has(> .record-detail-modal) .entry-sheet-header {
+  border-radius: calc(var(--home-glass-radius) - 1px) calc(var(--home-glass-radius) - 1px) 0 0;
+}
 .record-detail-modal {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
   background: var(--fit-page);
   color: var(--fit-ink);
 }
-.record-detail-content .record-detail-main { font: 700 24px/1.15 var(--fit-face); color: var(--fit-ink); }
+.home-variants .record-detail-modal .record-detail-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: var(--space-compact);
+  padding: var(--fit-space);
+  overflow-wrap: anywhere;
+}
+.record-detail-main { font: 700 1.625rem/1.15 var(--fit-face); color: var(--fit-ink); }
+.record-detail-secondary {
+  margin-block-start: 4px;
+  color: var(--fit-quiet);
+  font-size: .875rem;
+  font-variant-numeric: tabular-nums;
+}
+.record-detail-energy {
+  font: 700 2rem/1.05 var(--fit-face);
+  color: var(--fit-accent);
+  font-variant-numeric: tabular-nums;
+}
+.record-detail-energy small { color: var(--fit-quiet); font-size: .625em; }
+.record-detail-image {
+  display: block;
+  flex: none;
+  align-self: start;
+  width: auto;
+  max-width: 100%;
+  max-height: min(42dvh, 18rem);
+  object-fit: contain;
+  border: 1px solid var(--fit-rule);
+  border-radius: var(--home-glass-control-radius);
+  background: var(--fit-surface);
+}
+.record-detail-details, .record-detail-meta {
+  padding: var(--space-compact);
+  border: 1px solid var(--fit-rule);
+  border-radius: var(--home-glass-control-radius);
+  background: var(--fit-surface);
+  font-size: .9375rem;
+}
+.record-detail-details { white-space: pre-wrap; }
+.record-detail-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8em), 1fr));
+  gap: var(--space-small);
+}
+.record-detail-meta dt { color: var(--fit-quiet); font-size: .8125rem; }
+.record-detail-meta dd { font-weight: 650; font-variant-numeric: tabular-nums; }
 .record-detail-actions {
   display: flex;
+  flex: none;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-small);
+  padding: var(--space-compact) var(--fit-space);
   background: var(--fit-surface);
   border-top: 1px solid var(--fit-rule);
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint);
+}
+.fitness-entry-portal .record-detail-actions {
+  padding-bottom: calc(var(--space-compact) + env(safe-area-inset-bottom, 0px));
 }
 .record-detail-actions button {
   display: flex;
@@ -234,21 +297,31 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
   align-items: center;
   justify-content: center;
   gap: 6px;
+  min-width: var(--fit-target);
   min-height: var(--fit-target);
-  padding: 8px;
-  border: 1px solid var(--fit-control-line);
-  border-radius: var(--fit-control-radius);
-  font-weight: 600;
+  padding: var(--space-small);
+  border: 1px solid var(--home-glass-control-edge, var(--fit-control-line));
+  border-radius: var(--home-glass-control-radius);
+  font-weight: 700;
   color: var(--fit-ink);
   background: var(--fit-soft);
 }
-.record-detail-actions .record-detail-delete {
+.record-detail-actions button svg { flex: none; }
+.record-detail-actions .record-detail-edit:enabled {
+  color: var(--fit-on-orange);
+  background: var(--fit-orange);
+  border-color: var(--fit-accent);
+  box-shadow: inset 0 1px 0 var(--glass-nav-tint-glint), 0 1px 2px var(--glass-nav-contact);
+}
+.record-detail-actions .record-detail-delete:enabled {
   color: var(--fit-danger);
   background: var(--fit-danger-soft);
   border-color: currentColor;
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint);
 }
 .record-detail-actions button:hover:enabled { text-decoration: underline; }
-.record-detail-actions button:focus-visible { outline: 2px solid var(--fit-focus); outline-offset: 2px; }
+.record-detail-actions button:focus-visible { outline: 2px solid var(--fit-focus); outline-offset: -3px; }
+.record-detail-actions .record-detail-edit:focus-visible { outline-color: var(--fit-on-orange); }
 .record-detail-actions button:disabled, .record-delete-dialog button:disabled {
   color: var(--fit-quiet);
   background: var(--fit-soft);
@@ -263,10 +336,18 @@ html :is(.fitness-home, .fitness-entry-portal).home-variants .entry-form .entry-
 }
 .record-delete-error { color: var(--fit-danger); background: var(--fit-danger-soft); }
 .record-delete-notice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin-block: 8px;
-  color: var(--fit-ink);
-  background: var(--fit-soft);
+  color: var(--fit-success);
+  background: var(--fit-surface);
+  border: 1px solid var(--fit-rule);
+  border-radius: var(--home-glass-control-radius);
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint), 0 1px 2px var(--glass-nav-contact);
+  overflow-wrap: anywhere;
 }
+.record-delete-notice svg { flex: none; }
 @media (max-width: 350px) {
   .fitness-entry-portal.home-variants .entry-form .entry-fields-grid { padding-inline: 12px; }
 }
@@ -374,7 +455,7 @@ body:has(> .fitness-entry-portal form.entry-form) :is(.app-main, .app-bottom-nav
   flex: 0 0 calc(var(--entry-viewport-height, 100dvh) / 2);
 }
 
-/* Inicio 2C. Only the meal and exercise editor surfaces opt in. */
+/* Shared material for the Inicio dialogs that opt in. */
 :is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] {
   --entry-glass-control-shadow: inset 0 1px 0 var(--glass-nav-glint), 0 1px 2px var(--glass-nav-contact);
 }
@@ -504,4 +585,8 @@ html .home-variants :is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-gl
 }
 [data-entry-glass] :is(.entry-activity-chips button[aria-pressed="true"], .entry-form .entry-form-footer .entry-save:enabled):focus-visible {
   outline-color: var(--fit-on-orange);
+}
+
+.home-variants [data-entry-glass] .entry-weight-form .entry-form-content {
+  padding: var(--fit-space);
 }

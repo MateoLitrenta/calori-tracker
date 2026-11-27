@@ -41,7 +41,7 @@ async function fingerprint(dialog) {
     }));
 }
 
-function keyboardFixture() {
+export function keyboardFixture() {
   const viewport = new EventTarget();
   Object.assign(viewport, { height: innerHeight, offsetTop: 0, scale: 1 });
   Object.defineProperty(viewport, 'pageTop', { get: () => scrollY + viewport.offsetTop });
@@ -65,12 +65,12 @@ function keyboardFixture() {
   };
 }
 
-async function keyboard(page, mode, pan = 0) {
+export async function keyboard(page, mode, pan = 0) {
   await page.evaluate(([mode, pan]) => window.qaKeyboard(mode, pan), [mode, pan]);
   await settle(page);
 }
 
-async function verifyKeyboard(page, id, line = 0) {
+export async function verifyKeyboard(page, id, line = 0) {
   const values = await page.evaluate(({ id, line }) => {
     const field = document.getElementById(id);
     const box = field.getBoundingClientRect(), css = getComputedStyle(field);

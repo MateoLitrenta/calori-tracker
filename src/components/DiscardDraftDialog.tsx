@@ -1,7 +1,11 @@
 import { useLayoutEffect, useRef } from 'react';
 import './FitnessProfile.css';
 
-export default function DiscardDraftDialog({ onKeep, onDiscard }: { onKeep: () => void; onDiscard: () => void }) {
+export default function DiscardDraftDialog({ onKeep, onDiscard, context }: {
+  onKeep: () => void;
+  onDiscard: () => void;
+  context?: 'home';
+}) {
   const ref = useRef<HTMLDialogElement>(null);
   const keep = useRef<HTMLButtonElement>(null);
   useLayoutEffect(() => {
@@ -11,7 +15,7 @@ export default function DiscardDraftDialog({ onKeep, onDiscard }: { onKeep: () =
     return () => dialog.close();
   }, []);
 
-  return <dialog ref={ref} data-discard-draft className="profile-dialog" aria-labelledby="discard-draft-title" aria-describedby="discard-draft-description"
+  return <dialog ref={ref} data-discard-draft data-draft-context={context} className="profile-dialog" aria-labelledby="discard-draft-title" aria-describedby="discard-draft-description"
     onCancel={event => { event.preventDefault(); onKeep(); }}
     onClick={event => { if (event.target === event.currentTarget) onKeep(); }}>
     <div className="profile-dialog-body">

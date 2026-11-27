@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useLayoutEffect, useId, useMemo } from 'react';
-import { ForkKnife, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, CaretRight, Sparkle } from '@phosphor-icons/react';
+import { ForkKnife, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, CaretRight, Sparkle, X } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
@@ -25,6 +25,19 @@ type WorkoutCategory = typeof workoutCategories[number];
 const exactWorkoutCategory = (activity: string) => workoutCategories.find(category => category.toLowerCase() === activity.trim().toLowerCase()) ?? null;
 type EntryEstimate = { calories: number; assumptions: string[]; context: string; inputVersion: number; calorieVersion: number; contextKey: string };
 type MealEstimate = EntryEstimate & { category: MealType };
+
+const recordErrorAppearance = {
+  className: 'home-record-error',
+  style: {
+    background: 'var(--fit-danger-soft)',
+    color: 'var(--fit-danger)',
+    border: '1px solid var(--fit-control-line)',
+    borderRadius: 'var(--glass-nav-sidebar-radius)',
+    boxShadow: 'inset 0 1px 0 var(--glass-nav-glint), var(--glass-nav-shadow)',
+    overflowWrap: 'anywhere' as const,
+  },
+  iconTheme: { primary: 'var(--fit-danger)', secondary: 'var(--fit-danger-soft)' },
+};
 
 function mealTypeAtHour(hour: number): MealType {
   if (hour < 5) return 'Snack';
@@ -89,7 +102,7 @@ function DailyRecords({ count, children, receipt, onDismiss }: {
         setDestination(receipt);
         onDismiss();
       }}>Ver registro</button>
-      <button type="button" className="meal-saved-close" aria-label="Cerrar confirmación" onClick={onDismiss}>×</button>
+      <button type="button" className="meal-saved-close" aria-label="Cerrar confirmación" onClick={onDismiss}><X size={18} aria-hidden="true" /></button>
     </aside>}
     <ul ref={list} id={listId} data-expanded={expanded}
       className="daily-records">
@@ -335,7 +348,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       setIsEditingWeight(false);
       return true;
     } catch {
-      toast.error('No se pudo confirmar el peso. Tu valor se conserva para reintentar.');
+      toast.error('No se pudo confirmar el peso. Tu valor se conserva para reintentar.', recordErrorAppearance);
       return false;
     } finally {
       savingWeightRef.current = false;
@@ -614,7 +627,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       if (!base) return;
       draft.base = base;
       const oldMeal = base.meals.find(m => m.id === draft.id);
-      if (editingMealId && !oldMeal) { toast.error('La comida ya no está en este día. Tu borrador se conserva; revisá los registros antes de crear otra.'); return; }
+      if (editingMealId && !oldMeal) { toast.error('La comida ya no está en este día. Tu borrador se conserva; revisá los registros antes de crear otra.', recordErrorAppearance); return; }
       let uploadedPath: string | null = null;
       if (mealPhoto) {
         if (!draft.upload || draft.upload.blob !== mealPhoto) draft.upload = { blob: mealPhoto,
@@ -667,7 +680,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
       if (!base) return;
       draft.base = base;
       const previous = base.workouts.find(w => w.id === draft.id);
-      if (editingWorkoutId && !previous) { toast.error('El ejercicio ya no está en este día. Tu borrador se conserva; revisá los registros antes de crear otro.'); return; }
+      if (editingWorkoutId && !previous) { toast.error('El ejercicio ya no está en este día. Tu borrador se conserva; revisá los registros antes de crear otro.', recordErrorAppearance); return; }
       const workout: WorkoutEntry = { ...previous, id: draft.id, activity: workActivity, duration: Number(workDuration), calories: Number(workCals), muscles: previous?.muscles ?? [], details: workDetails, distance: workDistance ? Number(workDistance) : undefined, pace: workPace || undefined, time: workTime || (draft.fallbackTime ??= format(new Date(), 'HH:mm')) };
       const workouts = previous ? base.workouts.map(w => w.id === draft.id ? workout : w) : [...base.workouts, workout];
       if (!await onUpdateRecord(dateStr, { ...base, workouts }, { feedback: 'contextual' })) throw new Error('Guardado no confirmado');
@@ -677,7 +690,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         estimated: workEstimate?.contextKey === estimateContextKey && workEstimate.calories === workout.calories
           && workEstimate.inputVersion === workInputVersion.current && workEstimate.calorieVersion === workCalorieVersion.current });
     } catch {
-      toast.error('No se pudo confirmar el ejercicio. Tu borrador se conserva para reintentar.');
+      toast.error('No se pudo confirmar el ejercicio. Tu borrador se conserva para reintentar.', recordErrorAppearance);
     } finally {
       savingWorkoutRef.current = false;
       setSavingWorkout(false);
@@ -752,7 +765,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
   return (
     <div className="daily-panel flex flex-col gap-6 w-full" data-period={isGroup ? 'group' : 'day'}>
-      {discard && <DiscardDraftDialog onKeep={() => setDiscard(null)} onDiscard={() => { setDiscard(null); discard(); }} />}
+      {discard && <DiscardDraftDialog context="home" onKeep={() => setDiscard(null)} onDiscard={() => { setDiscard(null); discard(); }} />}
       <div className="daily-heading flex justify-between items-end border-b border-slate-200 dark:border-gray-800 pb-2">
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{panelTitle}</h3>
         <span className="text-slate-500 dark:text-gray-400">{isGroup ? panelSubtitle : <time dateTime={dateStr}>{panelSubtitle}</time>}</span>
@@ -1175,7 +1188,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
           </div>
 
           {!detail && !entryActive && deletionNotice?.scope === detailScope &&
-            <p className="record-delete-notice" role="status">{deletionNotice.text}</p>}
+            <p className="record-delete-notice" role="status"><Check size={16} aria-hidden="true" />{deletionNotice.text}</p>}
           {totalEntries === 0 && (
             <p className="daily-logs-empty">Las comidas y los ejercicios que agregues para este día aparecerán acá.</p>
           )}
@@ -1224,51 +1237,37 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Detail Modal */}
       {detailModalItem && (
-        <EntryFormShell fitness dateContext={entryDate} title="Detalle del registro" restoreFocusTo={recordOpener} desktopModal closeLabel="Cerrar detalle" onClose={closeDetail}>
-          <div className="record-detail-modal flex min-h-0 flex-col">
-            <div className="record-detail-content entry-form-content p-6 flex flex-col gap-4">
-
-              <div className="flex flex-col gap-1 text-center">
-                <span className="record-detail-main text-xl font-bold text-white break-words">
+        <EntryFormShell fitness liquidGlass dateContext={entryDate} title="Detalle del registro" restoreFocusTo={recordOpener} desktopModal closeLabel="Cerrar detalle" onClose={closeDetail}>
+          <div className="record-detail-modal">
+            <div className="record-detail-content entry-form-content">
+              <div className="record-detail-heading">
+                <h4 className="record-detail-main">
                   {detailModalItem._type === 'meal' ? detailModalItem.name : detailModalItem.activity}
-                </span>
-                <span className="record-detail-secondary text-sm text-slate-500 dark:text-gray-400">
-                  {detailModalItem.time ? `${detailModalItem.time} hs • ` : ''}
-                  {detailModalItem._type === 'meal' ? detailModalItem.type : `${detailModalItem.duration} min`}
-                </span>
+                </h4>
+                <p className="record-detail-secondary">
+                  {detailModalItem._type === 'meal' ? detailModalItem.type : `Ejercicio · ${detailModalItem.duration} min`}
+                  {detailModalItem.time && ` · ${detailModalItem.time} hs`}
+                </p>
               </div>
 
-              <div className="text-center py-2">
-                <span className={`text-3xl font-black tracking-tight ${detailModalItem._type === 'meal' ? 'text-blue-400' : 'text-orange-400'}`}>
-                  {detailModalItem._type === 'meal' ? '+' : '-'}{formatCalories(detailModalItem.calories)} <span className="text-lg font-medium text-slate-500 dark:text-gray-400">kcal</span>
-                </span>
-              </div>
+              <p className="record-detail-energy">
+                {detailModalItem._type === 'meal' ? '+' : '-'}{formatCalories(detailModalItem.calories)} <small>kcal</small>
+              </p>
 
-              {detailModalItem.details && (
-                <div className="record-detail-details bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-lg p-3 text-sm text-slate-900 dark:text-white whitespace-pre-wrap">
-                  {detailModalItem.details}
-                </div>
-              )}
+              {detailModalItem._type === 'meal' && detailModalItem.photo_path &&
+                <MealThumbnail key={detailModalItem.photo_path} path={detailModalItem.photo_path} detail />}
 
-              {detailModalItem._type === 'workout' && (detailModalItem.distance || detailModalItem.pace) && (
-                <div className="record-detail-meta flex gap-4 bg-slate-100 dark:bg-[#0f141c] border border-slate-200 dark:border-gray-800 rounded-lg p-3">
-                  {detailModalItem.distance && (
-                    <div className="flex-1 flex flex-col items-center">
-                      <span className="text-[10px] uppercase text-slate-500 dark:text-gray-400 font-bold tracking-wider mb-1">Distancia</span>
-                      <span className="font-medium">{detailModalItem.distance} km</span>
-                    </div>
-                  )}
-                  {detailModalItem.distance && detailModalItem.pace && (
-                    <div className="w-[1px] bg-slate-200 dark:bg-gray-800"></div>
-                  )}
-                  {detailModalItem.pace && (
-                    <div className="flex-1 flex flex-col items-center">
-                      <span className="text-[10px] uppercase text-slate-500 dark:text-gray-400 font-bold tracking-wider mb-1">Ritmo</span>
-                      <span className="font-medium">{detailModalItem.pace} /km</span>
-                    </div>
-                  )}
-                </div>
-              )}
+              {detailModalItem.details && <p className="record-detail-details">{detailModalItem.details}</p>}
+
+              {detailModalItem._type === 'workout' && (detailModalItem.distance || detailModalItem.pace) &&
+                <dl className="record-detail-meta">
+                  {!!detailModalItem.distance && <div>
+                    <dt>Distancia</dt><dd>{detailModalItem.distance} km</dd>
+                  </div>}
+                  {detailModalItem.pace && <div>
+                    <dt>Ritmo</dt><dd>{detailModalItem.pace} /km</dd>
+                  </div>}
+                </dl>}
             </div>
 
             {!liveDetailItem && !deletion && <p className="record-delete-error" role="status">Este registro ya no está en este día.</p>}
@@ -1300,7 +1299,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Weight uses the same accessible shell and selected-day context as other records. */}
       {isEditingWeight && (
-        <EntryFormShell fitness dateContext={entryDate} title={currentRecord.weight ? "Editar peso" : "Registrar peso"} dailyEditor onClose={closeWeight}>
+        <EntryFormShell fitness liquidGlass dateContext={entryDate} title={currentRecord.weight ? "Editar peso" : "Registrar peso"} dailyEditor onClose={closeWeight}>
           <form className="entry-form entry-weight-form" aria-busy={savingWeight} onChangeCapture={markEntryChanged} onSubmit={async event => {
             event.preventDefault();
             await handleSetWeight(parseFloat(editWeightVal) || 0);
@@ -1308,7 +1307,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
             <div className="entry-form-content">
 
               <div className="entry-field">
-                <label className="entry-field-label" htmlFor={dayContextId + '-weight'}>Peso (kg)</label>
+                <label className="entry-field-label" htmlFor={dayContextId + '-weight'}>Peso <span>(kg)</span></label>
                 <input id={dayContextId + '-weight'} name="weight" type="text" inputMode="decimal"
                   value={editWeightVal}
                   onChange={event => {

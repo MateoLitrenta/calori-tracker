@@ -1,5 +1,11 @@
 # Estado actual de Calori
 
+## Liquid Glass · Inicio etapa 2D en revisión
+
+La rama parte del candidato de #108, `965334e8f008b23e5a3af8fb6af6f3da07a5b733`. Detalle, confirmaciones, peso y avisos de Inicio toman el material de 2C. Editar usa el naranja de Calori y las acciones destructivas conservan el rojo de peligro. Se mantiene la confirmación explícita y el peso aplicable por fecha.
+
+[Decisiones, evidencia y recorrido de revisión](evidence/liquid-glass-home-2d/README.md)
+
 ## Liquid Glass · Inicio etapa 2C en revisión
 
 La rama parte de `5ff742305c9bb8b0fbc2ea5639aeea2dc0143370`, merge de #107 que incorpora el peso por fecha de #106. Las altas y ediciones de comida y ejercicio y el calendario «Elegir fecha» toman los radios, el borde óptico y el naranja de Inicio. Los campos se mantienen sólidos y la ubicación de las acciones en móvil conserva la protección del teclado.
