@@ -9,6 +9,8 @@ import {
   Barbell,
   ForkKnife,
   CalendarBlank,
+  Clock,
+  Minus,
   SoccerBall,
   Pulse,
 } from '@phosphor-icons/react';
@@ -143,6 +145,15 @@ const monthWeeks = (month: string) => {
   return result;
 };
 
+function revealDay(surface: HTMLDivElement | null, date: string, focus = false) {
+  const button = surface?.querySelector<HTMLButtonElement>('[data-date="' + date + '"]');
+  if (!surface || !button) return;
+  if (focus) button.focus({ preventScroll: true });
+  const bounds = button.getBoundingClientRect(), viewport = surface.getBoundingClientRect();
+  if (bounds.left < viewport.left) surface.scrollLeft -= viewport.left - bounds.left;
+  if (bounds.right > viewport.right) surface.scrollLeft += bounds.right - viewport.right;
+}
+
 export default function Heatmap({
   records,
   selectedDateStr,
@@ -214,7 +225,7 @@ export default function Heatmap({
   const helpId = useId(),
     detailId = useId(),
     blockedId = useId();
-  const focusRequest = useRef<string | null>(null),
+  const dayRequest = useRef<{ date: string; focus: boolean } | null>(null),
     surfaceRef = useRef<HTMLDivElement>(null);
   const calendar = buildHistoryPeriods(parseISO(today));
   const yearDates = calendar.year.find((period) => period.key.startsWith(String(year)))?.dates ?? [];
@@ -297,27 +308,23 @@ export default function Heatmap({
   }, []);
 
   useLayoutEffect(() => {
-    if (!focusRequest.current) return;
-    const button = surfaceRef.current?.querySelector<HTMLButtonElement>(
-      '[data-date="' + focusRequest.current + '"]',
-    );
-    if (button) {
-      button.focus({ preventScroll: true });
-      const scroll = surfaceRef.current;
-      if (scroll) {
-        const bounds = button.getBoundingClientRect(),
-          viewport = scroll.getBoundingClientRect();
-        if (bounds.left < viewport.left) scroll.scrollLeft -= viewport.left - bounds.left;
-        if (bounds.right > viewport.right) scroll.scrollLeft += bounds.right - viewport.right;
-      }
-    }
-    focusRequest.current = null;
+    const pending = dayRequest.current;
+    dayRequest.current = null;
+    if (pending) revealDay(surfaceRef.current, pending.date, pending.focus);
   }, [state.dateStr, state.view, state.anchor]);
+
+  const returnToToday = () => {
+    if (today === state.dateStr && today === state.anchor) revealDay(surfaceRef.current, today);
+    else dayRequest.current = { date: today, focus: false };
+    change({ dateStr: today, anchor: today });
+  };
 
   const select = (date: string, focus = false) => {
     const next = clampDate(date);
     // A boundary key must not leave a focus request waiting for an unrelated click.
-    focusRequest.current = focus && (next !== state.dateStr || next !== state.anchor) ? next : null;
+    dayRequest.current = focus && (next !== state.dateStr || next !== state.anchor)
+      ? { date: next, focus: true }
+      : null;
     change({ dateStr: next, anchor: next });
   };
   const navigateDays = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -373,7 +380,8 @@ export default function Heatmap({
     const record = records[date],
       activity = hasActivity(record),
       missingMeals = activity && !record?.meals.length,
-      unavailable = date > today || date < minDate;
+      future = date > today,
+      unavailable = future || date < minDate;
     const energy = getHistoryDay(record, date, profile, today, weightAt(date));
     const habitText =
       ((record?.steps ?? 0) > 0 ? ' · ' + number(record!.steps) + ' pasos' : '') +
@@ -396,19 +404,18 @@ export default function Heatmap({
         data-activity={activity && !unavailable}
         data-incomplete={missingMeals && !unavailable}
         data-balance={unavailable ? 'empty' : energy.category}
-        data-completeness={date > today ? 'future' : date < minDate ? 'unavailable' : energy.state}
+        data-completeness={future ? 'future' : unavailable ? 'unavailable' : energy.state}
         disabled={unavailable}
         aria-label={
           dateLabel(date) +
           (date === today ? ' · Hoy' : '') +
           ' · ' +
           (unavailable
-            ? date > today
+            ? future
               ? (activity ? 'Fecha futura · ' + status : 'Fecha futura · No disponible')
               : 'Fuera del período disponible'
             : status +
-              ' · ' +
-              energy.label +
+              (energy.canColorBalance ? ' · ' + energy.label : energy.activity ? ' · Parcial' : '') +
               (energy.balance !== null
                 ? ' · ' +
                   signed(energy.balance) +
@@ -431,7 +438,15 @@ export default function Heatmap({
             {energy.canColorBalance && energy.balance !== null ? signed(energy.balance) : 'Parcial'}
           </span>
         )}
-        {date > today && activity && <span className="ah-day-balance">Con registros</span>}
+        {future && (
+          <span className="ah-day-state ah-day-state--future" aria-hidden="true">
+            <Clock />
+            {activity && <span>Con registros</span>}
+          </span>
+        )}
+        {!unavailable && !activity && (
+          <span className="ah-day-state ah-day-state--empty" aria-hidden="true"><Minus /></span>
+        )}
         <span className="ah-day-marks" aria-hidden="true">
           {!!record?.meals.length && !unavailable && <ForkKnife weight="fill" />}
           {!unavailable && <SportMarks sports={energy.sports} />}
@@ -475,7 +490,7 @@ export default function Heatmap({
                 {state.view === 'week' && <span className="ah-period-boundary">Lunes a domingo</span>}
                 <span>{registeredDays
                   ? countLabel(registeredDays, 'día con registros', 'días con registros')
-                  : 'Sin registros en este período'}</span>
+                  : 'Sin registros hasta hoy en este período'}</span>
                 {state.view === 'year' && <span>Elegí un mes para explorar</span>}
               </p>
             </div>
@@ -491,7 +506,7 @@ export default function Heatmap({
               <button
                 type="button"
                 className="ah-today"
-                onClick={() => change({ dateStr: today, anchor: today })}
+                onClick={returnToToday}
               >
                 Hoy
               </button>
@@ -569,7 +584,7 @@ export default function Heatmap({
                               ),
                             ),
                           );
-                          focusRequest.current = next;
+                          dayRequest.current = { date: next, focus: true };
                           change({ view: 'month', anchor: next, dateStr: next });
                         }}
                       >
@@ -695,6 +710,8 @@ export default function Heatmap({
                   {state.view !== 'year' && <div className="ah-key">
                     <span><i className="ah-key-selection" aria-hidden="true" />Día consultado</span>
                     <span><i className="ah-key-today" aria-hidden="true" />Hoy</span>
+                    <span><Minus aria-hidden="true" />Sin registros</span>
+                    <span><Clock aria-hidden="true" />Fecha futura</span>
                     <span><ForkKnife aria-hidden="true" />Comida</span>
                     <span><SoccerBall aria-hidden="true" />Fútbol</span>
                     <span><Barbell aria-hidden="true" />Gimnasio</span>
@@ -846,34 +863,34 @@ export default function Heatmap({
             Esta acción cambia el día de registro en Inicio.
           </p>
         </div>
-      </div>
-      {state.view !== 'year' && (
-        <section
-          aria-label={`Resumen de ${viewLabel.toLowerCase()}`}
-          className="ah-period-summary"
-          data-period={state.view}
-          data-provisional={periodInfo.provisional}
-        >
-          <h3>Resumen {state.view === 'month' ? 'del mes' : 'de la semana'}</h3>
-          <BalanceReading
-            value={summary.averageBalance}
-            category={periodInfo.category}
-            label={averageLabel(periodInfo)}
-            unit="kcal/día"
-          />
-          <p>
-            {periodInfo.foodDays}/{countLabel(periodInfo.elapsedDays, 'día con comidas', 'días con comidas')} · Base:{' '}
-            {countLabel(summary.days, 'día con datos energéticos', 'días con datos energéticos')}
-          </p>
-          <p className="ah-average-basis">{averageBasis(periodInfo)}</p>
-          {periodInfo.sports.total > 0 && (
-            <p className="ah-period-sports">
-              {countLabel(periodInfo.sports.total, 'entrenamiento', 'entrenamientos')} ·{' '}
-              {sportsLabel(periodInfo.sports)}
+        {state.view !== 'year' && (
+          <section
+            aria-label={`Resumen de ${viewLabel.toLowerCase()}`}
+            className="ah-period-summary"
+            data-period={state.view}
+            data-provisional={periodInfo.provisional}
+          >
+            <h3>Resumen {state.view === 'month' ? 'del mes' : 'de la semana'}</h3>
+            <BalanceReading
+              value={summary.averageBalance}
+              category={periodInfo.category}
+              label={averageLabel(periodInfo)}
+              unit="kcal/día"
+            />
+            <p>
+              {periodInfo.foodDays}/{countLabel(periodInfo.elapsedDays, 'día con comidas', 'días con comidas')} · Base:{' '}
+              {countLabel(summary.days, 'día con datos energéticos', 'días con datos energéticos')}
             </p>
-          )}
-        </section>
-      )}
+            <p className="ah-average-basis">{averageBasis(periodInfo)}</p>
+            {periodInfo.sports.total > 0 && (
+              <p className="ah-period-sports">
+                {countLabel(periodInfo.sports.total, 'entrenamiento', 'entrenamientos')} ·{' '}
+                {sportsLabel(periodInfo.sports)}
+              </p>
+            )}
+          </section>
+        )}
+      </div>
       <details className="ah-energy">
         <summary>Ver resumen energético</summary>
         <div>

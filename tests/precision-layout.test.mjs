@@ -149,7 +149,8 @@ test('numbered history retains seven columns and accessible target sizes across 
     assert.equal(style('.ah-weekdays').gridTemplateColumns, columns);
     assert.ok(parseInt(style('.ah-day').minWidth) >= 44);
     assert.ok(parseInt(style('.ah-day').minHeight) >= 44);
-    assert.ok(parseInt(style('.ah-day-number').fontSize) >= 14);
+    const dayFontSize = style('.ah-day-number').fontSize;
+    assert.ok(parseFloat(dayFontSize) * (dayFontSize.endsWith('rem') ? 16 : 1) >= 14);
     assert.ok(parseInt(style('.ah-view-switch button').minHeight) >= 44);
     assert.ok(parseInt(style('.ah-nav-actions button').minWidth) >= 44);
     assert.ok(parseInt(style('.ah-nav-actions button').minHeight) >= 44);
@@ -179,11 +180,13 @@ test('narrow containers use an active weekly surface; roomy desktop integrates c
   }
   const roomy = view(t, 1440, 900, 1100);
   assert.equal(roomy.style('.ah-layout').gridTemplateColumns, 'minmax(0, 1.15fr) minmax(0, 1fr)');
+  assert.equal(roomy.style('.ah-layout').gridTemplateAreas, "'calendar detail' 'summary detail'");
   // JSDOM cannot resolve the color custom property in a border shorthand.
   assert.equal(roomy.declaration('.ah-detail', 'border-top'), '0');
   assert.match(roomy.declaration('.ah-detail', 'border-left'), /^1px solid var\(--home-line\)$/);
   const compact = view(t, 768, 1024, 700);
   assert.equal(compact.style('.ah-layout').gridTemplateColumns, 'minmax(0, 1fr)');
+  assert.equal(compact.style('.ah-layout').gridTemplateAreas, "'calendar' 'detail' 'summary'");
   assert.match(compact.declaration('.ah-detail', 'border-top'), /^1px solid var\(--home-line\)$/);
   const short = view(t, 1440, 768, 1100);
   assert.notEqual(short.style('.home-variants').getPropertyValue('--home-section-gap'), roomy.style('.home-variants').getPropertyValue('--home-section-gap'));
