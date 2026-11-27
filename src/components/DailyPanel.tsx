@@ -706,7 +706,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     path={mealPhotoPath}
     onChange={blob => { reviseEstimate('mealInput'); setMealPhoto(blob); setMealPhotoRemoved(false); }}
     onRemove={() => { reviseEstimate('mealInput'); setMealPhoto(null); setMealPhotoRemoved(true); }} onBusyChange={setPhotoProcessing} />;
-  const estimateNotice = (estimateFailure || !!deadline) && <p role="status" className="text-sm">
+  const estimateNotice = (estimateFailure || !!deadline) && <p role="status" className="entry-estimate-notice text-sm">
     {estimateFailure?.message} {!!deadline && 'Podés reintentar a las ' + new Date(deadline).toLocaleTimeString('es-AR') + '.'} Podés ingresar las calorías manualmente.
   </p>;
   const renderTimeField = (id: string, value: string, setTime: (time: string) => void, required = false) => (
@@ -851,7 +851,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
           {/* Forms Area */}
         {activeTab === 'comida' && (
-            <EntryFormShell fitness dailyEditor dateContext={entryDate} title="Agregar comida" onClose={closeEntry}>
+            <EntryFormShell fitness dailyEditor liquidGlass dateContext={entryDate} title="Agregar comida" onClose={closeEntry}>
               <form onChangeCapture={markEntryChanged} onSubmit={handleAddMeal} aria-busy={savingMeal || photoProcessing} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
                 <div className="entry-form-content entry-fields-grid entry-meal-fields">
                   <div className="entry-field entry-description">
@@ -924,7 +924,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         )}
 
         {activeTab === 'entrenamiento' && (
-            <EntryFormShell fitness dailyEditor dateContext={entryDate} title="Agregar ejercicio" onClose={closeEntry}>
+            <EntryFormShell fitness dailyEditor liquidGlass dateContext={entryDate} title="Agregar ejercicio" onClose={closeEntry}>
               <form onChangeCapture={markEntryChanged} onSubmit={handleAddWorkout} aria-busy={savingWorkout} className="entry-form bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
                 <div className="entry-form-content entry-fields-grid entry-workout-fields">
                   <div className="entry-field entry-description entry-activity">
@@ -1328,7 +1328,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Edit Modal para Comidas */}
       {editingMealId && (
-        <EntryFormShell fitness dateContext={entryDate} title="Editar comida" restoreFocusTo={recordOpener} onClose={closeEntry} dailyEditor>
+        <EntryFormShell fitness liquidGlass dateContext={entryDate} title="Editar comida" restoreFocusTo={recordOpener} onClose={closeEntry} dailyEditor>
           <form onChangeCapture={markEntryChanged} onSubmit={handleAddMeal} aria-busy={savingMeal || photoProcessing} className="entry-form p-4 flex flex-col gap-4">
             <div className="entry-form-content entry-fields-grid entry-meal-fields entry-edit-fields">
 
@@ -1403,7 +1403,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
 
       {/* Edit Modal para Entrenamiento */}
       {editingWorkoutId && (
-        <EntryFormShell fitness dateContext={entryDate} title="Editar ejercicio" restoreFocusTo={recordOpener} onClose={closeEntry} dailyEditor>
+        <EntryFormShell fitness liquidGlass dateContext={entryDate} title="Editar ejercicio" restoreFocusTo={recordOpener} onClose={closeEntry} dailyEditor>
           <form onChangeCapture={markEntryChanged} onSubmit={handleAddWorkout} aria-busy={savingWorkout} className="entry-form p-4 flex flex-col gap-4">
             <div className="entry-form-content entry-fields-grid entry-workout-fields entry-edit-fields">
 

@@ -1,5 +1,11 @@
 # Estado actual de Calori
 
+## Liquid Glass · Inicio etapa 2C en revisión
+
+La rama parte de `5ff742305c9bb8b0fbc2ea5639aeea2dc0143370`, merge de #107 que incorpora el peso por fecha de #106. Las altas y ediciones de comida y ejercicio y el calendario «Elegir fecha» toman los radios, el borde óptico y el naranja de Inicio. Los campos se mantienen sólidos y la ubicación de las acciones en móvil conserva la protección del teclado.
+
+[Decisiones, evidencia y recorrido de revisión](evidence/liquid-glass-home-2c/README.md)
+
 ## Liquid Glass · Inicio etapa 2B
 
 La rama parte del merge de #104 en `bf7fe5515a5f27edb2686c088c0110994d58e5b9`. Registros agrupa las filas en una superficie sólida. Hábitos incorpora tarjetas compactas con blancos táctiles de 44 px. Tu actividad lleva las curvas y el borde de Inicio al selector, calendarios y superficies de detalle. La navegación y la composición superior de Inicio 2A se conservan.

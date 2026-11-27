@@ -118,12 +118,12 @@ export function MealPhotoPicker({ blob, path, onChange, onRemove, onBusyChange }
   return <div className="flex flex-col gap-2">
     {(preview || path) && <div className="flex items-center gap-3">
       {preview ? <img src={preview} alt="Vista previa de la comida" className="h-20 w-20 object-cover rounded-[var(--radius-widget)]" /> : path ? <MealThumbnail path={path} size={80} /> : null}
-      <button type="button" onClick={onRemove} className="min-h-11 px-3 rounded-[var(--radius-control)] text-slate-600 dark:text-gray-300 border border-slate-300 dark:border-white/10">Quitar foto</button>
+      <button type="button" onClick={onRemove} className="entry-photo-action min-h-11 px-3 rounded-[var(--radius-control)] text-slate-600 dark:text-gray-300 border border-slate-300 dark:border-white/10">Quitar foto</button>
     </div>}
     <div className="flex flex-wrap gap-2">
       <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={event => { const file = event.target.files?.[0]; if (file) void select(file, file.name); event.target.value = ''; }} />
-      <button type="button" disabled={busy} onClick={() => input.current?.click()} className="min-h-11 px-3 rounded-[var(--radius-control)] border border-slate-300 dark:border-white/10 text-slate-700 dark:text-gray-200 flex items-center gap-2"><ImageSquare size={18} /> Elegir de galería</button>
-      <button ref={cameraOpener} type="button" disabled={busy} onClick={() => void openCamera()} className="min-h-11 px-3 rounded-[var(--radius-control)] border border-slate-300 dark:border-white/10 text-slate-700 dark:text-gray-200 flex items-center gap-2"><Camera size={18} /> Tomar foto</button>
+      <button type="button" disabled={busy} onClick={() => input.current?.click()} className="entry-photo-action min-h-11 px-3 rounded-[var(--radius-control)] border border-slate-300 dark:border-white/10 text-slate-700 dark:text-gray-200 flex items-center gap-2"><ImageSquare size={18} /> Elegir de galería</button>
+      <button ref={cameraOpener} type="button" disabled={busy} onClick={() => void openCamera()} className="entry-photo-action min-h-11 px-3 rounded-[var(--radius-control)] border border-slate-300 dark:border-white/10 text-slate-700 dark:text-gray-200 flex items-center gap-2"><Camera size={18} /> Tomar foto</button>
     </div>
     {busy && <span className="text-xs text-slate-500 dark:text-gray-400">Procesando foto…</span>}
     {camera && <div className="fixed inset-0 z-[80] bg-black/90 flex flex-col items-center justify-center gap-4 p-4">

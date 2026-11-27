@@ -10,6 +10,7 @@ interface EntryFormShellProps {
   dailyEditor?: boolean;
   closeLabel?: string;
   fitness?: boolean;
+  liquidGlass?: boolean;
   dateContext?: ReactNode;
   restoreFocusTo?: RefObject<HTMLElement | null>;
 }
@@ -42,7 +43,7 @@ function focusedBounds(field: HTMLElement) {
   return { top, bottom: top + height };
 }
 
-export default function EntryFormShell({ title, onClose, children, dailyEditor = false, desktopModal = dailyEditor, closeLabel = 'Cerrar formulario', fitness = false, dateContext, restoreFocusTo }: EntryFormShellProps) {
+export default function EntryFormShell({ title, onClose, children, dailyEditor = false, desktopModal = dailyEditor, closeLabel = 'Cerrar formulario', fitness = false, liquidGlass = false, dateContext, restoreFocusTo }: EntryFormShellProps) {
   const [mobile, setMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -201,7 +202,7 @@ export default function EntryFormShell({ title, onClose, children, dailyEditor =
   const desktopPanel = 'entry-desktop-modal bg-white dark:bg-[#161b22] border border-slate-200 dark:border-gray-800 w-full max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl shadow-xl flex flex-col animate-in zoom-in-95 duration-200';
   const dialog = <div className={mobile ? 'entry-sheet-backdrop' : desktopBackdrop}>
     <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId}
-      data-fitness={(!mobile && fitness) || undefined} className={mobile ? 'entry-bottom-sheet' : desktopPanel}>
+      data-fitness={(!mobile && fitness) || undefined} data-entry-glass={liquidGlass || undefined} className={mobile ? 'entry-bottom-sheet' : desktopPanel}>
       {mobile && <span className="entry-sheet-handle" aria-hidden="true" />}
       {fitness || mobile ? header : <div className="p-4 border-b border-slate-200 dark:border-gray-800 flex justify-between items-center bg-slate-100 dark:bg-[#0f141c]">
         <h3 id={titleId} className="font-bold text-lg text-slate-900 dark:text-white">{title}</h3>

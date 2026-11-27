@@ -82,6 +82,15 @@ html.dark {
   --fit-balance-surplus-high: #ddae7c;
   --fit-balance-empty: var(--fit-soft);
 }
+/* Body portals for the Inicio editors and date chooser share the app spacing. */
+.app-shell,
+body > .home-variants:has([data-entry-glass], .home-date-picker) {
+  --space-micro: 4px;
+  --space-small: 8px;
+  --space-compact: 12px;
+  --space-inset: 16px;
+}
+
 .app-shell, .app-main { background: var(--fit-page); color: var(--fit-ink); }
 .appearance-picker {
   background: var(--fit-surface); border-color: var(--fit-rule); color: var(--fit-ink);

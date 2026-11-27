@@ -1,28 +1,14 @@
-.home-variants.fitness-home {
+.home-variants:is(.fitness-home, .fitness-entry-portal) {
   --home-glass-radius: var(--glass-nav-sidebar-radius);
   --home-glass-control-radius: calc(var(--home-glass-radius) - var(--space-compact));
+  --home-glass-control-edge: color-mix(in srgb, var(--fit-control-line) 90%, var(--fit-ink));
+}
+.home-variants.fitness-home {
   --home-glass-gutter: 0px;
   padding: 0; gap: 0; width: 100%; max-width: var(--content-max);
 }
 .fitness-home .home-history { padding: 18px 0; margin-top: 8px; border-top: 1px solid var(--fit-rule); }
 .fitness-home .daily-logs-heading h4:focus-visible { outline-color: var(--fit-focus); }
-
-:is(.fitness-entry-portal, .fitness-home) .home-date-picker {
-  background: var(--fit-page);
-  color: var(--fit-ink);
-}
-:is(.fitness-entry-portal, .fitness-home) .home-month-heading h4 { font: 700 21px/1.2 var(--fit-face); }
-:is(.fitness-entry-portal, .fitness-home) .home-month-heading button,
-:is(.fitness-entry-portal, .fitness-home) .home-calendar-footer button {
-  background: transparent; color: var(--fit-ink); border: 1px solid var(--fit-rule); border-radius: 5px;
-}
-:is(.fitness-entry-portal, .fitness-home) .home-month-row button { border-radius: 5px; }
-:is(.fitness-entry-portal, .fitness-home) .home-month-row [aria-selected="true"] button {
-  background: var(--fit-orange); color: var(--fit-on-orange); font-weight: 700;
-}
-:is(.fitness-entry-portal, .fitness-home) .home-month-weekdays > span,
-:is(.fitness-entry-portal, .fitness-home) .home-calendar-footer > span { color: var(--fit-quiet); }
-:is(.fitness-entry-portal, .fitness-home) .home-date-picker button:focus-visible { outline-color: var(--fit-focus); }
 
 @media (max-width: 767px) {
   /* Leave room for all seven 44px dates at the narrowest width. */

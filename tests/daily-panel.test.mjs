@@ -441,6 +441,7 @@ test('mobile meal and workout actions open a named modal dialog; steps and water
     open(view, action);
     const dialog = node(sheet(view), element => element.props.role === 'dialog');
     assert.equal(dialog.props['aria-modal'], 'true');
+    assert.equal(dialog.props['data-entry-glass'], true);
     assert.equal(node(dialog, element => element.props.id === dialog.props['aria-labelledby']).props.children, title);
     assert.equal(nodes(dialog, element => element.type === 'form').length, 1);
     assert.ok(node(dialog, element => element.props.className?.includes('entry-form-footer')));
@@ -481,6 +482,7 @@ test('desktop actions use one named dialog while water editing stays inline', t 
     open(view, action);
     const dialog = node(sheet(view), element => element.props.role === 'dialog');
     assert.equal(dialog.props['aria-modal'], 'true');
+    assert.equal(dialog.props['data-entry-glass'], true);
     assert.equal(nodes(dialog, element => element.type === 'form').length, 1);
     shell(view).props.onClose();
   }
@@ -1288,6 +1290,7 @@ for (const mobile of [false, true]) test(`record details preserve date, keyboard
     let dialog = document.querySelector('[role="dialog"]');
     assert.equal(dialog.getAttribute('aria-modal'), 'true');
     assert.equal(document.getElementById(dialog.getAttribute('aria-labelledby')).textContent, 'Detalle del registro');
+    assert.equal(dialog.hasAttribute('data-entry-glass'), false);
     assert.equal(dialog.querySelector('time').dateTime, day);
     assert.equal(dialog.querySelector('.record-detail-main').textContent.trim(), `${index ? 'Ejercicio' : 'Comida'} ${index}`);
     const close = dialog.querySelector('[aria-label="Cerrar detalle"]');
@@ -1306,6 +1309,7 @@ for (const mobile of [false, true]) test(`record details preserve date, keyboard
     dialog = document.querySelector('[role="dialog"]');
     assert.equal(document.querySelectorAll('[role="dialog"]').length, 1);
     assert.equal(document.querySelector('.record-detail-modal'), null);
+    assert.equal(dialog.getAttribute('data-entry-glass'), 'true');
     assert.equal(document.activeElement, dialog.querySelector('[aria-label="Cerrar formulario"]'));
     assert.equal(dialog.querySelector('time').dateTime, day);
     assert.equal(document.getElementById(`edit-${index ? 'workout-activity' : 'meal-description'}`).value, `${index ? 'Ejercicio' : 'Comida'} ${index}`);
@@ -1328,6 +1332,7 @@ for (const mobile of [false, true]) test(`weight dialog names its historical day
   let dialog = document.querySelector('[role="dialog"]');
   assert.equal(dialog.getAttribute('aria-modal'), 'true');
   assert.equal(document.getElementById(dialog.getAttribute('aria-labelledby')).textContent, 'Editar peso');
+  assert.equal(dialog.hasAttribute('data-entry-glass'), false);
   assert.equal(dialog.querySelector('time').dateTime, day);
   assert.match(dialog.querySelector('.entry-date-context').textContent, /Día del registro.*11 nov 2026/);
   const input = dialog.querySelector('input[name="weight"]');

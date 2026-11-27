@@ -1,9 +1,5 @@
 /* App-only visual tokens. Public entry/auth surfaces retain their own defaults. */
 .app-shell {
-  --space-micro: 4px;
-  --space-small: 8px;
-  --space-compact: 12px;
-  --space-inset: 16px;
   --space-panel: 20px;
   --space-section: 24px;
   --space-wide: 32px;

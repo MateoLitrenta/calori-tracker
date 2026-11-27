@@ -373,3 +373,135 @@ body:has(> .fitness-entry-portal form.entry-form) :is(.app-main, .app-bottom-nav
   content: '';
   flex: 0 0 calc(var(--entry-viewport-height, 100dvh) / 2);
 }
+
+/* Inicio 2C. Only the meal and exercise editor surfaces opt in. */
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] {
+  --entry-glass-control-shadow: inset 0 1px 0 var(--glass-nav-glint), 0 1px 2px var(--glass-nav-contact);
+}
+.entry-desktop-modal[data-entry-glass] {
+  border-radius: var(--home-glass-radius);
+  box-shadow: 0 1px 2px var(--glass-nav-contact), var(--glass-nav-shadow);
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-sheet-header {
+  background: radial-gradient(ellipse 95% 44px at 16% 0%, var(--glass-nav-reflection), transparent), var(--fit-board);
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint), inset 0 -1px 0 var(--fit-rule);
+}
+.entry-desktop-modal[data-entry-glass] .entry-sheet-header {
+  border-radius: calc(var(--home-glass-radius) - 1px) calc(var(--home-glass-radius) - 1px) 0 0;
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-sheet-heading {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-sheet-heading h3 { font-size: 1.5625rem; }
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-sheet-header .entry-date-context { font-size: .8125rem; }
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-sheet-header button {
+  border-radius: 50%;
+  border-color: var(--home-glass-control-edge, var(--fit-control-line));
+  background: var(--fit-surface);
+  box-shadow: var(--entry-glass-control-shadow);
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-sheet-header button:hover {
+  background: var(--fit-soft);
+}
+
+html .home-variants :is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-form .entry-form-content :is(input:not([type="file"]), select, textarea) {
+  border-radius: var(--home-glass-control-radius);
+  font-size: max(16px, 1rem);
+  box-shadow: inset 0 1px 2px var(--glass-nav-contact);
+}
+[data-entry-glass] :is(input, textarea)::placeholder { color: var(--fit-quiet); opacity: 1; }
+[data-entry-glass] .entry-form .entry-form-content :is(input:not([type="file"]), select, textarea):focus-visible {
+  border-color: var(--fit-focus);
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-form .entry-form-content
+  :is(.entry-ai-action, .entry-time-now, .entry-photo-action, .entry-activity-chips button) {
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 100%;
+  border: 1px solid var(--home-glass-control-edge, var(--fit-control-line));
+  border-radius: 999px;
+  background: var(--fit-surface);
+  color: var(--fit-ink);
+  box-shadow: var(--entry-glass-control-shadow);
+  font-size: .8125rem;
+  font-weight: 600;
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-form .entry-form-content .entry-time-now {
+  min-height: 48px;
+  background: var(--fit-soft);
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-form .entry-form-content .entry-ai-action {
+  padding-inline: .875em;
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-form .entry-form-content
+  :is(.entry-ai-action, .entry-time-now, .entry-photo-action, .entry-activity-chips button):hover:not(:disabled):not([aria-pressed="true"]) {
+  background: var(--fit-soft);
+  color: var(--fit-ink);
+  border-color: var(--fit-accent);
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-form .entry-form-content .entry-activity-chips button[aria-pressed="true"] {
+  background: var(--fit-orange);
+  color: var(--fit-on-orange);
+  border-color: var(--fit-accent);
+  box-shadow: inset 0 1px 0 var(--glass-nav-tint-glint), 0 1px 2px var(--glass-nav-contact);
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-form .entry-form-content
+  :is(.entry-ai-action, .entry-time-now, .entry-photo-action, .entry-activity-chips button):disabled {
+  opacity: 1;
+  color: var(--fit-quiet);
+  background: var(--fit-soft);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+[data-entry-glass] :is(.entry-ai-action, .entry-photo-action, .entry-save) svg { flex: none; }
+[data-entry-glass] .entry-photo-section { gap: 6px; }
+[data-entry-glass] .entry-photo-section .entry-photo-hint { margin-bottom: 0; font-size: .8125rem; }
+[data-entry-glass] .entry-form .fitness-extras summary { border-radius: var(--home-glass-control-radius); font-size: .875rem; }
+[data-entry-glass] .entry-form .fitness-extras summary span { font-size: .8125rem; }
+[data-entry-glass] .entry-form .fitness-extras summary:hover { background: var(--fit-soft); }
+
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-estimate-result {
+  border-radius: var(--home-glass-control-radius);
+  background: var(--fit-surface);
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint);
+}
+[data-entry-glass] .entry-estimate-heading { color: var(--fit-accent); font-size: .8125rem; font-weight: 600; }
+[data-entry-glass] .entry-estimate-value { font-size: 1.25rem; }
+[data-entry-glass] .entry-estimate-notice {
+  padding: 8px 12px;
+  border-radius: var(--home-glass-control-radius);
+  background: var(--fit-danger-soft);
+  color: var(--fit-danger);
+}
+[data-entry-glass] .meal-write-error {
+  background: var(--fit-danger-soft);
+  color: var(--fit-danger);
+  border-color: var(--fit-danger);
+}
+
+/* The mobile action row already sits above the scrolling fields. */
+.entry-desktop-modal[data-entry-glass] .entry-form > .entry-form-footer {
+  background: var(--fit-surface);
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint);
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-form > .entry-form-footer button {
+  min-width: 44px;
+  border-radius: var(--home-glass-control-radius);
+  font-size: .9375rem;
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-form > .entry-form-footer .entry-cancel:enabled {
+  border-color: var(--home-glass-control-edge, var(--fit-control-line));
+  box-shadow: var(--entry-glass-control-shadow);
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass] .entry-form > .entry-form-footer .entry-save:enabled {
+  border: 1px solid var(--fit-accent);
+  box-shadow: inset 0 1px 0 var(--glass-nav-tint-glint), 0 1px 2px var(--glass-nav-contact);
+}
+:is(.entry-bottom-sheet, .entry-desktop-modal)[data-entry-glass]
+  :is(.entry-sheet-header button, .entry-ai-action, .entry-time-now, .entry-photo-action, .entry-activity-chips button, .entry-form-footer button):active:enabled {
+  box-shadow: inset 0 2px 3px var(--glass-nav-edge-shade);
+}
+[data-entry-glass] :is(.entry-activity-chips button[aria-pressed="true"], .entry-form .entry-form-footer .entry-save:enabled):focus-visible {
+  outline-color: var(--fit-on-orange);
+}
