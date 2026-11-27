@@ -17,7 +17,9 @@
         "overflow": 0,
         "clearance": 393
       },
-      "events": null,
+      "events": {
+        "historicalEnergy": "3 comidas · 2 ejerciciosSegún tus registros Las dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho. Calorías consumidas 1.250 kcal Gasto estimado 2.321 kcal TMB: 1.719 kcal Pasos: 252 kcal Ejercicio: 350 kcal Déficit Alto"
+      },
       "remote": {
         "external": 0,
         "ai": 0
