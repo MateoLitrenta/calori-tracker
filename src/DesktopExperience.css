@@ -1,12 +1,3 @@
-/* Body portals for the Inicio editors and date chooser share the app spacing. */
-.app-shell,
-body > .home-variants:has([data-entry-glass], .home-date-picker) {
-  --space-micro: 4px;
-  --space-small: 8px;
-  --space-compact: 12px;
-  --space-inset: 16px;
-}
-
 /* App-only visual tokens. Public entry/auth surfaces retain their own defaults. */
 .app-shell {
   --space-panel: 20px;
