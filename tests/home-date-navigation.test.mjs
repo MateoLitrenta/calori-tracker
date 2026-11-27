@@ -139,6 +139,10 @@ test('one weekly selection updates meals, workout, water, steps, weight and the 
   const view = await mount(t);
   assert.equal(document.querySelectorAll('.home-week-days button').length, 7);
   assert.equal(view.day('2026-11-13').disabled, true);
+  assert.equal(document.querySelector('.home-date-today'), null);
+  assert.equal(document.querySelector('.home-date-mobile-week'), null, 'The seven cells already identify the week within one month');
+  assert.equal(document.querySelector('.home-date-context time').dateTime, today);
+  assert.doesNotMatch(document.querySelector('.home-date-context').textContent, /Registrando en/);
   const panel = document.querySelector('.daily-panel');
   await view.click(view.day(yesterday));
   assert.equal(view.selected(), yesterday);
@@ -152,7 +156,13 @@ test('one weekly selection updates meals, workout, water, steps, weight and the 
   assert.equal(view.day(yesterday).getAttribute('aria-pressed'), 'true');
   assert.equal(view.saves.length, 0);
   await view.click(view.button('Semana anterior')); assert.equal(view.selected(), '2026-11-04');
-  await view.click(view.button('Hoy')); assert.equal(view.selected(), today);
+  const returnToToday = document.querySelector('.home-date-today');
+  assert.ok(returnToToday);
+  returnToToday.focus();
+  await view.click(returnToToday);
+  assert.equal(view.selected(), today);
+  assert.equal(document.querySelector('.home-date-today'), null);
+  assert.ok(document.activeElement === view.button('Abrir calendario mensual'), 'The focused return action hands focus to the calendar');
   assert.equal(view.button('Semana siguiente').disabled, true);
 });
 

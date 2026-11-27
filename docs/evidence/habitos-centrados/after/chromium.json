@@ -1,0 +1,3143 @@
+{
+  "engine": "chromium",
+  "version": "158.0.8127.37",
+  "cases": [
+    {
+      "width": 320,
+      "theme": "light",
+      "states": [
+        {
+          "mode": "normal",
+          "zoom": 100,
+          "check": {
+            "columns": 1,
+            "title": [
+              "Hábitos",
+              16,
+              66.421875
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0
+                ],
+                "rows": [
+                  20.90625,
+                  8,
+                  8
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 82.5625,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "row",
+                "delta": [
+                  0.0078125,
+                  0
+                ],
+                "rows": [
+                  20.90625,
+                  8,
+                  8
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 62.03125,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "row",
+                "delta": [
+                  0.0078125,
+                  0
+                ],
+                "rows": [
+                  20.90625,
+                  8,
+                  8
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 46.265625,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar peso",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                320,
+                106,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                320,
+                248.71875,
+                "Balance energético-1.031 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado2.281 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado2.281 kcalTMB: 1.679 kcalPasos: 252 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                288,
+                61,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                288,
+                377.546875,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                300,
+                56,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        },
+        {
+          "mode": "large",
+          "zoom": 200,
+          "check": {
+            "columns": 1,
+            "title": [
+              "Hábitos",
+              16,
+              132.828125
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  44.390625,
+                  111.109375
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 261.234375,
+                    "height": 62.71875
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0
+                ],
+                "rows": [
+                  8,
+                  44.390625,
+                  111.109375
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 248.09375,
+                    "height": 62.71875
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "row",
+                "delta": [
+                  0.0078125,
+                  0
+                ],
+                "rows": [
+                  21.15625,
+                  8,
+                  74.71875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 80.515625,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar peso",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                320,
+                133,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                320,
+                795.5,
+                "Balance energético-494.606 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado495.856 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado495.856 kcalTMB: 1.679 kcalPasos: 493.827 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                288,
+                132,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                288,
+                826.5625,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                300,
+                64.796875,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        },
+        {
+          "mode": "no-weight",
+          "zoom": 100,
+          "check": {
+            "columns": 1,
+            "title": [
+              "Hábitos",
+              16,
+              66.421875
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0
+                ],
+                "rows": [
+                  20.90625,
+                  8,
+                  8
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 82.5625,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "row",
+                "delta": [
+                  0.0078125,
+                  0
+                ],
+                "rows": [
+                  20.90625,
+                  8,
+                  8
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 62.03125,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "row",
+                "delta": [
+                  0.0078125,
+                  0
+                ],
+                "rows": [
+                  20.90625,
+                  8,
+                  8
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 96.28125,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Registrar peso",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                320,
+                106,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                320,
+                248.71875,
+                "Balance energético-1.031 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado2.281 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado2.281 kcalTMB: 1.679 kcalPasos: 252 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                288,
+                61,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                288,
+                377.546875,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                300,
+                56,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        }
+      ],
+      "interaction": null,
+      "usage": {
+        "external": 0,
+        "ai": 0
+      }
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "states": [
+        {
+          "mode": "normal",
+          "zoom": 100,
+          "check": {
+            "columns": 3,
+            "title": [
+              "Hábitos",
+              16,
+              66.421875
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "column",
+                "delta": [
+                  0,
+                  0,
+                  0
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 82.5625,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "column",
+                "delta": [
+                  0.015625,
+                  0.0078125,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 62.03125,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "column",
+                "delta": [
+                  0,
+                  0,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 46.265625,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar peso",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                353,
+                106,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                353,
+                248.71875,
+                "Balance energético-1.031 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado2.281 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado2.281 kcalTMB: 1.679 kcalPasos: 252 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                343,
+                48,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                343,
+                292.140625,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                355,
+                56,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        },
+        {
+          "mode": "large",
+          "zoom": 200,
+          "check": {
+            "columns": 1,
+            "title": [
+              "Hábitos",
+              16,
+              132.828125
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  44.390625,
+                  111.109375
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 261.234375,
+                    "height": 62.71875
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0
+                ],
+                "rows": [
+                  8,
+                  44.390625,
+                  111.109375
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 248.09375,
+                    "height": 62.71875
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "row",
+                "delta": [
+                  0.0078125,
+                  0
+                ],
+                "rows": [
+                  21.15625,
+                  8,
+                  74.71875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 80.515625,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar peso",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                353,
+                156.1875,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                353,
+                759.109375,
+                "Balance energético-494.606 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado495.856 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado495.856 kcalTMB: 1.679 kcalPasos: 493.827 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                343,
+                132,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                343,
+                749.875,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                355,
+                64.796875,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        },
+        {
+          "mode": "no-weight",
+          "zoom": 100,
+          "check": {
+            "columns": 3,
+            "title": [
+              "Hábitos",
+              16,
+              66.421875
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "column",
+                "delta": [
+                  0,
+                  0,
+                  0
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 82.5625,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "column",
+                "delta": [
+                  0.015625,
+                  0.0078125,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 62.03125,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "column",
+                "delta": [
+                  0,
+                  0.0078125,
+                  0
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 96.28125,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Registrar peso",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                353,
+                106,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                353,
+                248.71875,
+                "Balance energético-1.031 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado2.281 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado2.281 kcalTMB: 1.679 kcalPasos: 252 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                343,
+                48,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                343,
+                292.140625,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                355,
+                56,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        }
+      ],
+      "interaction": {
+        "water": 2000,
+        "steps": 6800,
+        "weight": 72.8,
+        "writes": [
+          "confirmed",
+          "confirmed"
+        ],
+        "editBounds": {
+          "width": 114.40625,
+          "height": 44,
+          "focus": true
+        },
+        "weightFocusRestored": true
+      },
+      "usage": {
+        "external": 0,
+        "ai": 0
+      }
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "states": [
+        {
+          "mode": "normal",
+          "zoom": 100,
+          "check": {
+            "columns": 3,
+            "title": [
+              "Hábitos",
+              16,
+              66.421875
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "column",
+                "delta": [
+                  0,
+                  0,
+                  0
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 82.5625,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "0px none rgb(245, 244, 238)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "column",
+                "delta": [
+                  0.015625,
+                  0.0078125,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 62.03125,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "0px none rgb(245, 244, 238)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "column",
+                "delta": [
+                  0,
+                  0,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 46.265625,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar peso",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                366,
+                106,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                366,
+                248.71875,
+                "Balance energético-1.031 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado2.281 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado2.281 kcalTMB: 1.679 kcalPasos: 252 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                358,
+                48,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                358,
+                292.140625,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                370,
+                56,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        },
+        {
+          "mode": "large",
+          "zoom": 200,
+          "check": {
+            "columns": 1,
+            "title": [
+              "Hábitos",
+              16,
+              132.828125
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  44.390625,
+                  111.109375
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 261.234375,
+                    "height": 62.71875
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "0px none rgb(245, 244, 238)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0
+                ],
+                "rows": [
+                  21.15625,
+                  8,
+                  74.71875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 248.09375,
+                    "height": 62.71875
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "0px none rgb(245, 244, 238)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0
+                ],
+                "rows": [
+                  21.15625,
+                  8,
+                  17.359375
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 80.515625,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar peso",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                366,
+                156.1875,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                366,
+                655.109375,
+                "Balance energético-494.606 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado495.856 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado495.856 kcalTMB: 1.679 kcalPasos: 493.827 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                358,
+                132,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                358,
+                749.875,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                370,
+                64.796875,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        },
+        {
+          "mode": "no-weight",
+          "zoom": 100,
+          "check": {
+            "columns": 3,
+            "title": [
+              "Hábitos",
+              16,
+              66.421875
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "column",
+                "delta": [
+                  0,
+                  0,
+                  0
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 82.5625,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "0px none rgb(245, 244, 238)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "column",
+                "delta": [
+                  0.015625,
+                  0.0078125,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 62.03125,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "0px none rgb(245, 244, 238)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "column",
+                "delta": [
+                  0,
+                  0.0078125,
+                  0
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 96.28125,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Registrar peso",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                366,
+                106,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                366,
+                248.71875,
+                "Balance energético-1.031 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado2.281 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado2.281 kcalTMB: 1.679 kcalPasos: 252 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                358,
+                48,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                358,
+                292.140625,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                370,
+                56,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        }
+      ],
+      "interaction": null,
+      "usage": {
+        "external": 0,
+        "ai": 0
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "states": [
+        {
+          "mode": "normal",
+          "zoom": 100,
+          "check": {
+            "columns": 3,
+            "title": [
+              "Hábitos",
+              280,
+              66.421875
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "column",
+                "delta": [
+                  0,
+                  0,
+                  0
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 82.5625,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "column",
+                "delta": [
+                  0.015625,
+                  0.0078125,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 62.03125,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "column",
+                "delta": [
+                  0.0078125,
+                  0.0078125,
+                  0
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 46.265625,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar peso",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                1126,
+                80,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                1126,
+                194.375,
+                "Balance energético-1.031 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado2.281 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado2.281 kcalTMB: 1.679 kcalPasos: 252 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                470.40625,
+                48,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                623.59375,
+                277,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                0,
+                0,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        },
+        {
+          "mode": "large",
+          "zoom": 200,
+          "check": {
+            "columns": 1,
+            "title": [
+              "Hábitos",
+              280,
+              132.828125
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "row",
+                "delta": [
+                  0.0078125,
+                  0
+                ],
+                "rows": [
+                  21.15625,
+                  8,
+                  74.71875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 261.234375,
+                    "height": 62.71875
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0
+                ],
+                "rows": [
+                  21.15625,
+                  8,
+                  74.71875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 248.09375,
+                    "height": 62.71875
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0
+                ],
+                "rows": [
+                  21.15625,
+                  8,
+                  17.359375
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 80.515625,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar peso",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                1126,
+                109.59375,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                1126,
+                389.578125,
+                "Balance energético-494.606 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado495.856 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado495.856 kcalTMB: 1.679 kcalPasos: 493.827 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                470.40625,
+                132,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                623.59375,
+                407.75,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                0,
+                0,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        },
+        {
+          "mode": "no-weight",
+          "zoom": 100,
+          "check": {
+            "columns": 3,
+            "title": [
+              "Hábitos",
+              280,
+              66.421875
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "column",
+                "delta": [
+                  0,
+                  0,
+                  0
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 82.5625,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "column",
+                "delta": [
+                  0.015625,
+                  0.0078125,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 62.03125,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "0px none rgb(28, 37, 34)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "column",
+                "delta": [
+                  0.0078125,
+                  0.015625,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(28, 37, 34)",
+                  "rgb(255, 254, 250)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 96.28125,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Registrar peso",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(28, 37, 34)",
+                    "border": "1px solid rgb(129, 138, 129)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                1126,
+                80,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                1126,
+                194.375,
+                "Balance energético-1.031 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado2.281 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado2.281 kcalTMB: 1.679 kcalPasos: 252 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                470.40625,
+                48,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                623.59375,
+                277,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                0,
+                0,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        }
+      ],
+      "interaction": null,
+      "usage": {
+        "external": 0,
+        "ai": 0
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "states": [
+        {
+          "mode": "normal",
+          "zoom": 100,
+          "check": {
+            "columns": 3,
+            "title": [
+              "Hábitos",
+              280,
+              66.421875
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "column",
+                "delta": [
+                  0,
+                  0,
+                  0
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 82.5625,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "0px none rgb(245, 244, 238)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "column",
+                "delta": [
+                  0.015625,
+                  0.0078125,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 62.03125,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "0px none rgb(245, 244, 238)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "column",
+                "delta": [
+                  0.0078125,
+                  0.0078125,
+                  0
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 46.265625,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar peso",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                1126,
+                80,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                1126,
+                194.375,
+                "Balance energético-1.031 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado2.281 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado2.281 kcalTMB: 1.679 kcalPasos: 252 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                470.40625,
+                48,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                623.59375,
+                277,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                0,
+                0,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        },
+        {
+          "mode": "large",
+          "zoom": 200,
+          "check": {
+            "columns": 1,
+            "title": [
+              "Hábitos",
+              280,
+              132.828125
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "row",
+                "delta": [
+                  0.0078125,
+                  0
+                ],
+                "rows": [
+                  21.15625,
+                  8,
+                  74.71875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 261.234375,
+                    "height": 62.71875
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "0px none rgb(245, 244, 238)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0
+                ],
+                "rows": [
+                  21.15625,
+                  8,
+                  74.71875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 248.09375,
+                    "height": 62.71875
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  },
+                  {
+                    "width": 73.359375,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "0px none rgb(245, 244, 238)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "row",
+                "delta": [
+                  0,
+                  0
+                ],
+                "rows": [
+                  21.15625,
+                  8,
+                  17.359375
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 80.515625,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar peso",
+                    "padding": "4px 5px",
+                    "font": "600 26px / 33.8px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                1126,
+                109.59375,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                1126,
+                389.578125,
+                "Balance energético-494.606 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado495.856 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado495.856 kcalTMB: 1.679 kcalPasos: 493.827 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                470.40625,
+                132,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                623.59375,
+                407.75,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                0,
+                0,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        },
+        {
+          "mode": "no-weight",
+          "zoom": 100,
+          "check": {
+            "columns": 3,
+            "title": [
+              "Hábitos",
+              280,
+              66.421875
+            ],
+            "cards": [
+              {
+                "label": "Agua",
+                "direction": "column",
+                "delta": [
+                  0,
+                  0,
+                  0
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 82.5625,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar cantidad de agua",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "0px none rgb(245, 244, 238)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 250 ml de agua",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Pasos",
+                "direction": "column",
+                "delta": [
+                  0.015625,
+                  0.0078125,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 62.03125,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  },
+                  {
+                    "width": 44,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Editar total de pasos",
+                    "padding": "0px",
+                    "font": "",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "0px none rgb(245, 244, 238)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Restar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  },
+                  {
+                    "label": "Sumar 500 pasos",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              },
+              {
+                "label": "Peso",
+                "direction": "column",
+                "delta": [
+                  0.0078125,
+                  0.015625,
+                  0.0078125
+                ],
+                "rows": [
+                  8,
+                  26.1875,
+                  74.1875
+                ],
+                "fits": true,
+                "surface": [
+                  "8px 6px",
+                  "rgb(245, 244, 238)",
+                  "rgb(26, 33, 31)",
+                  "18px",
+                  "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+                ],
+                "targets": [
+                  {
+                    "width": 96.28125,
+                    "height": 44
+                  }
+                ],
+                "controls": [
+                  {
+                    "label": "Registrar peso",
+                    "padding": "4px 5px",
+                    "font": "600 13px / 16.9px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+                    "color": "rgb(245, 244, 238)",
+                    "border": "1px solid rgb(119, 133, 123)",
+                    "radius": "10px"
+                  }
+                ]
+              }
+            ],
+            "outside": [
+              [
+                1126,
+                80,
+                "Hoyviernes 13 de noviembreHoy · 13 novlun9mar10mié11jue12vie13sáb14dom15"
+              ],
+              [
+                1126,
+                194.375,
+                "Balance energético-1.031 kcalSegún tus registros. El día puede estar incompleto.Calorías consumidas1.250 kcalGasto estimado2.281 kcalComparación en kcal · misma escalaVer desglose 3 comidas · 2 ejerciciosSegún tus registrosLas dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho.Calorías consumidas1.250 kcalGasto estimado2.281 kcalTMB: 1.679 kcalPasos: 252 kcalEjercicio: 350 kcalDéficit Alto"
+              ],
+              [
+                470.40625,
+                48,
+                "Agregar comidaAgregar ejercicio"
+              ],
+              [
+                623.59375,
+                277,
+                "Yogur, fruta y avena08:30 · Desayuno+380 kcalGimnasio10:00 · Ejercicio · 45 min-250 kcalArroz con verduras y pollo13:00 · Almuerzo+650 kcalCaminata15:00 · Ejercicio · 25 min-100 kcalTostadas con queso16:00 · Merienda+220 kcal"
+              ],
+              [
+                0,
+                0,
+                "InicioCoachDatosPerfil"
+              ]
+            ],
+            "overflow": 0
+          },
+          "weightReachable": true
+        }
+      ],
+      "interaction": {
+        "water": 2000,
+        "steps": 6800,
+        "weight": 72.8,
+        "writes": [
+          "confirmed",
+          "confirmed"
+        ],
+        "editBounds": {
+          "width": 114.40625,
+          "height": 44,
+          "focus": true
+        },
+        "weightFocusRestored": true
+      },
+      "usage": {
+        "external": 0,
+        "ai": 0
+      }
+    }
+  ]
+}

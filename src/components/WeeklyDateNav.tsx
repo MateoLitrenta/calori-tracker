@@ -10,16 +10,17 @@ import './WeeklyDateNav.css';
 export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, onOpenCalendar }: {
   selectedDateStr: string;
   today: string;
-  onSelectDate: (date: string) => void;
+  onSelectDate: (date: string) => boolean;
   onOpenCalendar: () => void;
 }) {
   const days = homeWeek(selectedDateStr), { min } = homeDateBounds(today);
   const date = parseISO(selectedDateStr), titleId = useId();
   const rootRef = useRef<HTMLElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
+  const calendarRef = useRef<HTMLButtonElement>(null);
   const label = format(date, selectedDateStr.slice(0, 4) === today.slice(0, 4) ? "EEEE d 'de' MMMM" : "EEEE d 'de' MMMM 'de' yyyy", { locale: es });
   const compactLabel = `${selectedDateStr === today ? 'Hoy · ' : ''}${format(date, selectedDateStr.slice(0, 4) === today.slice(0, 4) ? 'd MMM' : 'd MMM yy', { locale: es })}`;
-  const compactWeek = `${format(parseISO(days[0]), days[0].slice(0, 7) === days[6].slice(0, 7) ? 'd' : 'd MMM', { locale: es })}–${format(parseISO(days[6]), 'd MMM', { locale: es })}`;
+  const crossesMonth = days[0].slice(0, 7) !== days[6].slice(0, 7);
   const reveal = (day: string) => {
     const strip = stripRef.current, button = rootRef.current?.querySelector<HTMLButtonElement>(`[data-day="${day}"]`);
     if (!strip || !button || strip.clientWidth === 0) return;
@@ -74,12 +75,14 @@ export default function WeeklyDateNav({ selectedDateStr, today, onSelectDate, on
       </button>
       <div className="home-date-context" data-date-context={selectedDateStr === today ? 'today' : 'past'} aria-live="polite" aria-atomic="true">
         <span className="home-date-kicker sr-only">{selectedDateStr === today ? 'Hoy' : 'Fecha anterior'}</span>
-        <p className="home-entry-date-label">Registrando en</p>
         <h2 id={titleId}><time dateTime={selectedDateStr} aria-label={label}><span className="home-date-long-label">{label}</span><span className="home-date-compact-label">{compactLabel}</span></time></h2>
-        <span className="home-date-mobile-week">{compactWeek} · lun–dom</span>
+        {crossesMonth && <span className="home-date-mobile-week">{format(parseISO(days[0]), 'd MMM', { locale: es })}–{format(parseISO(days[6]), 'd MMM', { locale: es })} · lun–dom</span>}
       </div>
-      <button type="button" className="home-date-today" onClick={() => onSelectDate(today)} disabled={selectedDateStr === today}>Hoy</button>
-      <button type="button" className="home-date-calendar" aria-label="Abrir calendario mensual" onClick={onOpenCalendar}>
+      {selectedDateStr !== today && <button type="button" className="home-date-today" onClick={event => {
+        const hadFocus = event.currentTarget === document.activeElement;
+        if (onSelectDate(today) && hadFocus) calendarRef.current?.focus({ preventScroll: true });
+      }}>Hoy</button>}
+      <button ref={calendarRef} type="button" className="home-date-calendar" aria-label="Abrir calendario mensual" onClick={onOpenCalendar}>
         <CalendarBlank size={21} aria-hidden="true" />
       </button>
       <button type="button" aria-label="Semana siguiente" disabled={days[0] >= currentWeek} onClick={() => onSelectDate(moveHomeWeek(selectedDateStr, 1, today))}>

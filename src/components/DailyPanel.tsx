@@ -1008,65 +1008,6 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
         )}
 
         </div>
-        {/* Registros en orden cronológico */}
-        <div className={`daily-logs ${totalEntries === 0 ? 'daily-logs--empty' : ''}`}>
-          <div className="daily-logs-heading">
-            <h4 id="fitness-daily-entries" ref={element => { recordsHeading.current = element; onRecordsHeadingReady?.(element); }} tabIndex={-1} aria-describedby={dayContextId} className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
-            <span className="fitness-entry-count">{totalEntries} {totalEntries === 1 ? 'registro' : 'registros'}</span>
-            <time id={dayContextId} dateTime={dateStr} className="daily-active-date">
-              {dateStr === formatDateStr(new Date()) ? 'Hoy · ' : ''}{panelSubtitle}
-            </time>
-            {props.onReturnToHistory && <button type="button" className="history-record-return" onClick={event => {
-              event.stopPropagation(); props.onReturnToHistory?.();
-            }}>← Volver a Tu actividad</button>}
-          </div>
-
-          {!detail && !entryActive && deletionNotice?.scope === detailScope &&
-            <p className="record-delete-notice" role="status">{deletionNotice.text}</p>}
-          {totalEntries === 0 && (
-            <p className="daily-logs-empty">Las comidas y los ejercicios que agregues para este día aparecerán acá.</p>
-          )}
-
-        <DailyRecords key={`${profile.id}:${dateStr}:${selectedGroup?.type || 'day'}`}
-          receipt={!entryActive && !detailModalItem && entryReceipt?.date === dateStr && (entryReceipt.kind === 'meal' ? currentRecord.meals : currentRecord.workouts).some(entry => entry.id === entryReceipt.id) ? entryReceipt : null}
-          onDismiss={() => setEntryReceipt(null)} count={totalEntries}>
-          {
-            [
-              ...currentRecord.meals.map(m => ({ ...m, _type: 'meal' as const })),
-              ...currentRecord.workouts.map(w => ({ ...w, _type: 'workout' as const }))
-            ]
-            .sort((a, b) => {
-              const timeA = a.time || '00:00';
-              const timeB = b.time || '00:00';
-              return timeA.localeCompare(timeB);
-            })
-            .map(item => {
-              const meal = item._type === 'meal';
-              return (
-                <li key={`${item._type}-${item.id}`}>
-                  <button type="button" data-entry-kind={item._type} data-entry-id={item.id} data-meal-id={meal ? item.id : undefined} className="daily-record-open" onClick={event => {
-                    recordOpener.current = event.currentTarget;
-                    setDeletionNotice(null);
-                    setSelection({ scope: detailScope, item });
-                  }}>
-                    <span className="fitness-record-mark" aria-hidden="true">
-                      {meal && item.photo_path ? <MealThumbnail path={item.photo_path} /> : meal
-                        ? <ForkKnife size={17} aria-hidden="true" /> : <Barbell size={17} aria-hidden="true" />}
-                    </span>
-                    <span className="fitness-record-copy">
-                      <span className="daily-record-title">{meal ? item.name : item.activity}</span>
-                      <span className="daily-record-meta">{item.time && `${item.time} · `}{meal ? item.type : `Ejercicio · ${item.duration} min`}</span>
-                    </span>
-                    <span className="fitness-record-kcal">{meal ? '+' : '-'}{formatCalories(item.calories)} <small>kcal</small></span>
-                    <CaretRight size={14} aria-hidden="true" />
-                  </button>
-                </li>
-              );
-            })
-          }
-        </DailyRecords>
-      </div>
-
           <section className="daily-habits-block" aria-label="Agua, pasos y peso">
             <div className="daily-habits-heading">
               <h4>Hábitos</h4>
@@ -1219,6 +1160,65 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
               <p className="w-full">{habit.failure?.message}</p>
             </div>}
           </section>
+
+        {/* Registros en orden cronológico */}
+        <div className={`daily-logs ${totalEntries === 0 ? 'daily-logs--empty' : ''}`}>
+          <div className="daily-logs-heading">
+            <h4 id="fitness-daily-entries" ref={element => { recordsHeading.current = element; onRecordsHeadingReady?.(element); }} tabIndex={-1} aria-describedby={dayContextId} className="font-bold text-slate-900 dark:text-white">Registros del día</h4>
+            <span className="fitness-entry-count">{totalEntries} {totalEntries === 1 ? 'registro' : 'registros'}</span>
+            <time id={dayContextId} dateTime={dateStr} className="daily-active-date">
+              {dateStr === formatDateStr(new Date()) ? 'Hoy · ' : ''}{panelSubtitle}
+            </time>
+            {props.onReturnToHistory && <button type="button" className="history-record-return" onClick={event => {
+              event.stopPropagation(); props.onReturnToHistory?.();
+            }}>← Volver a Tu actividad</button>}
+          </div>
+
+          {!detail && !entryActive && deletionNotice?.scope === detailScope &&
+            <p className="record-delete-notice" role="status">{deletionNotice.text}</p>}
+          {totalEntries === 0 && (
+            <p className="daily-logs-empty">Las comidas y los ejercicios que agregues para este día aparecerán acá.</p>
+          )}
+
+        <DailyRecords key={`${profile.id}:${dateStr}:${selectedGroup?.type || 'day'}`}
+          receipt={!entryActive && !detailModalItem && entryReceipt?.date === dateStr && (entryReceipt.kind === 'meal' ? currentRecord.meals : currentRecord.workouts).some(entry => entry.id === entryReceipt.id) ? entryReceipt : null}
+          onDismiss={() => setEntryReceipt(null)} count={totalEntries}>
+          {
+            [
+              ...currentRecord.meals.map(m => ({ ...m, _type: 'meal' as const })),
+              ...currentRecord.workouts.map(w => ({ ...w, _type: 'workout' as const }))
+            ]
+            .sort((a, b) => {
+              const timeA = a.time || '00:00';
+              const timeB = b.time || '00:00';
+              return timeA.localeCompare(timeB);
+            })
+            .map(item => {
+              const meal = item._type === 'meal';
+              return (
+                <li key={`${item._type}-${item.id}`}>
+                  <button type="button" data-entry-kind={item._type} data-entry-id={item.id} data-meal-id={meal ? item.id : undefined} className="daily-record-open" onClick={event => {
+                    recordOpener.current = event.currentTarget;
+                    setDeletionNotice(null);
+                    setSelection({ scope: detailScope, item });
+                  }}>
+                    <span className="fitness-record-mark" aria-hidden="true">
+                      {meal && item.photo_path ? <MealThumbnail path={item.photo_path} /> : meal
+                        ? <ForkKnife size={17} aria-hidden="true" /> : <Barbell size={17} aria-hidden="true" />}
+                    </span>
+                    <span className="fitness-record-copy">
+                      <span className="daily-record-title">{meal ? item.name : item.activity}</span>
+                      <span className="daily-record-meta">{item.time && `${item.time} · `}{meal ? item.type : `Ejercicio · ${item.duration} min`}</span>
+                    </span>
+                    <span className="fitness-record-kcal">{meal ? '+' : '-'}{formatCalories(item.calories)} <small>kcal</small></span>
+                    <CaretRight size={14} aria-hidden="true" />
+                  </button>
+                </li>
+              );
+            })
+          }
+        </DailyRecords>
+      </div>
       </div>
       )}
 
