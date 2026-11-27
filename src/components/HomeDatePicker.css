@@ -1,26 +1,117 @@
-.home-date-picker { min-width: 0; padding: 4px 16px 16px; color: var(--home-text); overflow-y: auto; overscroll-behavior: contain; }
-.home-month-heading { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: 4px; margin-bottom: 8px; }
-.home-month-heading h4 { min-width: 0; font-size: 16px; font-weight: 600; text-align: center; }
+/* Only the date chooser uses this sheet material. The body remains opaque while scrolling. */
+.home-variants [role="dialog"]:has(> .home-date-picker) {
+  border-color: var(--fit-rule);
+  border-radius: var(--home-glass-radius);
+  background: var(--fit-page);
+  box-shadow: var(--glass-nav-shadow);
+}
+.fitness-entry-portal .entry-bottom-sheet[role="dialog"]:has(> .home-date-picker) {
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+.home-variants [role="dialog"]:has(> .home-date-picker) > .entry-sheet-header {
+  padding: var(--space-small) var(--space-inset);
+  border-radius: var(--home-glass-radius) var(--home-glass-radius) 0 0;
+  border-bottom: 1px solid var(--fit-rule);
+  background: radial-gradient(ellipse 92% 38px at 16% 0%, var(--glass-nav-reflection), transparent), var(--fit-board);
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint);
+}
+.home-date-picker {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-compact) var(--space-inset) var(--space-inset);
+  border-end-start-radius: inherit;
+  border-end-end-radius: inherit;
+  background: var(--fit-page);
+  color: var(--fit-ink);
+}
+.fitness-entry-portal .home-date-picker {
+  padding-bottom: calc(var(--space-inset) + env(safe-area-inset-bottom, 0px));
+}
+.home-month-heading {
+  display: grid;
+  grid-template-columns: var(--fit-target) minmax(0, 1fr) var(--fit-target);
+  align-items: center; gap: var(--space-micro);
+  margin-bottom: var(--space-small);
+}
+.home-month-heading h4 {
+  min-width: 0;
+  font: 700 1.3125rem/1.2 var(--fit-face);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
 .home-month-heading h4::first-letter { text-transform: uppercase; }
-.home-month-heading button, .home-calendar-footer button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; border-radius: var(--home-radius-control); color: var(--home-text); background: var(--home-control); }
-.home-month-heading button:hover:not(:disabled), .home-calendar-footer button:hover { background: var(--home-hover); }
-.home-month-heading button:disabled { opacity: .4; cursor: default; }
-.home-month-grid { min-width: 308px; }
-.home-month-row { display: grid; grid-template-columns: repeat(7, minmax(44px, 1fr)); }
-.home-month-weekdays > span { display: grid; place-items: center; min-height: 28px; font-size: 12px; color: var(--home-muted); }
+.home-variants [role="dialog"]:has(> .home-date-picker) .entry-sheet-header button,
+.home-month-heading button,
+.home-calendar-footer button {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--fit-target);
+  min-height: var(--fit-target);
+  border: 1px solid var(--home-glass-control-edge, var(--fit-control-line));
+  border-radius: var(--radius-pill);
+  color: var(--fit-ink);
+  background: linear-gradient(var(--glass-nav-reflection), transparent), var(--fit-soft);
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint), 0 1px 2px var(--glass-nav-contact);
+}
+.home-month-grid {
+  border: 1px solid var(--fit-rule);
+  border-radius: calc(var(--home-glass-radius) - var(--space-small));
+  background: var(--fit-surface);
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint);
+}
+.home-month-row { display: grid; grid-template-columns: repeat(7, minmax(var(--fit-target), 1fr)); }
+.home-month-weekdays { border-bottom: 1px solid var(--fit-rule); }
+.home-month-weekdays > span {
+  display: grid; place-items: center; min-width: 0; min-height: 30px;
+  font: 700 .75rem/1.35 var(--fit-face);
+  color: var(--fit-quiet); text-align: center; overflow-wrap: anywhere;
+}
 .home-month-row [role="gridcell"] { min-width: 0; }
-.home-month-row button { display: grid; place-items: center; width: 100%; min-width: 44px; min-height: 44px; border: 1px solid transparent; border-radius: var(--home-radius-control); font-size: 15px; font-weight: 500; color: var(--home-text); }
-.home-month-row button[data-outside-month="true"] { color: var(--home-muted); }
-.home-month-row [aria-selected="false"] button:hover:not(:disabled) { background: var(--home-hover); }
-.home-month-row [aria-selected="false"] button[aria-current="date"] { border: 2px solid var(--home-muted); text-decoration: underline; text-underline-offset: 3px; }
-.home-month-row [aria-selected="true"] button { background: var(--fit-orange); color: var(--fit-on-orange); }
-.home-month-row button:disabled { opacity: .35; cursor: default; }
-.home-date-picker button:focus-visible { outline: 2px solid var(--home-text); outline-offset: -2px; }
-.home-calendar-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; border-top: 1px solid var(--home-line); padding-top: 8px; }
-.home-calendar-footer > span { color: var(--home-muted); font-size: 12px; }
-.home-calendar-footer button { padding-inline: 16px; font-size: 14px; font-weight: 600; }
-.home-calendar-blocked { margin-top: 8px; font-size: 13px; line-height: 1.4; }
-.home-variants .entry-desktop-modal:has(.home-date-picker) > div:first-child > button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+.home-month-row button {
+  display: grid; place-items: center; width: 100%;
+  min-width: var(--fit-target); min-height: var(--fit-target);
+  border: 1px solid transparent;
+  border-radius: var(--home-glass-control-radius);
+  color: var(--fit-ink); font-size: .9375rem; font-weight: 550; font-variant-numeric: tabular-nums;
+}
+.home-month-row button[data-outside-month="true"] { color: var(--fit-quiet); }
+.home-month-row button[aria-current="date"] { text-decoration: underline; text-underline-offset: .2em; font-weight: 700; }
+.home-month-row [aria-selected="true"] button {
+  border-color: var(--fit-accent);
+  background: var(--fit-orange);
+  color: var(--fit-on-orange);
+  font-weight: 700;
+  box-shadow: inset 0 1px 0 var(--glass-nav-tint-glint), inset 0 -1px 0 var(--glass-nav-edge-shade);
+}
+.home-date-picker button:disabled { opacity: .46; cursor: default; }
+@media (hover: hover) {
+  .home-month-row [aria-selected="false"] button:hover:enabled,
+  .home-month-heading button:hover:enabled, .home-calendar-footer button:hover:enabled,
+  .home-variants [role="dialog"]:has(> .home-date-picker) .entry-sheet-header button:hover:enabled {
+    background: var(--fit-board);
+  }
+}
+.home-date-picker button:active:enabled,
+.home-variants [role="dialog"]:has(> .home-date-picker) .entry-sheet-header button:active {
+  box-shadow: inset 0 2px 4px var(--glass-nav-contact);
+}
+.home-variants [role="dialog"]:has(> .home-date-picker) button:focus-visible {
+  outline: 2px solid var(--fit-focus);
+  outline-offset: -3px;
+}
+.home-variants .home-month-row [aria-selected="true"] button:focus-visible { outline-color: var(--fit-on-orange); }
+.home-calendar-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-small);
+  margin-top: var(--space-compact);
+}
+.home-calendar-footer > span { min-width: 0; color: var(--fit-quiet); font-size: .8125rem; overflow-wrap: anywhere; }
+.home-calendar-footer button { padding-inline: var(--space-inset); font-size: .875rem; font-weight: 650; }
+.home-calendar-blocked { margin-top: var(--space-small); color: var(--fit-ink); font-size: .875rem; line-height: 1.4; }
 @media (max-width: 359px) {
-  .home-date-picker { padding-inline: 4px; }
+  /* Seven 44px date targets plus the grid and sheet borders fit in 320px. */
+  .home-date-picker { padding-inline: var(--space-micro); }
 }

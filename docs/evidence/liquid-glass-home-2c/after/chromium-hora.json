@@ -1,0 +1,51 @@
+{
+  "width": 375,
+  "theme": "dark",
+  "version": "158.0.8127.37",
+  "results": [
+    {
+      "name": "add-meal",
+      "display": "07:54 PM",
+      "editorWidth": 217.046875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 134.1796875,
+      "now": "12:00",
+      "footerVisible": true
+    },
+    {
+      "name": "edit-meal",
+      "display": "07:54 PM",
+      "editorWidth": 217.046875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 134.1796875,
+      "now": "12:00",
+      "footerVisible": true
+    },
+    {
+      "name": "add-workout",
+      "display": "07:54 PM",
+      "editorWidth": 217.046875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 134.1796875,
+      "now": "12:00",
+      "footerVisible": true
+    },
+    {
+      "name": "edit-workout",
+      "display": "07:54 PM",
+      "editorWidth": 217.046875,
+      "fieldsWidth": 71.6875,
+      "pickerWidth": 22.796875,
+      "dayPeriodVisible": true,
+      "spareWithSpanishSuffix": 134.1796875,
+      "now": "12:00",
+      "footerVisible": true
+    }
+  ]
+}

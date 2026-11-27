@@ -1,0 +1,997 @@
+{
+  "engine": "webkit",
+  "version": "26.0",
+  "cases": [
+    {
+      "width": 375,
+      "theme": "dark",
+      "readings": [
+        {
+          "stage": "calendario",
+          "samples": 57,
+          "textMin": 8.05,
+          "iconsMin": 14.02,
+          "disabledMin": 2.31,
+          "violations": []
+        },
+        {
+          "stage": "comida",
+          "samples": 25,
+          "textMin": 8.05,
+          "iconsMin": 8.05,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "estimando",
+          "samples": 21,
+          "textMin": 8.05,
+          "iconsMin": 8.05,
+          "disabledMin": 4.92,
+          "violations": []
+        },
+        {
+          "stage": "estimacion-foto",
+          "samples": 21,
+          "textMin": 8.05,
+          "iconsMin": 8.05,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "error-ia",
+          "samples": 29,
+          "textMin": 8.05,
+          "iconsMin": 8.05,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "error-guardado",
+          "samples": 31,
+          "textMin": 8.41,
+          "iconsMin": 8.41,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "guardando",
+          "samples": 30,
+          "textMin": 9.15,
+          "iconsMin": 14.02,
+          "disabledMin": 7.77,
+          "violations": []
+        },
+        {
+          "stage": "edicion-meal",
+          "samples": 25,
+          "textMin": 8.41,
+          "iconsMin": 8.41,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "deporte-seleccionado",
+          "samples": 30,
+          "textMin": 8.41,
+          "iconsMin": 8.41,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "estimacion-ejercicio",
+          "samples": 29,
+          "textMin": 8.41,
+          "iconsMin": 8.41,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "edicion-workout",
+          "samples": 30,
+          "textMin": 8.41,
+          "iconsMin": 8.41,
+          "disabledMin": null,
+          "violations": []
+        }
+      ],
+      "guards": {
+        "descarte": [
+          [
+            "DIALOG",
+            null,
+            337,
+            149,
+            "rgb(245, 244, 238)",
+            "rgb(26, 33, 31)",
+            "none",
+            "12px",
+            "none",
+            "0px",
+            "¿Descartar los cambios?Los cambios sin guardar se perderán.Seguir editandoDescartar cambios"
+          ],
+          [
+            "BUTTON",
+            null,
+            133.796875,
+            44,
+            "rgb(245, 244, 238)",
+            "rgb(38, 46, 43)",
+            "none",
+            "6px",
+            "none",
+            "8px 13px",
+            "Seguir editando"
+          ],
+          [
+            "BUTTON",
+            null,
+            153.296875,
+            44,
+            "rgb(255, 170, 160)",
+            "rgb(57, 38, 36)",
+            "none",
+            "6px",
+            "none",
+            "8px 13px",
+            "Descartar cambios"
+          ]
+        ],
+        "detalle-meal": [
+          [
+            "DIV",
+            null,
+            375,
+            360,
+            "rgb(245, 244, 238)",
+            "rgb(16, 21, 21)",
+            "none",
+            "13px 13px 0px 0px",
+            "none",
+            "0px",
+            "Detalle del registroDía del registro: 12 nov 2026Tostada sintética 2C20:45 hs • Cena+480 kcalTostada y fruta Editar Eliminar"
+          ],
+          [
+            "DIV",
+            null,
+            373,
+            75,
+            "rgb(247, 246, 237)",
+            "rgb(32, 39, 39)",
+            "none",
+            "12px 12px 0px 0px",
+            "none",
+            "14px 18px",
+            "Detalle del registroDía del registro: 12 nov 2026"
+          ],
+          [
+            "H3",
+            null,
+            159.203125,
+            27,
+            "rgb(247, 246, 237)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "0px",
+            "none",
+            "0px",
+            "Detalle del registro"
+          ],
+          [
+            "BUTTON",
+            "Cerrar detalle",
+            44,
+            44,
+            "rgb(247, 246, 237)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "5px",
+            "none",
+            "0px",
+            ""
+          ],
+          [
+            "SPAN",
+            null,
+            341,
+            27,
+            "rgb(245, 244, 238)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "0px",
+            "none",
+            "0px",
+            "Tostada sintética 2C"
+          ],
+          [
+            "BUTTON",
+            null,
+            166.5,
+            44,
+            "rgb(245, 244, 238)",
+            "rgb(38, 46, 43)",
+            "none",
+            "6px",
+            "none",
+            "8px",
+            "Editar"
+          ],
+          [
+            "BUTTON",
+            null,
+            166.5,
+            44,
+            "rgb(255, 170, 160)",
+            "rgb(57, 38, 36)",
+            "none",
+            "6px",
+            "none",
+            "8px",
+            "Eliminar"
+          ]
+        ],
+        "detalle-workout": [
+          [
+            "DIV",
+            null,
+            375,
+            485,
+            "rgb(245, 244, 238)",
+            "rgb(16, 21, 21)",
+            "none",
+            "13px 13px 0px 0px",
+            "none",
+            "0px",
+            "Detalle del registroDía del registro: 12 nov 2026Correr18:15 hs • 35 min-220 kcalIntervalos Trotes cortos FinalDistancia5.25 km Editar Eliminar"
+          ],
+          [
+            "DIV",
+            null,
+            373,
+            75,
+            "rgb(247, 246, 237)",
+            "rgb(32, 39, 39)",
+            "none",
+            "12px 12px 0px 0px",
+            "none",
+            "14px 18px",
+            "Detalle del registroDía del registro: 12 nov 2026"
+          ],
+          [
+            "H3",
+            null,
+            159.203125,
+            27,
+            "rgb(247, 246, 237)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "0px",
+            "none",
+            "0px",
+            "Detalle del registro"
+          ],
+          [
+            "BUTTON",
+            "Cerrar detalle",
+            44,
+            44,
+            "rgb(247, 246, 237)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "5px",
+            "none",
+            "0px",
+            ""
+          ],
+          [
+            "SPAN",
+            null,
+            341,
+            27,
+            "rgb(245, 244, 238)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "0px",
+            "none",
+            "0px",
+            "Correr"
+          ],
+          [
+            "BUTTON",
+            null,
+            166.5,
+            44,
+            "rgb(245, 244, 238)",
+            "rgb(38, 46, 43)",
+            "none",
+            "6px",
+            "none",
+            "8px",
+            "Editar"
+          ],
+          [
+            "BUTTON",
+            null,
+            166.5,
+            44,
+            "rgb(255, 170, 160)",
+            "rgb(57, 38, 36)",
+            "none",
+            "6px",
+            "none",
+            "8px",
+            "Eliminar"
+          ]
+        ],
+        "peso": [
+          [
+            "DIV",
+            null,
+            375,
+            812,
+            "rgb(245, 244, 238)",
+            "rgb(16, 21, 21)",
+            "none",
+            "0px",
+            "none",
+            "0px",
+            "Editar pesoDía del registro: 12 nov 2026Peso (kg)Cancelar Guardar peso"
+          ],
+          [
+            "DIV",
+            null,
+            375,
+            63,
+            "rgb(247, 246, 237)",
+            "rgb(32, 39, 39)",
+            "none",
+            "0px",
+            "none",
+            "8px 18px",
+            "Editar pesoDía del registro: 12 nov 2026"
+          ],
+          [
+            "H3",
+            null,
+            154.109375,
+            27,
+            "rgb(247, 246, 237)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "0px",
+            "none",
+            "0px",
+            "Editar peso"
+          ],
+          [
+            "BUTTON",
+            "Cerrar formulario",
+            44,
+            44,
+            "rgb(247, 246, 237)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "5px",
+            "none",
+            "0px",
+            ""
+          ],
+          [
+            "INPUT",
+            null,
+            343,
+            48,
+            "rgb(245, 244, 238)",
+            "rgb(26, 33, 31)",
+            "none",
+            "6px",
+            "none",
+            "10px 12px",
+            "73.2"
+          ],
+          [
+            "BUTTON",
+            null,
+            142.921875,
+            44,
+            "rgb(245, 244, 238)",
+            "rgb(38, 46, 43)",
+            "none",
+            "6px",
+            "none",
+            "9px 8px",
+            "Cancelar"
+          ],
+          [
+            "BUTTON",
+            null,
+            200.078125,
+            44,
+            "rgb(36, 27, 20)",
+            "rgb(244, 165, 109)",
+            "none",
+            "6px",
+            "none",
+            "9px 8px",
+            "Guardar peso"
+          ]
+        ]
+      },
+      "keyboardChecks": [
+        {
+          "id": "add-meal-description",
+          "visualHeight": 463,
+          "top": 34,
+          "sheet": 34,
+          "field": true,
+          "focused": true,
+          "actions": true,
+          "inert": true,
+          "opacity": "0",
+          "actionsBeforeFields": true,
+          "safePaddingTop": "0px",
+          "layoutHeight": 812
+        },
+        {
+          "id": "add-meal-description",
+          "visualHeight": 214,
+          "top": 7,
+          "sheet": 7,
+          "field": true,
+          "focused": true,
+          "actions": true,
+          "inert": true,
+          "opacity": "0",
+          "actionsBeforeFields": true,
+          "safePaddingTop": "0px",
+          "layoutHeight": 375
+        },
+        {
+          "id": "add-meal-calories",
+          "visualHeight": 487,
+          "top": 26,
+          "sheet": 26,
+          "field": true,
+          "focused": true,
+          "actions": true,
+          "inert": true,
+          "opacity": "0",
+          "actionsBeforeFields": true,
+          "safePaddingTop": "0px",
+          "layoutHeight": 812
+        }
+      ],
+      "synthetic": {
+        "writes": [
+          [
+            "2026-11-12",
+            "failed"
+          ],
+          [
+            "2026-11-12",
+            "confirmed"
+          ],
+          [
+            "2026-11-12",
+            "confirmed"
+          ],
+          [
+            "2026-11-12",
+            "confirmed"
+          ],
+          [
+            "2026-11-12",
+            "confirmed"
+          ]
+        ],
+        "estimateKinds": [
+          [
+            "meal",
+            "image"
+          ],
+          [
+            "meal",
+            null
+          ],
+          [
+            "workout",
+            null
+          ]
+        ],
+        "meals": [
+          {
+            "name": "Tostada sintética 2C editado",
+            "calories": 480,
+            "time": "20:45",
+            "type": "Cena"
+          }
+        ],
+        "workouts": [
+          {
+            "activity": "Correr editado",
+            "duration": 35,
+            "distance": 5.25,
+            "calories": 220,
+            "time": "18:15"
+          }
+        ]
+      },
+      "initialScroll": 95,
+      "external": 0
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "readings": [
+        {
+          "stage": "calendario",
+          "samples": 57,
+          "textMin": 6.33,
+          "iconsMin": 12.41,
+          "disabledMin": 1.69,
+          "violations": []
+        },
+        {
+          "stage": "comida",
+          "samples": 25,
+          "textMin": 5.97,
+          "iconsMin": 8.05,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "estimando",
+          "samples": 26,
+          "textMin": 5.97,
+          "iconsMin": 8.05,
+          "disabledMin": 3.09,
+          "violations": []
+        },
+        {
+          "stage": "estimacion-foto",
+          "samples": 30,
+          "textMin": 5.97,
+          "iconsMin": 8.05,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "error-ia",
+          "samples": 33,
+          "textMin": 5.97,
+          "iconsMin": 8.05,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "error-guardado",
+          "samples": 34,
+          "textMin": 5.97,
+          "iconsMin": 8.41,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "guardando",
+          "samples": 35,
+          "textMin": 5.97,
+          "iconsMin": 12.41,
+          "disabledMin": 5.81,
+          "violations": []
+        },
+        {
+          "stage": "edicion-meal",
+          "samples": 25,
+          "textMin": 5.97,
+          "iconsMin": 8.05,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "deporte-seleccionado",
+          "samples": 30,
+          "textMin": 5.83,
+          "iconsMin": 8.05,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "estimacion-ejercicio",
+          "samples": 33,
+          "textMin": 5.83,
+          "iconsMin": 8.41,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "edicion-workout",
+          "samples": 30,
+          "textMin": 5.83,
+          "iconsMin": 8.05,
+          "disabledMin": null,
+          "violations": []
+        }
+      ],
+      "guards": {
+        "descarte": [
+          [
+            "DIALOG",
+            null,
+            384,
+            165,
+            "rgb(28, 37, 34)",
+            "rgb(255, 254, 250)",
+            "none",
+            "12px",
+            "none",
+            "0px",
+            "¿Descartar los cambios?Los cambios sin guardar se perderán.Seguir editandoDescartar cambios"
+          ],
+          [
+            "BUTTON",
+            null,
+            133.796875,
+            44,
+            "rgb(28, 37, 34)",
+            "rgb(235, 236, 228)",
+            "none",
+            "6px",
+            "none",
+            "8px 13px",
+            "Seguir editando"
+          ],
+          [
+            "BUTTON",
+            null,
+            153.296875,
+            44,
+            "rgb(159, 48, 44)",
+            "rgb(249, 234, 229)",
+            "none",
+            "6px",
+            "none",
+            "8px 13px",
+            "Descartar cambios"
+          ]
+        ],
+        "detalle-meal": [
+          [
+            "DIV",
+            null,
+            384,
+            361,
+            "rgb(28, 37, 34)",
+            "rgb(246, 245, 239)",
+            "none",
+            "12px",
+            "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px",
+            "0px",
+            "Detalle del registroDía del registro: 12 nov 2026Tostada sintética 2C20:45 hs • Cena+480 kcalTostada y fruta Editar Eliminar"
+          ],
+          [
+            "DIV",
+            null,
+            382,
+            75,
+            "rgb(37, 40, 33)",
+            "rgb(241, 233, 219)",
+            "none",
+            "12px 12px 0px 0px",
+            "none",
+            "14px 18px",
+            "Detalle del registroDía del registro: 12 nov 2026"
+          ],
+          [
+            "H3",
+            null,
+            159.203125,
+            27,
+            "rgb(37, 40, 33)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "0px",
+            "none",
+            "0px",
+            "Detalle del registro"
+          ],
+          [
+            "BUTTON",
+            "Cerrar detalle",
+            44,
+            44,
+            "rgb(37, 40, 33)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "5px",
+            "none",
+            "0px",
+            ""
+          ],
+          [
+            "SPAN",
+            null,
+            350,
+            27,
+            "rgb(28, 37, 34)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "0px",
+            "none",
+            "0px",
+            "Tostada sintética 2C"
+          ],
+          [
+            "BUTTON",
+            null,
+            171,
+            44,
+            "rgb(28, 37, 34)",
+            "rgb(235, 236, 228)",
+            "none",
+            "6px",
+            "none",
+            "8px",
+            "Editar"
+          ],
+          [
+            "BUTTON",
+            null,
+            171,
+            44,
+            "rgb(159, 48, 44)",
+            "rgb(249, 234, 229)",
+            "none",
+            "6px",
+            "none",
+            "8px",
+            "Eliminar"
+          ]
+        ],
+        "detalle-workout": [
+          [
+            "DIV",
+            null,
+            384,
+            486,
+            "rgb(28, 37, 34)",
+            "rgb(246, 245, 239)",
+            "none",
+            "12px",
+            "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px",
+            "0px",
+            "Detalle del registroDía del registro: 12 nov 2026Correr18:15 hs • 35 min-220 kcalIntervalos Trotes cortos FinalDistancia5.25 km Editar Eliminar"
+          ],
+          [
+            "DIV",
+            null,
+            382,
+            75,
+            "rgb(37, 40, 33)",
+            "rgb(241, 233, 219)",
+            "none",
+            "12px 12px 0px 0px",
+            "none",
+            "14px 18px",
+            "Detalle del registroDía del registro: 12 nov 2026"
+          ],
+          [
+            "H3",
+            null,
+            159.203125,
+            27,
+            "rgb(37, 40, 33)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "0px",
+            "none",
+            "0px",
+            "Detalle del registro"
+          ],
+          [
+            "BUTTON",
+            "Cerrar detalle",
+            44,
+            44,
+            "rgb(37, 40, 33)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "5px",
+            "none",
+            "0px",
+            ""
+          ],
+          [
+            "SPAN",
+            null,
+            350,
+            27,
+            "rgb(28, 37, 34)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "0px",
+            "none",
+            "0px",
+            "Correr"
+          ],
+          [
+            "BUTTON",
+            null,
+            171,
+            44,
+            "rgb(28, 37, 34)",
+            "rgb(235, 236, 228)",
+            "none",
+            "6px",
+            "none",
+            "8px",
+            "Editar"
+          ],
+          [
+            "BUTTON",
+            null,
+            171,
+            44,
+            "rgb(159, 48, 44)",
+            "rgb(249, 234, 229)",
+            "none",
+            "6px",
+            "none",
+            "8px",
+            "Eliminar"
+          ]
+        ],
+        "peso": [
+          [
+            "DIV",
+            null,
+            384,
+            261,
+            "rgb(28, 37, 34)",
+            "rgb(246, 245, 239)",
+            "none",
+            "12px",
+            "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px",
+            "0px",
+            "Editar pesoDía del registro: 12 nov 2026Peso (kg)Cancelar Guardar peso"
+          ],
+          [
+            "DIV",
+            null,
+            382,
+            75,
+            "rgb(37, 40, 33)",
+            "rgb(241, 233, 219)",
+            "none",
+            "12px 12px 0px 0px",
+            "none",
+            "14px 18px",
+            "Editar pesoDía del registro: 12 nov 2026"
+          ],
+          [
+            "H3",
+            null,
+            154.109375,
+            27,
+            "rgb(37, 40, 33)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "0px",
+            "none",
+            "0px",
+            "Editar peso"
+          ],
+          [
+            "BUTTON",
+            "Cerrar formulario",
+            44,
+            44,
+            "rgb(37, 40, 33)",
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "5px",
+            "none",
+            "0px",
+            ""
+          ],
+          [
+            "INPUT",
+            null,
+            350,
+            48,
+            "rgb(28, 37, 34)",
+            "rgb(255, 254, 250)",
+            "none",
+            "6px",
+            "none",
+            "10px 12px",
+            "73.2"
+          ],
+          [
+            "BUTTON",
+            null,
+            101.375,
+            48,
+            "rgb(28, 37, 34)",
+            "rgb(235, 236, 228)",
+            "none",
+            "6px",
+            "none",
+            "9px 18px",
+            "Cancelar"
+          ],
+          [
+            "BUTTON",
+            null,
+            158.53125,
+            48,
+            "rgb(36, 27, 20)",
+            "rgb(255, 154, 83)",
+            "none",
+            "6px",
+            "none",
+            "9px 18px",
+            "Guardar peso"
+          ]
+        ]
+      },
+      "keyboardChecks": [],
+      "synthetic": {
+        "writes": [
+          [
+            "2026-11-12",
+            "failed"
+          ],
+          [
+            "2026-11-12",
+            "confirmed"
+          ],
+          [
+            "2026-11-12",
+            "confirmed"
+          ],
+          [
+            "2026-11-12",
+            "confirmed"
+          ],
+          [
+            "2026-11-12",
+            "confirmed"
+          ]
+        ],
+        "estimateKinds": [
+          [
+            "meal",
+            "image"
+          ],
+          [
+            "meal",
+            null
+          ],
+          [
+            "workout",
+            null
+          ]
+        ],
+        "meals": [
+          {
+            "name": "Tostada sintética 2C editado",
+            "calories": 480,
+            "time": "20:45",
+            "type": "Cena"
+          }
+        ],
+        "workouts": [
+          {
+            "activity": "Correr editado",
+            "duration": 35,
+            "distance": 5.25,
+            "calories": 220,
+            "time": "18:15"
+          }
+        ]
+      },
+      "initialScroll": 0,
+      "external": 0
+    }
+  ]
+}
