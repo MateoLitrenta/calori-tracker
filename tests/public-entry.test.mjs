@@ -559,6 +559,9 @@ test('profile derives the displayed weight from each refreshed record snapshot w
   const selectedDate = () => nodes(view.render(), el => el.type === 'time').map(el => el.props.dateTime);
 
   assert.match(markup(displayed()), /80.*kg/);
+  const fact = node(view.render(), el => el.props.className === 'profile-fact-weight');
+  assert.equal(nodes(fact, el => el.props.className === 'profile-weight-value').length, 1);
+  assert.doesNotMatch(markup(fact), /77/);
   assert.deepEqual(selectedDate(), [recentDate]);
 
   const changed = { ...records, [recentDate]: { ...records[recentDate], weight: 81.5 } };
@@ -573,6 +576,10 @@ test('profile derives the displayed weight from each refreshed record snapshot w
   assert.equal(saved.length, 1);
   assert.equal(saved[0].weight, 78);
   assert.equal(saved[0].records, changed);
+  store.activeProfile = saved[0];
+  assert.match(markup(displayed()), /81,5.*kg/);
+  const remounted = mount(ProfileView, {});
+  assert.match(markup(node(remounted.render(), el => el.props.className === 'profile-weight-value')), /81,5.*kg/);
 
   store.activeProfile = { ...saved[0], records: { [oldDate]: changed[oldDate] } };
   assert.match(markup(displayed()), /79.*kg/);
@@ -580,6 +587,13 @@ test('profile derives the displayed weight from each refreshed record snapshot w
   store.activeProfile = { ...store.activeProfile, records: {} };
   assert.match(markup(displayed()), /78.*kg/);
   assert.deepEqual(selectedDate(), []);
+
+  store.user = { id: 'user-b' };
+  assert.equal(nodes(view.render(), el => el.props.className === 'profile-weight-value').length, 0);
+  store.activeProfile = { ...profile, user_id: 'user-b', weight: 68, records: {} };
+  const secondAccount = mount(ProfileView, {});
+  assert.match(markup(node(secondAccount.render(), el => el.props.className === 'profile-weight-value')), /68.*kg/);
+  assert.equal(saved.length, 1);
 });
 
 test('profile v2 keeps edit fields, validation, cancel and save within the personal section', async () => {

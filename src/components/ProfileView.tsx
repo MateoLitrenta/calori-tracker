@@ -314,10 +314,8 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
                   <dd>
                     <span className="profile-weight-value">{(measurement?.weight ?? weight).toLocaleString('es-AR')} <small>kg</small></span>
                     <span className="profile-muted profile-weight-note">
-                      {measurement ? <>
-                        <span className="block">Medición del <time dateTime={measurement.dateStr}>{weightDateFormatter.format(parseISO(measurement.dateStr))}</time></span>
-                        <span className="block">Peso base para estimaciones · {weight.toLocaleString('es-AR')} kg</span>
-                      </> : 'Peso base de tu perfil. Se usa para estimar tu gasto.'}
+                      {measurement ? <>Medición del <time dateTime={measurement.dateStr}>{weightDateFormatter.format(parseISO(measurement.dateStr))}</time></>
+                        : 'Peso base de tu perfil.'}
                     </span>
                   </dd>
                 </div>
@@ -343,7 +341,7 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
                   <label className="profile-field">Peso base para estimaciones (kg)
                     <input required type="number" min="20" max="300" aria-describedby="profile-weight-help" step="0.1" value={weight} onChange={e => change('weight', Number(e.target.value))} />
                   </label>
-                  <p id="profile-weight-help" className="profile-muted profile-weight-note">Editar este peso recalcula tus estimaciones de gasto, incluso las de días anteriores. Registrá las mediciones en Inicio.</p>
+                  <p id="profile-weight-help" className="profile-muted profile-weight-note">Al guardar, se recalculan las estimaciones de los días anteriores a tu primera medición. Si todavía no registraste ninguna, el cambio aplica a todos los días.</p>
                 </div>
                 <label className="profile-field">Altura (cm)
                   <input required type="number" min="50" max="250" value={height} onChange={e => change('height', Number(e.target.value))} />
@@ -368,7 +366,7 @@ export default function ProfileView({ beforeLeave }: { beforeLeave?: RefObject<L
           </button>
           {showEnergyInfo && (
             <div id="profile-energy-details" className="profile-energy-details profile-muted">
-              <p>TMB: tu gasto en reposo, estimado con el peso base de tu perfil.</p>
+              <p>TMB: tu gasto en reposo. Para cada fecha usamos la última medición disponible hasta ese día o tu peso base.</p>
               <p>Gasto estimado = TMB + calorías de pasos + calorías de ejercicio registrados.</p>
               <p>Pasos y ejercicio pueden solaparse. Usamos los valores registrados sin correcciones.</p>
             </div>

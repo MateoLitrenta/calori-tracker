@@ -1,21 +1,20 @@
-# Peso vigente en Perfil
+# Peso vigente y estimaciones por fecha
 
-La rama parte del merge de #105, `a579065571584535408dd89b092de6619b520e27`. Perfil ahora muestra el último peso medido junto con su fecha. Si se guardó un peso base de 77 kg y se registró una medición válida de 80 kg el 26 de noviembre, la lectura muestra 80 kg y el peso base sigue identificado.
+Perfil muestra una sola lectura de peso y, cuando proviene de una medición, la fecha del registro. El peso base guardado en el perfil cubre los días para los que aún no hay una medición aplicable.
 
-## Fechas y actualización
+## Resolución por fecha
 
-La selección usa el día de calendario del registro, `dateStr`, elige la fecha más reciente hasta hoy y acepta cantidades finitas y positivas. Las fechas futuras o imposibles y los valores inválidos quedan fuera. La búsqueda recorre el historial disponible aunque una medición esté fuera del rango habitual de Inicio. La fecha se presenta en el calendario local, incluso si la referencia `Date` del registro se construyó en UTC.
+Para una fecha consultada, se toma la última medición válida de ese día o anterior. Se usa el día de calendario guardado en `dateStr`. La fecha de modificación, el día seleccionado en Inicio y los pesos inválidos quedan fuera de la resolución del peso vigente. Las mediciones futuras se excluyen del cálculo de hoy. La búsqueda usa todo el historial cargado, incluidas mediciones anteriores al período que se está resumiendo.
 
-Perfil obtiene el dato del conjunto de registros activo. Un alta, edición o retiro en ese conjunto se refleja en la próxima actualización. Al retirar la medición vigente, se muestra la anterior. Cuando el conjunto queda sin mediciones válidas, se muestra el peso base guardado en Perfil, inicialmente cargado durante el alta y editable desde «Editar perfil».
+Con un peso base de 77 kg y una medición de 80 kg el 26 de noviembre, Perfil muestra 80 kg. Si es la primera medición, la TMB de las fechas anteriores al 26 sigue usando 77 kg y la del 26 en adelante aumenta 30 kcal, hasta la próxima medición. Inicio, Datos, Historial, el contexto del Coach y cada nueva estimación de ejercicio usan la misma política. El ejercicio utiliza la fecha del formulario. Las series de mediciones del Coach siguen indicando solo pesos registrados en cada día.
 
-## Política de estimaciones
+## Ediciones y retiros
 
-El peso vigente es una lectura de las mediciones. La TMB y las estimaciones conservan el peso base editable del perfil. Hoy los cálculos de Inicio, Datos, Historial y Coach usan ese campo, también al leer días anteriores. Una sustitución automática de 77 por 80 kg cambiaría en 30 kcal por día la TMB y los gastos que dependen de ella. Por eso la medición nueva no se escribe en el campo base ni se transmite como nueva referencia de esos cálculos. El formulario aclara que una edición deliberada del peso base recalcula estimaciones, incluso históricas, como ya ocurría.
+- Una corrección histórica puede cambiar las estimaciones desde la fecha corregida hasta la siguiente medición. Las fechas previas conservan su peso aplicable.
+- Si se retira una medición, su intervalo toma la medición anterior o el peso base según corresponda.
+- «Editar perfil» permite corregir el peso base. El cambio afecta solo los días anteriores a la primera medición disponible. Si todavía no hay mediciones, aplica a todos los días. Para actualizar la lectura con una nueva medición se usa el registro de Inicio.
+- La política recalcula estimaciones derivadas. Se conservan las comidas, los pasos y las calorías de ejercicios ya guardadas. Se usan las escrituras existentes para editar Perfil y registrar mediciones. La resolución no agrega escrituras, tablas ni migraciones.
 
-La sincronización de esta versión es de presentación. Usar mediciones fechadas para estimaciones de cada día requiere acordar una política para los días sin medición y para preservación de históricos.
+## Evidencia
 
-## Verificación
-
-[Capturas, recorrido con datos sintéticos y resultados](visual.md)
-
-Los casos automatizados cubren orden por fecha de calendario, mediciones anteriores, fechas futuras o inválidas, edición, retiro, fallback y el valor del campo base al editar Perfil. El retiro individual se simula con un snapshot de registros actualizado. El control existente de Gestión de datos conserva su confirmación.
+[Recorrido sintético y versiones comparadas](visual.md). Las pruebas focalizadas cubren selección temporal, fechas inválidas y futuras, alta, edición, retiro de snapshots, recarga, cambio de cuenta, agregaciones y estimación de ejercicio con una respuesta simulada. El registro diario actual permite alta y edición. El retiro individual se verifica con un snapshot actualizado.

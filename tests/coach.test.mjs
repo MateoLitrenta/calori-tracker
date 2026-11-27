@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { buildCoachContext, coachSuggestions, recentLocalDates, sanitizeCoachContext } from '../src/utils/coachContext.ts';
-import { calculateDailyExpenditure } from '../src/utils/helpers.ts';
+import { buildDailyEnergyContext } from '../src/utils/helpers.ts';
 import { generateAIResponse, transcribeAudio, validActions } from '../src/services/aiService.ts';
 import apiHandler from '../api/ai/chat.ts';
 import { authorizedAIHandler } from './fixtures/ai-auth-mock.mjs';
@@ -18,7 +18,7 @@ const fixture = { ...profile, records: {
     meals: [{ id: 'secret-meal', name: 'Pollo y ensalada', type: 'Almuerzo', calories: 700, time: '13:00' }] }),
   '2026-09-26': day('2026-09-26', { weight: 70.2, workouts: [{ activity: 'Gimnasio', duration: 45, calories: 280 }] }),
   '2026-09-01': day('2026-09-01', { steps: 50000 }),
-  '2026-09-29': day('2026-09-29', { steps: 60000 }),
+  '2026-09-29': day('2026-09-29', { steps: 60000, weight: 95 }),
 } };
 
 test('coach context includes seven local dates, real recent activity and no account metadata', () => {
@@ -30,7 +30,17 @@ test('coach context includes seven local dates, real recent activity and no acco
   assert.equal(context.recentDays[5].calories, 700);
   assert.equal(context.recentDays[5].meals[0].time, '13:00');
   assert.equal(context.recentDays[5].weight, 69.8);
-  assert.equal(context.today.expenditure, calculateDailyExpenditure(fixture));
+  assert.equal(context.profile.weight, 69.8);
+  assert.equal(context.today.expenditure, 1450);
+  assert.equal(context.today.target, 1450);
+  assert.equal(context.today.weight, null);
+  assert.equal(context.recentDays[4].expenditure, 1734);
+  assert.equal(context.recentDays[5].expenditure, 2390);
+  assert.equal(context.recentDays[6].weight, null);
+  assert.equal(context.historyDays.find(day => day.date === '2026-09-01').expenditure, 3452);
+  assert.equal(context.historyDays.at(-1).weight, null);
+  assert.match(buildDailyEnergyContext(fixture, undefined, today), /Peso actual: 69\.8 kg\s+TMB: 1450 kcal/);
+  assert.equal(buildCoachContext(profile, today).profile.weight, 70);
   const serialized = JSON.stringify(context);
   for (const forbidden of ['private-', 'secret-', 'email', 'avatar', 'password', '2026-09-29']) assert.ok(!serialized.includes(forbidden));
   assert.ok(context.recentDays.every(day => day.date >= recentLocalDates(today)[0]));
@@ -130,6 +140,11 @@ test('API passes recent context, preserves workout proposals and keeps routine/p
       assert.deepEqual(serverContext.recentDays.map(day => day.date), recentLocalDates(today));
       assert.equal(serverContext.recentDays[5].meals[0].description, 'Pollo y ensalada');
       assert.equal(serverContext.recentDays[4].calories, null);
+      assert.equal(serverContext.profile.weight, 69.8);
+      assert.equal(serverContext.today.expenditure, 1450);
+      assert.equal(serverContext.today.weight, null);
+      assert.equal(serverContext.recentDays[5].expenditure, 2390);
+      assert.equal(serverContext.recentDays[5].workouts[0].calories, 540);
       assert.ok(!JSON.stringify(serverContext).includes('private-'));
     }
     modelResult = { reply: 'Sin registros.', actions: [] };

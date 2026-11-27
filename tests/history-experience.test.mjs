@@ -230,7 +230,7 @@ test('daily history channels retain recorded zero, unknown intake and missing en
     await view.selectDay(date);
     assert.deepEqual(channelText(), [
       ['Calorías consumidas', date === partialDay ? 'Sin comidas registradas' : date === mealDay ? '0 kcal' : '650 kcal'],
-      ['Gasto estimado', calculateDailyExpenditure(profile, initial[date]).toLocaleString('es-AR') + ' kcal'],
+      ['Gasto estimado', calculateDailyExpenditure({ ...profile, records: initial }, initial[date]).toLocaleString('es-AR') + ' kcal'],
     ]);
     assert.equal(view.heading(), today);
     assert.equal(view.day(date).getAttribute('aria-pressed'), 'true');
