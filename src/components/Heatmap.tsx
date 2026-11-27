@@ -1,4 +1,4 @@
-import { useId, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { addDays, addMonths, endOfMonth, format, parseISO, startOfMonth, startOfISOWeek } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 import {
@@ -13,7 +13,7 @@ import {
   Pulse,
 } from '@phosphor-icons/react';
 import type { DailyRecordsMap, UserProfile } from '../types';
-import { calculateDailyExpenditure, formatDateStr, getCaloriesIngested, getHeatmapColor } from '../utils/helpers';
+import { calculateDailyExpenditure, createWeightResolver, formatDateStr, getCaloriesIngested, getHeatmapColor } from '../utils/helpers';
 import { buildHistoryPeriods } from '../utils/historyPeriods';
 import {
   getHistoryDay,
@@ -227,9 +227,11 @@ export default function Heatmap({
   const weekStart = startOfISOWeek(parseISO(selected));
   const weekDates = Array.from({ length: 7 }, (_, index) => formatDateStr(addDays(weekStart, index)));
   const scopeDates = state.view === 'year' ? yearDates : state.view === 'month' ? monthDates : weekDates;
-  const periodInfo = getHistoryPeriod(records, scopeDates, profile, today);
+  const weightAt = useMemo(() => createWeightResolver(profile, records), [profile, records]);
+  const periodInfo = getHistoryPeriod(records, scopeDates, profile, today, weightAt);
   const summary = periodInfo.summary;
-  const selectedInfo = getHistoryDay(dayRecord, selected, profile, today);
+  const selectedWeight = weightAt(selected);
+  const selectedInfo = getHistoryDay(dayRecord, selected, profile, today, selectedWeight);
   const registeredDays = periodInfo.activityDays;
   const events = [
     ...(dayRecord?.meals ?? []).map((meal) => ({
@@ -372,7 +374,7 @@ export default function Heatmap({
       activity = hasActivity(record),
       missingMeals = activity && !record?.meals.length,
       unavailable = date > today || date < minDate;
-    const energy = getHistoryDay(record, date, profile, today);
+    const energy = getHistoryDay(record, date, profile, today, weightAt(date));
     const habitText =
       ((record?.steps ?? 0) > 0 ? ' · ' + number(record!.steps) + ' pasos' : '') +
       ((record?.water ?? 0) > 0 ? ' · ' + number(record!.water) + ' ml de agua' : '') +
@@ -511,7 +513,7 @@ export default function Heatmap({
                     const key = year + '-' + String(index + 1).padStart(2, '0'),
                       dates = yearDates.filter((date) => date.startsWith(key) && date <= today),
                       count = dates.filter((date) => hasActivity(records[date])).length,
-                      monthInfo = getHistoryPeriod(records, dates, profile, today),
+                      monthInfo = getHistoryPeriod(records, dates, profile, today, weightAt),
                       current = key === today.slice(0, 7),
                       future = key > today.slice(0, 7),
                       caption = current ? 'En curso' : null;
@@ -750,7 +752,7 @@ export default function Heatmap({
                   </div>
                   <div>
                     <dt>Gasto estimado</dt>
-                    <dd>{number(calculateDailyExpenditure(profile, dayRecord))} <small>kcal</small></dd>
+                    <dd>{number(calculateDailyExpenditure(profile, dayRecord, selectedWeight))} <small>kcal</small></dd>
                   </div>
                 </dl>
               )}

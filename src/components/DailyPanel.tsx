@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect, useLayoutEffect, useId } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect, useId, useMemo } from 'react';
 import { ForkKnife, Barbell, Drop, Trash, Check, PencilSimple, Scales, Sneaker, CaretRight, Sparkle } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 import type { DailyRecord, MealEntry, MealType, WorkoutEntry, DailyRecordsMap, UserProfile } from '../types';
-import { hasEnergyData, formatDateStr, formatCalories, getCaloriesIngested, generateUUID, aggregateEnergy, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure, getBalanceLabel } from '../utils/helpers';
+import { hasEnergyData, formatDateStr, formatCalories, getCaloriesIngested, generateUUID, aggregateEnergy, getWorkoutCalories, getStepCalories, calculateBMR, calculateDailyExpenditure, createWeightResolver, getBalanceLabel } from '../utils/helpers';
 import { estimateMeal, estimateWorkout } from '../services/aiService';
 import { AIRequestError } from '../services/aiTransport';
 import { supabase } from '../lib/supabase';
@@ -227,10 +227,13 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
   const detailModalItem = liveDetailItem ?? detail?.item;
   const deleting = deletion?.deleting ?? false;
 
-  const isHistorical = dateStr < formatDateStr(new Date());
+  const today = formatDateStr(new Date());
+  const isHistorical = dateStr < today;
   const emptyHistory = !isGroup && isHistorical && !hasEnergyData(currentRecord);
-  const expenditure = calculateDailyExpenditure(profile, currentRecord);
-  const summary = aggregateEnergy(records || {}, isGroup ? selectedGroup.dates : [dateStr], profile);
+  const weightAt = useMemo(() => createWeightResolver(profile, records), [profile, records]);
+  const dayWeight = weightAt(dateStr);
+  const expenditure = calculateDailyExpenditure(profile, currentRecord, dayWeight);
+  const summary = aggregateEnergy(records || {}, isGroup ? selectedGroup.dates : [dateStr], profile, today, weightAt);
   const ingested = isGroup ? summary.consumed : getCaloriesIngested(currentRecord);
   const balance = emptyHistory ? null : isGroup ? summary.balance : Math.round(ingested - expenditure);
   const classifiedBalance = isGroup ? summary.averageBalance : balance;
@@ -589,7 +592,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
     setEstimating(true);
     try {
       const result = await estimateWorkout({ activity: workActivity, duration: Number(workDuration), details,
-        profile: { sex: profile.sex, age: profile.age, weight: profile.weight, height: profile.height } });
+        profile: { sex: profile.sex, age: profile.age, weight: dayWeight, height: profile.height } });
       if (session !== estimateSessionRef.current) return;
         markEntryChanged();
       setWorkEstimate({ calories: result.calories, assumptions: result.assumptions, context, inputVersion, calorieVersion, contextKey: estimateContextKey });
@@ -786,7 +789,7 @@ const DailyPanel: React.FC<DailyPanelProps> = (props) => {
                 <div><dt>Calorías consumidas</dt><dd>{noDailyEnergy || provisionalBalance ? 'Sin ingesta registrada' : `${ingested.toLocaleString('es-AR')} kcal`}</dd></div>
                 <div><dt>Gasto estimado</dt><dd>{expenditure.toLocaleString('es-AR')} kcal</dd></div>
               </dl>
-              <div>TMB: {calculateBMR(profile).toLocaleString('es-AR')} kcal</div>
+              <div>TMB: {calculateBMR(profile, dayWeight).toLocaleString('es-AR')} kcal</div>
               <div>Pasos: {getStepCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
               <div>Ejercicio: {getWorkoutCalories(currentRecord).toLocaleString('es-AR')} kcal</div>
               {provisionalBalance && balance !== null && <p>Saldo provisional con los registros disponibles: <strong>{balance.toLocaleString('es-AR')} kcal</strong>. Falta registrar comidas para interpretar el balance del día.</p>}

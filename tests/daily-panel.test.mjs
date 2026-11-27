@@ -286,6 +286,7 @@ const hookUrl = stub(`
   export const useState = value => globalThis.__dailyHooks.useState(value);
   export const useRef = value => globalThis.__dailyHooks.useRef(value);
   export const useId = () => globalThis.__dailyHooks.useRef('daily-records-test').current;
+  export const useMemo = factory => factory();
   export const useEffect = (...args) => globalThis.__dailyHooks.useEffect(...args);
   export const useLayoutEffect = useEffect;
 `);

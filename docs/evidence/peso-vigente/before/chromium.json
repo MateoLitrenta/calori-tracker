@@ -1,0 +1,92 @@
+{
+  "engine": "chromium",
+  "version": "158.0.8127.37",
+  "cases": [
+    {
+      "width": 375,
+      "theme": "light",
+      "reading": {
+        "weight": 77,
+        "date": null,
+        "base": 77,
+        "text": "Peso de perfil 77 kg Se usa para estimar tu gasto. Las mediciones diarias se registran en Inicio."
+      },
+      "layout": {
+        "weightWidth": 309,
+        "weightHeight": 69.5,
+        "overflow": 0,
+        "clearance": 359.0625
+      },
+      "events": {
+        "historicalEnergy": "3 comidas · 2 ejerciciosSegún tus registros Las dos barras usan la misma escala. La mayor cifra del día ocupa todo el ancho. Calorías consumidas 1.250 kcal Gasto estimado 2.321 kcal TMB: 1.719 kcal Pasos: 252 kcal Ejercicio: 350 kcal Déficit Alto"
+      },
+      "remote": {
+        "external": 0,
+        "ai": 0
+      }
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "reading": {
+        "weight": 77,
+        "date": null,
+        "base": 77,
+        "text": "Peso de perfil 77 kg Se usa para estimar tu gasto. Las mediciones diarias se registran en Inicio."
+      },
+      "layout": {
+        "weightWidth": 324,
+        "weightHeight": 69.5,
+        "overflow": 0,
+        "clearance": 391.0625
+      },
+      "events": null,
+      "remote": {
+        "external": 0,
+        "ai": 0
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "reading": {
+        "weight": 77,
+        "date": null,
+        "base": 77,
+        "text": "Peso de perfil 77 kg Se usa para estimar tu gasto. Las mediciones diarias se registran en Inicio."
+      },
+      "layout": {
+        "weightWidth": 592.828125,
+        "weightHeight": 50.09375,
+        "overflow": 0,
+        "clearance": null
+      },
+      "events": null,
+      "remote": {
+        "external": 0,
+        "ai": 0
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "reading": {
+        "weight": 77,
+        "date": null,
+        "base": 77,
+        "text": "Peso de perfil 77 kg Se usa para estimar tu gasto. Las mediciones diarias se registran en Inicio."
+      },
+      "layout": {
+        "weightWidth": 592.828125,
+        "weightHeight": 50.09375,
+        "overflow": 0,
+        "clearance": null
+      },
+      "events": null,
+      "remote": {
+        "external": 0,
+        "ai": 0
+      }
+    }
+  ]
+}

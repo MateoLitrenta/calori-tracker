@@ -1,5 +1,5 @@
 import type { DailyRecordsMap, UserProfile } from '../types/index.ts';
-import { aggregateEnergy, formatDateStr, getWorkoutCalories, hasEnergyData } from './helpers.ts';
+import { aggregateEnergy, createWeightResolver, formatDateStr, getWorkoutCalories, hasEnergyData } from './helpers.ts';
 import { calculateMealStats } from './mealStats.ts';
 
 export type ChartPeriod = 'Semana' | 'Mes' | 'Año';
@@ -53,12 +53,13 @@ function rangeDates(start: Date, end: Date) {
   return dates;
 }
 
-function summarize(records: DailyRecordsMap, dates: string[], profile: UserProfile, today: string): ChartSummary {
+function summarize(records: DailyRecordsMap, dates: string[], profile: UserProfile, today: string,
+  weightAt: ReturnType<typeof createWeightResolver>): ChartSummary {
   const energyDates = dates.filter(date => date <= today && hasEnergyData(records[date]));
   const mealDates = energyDates.filter(date => records[date].meals.length > 0);
   const stepDates = energyDates.filter(date => records[date].steps > 0);
-  const energy = aggregateEnergy(records, energyDates, profile, today);
-  const meals = aggregateEnergy(records, mealDates, profile, today);
+  const energy = aggregateEnergy(records, energyDates, profile, today, weightAt);
+  const meals = aggregateEnergy(records, mealDates, profile, today, weightAt);
   const workoutCount = energyDates.reduce((sum, date) => sum + records[date].workouts.length, 0);
   return {
     consumed: meals.days ? Math.round(meals.consumed / meals.days) : null,
@@ -79,11 +80,12 @@ export function buildChartStats(profile: UserProfile, period: ChartPeriod, today
   const reference = new Date(`${today}T00:00:00Z`);
   const { start, end } = periodRange(period, reference);
   const dates = rangeDates(start, end);
-  const summary = summarize(profile.records, dates, profile, today);
+  const weightAt = createWeightResolver(profile);
+  const summary = summarize(profile.records, dates, profile, today, weightAt);
   const buckets: ChartBucket[] = [];
   const addBucket = (label: string, title: string, bucketStart: Date, bucketEnd: Date) => {
     buckets.push({ label, title, start: dateStr(bucketStart), end: dateStr(bucketEnd),
-      summary: summarize(profile.records, rangeDates(bucketStart, bucketEnd), profile, today) });
+      summary: summarize(profile.records, rangeDates(bucketStart, bucketEnd), profile, today, weightAt) });
   };
 
   if (period === 'Semana') {
@@ -105,7 +107,7 @@ export function buildChartStats(profile: UserProfile, period: ChartPeriod, today
   }
 
   const previousRange = periodRange(period, moveDays(start, -1));
-  const previous = summarize(profile.records, rangeDates(previousRange.start, previousRange.end), profile, today);
+  const previous = summarize(profile.records, rangeDates(previousRange.start, previousRange.end), profile, today, weightAt);
   const comparison = summary.mealDays >= 2 && previous.mealDays >= 2
     ? { consumed: summary.consumed! - previous.consumed!,
       expenditure: summary.expenditure! - previous.expenditure!, balance: summary.balance! - previous.balance! }

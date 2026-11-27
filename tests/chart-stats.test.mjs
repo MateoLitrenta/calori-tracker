@@ -117,8 +117,25 @@ test('empty, water-only and weight-only dates never dilute means', () => {
   user.records['2026-09-30'].meals = [meal(2000)];
   const updated = buildChartStats(user, 'Semana', '2026-09-30').summary;
   assert.equal(updated.consumed, 2000);
-  assert.equal(updated.expenditure, calculateBMR(user));
+  assert.equal(updated.expenditure, 1770);
   assert.equal(updated.energyDays, 1);
+});
+
+test('Datos carries weight into the period from earlier dates and uses the weight applicable in each bucket', () => {
+  const user = profile({
+    '2026-09-27': record('2026-09-27', { weight: 77 }),
+    '2026-09-28': record('2026-09-28', { meals: [meal(2000)] }),
+    '2026-09-29': record('2026-09-29', { weight: 80 }),
+    '2026-09-30': record('2026-09-30', { meals: [meal(2200)], workouts: [workout(385)] }),
+    '2026-10-01': record('2026-10-01', { meals: [meal(9999)], weight: 101 }),
+  });
+  const { summary, buckets } = buildChartStats(user, 'Semana', '2026-09-30');
+  assert.deepEqual(buckets.slice(0, 4).map(bucket => bucket.summary.expenditure), [1750, null, 2165, null]);
+  assert.equal(summary.expenditure, 1958);
+  assert.equal(summary.balance, 143);
+  assert.equal(summary.mealDays, 2);
+  assert.equal(summary.energyDays, 2);
+  assert.equal(summary.workoutCalories, 385);
 });
 
 test('balance output uses existing product thresholds and registered activity arithmetic', () => {
