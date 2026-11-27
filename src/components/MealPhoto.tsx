@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase';
 
 const cache = new Map<string, { expires: number; url: string }>();
 
-export function MealThumbnail({ path, size = 56 }: { path: string; size?: number }) {
+export function MealThumbnail({ path, size = 56, detail = false }: { path: string; size?: number; detail?: boolean }) {
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
     let live = true;
@@ -22,7 +22,10 @@ export function MealThumbnail({ path, size = 56 }: { path: string; size?: number
     }
     return () => { live = false; };
   }, [path]);
-  return url ? <img src={url} alt="Foto de la comida" width={size} height={size} className="flex-none object-cover rounded-[var(--radius-control)]" style={{ width: size, height: size }} /> : null;
+  if (!url) return null;
+  return detail
+    ? <img src={url} alt="Foto de la comida" className="record-detail-image" />
+    : <img src={url} alt="Foto de la comida" width={size} height={size} className="flex-none object-cover rounded-[var(--radius-control)]" style={{ width: size, height: size }} />;
 }
 
 export async function prepareMealPhoto(file: Blob): Promise<Blob> {

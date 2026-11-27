@@ -14,6 +14,7 @@ import './HomeMobile.css';
 import './FitnessHome.css';
 import './FitnessDaily.css';
 import './FitnessForms.css';
+import './HomeRecordConfirmations.css';
 
 export interface HomeViewState {
   ownerId?: string;

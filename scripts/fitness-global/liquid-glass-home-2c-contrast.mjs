@@ -8,7 +8,7 @@ const selectors = [
   '.home-month-heading h4', '.home-date-picker button', '.home-month-weekdays span', '.home-calendar-footer span',
 ].join(',');
 
-export async function contrast(page, dialog, stage, before) {
+export async function contrast(page, dialog, stage, before, { targets = selectors, scope = '[aria-modal="true"]' } = {}) {
   const samples = await dialog.evaluate((root, selector) => {
     const points = (host, box) => [.26, .5, .74]
       .map(fraction => [Math.round(box.x + box.width * fraction), Math.round(box.y + box.height * .5)])
@@ -22,7 +22,9 @@ export async function contrast(page, dialog, stage, before) {
       return { color, point, opacity, disabled, label, limit: kind === 'icon' || large ? 3 : 4.5, kind };
     };
     const results = [];
-    for (const el of root.querySelectorAll(selector)) {
+    const elements = [...root.querySelectorAll(selector)];
+    if (root.matches(selector)) elements.unshift(root);
+    for (const el of elements) {
       if (el.matches('textarea, input, select')) {
         const css = getComputedStyle(el);
         const color = !el.value && el.placeholder ? getComputedStyle(el, '::placeholder').color : css.color;
@@ -50,11 +52,11 @@ export async function contrast(page, dialog, stage, before) {
       }
     }
     return results;
-  }, selectors);
+  }, targets);
   assert.ok(samples.length > 0, 'No hay muestras de contraste en ' + stage);
   const style = await page.addStyleTag({ content: `
-    [aria-modal="true"] *, [aria-modal="true"] *::placeholder { -webkit-text-fill-color: transparent !important; text-shadow: none !important; }
-    [aria-modal="true"] svg { visibility: hidden !important; }
+    :is(${scope}), :is(${scope}) *, :is(${scope}) *::placeholder { -webkit-text-fill-color: transparent !important; text-shadow: none !important; }
+    :is(${scope}) svg { visibility: hidden !important; }
   ` });
   let bitmap;
   try { bitmap = (await page.screenshot({ scale: 'css' })).toString('base64'); }

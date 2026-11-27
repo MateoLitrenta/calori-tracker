@@ -1,0 +1,72 @@
+/* Both confirmations use native dialog focus and scrolling. Their shared
+   Profile classes keep the original appearance outside Home. */
+dialog:is([data-record-delete], [data-draft-context="home"]) {
+  border: 1px solid var(--fit-rule);
+  border-radius: var(--home-glass-radius);
+  background: radial-gradient(ellipse 92% 38px at 16% 0%, var(--glass-nav-reflection), transparent), var(--fit-surface);
+  color: var(--fit-ink);
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint), inset 0 -1px 0 var(--glass-nav-edge-shade),
+    0 1px 2px var(--glass-nav-contact), var(--glass-nav-shadow);
+}
+dialog:is([data-record-delete], [data-draft-context="home"]) .profile-dialog-body {
+  display: grid;
+  gap: var(--space-compact);
+  padding: var(--fit-space);
+  overflow-wrap: anywhere;
+}
+dialog:is([data-record-delete], [data-draft-context="home"]) .profile-section-title {
+  margin: 0;
+  display: block;
+  font: 700 1.625rem/1.12 var(--fit-face);
+}
+dialog:is([data-record-delete], [data-draft-context="home"]) .profile-dialog-body > p {
+  margin: 0;
+  font-size: .9375rem;
+  line-height: 1.45;
+}
+dialog[data-record-delete] .record-delete-dialog p > span {
+  margin-top: var(--space-micro);
+  color: var(--fit-quiet);
+  font-size: .875rem;
+  font-variant-numeric: tabular-nums;
+}
+dialog[data-record-delete] .record-delete-error {
+  border: 1px solid currentColor;
+  border-radius: var(--home-glass-control-radius);
+  background: var(--fit-danger-soft);
+  color: var(--fit-danger);
+}
+dialog:is([data-record-delete], [data-draft-context="home"]) .profile-form-actions {
+  gap: var(--space-small);
+  margin: 0;
+  padding-top: var(--space-compact);
+  border-top: 1px solid var(--fit-rule);
+}
+dialog:is([data-record-delete], [data-draft-context="home"]) .profile-button {
+  flex: 1 1 auto;
+  min-height: var(--fit-target);
+  min-width: var(--fit-target);
+  padding: var(--space-small) var(--space-compact);
+  border-radius: var(--home-glass-control-radius);
+  font-size: .9375rem;
+  white-space: normal;
+}
+dialog:is([data-record-delete], [data-draft-context="home"]) .profile-button:enabled {
+  box-shadow: inset 0 1px 0 var(--glass-nav-glint), 0 1px 2px var(--glass-nav-contact);
+}
+dialog:is([data-record-delete], [data-draft-context="home"]) .profile-button-neutral:enabled {
+  border-color: var(--home-glass-control-edge);
+  background: linear-gradient(var(--glass-nav-reflection), transparent), var(--fit-soft);
+  color: var(--fit-ink);
+}
+dialog:is([data-record-delete], [data-draft-context="home"]) .profile-button-danger:enabled {
+  border-color: currentColor;
+  background: var(--fit-danger-soft);
+  color: var(--fit-danger);
+}
+dialog:is([data-record-delete], [data-draft-context="home"]) .profile-button:active:enabled {
+  box-shadow: inset 0 2px 4px var(--glass-nav-contact);
+}
+dialog:is([data-record-delete], [data-draft-context="home"]) .profile-button-danger:focus-visible {
+  outline-color: var(--fit-danger);
+}

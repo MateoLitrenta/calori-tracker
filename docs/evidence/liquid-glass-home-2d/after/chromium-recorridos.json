@@ -1,0 +1,1517 @@
+{
+  "engine": "chromium",
+  "version": "158.0.8127.37",
+  "cases": [
+    {
+      "width": 375,
+      "theme": "dark",
+      "contrasts": [
+        {
+          "stage": "detalle-foto",
+          "samples": 21,
+          "textMin": 7.79,
+          "iconsMin": 7.79,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "detalle-notas",
+          "samples": 23,
+          "textMin": 7.79,
+          "iconsMin": 7.79,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "descarte",
+          "samples": 4,
+          "textMin": 7.79,
+          "iconsMin": null,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "error-comida",
+          "samples": 8,
+          "textMin": 7.79,
+          "iconsMin": 8.05,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "recibo-meal",
+          "samples": 8,
+          "textMin": 9.11,
+          "iconsMin": 12.64,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "error-ejercicio",
+          "samples": 2,
+          "textMin": 7.79,
+          "iconsMin": null,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "recibo-workout",
+          "samples": 9,
+          "textMin": 9.03,
+          "iconsMin": 12.64,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "detalle-ejercicio",
+          "samples": 24,
+          "textMin": 7.79,
+          "iconsMin": 7.79,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "error-eliminar",
+          "samples": 13,
+          "textMin": 7.79,
+          "iconsMin": null,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "eliminando",
+          "samples": 12,
+          "textMin": 9.15,
+          "iconsMin": null,
+          "disabledMin": 7.77,
+          "violations": []
+        },
+        {
+          "stage": "eliminado",
+          "samples": 2,
+          "textMin": 9.59,
+          "iconsMin": null,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "error-peso",
+          "samples": 2,
+          "textMin": 7.79,
+          "iconsMin": null,
+          "disabledMin": null,
+          "violations": []
+        }
+      ],
+      "scope": {
+        "profile": {
+          "initial": [
+            [
+              "SECTION",
+              null,
+              343,
+              360.53125,
+              "rgb(26, 33, 31)",
+              "none",
+              "rgb(245, 244, 238)",
+              "12px",
+              "none",
+              "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "16px",
+              "AlexCambiar fotoDatos personales Editar perfilEdad30 añosAltura175 cmSexoMasculinoPeso vigente72,8 kgMedición del 13 de noviembre de 2026Cómo calculamos tu gasto"
+            ],
+            [
+              "DIV",
+              null,
+              309,
+              50.09375,
+              "rgba(0, 0, 0, 0)",
+              "none",
+              "rgb(245, 244, 238)",
+              "0px",
+              "none",
+              "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "0px",
+              "Peso vigente72,8 kgMedición del 13 de noviembre de 2026"
+            ],
+            [
+              "SPAN",
+              null,
+              60.171875,
+              27.59375,
+              "rgba(0, 0, 0, 0)",
+              "none",
+              "rgb(245, 244, 238)",
+              "0px",
+              "none",
+              "",
+              "0px",
+              "72,8 kg"
+            ]
+          ],
+          "discard": [
+            [
+              "DIALOG",
+              null,
+              337,
+              150,
+              "rgb(26, 33, 31)",
+              "none",
+              "rgb(245, 244, 238)",
+              "12px",
+              "none",
+              "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "0px",
+              "¿Descartar los cambios?Los cambios sin guardar se perderán.Seguir editandoDescartar cambios"
+            ],
+            [
+              "H2",
+              null,
+              303,
+              27.5,
+              "rgba(0, 0, 0, 0)",
+              "none",
+              "rgb(245, 244, 238)",
+              "0px",
+              "none",
+              "700 25px / 27.5px \"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+              "0px",
+              "¿Descartar los cambios?"
+            ],
+            [
+              "BUTTON",
+              null,
+              132.875,
+              44,
+              "rgb(38, 46, 43)",
+              "none",
+              "rgb(245, 244, 238)",
+              "6px",
+              "none",
+              "650 14px / 18.2px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "8px 13px",
+              "Seguir editando"
+            ],
+            [
+              "BUTTON",
+              null,
+              149.15625,
+              44,
+              "rgb(57, 38, 36)",
+              "none",
+              "rgb(255, 170, 160)",
+              "6px",
+              "none",
+              "650 14px / 18.2px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "8px 13px",
+              "Descartar cambios"
+            ]
+          ]
+        },
+        "calendar": [
+          [
+            "DIV",
+            null,
+            373,
+            61,
+            "rgb(32, 39, 39)",
+            "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "rgb(247, 246, 237)",
+            "26px 26px 0px 0px",
+            "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "8px 16px",
+            "Elegir fecha"
+          ],
+          [
+            "DIV",
+            null,
+            341,
+            44,
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "rgb(245, 244, 238)",
+            "0px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "0px",
+            "noviembre de 2026"
+          ],
+          [
+            "DIV",
+            "grid",
+            341,
+            297,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "18px",
+            "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "0px",
+            "LunMarMiéJueVieSábDom262728293031123456789101112131415161718192021222324252627282930123456"
+          ],
+          [
+            "DIV",
+            null,
+            341,
+            44,
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "rgb(245, 244, 238)",
+            "0px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "0px",
+            "Seleccionado: 13 nov 2026Hoy"
+          ]
+        ],
+        "meal": [
+          [
+            "DIV",
+            null,
+            375,
+            65.6875,
+            "rgb(32, 39, 39)",
+            "radial-gradient(95% 44px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "rgb(247, 246, 237)",
+            "0px",
+            "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px -1px 0px 0px inset",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "8px 18px",
+            "Editar comidaDía del registro: 13 nov 2026"
+          ],
+          [
+            "FORM",
+            null,
+            375,
+            746.3125,
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "rgb(245, 244, 238)",
+            "0px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "0px",
+            "DescripciónYogur, fruta y avenaTipo de comidaDesayunoAlmuerzoMeriendaCenaSnackCaloríaskcalHoraAhoraFoto opcional · podés usarla para estimar con IA Elegir de galería Tomar fotoEstimar con IANotas OpcionalesNotas · OpcionalRegistro sintético de QACancelar Guardar cambios"
+          ],
+          [
+            "DIV",
+            null,
+            375,
+            689.3125,
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "rgb(245, 244, 238)",
+            "0px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "16px 18px",
+            "DescripciónYogur, fruta y avenaTipo de comidaDesayunoAlmuerzoMeriendaCenaSnackCaloríaskcalHoraAhoraFoto opcional · podés usarla para estimar con IA Elegir de galería Tomar fotoEstimar con IANotas OpcionalesNotas · OpcionalRegistro sintético de QA"
+          ],
+          [
+            "TEXTAREA",
+            null,
+            339,
+            48,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "14px",
+            "rgba(0, 0, 0, 0.38) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            "Yogur, fruta y avena"
+          ],
+          [
+            "SELECT",
+            null,
+            339,
+            48,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "14px",
+            "rgba(0, 0, 0, 0.38) 0px 1px 2px 0px inset",
+            "16px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            "DesayunoAlmuerzoMeriendaCenaSnack"
+          ],
+          [
+            "INPUT",
+            null,
+            339,
+            48,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "14px",
+            "rgba(0, 0, 0, 0.38) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 52px 10px 12px",
+            ""
+          ],
+          [
+            "INPUT",
+            null,
+            273.84375,
+            48,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "14px",
+            "rgba(0, 0, 0, 0.38) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            ""
+          ],
+          [
+            "BUTTON",
+            null,
+            134.421875,
+            44,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "999px",
+            "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px",
+            "600 13px / 19.5px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "5px 11.375px",
+            "Estimar con IA"
+          ],
+          [
+            "TEXTAREA",
+            null,
+            339,
+            48,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "14px",
+            "rgba(0, 0, 0, 0.38) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            "Registro sintético de QA"
+          ],
+          [
+            "DIV",
+            null,
+            375,
+            57,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "0px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "6px 12px",
+            "Cancelar Guardar cambios"
+          ],
+          [
+            "BUTTON",
+            null,
+            212.203125,
+            44,
+            "rgb(255, 154, 83)",
+            "none",
+            "rgb(36, 27, 20)",
+            "14px",
+            "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px",
+            "700 15px / 22.5px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "9px 8px",
+            "Guardar cambios"
+          ]
+        ],
+        "exercise": [
+          [
+            "DIV",
+            null,
+            375,
+            65.6875,
+            "rgb(32, 39, 39)",
+            "radial-gradient(95% 44px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "rgb(247, 246, 237)",
+            "0px",
+            "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgb(65, 75, 69) 0px -1px 0px 0px inset",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "8px 18px",
+            "Editar ejercicioDía del registro: 13 nov 2026"
+          ],
+          [
+            "FORM",
+            null,
+            375,
+            746.3125,
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "rgb(245, 244, 238)",
+            "0px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "0px",
+            "ActividadEntrenamiento de fuerza con intervalos y caminata de recuperación de una sesión largaGimnasioFútbolCorrerNataciónCaminataDuraciónminCaloríaskcalHoraAhoraEstimar con IADistancia (km)kmRitmoNotas · OpcionalPrimera parte de una nota sintética de revisión. Segunda parte con términos técnicos y una palabra extra larga: SemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantes. Última línea, conservada en el registro.Cancelar Guardar cambios"
+          ],
+          [
+            "DIV",
+            null,
+            375,
+            689.3125,
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "rgb(245, 244, 238)",
+            "0px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "16px 18px",
+            "ActividadEntrenamiento de fuerza con intervalos y caminata de recuperación de una sesión largaGimnasioFútbolCorrerNataciónCaminataDuraciónminCaloríaskcalHoraAhoraEstimar con IADistancia (km)kmRitmoNotas · OpcionalPrimera parte de una nota sintética de revisión. Segunda parte con términos técnicos y una palabra extra larga: SemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantes. Última línea, conservada en el registro."
+          ],
+          [
+            "TEXTAREA",
+            null,
+            339,
+            89,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "14px",
+            "rgba(0, 0, 0, 0.38) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            "Entrenamiento de fuerza con intervalos y caminata de recuperación de una sesión larga"
+          ],
+          [
+            "INPUT",
+            null,
+            163.5,
+            48,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "14px",
+            "rgba(0, 0, 0, 0.38) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 52px 10px 12px",
+            ""
+          ],
+          [
+            "INPUT",
+            null,
+            163.5,
+            48,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "14px",
+            "rgba(0, 0, 0, 0.38) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 52px 10px 12px",
+            ""
+          ],
+          [
+            "INPUT",
+            null,
+            273.84375,
+            48,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "14px",
+            "rgba(0, 0, 0, 0.38) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            ""
+          ],
+          [
+            "BUTTON",
+            null,
+            134.421875,
+            44,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "999px",
+            "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px",
+            "600 13px / 19.5px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "5px 11.375px",
+            "Estimar con IA"
+          ],
+          [
+            "INPUT",
+            null,
+            163.5,
+            48,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "14px",
+            "rgba(0, 0, 0, 0.38) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 52px 10px 12px",
+            ""
+          ],
+          [
+            "INPUT",
+            null,
+            163.5,
+            48,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "14px",
+            "rgba(0, 0, 0, 0.38) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            ""
+          ],
+          [
+            "TEXTAREA",
+            null,
+            339,
+            179,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "14px",
+            "rgba(0, 0, 0, 0.38) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            "Primera parte de una nota sintética de revisión. Segunda parte con términos técnicos y una palabra extra larga: SemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantes. Última línea, conservada en el registro."
+          ],
+          [
+            "DIV",
+            null,
+            375,
+            57,
+            "rgb(26, 33, 31)",
+            "none",
+            "rgb(245, 244, 238)",
+            "0px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "6px 12px",
+            "Cancelar Guardar cambios"
+          ],
+          [
+            "BUTTON",
+            null,
+            212.203125,
+            44,
+            "rgb(255, 154, 83)",
+            "none",
+            "rgb(36, 27, 20)",
+            "14px",
+            "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px",
+            "700 15px / 22.5px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "9px 8px",
+            "Guardar cambios"
+          ]
+        ]
+      },
+      "discard": {
+        "caret": [
+          8,
+          17
+        ],
+        "restoredScroll": 0,
+        "persisted": false
+      },
+      "deletion": {
+        "initialFocus": "Cancelar",
+        "returnedFocus": "Registros del día",
+        "attempts": [
+          {
+            "date": "2026-11-13",
+            "status": "failed"
+          },
+          {
+            "date": "2026-11-13",
+            "status": "confirmed"
+          }
+        ]
+      },
+      "weight": {
+        "prior": {
+          "base": 73,
+          "today": 72.8
+        },
+        "updated": {
+          "base": 73,
+          "today": 74.6
+        },
+        "historical": "Balance energético\n+649\nkcal\n\nSegún tus registros. El día puede estar incompleto.\n\nCalorías consumidas\n3.100\nkcal\nGasto estimado\n2.451\nkcal\nComparación en kcal · misma escala\nVer desglose",
+        "geometry": [
+          {
+            "id": "_r_9_-weight",
+            "visualHeight": 487,
+            "top": 23,
+            "sheet": 23,
+            "field": true,
+            "focused": true,
+            "actions": true,
+            "inert": true,
+            "opacity": "0",
+            "actionsBeforeFields": true,
+            "safePaddingTop": "0px",
+            "layoutHeight": 812
+          },
+          {
+            "id": "_r_9_-weight",
+            "visualHeight": 225,
+            "top": 7,
+            "sheet": 7,
+            "field": true,
+            "focused": true,
+            "actions": true,
+            "inert": true,
+            "opacity": "0",
+            "actionsBeforeFields": true,
+            "safePaddingTop": "0px",
+            "layoutHeight": 375
+          },
+          {
+            "id": "_r_9_-weight",
+            "visualHeight": 487,
+            "top": 31,
+            "sheet": 31,
+            "field": true,
+            "focused": true,
+            "actions": true,
+            "inert": true,
+            "opacity": "0",
+            "actionsBeforeFields": true,
+            "safePaddingTop": "0px",
+            "layoutHeight": 812
+          }
+        ]
+      },
+      "receipts": {
+        "meal": {
+          "gap": 10,
+          "bounds": [
+            12,
+            579.21875,
+            351,
+            144.78125
+          ],
+          "layer": 45,
+          "controls": [
+            {
+              "w": 117.03125,
+              "h": 44,
+              "hit": true,
+              "cover": null
+            },
+            {
+              "w": 44,
+              "h": 44,
+              "hit": true,
+              "cover": null
+            }
+          ],
+          "overlap": null,
+          "priorErrorVisible": false
+        },
+        "exercise": {
+          "gap": 10,
+          "bounds": [
+            12,
+            579.21875,
+            351,
+            144.78125
+          ],
+          "layer": 10000,
+          "controls": [
+            {
+              "w": 117.03125,
+              "h": 44,
+              "hit": true,
+              "cover": null
+            },
+            {
+              "w": 44,
+              "h": 44,
+              "hit": true,
+              "cover": null
+            }
+          ],
+          "overlap": null,
+          "priorErrorVisible": true,
+          "layerWhileModal": 45
+        }
+      },
+      "writes": [
+        {
+          "date": "2026-11-13",
+          "status": "failed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "confirmed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "failed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "confirmed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "failed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "confirmed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "failed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "confirmed"
+        }
+      ],
+      "usage": {
+        "external": 0,
+        "ai": 0,
+        "writes": 8
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "contrasts": [
+        {
+          "stage": "detalle-foto",
+          "samples": 27,
+          "textMin": 5.97,
+          "iconsMin": 6.11,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "detalle-notas",
+          "samples": 27,
+          "textMin": 5.97,
+          "iconsMin": 6.11,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "descarte",
+          "samples": 4,
+          "textMin": 6.11,
+          "iconsMin": null,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "error-comida",
+          "samples": 8,
+          "textMin": 6.11,
+          "iconsMin": 8.05,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "recibo-meal",
+          "samples": 8,
+          "textMin": 6.55,
+          "iconsMin": 13.2,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "error-ejercicio",
+          "samples": 2,
+          "textMin": 6.11,
+          "iconsMin": null,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "recibo-workout",
+          "samples": 9,
+          "textMin": 6.55,
+          "iconsMin": 13.2,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "detalle-ejercicio",
+          "samples": 30,
+          "textMin": 5.97,
+          "iconsMin": 6.11,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "error-eliminar",
+          "samples": 13,
+          "textMin": 6.11,
+          "iconsMin": null,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "eliminando",
+          "samples": 12,
+          "textMin": 6.85,
+          "iconsMin": null,
+          "disabledMin": 5.81,
+          "violations": []
+        },
+        {
+          "stage": "eliminado",
+          "samples": 1,
+          "textMin": 6.55,
+          "iconsMin": null,
+          "disabledMin": null,
+          "violations": []
+        },
+        {
+          "stage": "error-peso",
+          "samples": 2,
+          "textMin": 6.11,
+          "iconsMin": null,
+          "disabledMin": null,
+          "violations": []
+        }
+      ],
+      "scope": {
+        "profile": {
+          "initial": [
+            [
+              "SECTION",
+              null,
+              642.828125,
+              390.1875,
+              "rgb(255, 254, 250)",
+              "none",
+              "rgb(28, 37, 34)",
+              "12px",
+              "none",
+              "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "24px",
+              "AlexCambiar fotoDatos personales Editar perfilEdad30 añosAltura175 cmSexoMasculinoPeso vigente72,8 kgMedición del 13 de noviembre de 2026Cómo calculamos tu gasto"
+            ],
+            [
+              "DIV",
+              null,
+              592.828125,
+              50.09375,
+              "rgba(0, 0, 0, 0)",
+              "none",
+              "rgb(28, 37, 34)",
+              "0px",
+              "none",
+              "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "0px",
+              "Peso vigente72,8 kgMedición del 13 de noviembre de 2026"
+            ],
+            [
+              "SPAN",
+              null,
+              60.171875,
+              27.59375,
+              "rgba(0, 0, 0, 0)",
+              "none",
+              "rgb(28, 37, 34)",
+              "0px",
+              "none",
+              "",
+              "0px",
+              "72,8 kg"
+            ]
+          ],
+          "discard": [
+            [
+              "DIALOG",
+              null,
+              384,
+              166,
+              "rgb(255, 254, 250)",
+              "none",
+              "rgb(28, 37, 34)",
+              "12px",
+              "none",
+              "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "0px",
+              "¿Descartar los cambios?Los cambios sin guardar se perderán.Seguir editandoDescartar cambios"
+            ],
+            [
+              "H2",
+              null,
+              334,
+              27.5,
+              "rgba(0, 0, 0, 0)",
+              "none",
+              "rgb(28, 37, 34)",
+              "0px",
+              "none",
+              "700 25px / 27.5px \"Barlow Condensed\", \"Bahnschrift Condensed\", \"Arial Narrow\", sans-serif",
+              "0px",
+              "¿Descartar los cambios?"
+            ],
+            [
+              "BUTTON",
+              null,
+              132.875,
+              44,
+              "rgb(235, 236, 228)",
+              "none",
+              "rgb(28, 37, 34)",
+              "6px",
+              "none",
+              "650 14px / 18.2px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "8px 13px",
+              "Seguir editando"
+            ],
+            [
+              "BUTTON",
+              null,
+              149.15625,
+              44,
+              "rgb(249, 234, 229)",
+              "none",
+              "rgb(159, 48, 44)",
+              "6px",
+              "none",
+              "650 14px / 18.2px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "8px 13px",
+              "Descartar cambios"
+            ]
+          ]
+        },
+        "calendar": [
+          [
+            "DIV",
+            null,
+            382,
+            61,
+            "rgb(241, 233, 219)",
+            "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "rgb(37, 40, 33)",
+            "26px 26px 0px 0px",
+            "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "8px 16px",
+            "Elegir fecha"
+          ],
+          [
+            "DIV",
+            null,
+            350,
+            44,
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "rgb(28, 37, 34)",
+            "0px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "0px",
+            "noviembre de 2026"
+          ],
+          [
+            "DIV",
+            "grid",
+            350,
+            297,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "18px",
+            "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "0px",
+            "LunMarMiéJueVieSábDom262728293031123456789101112131415161718192021222324252627282930123456"
+          ],
+          [
+            "DIV",
+            null,
+            350,
+            44,
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "rgb(28, 37, 34)",
+            "0px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "0px",
+            "Seleccionado: 13 nov 2026Hoy"
+          ]
+        ],
+        "meal": [
+          [
+            "DIV",
+            null,
+            590,
+            77.6875,
+            "rgb(241, 233, 219)",
+            "radial-gradient(95% 44px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "rgb(37, 40, 33)",
+            "25px 25px 0px 0px",
+            "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px -1px 0px 0px inset",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "14px 18px",
+            "Editar comidaDía del registro: 13 nov 2026"
+          ],
+          [
+            "FORM",
+            null,
+            590,
+            565.171875,
+            "rgb(246, 245, 239)",
+            "none",
+            "rgb(28, 37, 34)",
+            "9px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "0px",
+            "DescripciónYogur, fruta y avenaTipo de comidaDesayunoAlmuerzoMeriendaCenaSnackCaloríaskcalHoraAhoraFoto opcional · podés usarla para estimar con IA Elegir de galería Tomar fotoEstimar con IANotas OpcionalesNotas · OpcionalRegistro sintético de QACancelar Guardar cambios"
+          ],
+          [
+            "DIV",
+            null,
+            590,
+            492.171875,
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "rgb(28, 37, 34)",
+            "0px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "18px",
+            "DescripciónYogur, fruta y avenaTipo de comidaDesayunoAlmuerzoMeriendaCenaSnackCaloríaskcalHoraAhoraFoto opcional · podés usarla para estimar con IA Elegir de galería Tomar fotoEstimar con IANotas OpcionalesNotas · OpcionalRegistro sintético de QA"
+          ],
+          [
+            "TEXTAREA",
+            null,
+            554,
+            48,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "14px",
+            "rgba(32, 38, 30, 0.12) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            "Yogur, fruta y avena"
+          ],
+          [
+            "SELECT",
+            null,
+            554,
+            48,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "14px",
+            "rgba(32, 38, 30, 0.12) 0px 1px 2px 0px inset",
+            "16px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            "DesayunoAlmuerzoMeriendaCenaSnack"
+          ],
+          [
+            "INPUT",
+            null,
+            180,
+            48,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "14px",
+            "rgba(32, 38, 30, 0.12) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 52px 10px 12px",
+            ""
+          ],
+          [
+            "INPUT",
+            null,
+            294.84375,
+            48,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "14px",
+            "rgba(32, 38, 30, 0.12) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            ""
+          ],
+          [
+            "BUTTON",
+            null,
+            134.421875,
+            44,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "999px",
+            "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px",
+            "600 13px / 19.5px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "5px 11.375px",
+            "Estimar con IA"
+          ],
+          [
+            "TEXTAREA",
+            null,
+            554,
+            48,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "14px",
+            "rgba(32, 38, 30, 0.12) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            "Registro sintético de QA"
+          ],
+          [
+            "DIV",
+            null,
+            590,
+            73,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "0px",
+            "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "12px 18px",
+            "Cancelar Guardar cambios"
+          ],
+          [
+            "BUTTON",
+            null,
+            179.53125,
+            48,
+            "rgb(255, 154, 83)",
+            "none",
+            "rgb(36, 27, 20)",
+            "14px",
+            "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px",
+            "700 15px / 22.5px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "9px 18px",
+            "Guardar cambios"
+          ]
+        ],
+        "exercise": [
+          [
+            "DIV",
+            null,
+            590,
+            77.6875,
+            "rgb(241, 233, 219)",
+            "radial-gradient(95% 44px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "rgb(37, 40, 33)",
+            "25px 25px 0px 0px",
+            "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgb(203, 206, 196) 0px -1px 0px 0px inset",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "14px 18px",
+            "Editar ejercicioDía del registro: 13 nov 2026"
+          ],
+          [
+            "FORM",
+            null,
+            590,
+            757.453125,
+            "rgb(246, 245, 239)",
+            "none",
+            "rgb(28, 37, 34)",
+            "9px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "0px",
+            "ActividadEntrenamiento de fuerza con intervalos y caminata de recuperación de una sesión largaGimnasioFútbolCorrerNataciónCaminataDuraciónminCaloríaskcalHoraAhoraEstimar con IADistancia (km)kmRitmoNotas · OpcionalPrimera parte de una nota sintética de revisión. Segunda parte con términos técnicos y una palabra extra larga: SemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantes. Última línea, conservada en el registro.Cancelar Guardar cambios"
+          ],
+          [
+            "DIV",
+            null,
+            590,
+            684.453125,
+            "rgba(0, 0, 0, 0)",
+            "none",
+            "rgb(28, 37, 34)",
+            "0px",
+            "none",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "18px",
+            "ActividadEntrenamiento de fuerza con intervalos y caminata de recuperación de una sesión largaGimnasioFútbolCorrerNataciónCaminataDuraciónminCaloríaskcalHoraAhoraEstimar con IADistancia (km)kmRitmoNotas · OpcionalPrimera parte de una nota sintética de revisión. Segunda parte con términos técnicos y una palabra extra larga: SemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantes. Última línea, conservada en el registro."
+          ],
+          [
+            "TEXTAREA",
+            null,
+            554,
+            67,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "14px",
+            "rgba(32, 38, 30, 0.12) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            "Entrenamiento de fuerza con intervalos y caminata de recuperación de una sesión larga"
+          ],
+          [
+            "INPUT",
+            null,
+            271,
+            48,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "14px",
+            "rgba(32, 38, 30, 0.12) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 52px 10px 12px",
+            ""
+          ],
+          [
+            "INPUT",
+            null,
+            271,
+            48,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "14px",
+            "rgba(32, 38, 30, 0.12) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 52px 10px 12px",
+            ""
+          ],
+          [
+            "INPUT",
+            null,
+            488.84375,
+            48,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "14px",
+            "rgba(32, 38, 30, 0.12) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            ""
+          ],
+          [
+            "BUTTON",
+            null,
+            134.421875,
+            44,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "999px",
+            "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px",
+            "600 13px / 19.5px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "5px 11.375px",
+            "Estimar con IA"
+          ],
+          [
+            "INPUT",
+            null,
+            271,
+            48,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "14px",
+            "rgba(32, 38, 30, 0.12) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 52px 10px 12px",
+            ""
+          ],
+          [
+            "INPUT",
+            null,
+            271,
+            48,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "14px",
+            "rgba(32, 38, 30, 0.12) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            ""
+          ],
+          [
+            "TEXTAREA",
+            null,
+            554,
+            134,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "14px",
+            "rgba(32, 38, 30, 0.12) 0px 1px 2px 0px inset",
+            "16px / 22.4px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "10px 12px",
+            "Primera parte de una nota sintética de revisión. Segunda parte con términos técnicos y una palabra extra larga: SemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantesSemillasCrocantes. Última línea, conservada en el registro."
+          ],
+          [
+            "DIV",
+            null,
+            590,
+            73,
+            "rgb(255, 254, 250)",
+            "none",
+            "rgb(28, 37, 34)",
+            "0px",
+            "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset",
+            "16px / 24px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "12px 18px",
+            "Cancelar Guardar cambios"
+          ],
+          [
+            "BUTTON",
+            null,
+            179.53125,
+            48,
+            "rgb(255, 154, 83)",
+            "none",
+            "rgb(36, 27, 20)",
+            "14px",
+            "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px",
+            "700 15px / 22.5px ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+            "9px 18px",
+            "Guardar cambios"
+          ]
+        ]
+      },
+      "discard": {
+        "caret": [
+          8,
+          17
+        ],
+        "restoredScroll": 0,
+        "persisted": false
+      },
+      "deletion": {
+        "initialFocus": "Cancelar",
+        "returnedFocus": "Registros del día",
+        "attempts": [
+          {
+            "date": "2026-11-13",
+            "status": "failed"
+          },
+          {
+            "date": "2026-11-13",
+            "status": "confirmed"
+          }
+        ]
+      },
+      "weight": {
+        "prior": {
+          "base": 73,
+          "today": 72.8
+        },
+        "updated": {
+          "base": 73,
+          "today": 74.6
+        },
+        "historical": "Balance energético\n+649\nkcal\n\nSegún tus registros. El día puede estar incompleto.\n\nCalorías consumidas\n3.100\nkcal\nGasto estimado\n2.451\nkcal\nComparación en kcal · misma escala\nVer desglose",
+        "geometry": []
+      },
+      "receipts": {
+        "meal": {
+          "gap": null,
+          "bounds": [
+            968,
+            731.21875,
+            448,
+            144.78125
+          ],
+          "layer": 45,
+          "controls": [
+            {
+              "w": 117.03125,
+              "h": 44,
+              "hit": true,
+              "cover": null
+            },
+            {
+              "w": 44,
+              "h": 44,
+              "hit": true,
+              "cover": null
+            }
+          ],
+          "overlap": null,
+          "priorErrorVisible": false
+        },
+        "exercise": {
+          "gap": null,
+          "bounds": [
+            968,
+            731.21875,
+            448,
+            144.78125
+          ],
+          "layer": 10000,
+          "controls": [
+            {
+              "w": 117.03125,
+              "h": 44,
+              "hit": true,
+              "cover": null
+            },
+            {
+              "w": 44,
+              "h": 44,
+              "hit": true,
+              "cover": null
+            }
+          ],
+          "overlap": null,
+          "priorErrorVisible": true,
+          "layerWhileModal": 45
+        }
+      },
+      "writes": [
+        {
+          "date": "2026-11-13",
+          "status": "failed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "confirmed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "failed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "confirmed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "failed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "confirmed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "failed"
+        },
+        {
+          "date": "2026-11-13",
+          "status": "confirmed"
+        }
+      ],
+      "usage": {
+        "external": 0,
+        "ai": 0,
+        "writes": 8
+      }
+    }
+  ]
+}

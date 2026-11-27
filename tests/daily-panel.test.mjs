@@ -464,6 +464,7 @@ test('explicit close asks before discarding text and a temporary photo', t => {
   assert.equal(node(tree, element => element.props.className === 'entry-sheet-backdrop').props.onClick, undefined);
   const confirmation = () => node(view(), element => typeof element.props.onDiscard === 'function');
   close();
+  assert.equal(confirmation().props.context, 'home');
   confirmation().props.onKeep();
   assert.equal(field(view, 'Ej. pollo con arroz y verduras').props.value, 'Borrador');
   assert.equal(node(view(), element => element.type.name === 'MealPhotoPicker').props.blob, photo);
@@ -1290,7 +1291,7 @@ for (const mobile of [false, true]) test(`record details preserve date, keyboard
     let dialog = document.querySelector('[role="dialog"]');
     assert.equal(dialog.getAttribute('aria-modal'), 'true');
     assert.equal(document.getElementById(dialog.getAttribute('aria-labelledby')).textContent, 'Detalle del registro');
-    assert.equal(dialog.hasAttribute('data-entry-glass'), false);
+    assert.equal(dialog.getAttribute('data-entry-glass'), 'true');
     assert.equal(dialog.querySelector('time').dateTime, day);
     assert.equal(dialog.querySelector('.record-detail-main').textContent.trim(), `${index ? 'Ejercicio' : 'Comida'} ${index}`);
     const close = dialog.querySelector('[aria-label="Cerrar detalle"]');
@@ -1332,7 +1333,7 @@ for (const mobile of [false, true]) test(`weight dialog names its historical day
   let dialog = document.querySelector('[role="dialog"]');
   assert.equal(dialog.getAttribute('aria-modal'), 'true');
   assert.equal(document.getElementById(dialog.getAttribute('aria-labelledby')).textContent, 'Editar peso');
-  assert.equal(dialog.hasAttribute('data-entry-glass'), false);
+  assert.equal(dialog.getAttribute('data-entry-glass'), 'true');
   assert.equal(dialog.querySelector('time').dateTime, day);
   assert.match(dialog.querySelector('.entry-date-context').textContent, /Día del registro.*11 nov 2026/);
   const input = dialog.querySelector('input[name="weight"]');
