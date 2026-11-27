@@ -102,7 +102,7 @@
   }
 }
 
-/* In reading order, actions lead to today's entries and then to habits. */
+/* In reading order, actions lead to habits and then to the day's entries. */
 .home-variants.fitness-home .daily-panel .daily-journal {
   display: grid; grid-template-columns: minmax(0,1fr); align-items: start; width: 100%;
   gap: 26px; padding: 18px 16px 0; border: 0; border-radius: 0; background: transparent;

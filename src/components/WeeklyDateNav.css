@@ -101,5 +101,3 @@
   .home-date-mobile-week { display: block; color: var(--fit-board-muted); font-size: .6875rem; }
   .home-week-days { gap: 0; }
 }
-
-.home-entry-date-label { margin: 0 0 3px; color: var(--fit-board-muted); font-size: .75rem; line-height: 1.3; }

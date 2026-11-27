@@ -240,7 +240,7 @@ test('daily reading order keeps actions, habits and chronological records togeth
   const document = dom.window.document;
   try {
     const inOrder = [...document.querySelectorAll('.energy-card, .daily-quick-actions, .daily-logs, .daily-habits-block')].map(node => node.className.split(' ')[0]);
-    assert.deepEqual(inOrder, ['energy-card', 'daily-quick-actions', 'daily-logs', 'daily-habits-block']);
+    assert.deepEqual(inOrder, ['energy-card', 'daily-quick-actions', 'daily-habits-block', 'daily-logs']);
     assert.equal(document.querySelectorAll('.daily-quick-actions').length, 1);
     assert.equal(document.querySelectorAll('.daily-habits').length, 1);
     assert.equal(document.querySelectorAll('.daily-record-open').length, 2);
