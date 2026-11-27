@@ -1,5 +1,5 @@
 import type { DailyRecord, UserProfile } from '../types';
-import { calculateDailyCalorieTarget, calculateDailyExpenditure, getCaloriesIngested, hasEnergyData } from './helpers.ts';
+import { calculateDailyCalorieTarget, calculateDailyExpenditure, createWeightResolver, getCaloriesIngested, hasEnergyData } from './helpers.ts';
 import { coachDates } from './coachDates.ts';
 import { sanitizeCoachContext } from './coachContextContract.ts';
 import { buildProactiveInsight } from './coachProactive.ts';
@@ -9,12 +9,12 @@ export const recentLocalDates = coachDates;
 
 export type CoachContext = ReturnType<typeof sanitizeCoachContext>;
 
-function summarizeDay(profile: UserProfile, record: DailyRecord | undefined, date: string) {
+function summarizeDay(profile: UserProfile, record: DailyRecord | undefined, date: string, weight: number) {
   return {
     date,
     hasData: Boolean(record && (record.meals.length || record.workouts.length || record.steps || record.water || record.weight)),
     calories: record?.meals.length ? getCaloriesIngested(record) : null,
-    expenditure: hasEnergyData(record) ? calculateDailyExpenditure(profile, record) : null,
+    expenditure: hasEnergyData(record) ? calculateDailyExpenditure(profile, record, weight) : null,
     meals: record?.meals.map(meal => ({ type: meal.type, description: meal.name, calories: meal.calories, time: meal.time })) ?? [],
     workouts: record?.workouts.map(workout => ({ name: workout.activity, duration: workout.duration, calories: workout.calories })) ?? [],
     steps: record?.steps ?? 0, water: record?.water ?? 0, weight: record?.weight ?? null,
@@ -23,15 +23,18 @@ function summarizeDay(profile: UserProfile, record: DailyRecord | undefined, dat
 
 export function buildCoachContext(profile: UserProfile, today: string): CoachContext {
   const record = profile.records[today];
+  const weightAt = createWeightResolver(profile);
+  const weight = weightAt(today);
   const context = sanitizeCoachContext({
-    profile: { name: profile.name, sex: profile.sex, age: profile.age, weight: profile.weight, height: profile.height, goal: profile.goal },
-    today: { ...summarizeDay(profile, record, today), consumed: getCaloriesIngested(record), expenditure: calculateDailyExpenditure(profile, record), target: calculateDailyCalorieTarget(profile, record) },
-    recentDays: recentLocalDates(today).map(date => summarizeDay(profile, profile.records[date], date)),
+    profile: { name: profile.name, sex: profile.sex, age: profile.age, weight, height: profile.height, goal: profile.goal },
+    today: { ...summarizeDay(profile, record, today, weight), consumed: getCaloriesIngested(record), expenditure: calculateDailyExpenditure(profile, record, weight), target: calculateDailyCalorieTarget(profile, record, weight) },
+    recentDays: recentLocalDates(today).map(date => summarizeDay(profile, profile.records[date], date, weightAt(date))),
     historyDays: coachDates(today, 60).map(date => {
       const record = profile.records[date];
+      const weight = weightAt(date);
       const activities = [...new Set(record?.workouts.map(workout => workout.activity.trim()).filter(Boolean) ?? [])];
       return { date, calories: record?.meals.length ? getCaloriesIngested(record) : null,
-        expenditure: hasEnergyData(record) ? calculateDailyExpenditure(profile, record) : null,
+        expenditure: hasEnergyData(record) ? calculateDailyExpenditure(profile, record, weight) : null,
         mealCount: record?.meals.length ?? 0, workoutCount: record?.workouts.length ?? 0,
         steps: record?.steps ?? 0, water: record?.water ?? 0, weight: record?.weight ?? null,
         activities: activities.slice(0, 2), omittedActivities: Math.max(0, activities.length - 2) };

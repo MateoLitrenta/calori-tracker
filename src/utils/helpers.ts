@@ -1,5 +1,7 @@
 import { format } from 'date-fns';
 import type { ActivityLevel, DailyRecord, DailyRecordsMap, UserProfile } from '../types';
+import { createWeightResolver, resolveWeight } from './profileWeight.ts';
+export { createWeightResolver, resolveWeight } from './profileWeight.ts';
 
 export const formatDateStr = (date: Date) => format(date, 'yyyy-MM-dd');
 
@@ -14,8 +16,8 @@ export const generateUUID = () => {
   });
 };
 
-export const calculateBMR = (profile: UserProfile): number => {
-  const base = 10 * profile.weight + 6.25 * profile.height - 5 * profile.age;
+export const calculateBMR = (profile: UserProfile, weight = resolveWeight(profile)): number => {
+  const base = 10 * weight + 6.25 * profile.height - 5 * profile.age;
   return Math.round(profile.sex === 'Masculino' ? base + 5 : base - 161);
 };
 
@@ -45,12 +47,16 @@ export const getStepCalories = (record: DailyRecord | undefined): number =>
   Math.round((record?.steps ?? 0) * CALORIES_PER_STEP);
 
 // Steps and workouts may overlap. This version uses recorded values without corrections.
-export const calculateDailyExpenditure = (profile: UserProfile, record?: DailyRecord): number =>
-  Math.round(calculateBMR(profile) + getStepCalories(record) + getWorkoutCalories(record));
+export const calculateDailyExpenditure = (profile: UserProfile, record?: DailyRecord,
+  weight = resolveWeight(profile, record?.dateStr)): number =>
+  Math.round(calculateBMR(profile, weight) + getStepCalories(record) + getWorkoutCalories(record));
 
-export const calculateDailyCalorieTarget = (profile: UserProfile, record?: DailyRecord): number =>
-  Math.round(calculateDailyExpenditure(profile, record) + (profile.goal === 'Déficit' ? DEFICIT_ADJUSTMENT
+const adjustedTarget = (profile: UserProfile, expenditure: number) =>
+  Math.round(expenditure + (profile.goal === 'Déficit' ? DEFICIT_ADJUSTMENT
     : profile.goal === 'Superávit' ? SURPLUS_ADJUSTMENT : 0));
+
+export const calculateDailyCalorieTarget = (profile: UserProfile, record?: DailyRecord, weight?: number): number =>
+  adjustedTarget(profile, calculateDailyExpenditure(profile, record, weight));
 
 export const getRemainingCalories = (record: DailyRecord | undefined, dailyTarget: number) =>
   Math.round(dailyTarget - getCaloriesIngested(record));
@@ -68,20 +74,21 @@ export const hasEnergyData = (record: DailyRecord | undefined): record is DailyR
 export const getCaloriesBurned = (record: DailyRecord | undefined, profile: UserProfile) =>
   hasEnergyData(record) ? calculateDailyExpenditure(profile, record) : 0;
 
-export const getEstimatedEnergyBalance = (record: DailyRecord | undefined, profile: UserProfile) => {
+export const getEstimatedEnergyBalance = (record: DailyRecord | undefined, profile: UserProfile, weight?: number) => {
   if (!hasEnergyData(record)) return null;
-  return Math.round(getCaloriesIngested(record) - calculateDailyExpenditure(profile, record));
+  return Math.round(getCaloriesIngested(record) - calculateDailyExpenditure(profile, record, weight));
 };
 
 export const getNetBalance = getEstimatedEnergyBalance;
 
-export const buildDailyEnergyContext = (profile: UserProfile, record?: DailyRecord): string => {
+export const buildDailyEnergyContext = (profile: UserProfile, record?: DailyRecord, date = record?.dateStr): string => {
+  const weight = resolveWeight(profile, date);
   const consumed = getCaloriesIngested(record);
-  const expenditure = calculateDailyExpenditure(profile, record);
+  const expenditure = calculateDailyExpenditure(profile, record, weight);
   const balance = Math.round(consumed - expenditure);
   return `Nombre: ${profile.name}
-Peso actual: ${profile.weight} kg
-TMB: ${calculateBMR(profile)} kcal
+Peso actual: ${weight} kg
+TMB: ${calculateBMR(profile, weight)} kcal
 Calorías consumidas hoy (solo comida/bebida): ${consumed} kcal
 Gasto estimado hoy: ${expenditure} kcal
 Balance energético hoy (consumidas - gasto): ${balance} kcal
@@ -97,7 +104,7 @@ Pasos y ejercicio pueden solaparse; esta versión usa los valores registrados si
 
 // Missing, empty and future days are not assumed to have zero intake.
 export const aggregateEnergy = (records: DailyRecordsMap, dates: string[], profile: UserProfile,
-  today = formatDateStr(new Date())) => {
+  today = formatDateStr(new Date()), weightAt = createWeightResolver(profile, records)) => {
   let consumed = 0;
   let days = 0;
   let expenditure = 0;
@@ -106,8 +113,9 @@ export const aggregateEnergy = (records: DailyRecordsMap, dates: string[], profi
     const record = records[date];
     if (date > today || !hasEnergyData(record)) continue;
     consumed += getCaloriesIngested(record);
-    expenditure += calculateDailyExpenditure(profile, record);
-    target += calculateDailyCalorieTarget(profile, record);
+    const dailyExpenditure = calculateDailyExpenditure(profile, record, weightAt(date));
+    expenditure += dailyExpenditure;
+    target += adjustedTarget(profile, dailyExpenditure);
     days++;
   }
   const balance = days ? Math.round(consumed - expenditure) : null;

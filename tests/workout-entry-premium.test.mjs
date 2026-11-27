@@ -90,7 +90,8 @@ async function mount(t, options = {}) {
         if (userId) setUser(previous => ({ ...previous, user_id: userId }));
       };
     }, [user.recordGeneration]);
-    return React.createElement(DailyPanel, { profile: user, dateStr: date, record: current, records: { [date]: current },
+    const records = { ...options.records, [date]: current };
+    return React.createElement(DailyPanel, { profile: { ...user, records }, dateStr: date, record: current, records,
       onUpdateRecord: async (date, next, writeOptions) => {
         saves.push({ date, record: structuredClone(next) });
         const success = options.save ? await options.save(date, next) : true;
@@ -433,6 +434,26 @@ test('workout estimate renders original long assumptions in expandable secondary
   assert.equal(document.getElementById('add-workout-calories').value, '510');
   assert.match(form.textContent, /Valor ajustado/); assert.match(form.textContent, /485 kcal/);
   await view.submit(); assert.equal(view.saves.length, 1); assert.equal(view.record().workouts[0].calories, 510);
+});
+
+test('explicit workout estimation sends the applicable weight for the open historical form', async t => {
+  const selected = '2026-09-28', prior = '2026-09-27', later = '2026-09-29';
+  const entry = (date, weight) => ({ ...emptyRecord(), dateStr: date, date: new Date(date + 'T12:00:00'), weight });
+  const stored = { id: 'stored', activity: 'Correr', duration: 30, calories: 325, muscles: [], time: '16:00' };
+  const view = await mount(t, {
+    selectedDate: selected,
+    record: { ...entry(selected), workouts: [stored] },
+    records: { [prior]: entry(prior, 78.5), [later]: entry(later, 82) },
+  });
+
+  await view.open();
+  await view.click(view.button('Fútbol'));
+  await view.fill('add-workout-duration', '50');
+  await view.estimate();
+  assert.equal(view.requests.length, 1);
+  assert.deepEqual(view.requests[0].input.profile, { sex: profile.sex, age: profile.age, weight: 78.5, height: profile.height });
+  assert.equal(view.saves.length, 0);
+  assert.deepEqual(view.record().workouts, [stored]);
 });
 
 test('in-flight duplicate clicks make one provider request and a manual calorie edit wins over the late response', async t => {

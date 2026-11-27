@@ -812,7 +812,7 @@ function UserChat({ userId, activeProfile, avatarRevision, updateRecord, coachCo
       if (!activeProfile || activeProfile.user_id !== userId) throw new Error('Esperá a que se cargue tu perfil para consultar al asistente.');
       const coachContext = buildCoachContext(activeProfile, todayStr);
       const systemPrompt = `Contexto diario calculado por Calori.
-${buildDailyEnergyContext(activeProfile, todayRecord)}
+${buildDailyEnergyContext(activeProfile, todayRecord, todayStr)}
 HOY: ${todayStr}.
 AYER: ${yesterdayStr}.
 ANTEAYER: ${dayBeforeStr}.

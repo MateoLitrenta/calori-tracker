@@ -70,6 +70,24 @@ test('water and weight remain visible partial activity without manufacturing an 
   assert.equal(result.category, 'empty');
 });
 
+test('history agrees on daily and period balances when weight changes between logged meals', () => {
+  const before = '2026-11-09', measured = '2026-11-10', after = '2026-11-11';
+  const meal = { id: 'meal', name: 'Comida sintética', type: 'Almuerzo', calories: 1700 };
+  const records = {
+    [before]: day(before, { meals: [meal] }),
+    [measured]: day(measured, { weight: 80 }),
+    [after]: day(after, { meals: [meal] }),
+  };
+  const user = { ...profile, weight: 77, records };
+  assert.equal(getHistoryDay(records[before], before, user, today).balance, 12);
+  assert.equal(getHistoryDay(records[after], after, user, today).balance, -18);
+  assert.equal(getHistoryDay(records[measured], measured, user, today).balance, null);
+  const result = getHistoryPeriod(records, [before, measured, after], user, today);
+  assert.equal(result.summary.expenditure, 3406);
+  assert.equal(result.summary.averageBalance, -3);
+  assert.equal(result.summary.days, 2);
+});
+
 test('missing and empty days remain unknown rather than zero intake or a calculated deficit', () => {
   for (const record of [undefined, day(today)]) {
     const result = getHistoryDay(record, today, profile, today);

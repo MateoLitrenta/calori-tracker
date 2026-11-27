@@ -1,6 +1,7 @@
 import type { DailyRecord, DailyRecordsMap, UserProfile, WorkoutEntry } from '../types';
 import {
   aggregateEnergy,
+  createWeightResolver,
   getBalanceCategory,
   getBalanceLabel,
   getNetBalance,
@@ -43,12 +44,13 @@ export function getHistoryDay(
   date: string,
   profile: UserProfile,
   today: string,
+  weight?: number,
 ) {
   const future = date > today;
   const activity = !future && hasHistoryActivity(record);
   const withMeals = activity && !!record?.meals.length;
   const state = future ? 'future' : !activity ? 'empty' : withMeals ? 'with-meals' : 'partial';
-  const balance = future ? null : getNetBalance(record, profile);
+  const balance = future ? null : getNetBalance(record, profile, weight);
   const canColorBalance = withMeals && balance !== null;
   return {
     state,
@@ -74,6 +76,7 @@ export function getHistoryPeriod(
   dates: readonly string[],
   profile: UserProfile,
   today: string,
+  weightAt?: ReturnType<typeof createWeightResolver>,
 ) {
   const unique = [...new Set(dates)];
   const elapsed = unique.filter((date) => date <= today);
@@ -85,7 +88,7 @@ export function getHistoryPeriod(
   const energyWithoutMeals = elapsed.filter(
     (date) => hasEnergyData(records[date]) && !records[date]?.meals.length,
   ).length;
-  const summary = aggregateEnergy(records, unique, profile, today);
+  const summary = aggregateEnergy(records, unique, profile, today, weightAt);
   const provisional = energyWithoutMeals > 0;
   const canColorBalance = foodDays > 0 && !provisional && summary.averageBalance !== null;
   return {

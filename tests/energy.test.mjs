@@ -98,6 +98,40 @@ test('empty and water/weight-only historical days stay Sin datos', () => {
   assert.equal(getEstimatedEnergyBalance({ ...record('2026-09-01'), water: 500, weight: 70 }, profile), null);
 });
 
+test('daily and period balances carry the applicable weight without rewriting stored entries', () => {
+  const earlierDay = '2026-09-01', measurementDay = '2026-09-02', laterDay = '2026-09-03';
+  const future = '2026-09-06';
+  const earlier = { ...record(earlierDay, 1200), steps: 7000, workouts: [{ calories: 450 }] };
+  const later = { ...earlier, dateStr: laterDay, date: new Date(laterDay) };
+  const records = {
+    [earlierDay]: earlier, [laterDay]: later,
+    [measurementDay]: { ...record(measurementDay), weight: 80 },
+    [future]: { ...record(future, 2000), weight: 90 },
+  };
+  const base = { ...profile, weight: 77, goal: 'Déficit' };
+  const user = { ...base, records };
+  const snapshot = structuredClone(records);
+
+  assert.equal(calculateBMR(user, 77), 1688);
+  assert.equal(calculateBMR(user, 80), 1718);
+  assert.equal(calculateDailyExpenditure(user, earlier), 2418);
+  assert.equal(calculateDailyExpenditure(user, later), 2448);
+  assert.equal(calculateDailyCalorieTarget(user, later), 2048);
+  assert.equal(getEstimatedEnergyBalance(earlier, user), -1218);
+  assert.equal(getEstimatedEnergyBalance(later, user), -1248);
+  assert.match(buildDailyEnergyContext(user, later), /Peso actual: 80 kg\s+TMB: 1718 kcal/);
+
+  // The measurement is outside the subset of requested dates and has no energy of its own.
+  assert.deepEqual(aggregateEnergy(records, [earlierDay, laterDay, laterDay, future], base, laterDay), {
+    consumed: 2400, days: 2, expenditure: 4866, target: 4066, balance: -2466, averageBalance: -1233,
+  });
+
+  const edited = { ...records, [measurementDay]: { ...records[measurementDay], weight: 79 } };
+  assert.equal(aggregateEnergy(edited, [earlierDay], base, laterDay).expenditure, 2418);
+  assert.equal(aggregateEnergy(edited, [laterDay], base, laterDay).expenditure, 2438);
+  assert.deepEqual(records, snapshot);
+});
+
 for (const length of [7, 30, 365]) test(`${length}-day aggregation sums actual unique day records`, () => {
   const dates = Array.from({ length }, (_, i) => new Date(Date.UTC(2026, 0, i + 1)).toISOString().slice(0, 10));
   const records = { [dates[0]]: record(dates[0], 1200),
