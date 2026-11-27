@@ -1,0 +1,5909 @@
+{
+  "browser": "158.0.8127.37",
+  "engine": "chromium",
+  "phase": "after",
+  "cases": [
+    {
+      "width": 320,
+      "height": 568,
+      "theme": "light",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 15,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 4,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 633.15625,
+          "bottom": 669.15625,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 633.15625,
+          "bottom": 669.15625,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 320,
+            "top": 0,
+            "bottom": 64,
+            "width": 320,
+            "height": 64,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 0,
+            "right": 320,
+            "top": 64,
+            "bottom": 179.78125,
+            "width": 320,
+            "height": 115.78125,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 0,
+            "right": 320,
+            "top": 179.78125,
+            "bottom": 428.5,
+            "width": 320,
+            "height": 248.71875,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 155,
+            "top": 446.5,
+            "bottom": 507.5,
+            "width": 139,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 165,
+            "right": 304,
+            "top": 446.5,
+            "bottom": 507.5,
+            "width": 139,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 310,
+            "top": 494,
+            "bottom": 550,
+            "width": 300,
+            "height": 56,
+            "radius": "28px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 31,
+          "text": "15:00 ·",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "235,236,228",
+          "min": 5.81,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "235,236,228",
+            "min": 5.81
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "255,254,250",
+          "min": 6.85,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "255,254,250",
+            "min": 6.85
+          }
+        },
+        "actividad": {
+          "count": 17,
+          "text": "Parcial",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "235,236,228",
+          "min": 5.81,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(146, 65, 17)",
+            "bg": "246,245,239",
+            "min": 6.44
+          }
+        }
+      }
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "theme": "light",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 15,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 8,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 3,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 1740.34375,
+          "bottom": 1776.34375,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 1740.34375,
+          "bottom": 1776.34375,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 320,
+            "top": 0,
+            "bottom": 92,
+            "width": 320,
+            "height": 92,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 0,
+            "right": 320,
+            "top": 92,
+            "bottom": 378.15625,
+            "width": 320,
+            "height": 286.15625,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 0,
+            "right": 320,
+            "top": 378.15625,
+            "bottom": 1173.65625,
+            "width": 320,
+            "height": 795.5,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 304,
+            "top": 1191.65625,
+            "bottom": 1252.65625,
+            "width": 288,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 16,
+            "right": 304,
+            "top": 1262.65625,
+            "bottom": 1323.65625,
+            "width": 288,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 310,
+            "top": 485.203125,
+            "bottom": 550,
+            "width": 300,
+            "height": 64.796875,
+            "radius": "32.4px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ],
+      "focus": [
+        {
+          "text": "Caminata15:00 · Ejercicio · 25 min-100 kcal",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 154.796875
+        },
+        {
+          "text": "Editar peso",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 223.703125
+        },
+        {
+          "text": "Indicadores del calendario",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 192.234375
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "theme": "light",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 4,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 625.5625,
+          "bottom": 661.5625,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 625.5625,
+          "bottom": 661.5625,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 375,
+            "top": 0,
+            "bottom": 64,
+            "width": 375,
+            "height": 64,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 11,
+            "right": 364,
+            "top": 64,
+            "bottom": 197.984375,
+            "width": 353,
+            "height": 133.984375,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 11,
+            "right": 364,
+            "top": 197.984375,
+            "bottom": 446.703125,
+            "width": 353,
+            "height": 248.71875,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 182.5,
+            "top": 464.703125,
+            "bottom": 512.703125,
+            "width": 166.5,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 192.5,
+            "right": 359,
+            "top": 464.703125,
+            "bottom": 512.703125,
+            "width": 166.5,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 365,
+            "top": 734,
+            "bottom": 790,
+            "width": 355,
+            "height": 56,
+            "radius": "28px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 32,
+          "text": "5",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "246,245,239",
+          "min": 6.33,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "235,236,228",
+            "min": 5.81
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "255,254,250",
+          "min": 6.85,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "255,254,250",
+            "min": 6.85
+          }
+        },
+        "actividad": {
+          "count": 34,
+          "text": "Parcial",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "235,236,228",
+          "min": 5.81,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(146, 65, 17)",
+            "bg": "246,245,239",
+            "min": 6.44
+          }
+        }
+      }
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "theme": "light",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 6,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 1627.6875,
+          "bottom": 1663.6875,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 1627.6875,
+          "bottom": 1663.6875,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 375,
+            "top": 0,
+            "bottom": 92,
+            "width": 375,
+            "height": 92,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 11,
+            "right": 364,
+            "top": 92,
+            "bottom": 417.34375,
+            "width": 353,
+            "height": 325.34375,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 11,
+            "right": 364,
+            "top": 417.34375,
+            "bottom": 1176.453125,
+            "width": 353,
+            "height": 759.109375,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 359,
+            "top": 1194.453125,
+            "bottom": 1255.453125,
+            "width": 343,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 16,
+            "right": 359,
+            "top": 1265.453125,
+            "bottom": 1326.453125,
+            "width": 343,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 365,
+            "top": 725.203125,
+            "bottom": 790,
+            "width": 355,
+            "height": 64.796875,
+            "radius": "32.4px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 4,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 608.765625,
+          "bottom": 644.765625,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 608.765625,
+          "bottom": 644.765625,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 390,
+            "top": 0,
+            "bottom": 64,
+            "width": 390,
+            "height": 64,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 12,
+            "right": 378,
+            "top": 64,
+            "bottom": 181.1875,
+            "width": 366,
+            "height": 117.1875,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 12,
+            "right": 378,
+            "top": 181.1875,
+            "bottom": 429.90625,
+            "width": 366,
+            "height": 248.71875,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 190,
+            "top": 447.90625,
+            "bottom": 495.90625,
+            "width": 174,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 200,
+            "right": 374,
+            "top": 447.90625,
+            "bottom": 495.90625,
+            "width": 174,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 380,
+            "top": 766,
+            "bottom": 822,
+            "width": 370,
+            "height": 56,
+            "radius": "28px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 32,
+          "text": "5",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "246,245,239",
+          "min": 6.33,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "235,236,228",
+            "min": 5.81
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "255,254,250",
+          "min": 6.85,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "255,254,250",
+            "min": 6.85
+          }
+        },
+        "actividad": {
+          "count": 35,
+          "text": "Parcial",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "235,236,228",
+          "min": 5.81,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(146, 65, 17)",
+            "bg": "246,245,239",
+            "min": 6.44
+          }
+        }
+      },
+      "focus": [
+        {
+          "text": "Caminata15:00 · Ejercicio · 25 min-100 kcal",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 352.71875
+        },
+        {
+          "text": "Editar peso",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 364.171875
+        },
+        {
+          "text": "Indicadores del calendario",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 360.203125
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 5,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 1471.703125,
+          "bottom": 1507.703125,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 1471.703125,
+          "bottom": 1507.703125,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 390,
+            "top": 0,
+            "bottom": 92,
+            "width": 390,
+            "height": 92,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 12,
+            "right": 378,
+            "top": 92,
+            "bottom": 386.15625,
+            "width": 366,
+            "height": 294.15625,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 12,
+            "right": 378,
+            "top": 386.15625,
+            "bottom": 1041.265625,
+            "width": 366,
+            "height": 655.109375,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 374,
+            "top": 1059.265625,
+            "bottom": 1120.265625,
+            "width": 358,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 16,
+            "right": 374,
+            "top": 1130.265625,
+            "bottom": 1191.265625,
+            "width": 358,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 380,
+            "top": 757.203125,
+            "bottom": 822,
+            "width": 370,
+            "height": 64.796875,
+            "radius": "32.4px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ],
+      "focus": [
+        {
+          "text": "Caminata15:00 · Ejercicio · 25 min-100 kcal",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 290.96875
+        },
+        {
+          "text": "Editar peso",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 359.9375
+        },
+        {
+          "text": "Indicadores del calendario",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 348.375
+        }
+      ]
+    },
+    {
+      "width": 440,
+      "height": 956,
+      "theme": "light",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 3,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 599.171875,
+          "bottom": 635.171875,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 599.171875,
+          "bottom": 635.171875,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 440,
+            "top": 0,
+            "bottom": 64,
+            "width": 440,
+            "height": 64,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 12,
+            "right": 428,
+            "top": 64,
+            "bottom": 181.1875,
+            "width": 416,
+            "height": 117.1875,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 12,
+            "right": 428,
+            "top": 181.1875,
+            "bottom": 430.703125,
+            "width": 416,
+            "height": 249.515625,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 215,
+            "top": 448.703125,
+            "bottom": 496.703125,
+            "width": 199,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 225,
+            "right": 424,
+            "top": 448.703125,
+            "bottom": 496.703125,
+            "width": 199,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 430,
+            "top": 878,
+            "bottom": 934,
+            "width": 420,
+            "height": 56,
+            "radius": "28px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 30,
+          "text": "5",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "246,245,239",
+          "min": 6.33,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "235,236,228",
+            "min": 5.81
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "255,254,250",
+          "min": 6.85,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "255,254,250",
+            "min": 6.85
+          }
+        },
+        "actividad": {
+          "count": 35,
+          "text": "Parcial",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "235,236,228",
+          "min": 5.81,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(146, 65, 17)",
+            "bg": "246,245,239",
+            "min": 6.44
+          }
+        }
+      }
+    },
+    {
+      "width": 440,
+      "height": 956,
+      "theme": "light",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 4,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 1322.125,
+          "bottom": 1358.125,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 1322.125,
+          "bottom": 1358.125,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 440,
+            "top": 0,
+            "bottom": 92,
+            "width": 440,
+            "height": 92,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 12,
+            "right": 428,
+            "top": 92,
+            "bottom": 318.96875,
+            "width": 416,
+            "height": 226.96875,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 12,
+            "right": 428,
+            "top": 318.96875,
+            "bottom": 912.484375,
+            "width": 416,
+            "height": 593.515625,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 424,
+            "top": 930.484375,
+            "bottom": 991.484375,
+            "width": 408,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 16,
+            "right": 424,
+            "top": 1001.484375,
+            "bottom": 1062.484375,
+            "width": 408,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 430,
+            "top": 869.203125,
+            "bottom": 934,
+            "width": 420,
+            "height": 64.796875,
+            "radius": "32.4px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ]
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "light",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 293,
+          "right": 329,
+          "top": 641.5625,
+          "bottom": 677.5625,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 293,
+          "right": 329,
+          "top": 641.5625,
+          "bottom": 677.5625,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 24,
+            "bottom": 84,
+            "width": 454,
+            "height": 60,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 84,
+            "bottom": 210.78125,
+            "width": 454,
+            "height": 126.78125,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 210.78125,
+            "bottom": 479.5,
+            "width": 454,
+            "height": 268.71875,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 280,
+            "right": 502,
+            "top": 501.5,
+            "bottom": 549.5,
+            "width": 222,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 512,
+            "right": 734,
+            "top": 501.5,
+            "bottom": 549.5,
+            "width": 222,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "28px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 12,
+            "right": 256,
+            "top": 12,
+            "bottom": 1012,
+            "width": 244,
+            "height": 1000,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 29,
+          "text": "5",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "246,245,239",
+          "min": 6.33,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "235,236,228",
+            "min": 5.81
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "255,254,250",
+          "min": 6.85,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "255,254,250",
+            "min": 6.85
+          }
+        },
+        "actividad": {
+          "count": 34,
+          "text": "Parcial",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "235,236,228",
+          "min": 5.81,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(146, 65, 17)",
+            "bg": "246,245,239",
+            "min": 6.44
+          }
+        }
+      }
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "light",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 4,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 293,
+          "right": 329,
+          "top": 1252.21875,
+          "bottom": 1288.21875,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 293,
+          "right": 329,
+          "top": 1252.21875,
+          "bottom": 1288.21875,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 24,
+            "bottom": 112,
+            "width": 454,
+            "height": 88,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 112,
+            "bottom": 359.375,
+            "width": 454,
+            "height": 247.375,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 359.375,
+            "bottom": 882.890625,
+            "width": 454,
+            "height": 523.515625,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 904.890625,
+            "bottom": 965.890625,
+            "width": 454,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 975.890625,
+            "bottom": 1036.890625,
+            "width": 454,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "32.4px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 12,
+            "right": 256,
+            "top": 12,
+            "bottom": 1012,
+            "width": 244,
+            "height": 1000,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "theme": "light",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 726.609375,
+          "right": 762.609375,
+          "top": 483.609375,
+          "bottom": 519.609375,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 726.609375,
+          "right": 762.609375,
+          "top": 483.609375,
+          "bottom": 519.609375,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 280,
+            "right": 1246,
+            "top": 24,
+            "bottom": 94,
+            "width": 966,
+            "height": 70,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 280,
+            "right": 1246,
+            "top": 94,
+            "bottom": 201.171875,
+            "width": 966,
+            "height": 107.171875,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 280,
+            "right": 1246,
+            "top": 201.171875,
+            "bottom": 395.546875,
+            "width": 966,
+            "height": 194.375,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 280,
+            "right": 475.796875,
+            "top": 417.546875,
+            "bottom": 465.546875,
+            "width": 195.796875,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 485.796875,
+            "right": 681.609375,
+            "top": 417.546875,
+            "bottom": 465.546875,
+            "width": 195.8125,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "28px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 12,
+            "right": 256,
+            "top": 12,
+            "bottom": 788,
+            "width": 244,
+            "height": 776,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 29,
+          "text": "5",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "246,245,239",
+          "min": 6.33,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "235,236,228",
+            "min": 5.81
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "255,254,250",
+          "min": 6.85,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "255,254,250",
+            "min": 6.85
+          }
+        },
+        "actividad": {
+          "count": 36,
+          "text": "Parcial",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "235,236,228",
+          "min": 5.81,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(146, 65, 17)",
+            "bg": "241,233,219",
+            "min": 5.83
+          }
+        }
+      }
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "theme": "light",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 3,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 726.609375,
+          "right": 762.609375,
+          "top": 1090.875,
+          "bottom": 1126.875,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 726.609375,
+          "right": 762.609375,
+          "top": 1090.875,
+          "bottom": 1126.875,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 280,
+            "right": 1246,
+            "top": 24,
+            "bottom": 112,
+            "width": 966,
+            "height": 88,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 280,
+            "right": 1246,
+            "top": 112,
+            "bottom": 366.765625,
+            "width": 966,
+            "height": 254.765625,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 280,
+            "right": 1246,
+            "top": 366.765625,
+            "bottom": 900.34375,
+            "width": 966,
+            "height": 533.578125,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 280,
+            "right": 681.609375,
+            "top": 922.34375,
+            "bottom": 983.34375,
+            "width": 401.609375,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 280,
+            "right": 681.609375,
+            "top": 993.34375,
+            "bottom": 1054.34375,
+            "width": 401.609375,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "32.4px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 12,
+            "right": 256,
+            "top": 12,
+            "bottom": 788,
+            "width": 244,
+            "height": 776,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 795.40625,
+          "right": 831.40625,
+          "top": 463.21875,
+          "bottom": 499.21875,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 795.40625,
+          "right": 831.40625,
+          "top": 463.21875,
+          "bottom": 499.21875,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 280,
+            "right": 1406,
+            "top": 24,
+            "bottom": 94,
+            "width": 1126,
+            "height": 70,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 280,
+            "right": 1406,
+            "top": 94,
+            "bottom": 180.78125,
+            "width": 1126,
+            "height": 86.78125,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 280,
+            "right": 1406,
+            "top": 180.78125,
+            "bottom": 375.15625,
+            "width": 1126,
+            "height": 194.375,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 280,
+            "right": 510.203125,
+            "top": 397.15625,
+            "bottom": 445.15625,
+            "width": 230.203125,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 520.203125,
+            "right": 750.40625,
+            "top": 397.15625,
+            "bottom": 445.15625,
+            "width": 230.203125,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "28px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 12,
+            "right": 256,
+            "top": 12,
+            "bottom": 888,
+            "width": 244,
+            "height": 876,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 29,
+          "text": "5",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "246,245,239",
+          "min": 6.33,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "235,236,228",
+            "min": 5.81
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "255,254,250",
+          "min": 6.85,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(80, 93, 85)",
+            "bg": "255,254,250",
+            "min": 6.85
+          }
+        },
+        "actividad": {
+          "count": 36,
+          "text": "Parcial",
+          "fg": "rgb(80, 93, 85)",
+          "bg": "235,236,228",
+          "min": 5.81,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(146, 65, 17)",
+            "bg": "241,233,219",
+            "min": 5.83
+          }
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 4,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 795.40625,
+          "right": 831.40625,
+          "top": 869.6875,
+          "bottom": 905.6875,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 795.40625,
+          "right": 831.40625,
+          "top": 869.6875,
+          "bottom": 905.6875,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 280,
+            "right": 1406,
+            "top": 24,
+            "bottom": 112,
+            "width": 1126,
+            "height": 88,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 280,
+            "right": 1406,
+            "top": 112,
+            "bottom": 292.375,
+            "width": 1126,
+            "height": 180.375,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(241, 233, 219)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(203, 206, 196) 1px 0px 0px 0px inset, rgb(203, 206, 196) -1px 0px 0px 0px inset, rgb(203, 206, 196) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.8) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 280,
+            "right": 1406,
+            "top": 292.375,
+            "bottom": 681.953125,
+            "width": 1126,
+            "height": 389.578125,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgb(203, 206, 196) 0px 0px 0px 1px inset, rgba(36, 27, 20, 0.14) 0px -2px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 280,
+            "right": 750.40625,
+            "top": 703.953125,
+            "bottom": 764.953125,
+            "width": 470.40625,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.35) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 280,
+            "right": 750.40625,
+            "top": 774.953125,
+            "bottom": 835.953125,
+            "width": 470.40625,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 254, 250)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "32.4px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.72)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 12,
+            "right": 256,
+            "top": 12,
+            "bottom": 888,
+            "width": 244,
+            "height": 876,
+            "radius": "26px",
+            "fill": "color(srgb 1 0.996078 0.980392 / 0.83)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.19), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.8) 0px 1px 0px 0px inset, rgba(36, 27, 20, 0.14) 0px -1px 0px 0px inset, rgba(32, 38, 30, 0.12) 0px 1px 2px 0px, rgba(32, 38, 30, 0.12) 0px 7px 22px 0px"
+          }
+        ]
+      ]
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "theme": "dark",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 15,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 4,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 633.15625,
+          "bottom": 669.15625,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 633.15625,
+          "bottom": 669.15625,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 320,
+            "top": 0,
+            "bottom": 64,
+            "width": 320,
+            "height": 64,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 0,
+            "right": 320,
+            "top": 64,
+            "bottom": 179.78125,
+            "width": 320,
+            "height": 115.78125,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 0,
+            "right": 320,
+            "top": 179.78125,
+            "bottom": 428.5,
+            "width": 320,
+            "height": 248.71875,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 155,
+            "top": 446.5,
+            "bottom": 507.5,
+            "width": 139,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 165,
+            "right": 304,
+            "top": 446.5,
+            "bottom": 507.5,
+            "width": 139,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 310,
+            "top": 494,
+            "bottom": 550,
+            "width": 300,
+            "height": 56,
+            "radius": "28px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 31,
+          "text": "15:00 ·",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "38,46,43",
+          "min": 7.77,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "38,46,43",
+            "min": 7.77
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "26,33,31",
+            "min": 9.15
+          }
+        },
+        "actividad": {
+          "count": 17,
+          "text": "9",
+          "fg": "rgb(245, 244, 238)",
+          "bg": "57,104,78",
+          "min": 5.84,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(255, 172, 114)",
+            "bg": "16,21,21",
+            "min": 10
+          }
+        }
+      }
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "theme": "dark",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 15,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 8,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 3,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 1740.34375,
+          "bottom": 1776.34375,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 1740.34375,
+          "bottom": 1776.34375,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 320,
+            "top": 0,
+            "bottom": 92,
+            "width": 320,
+            "height": 92,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 0,
+            "right": 320,
+            "top": 92,
+            "bottom": 378.15625,
+            "width": 320,
+            "height": 286.15625,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 0,
+            "right": 320,
+            "top": 378.15625,
+            "bottom": 1173.65625,
+            "width": 320,
+            "height": 795.5,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 304,
+            "top": 1191.65625,
+            "bottom": 1252.65625,
+            "width": 288,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 16,
+            "right": 304,
+            "top": 1262.65625,
+            "bottom": 1323.65625,
+            "width": 288,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 310,
+            "top": 485.203125,
+            "bottom": 550,
+            "width": 300,
+            "height": 64.796875,
+            "radius": "32.4px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ],
+      "focus": [
+        {
+          "text": "Caminata15:00 · Ejercicio · 25 min-100 kcal",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 154.796875
+        },
+        {
+          "text": "Editar peso",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 223.703125
+        },
+        {
+          "text": "Indicadores del calendario",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 198.234375
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "theme": "dark",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 4,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 625.5625,
+          "bottom": 661.5625,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 625.5625,
+          "bottom": 661.5625,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 375,
+            "top": 0,
+            "bottom": 64,
+            "width": 375,
+            "height": 64,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 11,
+            "right": 364,
+            "top": 64,
+            "bottom": 197.984375,
+            "width": 353,
+            "height": 133.984375,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 11,
+            "right": 364,
+            "top": 197.984375,
+            "bottom": 446.703125,
+            "width": 353,
+            "height": 248.71875,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 182.5,
+            "top": 464.703125,
+            "bottom": 512.703125,
+            "width": 166.5,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 192.5,
+            "right": 359,
+            "top": 464.703125,
+            "bottom": 512.703125,
+            "width": 166.5,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 365,
+            "top": 734,
+            "bottom": 790,
+            "width": 355,
+            "height": 56,
+            "radius": "28px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 32,
+          "text": "08:30 ·",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "38,46,43",
+            "min": 7.77
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "26,33,31",
+            "min": 9.15
+          }
+        },
+        "actividad": {
+          "count": 34,
+          "text": "9",
+          "fg": "rgb(245, 244, 238)",
+          "bg": "57,104,78",
+          "min": 5.84,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(255, 172, 114)",
+            "bg": "16,21,21",
+            "min": 10
+          }
+        }
+      }
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "theme": "dark",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 6,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 1627.6875,
+          "bottom": 1663.6875,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 1627.6875,
+          "bottom": 1663.6875,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 375,
+            "top": 0,
+            "bottom": 92,
+            "width": 375,
+            "height": 92,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 11,
+            "right": 364,
+            "top": 92,
+            "bottom": 417.34375,
+            "width": 353,
+            "height": 325.34375,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 11,
+            "right": 364,
+            "top": 417.34375,
+            "bottom": 1176.453125,
+            "width": 353,
+            "height": 759.109375,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 359,
+            "top": 1194.453125,
+            "bottom": 1255.453125,
+            "width": 343,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 16,
+            "right": 359,
+            "top": 1265.453125,
+            "bottom": 1326.453125,
+            "width": 343,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 365,
+            "top": 725.203125,
+            "bottom": 790,
+            "width": 355,
+            "height": 64.796875,
+            "radius": "32.4px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 4,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 608.765625,
+          "bottom": 644.765625,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 608.765625,
+          "bottom": 644.765625,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 390,
+            "top": 0,
+            "bottom": 64,
+            "width": 390,
+            "height": 64,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 12,
+            "right": 378,
+            "top": 64,
+            "bottom": 181.1875,
+            "width": 366,
+            "height": 117.1875,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 12,
+            "right": 378,
+            "top": 181.1875,
+            "bottom": 429.90625,
+            "width": 366,
+            "height": 248.71875,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 190,
+            "top": 447.90625,
+            "bottom": 495.90625,
+            "width": 174,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 200,
+            "right": 374,
+            "top": 447.90625,
+            "bottom": 495.90625,
+            "width": 174,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 380,
+            "top": 766,
+            "bottom": 822,
+            "width": 370,
+            "height": 56,
+            "radius": "28px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 32,
+          "text": "08:30 ·",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "38,46,43",
+            "min": 7.77
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "26,33,31",
+            "min": 9.15
+          }
+        },
+        "actividad": {
+          "count": 35,
+          "text": "9",
+          "fg": "rgb(245, 244, 238)",
+          "bg": "57,104,78",
+          "min": 5.84,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(255, 172, 114)",
+            "bg": "16,21,21",
+            "min": 10
+          }
+        }
+      },
+      "focus": [
+        {
+          "text": "Caminata15:00 · Ejercicio · 25 min-100 kcal",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 352.71875
+        },
+        {
+          "text": "Editar peso",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 364.171875
+        },
+        {
+          "text": "Indicadores del calendario",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 366.203125
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 5,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 1471.703125,
+          "bottom": 1507.703125,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 1471.703125,
+          "bottom": 1507.703125,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 390,
+            "top": 0,
+            "bottom": 92,
+            "width": 390,
+            "height": 92,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 12,
+            "right": 378,
+            "top": 92,
+            "bottom": 386.15625,
+            "width": 366,
+            "height": 294.15625,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 12,
+            "right": 378,
+            "top": 386.15625,
+            "bottom": 1041.265625,
+            "width": 366,
+            "height": 655.109375,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 374,
+            "top": 1059.265625,
+            "bottom": 1120.265625,
+            "width": 358,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 16,
+            "right": 374,
+            "top": 1130.265625,
+            "bottom": 1191.265625,
+            "width": 358,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 380,
+            "top": 757.203125,
+            "bottom": 822,
+            "width": 370,
+            "height": 64.796875,
+            "radius": "32.4px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ],
+      "focus": [
+        {
+          "text": "Caminata15:00 · Ejercicio · 25 min-100 kcal",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 290.96875
+        },
+        {
+          "text": "Editar peso",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 359.9375
+        },
+        {
+          "text": "Indicadores del calendario",
+          "active": true,
+          "focus": true,
+          "outline": "solid",
+          "hit": true,
+          "gap": 354.375
+        }
+      ]
+    },
+    {
+      "width": 440,
+      "height": 956,
+      "theme": "dark",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 3,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 599.171875,
+          "bottom": 635.171875,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 599.171875,
+          "bottom": 635.171875,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 440,
+            "top": 0,
+            "bottom": 64,
+            "width": 440,
+            "height": 64,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 12,
+            "right": 428,
+            "top": 64,
+            "bottom": 181.1875,
+            "width": 416,
+            "height": 117.1875,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 12,
+            "right": 428,
+            "top": 181.1875,
+            "bottom": 430.703125,
+            "width": 416,
+            "height": 249.515625,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 215,
+            "top": 448.703125,
+            "bottom": 496.703125,
+            "width": 199,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 225,
+            "right": 424,
+            "top": 448.703125,
+            "bottom": 496.703125,
+            "width": 199,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 430,
+            "top": 878,
+            "bottom": 934,
+            "width": 420,
+            "height": 56,
+            "radius": "28px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 30,
+          "text": "08:30 ·",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "38,46,43",
+            "min": 7.77
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "26,33,31",
+            "min": 9.15
+          }
+        },
+        "actividad": {
+          "count": 35,
+          "text": "9",
+          "fg": "rgb(245, 244, 238)",
+          "bg": "57,104,78",
+          "min": 5.84,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(255, 172, 114)",
+            "bg": "16,21,21",
+            "min": 10
+          }
+        }
+      }
+    },
+    {
+      "width": 440,
+      "height": 956,
+      "theme": "dark",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 4,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 29,
+          "right": 65,
+          "top": 1322.125,
+          "bottom": 1358.125,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 29,
+          "right": 65,
+          "top": 1322.125,
+          "bottom": 1358.125,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 0,
+            "right": 440,
+            "top": 0,
+            "bottom": 92,
+            "width": 440,
+            "height": 92,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 12,
+            "right": 428,
+            "top": 92,
+            "bottom": 318.96875,
+            "width": 416,
+            "height": 226.96875,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 12,
+            "right": 428,
+            "top": 318.96875,
+            "bottom": 912.484375,
+            "width": 416,
+            "height": 593.515625,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 16,
+            "right": 424,
+            "top": 930.484375,
+            "bottom": 991.484375,
+            "width": 408,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 16,
+            "right": 424,
+            "top": 1001.484375,
+            "bottom": 1062.484375,
+            "width": 408,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 10,
+            "right": 430,
+            "top": 869.203125,
+            "bottom": 934,
+            "width": 420,
+            "height": 64.796875,
+            "radius": "32.4px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ]
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "dark",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 293,
+          "right": 329,
+          "top": 641.5625,
+          "bottom": 677.5625,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 293,
+          "right": 329,
+          "top": 641.5625,
+          "bottom": 677.5625,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 24,
+            "bottom": 84,
+            "width": 454,
+            "height": 60,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 84,
+            "bottom": 210.78125,
+            "width": 454,
+            "height": 126.78125,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 210.78125,
+            "bottom": 479.5,
+            "width": 454,
+            "height": 268.71875,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 280,
+            "right": 502,
+            "top": 501.5,
+            "bottom": 549.5,
+            "width": 222,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 512,
+            "right": 734,
+            "top": 501.5,
+            "bottom": 549.5,
+            "width": 222,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "28px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 12,
+            "right": 256,
+            "top": 12,
+            "bottom": 1012,
+            "width": 244,
+            "height": 1000,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 29,
+          "text": "08:30 ·",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "38,46,43",
+            "min": 7.77
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "26,33,31",
+            "min": 9.15
+          }
+        },
+        "actividad": {
+          "count": 34,
+          "text": "9",
+          "fg": "rgb(245, 244, 238)",
+          "bg": "57,104,78",
+          "min": 5.84,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(255, 172, 114)",
+            "bg": "16,21,21",
+            "min": 10
+          }
+        }
+      }
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "dark",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 4,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 293,
+          "right": 329,
+          "top": 1252.21875,
+          "bottom": 1288.21875,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 293,
+          "right": 329,
+          "top": 1252.21875,
+          "bottom": 1288.21875,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 24,
+            "bottom": 112,
+            "width": 454,
+            "height": 88,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 112,
+            "bottom": 359.375,
+            "width": 454,
+            "height": 247.375,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 359.375,
+            "bottom": 882.890625,
+            "width": 454,
+            "height": 523.515625,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 904.890625,
+            "bottom": 965.890625,
+            "width": 454,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 280,
+            "right": 734,
+            "top": 975.890625,
+            "bottom": 1036.890625,
+            "width": 454,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "32.4px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 12,
+            "right": 256,
+            "top": 12,
+            "bottom": 1012,
+            "width": 244,
+            "height": 1000,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "theme": "dark",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 726.609375,
+          "right": 762.609375,
+          "top": 483.609375,
+          "bottom": 519.609375,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 726.609375,
+          "right": 762.609375,
+          "top": 483.609375,
+          "bottom": 519.609375,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 280,
+            "right": 1246,
+            "top": 24,
+            "bottom": 94,
+            "width": 966,
+            "height": 70,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 280,
+            "right": 1246,
+            "top": 94,
+            "bottom": 201.171875,
+            "width": 966,
+            "height": 107.171875,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 280,
+            "right": 1246,
+            "top": 201.171875,
+            "bottom": 395.546875,
+            "width": 966,
+            "height": 194.375,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 280,
+            "right": 475.796875,
+            "top": 417.546875,
+            "bottom": 465.546875,
+            "width": 195.796875,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 485.796875,
+            "right": 681.609375,
+            "top": 417.546875,
+            "bottom": 465.546875,
+            "width": 195.8125,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "28px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 12,
+            "right": 256,
+            "top": 12,
+            "bottom": 788,
+            "width": 244,
+            "height": 776,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 29,
+          "text": "08:30 ·",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "38,46,43",
+            "min": 7.77
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "26,33,31",
+            "min": 9.15
+          }
+        },
+        "actividad": {
+          "count": 36,
+          "text": "9",
+          "fg": "rgb(245, 244, 238)",
+          "bg": "57,104,78",
+          "min": 5.84,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(255, 172, 114)",
+            "bg": "32,39,39",
+            "min": 8.25
+          }
+        }
+      }
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "theme": "dark",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 3,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 726.609375,
+          "right": 762.609375,
+          "top": 1090.875,
+          "bottom": 1126.875,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 726.609375,
+          "right": 762.609375,
+          "top": 1090.875,
+          "bottom": 1126.875,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 280,
+            "right": 1246,
+            "top": 24,
+            "bottom": 112,
+            "width": 966,
+            "height": 88,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 280,
+            "right": 1246,
+            "top": 112,
+            "bottom": 366.765625,
+            "width": 966,
+            "height": 254.765625,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 280,
+            "right": 1246,
+            "top": 366.765625,
+            "bottom": 900.34375,
+            "width": 966,
+            "height": 533.578125,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 280,
+            "right": 681.609375,
+            "top": 922.34375,
+            "bottom": 983.34375,
+            "width": 401.609375,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 280,
+            "right": 681.609375,
+            "top": 993.34375,
+            "bottom": 1054.34375,
+            "width": 401.609375,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "32.4px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 12,
+            "right": 256,
+            "top": 12,
+            "bottom": 788,
+            "width": 244,
+            "height": 776,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 2,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 795.40625,
+          "right": 831.40625,
+          "top": 463.21875,
+          "bottom": 499.21875,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 795.40625,
+          "right": 831.40625,
+          "top": 463.21875,
+          "bottom": 499.21875,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 6,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 280,
+            "right": 1406,
+            "top": 24,
+            "bottom": 94,
+            "width": 1126,
+            "height": 70,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 280,
+            "right": 1406,
+            "top": 94,
+            "bottom": 180.78125,
+            "width": 1126,
+            "height": 86.78125,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 280,
+            "right": 1406,
+            "top": 180.78125,
+            "bottom": 375.15625,
+            "width": 1126,
+            "height": 194.375,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 280,
+            "right": 510.203125,
+            "top": 397.15625,
+            "bottom": 445.15625,
+            "width": 230.203125,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 520.203125,
+            "right": 750.40625,
+            "top": 397.15625,
+            "bottom": 445.15625,
+            "width": 230.203125,
+            "height": 48,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "28px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 12,
+            "right": 256,
+            "top": 12,
+            "bottom": 888,
+            "width": 244,
+            "height": 876,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ],
+      "contrast": {
+        "registros": {
+          "count": 29,
+          "text": "08:30 ·",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 7,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "38,46,43",
+            "min": 7.77
+          }
+        },
+        "habitos": {
+          "count": 13,
+          "text": "Agua",
+          "fg": "rgb(186, 196, 189)",
+          "bg": "26,33,31",
+          "min": 9.15,
+          "icons": {
+            "count": 3,
+            "text": "",
+            "fg": "rgb(186, 196, 189)",
+            "bg": "26,33,31",
+            "min": 9.15
+          }
+        },
+        "actividad": {
+          "count": 36,
+          "text": "9",
+          "fg": "rgb(245, 244, 238)",
+          "bg": "57,104,78",
+          "min": 5.84,
+          "icons": {
+            "count": 2,
+            "text": "",
+            "fg": "rgb(255, 172, 114)",
+            "bg": "32,39,39",
+            "min": 8.25
+          }
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "overflow": 0,
+      "sections": {
+        "registros": {
+          "count": 5,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "habitos": {
+          "count": 7,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        },
+        "actividad": {
+          "count": 50,
+          "minimum": 44,
+          "short": [],
+          "clipped": [],
+          "reduced": true
+        }
+      },
+      "rows": [
+        {
+          "title": "Bowl de quinoa con tomates cherry, huevos duros y sándwich de miga",
+          "kcal": "+1.100 kcal",
+          "lines": 4,
+          "overlap": false
+        },
+        {
+          "title": "Gimnasio",
+          "kcal": "-250 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Arroz con verduras y pollo",
+          "kcal": "+750 kcal",
+          "lines": 1,
+          "overlap": false
+        },
+        {
+          "title": "Caminata",
+          "kcal": "-100 kcal",
+          "lines": 1,
+          "overlap": false
+        }
+      ],
+      "photo": {
+        "frame": {
+          "left": 795.40625,
+          "right": 831.40625,
+          "top": 869.6875,
+          "bottom": 905.6875,
+          "width": 36,
+          "height": 36
+        },
+        "image": {
+          "left": 795.40625,
+          "right": 831.40625,
+          "top": 869.6875,
+          "bottom": 905.6875,
+          "width": 36,
+          "height": 36
+        }
+      },
+      "recordsDisclosureGap": 9.75,
+      "orange": "#ff9a53",
+      "approved": [
+        [
+          ".home-header",
+          {
+            "left": 280,
+            "right": 1406,
+            "top": 24,
+            "bottom": 112,
+            "width": 1126,
+            "height": 88,
+            "radius": "0px",
+            "fill": "rgba(0, 0, 0, 0)",
+            "surface": "none",
+            "shadow": "none"
+          }
+        ],
+        [
+          ".home-date-nav",
+          {
+            "left": 280,
+            "right": 1406,
+            "top": 112,
+            "bottom": 292.375,
+            "width": 1126,
+            "height": 180.375,
+            "radius": "26px 26px 0px 0px",
+            "fill": "rgb(32, 39, 39)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgb(65, 75, 69) 1px 0px 0px 0px inset, rgb(65, 75, 69) -1px 0px 0px 0px inset, rgb(65, 75, 69) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.22) 0px 2px 0px 0px inset"
+          }
+        ],
+        [
+          ".energy-card",
+          {
+            "left": 280,
+            "right": 1406,
+            "top": 292.375,
+            "bottom": 681.953125,
+            "width": 1126,
+            "height": 389.578125,
+            "radius": "0px 0px 26px 26px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgb(65, 75, 69) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.48) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:first-child",
+          {
+            "left": 280,
+            "right": 750.40625,
+            "top": 703.953125,
+            "bottom": 764.953125,
+            "width": 470.40625,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(255, 154, 83)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.13) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".daily-quick-actions button:last-child",
+          {
+            "left": 280,
+            "right": 750.40625,
+            "top": 774.953125,
+            "bottom": 835.953125,
+            "width": 470.40625,
+            "height": 61,
+            "radius": "14px",
+            "fill": "rgb(26, 33, 31)",
+            "surface": "none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px"
+          }
+        ],
+        [
+          ".bottom-nav-track",
+          {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "radius": "32.4px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.78)",
+            "surface": "radial-gradient(92% 12px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ],
+        [
+          ".app-sidebar",
+          {
+            "left": 12,
+            "right": 256,
+            "top": 12,
+            "bottom": 888,
+            "width": 244,
+            "height": 876,
+            "radius": "26px",
+            "fill": "color(srgb 0.101961 0.129412 0.121569 / 0.85)",
+            "surface": "radial-gradient(92% 38px at 16% 0%, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0)), none",
+            "shadow": "rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.48) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.38) 0px 1px 2px 0px, rgba(0, 0, 0, 0.33) 0px 8px 22px 0px"
+          }
+        ]
+      ]
+    }
+  ],
+  "warnings": [],
+  "datosControl": {
+    "width": 390,
+    "height": 766,
+    "equal": true
+  }
+}

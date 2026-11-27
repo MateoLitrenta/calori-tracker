@@ -1,12 +1,18 @@
 # Estado actual de Calori
 
-## Liquid Glass · Inicio etapa 2A
+## Liquid Glass · Inicio etapa 2B
+
+La rama parte del merge de #104 en `bf7fe5515a5f27edb2686c088c0110994d58e5b9`. Registros agrupa las filas en una superficie sólida. Hábitos incorpora tarjetas compactas con blancos táctiles de 44 px. Tu actividad lleva las curvas y el borde de Inicio al selector, calendarios y superficies de detalle. La navegación y la composición superior de Inicio 2A se conservan.
+
+[Decisiones, comparativas y recorrido de revisión](evidence/liquid-glass-home-2b/README.md)
+
+## Liquid Glass · Inicio etapa 2A integrada en el PR #104
 
 La etapa parte del merge de navegación Liquid Glass del PR #103, `cee76612a4352e82f626fc4eaf2951998f792e9c`. El encabezado de Inicio enlaza con un panel redondeado para el calendario semanal y el balance. La superficie de lectura es sólida y usa el borde óptico y la sombra de la navegación. La selección del día y el botón Agregar comida toman el naranja de Calori. Las dos acciones conservan su disposición responsive y sus formularios.
 
 [Decisiones, comparativas y verificación](evidence/liquid-glass-home/README.md)
 
-La revisión del candidato `27f20caffeb976e57c4beffaa79a606d0c993184` aprobó la composición de Inicio 2A. En el mismo Draft se suma una separación inferior de 12 a 16 px a la cápsula móvil. El área segura sigue a cargo del navegador. Las reservas de contenido y avisos toman la altura y el nuevo margen de la cápsula.
+La revisión del candidato `27f20caffeb976e57c4beffaa79a606d0c993184` aprobó la composición de Inicio 2A. El mismo PR integró una separación inferior adicional de 12 a 16 px para la cápsula móvil. El área segura sigue a cargo del navegador. Las reservas de contenido y avisos toman la altura y el nuevo margen de la cápsula.
 
 [Mediciones y recorrido de revisión en Safari](evidence/liquid-glass-home/ajuste-altura-nav/README.md)
 
