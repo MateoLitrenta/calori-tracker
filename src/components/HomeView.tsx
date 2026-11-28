@@ -169,11 +169,13 @@ export default function HomeView({ activeProfile, updateRecord, habitDrafts, vie
         onReturnToHistory={state.openedFromHistory ? returnToHistory : undefined}
       />
       <div className="home-history">
-        <button type="button" className="home-history-toggle" aria-expanded={historyExpanded} aria-controls={historyId}
-          onClick={() => setHistoryDisclosure({ ownerId, expanded: !historyExpanded })}>
-          <span><strong>Historial y tendencias</strong><small>Explorá tus semanas, meses y años</small></span>
-          {historyExpanded ? <CaretUp size={19} aria-hidden="true" /> : <CaretDown size={19} aria-hidden="true" />}
-        </button>
+        <h2 className="home-history-heading">
+          <button type="button" className="home-history-toggle" aria-expanded={historyExpanded} aria-controls={historyId}
+            onClick={() => setHistoryDisclosure({ ownerId, expanded: !historyExpanded })}>
+            <span>Tu actividad</span>
+            {historyExpanded ? <CaretUp size={19} aria-hidden="true" /> : <CaretDown size={19} aria-hidden="true" />}
+          </button>
+        </h2>
         <div id={historyId} className="home-history-content" hidden={!historyExpanded}>
           <Heatmap
             records={records}

@@ -279,6 +279,8 @@ test('week and month label empty and future dates with separate markers and no i
     assert.equal(empty.dataset.balance, 'empty');
     assert.match(empty.getAttribute('aria-label'), /sin registros/i);
     assert.equal(empty.querySelector('.ah-day-state--empty').getAttribute('aria-hidden'), 'true');
+    assert.equal(view.day(futureEmpty).querySelector('.ah-day-state--future').textContent.trim(), '',
+      'A future date without activity displays only its muted date number');
 
     for (const date of [future, futureEmpty]) {
       const cell = view.day(date);
@@ -290,7 +292,8 @@ test('week and month label empty and future dates with separate markers and no i
       assert.equal(cell.querySelector('.ah-day-state--future').getAttribute('aria-hidden'), 'true');
       assert.equal(cell.querySelector('.ah-day-state--empty'), null);
       assert.doesNotMatch(cell.textContent, /-600/);
-      assert.equal(cell.textContent.includes('Con registros'), date === future);
+      assert.equal(cell.textContent.includes('Con datos'), date === future);
+      assert.equal(cell.getAttribute('aria-label').includes('1 comida'), date === future);
     }
     assert.match(document.querySelector('.ah-period-note').textContent, /Sin registros hasta hoy/);
     assert.match(document.querySelector('.ah-key').textContent, /Sin registros.*Fecha futura/s);
@@ -711,6 +714,55 @@ test('the year exposes twelve real months and one activation drills into the cho
   await view.selectDay(mealDay);
   assert.equal(view.detail(), detail);
   assert.match(view.detail().textContent, /Almuerzo con verduras/);
+  assert.equal(view.heading(), today);
+  assert.equal(view.saves.length, 0);
+});
+
+test('annual record lanes distinguish elapsed, recorded and future dates in calendar order', async t => {
+  const future = '2026-11-13';
+  const view = await mount(t, {
+    [mealDay]: energyRecord(mealDay, 0),
+    [waterDay]: record(waterDay, { water: 750 }),
+    [future]: energyRecord(future, -350),
+  });
+  await view.scale('Año');
+  const month = key => document.querySelector('.ah-month[data-month="' + key + '"]');
+  const november = month('2026-11');
+  const lane = november.querySelector('.ah-month-days');
+  const states = [...lane.children].map(day => day.dataset.state);
+  assert.equal(lane.getAttribute('aria-hidden'), 'true');
+  assert.equal(states.length, 30);
+  assert.deepEqual(states.flatMap((state, i) => state === 'recorded' ? [(i + 1)] : []),
+    [mealDay, waterDay].map(date => Number(date.slice(-2))).sort((a, b) => a - b));
+  assert.ok(states.slice(0, 12).every(state => state === 'recorded' || state === 'empty'));
+  assert.ok(states.slice(12).every(state => state === 'future'));
+  assert.match(november.querySelector('.ah-month-coverage').textContent, /2 días con registros/);
+  assert.equal(month('2026-02').querySelector('.ah-month-days').children.length, 28);
+  assert.equal(month('2026-12').disabled, true);
+  assert.equal(month('2026-12').querySelector('[data-state="recorded"]'), null);
+  assert.equal(view.heading(), today);
+  assert.equal(view.saves.length, 0);
+});
+
+test('mobile activity heading toggles the calendar without resetting its selected period', async t => {
+  const view = await mount(t, undefined, { width: 375 });
+  const toggle = document.querySelector('h2.home-history-heading > .home-history-toggle');
+  const panel = document.getElementById(toggle.getAttribute('aria-controls'));
+  assert.equal(toggle.textContent.trim(), 'Tu actividad');
+  assert.equal(toggle.getAttribute('aria-expanded'), 'false');
+  assert.equal(panel.hidden, true);
+
+  await view.click(toggle);
+  assert.equal(panel.hidden, false);
+  assert.equal(toggle.getAttribute('aria-expanded'), 'true');
+  await view.scale('Semana');
+  await view.selectDay(mealDay);
+  await view.click(toggle);
+  assert.equal(panel.hidden, true);
+  await view.click(toggle);
+  assert.equal(panel.hidden, false);
+  assert.equal(view.button('Semana').getAttribute('aria-pressed'), 'true');
+  assert.equal(view.day(mealDay).getAttribute('aria-pressed'), 'true');
   assert.equal(view.heading(), today);
   assert.equal(view.saves.length, 0);
 });

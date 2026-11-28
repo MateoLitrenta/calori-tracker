@@ -9,9 +9,12 @@ import { fingerprint } from './liquid-glass-home-2d-flows.mjs';
 const output = path.join(repo, 'docs/evidence/liquid-glass-home-2e', before ? 'before' : 'after');
 const engine = process.argv.includes('--webkit') ? 'webkit' : 'chrome';
 const section = process.argv.find(value => value.startsWith('--section='))?.split('=')[1] ?? 'all';
+const iteration = process.argv.find(value => value.startsWith('--iteration='))?.split('=')[1];
 const resultsPath = process.argv.find(value => value.startsWith('--results='))?.slice('--results='.length);
 const referencePath = process.argv.find(value => value.startsWith('--reference='))?.slice('--reference='.length);
 assert.ok(['all', 'capturas', 'matriz'].includes(section));
+assert.ok(!iteration || ['production', 'first', 'second'].includes(iteration));
+if (iteration) assert.equal(before, iteration !== 'second');
 const widths = [[320, 568], [375, 812], [390, 844], [430, 932], [768, 1024], [1024, 768], [1440, 900]];
 const views = ['Semana', 'Mes', 'Año'];
 const root = '[data-history-root]';
@@ -19,7 +22,8 @@ const view = (page, name) => page.locator('.ah-view-switch').getByRole('button',
 const day = (page, date) => page.locator(`.ah-day[data-date="${date}"]`);
 const heading = '.ah-navigation h3';
 const detail = '.history-day-detail';
-const home = '.home-date-nav, .energy-card, .daily-quick-actions, .daily-habits-block, .daily-logs, .home-history-toggle, .bottom-nav-track, .app-sidebar';
+const home = '.home-date-nav, .energy-card, .daily-quick-actions, .daily-habits-block, .daily-logs, .bottom-nav-track, .app-sidebar'
+  + (iteration ? '' : ', .home-history-toggle');
 const today = '2026-11-13';
 
 function verifyBrowserErrors(errors) {
@@ -40,7 +44,9 @@ async function settle(page) {
 async function ready(page, width, height) {
   await page.setViewportSize({ width, height });
   await page.locator('.home-variants').waitFor({ timeout: 90_000 });
-  assert.equal(await page.evaluate(() => window.__homeQA.phase), 'liquid-glass-home-2e-' + (before ? 'before' : 'after'));
+  assert.equal(await page.evaluate(() => window.__homeQA.phase), iteration
+    ? 'liquid-glass-home-2e-v2-' + iteration
+    : 'liquid-glass-home-2e-' + (before ? 'before' : 'after'));
   const toggle = page.locator('.home-history-toggle');
   if (await toggle.isVisible() && await toggle.getAttribute('aria-expanded') === 'false') await toggle.click();
   await page.locator(root).waitFor();
@@ -92,7 +98,7 @@ async function select(page, date) {
 }
 
 async function measure(page) {
-  return page.locator(root).evaluate(section => {
+  return page.locator(iteration ? '.home-history' : root).evaluate(section => {
     const leftRight = node => {
       const bounds = node.getBoundingClientRect();
       return [bounds.left, bounds.right];
@@ -107,7 +113,7 @@ async function measure(page) {
         label: node.getAttribute('aria-label') || node.textContent.trim(), size: [+(width.toFixed(1)), +(height.toFixed(1))] }] : [];
     });
     const clipped = [];
-    for (const owner of section.querySelectorAll('button, summary, .ah-weekdays span, .ah-entries li, .ah-day-energy dd, .ah-habits dd')) {
+    for (const owner of section.querySelectorAll('button, summary, .ah-weekdays span, .ah-entries li, .ah-day-energy dd, .ah-habits dd, .ah-month-coverage')) {
       if (!visible(owner)) continue;
       const [left, right] = leftRight(owner);
       const walker = document.createTreeWalker(owner, NodeFilter.SHOW_TEXT);
@@ -132,7 +138,7 @@ async function measure(page) {
 }
 
 async function scaleText(page, enable) {
-  await page.locator(root).evaluate((section, active) => {
+  await page.locator(iteration ? '.home-history' : root).evaluate((section, active) => {
     if (window.__activityTextStyles) {
       for (const [node, value, priority] of window.__activityTextStyles) node.style.setProperty('font-size', value, priority);
     }
@@ -228,6 +234,15 @@ async function states(page) {
   assert.equal(await day(page, today).getAttribute('aria-current'), 'date');
   assert.equal(await day(page, '2026-11-14').isDisabled(), true);
   assert.match(await day(page, '2026-11-14').getAttribute('aria-label'), /Fecha futura.*1 comida/);
+  if (iteration === 'second') {
+    const recordedFuture = day(page, '2026-11-14');
+    const emptyFuture = day(page, '2026-11-15');
+    assert.equal((await recordedFuture.locator('.ah-day-state--future').textContent()).trim(), 'Con datos');
+    assert.equal((await emptyFuture.locator('.ah-day-state--future').textContent()).trim(), '');
+    assert.equal(await recordedFuture.locator('.ah-day-state--future svg').count(), 0);
+    assert.equal(await emptyFuture.locator('.ah-day-state--future svg').count(), 0);
+    assert.match(await emptyFuture.getAttribute('aria-label'), /Fecha futura/);
+  }
   assert.doesNotMatch(await page.locator('.ah-period-summary').innerText(), /333[. ]?333/);
   assert.equal(await page.locator('.home-date-context time').getAttribute('datetime'), today);
   const target = day(page, today);
@@ -274,7 +289,11 @@ async function measureMatrix(browser, previous) {
         await settle(page);
         result.home = await fingerprint(page, home);
         const prior = previous?.rows.find(row => row.width === width && row.theme === theme);
-        if (prior) assert.deepEqual(result.home, prior.home, 'Cambió Inicio o la navegación a ' + width + ' px en ' + theme);
+        if (prior) {
+          // The disclosure title is the only approved change outside the history root.
+          const expected = iteration ? prior.home.filter(item => item[0] !== 'BUTTON' || !item.at(-1).startsWith('Historial y tendencias')) : prior.home;
+          assert.deepEqual(result.home, expected, 'Cambió Inicio o la navegación a ' + width + ' px en ' + theme);
+        }
         await states(page);
         for (const zoom of [100, 200]) {
           for (const name of views) {
@@ -287,7 +306,8 @@ async function measureMatrix(browser, previous) {
             result.modes.push({ name, zoom, ...geometry, ...reserved });
             if (zoom === 100 && [375, 1440].includes(width)) {
               await page.locator(root).evaluate(node => node.scrollIntoView({ block: 'start', behavior: 'instant' }));
-              const targets = '.ah-header h2, .ah-view-switch button, .ah-navigation h3, .ah-nav-actions button, .ah-day-number, .ah-day-balance, .ah-month-name, .ah-month-caption, .ah-month strong, .ah-month .ah-balance-label, .ah-month b, .ah-day-energy b, .ah-day-channels dd';
+              const targets = '.ah-header h2, .ah-view-switch button, .ah-navigation h3, .ah-nav-actions button, .ah-day-number, .ah-day-balance, .ah-month-name, .ah-month-caption, .ah-month strong, .ah-month .ah-balance-label, .ah-month b, .ah-day-energy b, .ah-day-channels dd'
+                + (iteration ? ', .ah-month-coverage, .ah-day-status, .ah-open' : '');
               result.contrast.push(await contrast(page, page.locator(root), width + ' ' + theme + ' ' + name, true, { targets, scope: root }));
             }
           }
@@ -406,6 +426,24 @@ async function navigation(browser) {
   const { page, context, errors } = await open(browser, 375, 'light', 'light');
   try {
     await ready(page, 375, 812);
+    if (iteration === 'second') {
+      const disclosure = page.getByRole('button', { name: 'Tu actividad', exact: true });
+      const content = page.locator('.home-history-content');
+      assert.equal(await disclosure.getAttribute('aria-controls'), await content.getAttribute('id'));
+      assert.equal(await disclosure.getAttribute('aria-expanded'), 'true');
+      await disclosure.focus();
+      await page.keyboard.press('Shift+Tab');
+      await page.keyboard.press('Tab');
+      assert.ok(await disclosure.evaluate(node => node === document.activeElement && node.matches(':focus-visible')));
+      await page.keyboard.press('Space');
+      assert.equal(await disclosure.getAttribute('aria-expanded'), 'false');
+      assert.equal(await content.isVisible(), false);
+      assert.ok(await disclosure.evaluate(node => node === document.activeElement && node.matches(':focus-visible')));
+      await page.keyboard.press('Enter');
+      assert.equal(await disclosure.getAttribute('aria-expanded'), 'true');
+      assert.equal(await content.isVisible(), true);
+      assert.equal(await page.getByRole('heading', { name: 'Tu actividad', exact: true }).count(), 1);
+    }
     await seed(page, 'empty');
     assert.match(await page.locator(detail).innerText(), /Sin registros/);
     assert.equal(await page.locator(detail + ' .ah-day-energy b').count(), 0);

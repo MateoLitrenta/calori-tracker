@@ -1,8 +1,14 @@
 # Estado actual de Calori
 
-## Liquid Glass · Inicio etapa 2E en revisión
+## Liquid Glass · Inicio 2E, segunda iteración en Draft
 
-La etapa parte del merge de #109, `fb104d6c30832997e85f5e8fa8b211a0fafb162a`. Tu actividad conserva el selector y la navegación de fechas. Las fechas sin registros y futuras tienen marcas distintas, y el naranja indica la selección sin cubrir el balance. En escritorio, el resumen de Semana y Mes se lee junto al calendario, con el detalle diario al lado.
+El #110 reúne los períodos y el detalle diario bajo «Tu actividad». Las fechas se leen en una cuadrícula continua con balances firmados. El vidrio se concentra en el selector, la navegación temporal y la fecha consultada. Año muestra los días realmente registrados de cada mes y el balance diario toma una superficie neutra.
+
+[Exploración, decisiones y recorrido de revisión](evidence/liquid-glass-home-2e-v2/README.md)
+
+## Liquid Glass · Inicio 2E, primera iteración
+
+La etapa partió del merge de #109, `fb104d6c30832997e85f5e8fa8b211a0fafb162a`. Tu actividad conserva el selector y la navegación de fechas. Las fechas sin registros y futuras tienen marcas distintas, y el naranja indica la selección sin cubrir el balance. En escritorio, el resumen de Semana y Mes se lee junto al calendario, con el detalle diario al lado.
 
 [Decisiones, comparativas y recorrido de revisión](evidence/liquid-glass-home-2e/README.md)
 

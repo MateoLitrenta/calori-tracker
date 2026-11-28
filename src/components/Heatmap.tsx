@@ -440,8 +440,7 @@ export default function Heatmap({
         )}
         {future && (
           <span className="ah-day-state ah-day-state--future" aria-hidden="true">
-            <Clock />
-            {activity && <span>Con registros</span>}
+            {activity ? 'Con datos' : null}
           </span>
         )}
         {!unavailable && !activity && (
@@ -491,10 +490,9 @@ export default function Heatmap({
                 <span>{registeredDays
                   ? countLabel(registeredDays, 'día con registros', 'días con registros')
                   : 'Sin registros hasta hoy en este período'}</span>
-                {state.view === 'year' && <span>Elegí un mes para explorar</span>}
               </p>
             </div>
-            <div className="ah-nav-actions">
+            <div className="ah-nav-actions" role="group" aria-label="Navegación del período">
               <button
                 type="button"
                 aria-label={viewLabel + ' anterior'}
@@ -526,8 +524,10 @@ export default function Heatmap({
                 <div className="ah-year" role="group" aria-label={'Meses de ' + year}>
                   {Array.from({ length: 12 }, (_, index) => {
                     const key = year + '-' + String(index + 1).padStart(2, '0'),
-                      dates = yearDates.filter((date) => date.startsWith(key) && date <= today),
-                      count = dates.filter((date) => hasActivity(records[date])).length,
+                      monthDays = yearDates.filter((date) => date.startsWith(key)),
+                      dates = monthDays.filter((date) => date <= today),
+                      recorded = new Set(dates.filter((date) => hasActivity(records[date]))),
+                      count = recorded.size,
                       monthInfo = getHistoryPeriod(records, dates, profile, today, weightAt),
                       current = key === today.slice(0, 7),
                       future = key > today.slice(0, 7),
@@ -594,6 +594,12 @@ export default function Heatmap({
                           </span>
                           {caption && <span className="ah-month-caption">{caption}</span>}
                         </span>
+                        <span className="ah-month-days" aria-hidden="true">
+                          {monthDays.map(date => (
+                            <span key={date} data-state={date > today ? 'future' : recorded.has(date) ? 'recorded' : 'empty'} />
+                          ))}
+                        </span>
+                        {count > 0 && <span className="ah-month-coverage">{countLabel(count, 'día con registros', 'días con registros')}</span>}
                         {(future || count === 0) && (
                           <strong>{future ? 'Próximamente' : 'Sin registros'}</strong>
                         )}
@@ -707,11 +713,13 @@ export default function Heatmap({
                     </span>
                     <span><i className="ah-key-partial" aria-hidden="true" />Parcial</span>
                   </p>
-                  {state.view !== 'year' && <div className="ah-key">
+                  {state.view === 'year' ? (
+                    <p className="ah-period-note">La tira de cada mes marca los días con registros.</p>
+                  ) : <div className="ah-key">
                     <span><i className="ah-key-selection" aria-hidden="true" />Día consultado</span>
                     <span><i className="ah-key-today" aria-hidden="true" />Hoy</span>
                     <span><Minus aria-hidden="true" />Sin registros</span>
-                    <span><Clock aria-hidden="true" />Fecha futura</span>
+                    <span><Clock aria-hidden="true" />Fecha futura · número atenuado</span>
                     <span><ForkKnife aria-hidden="true" />Comida</span>
                     <span><SoccerBall aria-hidden="true" />Fútbol</span>
                     <span><Barbell aria-hidden="true" />Gimnasio</span>
