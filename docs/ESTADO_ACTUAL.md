@@ -1,12 +1,24 @@
 # Estado actual de Calori
 
-## Liquid Glass · Inicio etapa 2D en revisión
+## Liquid Glass · Inicio 2E, segunda iteración en Draft
+
+El #110 reúne los períodos y el detalle diario bajo «Tu actividad». Las fechas se leen en una cuadrícula continua con balances firmados. El vidrio se concentra en el selector, la navegación temporal y la fecha consultada. Año muestra los días realmente registrados de cada mes y el balance diario toma una superficie neutra.
+
+[Exploración, decisiones y recorrido de revisión](evidence/liquid-glass-home-2e-v2/README.md)
+
+## Liquid Glass · Inicio 2E, primera iteración
+
+La etapa partió del merge de #109, `fb104d6c30832997e85f5e8fa8b211a0fafb162a`. Tu actividad conserva el selector y la navegación de fechas. Las fechas sin registros y futuras tienen marcas distintas, y el naranja indica la selección sin cubrir el balance. En escritorio, el resumen de Semana y Mes se lee junto al calendario, con el detalle diario al lado.
+
+[Decisiones, comparativas y recorrido de revisión](evidence/liquid-glass-home-2e/README.md)
+
+## Liquid Glass · Inicio etapa 2D integrada en el PR #109
 
 La rama parte del candidato de #108, `965334e8f008b23e5a3af8fb6af6f3da07a5b733`. Detalle, confirmaciones, peso y avisos de Inicio toman el material de 2C. Editar usa el naranja de Calori y las acciones destructivas conservan el rojo de peligro. Se mantiene la confirmación explícita y el peso aplicable por fecha.
 
 [Decisiones, evidencia y recorrido de revisión](evidence/liquid-glass-home-2d/README.md)
 
-## Liquid Glass · Inicio etapa 2C en revisión
+## Liquid Glass · Inicio etapa 2C integrada en el PR #108
 
 La rama parte de `5ff742305c9bb8b0fbc2ea5639aeea2dc0143370`, merge de #107 que incorpora el peso por fecha de #106. Las altas y ediciones de comida y ejercicio y el calendario «Elegir fecha» toman los radios, el borde óptico y el naranja de Inicio. Los campos se mantienen sólidos y la ubicación de las acciones en móvil conserva la protección del teclado.
 

@@ -268,17 +268,36 @@ test('week and month use the legend scale only for days with a meal-backed balan
   }
 });
 
-test('empty and future dates have separate neutral states with no invented balance values', async t => {
-  const future = '2026-11-13';
+test('week and month label empty and future dates with separate markers and no invented balances', async t => {
+  const future = '2026-11-13', futureEmpty = '2026-11-14';
   const view = await mount(t, { [future]: energyRecord(future, -600) });
-  assert.equal(view.day(today).dataset.completeness, 'empty');
-  assert.equal(view.day(today).dataset.balance, 'empty');
-  assert.match(view.day(today).getAttribute('aria-label'), /sin registros/i);
-  assert.equal(view.day(future).dataset.completeness, 'future');
-  assert.equal(view.day(future).dataset.balance, 'empty');
-  assert.equal(view.day(future).disabled, true);
-  assert.equal(!!view.day(future).querySelector('.ah-day-fill'), false);
-  assert.doesNotMatch(view.day(future).textContent, /-600/);
+
+  for (const period of ['Semana', 'Mes']) {
+    await view.scale(period);
+    const empty = view.day(today);
+    assert.equal(empty.dataset.completeness, 'empty');
+    assert.equal(empty.dataset.balance, 'empty');
+    assert.match(empty.getAttribute('aria-label'), /sin registros/i);
+    assert.equal(empty.querySelector('.ah-day-state--empty').getAttribute('aria-hidden'), 'true');
+    assert.equal(view.day(futureEmpty).querySelector('.ah-day-state--future').textContent.trim(), '',
+      'A future date without activity displays only its muted date number');
+
+    for (const date of [future, futureEmpty]) {
+      const cell = view.day(date);
+      assert.equal(cell.dataset.completeness, 'future');
+      assert.equal(cell.dataset.balance, 'empty');
+      assert.equal(cell.disabled, true);
+      assert.match(cell.getAttribute('aria-label'), /fecha futura/i);
+      assert.equal(cell.querySelector('.ah-day-fill'), null);
+      assert.equal(cell.querySelector('.ah-day-state--future').getAttribute('aria-hidden'), 'true');
+      assert.equal(cell.querySelector('.ah-day-state--empty'), null);
+      assert.doesNotMatch(cell.textContent, /-600/);
+      assert.equal(cell.textContent.includes('Con datos'), date === future);
+      assert.equal(cell.getAttribute('aria-label').includes('1 comida'), date === future);
+    }
+    assert.match(document.querySelector('.ah-period-note').textContent, /Sin registros hasta hoy/);
+    assert.match(document.querySelector('.ah-key').textContent, /Sin registros.*Fecha futura/s);
+  }
   assert.equal(view.saves.length, 0);
 });
 
@@ -582,6 +601,32 @@ test('Hoy immediately returns the explored date and calendar context, without su
   assert.equal(view.saves.length, 0);
 });
 
+test('Hoy reveals the selected date in the local calendar scroller while preserving focus and page position', async t => {
+  const view = await mount(t, undefined, { width: 320 });
+  await view.scale('Semana');
+  await view.selectDay(yesterday);
+  const button = view.button('Hoy');
+  const surface = document.querySelector('.ah-calendar-surface');
+  const main = document.querySelector('.app-main');
+  const todayCell = view.day(today);
+  surface.getBoundingClientRect = () => ({ left: 0, right: 280 });
+  todayCell.getBoundingClientRect = () => ({ left: 265 - surface.scrollLeft, right: 309 - surface.scrollLeft });
+  button.focus();
+  main.scrollTop = 123;
+
+  for (const alreadyToday of [false, true]) {
+    surface.scrollLeft = 0;
+    assert.equal(todayCell.getAttribute('aria-pressed'), String(alreadyToday));
+    await view.click(button);
+    assert.equal(surface.scrollLeft, 29);
+    assert.equal(main.scrollTop, 123);
+    assert.equal(document.activeElement, button);
+    assert.equal(todayCell.getAttribute('aria-pressed'), 'true');
+    assert.equal(view.heading(), today);
+  }
+  assert.equal(view.saves.length, 0);
+});
+
 test('previous and next month change a readable calendar, preserve daily widgets and never save records', async t => {
   const view = await mount(t);
   const daily = document.querySelector('.daily-panel');
@@ -669,6 +714,55 @@ test('the year exposes twelve real months and one activation drills into the cho
   await view.selectDay(mealDay);
   assert.equal(view.detail(), detail);
   assert.match(view.detail().textContent, /Almuerzo con verduras/);
+  assert.equal(view.heading(), today);
+  assert.equal(view.saves.length, 0);
+});
+
+test('annual record lanes distinguish elapsed, recorded and future dates in calendar order', async t => {
+  const future = '2026-11-13';
+  const view = await mount(t, {
+    [mealDay]: energyRecord(mealDay, 0),
+    [waterDay]: record(waterDay, { water: 750 }),
+    [future]: energyRecord(future, -350),
+  });
+  await view.scale('Año');
+  const month = key => document.querySelector('.ah-month[data-month="' + key + '"]');
+  const november = month('2026-11');
+  const lane = november.querySelector('.ah-month-days');
+  const states = [...lane.children].map(day => day.dataset.state);
+  assert.equal(lane.getAttribute('aria-hidden'), 'true');
+  assert.equal(states.length, 30);
+  assert.deepEqual(states.flatMap((state, i) => state === 'recorded' ? [(i + 1)] : []),
+    [mealDay, waterDay].map(date => Number(date.slice(-2))).sort((a, b) => a - b));
+  assert.ok(states.slice(0, 12).every(state => state === 'recorded' || state === 'empty'));
+  assert.ok(states.slice(12).every(state => state === 'future'));
+  assert.match(november.querySelector('.ah-month-coverage').textContent, /2 días con registros/);
+  assert.equal(month('2026-02').querySelector('.ah-month-days').children.length, 28);
+  assert.equal(month('2026-12').disabled, true);
+  assert.equal(month('2026-12').querySelector('[data-state="recorded"]'), null);
+  assert.equal(view.heading(), today);
+  assert.equal(view.saves.length, 0);
+});
+
+test('mobile activity heading toggles the calendar without resetting its selected period', async t => {
+  const view = await mount(t, undefined, { width: 375 });
+  const toggle = document.querySelector('h2.home-history-heading > .home-history-toggle');
+  const panel = document.getElementById(toggle.getAttribute('aria-controls'));
+  assert.equal(toggle.textContent.trim(), 'Tu actividad');
+  assert.equal(toggle.getAttribute('aria-expanded'), 'false');
+  assert.equal(panel.hidden, true);
+
+  await view.click(toggle);
+  assert.equal(panel.hidden, false);
+  assert.equal(toggle.getAttribute('aria-expanded'), 'true');
+  await view.scale('Semana');
+  await view.selectDay(mealDay);
+  await view.click(toggle);
+  assert.equal(panel.hidden, true);
+  await view.click(toggle);
+  assert.equal(panel.hidden, false);
+  assert.equal(view.button('Semana').getAttribute('aria-pressed'), 'true');
+  assert.equal(view.day(mealDay).getAttribute('aria-pressed'), 'true');
   assert.equal(view.heading(), today);
   assert.equal(view.saves.length, 0);
 });
